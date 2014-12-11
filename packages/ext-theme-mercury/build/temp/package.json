@@ -1,0 +1,11 @@
+{
+  "name": "ext-theme-mercury",
+  "format": "1",
+  "version": "1.0.0",
+  "creator": "Miroslav Bojic, Sencha Inc.",
+  "summary": "A gray theme based on ext-theme-neptune.",
+  "detailedDescription": "This theme has been created with Sencha Architect 3.0",
+  "type": "theme",
+  "extend": "ext-theme-neptune",
+  "local": true
+}
