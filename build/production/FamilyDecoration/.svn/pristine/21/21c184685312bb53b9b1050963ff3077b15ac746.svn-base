@@ -1,0 +1,75 @@
+<!--
+Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+-->
+<!DOCTYPE html>
+<html>
+<head>
+		<meta charset="utf-8">
+		<link href="./resources/css/style.css" rel='stylesheet' type='text/css' />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!--webfonts-->
+		<link href='./resources/css/font.css' rel='stylesheet' type='text.css'/>
+		<!--//webfonts-->
+		<script type="text/javascript" src="tools/jquery-2.1.1.min.js"></script>
+		<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+</head>
+ 
+<body>
+	<div class="main">
+		<form>
+    		<h1><span>用户</span> <lable> 登录 </lable> </h1>
+  			<div class="inset">
+	  			<p>
+	    		 <label for="email">用户名</label>
+   	 			<input type="text" name="userName" placeholder="" required/>
+				</p>
+  				<p>
+				    <label for="password">密码</label>
+				    <input type="password" name="userPassword" placeholder="" required/>
+  				</p>
+				  <!-- <p>
+				    <input type="checkbox" name="remember" id="remember">
+				    <label for="remember">Remember me for 14 days</label>
+				  </p> -->
+ 			 </div>
+ 	 
+			  <p class="p-container">
+			    <span><a href="#">注册</a></span>
+			    <input type="button" value="登录" name="userLogin">
+			  </p>
+		</form>
+	</div>  
+	<script type="text/javascript">
+		$(function (){
+			$('[name="userLogin"]').on('click', function (){
+				var name = $('[name="userName"]').val(),
+					password = $('[name="userPassword"]').val();
+				$.ajax({
+					type: 'POST',
+					url: './libs/user.php?action=login',
+					dataType: 'json',
+					data: {
+						name: name,
+						password: password
+					}
+				})
+				.done(function (res, status){
+					if (res.status == 'successful') {
+						location.href = './index.php';
+					}
+					else {
+						alert(res.errMsg);
+					}
+				})
+				.fail(function (){
+					alert('connection error');
+				});
+			});
+		});
+		
+	</script>
+</body>
+</html>

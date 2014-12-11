@@ -1,0 +1,13 @@
+<?php
+	include_once "basicsubitem.php";
+
+	$item = $_POST;
+
+	$item["mainMaterialPrice"] = (int)(((float)$item["mainMaterialPrice"]) * 1000);
+	$item["auxiliaryMaterialPrice"] = (int)(((float)$item["auxiliaryMaterialPrice"]) * 1000);
+	$item["manpowerPrice"] = (int)(((float)$item["manpowerPrice"]) * 1000);
+	$item["machineryPrice"] = (int)(((float)$item["machineryPrice"]) * 1000);
+	$item["lossPercent"] = (float)$item["lossPercent"];
+
+	echo editBasicSubItem($item);
+?>

@@ -1,0 +1,55 @@
+table.pros {
+    color: #333;
+    padding: 10px;
+}
+
+table.pros td{
+    padding: 3px 5px;
+    white-space:nowrap;
+}
+
+a#logout:link {
+ color: #675c4c;
+ font-family: 黑体;
+ text-decoration: none
+}
+a#logout:visited {
+ color: #675c4c;
+ font-family: 黑体;
+ text-decoration: none
+}
+a#logout:hover {
+ color: #675c4c;
+ font-family: 黑体;
+ text-decoration: underline;
+}
+a#logout:active {
+ color: #675c4c;
+ font-family: 黑体;
+ text-decoration: underline;
+}
+
+#userInfo {
+	padding: 2px;
+}
+
+#userInfo span {
+	font-family: 微软雅黑;
+	margin: 0 4px 0 0;
+}
+
+.announcement {
+	padding: 8px;
+	font-family: 黑体;
+	font-size: 20px;
+	text-align: center;
+	word-wrap: break-word;
+    overflow: hidden;
+}
+
+.x-mask {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=70);
+  opacity: 0.1;
+  background: white;
+  cursor: default;
+}

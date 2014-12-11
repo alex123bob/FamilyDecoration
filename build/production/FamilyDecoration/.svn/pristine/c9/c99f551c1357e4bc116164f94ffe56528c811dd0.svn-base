@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <title>test</title>
+	<script src="jquery-2.1.1.min.js"></script>
+	<script>
+	
+	String.prototype.trim=function(){
+　　    return this.replace(/(^\s*)|(\s*$)/g, "");
+　　 }
+
+		$(function(){
+			$("#data").on("keydown",function(e){
+				if(e.keyCode=="9"){
+					var index = $("#data")[0].selectionStart;
+					var value = $("#data").val();
+					value = value.substring(0,index)+"    "+value.substring(index);
+					$("#data").val(value)[0].setSelectionRange(index+4,index+4);
+					return false;
+				};
+			})
+			
+		});
+		function testClick(){
+			log();
+			var value = $("#data").val();
+			var url = $("#url").val();
+			var method = $('input:radio[name="method"]:checked').val();
+			if(url == null || url.trim() == ""){
+				error("url 为空!");
+				$("#url").focus();
+				return false;
+			}
+			if(value != null && value.trim() != ""){
+				value = "window.tmpvalue = "+value;
+			}
+			try{
+				eval(value);
+			}catch(e){
+				console.log(e);
+				error("数据有错："+e.message);
+				$("#data").focus();
+				return;
+			}
+			var ajaxObj = { 
+						url: url, 
+						method:method,
+						cache:false,
+						success: function(res){
+									try{
+										res = JSON.parse(res);
+										var logFunc = res.status == "failing" ? error: log;
+										res = JSON.stringify(res, null, '\t').replace(/\t/gi,"&nbsp;&nbsp;&nbsp;&nbsp;").replace(/\n/gi,"<br />");
+										logFunc(res);
+									}catch(ex){
+										log(res);
+									}
+								}
+					};
+			if(typeof tmpvalue != "undefined"){
+				ajaxObj.data = tmpvalue;
+			}
+			$.ajax(ajaxObj);
+		}
+		
+		function log(msg){
+			if(typeof msg == "undefined"){
+				msg = "";
+			}
+			$("#msg").html(msg);
+		}
+		function error(msg){
+			$("#msg").html("<font color='red'>"+msg+"</font>");
+		}
+	</script>
+	<style>
+		#msg{margin:50px auto auto 50px;float:left;width:600px;height:400px;white-space:normal;word-break:break-all;}
+		#main{margin:50px;float:left;}
+		label:hover{cursor:pointer;}
+		#url{width:400px;}
+	</style>
+</head>
+<body>
+	<div id="msg"></div>
+	<div id="main">
+		<table>
+			<tr><td>url:</td><td><input type="text" name="url" id="url"/></td></tr>
+			<tr><td>method:</td>
+				<td unselectable="on" onselectstart="return false;" style="-moz-user-select:none;" >
+					<label for="method_post" ><input checked="checked" type="radio" id="method_post" value="post" name="method"/>post</label>
+					<label for="method_get" ><input type="radio" id="method_get" value="get" name="method"/>get</label>
+				</td>
+			</tr>
+			<tr><td>data:</td><td><textarea style="min-width:400px;min-height:200px;" onscroll="this.rows++;" id="data"></textarea></td></tr>
+			<tr><td></td><td><input type="button" value="test" onclick="testClick()"/></td></tr>
+	</div>
+</body>
+</html>

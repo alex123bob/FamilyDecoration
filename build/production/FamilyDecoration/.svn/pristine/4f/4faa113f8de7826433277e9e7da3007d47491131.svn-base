@@ -1,0 +1,75 @@
+<?php
+include_once "../libs/conn.php";
+include_once '../libs/budgetDB.php'; 
+include_once 'chinese.php';
+include_once 'pdf_chinese.php';
+global $custName ;
+global $projectName ;
+$budget = getBudgetsByBudgetId($_REQUEST["budgetId"]);
+$custName =  str2GBK(urldecode($budget[0]["custName"]));
+$projectName = str2GBK(urldecode($budget[0]["projectName"]));
+$action = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "download";
+
+$budgetItems = getBudgetItemsByBudgetIdGBK($_REQUEST["budgetId"]);
+$pdf=new PDF('L','mm', 'A4'); //创建新的FPDF对象 
+$pdf->AddGBFont(); //设置中文字体 
+$pdf->Open(); //开始创建PDF 
+$pdf->AddPage(); //增加一页 
+$pdf->SetFont('GB','',10); //设置字体样式 
+
+$CellWidth  = array(   30,   50,   20,   20,	14,	   18,    14,    18,    14,    18,    14,    18,    22);
+$lineHeight = 10;
+ksort($budgetItems);
+$arrayForTotalCount = array();
+$bigBudgetIndex;
+foreach($budgetItems as $bItem){
+	$amount = $bItem["itemAmount"];
+	$bdgCode = $bItem["itemCode"];
+	$isBigSubject = (1 === strlen($bdgCode));
+	$mainMaterialPrice = $amount * ( $bItem["mainMaterialPrice"] + $bItem["lossPercent"] );
+	$auxiliaryMaterialPrice = $amount*$bItem["auxiliaryMaterialPrice"];
+	$manpowerPrice = $amount*$bItem["manpowerPrice"];
+	$machineryPrice = $amount*$bItem["machineryPrice"];
+	//输出小计
+	if($isBigSubject && count($arrayForTotalCount) == 4){
+		$data = array('','小计','','','',$arrayForTotalCount["A"],'',$arrayForTotalCount["B"],'',$arrayForTotalCount["C"],'',$arrayForTotalCount["D"],'');
+		$pdf->writeCellLine($CellWidth,$lineHeight,$data,1,0,'C');
+	}
+	$arrayForTotalCount["A"] = (isset($arrayForTotalCount["A"]) ? $arrayForTotalCount["A"] : 0 ) + $mainMaterialPrice;
+	$arrayForTotalCount["B"] = (isset($arrayForTotalCount["B"]) ? $arrayForTotalCount["B"] : 0 ) + $auxiliaryMaterialPrice;
+	$arrayForTotalCount["C"] = (isset($arrayForTotalCount["C"]) ? $arrayForTotalCount["C"] : 0 ) + $manpowerPrice;
+	$arrayForTotalCount["D"] = (isset($arrayForTotalCount["D"]) ? $arrayForTotalCount["D"] : 0 ) + $machineryPrice;
+	
+	$data = array($bdgCode,$bItem["itemName"],'','','','','','','','','','','');
+	if(!$isBigSubject){
+		$data = array($bdgCode,$bItem["itemName"],$bItem["itemUnit"],
+					$amount,$bItem["mainMaterialPrice"],$mainMaterialPrice,
+					$bItem["auxiliaryMaterialPrice"],$auxiliaryMaterialPrice,$bItem["manpowerPrice"],
+					$manpowerPrice,$bItem["machineryPrice"],$machineryPrice,
+					$bItem["lossPercent"]);
+	}
+	$pdf->writeCellLine($CellWidth,$lineHeight,$data,1,0,'C');
+}
+
+//输出总计
+
+
+
+//输出其他
+$count = 0;
+$pdf->Cell($CellWidth[$count++],$lineHeight,"",1,0,'C');
+$pdf->Cell($CellWidth[$count++],$lineHeight,"小计",1,0,'C');
+$pdf->Cell($CellWidth[$count++],$lineHeight,"",1,0,'C');
+$pdf->Cell($CellWidth[$count++],$lineHeight,"",1,0,'C');
+$pdf->Cell($CellWidth[$count++],$lineHeight,"",1,0,'C');
+$pdf->Cell($CellWidth[$count++],$lineHeight,isset($arrayForTotalCount["A"]) ? $arrayForTotalCount["A"] : "",1,0,'C');
+$pdf->Cell($CellWidth[$count++],$lineHeight,"",1,0,'C');
+$pdf->Cell($CellWidth[$count++],$lineHeight,isset($arrayForTotalCount["B"]) ? $arrayForTotalCount["B"] : "",1,0,'C');
+$pdf->Cell($CellWidth[$count++],$lineHeight,"",1,0,'C');
+$pdf->Cell($CellWidth[$count++],$lineHeight,isset($arrayForTotalCount["C"]) ? $arrayForTotalCount["C"] : "",1,0,'C');
+$pdf->Cell($CellWidth[$count++],$lineHeight,"",1,0,'C');
+$pdf->Cell($CellWidth[$count++],$lineHeight,isset($arrayForTotalCount["D"]) ? $arrayForTotalCount["D"] : "",1,0,'C');
+$pdf->Cell($CellWidth[$count++],$lineHeight,"",'LBR',0,'C');
+//$projectName = iconv("GB2312","UTF-8",urldecode($projectName));
+$pdf->Output($projectName.".pdf", $action == "view" ? "I" : "D" );
+?>  

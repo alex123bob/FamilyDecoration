@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <title>FamilyDecoration</title>
+<link rel="stylesheet" href="resources/FamilyDecoration-all.css"/>
+<script type="text/javascript" src="app.js"></script>
+    <link href="resources/css/global.css" rel="stylesheet" />
+    <script type="text/javascript" src="resources/locale/ext-lang-zh_CN.js"></script>
+</head>
+<body>
+    <div id="userInfo" class="x-hide-display">
+        <span>用户信息:</span>
+        <span>账号:</span>
+        <span>alex123bob</span>
+        <span>权限:</span>
+        <span>管理员</span>
+    </div>
+</body>
+</html>

@@ -1,0 +1,187 @@
+Ext.define('FamilyDecoration.view.basicitem.AddBasicSubItem', {
+	extend: 'Ext.window.Window',
+	alias: 'widget.basicitem-addbasicsubitem',
+	requires: ['Ext.grid.plugin.CellEditing', 'FamilyDecoration.view.basicitem.SubItemTable'],
+
+	// resizable: false,
+	modal: true,
+	layout: 'fit',
+	maximizable: true,
+
+	title: '添加小类项目',
+	width: 800,
+	height: 500,
+	autoScroll: true,
+
+	parentId: undefined,
+	subItem: undefined,
+
+	initComponent: function (){
+		var me = this,
+			gridSt;
+
+		me.title = me.subItem ? '编辑"' + me.subItem.get('subItemName') + '"' : '添加小类项目';
+
+		if (me.subItem) {
+			gridSt = Ext.create('FamilyDecoration.store.BasicSubItem', {
+				autoLoad: false,
+				data: me.subItem.getData(),
+				proxy: {
+					type: 'memory',
+					reader: {
+						type: 'json'
+					}
+				}
+			});
+		}
+		else {
+			gridSt = Ext.create('FamilyDecoration.store.BasicSubItem', {
+				autoLoad: false,
+				proxy: {
+					type: 'memory',
+					reader: {
+						type: 'json'
+					}
+				}
+			});
+		}
+
+		me.items = [{
+			xtype: 'basicitem-subitemtable',
+			header: false,
+			store: gridSt,
+			tbar: [{
+				xtype: 'button',
+				text: '添加',
+				hidden: me.subItem ? true : false,
+				handler: function (){
+					var grid = this.up('gridpanel'),
+						st = grid.getStore(),
+						count = st.getCount();
+					st.insert(count, {
+						subItemName: '',
+						subItemUnit: '',
+						mainMaterialPrice: 0,
+						auxiliaryMaterialPrice: 0,
+						manpowerPrice: 0,
+						machineryPrice: 0,
+						lossPercent: 0
+					});
+
+					grid.plugins[0].startEditByPosition({
+			            row: count, 
+			            column: 1
+			        });
+				}
+			}],
+			plugins: [
+				Ext.create('Ext.grid.plugin.CellEditing', {
+		            clicksToEdit: 1,
+		            listeners: {
+		            	edit: function (editor, e){
+		            		e.record.commit();
+		            		editor.completeEdit();
+		            	}
+		            }
+		        })
+			],
+			selType: 'cellmodel',
+			isItemEmpty: function (rec) {
+				var flag = Ext.isEmpty(rec.get('subItemName')) || Ext.isEmpty(rec.get('subItemUnit')) || Ext.isEmpty(rec.get('mainMaterialPrice'))
+							|| Ext.isEmpty(rec.get('auxiliaryMaterialPrice')) || Ext.isEmpty(rec.get('manpowerPrice')) || Ext.isEmpty(rec.get('machineryPrice'))
+							|| Ext.isEmpty(rec.get('lossPercent')) || Ext.isEmpty(rec.get('cost'))
+
+				return flag;
+			}
+		}];
+
+		me.buttons = [{
+			xtype: 'button',
+			text: '保存',
+			handler: function (){
+				var grid = me.down('gridpanel'),
+					st = grid.getStore(),
+					items = st.data.items,
+					flag = true,
+					p = {
+						subItemName: [],
+						subItemUnit: [],
+						mainMaterialPrice: [],
+						auxiliaryMaterialPrice: [],
+						manpowerPrice: [],
+						machineryPrice: [],
+						lossPercent: [],
+						cost: []
+					};
+
+				if (items.length <= 0) {
+					Ext.Msg.info('请添加项目');
+				}
+				else {
+					for (var i = 0; i < items.length; i++) {
+						if (grid.isItemEmpty(items[i])) {
+							flag = false;
+							break;
+						}
+						else {
+							p.subItemName.push(items[i].get('subItemName'));
+							p.subItemUnit.push(items[i].get('subItemUnit'));
+							p.mainMaterialPrice.push(items[i].get('mainMaterialPrice'));
+							p.auxiliaryMaterialPrice.push(items[i].get('auxiliaryMaterialPrice'));
+							p.manpowerPrice.push(items[i].get('manpowerPrice'));
+							p.machineryPrice.push(items[i].get('machineryPrice'));
+							p.lossPercent.push(items[i].get('lossPercent'));
+							p.cost.push(items[i].get('cost'));
+						}
+					}
+
+					if (flag) {
+						p.subItemName = p.subItemName.join('<>');
+						p.subItemUnit = p.subItemUnit.join('<>');
+						p.mainMaterialPrice = p.mainMaterialPrice.join('<>');
+						p.auxiliaryMaterialPrice = p.auxiliaryMaterialPrice.join('<>');
+						p.manpowerPrice = p.manpowerPrice.join('<>');
+						p.machineryPrice = p.machineryPrice.join('<>');
+						p.lossPercent = p.lossPercent.join('<>');
+						p.cost = p.cost.join('<>');
+						p.parentId = me.parentId;
+
+						if (me.subItem) {
+							Ext.apply(p, {
+								subItemId: me.subItem.getId()
+							});
+						}
+
+						Ext.Ajax.request({
+							url: me.subItem ? './libs/editbasicsubitem.php' : './libs/addbasicsubitem.php',
+							method: 'POST',
+							params: p,
+							callback: function (opts, success, res){
+								if (success) {
+									var obj = Ext.decode(res.responseText);
+									if (obj.status == 'successful') {
+										var msg = me.subItem ? '编辑成功！' : '添加成功！';
+										showMsg(msg);
+										me.close();
+										Ext.getCmp('gridpanel-basicSubItem').getStore().reload();
+									}
+								}
+							}
+						})
+					}
+					else {
+						Ext.Msg.info('第' + (i + 1) + '项有条目未填写，请填写完整再保存！');
+					}
+				}
+			}
+		}, {
+			xtype: 'button',
+			text: '取消',
+			handler: function (){
+				me.close();
+			}
+		}]
+
+		this.callParent();
+	}
+});

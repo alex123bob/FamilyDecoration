@@ -1,0 +1,12 @@
+class PDF extends PDF_Chinese{
+	function Header(){//设置页眉  
+		$this->SetFont('GB','',10); 
+		$this->Write(10,'XX公司产品名录'); 
+		$this->Ln(20); //换行 
+	}
+	function Footer(){ //设置页脚 
+		$this->SetY(-15); 
+		$this->SetFont('GB','',10); 
+		$this->Cell(0,10,'第'.$this->PageNo().'页'); 
+	}
+} 

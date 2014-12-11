@@ -1,0 +1,21 @@
+<?php
+	include_once "basicsubitem.php";
+
+	$pid = $_GET['parentId'];
+
+	$result = json_decode(getBasicSubItems($pid), true);
+
+	if (!array_key_exists("status", $result)) {
+		for ($i = 0; $i < count($result); $i++) {
+			$result[$i]["mainMaterialPrice"] = $result[$i]["mainMaterialPrice"] / 1000;
+			$result[$i]["auxiliaryMaterialPrice"] = $result[$i]["auxiliaryMaterialPrice"] / 1000;
+			$result[$i]["manpowerPrice"] = $result[$i]["manpowerPrice"] / 1000;
+			$result[$i]["machineryPrice"] = $result[$i]["machineryPrice"] / 1000;
+			$result[$i]["cost"] = $result[$i]["cost"] / 1000;
+		}
+		echo json_encode($result);
+	}
+	else {
+		echo json_encode($result);
+	}
+?>
