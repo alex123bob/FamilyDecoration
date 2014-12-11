@@ -1,0 +1,15 @@
+.#{$prefix}action-col-cell .#{$prefix}item-disabled {
+  display: none !important;
+}
+
+.#{$prefix}action-col-cell .#{$prefix}action-col-icon {
+  display: none;
+}
+
+.#{$prefix}grid-row-over .#{$prefix}action-col-cell .#{$prefix}action-col-icon {
+  display: inline-block;
+}
+
+.#{$prefix}-grid-cell img {
+  width: 16px;
+}

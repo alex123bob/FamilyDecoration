@@ -1,0 +1,7 @@
+.#{$prefix}tab-default-top-active {
+  border-width: $tab-border-width-active !important;
+}
+
+.#{$prefix}tab-default-top-active:first-child {
+  border-left-width: 0 !important;
+}

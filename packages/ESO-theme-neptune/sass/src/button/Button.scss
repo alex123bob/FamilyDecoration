@@ -1,0 +1,30 @@
+@mixin box-shadow($shadow) {
+	-webkit-box-shadow: $shadow;
+	-moz-box-shadow: $shadow;
+	-ms-box-shadow: $shadow;
+	box-shadow: $shadow;
+}
+
+.x-btn-default-small {
+  background-image: none;
+  background-color: #ffffff;
+  border-color: #c0c0c0;
+}
+
+.x-btn-default-small-over, .x-btn-default-small-focus {
+  border-color: #157FCC;
+  background-color: #ffffff;
+}
+
+.x-btn-default-small .x-btn-inner {
+  font-weight: normal;
+  color: #000;
+}
+
+.x-toolbar-default .x-tool-img {
+  background-color: transparent;
+}
+
+/*.x-btn-default-toolbar-small {
+	@include box-shadow(1px 1px 2px 3px #cccccc);
+}*/

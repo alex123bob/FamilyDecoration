@@ -1,0 +1,11 @@
+{
+  "name": "ext-theme-crisp",
+  "format": "1",
+  "version": "5.0.0",
+  "creator": "Sencha",
+  "summary": "Ext JS Crisp Theme",
+  "detailedDescription": "The Crisp Theme builds upon Neptune, adding a light, clean look and feel.",
+  "type": "theme",
+  "extend": "ext-theme-neptune",
+  "local": true
+}
