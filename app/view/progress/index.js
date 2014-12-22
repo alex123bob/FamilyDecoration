@@ -343,17 +343,45 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				name: 'button-showBudget',
 				disabled: true,
 				handler: function (){
-					var win = Ext.create('Ext.window.Window', {
-						items: [{
-							xtype: 'budget-editbudget'
-						}],
-						width: 500,
-						height: 400,
-						maximizable: true,
-						modal: true,
-						layout: 'fit'
-					});
-					win.show();
+					var proPanel = Ext.getCmp('treepanel-projectName'),
+						project = proPanel.getSelectionModel().getSelection()[0],
+						budgetId = project.get('budgetId');
+
+					if (budgetId != 'NULL') {
+						Ext.Ajax.request({
+							url: './libs/budget.php?action=view',
+							method: 'GET',
+							params: {
+								budgetId: budgetId
+							},
+							callback: function (opts, success, res){
+								if (success) {
+									var obj = Ext.decode(res.responseText);
+									if (obj.length > 0) {
+										var win = Ext.create('Ext.window.Window', {
+											items: [{
+												budget: obj[0],
+												xtype: 'budget-editbudget'
+											}],
+											width: 500,
+											height: 400,
+											maximizable: true,
+											modal: true,
+											layout: 'fit'
+										});
+										win.show();
+									}
+									else {
+										// todo do not find the corresponding project
+									}
+								}
+							}
+						})
+						
+					}
+					else {
+						showMsg('没有对应预算！');
+					}
 				}
 			}],
 			hideHeaders: true,

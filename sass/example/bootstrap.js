@@ -43,6 +43,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.budget.BudgetContent": "../../app/view/budget/budgetcontent.js",
   "FamilyDecoration.view.budget.BudgetHeader": "../../app/view/budget/budgetheader.js",
   "FamilyDecoration.view.budget.BudgetTable": "../../app/view/budget/budgettable.js",
+  "FamilyDecoration.view.budget.EditBudget": "../../app/view/budget/editbudget.js",
   "FamilyDecoration.view.budget.History": "../../app/view/budget/history.js",
   "FamilyDecoration.view.budget.Index": "../../app/view/budget/index.js",
   "FamilyDecoration.view.budget.Preview": "../../app/view/budget/preview.js",
@@ -940,6 +941,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.budget.BudgetContent": [],
   "FamilyDecoration.view.budget.BudgetHeader": [],
   "FamilyDecoration.view.budget.BudgetTable": [],
+  "FamilyDecoration.view.budget.EditBudget": [],
   "FamilyDecoration.view.budget.History": [],
   "FamilyDecoration.view.budget.Index": [],
   "FamilyDecoration.view.budget.Preview": [],
@@ -2019,6 +2021,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.budget.BudgetTable": [
     "widget.budget-budgettable"
+  ],
+  "FamilyDecoration.view.budget.EditBudget": [
+    "widget.budget-editbudget"
   ],
   "FamilyDecoration.view.budget.History": [
     "widget.budget-history"

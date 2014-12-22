@@ -11,7 +11,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetTable', {
             var base = 1000;
 
             var store = Ext.create('FamilyDecoration.store.BudgetItem', {
-
+                  autoLoad: true
             });
 
             me.items = [{
