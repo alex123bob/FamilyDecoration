@@ -91,17 +91,53 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 							}
 						});
 					}
+				},
+				{
+					text: '删除账号',
+					hidden: User.isAdmin() ? false : true,
+					name: 'button-deleteaccount',
+					id: 'button-deleteaccount',
+					disabled: true,
+					handler: function (){
+						var grid = me.down('gridpanel'),
+							rec = grid.getSelectionModel().getSelection()[0];
+						Ext.Msg.warning('确定要删除该账户吗？', function (btnId){
+							if (btnId == 'yes') {
+								Ext.Ajax.request({
+									url: './libs/user.php?action=delete',
+									method: 'POST',
+									params: {
+										name: rec.get('name')
+									},
+									callback: function (opts, success, res){
+										if (success) {
+											var obj = Ext.decode(res.responseText);
+											if (obj.status == 'successful') {
+												showMsg('账号删除成功！');
+												me.down('gridpanel').getStore().reload();
+											}
+											else {
+												showMsg(obj.errMsg);
+											}
+										}
+									}
+								})
+							}
+						});
+					}
 				}
 			],
 			listeners: {
 				selectionchange: function (selModel, sels, opts){
 					var rec = sels[0],
 						edit = Ext.getCmp('button-editaccount'),
-						reset = Ext.getCmp('button-resetaccount');
+						reset = Ext.getCmp('button-resetaccount'),
+						del = Ext.getCmp('button-deleteaccount');
 
 					if (rec) {
 						edit.enable();
 						reset.enable();
+						del.setDisabled(rec.get('level') == 1);
 					}
 					else {
 						edit.disable();
