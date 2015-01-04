@@ -76,7 +76,10 @@ Ext.define('FamilyDecoration.view.budget.AddBasicItem', {
 								parentId: subRecs[i].get('parentId'),
 								lossPercent: subRecs[i].get('mainMaterialPrice').add(subRecs[i].get('auxiliaryMaterialPrice')).mul(subRecs[i].get('lossPercent')),
 								cost: subRecs[i].get('cost'),
-								originalCost: subRecs[i].get('cost')
+								originalCost: subRecs[i].get('cost'),
+								remark: subRecs[i].get('remark'),
+								basicItemId: subRecs[i].get('parentId'),
+								basicSubItemId: subRecs[i].get('subItemId')
 							});
 						}
 						grid.getStore().insert(pos + numOfSub + 1, data);
@@ -85,7 +88,8 @@ Ext.define('FamilyDecoration.view.budget.AddBasicItem', {
 						mainCode = getId(numOfMain + 1);
 						// push data of basic main project if not finding it in budget grid.
 						data.push(Ext.apply(mainRec.data, {
-							itemCode: mainCode
+							itemCode: mainCode,
+							basicItemId: mainRec.getId()
 						}));
 
 						for (i = 0; i < subRecs.length; i++) {
@@ -101,7 +105,10 @@ Ext.define('FamilyDecoration.view.budget.AddBasicItem', {
 								parentId: subRecs[i].get('parentId'),
 								lossPercent: subRecs[i].get('mainMaterialPrice').add(subRecs[i].get('auxiliaryMaterialPrice')).mul(subRecs[i].get('lossPercent')),
 								cost: subRecs[i].get('cost'),
-								originalCost: subRecs[i].get('cost')
+								originalCost: subRecs[i].get('cost'),
+								remark: subRecs[i].get('remark'),
+								basicItemId: subRecs[i].get('parentId'),
+								basicSubItemId: subRecs[i].get('subItemId')
 							});
 						}
 

@@ -11,6 +11,7 @@ Ext.define('FamilyDecoration.model.BasicSubItem', {
 		{name: 'lossPercent', type: 'float'},
 		{name: 'parentId', type: 'string'},
 		{name: 'cost', type: 'float'},
+		{name: 'remark', type: 'string'}
 	],
 	idProperty: 'subItemId'
 });

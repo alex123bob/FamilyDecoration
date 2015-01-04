@@ -8,8 +8,8 @@
 	function addProject (array $pro){
 		try {
 			global $mysql;
-			$mysql->DBInsert("`project`", "`projectId`, `projectName`, `projectProgress`, `projectChart`, `projectTime`",
-			 	"'".$pro['projectId']."', '".$pro['projectName']."', '".$pro['projectProgress']."', '".$pro['projectChart']."', '".$pro['projectTime']."'");
+			$mysql->DBInsert("`project`", "`projectId`, `projectName`, `projectProgress`, `projectChart`, `projectTime`, `isFrozen`",
+			 	"'".$pro['projectId']."', '".$pro['projectName']."', '".$pro['projectProgress']."', '".$pro['projectChart']."', '".$pro['projectTime']."', 0");
 			return json_encode(array('status'=>'successful', 'errMsg' => ''));
 		}
 		catch (Exception $e) {

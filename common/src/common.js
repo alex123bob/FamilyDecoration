@@ -276,7 +276,7 @@ Ext.require('Ext.Ajax', function () {
             return;
         }
         else if (status === 401) {
-            Ext.Msg.error('请确认该用户在其他地方登录或密码、权限被修改，或者联系管理员确认账号是否被删除。');
+            Ext.Msg.error('管理员账号在其他地方登陆！', logout);
         }
         else if (status === -1) {
             // do nothing

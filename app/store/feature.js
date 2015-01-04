@@ -2,14 +2,14 @@ Ext.define('FamilyDecoration.store.Feature', {
 	extend: 'Ext.data.Store',
 	model: 'FamilyDecoration.model.Feature',
 	data: [{
+        name: '公告栏信息',
+        cmp: 'bulletin-index'
+    }, {
         name: '添加预算',
         cmp: 'budget-index'
     }, {
         name: '查看图库',
         cmp: 'chart-index'
-    }, {
-        name: '公告栏信息',
-        cmp: 'bulletin-index'
     }, {
         name: '各工程进度情况',
         cmp: 'progress-index'

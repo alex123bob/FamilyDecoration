@@ -347,7 +347,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 						project = proPanel.getSelectionModel().getSelection()[0],
 						budgetId = project.get('budgetId');
 
-					if (budgetId != 'NULL') {
+					if (budgetId != 'NULL' && budgetId != '') {
 						Ext.Ajax.request({
 							url: './libs/budget.php?action=view',
 							method: 'GET',
@@ -363,8 +363,6 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 												budget: obj[0],
 												xtype: 'budget-editbudget'
 											}],
-											width: 500,
-											height: 400,
 											maximizable: true,
 											modal: true,
 											layout: 'fit'
@@ -372,7 +370,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 										win.show();
 									}
 									else {
-										// todo do not find the corresponding project
+										showMsg('找不到对应预算！');
 									}
 								}
 							}

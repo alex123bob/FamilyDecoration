@@ -7,7 +7,6 @@
 Ext.Loader.addClassPathMappings({
   "Ext": "ext/src",
   "Ext.Msg": "ext/src/window/MessageBox.js",
-  "Ext.theme": "packages/ext-theme-crisp",
   "ExtThemeNeptune": "ext/packages/ext-theme-neptune/overrides",
   "FamilyDecoration.Application": "app/application.js",
   "FamilyDecoration.Common": "common/src/common.js",
@@ -733,8 +732,6 @@ Ext.ClassManager.addNameAlternateMappings({
     "Ext.TabPanel"
   ],
   "Ext.tab.Tab": [],
-  "Ext.theme.crisp.tab.Panel": [],
-  "Ext.theme.crisp.view.Table": [],
   "Ext.tip.QuickTip": [
     "Ext.QuickTip"
   ],
@@ -1749,8 +1746,6 @@ Ext.ClassManager.addNameAliasMappings({
   "Ext.tab.Tab": [
     "widget.tab"
   ],
-  "Ext.theme.crisp.tab.Panel": [],
-  "Ext.theme.crisp.view.Table": [],
   "Ext.tip.QuickTip": [
     "widget.quicktip"
   ],
@@ -2069,7 +2064,6 @@ Ext.ClassManager.addNameAliasMappings({
   ]
 });
 Ext.setVersion("ext-theme-base", "4.2.2");
-Ext.setVersion("ext-theme-crisp", "5.0.0");
 Ext.setVersion("ext-theme-neptune", "4.2.2");
 Ext.setVersion("ext-theme-neutral", "4.2.2");
 Ext.Loader.loadScript("ext/packages/ext-theme-neptune/overrides/Component.js");;
@@ -2080,7 +2074,6 @@ Ext.Loader.loadScript("ext/packages/ext-theme-neptune/overrides/container/Button
 Ext.Loader.loadScript("ext/packages/ext-theme-neptune/overrides/toolbar/Paging.js");;
 Ext.Loader.loadScript("ext/packages/ext-theme-neptune/overrides/picker/Month.js");;
 Ext.Loader.loadScript("ext/packages/ext-theme-neptune/overrides/form/field/HtmlEditor.js");;
-Ext.Loader.loadScript("packages/ext-theme-crisp/overrides/view/Table.js");;
 Ext.Loader.loadScript("ext/packages/ext-theme-neptune/overrides/panel/Table.js");;
 Ext.Loader.loadScript("ext/packages/ext-theme-neptune/overrides/grid/RowEditor.js");;
 Ext.Loader.loadScript("ext/packages/ext-theme-neptune/overrides/grid/column/RowNumberer.js");;
@@ -2089,7 +2082,6 @@ Ext.Loader.loadScript("ext/packages/ext-theme-neptune/overrides/menu/Menu.js");;
 Ext.Loader.loadScript("ext/packages/ext-theme-neptune/overrides/menu/Separator.js");;
 Ext.Loader.loadScript("ext/packages/ext-theme-neptune/overrides/panel/Tool.js");;
 Ext.Loader.loadScript("ext/packages/ext-theme-neptune/overrides/tab/Tab.js");;
-Ext.Loader.loadScript("packages/ext-theme-crisp/overrides/tab/Panel.js");;
 /**
  * Sencha Blink - Development
  * @author Jacky Nguyen <jacky@sencha.com>

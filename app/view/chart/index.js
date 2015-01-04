@@ -514,6 +514,23 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 					});
 					win.show();
 				}
+			}, {
+				text: '返回工程',
+				handler: function (){
+					var sel = Ext.getCmp('treepanel-chartCategory').getSelectionModel().getSelection()[0];
+					if (sel) {
+						window.pro = {
+							year: sel.get('projectYear'),
+							month: sel.get('projectMonth'),
+							pid: sel.getId()
+						};
+
+						changeMainCt('progress-index');
+					}
+					else {
+						showMsg('请选择工程！');
+					}
+				}
 			}],
 			hideHeaders: true,
 			columns: [{

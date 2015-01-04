@@ -78,24 +78,34 @@ Ext.define('FamilyDecoration.view.budget.BudgetContent', {
 		            listeners: {
 		            	beforeedit: function (editor, e) {
 		            		var rec = e.record;
-		            		if (rec.get('parentId') && rec.get('itemUnit')) {
-		            			return true;
+		            		if (e.field == 'itemAmount') {
+								if (rec.get('parentId') && rec.get('itemUnit')) {
+									return true;
+								}
+								// 效果图编辑数量
+								else if (rec.get('itemCode') == 'P') {
+									return true;
+								}
+								// 设计费百分比
+								else if (rec.get('itemCode') == 'O') {
+									return true;
+								}
+								// 税金百分比
+								else if (rec.get('itemCode') == 'R') {
+									return true;
+								} else {
+									return false;
+								}
 		            		}
-		            		// 效果图编辑数量
-		            		else if (rec.get('itemCode') == 'P') {
-		            			return true;
+		            		else if (e.field == 'remark') {
+		            			if (rec.get('parentId') && rec.get('itemUnit')) {
+		            				return true;
+		            			}
+		            			else {
+		            				return false;
+		            			}
 		            		}
-		            		// 设计费百分比
-		            		else if (rec.get('itemCode') == 'O') {
-		            			return true;
-		            		}
-		            		// 税金百分比
-		            		else if (rec.get('itemCode') == 'R') {
-		            			return true;
-		            		}
-		            		else {
-		            			return false;
-		            		}
+		            		
 		            	},
 		            	edit: function (editor, e){
 		            		Ext.suspendLayouts();

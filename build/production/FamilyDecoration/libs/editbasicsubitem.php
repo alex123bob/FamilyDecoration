@@ -9,6 +9,7 @@
 	$item["machineryPrice"] = $item["machineryPrice"];
 	$item["lossPercent"] = $item["lossPercent"];
 	$item["cost"] = $item["cost"];
+	$item["remark"] = $item["remark"];
 
 	echo editBasicSubItem($item);
 ?>

@@ -53,7 +53,7 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 				allowBlank: false,
 				validator: function (val){
 					var pwd = this.previousSibling(),
-						confirm = this;
+						confirm =this;
 
 					if (pwd.getValue() != confirm.getValue()) {
 						return '两次密码不一致';
@@ -76,7 +76,13 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 					proxy: {
 						type: 'memory'
 					},
-					data: User.role
+					data: User.role,
+					filters: User.isManager() ? [
+						// manager can not add an administrator account.
+						function (item){
+							return item.get('value') != 1;
+						}
+					] : []
 				})
 			}]
 		}];

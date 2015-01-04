@@ -111,7 +111,8 @@ Ext.define('FamilyDecoration.view.basicitem.AddBasicSubItem', {
 						manpowerPrice: [],
 						machineryPrice: [],
 						lossPercent: [],
-						cost: []
+						cost: [],
+						remark: []
 					};
 
 				if (items.length <= 0) {
@@ -132,18 +133,20 @@ Ext.define('FamilyDecoration.view.basicitem.AddBasicSubItem', {
 							p.machineryPrice.push(items[i].get('machineryPrice'));
 							p.lossPercent.push(items[i].get('lossPercent'));
 							p.cost.push(items[i].get('cost'));
+							p.remark.push(items[i].get('remark'));
 						}
 					}
 
 					if (flag) {
-						p.subItemName = p.subItemName.join('<>');
-						p.subItemUnit = p.subItemUnit.join('<>');
-						p.mainMaterialPrice = p.mainMaterialPrice.join('<>');
-						p.auxiliaryMaterialPrice = p.auxiliaryMaterialPrice.join('<>');
-						p.manpowerPrice = p.manpowerPrice.join('<>');
-						p.machineryPrice = p.machineryPrice.join('<>');
-						p.lossPercent = p.lossPercent.join('<>');
-						p.cost = p.cost.join('<>');
+						p.subItemName = p.subItemName.join('>>><<<');
+						p.subItemUnit = p.subItemUnit.join('>>><<<');
+						p.mainMaterialPrice = p.mainMaterialPrice.join('>>><<<');
+						p.auxiliaryMaterialPrice = p.auxiliaryMaterialPrice.join('>>><<<');
+						p.manpowerPrice = p.manpowerPrice.join('>>><<<');
+						p.machineryPrice = p.machineryPrice.join('>>><<<');
+						p.lossPercent = p.lossPercent.join('>>><<<');
+						p.cost = p.cost.join('>>><<<');
+						p.remark = p.remark.join('>>><<<');
 						p.parentId = me.parentId;
 
 						if (me.subItem) {
@@ -164,6 +167,7 @@ Ext.define('FamilyDecoration.view.basicitem.AddBasicSubItem', {
 										showMsg(msg);
 										me.close();
 										Ext.getCmp('gridpanel-basicSubItem').getStore().reload();
+										Ext.getCmp('gridpanel-basicSubItem').getSelectionModel().deselectAll();
 									}
 								}
 							}

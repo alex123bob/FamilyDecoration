@@ -2,11 +2,11 @@
 	include_once "basicsubitem.php";
 
 	$subItem = $_POST;
-	$count = count(explode("<>", $subItem["subItemName"]));
+	$count = count(explode(">>><<<", $subItem["subItemName"]));
 	
 	foreach($subItem as $key => $value) {
 		if ($key != "parentId") {
-			$subItem[$key] = explode("<>", $value);
+			$subItem[$key] = explode(">>><<<", $value);
 		}
 	}
 
@@ -26,6 +26,7 @@
 		$addArr["lossPercent"] = $subItem["lossPercent"][$i];
 		$addArr["parentId"] = $subItem["parentId"];
 		$addArr["cost"] = $subItem["cost"][$i];
+		$addArr["remark"] = $subItem["remark"][$i];
 
 		$info = addBasicSubItem($addArr);
 		$info = json_decode($info, true);
@@ -37,8 +38,7 @@
 
 	if (count($result) <= 0) {
 		echo json_encode(array('status'=>'successful', 'errMsg' => ''));
-	}
-	else {
+	} else {
 		$result = implode(",", $result);
 		echo json_encode(array('status' => 'failing', 'errMsg'=> $result."未添加成功！"));
 	}

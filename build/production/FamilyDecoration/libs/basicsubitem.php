@@ -6,7 +6,6 @@
 	 * @return [type] [description]
 	 */
 	function getBasicSubItems ($parentId){
-		try {
 			global $mysql;
 			$arr = $mysql->DBGetSomeRows("`basic_sub_item`", "*", "where `parentId` = '$parentId'");
 			if ($arr) {
@@ -15,16 +14,10 @@
 					$arr[$key]['subItemName'] = urlencode($val['subItemName']);
 				}
 				$arr = urldecode(json_encode($arr));
-			}
-			else {
+			}else {
 				$arr = json_encode(array());
 			}
-			
 			return $arr;
-		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
 	}
 
 	/**
@@ -32,15 +25,10 @@
 	 * @param array $item [description]
 	 */
 	function addBasicSubItem (array $item){
-		try {
-			global $mysql;
-			$mysql->DBInsert("`basic_sub_item`", "`subItemId`, `subItemName`, `subItemUnit`, `mainMaterialPrice`, `auxiliaryMaterialPrice`, `manpowerPrice`, `machineryPrice`, `lossPercent`, `parentId`, `cost`",
-			 	"'".$item['subItemId']."', '".$item['subItemName']."', '".$item["subItemUnit"]."', ".$item["mainMaterialPrice"].", ".$item["auxiliaryMaterialPrice"].", ".$item["manpowerPrice"].", ".$item["machineryPrice"].", ".$item["lossPercent"].", '".$item["parentId"]."', ".$item["cost"]);
-			return json_encode(array('status'=>'successful', 'errMsg' => ''));
-		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		global $mysql;
+		$mysql->DBInsert("`basic_sub_item`", "`subItemId`,`remark`, `subItemName`, `subItemUnit`, `mainMaterialPrice`, `auxiliaryMaterialPrice`, `manpowerPrice`, `machineryPrice`, `lossPercent`, `parentId`, `cost`",
+		 	"'".$item['subItemId']."', '".$item['remark']."', '".$item['subItemName']."', '".$item["subItemUnit"]."', ".$item["mainMaterialPrice"].", ".$item["auxiliaryMaterialPrice"].", ".$item["manpowerPrice"].", ".$item["machineryPrice"].", ".$item["lossPercent"].", '".$item["parentId"]."', ".$item["cost"]);
+		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 
 	/**
@@ -49,27 +37,17 @@
 	 * @return [type]         [description]
 	 */
 	function deleteBasicSubItem ($itemId){
-		try {
-			global $mysql;
-			$condition = "`subItemId` = '".$itemId."'";
-			$mysql->DBDelete("`basic_sub_item`", $condition);
-			return json_encode(array('status'=>'successful', 'errMsg' => ''));
-		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		global $mysql;
+		$condition = "`subItemId` = '".$itemId."'";
+		$mysql->DBDelete("`basic_sub_item`", $condition);
+		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 
 	function deleteBasicSubItemByParentId ($parentId){
-		try {
-			global $mysql;
-			$condition = "`parentId` = '".$parentId."'";
-			$mysql->DBDelete("`basic_sub_item`", $condition);
-			return json_encode(array('status'=>'successful', 'errMsg' => ''));
-		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		global $mysql;
+		$condition = "`parentId` = '".$parentId."'";
+		$mysql->DBDelete("`basic_sub_item`", $condition);
+		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 
 	/**
@@ -78,24 +56,18 @@
 	 * @return [type]       [description]
 	 */
 	function editBasicSubItem (array $item){
-		try {
-			global $mysql;
-			$setValue = "";
-			foreach ($item as $key => $val) {
-				if ($key == "subItemId" || is_numeric ($key)) {
-					continue;
-				}
-				else {
-					$setValue .= " `".$key."` = '".$val."',";
-				}
+		global $mysql;
+		$setValue = "";
+		foreach ($item as $key => $val) {
+			if ($key == "subItemId" || is_numeric ($key)) {
+				continue;
+			} else {
+				$setValue .= " `".$key."` = '".$val."',";
 			}
-			$setValue = substr($setValue, 0, -1);
-			$condition = "`subItemId` = '".$item['subItemId']."'";
-			$mysql->DBUpdateSomeCols("`basic_sub_item`", $condition, $setValue);
-			return json_encode(array('status'=>'successful', 'errMsg' => ''));
 		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		$setValue = substr($setValue, 0, -1);
+		$condition = "`subItemId` = '".$item['subItemId']."'";
+		$mysql->DBUpdateSomeCols("`basic_sub_item`", $condition, $setValue);
+		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 ?>

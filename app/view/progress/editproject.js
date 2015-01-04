@@ -13,6 +13,7 @@ Ext.define('FamilyDecoration.view.progress.EditProject', {
 			pro = me.project;
 		if (pro) {
 			me.title = '编辑项目"' + pro.get('projectName') + '"';
+			pro.set('projectTime', pro.get('projectTime').split(' ')[0]);
 		}
 		else {
 			me.title = '新建项目';
@@ -26,12 +27,15 @@ Ext.define('FamilyDecoration.view.progress.EditProject', {
 				xtype: 'textfield',
 				fieldLabel: '项目名称',
 				name: 'projectName',
+				allowBlank: false,
 				value: pro ? pro.get('projectName') : ''
 			}, {
 				xtype: 'datefield',
 				fieldLabel: '项目时间',
-				format: 'Y/m/d H:i:s',
+				// format: 'Y/m/d H:i:s',
+				format: 'Y/m/d', // if the time needed, change format into the upper type
 				name: 'projectTime',
+				allowBlank: false,
 				value: pro ? pro.get('projectTime').replace(/-/gi, '/') : ''
 			}]
 		}];
@@ -43,28 +47,35 @@ Ext.define('FamilyDecoration.view.progress.EditProject', {
 					params = frm.getValues(),
 					treepanel = Ext.getCmp('treepanel-projectName'),
 					st = treepanel.getStore();
-				pro && Ext.apply(params, {
-					projectId: pro.get('projectId')
-				});
-				Ext.Ajax.request({
-					url: pro ? './libs/editproject.php' : './libs/addproject.php',
-					method: 'POST',
-					params: params,
-					callback: function (opts, success, res){
-						if (success) {
-							var obj = Ext.decode(res.responseText);
-							if (obj.status == 'successful') {
-								pro ? showMsg('编辑成功！') : showMsg('添加成功！');
-								me.close();
-								st.getProxy().url = 'libs/getprojectyears.php';
-								st.getProxy().extraParams = {};
-								treepanel.getStore().load({
-									node: treepanel.getRootNode()
-								});
+				if (frm.isValid()) {
+					pro && Ext.apply(params, {
+						projectId: pro.get('projectId')
+					});
+					Ext.Ajax.request({
+						url: pro ? './libs/editproject.php' : './libs/addproject.php',
+						method: 'POST',
+						params: params,
+						callback: function (opts, success, res){
+							if (success) {
+								var obj = Ext.decode(res.responseText);
+								if (obj.status == 'successful') {
+									pro ? showMsg('编辑成功！') : showMsg('添加成功！');
+									me.close();
+									st.getProxy().url = 'libs/getprojectyears.php';
+									st.getProxy().extraParams = {};
+									treepanel.getStore().load({
+										node: treepanel.getRootNode(),
+										callback: function (recs, ope, success){
+											if (success) {
+												treepanel.getSelectionModel().deselectAll();
+											}
+										}
+									});
+								}
 							}
 						}
-					}
-				});
+					});
+				}
 			}
 		}, {
 			text: '取消',

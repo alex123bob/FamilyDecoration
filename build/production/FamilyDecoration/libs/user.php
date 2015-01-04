@@ -1,12 +1,8 @@
 <?php
-	session_start();
 	include_once "conn.php";
-
 	$action = $_GET["action"];
-
 	$prefix = "familydecoration-";
 	$res = "";
-
 	switch($action){
 		case "register": 				$res = register();  break;
 		case "login":					$res = login(); break;
@@ -24,30 +20,17 @@
 	 * @param array $user [consists of name, password]
 	 */
 	function register (){
-		try {
 			$name = $_POST["name"];
 			$password = $_POST["password"];
 			$level = $_POST["level"];
-
 			global $mysql, $prefix;
-
 			$user = $mysql->DBGetOneRow("`user`", "*", "`name` = '$name'");
-
-			if ($user) {
-				return json_encode(array("status"=>"failing", "errMsg"=>"用户已经存在"));
+			if($user){
+				throw new Exception('用户已经存在！');
 			}
-			else {
-				$password = md5($prefix.$password);
-
-				$mysql->DBInsert("`user`", "`name`, `password`, `level`",
-				 	"'".$name."', '".$password."', ".$level);
-
-				return json_encode(array('status'=>'successful', 'errMsg' => ''));
-			}
-		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+			$password = md5($prefix.$password);
+			$mysql->DBInsert("`user`", "`name`, `password`, `level`","'".$name."', '".$password."', ".$level);
+			return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 
 	/**
@@ -55,36 +38,27 @@
 	 * @return [type]       [description]
 	 */
 	function login (){
-		try {
-			$name = $_POST["name"];
-			$password = $_POST["password"];
-
-			global $mysql, $prefix;
-
-			$password = md5($prefix.$password);
-
-			$user = $mysql->DBGetOneRow("`user`", "*", "`name` = '$name'");
-
-			if ($user["name"] == $name) {
-				if ($user["password"] == $password) {
-
-					$_SESSION["name"] = $user["name"];
-					$_SESSION["password"] = $user["password"];
-					$_SESSION["level"] = $user["level"];
-
-					return json_encode(array('status'=>'successful', 'errMsg'=>''));
-				}
-				else {
-					return json_encode(array('status'=>'failing', 'errMsg'=>'密码不正确！'));
-				}
+		$name = $_REQUEST["name"];
+		$password = $_REQUEST["password"];
+		global $mysql, $prefix;
+		$password = md5($prefix.$password);
+		$user = $mysql->DBGetOneRow("`user`", "*", "`name` = '$name'");
+		if ($user["name"] == $name && $user["password"] == $password) {
+			$sessionId = session_id();
+			$_SESSION["name"] = $user["name"];
+			$_SESSION["password"] = $user["password"];
+			$_SESSION["level"] = $user["level"];
+			if($name == "admin"){
+				$_SESSION["admin"] = true;
+				//update
+				$condition = "`id` = '2' ";
+				$setValue = " `updateTime` = CURRENT_TIMESTAMP , `paramValue` = '$sessionId' ";
+				$mysql->DBUpdateSomeCols("`system`", $condition, $setValue);
 			}
-			else {
-				return json_encode(array('status'=>'failing', 'errMsg'=>'用户不存在！'));
-			}
+			
+			return json_encode(array('status'=>'successful', 'errMsg'=>'','token'=>$sessionId));
 		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		throw new Exception('用户或密码不正确！');
 	}
 
 	/**
@@ -102,34 +76,27 @@
 	 * @return [type] [description]
 	 */
 	function edit (){
-		try {
-			$name = $_POST["name"];
-			$oldpassword= $_POST['oldpassword'];
-			$newpassword= $_POST['newpassword'];
-			$level = $_POST["level"];
+		$name = $_POST["name"];
+		$oldpassword= $_POST['oldpassword'];
+		$newpassword= $_POST['newpassword'];
+		$level = $_POST["level"];
 
-			global $mysql, $prefix;
+		global $mysql, $prefix;
 
-			$oldpassword = md5($prefix.$oldpassword);
-			$newpassword = md5($prefix.$newpassword);
+		$oldpassword = md5($prefix.$oldpassword);
+		$newpassword = md5($prefix.$newpassword);
 
-			$user = $mysql->DBGetOneRow("`user`", "*", "`name` = '$name'");
+		$user = $mysql->DBGetOneRow("`user`", "*", "`name` = '$name'");
 
-			if ($user["name"] == $name) {
-				if ($user["password"] == $oldpassword) {
-					$mysql->DBUpdateOneCol("`user`", "`name` = '".$user["name"]."'", "`password`", $newpassword);
-					return json_encode(array('status'=>'successful', 'errMsg'=>''));
-				}
-				else {
-					return json_encode(array('status'=>'failing', 'errMsg'=>'原密码输入不正确！'));
-				}
+		if ($user["name"] == $name) {
+			if ($user["password"] == $oldpassword) {
+				$mysql->DBUpdateOneCol("`user`", "`name` = '".$user["name"]."'", "`password`", $newpassword);
+				return json_encode(array('status'=>'successful', 'errMsg'=>''));
+			} else {
+				throw new Exception('原密码不正确！');
 			}
-			else {
-				return json_encode(array('status'=>'failing', 'errMsg'=>'用户不存在！'));
-			}
-		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
+		} else {
+			throw new Exception('用户不存在！');
 		}
 	}
 
@@ -138,22 +105,13 @@
 	 * @param array $user [consists of name, password]
 	 */
 	function modify (){
-		try {
-			$name = $_POST["name"];
-			$password = $_POST["password"];
-			$level = $_POST["level"];
-
-			global $mysql, $prefix;
-
-			$password = md5($prefix.$password);
-
-			$mysql->DBUpdateSomeCols("`user`", "`name` = '$name'", "`password` = '$password', `level` = '$level'");
-
-			return json_encode(array('status'=>'successful', 'errMsg' => ''));
-		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		$name = $_POST["name"];
+		$password = $_POST["password"];
+		$level = $_POST["level"];
+		global $mysql, $prefix;
+		$password = md5($prefix.$password);
+		$mysql->DBUpdateSomeCols("`user`", "`name` = '$name'", "`password` = '$password', `level` = '$level'");
+		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 
 	/**
@@ -161,26 +119,21 @@
 	 * @return [type] [description]
 	 */
 	function resetAccount (){
-		try {
-			$name = $_POST["name"];
+		$name = $_POST["name"];
 
-			global $mysql, $prefix;
+		global $mysql, $prefix;
 
-			$newpassword = md5($prefix."666666");
+		$newpassword = md5($prefix."666666");
 
-			$user = $mysql->DBGetOneRow("`user`", "*", "`name` = '$name'");
+		$user = $mysql->DBGetOneRow("`user`", "*", "`name` = '$name'");
 
-			if ($user["name"] == $name) {
-				$mysql->DBUpdateOneCol("`user`", "`name` = '".$user["name"]."'", "`password`", $newpassword);
-				return json_encode(array('status'=>'successful', 'errMsg'=>''));
-			}
-			else {
-				return json_encode(array('status'=>'failing', 'errMsg'=>'用户不存在！'));
-			}
+		if ($user["name"] == $name) {
+			$mysql->DBUpdateOneCol("`user`", "`name` = '".$user["name"]."'", "`password`", $newpassword);
+			return json_encode(array('status'=>'successful', 'errMsg'=>''));
+		} else {
+			return json_encode(array('status'=>'failing', 'errMsg'=>'用户不存在！'));
 		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+	
 	}
 
 	/**
@@ -188,15 +141,8 @@
 	 * @return json user json string
 	 */
 	function getList (){
-		try {
-			global $mysql, $prefix;
-
-			$res = $mysql->DBGetAllRows("`user`", "*");
-
-			return json_encode($res);
-		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		global $mysql, $prefix;
+		$res = $mysql->DBGetAllRows("`user`", "*");
+		return json_encode($res);
 	}
 ?>

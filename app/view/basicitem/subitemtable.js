@@ -194,6 +194,20 @@ Ext.define('FamilyDecoration.view.basicitem.SubItemTable', {
             		allowBlank: false
             	}
 	        },
+	        {
+	        	text: '备注',
+	        	dataIndex: 'remark',
+	        	flex: 2,
+	        	draggable: false,
+	        	align: 'center',
+	        	editor: {
+	        		xtype: 'textarea',
+	        		allowBlank: false
+	        	},
+	        	renderer: function (val, meta, rec){
+    				return val.replace(/\n/g, '<br />');
+	        	}
+	        }
 		];
 
 		this.callParent();

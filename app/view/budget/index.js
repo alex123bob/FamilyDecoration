@@ -134,43 +134,63 @@ Ext.define('FamilyDecoration.view.budget.Index', {
 																								manpowerPrice: [],
 																								machineryPrice: [],
 																								lossPercent: [],
-																								remark: []
+																								remark: [],
+																								basicItemId: [],
+																								basicSubItemId: []
 																							};
 																							bodySt.each(function (rec){
-																								// itemCode
-																								if (rec.get('itemCode') == "") {
-																									p.itemCode.push('NULL');
-																								}
-																								else {
-																									p.itemCode.push(rec.get('itemCode'));
-																								}
+																								if (rec.get('itemName') != '' && '小计' != rec.get('itemName')) {
+																									// itemCode
+																									if (rec.get('itemCode') == "") {
+																										p.itemCode.push('NULL');
+																									}
+																									else {
+																										p.itemCode.push(rec.get('itemCode'));
+																									}
 
-																								// itemName
-																								p.itemName.push(rec.get('itemName'));
+																									// itemName
+																									p.itemName.push(rec.get('itemName'));
 
-																								// itemUnit
-																								if (rec.get('itemUnit') == "") {
-																									p.itemUnit.push('NULL');
-																								}
-																								else {
-																									p.itemUnit.push(rec.get('itemUnit'));
-																								}
+																									// itemUnit
+																									if (rec.get('itemUnit') == "") {
+																										p.itemUnit.push('NULL');
+																									}
+																									else {
+																										p.itemUnit.push(rec.get('itemUnit'));
+																									}
 
-																								// remark
-																								if (rec.get('remark') == "") {
-																									p.remark.push('NULL');
-																								}
-																								else {
-																									p.remark.push(rec.get('remark'));
-																								}
+																									// remark
+																									if (rec.get('remark') == "") {
+																										p.remark.push('NULL');
+																									}
+																									else {
+																										p.remark.push(rec.get('remark'));
+																									}
 
-																								p.budgetId.push(budgetId);
-																								p.itemAmount.push(rec.get('itemAmount'));
-																								p.mainMaterialPrice.push(rec.get('mainMaterialPrice'));
-																								p.auxiliaryMaterialPrice.push(rec.get('auxiliaryMaterialPrice'));
-																								p.manpowerPrice.push(rec.get('manpowerPrice'));
-																								p.machineryPrice.push(rec.get('machineryPrice'));
-																								p.lossPercent.push(rec.get('lossPercent'));
+																									// basicItemId
+																									if (rec.get('basicItemId') == '') {
+																										p.basicItemId.push('NULL');
+																									}
+																									else {
+																										p.basicItemId.push(rec.get('basicItemId'));
+																									}
+
+																									// basicSubItemId
+																									if (rec.get('basicSubItemId') == '') {
+																										p.basicSubItemId.push('NULL');
+																									}
+																									else {
+																										p.basicSubItemId.push(rec.get('basicSubItemId'));
+																									}
+
+																									p.budgetId.push(budgetId);
+																									p.itemAmount.push(rec.get('itemAmount'));
+																									p.mainMaterialPrice.push(rec.get('mainMaterialPrice'));
+																									p.auxiliaryMaterialPrice.push(rec.get('auxiliaryMaterialPrice'));
+																									p.manpowerPrice.push(rec.get('manpowerPrice'));
+																									p.machineryPrice.push(rec.get('machineryPrice'));
+																									p.lossPercent.push(rec.get('lossPercent'));
+																								}
 																							});
 
 																							for (var pro in p) {
@@ -330,7 +350,7 @@ Ext.define('FamilyDecoration.view.budget.Index', {
 						win.show();
 					}
 				}, {
-					text: '新建预算',
+					text: '放弃预算',
 					handler: function (){
 						var header = Ext.getCmp('gridpanel-budgetheader'),
 							budgetContent = Ext.getCmp('panel-budgetContent');

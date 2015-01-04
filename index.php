@@ -111,6 +111,19 @@
                 return this.name;
             }
         });
+        
+        function heartBeat (){
+            Ext.Ajax.request({
+                url: './libs/sys.php?action=adminHeartBeat',
+                method: 'GET'
+            });
+        }
+
+        if (User.isAdmin()) {
+            Ext.defer(heartBeat, 2000);
+            // Heartbeat
+            setInterval(heartBeat, 60000);
+        }
 
         document.getElementById('logout').onclick = function (){
             logout();

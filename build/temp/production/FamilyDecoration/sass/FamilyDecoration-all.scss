@@ -1,5 +1,5 @@
 $image-search-path: 'C:/Program Files (x86)/Zend/Apache2/htdocs/familydecoration/build/production/FamilyDecoration/resources';
-$theme-name:  'ext-theme-crisp' !default;
+$theme-name:  'ext-theme-neptune' !default;
 $include-ext-abstractcomponent: true;
 $include-ext-abstractmanager: true;
 $include-ext-abstractplugin: true;
@@ -430,8 +430,6 @@ $include-ext-state-stateful: true;
 $include-ext-tab-bar: true;
 $include-ext-tab-panel: true;
 $include-ext-tab-tab: true;
-$include-ext-theme-crisp-tab-panel: true;
-$include-ext-theme-crisp-view-table: true;
 $include-ext-tip-quicktip: true;
 $include-ext-tip-quicktipmanager: true;
 $include-ext-tip-tip: true;
@@ -619,30 +617,6 @@ $include-familydecoration-view-setting-index: true;
 @import '../../../../../ext/packages/ext-theme-neutral/sass/etc/all';
 /* including package ext-theme-neptune */
 @import '../../../../../ext/packages/ext-theme-neptune/sass/etc/all';
-/* including package ext-theme-crisp */
-@import '../../../../../packages/ext-theme-crisp/sass/etc/all';
-/* including package ext-theme-crisp */
-@import '../../../../../packages/ext-theme-crisp/sass/var/Component';
-@import '../../../../../packages/ext-theme-crisp/sass/var/button/Button';
-@import '../../../../../packages/ext-theme-crisp/sass/var/toolbar/Toolbar';
-@import '../../../../../packages/ext-theme-crisp/sass/var/panel/Panel';
-@import '../../../../../packages/ext-theme-crisp/sass/var/tip/Tip';
-@import '../../../../../packages/ext-theme-crisp/sass/var/window/Window';
-@import '../../../../../packages/ext-theme-crisp/sass/var/form/Labelable';
-@import '../../../../../packages/ext-theme-crisp/sass/var/form/field/Base';
-@import '../../../../../packages/ext-theme-crisp/sass/var/view/Table';
-@import '../../../../../packages/ext-theme-crisp/sass/var/grid/header/Container';
-@import '../../../../../packages/ext-theme-crisp/sass/var/grid/column/Column';
-@import '../../../../../packages/ext-theme-crisp/sass/var/grid/feature/Grouping';
-@import '../../../../../packages/ext-theme-crisp/sass/var/grid/locking/Lockable';
-@import '../../../../../packages/ext-theme-crisp/sass/var/layout/container/Accordion';
-@import '../../../../../packages/ext-theme-crisp/sass/var/resizer/Splitter';
-@import '../../../../../packages/ext-theme-crisp/sass/var/layout/container/Border';
-@import '../../../../../packages/ext-theme-crisp/sass/var/panel/Tool';
-@import '../../../../../packages/ext-theme-crisp/sass/var/resizer/Resizer';
-@import '../../../../../packages/ext-theme-crisp/sass/var/tab/Tab';
-@import '../../../../../packages/ext-theme-crisp/sass/var/tab/Bar';
-@import '../../../../../packages/ext-theme-crisp/sass/var/tab/Panel';
 /* including package ext-theme-neptune */
 @import '../../../../../ext/packages/ext-theme-neptune/sass/var/Component';
 @import '../../../../../ext/packages/ext-theme-neptune/sass/var/LoadMask';
