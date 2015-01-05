@@ -9,12 +9,25 @@
 		case "logout":					$res = logout(); break;
 		case "edit":					$res = edit(); break;
 		case "modify":					$res = modify(); break;
+		case "delete":					$res = delete($_POST['name']); break;
 		case "view":					$res = getList(); break;
 		case "reset":					$res = resetAccount(); break;
 		default: 		throw new Exception("unknown action:".$action);
 	}
 	echo $res;
 
+	function delete($name){
+		global $mysql;
+		if($name == "admin"){
+			throw new Exception('只有管理员账户无法删除！');
+		}
+		if(isset($_SESSION["admin"]) && $_SESSION["admin"]){
+			$mysql->DBDelete("`user`", "`name` = '$name' ");
+		}else{
+			throw new Exception('只有管理员可以删除用户！');
+		}
+		return json_encode(array('status'=>'successful', 'errMsg' => ''));
+	}
 	/**
 	 * [register]
 	 * @param array $user [consists of name, password]

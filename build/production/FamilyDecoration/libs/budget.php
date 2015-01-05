@@ -3,9 +3,11 @@
 	include_once "budgetDB.php";
 	$action = $_REQUEST["action"];
 	$res = "";
+	$isParseResut = true;
 	switch($action){
 		case "list": 	$res = getBudgets();  break;
-		case "itemlist":$res = getBudgetItemsByBudgetId($_REQUEST["budgetId"]); break;
+		case "listIds": 	$res = getBudgetIds();  $isParseResut = false;break;
+		case "itemlist":$res = getBudgetItemsByBudgetId($_REQUEST["budgetId"]);break;
 		case "add":  	$res = addBudget($_REQUEST);  break;
 		case "addItem":	$res = addBugetItem($_REQUEST);  break;;
 		case "deleItem":$res = delBudgetItem($_REQUEST['budgetId'],$_REQUEST["ItemId"],$_REQUEST['itemCode']);  break;;
@@ -25,5 +27,7 @@
 		echo "\n";
 	}*/
 	//print_r($res);
-	echo urldecode(json_encode($res));
+	if($isParseResut){
+		echo urldecode(json_encode($res));
+	}	
 ?>

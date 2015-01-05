@@ -105,13 +105,15 @@
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 	
-	function delBudget ($id){
+	function delBudget ($budgetId){
 		global $mysql;
-		$condition = "`budgetId` = '$id' ";
+		$condition = "`budgetId` = '$budgetId' ";
 		$setValue = " `isDeleted` = 'true'";
-		$mysql->DBUpdateSomeCols("`Budget`", $condition, $setValue);
+		$mysql->DBUpdateSomeCols("`budget`", $condition, $setValue);
+		$mysql->DBUpdateSomeCols("`budget_item`", $condition, $setValue);
 		return array('status'=>'successful', 'errMsg' => '');
 	}
+		
 	function delBudgetItem($budgetId,$ItemId,$ItemCode){
 		global $mysql;
 		$condition = "`budgetItemId` = '$ItemId' ";
@@ -120,6 +122,15 @@
 		//更新下项的ItemCode
 		renewItemCode($budgetId,$ItemCode);
 		return array('status'=>'successful', 'errMsg' => '');
+	}
+	//供本地备份脚本使用
+	function getBudgetIds (){
+		global $mysql;
+		$res= array();
+		$arr = $mysql->DBGetSomeRows("`budget`", "budgetId,projectName", " where `isDeleted` = 'false' ");
+		foreach($arr as $key => $val) {
+			echo $val['budgetId'].">".str2GBK($val['projectName']).".pdf\n";
+		}
 	}
 	function getBudgets (){
 		global $mysql;
@@ -159,6 +170,31 @@
 		$smallCount = array(0,0,0,0);
 		$directFee = 0;
 		$isFirstSmallCount = true;
+		$otherItems = array();
+		$otherItems['N'] = array('budgetItemId'=>'NULLN','itemName'=>'','budgetId'=>'',
+								'itemCode'=>'','itemUnit'=>'','itemAmount'=>'','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'',
+								'machineryPrice'=>'','mainMaterialTotalPrice'=>'','auxiliaryMaterialTotalPrice'=>'',
+								'manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'');
+		$otherItems['O'] = array('budgetItemId'=>'NULLN','itemName'=>'','budgetId'=>'',
+								'itemCode'=>'','itemUnit'=>'','itemAmount'=>'','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'',
+								'machineryPrice'=>'','mainMaterialTotalPrice'=>'','auxiliaryMaterialTotalPrice'=>'',
+								'manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'');
+		$otherItems['P'] = array('budgetItemId'=>'NULLN','itemName'=>'','budgetId'=>'',
+								'itemCode'=>'','itemUnit'=>'','itemAmount'=>'','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'',
+								'machineryPrice'=>'','mainMaterialTotalPrice'=>'','auxiliaryMaterialTotalPrice'=>'',
+								'manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'');
+		$otherItems['Q'] = array('budgetItemId'=>'NULLN','itemName'=>'','budgetId'=>'',
+								'itemCode'=>'','itemUnit'=>'','itemAmount'=>'','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'',
+								'machineryPrice'=>'','mainMaterialTotalPrice'=>'','auxiliaryMaterialTotalPrice'=>'',
+								'manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'');
+		$otherItems['R'] = array('budgetItemId'=>'NULLN','itemName'=>'','budgetId'=>'',
+								'itemCode'=>'','itemUnit'=>'','itemAmount'=>'','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'',
+								'machineryPrice'=>'','mainMaterialTotalPrice'=>'','auxiliaryMaterialTotalPrice'=>'',
+								'manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'');
+		$otherItems['S'] = array('budgetItemId'=>'NULLN','itemName'=>'','budgetId'=>'',
+								'itemCode'=>'','itemUnit'=>'','itemAmount'=>'','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'',
+								'machineryPrice'=>'','mainMaterialTotalPrice'=>'','auxiliaryMaterialTotalPrice'=>'',
+								'manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'');
 		foreach($arr as $val) {
 			$itemCode = $val['itemCode'];
 			$itemUnit = $val['itemUnit'];

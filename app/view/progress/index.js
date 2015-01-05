@@ -103,7 +103,8 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 									url: './libs/delproject.php',
 									method: 'POST',
 									params: {
-										projectId: pro.get('projectId')
+										projectId: pro.get('projectId'),
+										budgetId: pro.get('budgetId')
 									},
 									callback: function (opts, success, res){
 										if (success) {
