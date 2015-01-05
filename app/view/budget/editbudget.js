@@ -22,18 +22,20 @@ Ext.define('FamilyDecoration.view.budget.EditBudget', {
             layout: 'hbox',
             items: [{
                 width: 80,
+                height: 60,
                 xtype: 'image',
+                margin: '0 0 0 250',
                 src: './resources/img/logo.jpg'
             }, {
                 xtype: 'displayfield',
                 margin: '0 0 0 20',
-                value: '<center>佳诚装饰室内装修装饰工程&nbsp;预算单</center>',
+                value: '佳诚装饰室内装修装饰工程&nbsp;预算单',
                 fieldStyle: {
                     fontFamily: '黑体',
                     fontSize: '24px',
                     lineHeight: '60px'
                 },
-                width: '100%',
+                width: 700,
                 height: '100%'
             }],
             width: '100%',

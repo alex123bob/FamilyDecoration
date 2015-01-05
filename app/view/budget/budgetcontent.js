@@ -31,19 +31,20 @@ Ext.define('FamilyDecoration.view.budget.BudgetContent', {
 					width: 80,
 					height: 60,
 					xtype: 'image',
+					margin: '0 0 0 250',
 					src: './resources/img/logo.jpg'
 				},
 				{
 					xtype: 'displayfield',
 					margin: '0 0 0 20',
-					value: '<center>佳诚装饰室内装修装饰工程&nbsp;预算单</center>',
+					value: '佳诚装饰室内装修装饰工程&nbsp;预算单',
 					hideLabel: true,
 					fieldStyle: {
 						fontFamily: '黑体',
 						fontSize: '24px',
 						lineHeight: '60px'
 					},
-					width: '100%',
+					width: 700,
 					height: '100%'
 				}
 			],
@@ -52,8 +53,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetContent', {
 		}, {
 			xtype: 'fieldcontainer',
 			layout: {
-				type: 'hbox',
-				pack: 'end'
+				type: 'hbox'
 			},
 			items: [{
 				xtype: 'displayfield',
@@ -277,7 +277,8 @@ Ext.define('FamilyDecoration.view.budget.BudgetContent', {
 		        	flex: 0.5,
                 	draggable: false,
                 	align: 'center',
-                	sortable: false
+                	sortable: false,
+                	menuDisabled: true
 		        },
 		        {
 		        	text: '项目名称',
@@ -285,7 +286,8 @@ Ext.define('FamilyDecoration.view.budget.BudgetContent', {
 		        	flex: 0.8,
                 	draggable: false,
                 	align: 'center',
-                	sortable: false
+                	sortable: false,
+                	menuDisabled: true
 		        },
 		        {
 		        	text: '单位', 
@@ -293,7 +295,8 @@ Ext.define('FamilyDecoration.view.budget.BudgetContent', {
 		        	flex: 0.5,
                 	draggable: false,
                 	align: 'center',
-                	sortable: false
+                	sortable: false,
+                	menuDisabled: true
 		        },
 		        {
 		        	text: '数量',
@@ -316,18 +319,22 @@ Ext.define('FamilyDecoration.view.budget.BudgetContent', {
         				else {
         					return val;
         				}
-                	}
+                	},
+                	menuDisabled: true
 		        },
 		        {
 		        	text: '主材',
+		        	menuDisabled: true,
 		        	columns: [
 		        		{
 		        			text: '单价',
 		        			dataIndex: 'mainMaterialPrice',
-		        			flex: 1,
+		        			// flex: 0.5,
+		        			width: 49,
                 			draggable: false,
                 			align: 'center',
                 			sortable: false,
+                			menuDisabled: true,
                 			renderer: function (val, meta, rec){
                 				if (!rec.get('parentId') || !rec.get('itemUnit')) {
                 					return '';
@@ -339,10 +346,12 @@ Ext.define('FamilyDecoration.view.budget.BudgetContent', {
 		        		},
 		        		{
 		        			text: '总价',
-		        			flex: 1,
+		        			// flex: 0.5,
+		        			width: 48,
                 			draggable: false,
                 			align: 'center',
                 			sortable: false,
+                			menuDisabled: true,
                 			dataIndex: 'mainMaterialTotalPrice',
                 			renderer: function (val, meta, rec) {
                 				if (rec.get('itemCode') != '' && 'NOPQRS'.indexOf(rec.get('itemCode')) != -1) {
@@ -362,14 +371,17 @@ Ext.define('FamilyDecoration.view.budget.BudgetContent', {
 		        },
 		        {
 		        	text: '辅材',
+		        	menuDisabled: true,
 		        	columns: [
 		        		{
 		        			text: '单价',
 		        			dataIndex: 'auxiliaryMaterialPrice',
-		        			flex: 1,
+		        			// flex: 0.5,
+		        			width: 49,
                 			draggable: false,
                 			align: 'center',
                 			sortable: false,
+                			menuDisabled: true,
                 			renderer: function (val, meta, rec){
                 				if (!rec.get('parentId') || !rec.get('itemUnit')) {
                 					return '';
@@ -381,10 +393,12 @@ Ext.define('FamilyDecoration.view.budget.BudgetContent', {
 		        		},
 		        		{
 		        			text: '总价',
-		        			flex: 1,
+		        			// flex: 0.5,
+		        			width: 48,
                 			draggable: false,
                 			align: 'center',
                 			sortable: false,
+                			menuDisabled: true,
                 			dataIndex: 'auxiliaryMaterialTotalPrice',
                 			renderer: function (val, meta, rec) {
                 				if (!rec.get('parentId')) {
@@ -401,14 +415,17 @@ Ext.define('FamilyDecoration.view.budget.BudgetContent', {
 		        },
 		        {
 		        	text: '人工',
+		        	menuDisabled: true,
 		        	columns: [
 		        		{
 		        			text: '单价',
 		        			dataIndex: 'manpowerPrice',
-		        			flex: 1,
+		        			// flex: 0.5,
+		        			width: 49,
                 			draggable: false,
                 			align: 'center',
                 			sortable: false,
+                			menuDisabled: true,
                 			renderer: function (val, meta, rec){
                 				if (!rec.get('parentId') || !rec.get('itemUnit')) {
                 					return '';
@@ -420,10 +437,12 @@ Ext.define('FamilyDecoration.view.budget.BudgetContent', {
 		        		},
 		        		{
 		        			text: '总价',
-		        			flex: 1,
+		        			// flex: 0.5,
+		        			width: 48,
                 			draggable: false,
                 			align: 'center',
                 			sortable: false,
+                			menuDisabled: true,
                 			dataIndex: 'manpowerTotalPrice',
                 			renderer: function (val, meta, rec) {
                 				if (!rec.get('parentId')) {
@@ -439,15 +458,18 @@ Ext.define('FamilyDecoration.view.budget.BudgetContent', {
                 	align: 'center'
 		        },
 		        {
-		        	text: '机械', 
+		        	text: '机械',
+		        	menuDisabled: true,
 		        	columns: [
 		        		{
 		        			text: '单价',
 		        			dataIndex: 'machineryPrice',
-		        			flex: 1,
+		        			// flex: 0.5,
+		        			width: 49,
                 			draggable: false,
                 			align: 'center',
                 			sortable: false,
+                			menuDisabled: true,
                 			renderer: function (val, meta, rec){
                 				if (!rec.get('parentId') || !rec.get('itemUnit')) {
                 					return '';
@@ -459,10 +481,12 @@ Ext.define('FamilyDecoration.view.budget.BudgetContent', {
 		        		},
 		        		{
 		        			text: '总价',
-		        			flex: 1,
+		        			// flex: 0.5,
+		        			width: 48,
                 			draggable: false,
                 			align: 'center',
                 			sortable: false,
+                			menuDisabled: true,
                 			dataIndex: 'machineryTotalPrice',
                 			renderer: function (val, meta, rec) {
                 				if (!rec.get('parentId')) {
@@ -479,14 +503,17 @@ Ext.define('FamilyDecoration.view.budget.BudgetContent', {
 		        },
 		        {
 		        	text: '损耗',
+		        	menuDisabled: true,
 		        	columns: [
 		        		{
 		        			text: '单价',
 		        			dataIndex: 'lossPercent',
-		        			flex: 1,
+		        			// flex: 0.5,
+		        			width: 48,
                 			draggable: false,
                 			align: 'center',
                 			sortable: false,
+                			menuDisabled: true,
                 			renderer: function (val, meta, rec){
                 				if (!rec.get('parentId') || !rec.get('itemUnit')) {
                 					return '';
@@ -510,6 +537,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetContent', {
 		        	editor: me.isForPreview ? null : {
                 		xtype: 'textarea'
                 	},
+                	menuDisabled: true,
 		        	renderer: function (val, meta, rec){
 		        		if (!rec.get('parentId') || !rec.get('itemUnit')) {
         					return '';
@@ -527,6 +555,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetContent', {
 		        	align: 'center',
 		        	dataIndex: 'cost',
 		        	sortable: false,
+		        	menuDisabled: true,
 		        	renderer: function (val, meta, rec) {
 		        		if (!rec.get('parentId') || !rec.get('itemUnit') || 'NOPQRS'.indexOf(rec.get('itemCode')) != -1) {
         					return '';

@@ -73,6 +73,23 @@ Ext.define('FamilyDecoration.view.basicitem.AddBasicSubItem', {
 			            column: 1
 			        });
 				}
+			}, {
+				xtype: 'button',
+				text: '删除',
+				hidden: me.subItem ? true : false,
+				handler: function (){
+					var grid = this.up('gridpanel'),
+						st = grid.getStore(),
+						rec = grid.getSelectionModel().getSelection();
+					if (rec.length > 0) {
+						rec = rec[0];
+						st.remove(rec);
+						showMsg('已删除！');
+					}
+					else {
+						showMsg('请选择条目！');
+					}
+				}
 			}],
 			plugins: [
 				Ext.create('Ext.grid.plugin.CellEditing', {

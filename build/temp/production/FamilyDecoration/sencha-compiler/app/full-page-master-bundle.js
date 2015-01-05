@@ -1,2 +1,2 @@
 // @tag full-page
-// @require F:\Zend\Apache2\htdocs\familydecoration\app.js
+// @require C:\Program Files (x86)\Zend\Apache2\htdocs\familydecoration\app.js
