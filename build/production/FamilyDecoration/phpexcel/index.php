@@ -178,7 +178,6 @@ $objActSheet->setCellValue('N'.$contentIndex, '备注');
 
 for ($i = 0; $i < count($budgetItems); $i++) {
     $num = $i + $contentIndex + 2;
-    echo $budgetItems[$i]["itemName"].'<p>';
     $objActSheet->setCellValue("A$num", $budgetItems[$i]["itemCode"]);    
     $objActSheet->setCellValue("B$num", iconv('gbk', 'utf-8', $budgetItems[$i]["itemName"]));    
     $objActSheet->setCellValue("C$num", iconv('gbk', 'utf-8', $budgetItems[$i]["itemUnit"]));    
@@ -210,7 +209,7 @@ $objActSheet->getStyle('B'.$commentIndex)->getAlignment()->setVertical(PHPExcel_
 $objActSheet->setCellValue('N'.$commentIndex, '客户签名：');
 $objActSheet->setCellValue('N'.($commentIndex + 2), '时间：                   年                   月                   日');
 
-$outputFileName = iconv('gbk', 'utf-8', urldecode($budget[0]["projectName"])).".xls";  
+$outputFileName = urldecode($budget[0]["projectName"]).".xls";  
 //到文件       
 $objWriter->save($outputFileName);       
   
