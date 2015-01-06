@@ -21,14 +21,14 @@ cd ../..
 move jobs/update.bat backups/%dirName% > nul 2>&1
 
 rem 更新svn
-svn update
+rem svn update
 
 rem 执行本次升级脚本
 jobs/update.bat >nul 2>&1
 
 rem 获取需要备份的pdf 列表
 cd backups/%dirName%
-..\..\bin\cur -s "http://127.0.0.1/fd/libs/budget.php?action=listIds" > budgetIds.txt
+..\..\bin\cur -s "http://127.0.0.1:82/familydecoration/build/production/FamilyDecoration/libs/budget.php?action=listIds" > budgetIds.txt
 rem svn add budgetIds.txt
 
 rem 创建pdf备份文件夹
@@ -37,7 +37,7 @@ mkdir backup-pdf
 rem 遍历curl 获取pdf
 for /f %%a in ('type budgetIds.txt') do (
 	set line=%%a
-	set url="http://127.0.0.1/fd/fpdf/index2.php?budgetId=!line:~0,25!"
+	set url="http://127.0.0.1:82/familydecoration/build/production/FamilyDecoration/fpdf/index2.php?budgetId=!line:~0,25!"
 	..\..\bin\cur -s !url! > !line:~26!
 )
 

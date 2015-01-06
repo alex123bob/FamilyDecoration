@@ -52,6 +52,9 @@
         <copy todir="${build.dir}/tools">
             <fileset dir="${app.dir}/tools" />
         </copy>
+        <copy todir="${build.dir}/phpexcel">
+            <fileset dir="${app.dir}/phpexcel" />
+        </copy>
         <copy todir="${build.dir}">
             <fileset dir="${app.dir}" includes="login.html" />
         </copy>
