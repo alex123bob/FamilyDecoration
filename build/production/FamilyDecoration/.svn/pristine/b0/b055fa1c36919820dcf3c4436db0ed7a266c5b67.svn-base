@@ -2,9 +2,7 @@
 setlocal enabledelayedexpansion
 title backup
 
-echo å¼€å§‹å¤‡ä»½
-
-rem Â´Â´Â½Â¨ÃÃ„Â¼Ã¾Â¼Ã
+rem ´´½¨ÎÄ¼ş¼Ğ
 for /f "tokens=1 delims=/ " %%j in ("%date%") do set d1=%%j
 for /f "tokens=2 delims=/ " %%j in ("%date%") do set d2=%%j
 for /f "tokens=3 delims=/ " %%j in ("%date%") do set d3=%%j
@@ -14,35 +12,35 @@ for /f "tokens=3 delims=:. " %%j in ("%time%") do set t3=%%j
 set dirName=%d1%-%d2%-%d3%-%t1%-%t2%-%t3%
 cd ../backups/
 
-rem Â±Â¸Â·ÃÃŠÃ½Â¾ÃÂ¿Ã¢ ÂºÃ Ã‰ÃÂ´ÃÃ‰Ã½Â¼Â¶Â½Ã…Â±Â¾
+rem ±¸·İÊı¾İ¿â ºÍ ÉÏ´ÎÉı¼¶½Å±¾
 mysqldump -hlocalhost -uroot  familydecoration  > database.sql
-svn add database.sql > nul 2>&1
+svn add database.sql
 
 mkdir %dirName%
 
 cd ../
 move jobs/update.bat backups/%dirName% > nul 2>&1
 
-rem Â¸Ã¼ÃÃ‚svn
-svn update -q
+rem ¸üĞÂsvn
+svn update
 
-rem Ã–Â´ÃÃÂ±Â¾Â´ÃÃ‰Ã½Â¼Â¶Â½Ã…Â±Â¾
+rem Ö´ĞĞ±¾´ÎÉı¼¶½Å±¾
 jobs/update.bat >nul 2>&1
 
-rem Â»Ã±ÃˆÂ¡ÃÃ¨Ã’ÂªÂ±Â¸Â·ÃÂµÃ„pdf ÃÃÂ±Ã­
+rem »ñÈ¡ĞèÒª±¸·İµÄpdf ÁĞ±í
 cd backups/%dirName%
-..\..\bin\cur -s "http://127.0.0.1:82/familydecoration/build/production/FamilyDecoration/libs/budget.php?action=listIds" > budgetIds.txt
+..\..\bin\cur -s "http://127.0.0.1/familydecoration/build/production/FamilyDecoration/libs/budget.php?action=listIds" > budgetIds.txt
 rem svn add budgetIds.txt
 
-rem Â´Â´Â½Â¨pdfÂ±Â¸Â·ÃÃÃ„Â¼Ã¾Â¼Ã
+rem ´´½¨pdf±¸·İÎÄ¼ş¼Ğ
 mkdir backup-pdf
 mkdir backup-xls
 
-rem Â±Ã©Ã€Ãºcurl Â»Ã±ÃˆÂ¡pdf
+rem ±éÀúcurl »ñÈ¡pdf
 for /f %%a in ('type budgetIds.txt') do (
 	set line=%%a
-	set url1="http://127.0.0.1:82/familydecoration/build/production/FamilyDecoration/fpdf/index2.php?budgetId=!line:~0,25!"
-	set url2="http://127.0.0.1:82/familydecoration/build/production/FamilyDecoration/phpexcel/index.php?budgetId=!line:~0,25!"
+	set url1="http://127.0.0.1/familydecoration/build/production/FamilyDecoration/fpdf/index2.php?budgetId=!line:~0,25!"
+	set url2="http://127.0.0.1/familydecoration/build/production/FamilyDecoration/phpexcel/index.php?budgetId=!line:~0,25!"
 	set fileName1="!line:~26!.pdf"
 	set fileName2="!line:~26!.xls"
 	..\..\bin\cur -s !url1! >  !fileName1!
@@ -50,15 +48,13 @@ for /f %%a in ('type budgetIds.txt') do (
 )
 
 
-rem Ã’Ã†Â¶Â¯ÂµÂ½pdf Â±Â¸Â·ÃÃÃ„Â¼Ã¾Â¼Ã
-move *.pdf backup-pdf/ > nul 2>&1
-move *.xls backup-xls/ > nul 2>&1
+rem ÒÆ¶¯µ½pdf ±¸·İÎÄ¼ş¼Ğ
+move *.pdf backup-pdf/
+move *.xls backup-xls/
 
 
 cd ../
-svn commit ./database.sql -m backup -q
+svn commit ./database.sql -m backup
 
-rem Â»Ã˜ÂµÂ½rootÃ„Â¿Ã‚Â¼
+rem »Øµ½rootÄ¿Â¼
 cd ../bin/
-
-echo å¤‡ä»½æˆåŠŸ

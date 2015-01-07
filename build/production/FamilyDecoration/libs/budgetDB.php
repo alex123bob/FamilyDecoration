@@ -129,7 +129,7 @@
 		$res= array();
 		$arr = $mysql->DBGetSomeRows("`budget`", "budgetId,projectName", " where `isDeleted` = 'false' ");
 		foreach($arr as $key => $val) {
-			echo $val['budgetId'].">".str2GBK($val['projectName']).".pdf\n";
+			echo $val['budgetId'].">".str2GBK($val['projectName'])."\n";
 		}
 	}
 	function getBudgets (){

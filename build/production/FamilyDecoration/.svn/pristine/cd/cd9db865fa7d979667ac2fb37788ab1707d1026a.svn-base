@@ -20,20 +20,17 @@ $cancel_time=date("YmdHis");
 $objExcel = new PHPExcel();       
       
 // 创建文件格式写入对象实例, uncomment       
-//$objWriter = new PHPExcel_Writer_Excel5($objExcel);      
-$objWriter = PHPExcel_IOFactory::createWriter($objExcel, 'Excel5');
- 
-//设置文档基本属性       encode error ,dont konw why
-/*$compay = "author";
+$objWriter = new PHPExcel_Writer_Excel5($objExcel);      
+    
+//设置文档基本属性       
 $objProps = $objExcel->getProperties();       
-$objProps->setCreator($compay);  
-$objProps->setLastModifiedBy(urldecode($compay));     
-$objProps->setTitle($compay);       
-$objProps->setTitle(str2GBK(urldecode($budget[0]['projectName'])));       
-$objProps->setSubject($compay);       
-$objProps->setDescription($compay);       
-$objProps->setKeywords($compay));       
-$objProps->setCategory($compay)); */      
+$objProps->setCreator("佳诚装饰室内装修装饰工程");       
+$objProps->setLastModifiedBy("佳诚装饰室内装修装饰工程");       
+$objProps->setTitle(urldecode($budget[0]['projectName']));       
+$objProps->setSubject("佳诚装饰室内装修装饰工程");       
+$objProps->setDescription("佳诚装饰室内装修装饰工程");       
+$objProps->setKeywords("佳诚装饰室内装修装饰工程");       
+$objProps->setCategory("佳诚装饰室内装修装饰工程");       
       
 //*************************************       
 //设置当前的sheet索引，用于后续的内容操作。       
@@ -216,6 +213,9 @@ array_push($projectComments,"注： 1、 本报价单为合同附件， 具有�
 while($i<$commentsLines){
 	$objActSheet->setCellValue("B".($commentIndex+$i),$projectComments[$i]); 
 	$objActSheet->mergeCells('B'.($commentIndex+$i).':F'.($commentIndex+$i));
+	$objActSheet->mergeCells('B'.($commentIndex+$i+1).':F'.($commentIndex+$i+1));
+	$objActSheet->mergeCells('B'.($commentIndex+$i+2).':F'.($commentIndex+$i+2));
+	$objActSheet->mergeCells('B'.($commentIndex+$i).':B'.($commentIndex+$i+2));
 	$objActSheet->getStyle('B'.($commentIndex+$i))->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
 	$i++;
 }
@@ -224,14 +224,17 @@ $objActSheet->setCellValue('N'.$commentIndex, '客户签名：');
 $objActSheet->setCellValue('N'.($commentIndex + 2), '时间：                   年                   月                   日');
 
 //到文件       
-#$objWriter->save($fileName);       
+//$objWriter->save($fileName);       
 //下载  
 header("Pragma: public");
 header("Expires: 0");
 header("Cache-Control:must-revalidate, post-check=0, pre-check=0");
+header("Content-Type:application/force-download");
+header("Content-Type:application/vnd.ms-execl");
+header("Content-Type:application/octet-stream");
+header("Content-Type:application/download");
 header('Content-Disposition:attachment;filename="'.$fileName.'"');
-header("Content-Transfer-Encoding: binary ");
-header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+header("Content-Transfer-Encoding:binary");
 $objWriter->save('php://output');
 　　
 ?>

@@ -4,8 +4,15 @@ include_once './Classes/PHPExcel/Writer/Excel5.php';
 include_once "../libs/conn.php";
 include_once '../libs/budgetDB.php';
 
+$downLoad = false;
+if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'download'){
+	$downLoad = true;
+}
+
 $budget = getBudgetsByBudgetId($_REQUEST["budgetId"]);
 $budgetItems = getBudgetItemsByBudgetId($_REQUEST["budgetId"],true,false);
+
+$fileName = str2GBK(urldecode($budget[0]["projectName"])).".xls";
 
 $cancel_time=date("YmdHis");   
       
@@ -13,17 +20,20 @@ $cancel_time=date("YmdHis");
 $objExcel = new PHPExcel();       
       
 // 创建文件格式写入对象实例, uncomment       
-$objWriter = new PHPExcel_Writer_Excel5($objExcel);      
-    
-//设置文档基本属性       
+//$objWriter = new PHPExcel_Writer_Excel5($objExcel);      
+$objWriter = PHPExcel_IOFactory::createWriter($objExcel, 'Excel5');
+ 
+//设置文档基本属性       encode error ,dont konw why
+/*$compay = "author";
 $objProps = $objExcel->getProperties();       
-$objProps->setCreator("佳诚装饰室内装修装饰工程");       
-$objProps->setLastModifiedBy("佳诚装饰室内装修装饰工程");       
-$objProps->setTitle(urldecode($budget[0]['projectName']));       
-$objProps->setSubject("佳诚装饰室内装修装饰工程");       
-$objProps->setDescription("佳诚装饰室内装修装饰工程");       
-$objProps->setKeywords("佳诚装饰室内装修装饰工程");       
-$objProps->setCategory("佳诚装饰室内装修装饰工程");       
+$objProps->setCreator($compay);  
+$objProps->setLastModifiedBy(urldecode($compay));     
+$objProps->setTitle($compay);       
+$objProps->setTitle(str2GBK(urldecode($budget[0]['projectName'])));       
+$objProps->setSubject($compay);       
+$objProps->setDescription($compay);       
+$objProps->setKeywords($compay));       
+$objProps->setCategory($compay)); */      
       
 //*************************************       
 //设置当前的sheet索引，用于后续的内容操作。       
@@ -196,21 +206,32 @@ for ($i = 0; $i < count($budgetItems); $i++) {
 
 // set comments
 $commentIndex = $num + 2;
-
-$objActSheet->setCellValue("B".$commentIndex, urldecode($budget[0]["comments"]));    
-
-$objActSheet->mergeCells('B'.$commentIndex.':F'.$commentIndex);
-$objActSheet->mergeCells('B'.($commentIndex + 1).':F'.($commentIndex + 1));
-$objActSheet->mergeCells('B'.($commentIndex + 2).':F'.($commentIndex + 2));
-$objActSheet->mergeCells('B'.$commentIndex.':B'.($commentIndex + 2));
-$objActSheet->getStyle('B'.$commentIndex)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-
+$projectComments=urldecode($budget[0]["comments"]);
+$projectComments = explode('>>><<<',$projectComments);
+$commentsLines = count($projectComments);
+$i = 0;
+$commentsLines = $commentsLines +2;
+array_push($projectComments,"");
+array_push($projectComments,"注： 1、 本报价单为合同附件， 具有同等法律效力， 业主签字后生效。");
+while($i<$commentsLines){
+	$objActSheet->setCellValue("B".($commentIndex+$i),$projectComments[$i]); 
+	$objActSheet->mergeCells('B'.($commentIndex+$i).':F'.($commentIndex+$i));
+	$objActSheet->getStyle('B'.($commentIndex+$i))->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+	$i++;
+}
 // set signature
 $objActSheet->setCellValue('N'.$commentIndex, '客户签名：');
 $objActSheet->setCellValue('N'.($commentIndex + 2), '时间：                   年                   月                   日');
 
-$outputFileName = urldecode($budget[0]["projectName"]).".xls";  
 //到文件       
-$objWriter->save($outputFileName);       
-  
+#$objWriter->save($fileName);       
+//下载  
+header("Pragma: public");
+header("Expires: 0");
+header("Cache-Control:must-revalidate, post-check=0, pre-check=0");
+header('Content-Disposition:attachment;filename="'.$fileName.'"');
+header("Content-Transfer-Encoding: binary ");
+header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+$objWriter->save('php://output');
+　　
 ?>
