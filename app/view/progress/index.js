@@ -57,7 +57,14 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 												st.proxy.url = './libs/getprojectyears.php';
 												st.proxy.extraParams = {};
 												st.load({
-													node: frozenPanel.getRootNode()
+													node: frozenPanel.getRootNode(),
+													callback: function (){
+														var progressGrid = Ext.getCmp('gridpanel-projectProgress');
+														frozenPanel.getSelectionModel().deselectAll();
+														progressGrid.initBtn();
+														progressGrid.refresh();
+														Ext.getCmp('tool-frozeProject').disable();
+													}
 												});
 											}
 										}
@@ -202,7 +209,14 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 												st.proxy.url = './libs/getprojectyears.php';
 												st.proxy.extraParams = {};
 												st.load({
-													node: proPanel.getRootNode()
+													node: proPanel.getRootNode(),
+													callback: function (){
+														var progressGrid = Ext.getCmp('gridpanel-projectProgress');
+														proPanel.getSelectionModel().deselectAll();
+														progressGrid.initBtn();
+														progressGrid.refresh();
+														Ext.getCmp('tool-unfreezeProject').disable();
+													}
 												});
 											}
 										}
@@ -238,15 +252,31 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 			refresh: function (rec){
 				var splitFlag = '<>',
 					grid = this;
-				var progress = rec.get('projectProgress').split(splitFlag),
-					projectId = rec.getId();
-				Ext.each(progress, function (val, i, pro){
-					pro[i] = {
-						projectProgress: val,
-						progressId: projectId + '-' + i
-					};
-				});
-				grid.getStore().loadData(progress);
+				if (rec) {
+					var progress = rec.get('projectProgress').split(splitFlag),
+						projectId = rec.getId();
+					Ext.each(progress, function (val, i, pro){
+						pro[i] = {
+							projectProgress: val,
+							progressId: projectId + '-' + i
+						};
+					});
+					grid.getStore().loadData(progress);
+				}
+				else {
+					grid.getStore().loadData([]);
+				}
+			},
+			initBtn: function (){
+				var editBtn = Ext.getCmp('button-addProgress'),
+					delBtn = Ext.getCmp('button-deleteProgress'),
+					chartBtn = Ext.getCmp('button-showProjectChart'),
+					budgetBtn = Ext.getCmp('button-showBudget');
+
+				editBtn.disable();
+				delBtn.disable();
+				chartBtn.disable();
+				budgetBtn.disable();
 			},
 			tbar: [{
 				text: '修改',
