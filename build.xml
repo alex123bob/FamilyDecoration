@@ -58,11 +58,23 @@
         <copy todir="${build.dir}">
             <fileset dir="${app.dir}" includes="login.html" />
         </copy>
+        <copy todir="${build.dir}/highchart">
+            <fileset dir="${app.dir}/highchart" />
+        </copy>
         <!-- <copy todir="${build.dir}/config">
             <fileset dir="${app.dir}/config" />
         </copy>
         <copy todir="${build.dir}/views">
             <fileset dir="${app.dir}/views" />
         </copy> -->
+    </target>
+
+    <target name="-before-init">
+        <tstamp>
+            <format property="tstamp.full" pattern="yyyyMMddHHmmss"/>
+        </tstamp>
+
+        <property name="build.classes.name"
+                  value="all-${tstamp.full}.js"/>
     </target>
 </project>

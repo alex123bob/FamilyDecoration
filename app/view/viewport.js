@@ -4,7 +4,8 @@ Ext.define('FamilyDecoration.view.Viewport', {
         'Ext.tab.Panel',
         'Ext.grid.Panel',
         'Ext.layout.container.Border',
-        'FamilyDecoration.store.Feature'
+        'FamilyDecoration.store.Feature',
+        'FamilyDecoration.view.chat.Index'
     ],
 
     layout: {
@@ -16,34 +17,35 @@ Ext.define('FamilyDecoration.view.Viewport', {
     autoScroll: true,
 
     initComponent: function (){
-        var featureStore = Ext.create('FamilyDecoration.store.Feature');
-        featureStore.filterFeature(User);
+        var featureStore = Ext.create('FamilyDecoration.store.Feature', {
+            listeners: {
+                beforeappend: function (pNode, node, opts){
+                    return FamilyDecoration.store.Feature.filterFeature(node);
+                }
+            }
+        });
 
         this.items = [{
-            xtype: 'gridpanel',
+            xtype: 'treepanel',
             region: 'west',
             split: true,
             collapsible: true,
             title: '选项',
-            hideHeaders: true,
-            columns: [
-                {
-                    dataIndex: 'name', 
-                    flex: 1, 
-                    sortable: false,
-                    menuDisabled: true,
-                    draggable: false
-                }
-            ],
+            rootVisible: false,
             width: 200,
             minWidth: 200,
             maxWidth: 400,
             store: featureStore,
             margin: '8 1 2 8',
             listeners: {
+                itemclick: function (view, rec){
+                    if (/-parent/i.test(rec.get('cmp'))) {
+                        return false;
+                    }
+                },
                 selectionchange: function (selModel, sels){
                     var rec = sels[0], xtype;
-                    if (rec) {
+                    if (rec && /-index/i.test(rec.get('cmp'))) {
                         xtype = rec.get('cmp');
                         changeMainCt(xtype);
                     }
@@ -55,7 +57,7 @@ Ext.define('FamilyDecoration.view.Viewport', {
             layout: 'fit',
             margin: '8 8 2 1',
             items: [{
-                xtype: 'bulletin-index'
+                // xtype: 'bulletin-index'
             }]
         }, {
             xtype: 'container',
@@ -65,16 +67,36 @@ Ext.define('FamilyDecoration.view.Viewport', {
         }];
 
         this.on('afterrender', function (){
-            Ext.util.Cookies.set('lastXtype', 'basicitem-index');
+            var tree = this.down('treepanel'),
+                root = tree.getStore().getRootNode(),
+                bulletin = root.findChild('cmp', 'bulletin-index', true),
+                chartPanel;
 
-            var grid = this.down('gridpanel'),
-                st = grid.getStore(),
-                bulletin = st.getById('bulletin-index');
+            Ext.util.Cookies.clear('lastXtype');
+            if (User.isGeneral()) {
+                chartPanel = root.findChild('cmp', 'chart-index', true);
+                tree.getSelectionModel().select(chartPanel);
+            }
+            else {
+                tree.getSelectionModel().select(bulletin);
+            }
 
-            this.down('gridpanel').getSelectionModel().select(bulletin);
-
+            Ext.select('[name="realname"]').elements[0].innerHTML = User.getRealName();
             Ext.select('[name="authority"]').elements[0].innerHTML = User.getStatus();
             Ext.select('[name="account"]').elements[0].innerHTML = User.getName();
+
+            function heartBeat (){
+                Ext.Ajax.request({
+                    url: './libs/sys.php?action=adminHeartBeat',
+                    method: 'GET'
+                });
+            }
+
+            if (User.isAdmin()) {
+                Ext.defer(heartBeat, 2000);
+                // Heartbeat
+                setInterval(heartBeat, 60000);
+            }
         });
         
         this.callParent();
@@ -119,7 +141,7 @@ function changeMainCt (xtype){
         });
     }
 
-    var cmp = option.getStore().find('cmp', xtype);
+    var cmp = option.getStore().getRootNode().findChild('cmp', xtype, true);
     option.getSelectionModel().select(cmp);
 
     Ext.util.Cookies.set('lastXtype', xtype);

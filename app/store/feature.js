@@ -1,50 +1,152 @@
 Ext.define('FamilyDecoration.store.Feature', {
-	extend: 'Ext.data.Store',
+	extend: 'Ext.data.TreeStore',
 	model: 'FamilyDecoration.model.Feature',
-	data: [{
-        name: '公告栏信息',
-        cmp: 'bulletin-index'
-    }, {
-        name: '添加预算',
-        cmp: 'budget-index'
-    }, {
-        name: '查看图库',
-        cmp: 'chart-index'
-    }, {
-        name: '各工程进度情况',
-        cmp: 'progress-index'
-    }, {
-        name: '基础项目添加',
-        cmp: 'basicitem-index'
-    }, {
-        name: '应用设置',
-        cmp: 'setting-index'
-    }],
 
     autoLoad: true,
+    root: {
+        expanded: true,
+        children: [
+            { 
+                name: "公告栏信息",
+                cmp: 'bulletin-index',
+                leaf: true,
+                icon: 'resources/img/menu_item.ico'
+            },
+            {
+                name: "工作日志", 
+                expanded: true, 
+                icon: 'resources/img/menu.ico',
+                cmp: 'logbook-parent',
+                children: [
+                    {
+                        name: "我的工作日志",
+                        cmp: 'mylog-index',
+                        leaf: true,
+                        icon: 'resources/img/menu_item.ico'
+                    },
+                    {
+                        name: "工作日志查看",
+                        cmp: 'checklog-index',
+                        leaf: true,
+                        icon: 'resources/img/menu_item.ico'
+                    }
+                ] 
+            },
+            {
+                name: "预算", 
+                expanded: true, 
+                icon: 'resources/img/menu.ico',
+                cmp: 'budget-parent',
+                children: [
+                    {
+                        name: "添加预算",
+                        cmp: 'budget-index',
+                        leaf: true,
+                        icon: 'resources/img/menu_item.ico'
+                    },
+                    {
+                        name: "基础项目添加",
+                        cmp: 'basicitem-index',
+                        leaf: true,
+                        icon: 'resources/img/menu_item.ico'
+                    }
+                ] 
+            },
+            { 
+                name: "查看图库",
+                cmp: 'chart-index',
+                leaf: true,
+                icon: 'resources/img/menu_item.ico'
+            },
+            {
+                name: "工程情况", 
+                expanded: true, 
+                cmp: 'project-parent',
+                icon: 'resources/img/menu.ico',
+                children: [
+                    {
+                        name: "各工程进度情况",
+                        cmp: 'progress-index',
+                        leaf: true,
+                        icon: 'resources/img/menu_item.ico'
+                    },
+                    {
+                        name: "计划生成",
+                        cmp: 'plan-index',
+                        // cmp: '',
+                        leaf: true,
+                        icon: 'resources/img/menu_item.ico'
+                    }
+                ] 
+            },
+            {
+                name: "应用设置", 
+                expanded: true,
+                cmp: 'setting-parent', 
+                icon: 'resources/img/menu.ico',
+                children: [
+                    {
+                        name: "账户设置",
+                        cmp: 'setting-index',
+                        leaf: true,
+                        icon: 'resources/img/menu_item.ico'
+                    }
+                ] 
+            }
+        ]
+    },
 
-    // 载入之前进行过滤，通过获取用户身份，过滤掉对应功能
-    filterFeature: function (user){
-    	var store = this,
-            flag;
+    statics: {
+        // 载入之前进行过滤，通过获取用户身份，过滤掉对应功能
+        filterFeature: function (rec){
+            var flag;
 
-    	store.filterBy(function (rec){
             if (rec.get('cmp') == '') {
                 flag = false;
             }
+            else if (rec.get('cmp') == 'bulletin-index') {
+                flag = User.isGeneral() ? false : true;
+            }
+            else if (rec.get('cmp') == 'logbook-parent') {
+                flag = User.isAdmin() || User.isManager() || User.isDesignStaff() || User.isProjectStaff() || User.isSupervisor() || User.isBusinessStaff() || User.isAdministrationStaff() || User.isPropagandaManager() || User.isPropagandaStaff() ? true : false;
+            }
+            else if (rec.get('cmp') == 'mylog-index') {
+                flag = User.isAdmin() || User.isManager() || User.isDesignStaff() || User.isProjectStaff() || User.isSupervisor() || User.isBusinessStaff() || User.isAdministrationStaff() || User.isPropagandaManager() || User.isPropagandaStaff() ? true : false;
+            }
+            else if (rec.get('cmp') == 'checklog-index') {
+                flag = User.isAdmin() || User.isManager() ? true : false;
+            }
+            else if (rec.get('cmp') == 'budget-parent') {
+                flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() ? true : false;
+            }
+            else if (rec.get('cmp') == 'chart-index') {
+                flag = true;
+            }
+            else if (rec.get('cmp') == 'project-parent') {
+                flag = true;
+            }
+            else if (rec.get('cmp') == 'progress-index') {
+                flag = true;
+            }
+            else if (rec.get('cmp') == 'plan-index') {
+                flag = User.isAdmin() || User.isProjectManager() || User.isProjectStaff() ? true : false;
+            }
+            else if (rec.get('cmp') == 'setting-parent') {
+                flag = User.isAdmin() || User.isBusinessStaff() ? true : false;
+            }
             else if (rec.get('cmp') == 'basicitem-index') {
-                flag =  user.isAdmin() ? true : false;
+                flag =  User.isAdmin() ? true : false;
             }
             else if (rec.get('cmp') == 'setting-index') {
-                flag = user.isAdmin() || user.isManager() ? true : false;
+                flag = User.isAdmin() || User.isBusinessStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'budget-index') {
-                flag = user.isAdmin() || user.isManager() ? true : false;
+                flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() ? true : false;
             }
             else {
                 flag = true;
             }
-    		return flag;
-    	});
+            return flag;
+        }
     }
 });

@@ -36,13 +36,15 @@
 			$name = $_POST["name"];
 			$password = $_POST["password"];
 			$level = $_POST["level"];
+			$realname = $_POST["realname"];
+			$projectId = isset($_POST["projectId"]) ? $_POST["projectId"] : '' ;
 			global $mysql, $prefix;
 			$user = $mysql->DBGetOneRow("`user`", "*", "`name` = '$name'");
 			if($user){
 				throw new Exception('用户已经存在！');
 			}
 			$password = md5($prefix.$password);
-			$mysql->DBInsert("`user`", "`name`, `password`, `level`","'".$name."', '".$password."', ".$level);
+			$mysql->DBInsert("`user`", "`name`, `realname`, `password`, `level` , `projectId`" ,"'".$name."', '".$realname."', '".$password."', '".$level."','".$projectId."'");
 			return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 
@@ -59,9 +61,10 @@
 		if ($user["name"] == $name && $user["password"] == $password) {
 			$sessionId = session_id();
 			$_SESSION["name"] = $user["name"];
+			$_SESSION["realname"] = $user["realname"];
 			$_SESSION["password"] = $user["password"];
 			$_SESSION["level"] = $user["level"];
-			if($name == "admin"){
+			if($name == "admin" || $name == "vadmin"){
 				$_SESSION["admin"] = true;
 				//update
 				$condition = "`id` = '2' ";
@@ -121,9 +124,11 @@
 		$name = $_POST["name"];
 		$password = $_POST["password"];
 		$level = $_POST["level"];
+		$realname = $_POST["realname"];
+		$projectId = isset($_POST["projectId"]) ? $_POST["projectId"] : '';
 		global $mysql, $prefix;
 		$password = md5($prefix.$password);
-		$mysql->DBUpdateSomeCols("`user`", "`name` = '$name'", "`password` = '$password', `level` = '$level'");
+		$mysql->DBUpdateSomeCols("`user`", "`name` = '$name'", "`realname` = '$realname', `password` = '$password', `level` = '$level' , `projectId` = '$projectId' ");
 		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 
@@ -155,7 +160,9 @@
 	 */
 	function getList (){
 		global $mysql, $prefix;
-		$res = $mysql->DBGetAllRows("`user`", "*");
-		return json_encode($res);
+		$arr = $mysql->DBGetSomeRows("`user` ", " user.*,p.projectName "," left join project p on p.projectId = user.projectId " ,"");
+		//select u.*,p.projectName from user u left join project p on p.projectId = u.projectId;
+		//$res = $mysql->DBGetAllRows("`user`", "*");
+		return json_encode($arr);
 	}
 ?>

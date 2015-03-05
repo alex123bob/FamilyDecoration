@@ -1,6 +1,7 @@
 Ext.define('FamilyDecoration.model.Feature', {
-	extend: 'Ext.data.Model',
+	extend: 'Ext.data.TreeModel',
 	fields: [
+		{name: 'text', mapping: 'name'},
 		{name: 'name', type: 'string'},
 		{name: 'cmp', type: 'string'}
 	],

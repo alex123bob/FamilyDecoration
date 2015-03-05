@@ -14,6 +14,10 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.Budget": "app/controller/budget.js",
   "FamilyDecoration.controller.Bulletin": "app/controller/bulletin.js",
   "FamilyDecoration.controller.Chart": "app/controller/chart.js",
+  "FamilyDecoration.controller.Chat": "app/controller/chat.js",
+  "FamilyDecoration.controller.CheckLog": "app/controller/checklog.js",
+  "FamilyDecoration.controller.MyLog": "app/controller/mylog.js",
+  "FamilyDecoration.controller.Plan": "app/controller/plan.js",
   "FamilyDecoration.controller.Progress": "app/controller/progress.js",
   "FamilyDecoration.controller.Setting": "app/controller/setting.js",
   "FamilyDecoration.controller.Viewport": "app/controller/viewport.js",
@@ -23,7 +27,11 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.model.BudgetItem": "app/model/budgetitem.js",
   "FamilyDecoration.model.Chart": "app/model/chart.js",
   "FamilyDecoration.model.Feature": "app/model/feature.js",
+  "FamilyDecoration.model.LogList": "app/model/loglist.js",
+  "FamilyDecoration.model.MemberList": "app/model/memberlist.js",
+  "FamilyDecoration.model.Plan": "app/model/plan.js",
   "FamilyDecoration.model.Project": "app/model/project.js",
+  "FamilyDecoration.model.ScrutinizeList": "app/model/scrutinizelist.js",
   "FamilyDecoration.model.User": "app/model/user.js",
   "FamilyDecoration.store.BasicItem": "app/store/basicitem.js",
   "FamilyDecoration.store.BasicSubItem": "app/store/basicsubitem.js",
@@ -31,7 +39,11 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.store.BudgetItem": "app/store/budgetitem.js",
   "FamilyDecoration.store.Chart": "app/store/chart.js",
   "FamilyDecoration.store.Feature": "app/store/feature.js",
+  "FamilyDecoration.store.LogList": "app/store/loglist.js",
+  "FamilyDecoration.store.MemberList": "app/store/memberlist.js",
+  "FamilyDecoration.store.PlanCategory": "app/store/plancategory.js",
   "FamilyDecoration.store.Project": "app/store/project.js",
+  "FamilyDecoration.store.ScrutinizeList": "app/store/scrutinizelist.js",
   "FamilyDecoration.store.User": "app/store/user.js",
   "FamilyDecoration.view.Viewport": "app/view/viewport.js",
   "FamilyDecoration.view.basicitem.AddBasicItem": "app/view/basicitem/addbasicitem.js",
@@ -51,6 +63,15 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.chart.BatchRemove": "app/view/chart/batchremove.js",
   "FamilyDecoration.view.chart.Index": "app/view/chart/index.js",
   "FamilyDecoration.view.chart.UploadForm": "app/view/chart/uploadform.js",
+  "FamilyDecoration.view.chat.Index": "app/view/chat/index.js",
+  "FamilyDecoration.view.checklog.Index": "app/view/checklog/index.js",
+  "FamilyDecoration.view.checklog.MemberList": "app/view/checklog/memberlist.js",
+  "FamilyDecoration.view.checklog.UserLogList": "app/view/checklog/userloglist.js",
+  "FamilyDecoration.view.mylog.EditLogDetail": "app/view/mylog/editlogdetail.js",
+  "FamilyDecoration.view.mylog.Index": "app/view/mylog/index.js",
+  "FamilyDecoration.view.mylog.LogList": "app/view/mylog/loglist.js",
+  "FamilyDecoration.view.plan.EditPlan": "app/view/plan/editplan.js",
+  "FamilyDecoration.view.plan.Index": "app/view/plan/index.js",
   "FamilyDecoration.view.progress.EditProgress": "app/view/progress/editprogress.js",
   "FamilyDecoration.view.progress.EditProject": "app/view/progress/editproject.js",
   "FamilyDecoration.view.progress.Index": "app/view/progress/index.js",
@@ -910,6 +931,10 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.Budget": [],
   "FamilyDecoration.controller.Bulletin": [],
   "FamilyDecoration.controller.Chart": [],
+  "FamilyDecoration.controller.Chat": [],
+  "FamilyDecoration.controller.CheckLog": [],
+  "FamilyDecoration.controller.MyLog": [],
+  "FamilyDecoration.controller.Plan": [],
   "FamilyDecoration.controller.Progress": [],
   "FamilyDecoration.controller.Setting": [],
   "FamilyDecoration.controller.Viewport": [],
@@ -919,7 +944,11 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.model.BudgetItem": [],
   "FamilyDecoration.model.Chart": [],
   "FamilyDecoration.model.Feature": [],
+  "FamilyDecoration.model.LogList": [],
+  "FamilyDecoration.model.MemberList": [],
+  "FamilyDecoration.model.Plan": [],
   "FamilyDecoration.model.Project": [],
+  "FamilyDecoration.model.ScrutinizeList": [],
   "FamilyDecoration.model.User": [],
   "FamilyDecoration.store.BasicItem": [],
   "FamilyDecoration.store.BasicSubItem": [],
@@ -927,7 +956,11 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.store.BudgetItem": [],
   "FamilyDecoration.store.Chart": [],
   "FamilyDecoration.store.Feature": [],
+  "FamilyDecoration.store.LogList": [],
+  "FamilyDecoration.store.MemberList": [],
+  "FamilyDecoration.store.PlanCategory": [],
   "FamilyDecoration.store.Project": [],
+  "FamilyDecoration.store.ScrutinizeList": [],
   "FamilyDecoration.store.User": [],
   "FamilyDecoration.view.Viewport": [],
   "FamilyDecoration.view.basicitem.AddBasicItem": [],
@@ -947,6 +980,15 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.chart.BatchRemove": [],
   "FamilyDecoration.view.chart.Index": [],
   "FamilyDecoration.view.chart.UploadForm": [],
+  "FamilyDecoration.view.chat.Index": [],
+  "FamilyDecoration.view.checklog.Index": [],
+  "FamilyDecoration.view.checklog.MemberList": [],
+  "FamilyDecoration.view.checklog.UserLogList": [],
+  "FamilyDecoration.view.mylog.EditLogDetail": [],
+  "FamilyDecoration.view.mylog.Index": [],
+  "FamilyDecoration.view.mylog.LogList": [],
+  "FamilyDecoration.view.plan.EditPlan": [],
+  "FamilyDecoration.view.plan.Index": [],
   "FamilyDecoration.view.progress.EditProgress": [],
   "FamilyDecoration.view.progress.EditProject": [],
   "FamilyDecoration.view.progress.Index": [],
@@ -1973,6 +2015,10 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.Budget": [],
   "FamilyDecoration.controller.Bulletin": [],
   "FamilyDecoration.controller.Chart": [],
+  "FamilyDecoration.controller.Chat": [],
+  "FamilyDecoration.controller.CheckLog": [],
+  "FamilyDecoration.controller.MyLog": [],
+  "FamilyDecoration.controller.Plan": [],
   "FamilyDecoration.controller.Progress": [],
   "FamilyDecoration.controller.Setting": [],
   "FamilyDecoration.controller.Viewport": [],
@@ -1982,7 +2028,11 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.model.BudgetItem": [],
   "FamilyDecoration.model.Chart": [],
   "FamilyDecoration.model.Feature": [],
+  "FamilyDecoration.model.LogList": [],
+  "FamilyDecoration.model.MemberList": [],
+  "FamilyDecoration.model.Plan": [],
   "FamilyDecoration.model.Project": [],
+  "FamilyDecoration.model.ScrutinizeList": [],
   "FamilyDecoration.model.User": [],
   "FamilyDecoration.store.BasicItem": [],
   "FamilyDecoration.store.BasicSubItem": [],
@@ -1990,7 +2040,11 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.store.BudgetItem": [],
   "FamilyDecoration.store.Chart": [],
   "FamilyDecoration.store.Feature": [],
+  "FamilyDecoration.store.LogList": [],
+  "FamilyDecoration.store.MemberList": [],
+  "FamilyDecoration.store.PlanCategory": [],
   "FamilyDecoration.store.Project": [],
+  "FamilyDecoration.store.ScrutinizeList": [],
   "FamilyDecoration.store.User": [],
   "FamilyDecoration.view.Viewport": [],
   "FamilyDecoration.view.basicitem.AddBasicItem": [
@@ -2043,6 +2097,33 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.chart.UploadForm": [
     "widget.chart-uploadform"
+  ],
+  "FamilyDecoration.view.chat.Index": [
+    "widget.chat-index"
+  ],
+  "FamilyDecoration.view.checklog.Index": [
+    "widget.checklog-index"
+  ],
+  "FamilyDecoration.view.checklog.MemberList": [
+    "widget.checklog-memberlist"
+  ],
+  "FamilyDecoration.view.checklog.UserLogList": [
+    "widget.checklog-userloglist"
+  ],
+  "FamilyDecoration.view.mylog.EditLogDetail": [
+    "widget.mylog-editlogdetail"
+  ],
+  "FamilyDecoration.view.mylog.Index": [
+    "widget.mylog-index"
+  ],
+  "FamilyDecoration.view.mylog.LogList": [
+    "widget.mylog-loglist"
+  ],
+  "FamilyDecoration.view.plan.EditPlan": [
+    "widget.plan-editplan"
+  ],
+  "FamilyDecoration.view.plan.Index": [
+    "widget.plan-index"
   ],
   "FamilyDecoration.view.progress.EditProgress": [
     "widget.progress-editprogress"

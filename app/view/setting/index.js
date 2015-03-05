@@ -14,19 +14,44 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 		me.items = [{
 			xtype: 'gridpanel',
 			columns: [{
+				text: '姓名',
+				flex: 1,
+				dataIndex: 'realname'
+			}, {
 				text: '用户名',
 				flex: 1,
 				dataIndex: 'name'
+			}, {
+				text: '部门',
+				flex: 1,
+				dataIndex: 'level',
+				renderer: function (val){
+					return User.renderDepartment(val);
+				}
 			}, {
 				text: '等级',
 				flex: 1,
 				dataIndex: 'level',
 				renderer: function (val){
-					return User.render(val);
+					return User.renderRole(val);
 				}
+			}, {
+				text: '项目名称',
+				flex: 1,
+				dataIndex: 'projectName'
 			}],
 			store: Ext.create('FamilyDecoration.store.User', {
-				autoLoad: true
+				autoLoad: true,
+				filters: [
+					function (item) {
+						if (User.isBusinessStaff()) {
+							return item.get('level') == '006-001';
+						}
+						else if (User.isAdmin()) {
+							return true;
+						}
+					}
+				]
 			}),
 			tbar: [
 				{
@@ -41,7 +66,7 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 				}, 
 				{
 					text: '修改账号',
-					hidden: User.isAdmin() ? false : true,
+					hidden: User.isAdmin() || User.isBusinessStaff() ? false : true,
 					name: 'button-editaccount',
 					id: 'button-editaccount',
 					disabled: true,
@@ -142,6 +167,7 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 					else {
 						edit.disable();
 						reset.disable();
+						del.disable();
 					}
 				}
 			}

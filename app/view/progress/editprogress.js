@@ -82,18 +82,27 @@ Ext.define('FamilyDecoration.view.progress.EditProgress', {
 					progressPanel = Ext.getCmp('gridpanel-projectProgress'),
 					arr = grid.getStore().data.items,
 					splitFlag = '<>',
-					params = '';
+					progress = '',
+					params = {},
+					progressComment = pro.get('projectProgressComment');
 				for (var i = 0; i < arr.length; i++) {
 					if (arr[i].get('strip')) {
-						params += arr[i].get('strip') + splitFlag;
+						progress += arr[i].get('strip') + splitFlag;
 					}
 					else {
 						continue;
 					}
 				}
-				params = params.slice(0, params.length - splitFlag.length);
+				progress = progress.slice(0, progress.length - splitFlag.length);
+
+				var number = progress.split('<>').length - progressComment.split('<>').length;
+				while (number-- > 0) {
+					progressComment = '<>' + progressComment;
+				}
+
 				params = {
-					projectProgress: params
+					projectProgress: progress,
+					projectProgressComment: progressComment
 				};
 
 				pro && Ext.apply(params, {

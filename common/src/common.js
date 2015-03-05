@@ -295,6 +295,7 @@ function logout (){
             if (success) {
                 var obj = Ext.decode(res.responseText);
                 if (obj.status == 'successful') {
+                    Ext.util.Cookies.clear('lastXtype');
                     location.href = './login.html';
                 }
             }

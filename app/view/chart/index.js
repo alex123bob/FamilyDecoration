@@ -58,6 +58,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 					}
 				}
 			} ,{
+				hidden: User.isGeneral() ? true : false,
 				xtype: 'gridpanel',
 				name: 'gridpanel-chartCategory',
 				id: 'gridpanel-chartCategory',
@@ -81,6 +82,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 					}
 				],
 				bbar: [{
+					hidden: User.isGeneral() ? true : false,
 					text: '添加',
 					id: 'button-addCategory',
 					name: 'button-addCategory',
@@ -91,6 +93,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 						win.show();
 					}
 				}, {
+					hidden: User.isGeneral() ? true : false,
 					text: '修改',
 					id: 'button-editCategory',
 					name: 'button-editCategory',
@@ -123,6 +126,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 						}, window, false, rec.get('chartCategory'));
 					}
 				}, {
+					hidden: User.isGeneral() ? true : false,
 					text: '删除',
 					id: 'button-deleteCategory',
 					name: 'button-deleteCategory',
@@ -277,6 +281,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 				}
 			},
 			tbar: [{
+				hidden: User.isGeneral() ? true : false,
 				text: '项目图库添加',
 				id: 'button-addProjectChart',
 				name: 'button-addProjectChart',
@@ -335,6 +340,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 					win.show();
 				}
 			}, {
+				hidden: User.isGeneral() ? true : false,
 				text: '自定义图库添加',
 				id: 'button-addCustomizedChart',
 				name: 'button-addCustomizedChart',
@@ -391,6 +397,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 					win.show();
 				}
 			}, {
+				hidden: User.isGeneral() ? true : false,
 				text: '删除',
 				id: 'button-deleteChart',
 				name: 'button-deleteChart',
@@ -476,6 +483,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 					})
 				}
 			}, {
+				hidden: User.isGeneral() ? true : false,
 				text: '批量删除',
 				id: 'button-batchremove',
 				name: 'button-batchremove',

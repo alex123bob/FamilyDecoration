@@ -1,0 +1,55 @@
+<?php
+	function deleteLogList($logListId){
+		global $mysql;
+		$condition = "`id` = '$logListId' ";
+		$setValue = " `isDeleted` = 'true'";
+		$mysql->DBUpdateSomeCols("`log_list`", $condition, $setValue);
+
+		$condition = "`logListId` = '$logListId' ";
+		$setValue = " `isDeleted` = 'true'";
+		$mysql->DBUpdateSomeCols("`log_detail`", $condition, $setValue);
+		return array('status'=>'successful', 'errMsg' => '');
+	}
+
+	function deleteLogDetail($logDetailId){
+		global $mysql;
+		$condition = "`id` = '$logDetailId' ";
+		$setValue = " `isDeleted` = 'true'";
+		$mysql->DBUpdateSomeCols("`log_detail`", $condition, $setValue);
+		return array('status'=>'successful', 'errMsg' => '');
+	}
+	
+	function addLogList($post){		
+		$obj = array(
+			"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
+			"logName"=>$post["logName"],
+			"ownerId"=>$post["ownerId"]
+		);
+		global $mysql;
+		$mysql->DBInsertAsArray("`log_list`",$obj);
+		return array('status'=>'successful', 'errMsg' => '','logListId'=> $obj["id"]);
+	}
+
+	function addLogDetail($post){		
+		$obj = array(
+			"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
+			"logListId"=>$post["logListId"],
+			"content"=>$post["content"]
+		);
+		global $mysql;
+		$mysql->DBInsertAsArray("`log_list`",$obj);
+		return array('status'=>'successful', 'errMsg' => '');
+	}
+
+	function getLogListYears(){
+		global $mysql;
+        $res= array();
+		$arr = $mysql->DBGetSomeRows("`log_list`", " DISTINCT year(createTime)  ", " where isDeleted = 'false' ","");
+		$count = 0;
+		foreach($arr as $key => $val) {
+		    $res[$count] = array("year"=>$val[0]);
+		    $count ++;
+        }
+		return $res;
+	}
+?>

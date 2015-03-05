@@ -6,15 +6,10 @@
 	 * @param array $pro [consists of projectId, projectName, projectProgress, projectChart]
 	 */
 	function addProject (array $pro){
-		try {
-			global $mysql;
-			$mysql->DBInsert("`project`", "`projectId`, `projectName`, `projectProgress`, `projectChart`, `projectTime`, `isFrozen`",
-			 	"'".$pro['projectId']."', '".$pro['projectName']."', '".$pro['projectProgress']."', '".$pro['projectChart']."', '".$pro['projectTime']."', 0");
-			return json_encode(array('status'=>'successful', 'errMsg' => ''));
-		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		global $mysql;
+		$mysql->DBInsert("`project`", "`projectId`, `projectName`, `projectProgress`, `projectChart`, `projectTime`, `isFrozen`,`projectProgressComment` ",
+		 	"'".$pro['projectId']."', '".$pro['projectName']."', '".$pro['projectProgress']."', '".$pro['projectChart']."', '".$pro['projectTime']."', 0 ,'".$pro['projectProgressComment']."'");
+		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 
 	/**
@@ -23,122 +18,112 @@
 	 * @return [type]     [description]
 	 */
 	function delProject ($id){
-		try {
-			global $mysql;
-			$mysql->DBDelete('`project`', "`projectId` = '".$id."'");
-			return json_encode(array('status'=>'successful', 'errMsg' => ''));
-		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		global $mysql;
+		$mysql->DBDelete('`project`', "`projectId` = '".$id."'");
+		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 
 	function getProjectNames (){
-		try {
-			global $mysql;
-			$arr = $mysql->DBGetAllRows("`project`", "`projectName`");
+		global $mysql;
+		$arr = $mysql->DBGetAllRows("`project`", "`projectName`");
 
-			if ($arr) {
-				// Url encode Chinese characters and then decode them, in order to avert garbled characters.
-				foreach($arr as $key => $val) {
-					$arr[$key]['projectName'] = urlencode($val['projectName']);
-				}
-				$arr = urldecode(json_encode($arr));
+		if ($arr) {
+			// Url encode Chinese characters and then decode them, in order to avert garbled characters.
+			foreach($arr as $key => $val) {
+				$arr[$key]['projectName'] = urlencode($val['projectName']);
 			}
-			else {
-				$arr = json_encode(array());
-			}
-			
-			return $arr;
+			$arr = urldecode(json_encode($arr));
 		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
+		else {
+			$arr = json_encode(array());
 		}
+		
+		return $arr;
 	}
 
+	function getVisitorProject($visitorName,$filter){
+		$select = "";
+		switch($filter){
+			case "onlyYears":
+				$select = " YEAR(p.projectTime) as projectYear ";
+				break;
+			case "onlyMonth":
+				$select = " MONTH(p.projectTime) as projectMonth  ";
+				break;
+			case "project":
+			default:
+				$select = " p.*,MONTH(p.projectTime) as projectMonth,YEAR(p.projectTime) as projectYear ";
+			break;
+		}
+		$where = " left join project p on p.projectId = user.projectId where user.name = '$visitorName' and p.projectId is not null "; 
+		global $mysql;
+		$arr = $mysql->DBGetSomeRows("`user`", $select , $where,"");
+		$arr = $arr ? json_encode($arr) : json_encode(array());	
+		return $arr;
+	}
 	function getProjectYears (){
-		try {
-			global $mysql;
-			$arr = $mysql->DBGetAllRows("`project`", "distinct YEAR(`projectTime`) as `projectYear`", " ORDER BY `projectTime` DESC");
-
-			$arr = $arr ? json_encode($arr) : json_encode(array());
-			
-			return $arr;
-		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		global $mysql;
+		$arr = $mysql->DBGetAllRows("`project`", "distinct YEAR(`projectTime`) as `projectYear`", " ORDER BY `projectTime` DESC");
+		$arr = $arr ? json_encode($arr) : json_encode(array());	
+		return $arr;
 	}
 
 	function getProjectMonths ($year){
-		try {
-			global $mysql;
-			$arr = $mysql->DBGetSomeRows("`project`", "distinct MONTH(`projectTime`) as `projectMonth`", "where YEAR(`projectTime`) = $year",
-				" ORDER BY `projectTime` DESC");
+		global $mysql;
+		$arr = $mysql->DBGetSomeRows("`project`", "distinct MONTH(`projectTime`) as `projectMonth`", "where YEAR(`projectTime`) = $year",
+			" ORDER BY `projectTime` DESC");
 
-			$arr = $arr ? json_encode($arr) : json_encode(array());
-			
-			return $arr;
-		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		$arr = $arr ? json_encode($arr) : json_encode(array());
+		
+		return $arr;
 	}
 
 	function getProjects ($year, $month){
-		try {
-			global $mysql;
-			$arr = $mysql->DBGetSomeRows("`project`", "*", "where YEAR(`projectTime`) = $year and MONTH(`projectTime`) = $month");
+		global $mysql;
+		$arr = $mysql->DBGetSomeRows("`project`", "*", "where YEAR(`projectTime`) = $year and MONTH(`projectTime`) = $month");
 
-			if ($arr) {
-				// Url encode Chinese characters and then decode them, in order to avert garbled characters.
-				foreach($arr as $key => $val) {
-					$arr[$key]['projectName'] = urlencode($val['projectName']);
-					$arr[$key]['projectId'] = urlencode($val['projectId']);
-					$arr[$key]['projectChart'] = urlencode($val['projectChart']);
-					$arr[$key]['projectProgress'] = urlencode($val['projectProgress']);
-					$arr[$key]['projectYear'] = date("Y", strtotime($val["projectTime"]));
-					$arr[$key]['projectMonth'] = date("m", strtotime($val["projectTime"]));
-					$arr[$key]['budgetId'] = urlencode($val['budgetId']);
-				}
-				$arr = urldecode(json_encode($arr));
+		if ($arr) {
+			// Url encode Chinese characters and then decode them, in order to avert garbled characters.
+			foreach($arr as $key => $val) {
+				$arr[$key]['projectName'] = urlencode($val['projectName']);
+				$arr[$key]['projectId'] = urlencode($val['projectId']);
+				$arr[$key]['projectChart'] = urlencode($val['projectChart']);
+				$arr[$key]['projectProgress'] = urlencode($val['projectProgress']);
+				$arr[$key]['projectYear'] = date("Y", strtotime($val["projectTime"]));
+				$arr[$key]['projectMonth'] = date("m", strtotime($val["projectTime"]));
+				$arr[$key]['budgetId'] = urlencode($val['budgetId']);
+				$arr[$key]['projectProgressComment'] = ($val['projectProgressComment']);
 			}
-			else {
-				$arr = json_encode(array());
-			}
-			
-			return $arr;
+			$arr = urldecode(json_encode($arr));
 		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
+		else {
+			$arr = json_encode(array());
 		}
+		
+		return $arr;
 	}
 	
 	function getProjectsByProjectId ($projectId){
-		try {
-			global $mysql;
-			$arr = $mysql->DBGetSomeRows("`project`", "*", "where `projectId` = '$projectId' ");
+		global $mysql;
+		$arr = $mysql->DBGetSomeRows("`project`", "*", "where `projectId` = '$projectId' ");
 
-			if ($arr) {
-				// Url encode Chinese characters and then decode them, in order to avert garbled characters.
-				foreach($arr as $key => $val) {
-					$arr[$key]['projectName'] = urlencode($val['projectName']);
-					$arr[$key]['projectId'] = urlencode($val['projectId']);
-					$arr[$key]['projectChart'] = urlencode($val['projectChart']);
-					$arr[$key]['projectProgress'] = urlencode($val['projectProgress']);
-					$arr[$key]['budgetId'] = urlencode($val['budgetId']);
-				}
-				$arr = urldecode(json_encode($arr));
+		if ($arr) {
+			// Url encode Chinese characters and then decode them, in order to avert garbled characters.
+			foreach($arr as $key => $val) {
+				$arr[$key]['projectName'] = $val['projectName'];
+				$arr[$key]['projectId'] = $val['projectId'];
+				$arr[$key]['projectChart'] = $val['projectChart'];
+				$arr[$key]['projectProgress'] = $val['projectProgress'];
+				$arr[$key]['budgetId'] = $val['budgetId'];
+				$arr[$key]['projectProgressComment'] = $val['projectProgressComment'];
 			}
-			else {
-				$arr = json_encode(array());
-			}
+			$arr = urldecode(json_encode($arr));
+		}
+		else {
+			$arr = json_encode(array());
+		}
 
-			return $arr;
-		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		return $arr;
 	}
 
 	/**
@@ -147,47 +132,37 @@
 	 * @return [type]      [description]
 	 */
 	function editProject (array $pro){
-		try {
-			global $mysql;
-			$setValue = "";
-			foreach ($pro as $key => $val) {
-				if ($key == "projectId" || is_numeric ($key)) {
-					continue;
-				}
-				else {
-					$setValue .= " `".$key."` = '".$val."',";
-				}
+		global $mysql;
+		$setValue = "";
+		foreach ($pro as $key => $val) {
+			if ($key == "projectId" || is_numeric ($key)) {
+				continue;
 			}
-			$setValue = substr($setValue, 0, -1);
-			$condition = "`projectId` = '".$pro['projectId']."'";
-			$mysql->DBUpdateSomeCols("`project`", $condition, $setValue);
-			return json_encode(array('status'=>'successful', 'errMsg' => ''));
+			else {
+				$setValue .= " `".$key."` = '".$val."',";
+			}
 		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		$setValue = substr($setValue, 0, -1);
+		$condition = "`projectId` = '".$pro['projectId']."'";
+		$mysql->DBUpdateSomeCols("`project`", $condition, $setValue);
+		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 
 	function editProjectByProjectName (array $pro){
-		try {
-			global $mysql;
-			$setValue = "";
-			foreach ($pro as $key => $val) {
-				if ($key == "projectName" || is_numeric ($key)) {
-					continue;
-				}
-				else {
-					$setValue .= " `".$key."` = '".$val."',";
-				}
+		global $mysql;
+		$setValue = "";
+		foreach ($pro as $key => $val) {
+			if ($key == "projectName" || is_numeric ($key)) {
+				continue;
 			}
-			$setValue = substr($setValue, 0, -1);
-			$condition = "`projectName` = '".$pro['projectName']."'";
-			$mysql->DBUpdateSomeCols("`project`", $condition, $setValue);
-			return json_encode(array('status'=>'successful', 'errMsg' => ''));
+			else {
+				$setValue .= " `".$key."` = '".$val."',";
+			}
 		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		$setValue = substr($setValue, 0, -1);
+		$condition = "`projectName` = '".$pro['projectName']."'";
+		$mysql->DBUpdateSomeCols("`project`", $condition, $setValue);
+		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 
 	// echo addProject(array("projectId"=>"A-5-9", "projectName"=>"家装项目", "projectProgress"=>"刚刚开始;材料初始化;工程受阻;工程继续;", "projectChart"=>"sjaldjfas.fasdfasdal"))

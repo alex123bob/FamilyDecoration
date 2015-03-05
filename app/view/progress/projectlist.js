@@ -48,6 +48,10 @@ Ext.define('FamilyDecoration.view.progress.ProjectList', {
 	            			node.set('text', node.get('projectName') || node.get('projectMonth') || node.get('projectYear'));
 	            			if (me.isForChart) {
 	            				if (node.get('projectName')) {
+	            					// 图库面板，即使工程没有图库也出现工程名
+	            					// if (node.get('isFrozen') != 1) {
+
+	            					// 图库面板，工程没有图库就不出现工程名
 	            					if (node.get('projectChart') && node.get('isFrozen') != 1) {
 	            						node.set({
 		            						leaf: true,
