@@ -195,7 +195,6 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 						win.show();
 					}
 				}],
-				hideHeaders: true,
 				store: Ext.create('Ext.data.Store', {
 					fields: ['content', 'id', 'createTime'],
 					autoLoad: false
@@ -208,6 +207,11 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 			        	renderer: function (val){
 			        		return val.replace(/\n/g, '<br />');
 			        	}
+			        },
+			        {
+			        	text: '创建时间', 
+			        	dataIndex: 'createTime', 
+			        	flex: 1
 			        }
 			    ],
 			    listeners: {

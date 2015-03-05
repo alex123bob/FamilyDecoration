@@ -7,8 +7,14 @@
 	 */
 	function addProject (array $pro){
 		global $mysql;
+		$projectId = $pro['projectId'];
+		$projectName = $pro['projectName'];
+		$projectProgress = $pro['projectProgress'];
+		$projectChart = $pro['projectChart'];
+		$projectTime = $pro['projectTime'];
+		$projectProgressComment = isset($pro['projectProgressComment']) ? $pro['projectProgressComment'] : '';
 		$mysql->DBInsert("`project`", "`projectId`, `projectName`, `projectProgress`, `projectChart`, `projectTime`, `isFrozen`,`projectProgressComment` ",
-		 	"'".$pro['projectId']."', '".$pro['projectName']."', '".$pro['projectProgress']."', '".$pro['projectChart']."', '".$pro['projectTime']."', 0 ,'".$pro['projectProgressComment']."'");
+		 	"'$projectId', '$projectName', '$projectProgress', '$projectChart', '$projectTime', 0 ,'$projectProgressComment'");
 		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 

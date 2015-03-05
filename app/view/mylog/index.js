@@ -327,7 +327,6 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 						})
 					}
 				}],
-				hideHeaders: true,
 				store: Ext.create('Ext.data.Store', {
 					fields: ['content', 'id', 'createTime'],
 					autoLoad: false
@@ -340,6 +339,11 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 			        	renderer: function (val){
 			        		return val.replace(/\n/g, '<br />');
 			        	}
+			        },
+			        {
+			        	text: '创建日期', 
+			        	dataIndex: 'createTime', 
+			        	flex: 1
 			        }
 			    ],
 			    listeners: {
