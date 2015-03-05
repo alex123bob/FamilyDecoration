@@ -1,4 +1,0 @@
-错误的语句是INSERT INTO `user`(`name`, `realname`, `password`, `level`) VALUES('test', 'test', '9dbe87d7bcd06079e681b60d5e7c43b9', '006-001')
-发生的时间是：2015-03-04 22:08:05
-错误的语句是INSERT INTO `user`(`name`, `realname`, `password`, `level`) VALUES('test', 'test', '9dbe87d7bcd06079e681b60d5e7c43b9', '006-001')
-发生的时间是：2015-03-04 22:08:06
