@@ -19,7 +19,11 @@ Ext.define('FamilyDecoration.view.progress.ProjectList', {
 				autoLoad: false,
 	            proxy: {
 	                type: 'rest',
-	                url: 'libs/getprojectyears.php',
+	                appendId: false,
+	                url: './libs/project.php',
+	                extraParams: {
+	                	action: 'getProjectYears'
+	                },
 	                reader: {
 	                    type: 'json'
 	                }
@@ -28,16 +32,18 @@ Ext.define('FamilyDecoration.view.progress.ProjectList', {
 	            	beforeload: function (st, ope){
 	            		var node = ope.node;
 	            		if (node.get('projectYear')) {
-	            			st.proxy.url = 'libs/getprojectmonths.php';
+	            			st.proxy.url = './libs/project.php';
 	            			st.proxy.extraParams = {
-	            				year: node.get('projectYear')
+	            				year: node.get('projectYear'),
+	            				action: 'getProjectMonths'
 	            			};
 	            		}
 	            		else if (node.get('projectMonth')) {
-	            			st.proxy.url = 'libs/getprojects.php';
+	            			st.proxy.url = './libs/project.php';
 	            			st.proxy.extraParams = {
 	            				year: node.parentNode.get('projectYear'),
-	            				month: node.get('projectMonth')
+	            				month: node.get('projectMonth'),
+	            				action: 'getProjects'
 	            			};
 	            		}
 	            	},
@@ -45,7 +51,16 @@ Ext.define('FamilyDecoration.view.progress.ProjectList', {
 	            		if (!pNode) {
 	            		}
 	            		else {
-	            			node.set('text', node.get('projectName') || node.get('projectMonth') || node.get('projectYear'));
+	            			if (node.get('projectName')) {
+	            				node.set({
+	            					text: node.get('projectName') + '(' + node.get('projectTime').split(' ')[0] + ')'
+	            				});
+	            			}
+	            			else {
+	            				node.set({
+	            					text: node.get('projectMonth') || node.get('projectYear')
+	            				});
+	            			}
 	            			if (me.isForChart) {
 	            				if (node.get('projectName')) {
 	            					// 图库面板，即使工程没有图库也出现工程名

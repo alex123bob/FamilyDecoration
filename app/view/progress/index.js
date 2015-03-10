@@ -4,7 +4,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 	requires: [
 		'FamilyDecoration.store.Project', 'FamilyDecoration.view.progress.EditProject', 'Ext.tree.Panel',
 		'FamilyDecoration.view.progress.EditProgress', 'FamilyDecoration.view.progress.ProjectList',
-		'FamilyDecoration.view.budget.EditBudget'
+		'FamilyDecoration.view.budget.EditBudget', 'Ext.layout.container.Form', 'FamilyDecoration.model.Progress'
 	],
 	autoScroll: true,
 	layout: 'border',
@@ -39,7 +39,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 						Ext.Msg.warning('确定要封存项目"' + pro.get('projectName') + '"吗？', function (id) {
 							if (id == 'yes') {
 								Ext.Ajax.request({
-									url: './libs/editproject.php',
+									url: './libs/project.php?action=editProject',
 									method: 'POST',
 									params: {
 										projectId: pro.get('projectId'),
@@ -48,15 +48,19 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 									callback: function (opts, success, res){
 										if (success) {
 											var obj = Ext.JSON.decode(res.responseText),
+												treePanel = Ext.getCmp('treepanel-projectName'),
 												frozenPanel = Ext.getCmp('treepanel-frozenProject'),
 												st = frozenPanel.getStore();
 											if (obj.status == 'successful') {
 												showMsg('封存成功！');
-												Ext.getCmp('treepanel-projectName').getStore().load({
+												treePanel.getStore().load({
 													node: pro.parentNode.parentNode
 												});
-												st.proxy.url = './libs/getprojectyears.php';
-												st.proxy.extraParams = {};
+												treePanel.getSelectionModel().deselectAll();
+												st.proxy.url = './libs/project.php';
+												st.proxy.extraParams = {
+													action: 'getProjectYears'
+												};
 												st.load({
 													node: frozenPanel.getRootNode(),
 													callback: function (){
@@ -107,11 +111,12 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					handler: function (){
 						var panel = Ext.getCmp('treepanel-projectName');
 						var pro = panel.getSelectionModel().getSelection()[0];
+						var progressGrid = Ext.getCmp('gridpanel-projectProgress');
 
-						Ext.Msg.warning('确定要删除项目"' + pro.get('projectName') + '"吗？', function (id) {
+						Ext.Msg.warning('【注意】删除项目会删除项目下所有的进度内容。<br />确定要删除项目"' + pro.get('projectName') + '"吗？', function (id) {
 							if (id == 'yes') {
 								Ext.Ajax.request({
-									url: './libs/delproject.php',
+									url: './libs/project.php?action=delProject',
 									method: 'POST',
 									params: {
 										projectId: pro.get('projectId'),
@@ -121,10 +126,33 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 										if (success) {
 											var obj = Ext.JSON.decode(res.responseText);
 											if (obj.status == 'successful') {
-												showMsg('删除成功！');
-												Ext.getCmp('treepanel-projectName').getStore().load({
+												panel.getStore().load({
 													node: pro.parentNode.parentNode
 												});
+												panel.getSelectionModel().deselectAll();
+												Ext.Ajax.request({
+													url: './libs/progress.php?action=deleteProgressByProjectId',
+													method: 'POST',
+													params: {
+														projectId: pro.getId()
+													},
+													callback: function (opts, success, res){
+														if (success) {
+															var obj = Ext.decode(res.responseText);
+															if (obj.status == 'successful') {
+																showMsg('删除成功！');
+																progressGrid.refresh();
+																progressGrid.initBtn();
+															}
+															else {
+																showMsg(obj.errMsg);
+															}
+														}
+													}
+												})
+											}
+											else {
+												showMsg(obj.errMsg);
 											}
 										}
 									}
@@ -138,12 +166,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				autoScroll: true,
 				listeners: {
 					itemclick: function (view, rec){
-						if (rec.get('projectName')) {
-							Ext.getCmp('gridpanel-projectProgress').refresh(rec);
-						}
-						else {
-							return false;
-						}
+						return rec.get('projectName') ? true : false;
 					},
 					selectionchange: function (selModel, sels, opts){
 						var rec = sels[0],
@@ -154,6 +177,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 							showBudgetBtn = Ext.getCmp('button-showBudget'),
 							frozeProjectBtn = Ext.getCmp('tool-frozeProject'),
 							showPlanBtn = Ext.getCmp('button-showProjectPlan'),
+							editHeadInfoBtn = Ext.getCmp('button-editTopInfo'),
 							progressPanel = Ext.getCmp('gridpanel-projectProgress');
 						if (!rec) {
 							delProjectBtn.disable();
@@ -162,6 +186,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 							showChartBtn.disable();
 							showBudgetBtn.disable();
 							frozeProjectBtn.disable();
+							editHeadInfoBtn.disable();
 							progressPanel.refresh();
 						}
 						else {
@@ -169,6 +194,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 							editProjectBtn.setDisabled(!rec.get('projectName'));
 							addProgressBtn.setDisabled(!rec.get('projectName'));
 							frozeProjectBtn.setDisabled(!rec.get('projectName'));
+							editHeadInfoBtn.setDisabled(!rec.get('projectName'));
 							if (rec.get('projectName') && rec.get('projectChart') != '') {
 								showChartBtn.enable();
 							}
@@ -213,7 +239,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 						Ext.Msg.warning('确定要解封项目"' + pro.get('projectName') + '"吗？', function (id) {
 							if (id == 'yes') {
 								Ext.Ajax.request({
-									url: './libs/editproject.php',
+									url: './libs/project.php?action=editProject',
 									method: 'POST',
 									params: {
 										projectId: pro.get('projectId'),
@@ -229,8 +255,10 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 												Ext.getCmp('treepanel-projectName').getStore().load({
 													node: pro.parentNode.parentNode
 												});
-												st.proxy.url = './libs/getprojectyears.php';
-												st.proxy.extraParams = {};
+												st.proxy.url = './libs/project.php';
+												st.proxy.extraParams = {
+													action: 'getProjectYears'
+												};
 												st.load({
 													node: proPanel.getRootNode(),
 													callback: function (){
@@ -273,39 +301,72 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 			name: 'gridpanel-projectProgress',
 			title: '工程进度查看情况',
 			refresh: function (rec){
-				var splitFlag = '<>',
-					grid = this;
+				var grid = this,
+					st = grid.getStore(),
+					period = Ext.getCmp('textfield-period'),
+					captain = Ext.getCmp('textfield-captain'),
+					supervisor = Ext.getCmp('textfield-supervisor');
 				if (rec) {
-					var progress = rec.get('projectProgress').split(splitFlag),
-						projectId = rec.getId(),
-						commentArr = rec.get('projectProgressComment').split(splitFlag);
-					Ext.each(progress, function (val, i, pro){
-						pro[i] = {
-							projectProgress: val,
-							projectProgressComment: commentArr[i],
-							progressId: projectId + '-' + i
-						};
+					st.load({
+						params: {
+							action: 'getProgressByProjectId',
+							projectId: rec.getId()
+						}
 					});
-					grid.getStore().loadData(progress);
+					period.setValue(rec.get('period'));
+					captain.setValue(rec.get('captain'));
+					supervisor.setValue(rec.get('supervisor'));
 				}
 				else {
 					grid.getStore().loadData([]);
+					period.setValue('');
+					captain.setValue('');
+					supervisor.setValue('');
 				}
 			},
 			initBtn: function (){
-				var editBtn = Ext.getCmp('button-addProgress'),
+				var addBtn = Ext.getCmp('button-addProgress'),
+					editBtn = Ext.getCmp('button-editProgress'),
 					delBtn = Ext.getCmp('button-deleteProgress'),
 					chartBtn = Ext.getCmp('button-showProjectChart'),
-					budgetBtn = Ext.getCmp('button-showBudget');
+					budgetBtn = Ext.getCmp('button-showBudget'),
+					headInfoBtn = Ext.getCmp('button-editTopInfo');
 
+				addBtn.disable();
 				editBtn.disable();
 				delBtn.disable();
 				chartBtn.disable();
 				budgetBtn.disable();
+				headInfoBtn.disable();
 			},
 			tbar: [{
+				xtype: 'textfield',
+				name: 'textfield-period',
+				id: 'textfield-period',
+				labelWidth: 70,
+				width: 240,
+				readOnly: true,
+				fieldLabel: '项目工期'
+			}, {
+				xtype: 'textfield',
+				name: 'textfield-captain',
+				id: 'textfield-captain',
+				labelWidth: 70,
+				width: 240,
+				readOnly: true,
+				fieldLabel: '项目负责人'
+			}, {
+				xtype: 'textfield',
+				name: 'textfield-supervisor',
+				id: 'textfield-supervisor',
+				labelWidth: 70,
+				width: 240,
+				readOnly: true,
+				fieldLabel: '项目监理'
+			}],
+			bbar: [{
 				hidden: User.isGeneral() ? true : false,
-				text: '修改',
+				text: '添加',
 				id: 'button-addProgress',
 				name: 'button-addProgress',
 				disabled: true,
@@ -319,6 +380,23 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				}
 			}, {
 				hidden: User.isGeneral() ? true : false,
+				text: '修改',
+				id: 'button-editProgress',
+				name: 'button-editProgress',
+				disabled: true,
+				handler: function (){
+					var proPanel = Ext.getCmp('treepanel-projectName'),
+						project = proPanel.getSelectionModel().getSelection()[0],
+						gridPanel = Ext.getCmp('gridpanel-projectProgress'),
+						progress = gridPanel.getSelectionModel().getSelection()[0];
+					var win = Ext.create('FamilyDecoration.view.progress.EditProgress', {
+						project: project,
+						progress: progress
+					});
+					win.show();
+				}
+			}, {
+				hidden: User.isGeneral() ? true : false,
 				text: '删除',
 				id: 'button-deleteProgress',
 				name: 'button-deleteProgress',
@@ -327,55 +405,34 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					var progressPanel = Ext.getCmp('gridpanel-projectProgress'),
 						proPanel = Ext.getCmp('treepanel-projectName'),
 						project = proPanel.getSelectionModel().getSelection()[0],
-						rec = progressPanel.getSelectionModel().getSelection()[0],
-						arr = progressPanel.getStore().data.items,
-						splitFlag = '<>',
-						str = '', params, commentStr = '';
+						rec = progressPanel.getSelectionModel().getSelection()[0];
 					if (rec) {
-						Ext.Msg.warning('确定要删除当前这条进度吗？', function (btnId){
-							if ('yes' == btnId) {
-								for (var i = 0; i < arr.length; i++) {
-									if (arr[i].raw.progressId != rec.raw.progressId) {
-										str += arr[i].get('projectProgress') + splitFlag;
-										commentStr += arr[i].get('projectProgressComment') + splitFlag;
-									}
-								}
-								str = str.slice(0, str.length - splitFlag.length);
-								commentStr = commentStr.slice(0, commentStr.length - splitFlag.length);
-								params = {
-									projectProgress: str,
-									projectProgressComment: commentStr
-								};
-								Ext.apply(params, {
-									projectId: project.getId()
-								});
+						Ext.Msg.warning('确定删除该条进度吗？', function (btn){
+							if (btn == 'yes') {
 								Ext.Ajax.request({
-									url: './libs/editproject.php',
+									url: './libs/progress.php?action=deleteProgress',
 									method: 'POST',
-									params: params,
+									params: {
+										id: rec.getId()
+									},
 									callback: function (opts, success, res){
 										if (success) {
 											var obj = Ext.decode(res.responseText);
 											if (obj.status == 'successful') {
-												showMsg('删除成功！');
-												proPanel.getStore().load({
-													node: project.parentNode,
-													callback: function (recs, ope, success){
-														if (success) {
-															var node = ope.node;
-															var pro = node.findChild('projectId', project.getId());
-															proPanel.getSelectionModel().select(pro);
-															progressPanel.refresh(pro);
-														}
-													}
-												});
-												
+												showMsg('删除进度成功！');
+												progressPanel.refresh(project);
+											}
+											else {
+												showMsg(obj.errMsg);
 											}
 										}
 									}
 								});
 							}
 						});
+					}
+					else {
+						showMsg('请选择进度！');
 					}
 				}
 			}, {
@@ -464,27 +521,134 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 
 					changeMainCt('plan-index');
 				}
+			}, {
+				hidden: !(User.isAdmin() || User.isProjectManager() || User.isProjectStaff()),
+				text: '编辑置顶信息',
+				disabled: true,
+				id: 'button-editTopInfo',
+				name: 'button-editTopInfo',
+				handler: function (){
+					var treePanel = Ext.getCmp('treepanel-projectName'),
+						st = treePanel.getStore(),
+						pro = treePanel.getSelectionModel().getSelection()[0];
+					var win = Ext.create('Ext.window.Window', {
+						title: '编辑置顶信息',
+						width: 500,
+						height: 200,
+						layout: 'form',
+						modal: true,
+						defaultType: 'textfield',
+					    items: [{
+					       	fieldLabel: '工期',
+					        name: 'projectPeriod',
+					        allowBlank:false,
+					        value: pro ? pro.get('period') : ''
+					    },{
+					        fieldLabel: '项目负责人',
+					        name: 'projectCaptain',
+					        allowBlank: false,
+					        value: pro ? pro.get('captain') : ''
+					    },{
+					        fieldLabel: '监理',
+					        name: 'projectSupervisor',
+					        allowBlank: false,
+					        value: pro ? pro.get('supervisor') : ''
+					    }],
+					    buttons: [{
+					    	text: '确定',
+					    	handler: function (){
+					    		var period = win.down('[name="projectPeriod"]'),
+					    			captain = win.down('[name="projectCaptain"]'),
+					    			supervisor = win.down('[name="projectSupervisor"]'),
+					    			gridPanel = Ext.getCmp('gridpanel-projectProgress');
+					    		Ext.Ajax.request({
+					    			url: './libs/project.php?action=editProjectHeadInfo',
+					    			method: 'POST',
+					    			params: {
+					    				projectId: pro.getId(),
+					    				period: period.getValue(),
+					    				captain: captain.getValue(),
+					    				supervisor: supervisor.getValue()
+					    			},
+					    			callback: function (opts, success, res){
+					    				if (success) {
+					    					var obj = Ext.decode(res.responseText);
+					    					if (obj.status == 'successful') {
+					    						st.proxy.url = './libs/project.php';
+					    						st.proxy.extraParams = {
+					    							action: 'getProjects',
+					    							year: pro.get('projectYear'),
+					    							month: pro.get('projectMonth')
+					    						};
+					    						st.load({
+					    							node: pro.parentNode,
+					    							callback: function (recs, ope, success){
+					    								if (success) {
+					    									var newPro;
+					    									for (var i = 0; i < recs.length; i++) {
+					    										if (recs[i].getId() == pro.getId()) {
+					    											newPro = recs[i];
+					    											break;
+					    										}
+					    									}
+					    									treePanel.getSelectionModel().deselectAll()
+					    									treePanel.getSelectionModel().select(newPro);
+					    									win.close();
+					    								}
+					    							}
+					    						})
+					    					}
+					    					else {
+					    						Ext.Msg.error(obj.errMsg);
+					    					}
+					    				}
+					    			}
+					    		})
+					    	}
+					    }, {
+					    	text: '取消',
+					    	handler: function (){
+					    		win.close();
+					    	}
+					    }]
+					});
+
+					win.show();
+				}
 			}],
 			// hideHeaders: true,
 			store: Ext.create('Ext.data.Store', {
-				model: 'FamilyDecoration.model.Project',
+				model: 'FamilyDecoration.model.Progress',
 				autoLoad: false
 			}),
 			columns: [
 		        {
 		        	text: '工程进度', 
-		        	dataIndex: 'projectProgress', 
+		        	dataIndex: 'progress', 
 		        	flex: 1,
 		        	draggable: false,
 		        	menuDisabled: true,
-		        	sortable: false
+		        	sortable: false,
+		        	renderer: function (val){
+		        		if (val) {
+		        			return val.replace(/\n/gi, '<br />');
+		        		}
+		        		else {
+		        			return val;
+		        		}
+		        	},
 		        },
 		        {
 		        	text: '监理意见',
-		        	dataIndex: 'projectProgressComment', 
+		        	dataIndex: 'comments', 
 		        	flex: 1,
 		        	renderer: function (val){
-		        		return val.replace(/\n/gi, '<br />');
+		        		if (val) {
+		        			return val.replace(/\n/gi, '<br />');
+		        		}
+		        		else {
+		        			return val;
+		        		}
 		        	},
 		        	draggable: false,
 		        	menuDisabled: true,
@@ -494,12 +658,14 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 		    listeners: {
 		    	selectionchange: function (view, sels){
 		    		var rec = sels[0],
-		    			delBtn = Ext.getCmp('button-deleteProgress');
+		    			delBtn = Ext.getCmp('button-deleteProgress'),
+		    			editBtn = Ext.getCmp('button-editProgress');
 		    		delBtn.setDisabled(!rec);
+		    		editBtn.setDisabled(!rec);
 		    	},
 		    	cellclick: function (table, td, cellIndex, rec, tr, rowIndex, e, eOpts) {
 		    		if (User.isAdmin() || User.isSupervisor()) {
-		    			if (1 == cellIndex) {
+	    				if (1 == cellIndex) {
 		    				var win = Ext.create('Ext.window.Window', {
 			    				title: '添加监理意见',
 			    				width: 500,
@@ -510,51 +676,28 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 			    					id: 'textarea-progresscomment',
 			    					name: 'textarea-progresscomment',
 			    					xtype: 'textarea',
-			    					value: rec.get('projectProgressComment')
+			    					value: rec.get('comments')
 			    				}],
 			    				buttons: [{
 			    					text: '添加',
 			    					handler: function (){
 			    						var pro = Ext.getCmp('treepanel-projectName').getSelectionModel().getSelection()[0],
-			    							comment = [],
-			    							arr = Ext.getCmp('gridpanel-projectProgress').getStore().data.items,
-			    							splitFlag = '<>',
 			    							textarea = Ext.getCmp('textarea-progresscomment');
-			    						Ext.each(arr, function (rec, i){
-			    							if (i == rowIndex) {
-			    								comment.push(textarea.getValue());
-			    							}
-			    							else {
-			    								comment.push(rec.get('projectProgressComment'));
-			    							}
-			    						});
-			    						comment = comment.join(splitFlag);
 			    						Ext.Ajax.request({
-			    							url: './libs/editproject.php',
+			    							url: './libs/progress.php?action=editProgress',
 			    							method: 'POST',
 			    							params: {
-			    								projectId: pro.getId(),
-			    								projectProgressComment: comment
+			    								id: rec.getId(),
+			    								comments: textarea.getValue()
 			    							},
 			    							callback: function (opts, success, res){
 			    								if (success) {
 			    									var obj = Ext.decode(res.responseText),
-			    										proPanel = Ext.getCmp('treepanel-projectName'),
 			    										progressPanel = Ext.getCmp('gridpanel-projectProgress');
 			    									if (obj.status == 'successful') {
 			    										win.close();
 			    										showMsg('监理意见添加成功！');
-			    										proPanel.getStore().load({
-															node: pro.parentNode,
-															callback: function (res, ope, success){
-																if (success) {
-																	var node = ope.node;
-																	var newPro = node.findChild('projectId', pro.getId());
-																	proPanel.getSelectionModel().select(newPro);
-																	progressPanel.refresh(newPro);
-																}
-															}
-														});
+			    										progressPanel.refresh(pro);
 			    									}
 			    								}
 			    							}

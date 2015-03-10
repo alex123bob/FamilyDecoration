@@ -1,0 +1,3 @@
+ALTER TABLE  `project` ADD  `projectPeriod` VARCHAR( 45 ) NULL COMMENT  '项目工期' AFTER  `projectName` ,
+ADD  `projectCaptain` VARCHAR( 45 ) NULL COMMENT  '项目负责人' AFTER  `projectPeriod` ,
+ADD  `projectSupevisor` VARCHAR( 45 ) NULL COMMENT  '项目监理' AFTER  `projectCaptain`

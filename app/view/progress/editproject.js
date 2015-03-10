@@ -52,7 +52,7 @@ Ext.define('FamilyDecoration.view.progress.EditProject', {
 						projectId: pro.get('projectId')
 					});
 					Ext.Ajax.request({
-						url: pro ? './libs/editproject.php' : './libs/addproject.php',
+						url: pro ? './libs/project.php?action=editProject' : './libs/project.php?action=addProject',
 						method: 'POST',
 						params: params,
 						callback: function (opts, success, res){
@@ -61,7 +61,7 @@ Ext.define('FamilyDecoration.view.progress.EditProject', {
 								if (obj.status == 'successful') {
 									pro ? showMsg('编辑成功！') : showMsg('添加成功！');
 									me.close();
-									st.getProxy().url = 'libs/getprojectyears.php';
+									st.getProxy().url = 'libs/project.php?action=getProjectYears';
 									st.getProxy().extraParams = {};
 									treepanel.getStore().load({
 										node: treepanel.getRootNode(),

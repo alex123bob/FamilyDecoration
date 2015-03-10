@@ -85,7 +85,7 @@ Ext.define('FamilyDecoration.view.budget.Index', {
 										}
 										else {
 											Ext.Ajax.request({
-												url: './libs/getprojectnames.php',
+												url: './libs/project.php?action=getProjectNames',
 												method: 'GET',
 												callback: function (opts, success, res){
 													if (success) {
@@ -206,7 +206,7 @@ Ext.define('FamilyDecoration.view.budget.Index', {
 																										var status = Ext.decode(res.responseText);
 																										if (status.status == 'successful') {
 																											Ext.Ajax.request({
-																												url: './libs/editprojectbyprojectname.php',
+																												url: './libs/project.php?action=editProjectByProjectName',
 																												method: 'POST',
 																												params: {
 																													budgetId: data['budgetId'],

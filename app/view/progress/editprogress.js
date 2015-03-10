@@ -1,141 +1,72 @@
 Ext.define('FamilyDecoration.view.progress.EditProgress', {
 	extend: 'Ext.window.Window',
 	alias: 'widget.progress-editprogress',
-	requires: ['Ext.grid.plugin.CellEditing'],
+	requires: ['Ext.grid.plugin.CellEditing', 'FamilyDecoration.model.Progress'],
 
 	// resizable: false,
 	modal: true,
-	layout: 'fit',
-	maximizable: true,
 
-	title: '添加编辑工程进度',
-	width: 500,
-	height: 300,
-	autoScroll: true,
+	title: '添加工程进度',
+	width: 400,
+	height: 240,
 	project: null,
+	progress: null,
+	layout: 'fit',
 
 	initComponent: function (){
-		var me = this,
-			splitFlag = '<>',
-			progresses = me.project.get('projectProgress'),
-			strips = progresses ? progresses.split(splitFlag) : [];
-		for (var i = 0 ; i < strips.length; i++) {
-			strips[i] = {
-				strip: strips[i]
-			};
-		}
+		var me = this;
+
+		me.title = me.progress ? '编辑工程进度' : '添加工程进度';
 
 		me.items = [{
-			xtype: 'gridpanel',
-			name: 'gridpanel-editProgress',
-			id: 'gridpanel-editProgress',
-			store: Ext.create('Ext.data.Store', {
-				fields: ['strip'],
-				data: strips
-			}),
+			name: 'textarea-progress',
+			id: 'textarea-progress',
+			xtype: 'textarea',
 			autoScroll: true,
-			columns: [{
-				header: '项目',
-				dataIndex: 'strip',
-				align: 'center',
-				flex: 1,
-				editor: 'textfield'
-			}],
-			plugins: [
-				Ext.create('Ext.grid.plugin.CellEditing', {
-		            clicksToEdit: 1,
-		            listeners: {
-		            	edit: function (editor, e){
-		            		e.record.commit();
-		            		editor.completeEdit();
-		            	}
-		            }
-		        })
-			],
-			selType: 'cellmodel'
+			allowBlank: false,
+			fieldLabel: '工程进度',
+			value: me.progress ? me.progress.get('progress') : ''
 		}];
 
-		me.tbar = [{
-			xtype: 'button',
-			text: '添加',
+		me.buttons = [{
+			text: '确定',
 			handler: function (){
-				var grid = Ext.getCmp('gridpanel-editProgress'),
-					st = grid.getStore();
-				st.insert(0, {
-					strip: ''
-				});
-
-				grid.plugins[0].startEditByPosition({
-		            row: 0, 
-		            column: 0
-		        });
-			}
-		}];
-
-		me.bbar = [{
-			xtype: 'button',
-			text: '保存',
-			handler: function (){
-				var pro = me.project,
-					grid = Ext.getCmp('gridpanel-editProgress'),
-					proPanel = Ext.getCmp('treepanel-projectName'),
-					progressPanel = Ext.getCmp('gridpanel-projectProgress'),
-					arr = grid.getStore().data.items,
-					splitFlag = '<>',
-					progress = '',
-					params = {},
-					progressComment = pro.get('projectProgressComment');
-				for (var i = 0; i < arr.length; i++) {
-					if (arr[i].get('strip')) {
-						progress += arr[i].get('strip') + splitFlag;
-					}
-					else {
-						continue;
-					}
+				var progress = Ext.getCmp('textarea-progress').getValue(),
+					p = {};
+				if (me.progress) {
+					Ext.apply(p, {
+						progress: progress,
+						id: me.progress.getId()
+					});
 				}
-				progress = progress.slice(0, progress.length - splitFlag.length);
-
-				var number = progress.split('<>').length - progressComment.split('<>').length;
-				while (number-- > 0) {
-					progressComment = '<>' + progressComment;
+				else {
+					Ext.apply(p, {
+						progress: progress,
+						projectId: me.project.getId()
+					})
 				}
-
-				params = {
-					projectProgress: progress,
-					projectProgressComment: progressComment
-				};
-
-				pro && Ext.apply(params, {
-					projectId: pro.get('projectId')
-				});
 				Ext.Ajax.request({
-					url: './libs/editproject.php',
+					url: me.progress ? './libs/progress.php?action=editProgress' : './libs/progress.php?action=addProgress',
 					method: 'POST',
-					params: params,
+					params: p,
 					callback: function (opts, success, res){
 						if (success) {
-							var obj = Ext.decode(res.responseText);
+							var obj = Ext.decode(res.responseText),
+								str = '进度成功！';
 							if (obj.status == 'successful') {
-								showMsg('编辑成功！');
+								str = (me.progress ? '编辑' : '添加') + str;
+								showMsg(str);
 								me.close();
-								proPanel.getStore().load({
-									node: pro.parentNode,
-									callback: function (res, ope, success){
-										if (success) {
-											var node = ope.node;
-											var newPro = node.findChild('projectId', pro.getId());
-											proPanel.getSelectionModel().select(newPro);
-											progressPanel.refresh(newPro);
-										}
-									}
-								});
+								Ext.getCmp('gridpanel-projectProgress').getStore().reload();
+							}
+							else {
+								Ext.Msg.error(obj.errMsg);
 							}
 						}
 					}
-				});
+				})
 			}
 		}, {
-			xtype: 'button',
 			text: '取消',
 			handler: function (){
 				me.close();

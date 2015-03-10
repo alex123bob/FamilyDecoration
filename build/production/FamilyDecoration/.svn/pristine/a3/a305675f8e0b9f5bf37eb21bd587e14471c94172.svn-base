@@ -1,0 +1,4 @@
+<?php
+	include_once "project.php";
+	echo editProjectHeadInfo($_POST);
+?>
