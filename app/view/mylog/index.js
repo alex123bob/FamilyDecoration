@@ -218,9 +218,18 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 							btnDelLog = Ext.getCmp('button-deleteLog'),
 							btnAddLogDetail = Ext.getCmp('button-addLogDetail'),
 							gridLogContent = Ext.getCmp('gridpanel-logDetail'),
-							tree = Ext.getCmp('treepanel-logName');
+							tree = Ext.getCmp('treepanel-logName'),
+							scrutinizeGrid = Ext.getCmp('gridpanel-scrutinize'),
+							st = scrutinizeGrid.getStore();
 						gridLogContent.refresh(rec);
 						if (rec) {
+							if (rec.get('logName')) {
+								st.reload({
+									params: {
+										logListId: rec.getId()
+									}
+								});
+							}
 							tree.getSelectionModel().deselectAll();
 						}
 					}

@@ -132,7 +132,7 @@
 	function getLogListMonthsByUser($year,$user){
 		global $mysql;
         $res= array();
-		$condition = " where userName = '$user' and isDeleted = 'false' ";
+		$condition = " where userName = '$user' and isDeleted = 'false' and year(createTime) = '$year'";
         $orderBy = " order by createTime ";
 		$arr = $mysql->DBGetSomeRows("`log_list`", " DISTINCT month(createTime)  ",$condition,$orderBy);
 		$count = 0;

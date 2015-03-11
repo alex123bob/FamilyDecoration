@@ -92,7 +92,7 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 									params: {
 										logListId: rec.getId()
 									}
-								})
+								});
 							}
 							else {
 								st.removeAll();
@@ -161,7 +161,9 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 									var textarea = Ext.getCmp('textarea-censorship'),
 										content = textarea.getValue(),
 										logPanel = Ext.getCmp('treepanel-logNameByUser'),
-										logItem = logPanel.getSelectionModel().getSelection()[0];
+										logItem = logPanel.getSelectionModel().getSelection()[0],
+										scrutinizeGrid = Ext.getCmp('gridpanel-scrutinizeForCheckLog'),
+										st = scrutinizeGrid.getStore();
 									if (content) {
 										Ext.Ajax.request({
 											url: './libs/censorship.php?action=mark',
@@ -176,6 +178,11 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 													if (obj.status == 'successful') {
 														showMsg('批阅成功！');
 														win.close();
+														st.reload({
+															params: {
+																logListId: logItem.getId()
+															}
+														});
 													}
 												}
 											}
