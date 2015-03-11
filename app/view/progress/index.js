@@ -642,7 +642,10 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 		        	text: '监理意见',
 		        	dataIndex: 'comments', 
 		        	flex: 1,
-		        	renderer: function (val){
+		        	renderer: function (val, meta, rec){
+		        		if (User.isAdmin() || User.isSupervisor()) {
+		        			meta.style = 'cursor: pointer;';
+		        		}
 		        		if (val) {
 		        			return val.replace(/\n/gi, '<br />');
 		        		}
@@ -713,7 +716,31 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 			    			win.show();
 		    			}
 		    		}
-		    	}
+		    	},
+				afterrender: function(grid, opts) {
+					var view = grid.getView();
+					var tip = Ext.create('Ext.tip.ToolTip', {
+						target: view.el,
+						delegate: view.cellSelector,
+						trackMouse: true,
+						renderTo: Ext.getBody(),
+						listeners: {
+							beforeshow: function(tip) {
+								var gridColumns = view.getGridColumns();
+								if (tip.triggerElement.cellIndex == 1 && (User.isAdmin() || User.isSupervisor())) {
+									// var column = gridColumns[tip.triggerElement.cellIndex];
+									// var val = view.getRecord(tip.triggerElement.parentNode).get(column.dataIndex);
+									// val.replace && val.replace(/\n/gi, '<br />');
+									// tip.update(val);
+									tip.update('请点击栏目，编辑监理意见');
+								}
+								else {
+									return false;
+								}
+							}
+						}
+					});
+				}
 		    }
 		}];
 
