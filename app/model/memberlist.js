@@ -3,7 +3,8 @@ Ext.define('FamilyDecoration.model.MemberList', {
 	fields: [
         'id',
         {name: 'name', type: 'string'},
-        {name: 'level', type: 'string'}
+        {name: 'level', type: 'string'},
+        {name: 'realname', type: 'string'}
     ],
     idProperty: 'id',
     proxy: {

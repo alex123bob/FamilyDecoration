@@ -2,6 +2,7 @@
 	include_once "conn.php";
 	include_once "userDB.php";
 	$action = $_GET["action"];
+	$prefix = "familydecoration-";
 	$res = "";
 	switch($action){
 		case "register": 				$res = register();  break;
@@ -12,8 +13,8 @@
 		case "delete":					$res = delete($_POST['name']); break;
 		case "view":					$res = getList(); break;
 		case "reset":					$res = resetAccount(); break;
-		case "checkUserOnlineUniqueness":$res = checkUserOnlineUniqueness();break;
+		case "checkUserOnlineUniqueness"$res = checkUserOnlineUniqueness();break;
 		default: 		throw new Exception("unknown action:".$action);
 	}
-	echo json_encode($res);
+	echo $res;
 ?>

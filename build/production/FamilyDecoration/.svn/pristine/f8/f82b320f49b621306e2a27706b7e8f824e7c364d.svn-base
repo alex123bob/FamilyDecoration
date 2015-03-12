@@ -43,12 +43,12 @@
 		$userName = $_SESSION["name"];
 		$res = $mysql->DBGetOneRow("`online_user`", "count(*) as count", "`userName` = '$userName'  and `sessionId` = '$sessionId' and `offlineTime` is null ");
 		if($res["count"] != 1){
-			header('HTTP/1.1 401 已在别处登陆！');
+			header('HTTP/1.1 401 admin login somewhere else !');
 			session_unset();
 			session_destroy();
 			throw new Exception($userName."已在别处登陆！");
 		}
-		$mysql->DBUpdateSomeCols("`online_user`", "`userName` = '$userName'  and `sessionId` = '$sessionId'", " `lastUpdateTime` = now() ");
+		$mysql->DBUpdateSomeCols("`system`", " `id` = '2' ", " `updateTime` = CURRENT_TIMESTAMP");
 		return array("status" => "ok","errMsg" =>"");
 	}
 ?>

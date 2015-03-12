@@ -276,7 +276,7 @@ Ext.require('Ext.Ajax', function () {
             return;
         }
         else if (status === 401) {
-            Ext.Msg.error('管理员账号在其他地方登陆！', logout);
+            Ext.Msg.error(response.statusText, logout);
         }
         else if (status === -1) {
             // do nothing

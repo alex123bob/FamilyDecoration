@@ -87,7 +87,7 @@ Ext.define('FamilyDecoration.view.Viewport', {
 
             function heartBeat (){
                 Ext.Ajax.request({
-                    url: './libs/sys.php?action=adminHeartBeat',
+                    url: './libs/user.php?action=checkUserOnlineUniqueness',
                     method: 'GET'
                 });
             }

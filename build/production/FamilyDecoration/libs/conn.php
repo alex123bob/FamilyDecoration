@@ -13,10 +13,7 @@
 		$mysql = new mysql('localhost', 'root', '', 'familydecoration', 'utf8');
 	}
 	
-	if(isset($_SESSION["admin"]) && $_SESSION["admin"] && !strpos($_SERVER["REQUEST_URI"],"user.php?action=log")){
-		$res = $mysql->DBGetOneRow("`system`", "count(*) as count", "`id` = '2'  and `paramValue` = '".session_id()."'");
-		if($res["count"] != 1){
-			header('HTTP/1.1 401 admin login somewhere else !');
-		}
+	if(!strpos($_SERVER["REQUEST_URI"],"user.php?action=log")){
+		checkUserOnlineUniqueness();
 	}
 ?>

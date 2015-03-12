@@ -48,7 +48,7 @@
 			session_destroy();
 			throw new Exception($userName."已在别处登陆！");
 		}
-		$mysql->DBUpdateSomeCols("`online_user`", "`userName` = '$userName'  and `sessionId` = '$sessionId'", " `lastUpdateTime` = now() ");
+		$mysql->DBUpdateSomeCols("`system`", " `id` = '2' ", " `updateTime` = CURRENT_TIMESTAMP");
 		return array("status" => "ok","errMsg" =>"");
 	}
 ?>

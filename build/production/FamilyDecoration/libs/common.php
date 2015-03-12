@@ -23,4 +23,32 @@
 	};
 	set_error_handler("ErrorHandler");
 	set_exception_handler("ExceptionHandler");
+	
+	function getIP (){
+		global $_SERVER;
+		if (getenv('HTTP_CLIENT_IP')) {
+			$ip = getenv('HTTP_CLIENT_IP');
+		} else if (getenv('HTTP_X_FORWARDED_FOR')) {
+			$ip = getenv('HTTP_X_FORWARDED_FOR');
+		} else if (getenv('REMOTE_ADDR')) {
+			$ip = getenv('REMOTE_ADDR');
+		} else {
+			$ip = $_SERVER['REMOTE_ADDR'];
+		}
+		return $ip;
+	}
+	function checkUserOnlineUniqueness(){
+		global $mysql;
+		$sessionId = session_id();
+		$userName = $_SESSION["name"];
+		$res = $mysql->DBGetOneRow("`online_user`", "count(*) as count", "`userName` = '$userName'  and `sessionId` = '$sessionId' and `offlineTime` is null ");
+		if($res["count"] != 1){
+			header('HTTP/1.1 401 已在别处登陆！');
+			session_unset();
+			session_destroy();
+			throw new Exception($userName."已在别处登陆！");
+		}
+		$mysql->DBUpdateSomeCols("`online_user`", "`userName` = '$userName'  and `sessionId` = '$sessionId'", " `lastUpdateTime` = now() ");
+		return array("status" => "ok","errMsg" =>"");
+	}
 ?>

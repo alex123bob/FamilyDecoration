@@ -52,7 +52,7 @@ Ext.define('FamilyDecoration.view.checklog.MemberList', {
 	            			}
 	            			else {
 	            				node.set({
-	            					text: node.get('name'),
+	            					text: node.get('realname'),
 	            					leaf: true,
 	            					icon: 'resources/img/user.ico'
 	            				})
