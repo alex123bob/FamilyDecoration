@@ -642,6 +642,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 		        	text: '监理意见',
 		        	dataIndex: 'comments', 
 		        	flex: 1,
+		        	hidden: User.isGeneral(),
 		        	renderer: function (val, meta, rec){
 		        		if (User.isAdmin() || User.isSupervisor()) {
 		        			meta.style = 'cursor: pointer;';

@@ -1,6 +1,7 @@
 <?php
 	
 	header("Content-type: text/html; charset=utf-8"); 
+	header("message-queue: 1"); 
 	if (!session_id()) session_start();
 	// error_reporting(E_ALL ^ E_DEPRECATED);
 	date_default_timezone_set('Asia/Shanghai'); 

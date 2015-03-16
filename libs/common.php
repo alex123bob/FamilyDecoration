@@ -39,16 +39,20 @@
 	}
 	function checkUserOnlineUniqueness(){
 		global $mysql;
+		if (!isset($_SESSION["name"])){
+			header('HTTP/1.1 401 not login');
+			throw new Exception("未登陆！");
+		}
 		$sessionId = session_id();
 		$userName = $_SESSION["name"];
 		$res = $mysql->DBGetOneRow("`online_user`", "count(*) as count", "`userName` = '$userName'  and `sessionId` = '$sessionId' and `offlineTime` is null ");
 		if($res["count"] != 1){
-			header('HTTP/1.1 401 已在别处登陆！');
+			header('HTTP/1.1 401 already login else');
 			session_unset();
 			session_destroy();
 			throw new Exception($userName."已在别处登陆！");
 		}
-		$mysql->DBUpdateSomeCols("`online_user`", "`userName` = '$userName'  and `sessionId` = '$sessionId'", " `lastUpdateTime` = now() ");
+		$mysql->DBUpdateSomeCols("`online_user`", " `userName` = '$userName'  and `sessionId` = '$sessionId' and `offlineTime` is null ","`lastUpdateTime` = now() ");
 		return array("status" => "ok","errMsg" =>"");
 	}
 ?>

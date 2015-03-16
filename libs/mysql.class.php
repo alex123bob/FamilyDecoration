@@ -329,14 +329,19 @@
 		 */
 		 public function DBOutputErrorInfo()
 		 {
-		 	$pathArray = parse_url($_SERVER['REQUEST_URI']);
-		 	$fileTemp = substr($pathArray['path'], (strrpos($pathArray['path'], "/")+1));
-		 	$fileName = "errors-on-".$fileTemp.".txt";
-			$fp = fopen($fileName, "ab");
+			$pathArray = parse_url($_SERVER['REQUEST_URI']);
+			$fileTemp = substr($pathArray['path'], (strrpos($pathArray['path'], "/")+1));
+			$fileName = "errors-on-".$fileTemp.".txt";
 			$inputStr = "错误的语句是".$this->dbSQL."\r\n";
 			$inputStr .= "发生的时间是：".date("Y-m-d H:i:s")."\r\n";
-			fwrite($fp, $inputStr);
-			fclose($fp);
+			if (defined("SAE_MYSQL_HOST_M")) {
+				$mysql = new mysql(SAE_MYSQL_HOST_M.':'.SAE_MYSQL_PORT, SAE_MYSQL_USER, SAE_MYSQL_PASS, SAE_MYSQL_DB, 'utf8');
+				throw new Exception($inputStr);
+			} else {
+				$fp = fopen($fileName, "ab");
+				fwrite($fp, $inputStr);
+				fclose($fp);
+			}		 	
 			exit();
 		 }
 

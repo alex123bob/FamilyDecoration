@@ -3,7 +3,7 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 	alias: 'widget.mylog-index',
 	requires: [
 		'FamilyDecoration.view.mylog.LogList', 'FamilyDecoration.view.mylog.EditLogDetail',
-		'FamilyDecoration.store.ScrutinizeList'
+		'FamilyDecoration.store.ScrutinizeList', 'FamilyDecoration.view.mylog.AskLeave'
 	],
 	autoScroll: true,
 	layout: 'border',
@@ -177,6 +177,7 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 						var rec = sels[0],
 							btnDelLog = Ext.getCmp('button-deleteLog'),
 							btnAddLogDetail = Ext.getCmp('button-addLogDetail'),
+							btnAskLeave = Ext.getCmp('button-askLeave'),
 							gridLogContent = Ext.getCmp('gridpanel-logDetail'),
 							frozenTree = Ext.getCmp('treepanel-frozenLogName'),
 							scrutinizeGrid = Ext.getCmp('gridpanel-scrutinize'),
@@ -195,12 +196,14 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 							}
 							btnDelLog.setDisabled(!rec.get('logName'));
 							btnAddLogDetail.setDisabled(!rec.get('logName'));
+							btnAskLeave.setDisabled(!rec.get('logName'));
 							frozenTree.getSelectionModel().deselectAll();
 						}
 						else {
 							st.removeAll();
 							btnDelLog.disable();
 							btnAddLogDetail.disable();
+							btnAskLeave.disable();
 						}
 					}
 				}
@@ -334,6 +337,20 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 								});
 							}
 						})
+					}
+				}, {
+					text: '请假申请',
+					id: 'button-askLeave',
+					name: 'button-askLeave',
+					hidden: true,
+					disabled: true,
+					handler: function (){
+						var tree = Ext.getCmp('treepanel-logName'),
+							logItem = tree.getSelectionModel().getSelection()[0];
+						var win = Ext.create('FamilyDecoration.view.mylog.AskLeave', {
+							logListId: logItem.getId()
+						});
+						win.show();
 					}
 				}],
 				store: Ext.create('Ext.data.Store', {

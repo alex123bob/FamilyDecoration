@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 10, 2015 at 07:10 AM
+-- Generation Time: Mar 16, 2015 at 03:39 AM
 -- Server version: 5.1.50
 -- PHP Version: 5.3.14
 
@@ -243,14 +243,14 @@ INSERT INTO `budget_item` (`id`, `budgetItemId`, `itemName`, `budgetId`, `itemCo
 (72, 'budget-item-201501041440307222', '0%税金', 'budget-201501041440302265', 'R', '元', 0, 0, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL'),
 (73, 'budget-item-201501041440302529', '工程总造价', 'budget-201501041440302265', 'S', '元', 1, 10.787721, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL'),
 (74, 'budget-item-201503101354359814', '彭浩工程', 'budget-201503101354352774', 'A', 'NULL', 0, 0, 0, 0, 0, 0, 'false', 'NULL', 'basic-201412061745099855', 'NULL'),
-(75, 'budget-item-201503101354351129', '美工', 'budget-201503101354352774', 'A-1', 'ml', 1, 1.31, 9.1, 11.21, 0.13, 1.041, 'false', 'asdfasdfasdf\nas\ndf\na\nsd\n', 'basic-201412061745099855', 'basic-sub-201412061746241275'),
+(75, 'budget-item-201503101354351129', '美工', 'budget-201503101354352774', 'A-1', 'ml', 1.1, 1.31, 9.1, 11.21, 0.13, 1.041, 'false', 'asdfasdfasdf\nas\ndf\na\nsd\n', 'basic-201412061745099855', 'basic-sub-201412061746241275'),
 (76, 'budget-item-201503101354354607', '美化', 'budget-201503101354352774', 'A-2', 'km', 2, 10.12, 9.12, 11.21, 11.98, 17.33524, 'false', 'asdfas\ndf\na\nsd\na', 'basic-201412061745099855', 'basic-sub-201412061746245245'),
-(77, 'budget-item-201503101354352751', '工程直接费', 'budget-201503101354352774', 'N', '元', 1, 142.32148, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL'),
-(78, 'budget-item-201503101354355230', '设计费3%', 'budget-201503101354352774', 'O', '元', 0.3, 42.696444, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL'),
+(77, 'budget-item-201503101354352751', '工程直接费', 'budget-201503101354352774', 'N', '元', 1, 144.60058, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL'),
+(78, 'budget-item-201503101354355230', '设计费3%', 'budget-201503101354352774', 'O', '元', 0.3, 43.380174, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL'),
 (79, 'budget-item-201503101354357948', '效果图', 'budget-201503101354352774', 'P', '张', 1, 500, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL'),
-(80, 'budget-item-201503101354355313', '5%管理费', 'budget-201503101354352774', 'Q', '元', 0.05, 7.116074, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL'),
-(81, 'budget-item-201503101354351014', '0%税金', 'budget-201503101354352774', 'R', '元', 0.3, 42.696444, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL'),
-(82, 'budget-item-201503101354356986', '工程总造价', 'budget-201503101354352774', 'S', '元', 1, 734.830442, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL');
+(80, 'budget-item-201503101354355313', '5%管理费', 'budget-201503101354352774', 'Q', '元', 0.05, 7.230029, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL'),
+(81, 'budget-item-201503101354351014', '0%税金', 'budget-201503101354352774', 'R', '元', 0.3, 43.380174, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL'),
+(82, 'budget-item-201503101354356986', '工程总造价', 'budget-201503101354352774', 'S', '元', 1, 738.590957, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL');
 
 -- --------------------------------------------------------
 
@@ -318,7 +318,9 @@ INSERT INTO `censorship` (`id`, `logListId`, `content`, `isDeleted`, `createTime
 ('201503021212362968', '201503021211142441', '设计部主管', 'true', '2015-03-02 12:12:36', 'dmanager'),
 ('201503021216377626', '201503021216038191', 'fasdfasdfasfa', 'true', '2015-03-02 12:16:37', 'dmanager'),
 ('201503021218552716', '201503021217462154', '设计主管批阅', 'true', '2015-03-02 12:18:55', 'dmanager'),
-('201503021219127940', '201503021217462154', '副总经理批阅', 'true', '2015-03-02 12:19:12', 'vadmin');
+('201503021219127940', '201503021217462154', '副总经理批阅', 'true', '2015-03-02 12:19:12', 'vadmin'),
+('201503110929546618', '201502271106118102', '副总经理批一个', 'false', '2015-03-11 09:29:54', 'vadmin'),
+('201503110933527673', '201502271106118102', '副总再批阅一个', 'false', '2015-03-11 09:33:52', 'vadmin');
 
 -- --------------------------------------------------------
 
@@ -400,7 +402,11 @@ INSERT INTO `log_detail` (`id`, `createTime`, `isDeleted`, `logListId`, `content
 ('201503021212046190', '2015-03-02 12:12:04', 'true', '201503021211142441', 'fasdfasda'),
 ('201503021212078767', '2015-03-02 12:12:07', 'true', '201503021211142441', 'fasdfasda'),
 ('201503021216093577', '2015-03-02 12:16:09', 'true', '201503021216038191', '发送的发生'),
-('201503021218357317', '2015-03-02 12:18:35', 'true', '201503021217462154', '睡都发生大发');
+('201503021218357317', '2015-03-02 12:18:35', 'true', '201503021217462154', '睡都发生大发'),
+('201409251101921201', '2014-09-25 19:48:38', 'false', '201409251042244648', 'asdfasdfasdfasda'),
+('201503121647419423', '2015-03-12 16:47:41', 'false', '201502271106118102', '张泽南请假。 请假原因： dfsgdfsgfds 请假时间： 从2015-03-12 到 2015-03-20。'),
+('201503121648158725', '2015-03-12 16:48:15', 'false', '201502271106118102', '张泽南请假。 请假原因： asdfasdfa\nsd\nf\nas\nd\nfa\nfsd\n\na 请假时间： 从2015-03-11 到 2015-03-14。'),
+('201503130925239999', '2015-03-13 09:25:23', 'false', '201502271106118102', 'afsdfa');
 
 -- --------------------------------------------------------
 
@@ -444,7 +450,81 @@ INSERT INTO `log_list` (`id`, `logName`, `createTime`, `isDeleted`, `userName`) 
 ('201503021214031103', 'fasfasdaf', '2015-03-02 00:00:00', 'true', 'dstaff'),
 ('201503021215012408', 'fasdfa', '2015-03-02 00:00:00', 'true', 'dstaff'),
 ('201503021216038191', '测试下', '2015-03-02 00:00:00', 'true', 'dstaff'),
-('201503021217462154', '测试最后一次', '2015-03-02 00:00:00', 'true', 'dstaff');
+('201503021217462154', '测试最后一次', '2015-03-02 00:00:00', 'true', 'dstaff'),
+('201409251042244648', '测试封存', '2014-09-25 10:42:24', 'false', 'pstaff');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `online_user`
+--
+
+DROP TABLE IF EXISTS `online_user`;
+CREATE TABLE IF NOT EXISTS `online_user` (
+  `userName` varchar(250) NOT NULL COMMENT '用户名',
+  `onlineTime` datetime NOT NULL COMMENT '上线时间',
+  `offlineTime` datetime DEFAULT NULL COMMENT '下线时间',
+  `lastUpdateTime` datetime NOT NULL COMMENT '最后更新时间',
+  `sessionId` varchar(250) NOT NULL COMMENT 'sessionId',
+  `ip` varchar(100) DEFAULT NULL COMMENT '用户的ip',
+  `userAgent` varchar(400) DEFAULT NULL COMMENT '用户的浏览器信息',
+  KEY `userName` (`userName`,`sessionId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `online_user`
+--
+
+INSERT INTO `online_user` (`userName`, `onlineTime`, `offlineTime`, `lastUpdateTime`, `sessionId`, `ip`, `userAgent`) VALUES
+('admin', '2015-03-12 10:35:00', '2015-03-12 12:55:42', '2015-03-12 13:45:16', '7qgh6ktjih8jn3l8m4svpni693', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-12 10:41:28', '2015-03-12 12:55:42', '2015-03-12 10:41:28', 'nt1u3kce9igpkt1th4jj797466', '127.0.0.1', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)'),
+('admin', '2015-03-12 10:41:57', '2015-03-12 12:55:42', '2015-03-12 13:45:16', '7qgh6ktjih8jn3l8m4svpni693', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-12 10:52:06', '2015-03-12 12:55:42', '2015-03-12 10:52:06', 'nt1u3kce9igpkt1th4jj797466', '127.0.0.1', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)'),
+('admin', '2015-03-12 10:53:37', '2015-03-12 12:55:42', '2015-03-12 13:45:16', '7qgh6ktjih8jn3l8m4svpni693', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-12 10:53:43', '2015-03-12 12:55:42', '2015-03-12 10:53:43', 'nt1u3kce9igpkt1th4jj797466', '127.0.0.1', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)'),
+('admin', '2015-03-12 10:54:03', '2015-03-12 12:55:42', '2015-03-12 13:45:16', '7qgh6ktjih8jn3l8m4svpni693', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-12 10:54:12', '2015-03-12 12:55:42', '2015-03-12 10:54:12', 'nt1u3kce9igpkt1th4jj797466', '127.0.0.1', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)'),
+('admin', '2015-03-12 10:55:40', '2015-03-12 12:55:42', '2015-03-12 13:45:16', '7qgh6ktjih8jn3l8m4svpni693', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-12 10:55:52', '2015-03-12 12:55:42', '2015-03-12 10:55:52', 'nt1u3kce9igpkt1th4jj797466', '127.0.0.1', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)'),
+('admin', '2015-03-12 10:56:58', '2015-03-12 12:55:42', '2015-03-12 13:45:16', '7qgh6ktjih8jn3l8m4svpni693', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-12 10:57:05', '2015-03-12 12:55:42', '2015-03-12 10:57:05', 'nt1u3kce9igpkt1th4jj797466', '127.0.0.1', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)'),
+('admin', '2015-03-12 10:59:55', '2015-03-12 12:55:42', '2015-03-12 13:45:16', '7qgh6ktjih8jn3l8m4svpni693', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-12 11:00:07', '2015-03-12 12:55:42', '2015-03-12 11:00:07', 'nt1u3kce9igpkt1th4jj797466', '127.0.0.1', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)'),
+('vadmin', '2015-03-12 11:04:47', '2015-03-12 12:38:46', '2015-03-12 12:38:31', '7qgh6ktjih8jn3l8m4svpni693', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('vadmin', '2015-03-12 11:05:32', '2015-03-12 12:38:46', '2015-03-12 11:05:32', 'nt1u3kce9igpkt1th4jj797466', '127.0.0.1', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)'),
+('pstaff', '2015-03-12 11:07:08', '2015-03-12 11:15:17', '2015-03-12 11:15:05', '7qgh6ktjih8jn3l8m4svpni693', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('pstaff', '2015-03-12 11:07:18', '2015-03-12 11:15:17', '2015-03-12 11:07:18', 'nt1u3kce9igpkt1th4jj797466', '127.0.0.1', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)'),
+('pstaff', '2015-03-12 11:07:27', '2015-03-12 11:15:17', '2015-03-12 11:15:05', '7qgh6ktjih8jn3l8m4svpni693', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('pstaff', '2015-03-12 11:10:33', '2015-03-12 11:15:17', '2015-03-12 11:10:34', '9iuvkmk4jiu4s6taugict6u4c3', '127.0.0.1', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)'),
+('pstaff', '2015-03-12 11:11:06', '2015-03-12 11:15:17', '2015-03-12 11:15:05', '7qgh6ktjih8jn3l8m4svpni693', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('pstaff', '2015-03-12 11:15:17', NULL, '2015-03-12 11:15:19', '7v9fspa8sog70efeupke6fs6a3', '127.0.0.1', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)'),
+('vadmin', '2015-03-12 11:15:30', '2015-03-12 12:38:46', '2015-03-12 11:15:42', '7v9fspa8sog70efeupke6fs6a3', '127.0.0.1', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)'),
+('admin', '2015-03-12 11:15:34', '2015-03-12 12:55:42', '2015-03-12 13:45:16', '7qgh6ktjih8jn3l8m4svpni693', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('vadmin', '2015-03-12 11:15:47', '2015-03-12 12:38:46', '2015-03-12 12:38:31', '7qgh6ktjih8jn3l8m4svpni693', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('vadmin', '2015-03-12 12:38:46', '2015-03-12 14:06:55', '2015-03-12 14:06:55', 'br6eib2tduot6vct9ihpaaj112', '127.0.0.1', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)'),
+('admin', '2015-03-12 12:38:58', '2015-03-12 12:55:42', '2015-03-12 13:45:16', '7qgh6ktjih8jn3l8m4svpni693', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-12 12:39:04', '2015-03-12 12:55:42', '2015-03-12 12:41:05', 'br6eib2tduot6vct9ihpaaj112', '127.0.0.1', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)'),
+('admin', '2015-03-12 12:55:42', '2015-03-12 13:48:15', '2015-03-12 13:48:15', '7qgh6ktjih8jn3l8m4svpni693', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-12 13:48:15', '2015-03-12 13:52:32', '2015-03-12 13:52:32', 'tnkdur9rpe7qksblbe9is750q5', '127.0.0.1', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)'),
+('admin', '2015-03-12 13:52:44', '2015-03-12 13:52:57', '2015-03-12 13:52:57', '7qgh6ktjih8jn3l8m4svpni693', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-12 13:58:59', '2015-03-12 14:00:03', '2015-03-12 14:00:03', '7qgh6ktjih8jn3l8m4svpni693', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-12 14:00:03', '2015-03-12 14:00:19', '2015-03-12 14:00:19', 'fdtg7kil11312ighhepe7q8ml7', '127.0.0.1', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)'),
+('admin', '2015-03-12 14:00:19', '2015-03-12 14:00:47', '2015-03-12 14:00:47', '7qgh6ktjih8jn3l8m4svpni693', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-12 14:00:47', '2015-03-12 14:01:04', '2015-03-12 14:01:04', 'fdtg7kil11312ighhepe7q8ml7', '127.0.0.1', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)'),
+('admin', '2015-03-12 14:01:04', '2015-03-12 14:06:04', '2015-03-12 14:06:04', '7qgh6ktjih8jn3l8m4svpni693', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-12 14:06:04', '2015-03-12 14:06:17', '2015-03-12 14:06:17', '7qgh6ktjih8jn3l8m4svpni693', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-12 14:06:17', '2015-03-12 14:06:32', '2015-03-12 14:06:32', '97v1eed3vunqu922pjknv48b75', '127.0.0.1', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)'),
+('admin', '2015-03-12 14:06:40', '2015-03-12 14:06:44', '2015-03-12 14:06:44', '97v1eed3vunqu922pjknv48b75', '127.0.0.1', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)'),
+('admin', '2015-03-12 14:06:44', '2015-03-12 14:07:21', '2015-03-12 14:07:21', '7qgh6ktjih8jn3l8m4svpni693', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('vadmin', '2015-03-12 14:06:55', '2015-03-12 14:07:17', '2015-03-12 14:07:17', '97v1eed3vunqu922pjknv48b75', '127.0.0.1', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)'),
+('admin', '2015-03-12 14:07:21', '2015-03-12 16:17:51', '2015-03-12 16:17:51', '97v1eed3vunqu922pjknv48b75', '127.0.0.1', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)'),
+('admin', '2015-03-12 16:17:51', '2015-03-13 09:24:54', '2015-03-13 09:24:54', '7qgh6ktjih8jn3l8m4svpni693', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-13 09:24:54', '2015-03-16 09:46:35', '2015-03-16 09:46:35', 's79ibjcspntuendp227ig82of4', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-16 09:46:35', '2015-03-16 09:46:39', '2015-03-16 09:46:39', 'gd443fqhfkrqnta0t4nd3d90i1', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('visitor', '2015-03-16 09:46:43', '2015-03-16 09:49:05', '2015-03-16 09:49:05', 'gd443fqhfkrqnta0t4nd3d90i1', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-16 09:49:29', '2015-03-16 09:51:36', '2015-03-16 09:51:36', 'gd443fqhfkrqnta0t4nd3d90i1', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('visitor1', '2015-03-16 09:51:40', '2015-03-16 09:51:56', '2015-03-16 09:51:56', 'gd443fqhfkrqnta0t4nd3d90i1', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-16 10:03:32', NULL, '2015-03-16 10:46:38', 'gd443fqhfkrqnta0t4nd3d90i1', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36');
 
 -- --------------------------------------------------------
 
@@ -479,7 +559,8 @@ INSERT INTO `plan` (`id`, `projectId`, `createTime`, `prework`, `matPrepare`, `w
 ('201503031324272879', '201412301639279398', '2015-03-03 13:24:27', '1', '2', '3', '1', '4', '6', '111', '3', '5', 'true'),
 ('201503031324401656', '201412301640035296', '2015-03-03 13:24:40', 'a', 'fa', '', '', '', '', '', 'sdfa ', '', 'false'),
 ('201503031324496075', '201412301639437839', '2015-03-03 13:24:49', 'as', '', '', '', 'as', 'dfa', 'sd', ' ', 'sf ', 'false'),
-('201503031736418258', '201412301639279398', '2015-03-03 17:36:41', '1', '2', '2', '1', '2', '', '', '2', '2', 'true');
+('201503031736418258', '201412301639279398', '2015-03-03 17:36:41', '1', '2', '2', '1', '2', '', '', '2', '2', 'true'),
+('201503111018038668', '201412301639279398', '2015-03-11 10:18:03', 'sa', 'fdsa', 'df', 'asdfa', 'sd', 'asdfa', 'dfasd', 'sdfad', 'sdfa', 'false');
 
 -- --------------------------------------------------------
 
@@ -544,11 +625,12 @@ INSERT INTO `progress` (`id`, `progress`, `comments`, `createTime`, `isDeleted`,
 ('201503101340508060', '!@#$%^&*(', '睡都发送', '2015-03-10 13:40:50', 'true', '201412301639279398'),
 ('201503101430051640', '+++++++', '', '2015-03-10 14:30:05', 'false', '201412301639437839'),
 ('201503101455006190', 'testxxxxx', '', '2015-03-10 14:55:00', 'false', '201412301639279398'),
-('201503101456008576', '1', '', '2015-03-10 14:56:00', 'false', '201503091311147143'),
-('201503101456029224', '2', '', '2015-03-10 14:56:02', 'false', '201503091311147143'),
-('201503101456044301', '3', '', '2015-03-10 14:56:04', 'false', '201503091311147143'),
+('201503101456008576', '1', 'safasda\nasdf\nasdfa\nsd\nf\nas\nd\nfa\nsd\nf\na\nsd\nf\nasd\nf\na\nfa\nsd\nfa\nsd\nf\na', '2015-03-10 14:56:00', 'false', '201503091311147143'),
+('201503101456029224', '2', 'fasdfasd\nfas\nd\nfa\nsd\nf\nasd\n\n', '2015-03-10 14:56:02', 'false', '201503091311147143'),
+('201503101456044301', '3', 'asdfasda', '2015-03-10 14:56:04', 'false', '201503091311147143'),
 ('201503101456322594', '+++++++', '撒的发生大', '2015-03-10 14:56:32', 'false', '201503091311147143'),
-('201503101458555367', '阿斯顿发送到', '', '2015-03-10 14:58:55', 'false', '201503091311147143');
+('201503101458555367', '阿斯顿发送到', '', '2015-03-10 14:58:55', 'false', '201503091311147143'),
+('201503111023148966', 'test111', 'asdfasdfa', '2015-03-11 10:23:14', 'false', '201503091311147143');
 
 -- --------------------------------------------------------
 
@@ -615,7 +697,7 @@ CREATE TABLE IF NOT EXISTS `system` (
 
 INSERT INTO `system` (`id`, `paramName`, `paramValue`, `isDeleted`, `createTime`, `updateTime`, `paramDesc`) VALUES
 (1, 'adminpassword', 'admin:admin', 'false', '2014-12-24 16:59:08', '0000-00-00 00:00:00', '管理员密码'),
-(2, 'sessionId', '48ngg9l0qgjr1rmnbe6ipt43n6', 'false', '2014-12-24 17:01:02', '2015-03-10 15:10:16', '用来限制admin用户同一时刻只能在一个地方登陆'),
+(2, 'sessionId', '7qgh6ktjih8jn3l8m4svpni693', 'false', '2014-12-24 17:01:02', '2015-03-12 11:07:32', '用来限制admin用户同一时刻只能在一个地方登陆'),
 (3, 'pageView', '0', 'false', '2014-12-24 17:01:38', '0000-00-00 00:00:00', '网页访问次数');
 
 -- --------------------------------------------------------

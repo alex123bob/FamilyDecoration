@@ -68,6 +68,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.checklog.Index": "app/view/checklog/index.js",
   "FamilyDecoration.view.checklog.MemberList": "app/view/checklog/memberlist.js",
   "FamilyDecoration.view.checklog.UserLogList": "app/view/checklog/userloglist.js",
+  "FamilyDecoration.view.mylog.AskLeave": "app/view/mylog/askleave.js",
   "FamilyDecoration.view.mylog.EditLogDetail": "app/view/mylog/editlogdetail.js",
   "FamilyDecoration.view.mylog.Index": "app/view/mylog/index.js",
   "FamilyDecoration.view.mylog.LogList": "app/view/mylog/loglist.js",
@@ -986,6 +987,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.checklog.Index": [],
   "FamilyDecoration.view.checklog.MemberList": [],
   "FamilyDecoration.view.checklog.UserLogList": [],
+  "FamilyDecoration.view.mylog.AskLeave": [],
   "FamilyDecoration.view.mylog.EditLogDetail": [],
   "FamilyDecoration.view.mylog.Index": [],
   "FamilyDecoration.view.mylog.LogList": [],
@@ -2112,6 +2114,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.checklog.UserLogList": [
     "widget.checklog-userloglist"
+  ],
+  "FamilyDecoration.view.mylog.AskLeave": [
+    "widget.mylog-askleave"
   ],
   "FamilyDecoration.view.mylog.EditLogDetail": [
     "widget.mylog-editlogdetail"

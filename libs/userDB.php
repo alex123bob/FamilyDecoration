@@ -54,7 +54,7 @@
 			$ip = getIP();
 			$userAgent = $_SERVER['HTTP_USER_AGENT'];
 			//update
-			$mysql->DBUpdateSomeCols("`online_user`", "`userName`='$userName' " , "`offlineTime` = now() ");
+			$mysql->DBUpdateSomeCols("`online_user`"," `userName` = '$userName' and `offlineTime` is null ", "`lastUpdateTime` = now(),`offlineTime` = now() ");
 			$mysql->DBInsert("`online_user`", "`userName`, `onlineTime`,`sessionId`, `lastUpdateTime`,`ip`,`userAgent`" ," '$name', now(),'$sessionId', now(),'$ip','$userAgent' ");
 			return (array('status'=>'successful', 'errMsg'=>'','token'=>$sessionId));
 		}
@@ -66,9 +66,16 @@
 	 * @return [type] [description]
 	 */
 	function logout() {
+		if (!isset($_SESSION["name"])){
+			return array('status'=>'successful', 'errMsg'=>'already logout');
+		}
+		$sessionId = session_id();
+		$userName = $_SESSION["name"];
+		global $mysql;
+		$mysql->DBUpdateSomeCols("`online_user`"," `userName` = '$userName' and `offlineTime` is null and `sessionId` = '$sessionId' ", "`lastUpdateTime` = now(),`offlineTime` = now() ");
 		session_unset();
 		session_destroy();
-		return (array('status'=>'successful', 'errMsg'=>''));
+		return array('status'=>'successful', 'errMsg'=>'log out ok');
 	}
 
 	/**

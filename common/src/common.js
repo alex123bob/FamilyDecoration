@@ -276,7 +276,8 @@ Ext.require('Ext.Ajax', function () {
             return;
         }
         else if (status === 401) {
-            Ext.Msg.error(response.statusText, logout);
+            var obj = Ext.decode(response.responseText);
+            Ext.Msg.error(obj.errMsg, logoutWithoutCleanningSession);
         }
         else if (status === -1) {
             // do nothing
@@ -301,6 +302,10 @@ function logout (){
             }
         }
     });
+}
+
+function logoutWithoutCleanningSession (){
+    location.href = './login.html';
 }
 
 /**
