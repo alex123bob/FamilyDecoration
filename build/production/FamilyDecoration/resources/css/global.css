@@ -47,6 +47,9 @@ table.pros td{
     overflow: hidden;
 }
 
+#gridpanel-projectProgress .x-grid-cell-inner, #gridpanel-logDetail .x-grid-cell-inner, #gridpanel-logDetailByUser .x-grid-cell-inner {
+  white-space: normal;
+}
 /* keen dashboard */
 
 /*

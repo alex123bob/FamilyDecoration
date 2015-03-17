@@ -62,14 +62,29 @@ class PDF extends PDF_Chinese{
 			$this->SetFont('GB','',$thisLineFontSize);
 			$txt = is_array($txts) ? $txts[$c] : $txts;
 			$txt = ($txt === null || $txt === "NULL")? "" : $txt;
-			$this->Cell(
-				is_array($widths) ? $widths[$c] : $widths ,
-				is_array($heights) ? $heights[$c] : $heights ,
-				$txt ,
-				is_array($borders) ? $borders[$c] : $borders ,
-				is_array($positions) ? $positions[$c] : $positions ,
-				is_array($aligns) ? $aligns[$c] : $aligns
-			);
+			if ($c == 1) {
+				$x = $this->getx();
+				$y = $this->gety();
+				$this->MultiCell(
+					is_array($widths) ? $widths[$c] : $widths ,
+					is_array($heights) ? $heights[$c] : $heights ,
+					$txt ,
+					is_array($borders) ? $borders[$c] : $borders,
+					'C',
+					false
+				);
+				$this->setxy($x + 41,$y);
+			}
+			else {
+				$this->Cell(
+					is_array($widths) ? $widths[$c] : $widths ,
+					is_array($heights) ? $heights[$c] : $heights ,
+					$txt ,
+					is_array($borders) ? $borders[$c] : $borders ,
+					is_array($positions) ? $positions[$c] : $positions ,
+					is_array($aligns) ? $aligns[$c] : $aligns
+				);
+			}
 		}
 		$this->Ln();
 	}

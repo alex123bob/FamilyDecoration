@@ -38,7 +38,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
             },
             bbar: [{
                 text: '添加公告',
-                hidden: !User.isAdmin(),
+                hidden: !User.isAdmin() && !User.isAdministrationManager() && !User.isAdministrationStaff(),
                 handler: function (){
                     var win = Ext.create('Ext.window.Window', {
                         title: '添加公告',

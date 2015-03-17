@@ -5,6 +5,7 @@ Ext.define('FamilyDecoration.model.ScrutinizeList', {
         {name: 'logListId', type: 'string'},
         {name: 'isDeleted', type: 'boolean'},
         {name: 'userName', type: 'string'},
+        {name: 'realName', type: 'string'},
         {name: 'scrutinizeTime', type: 'string', mapping: 'createTime'},
         {name: 'scrutinizeContent', type: 'string', mapping: 'content'},
     ],

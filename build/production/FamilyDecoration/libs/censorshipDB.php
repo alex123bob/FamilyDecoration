@@ -56,6 +56,8 @@
 		    $res[$count]["createTime"] = $val["createTime"];
 		    $res[$count]["userName"] = $val["userName"];
 			$res[$count]["content"] = $val["content"];
+			$tmp = $mysql->DBGetOneRow("`user`", "`realname`", "`name` = '".$val["userName"]."'");
+			$res[$count]["realName"] = $tmp["realname"];
 		    $count ++;
         }
 		return $res;
