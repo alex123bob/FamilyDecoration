@@ -1,0 +1,3 @@
+ALTER TABLE  `user` ADD  `updateTime` DATETIME NULL COMMENT  '最近一次更新时间';
+ALTER TABLE  `user` ADD  `isDeleted` VARCHAR( 5 ) NOT NULL DEFAULT  'false' COMMENT  '是否删除';
+ALTER TABLE  `user` ADD  `createTime` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL COMMENT  '创建时间' AFTER  `level`;

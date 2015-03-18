@@ -2,16 +2,17 @@
 	include_once "conn.php";
 	
 	$prefix = "familydecoration-";
-	function delete($name){
+	function delete($nameToDelete){
 		global $mysql;
-		if($name == "admin"){
-			throw new Exception('只有管理员账户无法删除！');
+		$name = $_SESSION["name"];
+		$level = $_SESSION["level"];
+		if($name == $nameToDelete){
+			throw new Exception('不能删除自己！');
 		}
-		if(isset($_SESSION["admin"]) && $_SESSION["admin"]){
-			$mysql->DBDelete("`user`", "`name` = '$name' ");
-		}else{
+		if(!startWith($level,'001-')){
 			throw new Exception('只有管理员可以删除用户！');
 		}
+		$mysql->DBUpdateSomeCols("`user`"," `name` = '$nameToDelete' ", "`isDeleted` = 'true',`updateTime` = now() ");
 		return (array('status'=>'successful', 'errMsg' => ''));
 	}
 	/**
@@ -151,7 +152,7 @@
 	 */
 	function getList (){
 		global $mysql, $prefix;
-		$arr = $mysql->DBGetSomeRows("`user` ", " user.*,p.projectName "," left join project p on p.projectId = user.projectId " ,"");
+		$arr = $mysql->DBGetSomeRows("`user` ", " user.*,p.projectName "," left join project p on p.projectId = user.projectId where user.isDeleted = 'false'" ,"");
 		//select u.*,p.projectName from user u left join project p on p.projectId = u.projectId;
 		//$res = $mysql->DBGetAllRows("`user`", "*");
 		return ($arr);

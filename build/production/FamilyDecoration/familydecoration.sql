@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 16, 2015 at 03:39 AM
+-- Generation Time: Mar 18, 2015 at 02:31 AM
 -- Server version: 5.1.50
 -- PHP Version: 5.3.14
 
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `basic_sub_item` (
   `cost` double NOT NULL COMMENT '基础子项目成本',
   `remark` text NOT NULL COMMENT '多行备注',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=28 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=29 ;
 
 --
 -- Dumping data for table `basic_sub_item`
@@ -104,7 +104,8 @@ INSERT INTO `basic_sub_item` (`id`, `subItemId`, `subItemName`, `subItemUnit`, `
 (24, 'basic-sub-201501041354226726', '小项测试1', 'df', 0, 0, 0, 0, 0, 'basic-201412061745208299', 0, 'asfdas\ndfasdfasdfa\nsdfasdf\n1234\n123'),
 (25, 'basic-sub-201501041356086266', '小项测试1', 'df', 0, 0, 0, 0, 0, 'basic-201412061745208299', 0, 'asfd\nasdfasdfasdf\nasdf\nasdf'),
 (26, 'basic-sub-201501041417323382', 'asdfa', 'asfa', 0, 0, 0, 0, 0, 'basic-201412241009187201', 0, 'asdfasdfa\nsd\nfa\nsd\nfa\ns\ndf\na\n'),
-(27, 'basic-sub-201501041417323509', 'asdfas', 'sdfa', 0, 0, 0, 0, 0, 'basic-201412241009187201', 0, 'asdfasdfasdfasdfjalksjdlkfjalksdjlfkajlsdjfal');
+(27, 'basic-sub-201501041417323509', 'asdfas', 'sdfa', 0, 0, 0, 0, 0, 'basic-201412241009187201', 0, 'asdfasdfasdfasdfjalksjdlkfjalksdjlfkajlsdjfal'),
+(28, 'basic-sub-201503161643235280', '长名字长名字长名字长名字长名字长名字长名字长名字长名字长名字长名字长名字', 'm', 1, 2, 3, 4, 0.2, 'basic-201412241009185763', 0.8, '备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注');
 
 -- --------------------------------------------------------
 
@@ -124,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `budget` (
   `isDeleted` varchar(5) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `bugetId` (`budgetId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `budget`
@@ -134,7 +135,8 @@ INSERT INTO `budget` (`id`, `budgetId`, `custName`, `projectName`, `areaSize`, `
 (1, 'budget-201412241230051238', '李先生', '测试工程', '102', '2256.78964', '阿斯顿发手机的路口附近阿拉斯加的立方阿加思考的>>><<<爱睡觉了快点交罚款辣椒水老地方加速度啊', 'true'),
 (2, 'budget-201412301726085628', 'test', '西山美墅', '12342', '5016.14432', 'asdfasdfa', 'false'),
 (3, 'budget-201501041440302265', 'asdfasdaf', '天鹏工程', '11111', '10.27402', 'fasdfasdfa', 'false'),
-(4, 'budget-201503101354352774', 'test1', 'test1', '12313', '142.32148', 'fasdfa', 'false');
+(4, 'budget-201503101354352774', 'test1', 'test1', '12313', '142.32148', 'fasdfa', 'false'),
+(5, 'budget-201503161644263572', '阿斯顿发生', 'test', '1111', '4332.97824', '发送到发送到', 'false');
 
 -- --------------------------------------------------------
 
@@ -162,7 +164,7 @@ CREATE TABLE IF NOT EXISTS `budget_item` (
   `basicSubItemId` varchar(120) DEFAULT NULL COMMENT '基础项目子项id',
   PRIMARY KEY (`id`),
   KEY `buget_item_buget_idx` (`budgetId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=83 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=95 ;
 
 --
 -- Dumping data for table `budget_item`
@@ -250,7 +252,19 @@ INSERT INTO `budget_item` (`id`, `budgetItemId`, `itemName`, `budgetId`, `itemCo
 (79, 'budget-item-201503101354357948', '效果图', 'budget-201503101354352774', 'P', '张', 1, 500, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL'),
 (80, 'budget-item-201503101354355313', '5%管理费', 'budget-201503101354352774', 'Q', '元', 0.05, 7.230029, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL'),
 (81, 'budget-item-201503101354351014', '0%税金', 'budget-201503101354352774', 'R', '元', 0.3, 43.380174, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL'),
-(82, 'budget-item-201503101354356986', '工程总造价', 'budget-201503101354352774', 'S', '元', 1, 738.590957, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL');
+(82, 'budget-item-201503101354356986', '工程总造价', 'budget-201503101354352774', 'S', '元', 1, 738.590957, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL'),
+(83, 'budget-item-201503161644269195', '玻璃工程', 'budget-201503161644263572', 'A', 'NULL', 0, 0, 0, 0, 0, 0, 'false', 'NULL', 'basic-201412241009185763', 'NULL'),
+(84, 'budget-item-201503161644266623', '玻璃1', 'budget-201503161644263572', 'A-1', 'h', 1.2, 1.21, 21.2, 0.21, 0.21, 6.723, 'false', 'asdfa ', 'basic-201412241009185763', 'basic-sub-201412241136392687'),
+(85, 'budget-item-201503161644264601', '玻璃2', 'budget-201503161644263572', 'A-2', 'k1', 3, 12.12, 31.1, 12.1, 41.1, 8.644, 'false', 'NULL', 'basic-201412241009185763', 'basic-sub-201412241138575707'),
+(86, 'budget-item-201503161644264049', '玻璃3', 'budget-201503161644263572', 'A-3', 'a', 1.2, 12.31, 12.21, 12.1, 19.12, 2.6972, 'false', 'NULL', 'basic-201412241009185763', 'basic-sub-201412241138577250'),
+(87, 'budget-item-201503161644265757', '玻璃4', 'budget-201503161644263572', 'A-4', 'o', 33, 91, 10.2, 0.21, 2.3, 8.096, 'false', 'NULL', 'basic-201412241009185763', 'basic-sub-201412241138571101'),
+(88, 'budget-item-201503161644261893', '长名字长名字长名字长名字长名字长名字长名字长名字长名字长名字长名字长名字', 'budget-201503161644263572', 'A-5', 'm', 21, 1, 2, 3, 4, 0.6, 'false', '备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注', 'basic-201412241009185763', 'basic-sub-201503161643235280'),
+(89, 'budget-item-201503161644269957', '工程直接费', 'budget-201503161644263572', 'N', '元', 1, 4332.97824, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL'),
+(90, 'budget-item-201503161644261906', '设计费3%', 'budget-201503161644263572', 'O', '元', 0.2, 866.595648, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL'),
+(91, 'budget-item-201503161644267899', '效果图', 'budget-201503161644263572', 'P', '张', 1, 500, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL'),
+(92, 'budget-item-201503161644264759', '5%管理费', 'budget-201503161644263572', 'Q', '元', 0.05, 216.648912, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL'),
+(93, 'budget-item-201503161644265069', '0%税金', 'budget-201503161644263572', 'R', '元', 0.3, 1299.893472, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL'),
+(94, 'budget-item-201503161644264985', '工程总造价', 'budget-201503161644263572', 'S', '元', 1, 7216.116272, 0, 0, 0, 0, 'false', 'NULL', 'NULL', 'NULL');
 
 -- --------------------------------------------------------
 
@@ -524,7 +538,16 @@ INSERT INTO `online_user` (`userName`, `onlineTime`, `offlineTime`, `lastUpdateT
 ('visitor', '2015-03-16 09:46:43', '2015-03-16 09:49:05', '2015-03-16 09:49:05', 'gd443fqhfkrqnta0t4nd3d90i1', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
 ('admin', '2015-03-16 09:49:29', '2015-03-16 09:51:36', '2015-03-16 09:51:36', 'gd443fqhfkrqnta0t4nd3d90i1', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
 ('visitor1', '2015-03-16 09:51:40', '2015-03-16 09:51:56', '2015-03-16 09:51:56', 'gd443fqhfkrqnta0t4nd3d90i1', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
-('admin', '2015-03-16 10:03:32', NULL, '2015-03-16 10:46:38', 'gd443fqhfkrqnta0t4nd3d90i1', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36');
+('admin', '2015-03-16 10:03:32', '2015-03-16 16:17:19', '2015-03-16 16:17:19', 'gd443fqhfkrqnta0t4nd3d90i1', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('amanager', '2015-03-16 16:17:27', '2015-03-16 16:17:38', '2015-03-16 16:17:38', 'gd443fqhfkrqnta0t4nd3d90i1', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-16 16:17:41', '2015-03-16 16:18:07', '2015-03-16 16:18:07', 'gd443fqhfkrqnta0t4nd3d90i1', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('amanager', '2015-03-16 16:18:11', '2015-03-16 16:18:18', '2015-03-16 16:18:18', 'gd443fqhfkrqnta0t4nd3d90i1', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('astaff', '2015-03-16 16:18:23', '2015-03-16 16:18:50', '2015-03-16 16:18:50', 'gd443fqhfkrqnta0t4nd3d90i1', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-16 16:25:49', '2015-03-16 18:01:13', '2015-03-16 18:01:13', 'gd443fqhfkrqnta0t4nd3d90i1', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-16 18:01:13', '2015-03-17 09:13:06', '2015-03-17 09:13:06', '6tdic59rq7p87gccbtr9fd0qc3', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-17 09:13:06', '2015-03-17 16:28:17', '2015-03-17 16:28:17', 'doi2vq30qqvgrauvmf83g8mfa6', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-17 16:28:18', '2015-03-18 09:28:28', '2015-03-18 09:28:28', '07mborgt80eksa1caumj0nk784', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'),
+('admin', '2015-03-18 09:28:28', NULL, '2015-03-18 10:30:31', 'sb74bpek2trfaqso3cttlucnq0', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36');
 
 -- --------------------------------------------------------
 
@@ -630,7 +653,9 @@ INSERT INTO `progress` (`id`, `progress`, `comments`, `createTime`, `isDeleted`,
 ('201503101456044301', '3', 'asdfasda', '2015-03-10 14:56:04', 'false', '201503091311147143'),
 ('201503101456322594', '+++++++', '撒的发生大', '2015-03-10 14:56:32', 'false', '201503091311147143'),
 ('201503101458555367', '阿斯顿发送到', '', '2015-03-10 14:58:55', 'false', '201503091311147143'),
-('201503111023148966', 'test111', 'asdfasdfa', '2015-03-11 10:23:14', 'false', '201503091311147143');
+('201503111023148966', 'test111', 'asdfasdfa', '2015-03-11 10:23:14', 'false', '201503091311147143'),
+('201503171515004343', 'asdjflkajslkdfa\nsfajlsdjflkajslkdjflkajsldkfjalkasl\nfas\nd\nf\nas\ndf\na\nsd\nfa\nsdfasdfasjdfjalsjdlkfjalkjsdlkfjalksjdlkfjalksjdlkfajlksjdlfajlk', '', '2015-03-17 15:15:00', 'false', '201503091311147143'),
+('201503171523392864', '奥手机地方将阿里睡都发觉数据量法丝芙兰失联飞机的按时间段阿里斯顿静安寺靠里发酵螺丝刀解放路阿斯顿龙卷风卡拉斯姐弟恋发酵阿双方均绿卡死里发酵粮食店街法拉克丝的\n阿斯兰的减肥垃圾流口水姐弟俩\n阿斯顿飞机拉克丝就放\na艾弗森的\n\na是\nfas df啊\n ', '', '2015-03-17 15:23:39', 'false', '201503091311147143');
 
 -- --------------------------------------------------------
 
@@ -662,8 +687,8 @@ INSERT INTO `project` (`id`, `projectId`, `projectName`, `period`, `captain`, `s
 (8, '201412301639279398', '西山美墅', '====11', '-----222', '1111333', '../resources/chart/201412301639279398/201501091131157127.jpg||08f790529822720eb9ab5fe979cb0a46f21fabb8.jpg<>../resources/chart/201412301639279398/201501091131151184.jpg||9f2f070828381f30f49143b6ab014c086e06f021.jpg<>../resources/chart/201412301639279398/201501091131155389.jpg||574e9258d109b3de8106567bcebf6c81800a4c63.jpg<>../resources/chart/201412301639279398/201501091131159348.jpg||5882b2b7d0a20cf43194a4de74094b36acaf99ae.jpg<>../resources/chart/201412301639279398/201501091131152245.jpg||a6efce1b9d16fdfa58ee65e3b68f8c5494ee7b39.jpg<>../resources/chart/201412301639279398/201501091131153716.jpg||aa64034f78f0f736319e2e080855b319ebc41352.jpg<>../resources/chart/201412301639279398/201501091131155881.jpg||b8014a90f603738d3c345623b11bb051f819ecb1.jpg<>../resources/chart/201412301639279398/201501091131158899.jpg||cdbf6c81800a19d87a6555ea31fa828ba71e46ff.jpg<>../resources/chart/201412301639279398/201501091131156331.jpg||d009b3de9c82d158fb0603b0820a19d8bc3e422e.jpg<>../resources/chart/201412301639279398/201501091131151941.jpg||d31b0ef41bd5ad6e6dd475eb83cb39dbb6fd3c85.jpg<>../resources/chart/201412301639279398/201501091131157546.jpg||u=1,2239671332&fm=25&gp=0.jpg<>../resources/chart/201412301639279398/201501091131153418.jpg||u=2,596083530&fm=25&gp=0.jpg', '2012-01-10 00:00:00', 'budget-201412301726085628', 0, 'false'),
 (9, '201412301639437839', '天鹏工程', '++++', '++++', '++++', '', '2011-12-07 00:00:00', 'budget-201501041440302265', 0, 'false'),
 (10, '201412301640035296', '测试工程', NULL, NULL, NULL, '', '2012-12-06 00:00:00', 'budget-201412241230051238', 0, 'true'),
-(11, '201503091249283570', 'test', '1', '2', '3', '', '2015-03-09 00:00:00', NULL, 0, 'true'),
-(12, '201503091311147143', 'test', NULL, NULL, NULL, '', '2015-03-08 00:00:00', NULL, 0, 'false'),
+(11, '201503091249283570', 'test', '1', '2', '3', '', '2015-03-09 00:00:00', 'budget-201503161644263572', 0, 'true'),
+(12, '201503091311147143', 'test', NULL, NULL, NULL, '', '2015-03-08 00:00:00', 'budget-201503161644263572', 0, 'false'),
 (13, '201503091311314818', 'test1', NULL, NULL, NULL, '', '2015-03-07 00:00:00', 'budget-201503101354352774', 0, 'false'),
 (14, '201503091551047216', '测试工程', NULL, NULL, NULL, NULL, '2015-03-01 00:00:00', NULL, 0, 'true'),
 (15, '201503091632462559', 'test111221111', NULL, NULL, NULL, NULL, '2015-03-10 00:00:00', NULL, 0, 'true'),
@@ -714,6 +739,9 @@ CREATE TABLE IF NOT EXISTS `user` (
   `realname` varchar(100) NOT NULL COMMENT '用户真实姓名',
   `password` varchar(200) NOT NULL,
   `level` varchar(10) NOT NULL COMMENT '用户等级',
+  `createTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateTime` datetime DEFAULT NULL COMMENT '最近一次更新时间',
+  `isDeleted` varchar(5) NOT NULL DEFAULT 'false' COMMENT '是否删除',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=29 ;
 
@@ -721,25 +749,25 @@ CREATE TABLE IF NOT EXISTS `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `name`, `projectId`, `realname`, `password`, `level`) VALUES
-(1, 'admin', NULL, '张泽南', '858c86a3843be5e3001b7db637cb67ab', '001-001'),
-(10, 'vadmin', NULL, '李丹丹', '99f4f6dfdc0af4a57a98e8930966c709', '001-002'),
-(11, 'dmanager', NULL, '王小二', 'f05fe7cc82606585202bd976be1c3b20', '002-001'),
-(12, 'pmanager', NULL, '张小三', '25f09d7ddb6674026750f8325f26c842', '003-001'),
-(13, 'bmanager', NULL, '李小四', '0ce91e898f456aee56a22a524b38ccef', '004-001'),
-(14, 'visitor', NULL, '赵小二', '9a96de2483722aed08b4b190568a425a', '006-001'),
-(15, 'dstaff', NULL, '孙小二', 'c1f672517aac54e099a6a51be26a2d76', '002-002'),
-(16, 'pstaff', NULL, '孙小三', '7cdd7bb1ba94dd63e88cda2bf96629df', '003-002'),
-(17, 'psupervisor', NULL, '周小二', 'fcc3547b30e5d847b4f1a7e059288f3a', '003-003'),
-(18, 'bstaff', NULL, '吴小二', 'baf1424e94aafd8f61866515159bfc59', '004-002'),
-(21, 'amanager', NULL, '吴小三', '414cc63e205d297de7ccebc3af1cbffc', '005-001'),
-(22, 'astaff', NULL, '于小三', '434581bfafa03698d61eaf573f52a3ba', '005-002'),
-(23, 'pstaff1', NULL, '宋小二', '83d0f04ed0dbb0c9f0140e679db8ef06', '003-002'),
-(24, 'visitor1', '201412301639279398', '宋丹丹', '835d1537edaaa2c61f8b8810fbbae84e', '006-001'),
-(25, 'pgmanager', '', '王老五', 'b77c4c9748930b2be23c0a0307bfd793', '007-001'),
-(26, 'pgstaff', '', '王老六', '2840dafdbec73caf14aaa7b9a04c61c9', '007-002'),
-(27, 'traveler', '201412301639279398', '我是游客', '4951aacd81bec0ba7392114ebb7c9dbd', '006-001'),
-(28, 'test', '201412301639279398', 'test', '9dbe87d7bcd06079e681b60d5e7c43b9', '006-001');
+INSERT INTO `user` (`id`, `name`, `projectId`, `realname`, `password`, `level`, `createTime`, `updateTime`, `isDeleted`) VALUES
+(1, 'admin', NULL, '张泽南', '858c86a3843be5e3001b7db637cb67ab', '001-001', '0000-00-00 00:00:00', NULL, 'false'),
+(10, 'vadmin', NULL, '李丹丹', '99f4f6dfdc0af4a57a98e8930966c709', '001-002', '0000-00-00 00:00:00', NULL, 'false'),
+(11, 'dmanager', NULL, '王小二', 'f05fe7cc82606585202bd976be1c3b20', '002-001', '0000-00-00 00:00:00', NULL, 'false'),
+(12, 'pmanager', NULL, '张小三', '25f09d7ddb6674026750f8325f26c842', '003-001', '0000-00-00 00:00:00', NULL, 'false'),
+(13, 'bmanager', NULL, '李小四', '0ce91e898f456aee56a22a524b38ccef', '004-001', '0000-00-00 00:00:00', NULL, 'false'),
+(14, 'visitor', NULL, '赵小二', '9a96de2483722aed08b4b190568a425a', '006-001', '2015-03-18 10:01:05', '2015-03-18 10:01:05', 'true'),
+(15, 'dstaff', NULL, '孙小二', 'c1f672517aac54e099a6a51be26a2d76', '002-002', '0000-00-00 00:00:00', NULL, 'false'),
+(16, 'pstaff', NULL, '孙小三', '7cdd7bb1ba94dd63e88cda2bf96629df', '003-002', '0000-00-00 00:00:00', NULL, 'false'),
+(17, 'psupervisor', NULL, '周小二', 'fcc3547b30e5d847b4f1a7e059288f3a', '003-003', '0000-00-00 00:00:00', NULL, 'false'),
+(18, 'bstaff', NULL, '吴小二', 'baf1424e94aafd8f61866515159bfc59', '004-002', '0000-00-00 00:00:00', NULL, 'false'),
+(21, 'amanager', NULL, '吴小三', '414cc63e205d297de7ccebc3af1cbffc', '005-001', '0000-00-00 00:00:00', NULL, 'false'),
+(22, 'astaff', NULL, '于小三', '434581bfafa03698d61eaf573f52a3ba', '005-002', '0000-00-00 00:00:00', NULL, 'false'),
+(23, 'pstaff1', NULL, '宋小二', '83d0f04ed0dbb0c9f0140e679db8ef06', '003-002', '0000-00-00 00:00:00', NULL, 'false'),
+(24, 'visitor1', '201412301639279398', '宋丹丹', '835d1537edaaa2c61f8b8810fbbae84e', '006-001', '0000-00-00 00:00:00', NULL, 'false'),
+(25, 'pgmanager', '', '王老五', 'b77c4c9748930b2be23c0a0307bfd793', '007-001', '0000-00-00 00:00:00', NULL, 'false'),
+(26, 'pgstaff', '', '王老六', '2840dafdbec73caf14aaa7b9a04c61c9', '007-002', '0000-00-00 00:00:00', NULL, 'false'),
+(27, 'traveler', '201412301639279398', '我是游客', '4951aacd81bec0ba7392114ebb7c9dbd', '006-001', '0000-00-00 00:00:00', NULL, 'false'),
+(28, 'test', '201412301639279398', 'test', '9dbe87d7bcd06079e681b60d5e7c43b9', '006-001', '0000-00-00 00:00:00', NULL, 'false');
 
 --
 -- Constraints for dumped tables

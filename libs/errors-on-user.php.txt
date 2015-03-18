@@ -1,0 +1,2 @@
+错误的语句是SELECT  user.*,p.projectName  FROM `user`   left join project p on p.projectId = user.projectId where user.isDeleted = 'false'
+发生的时间是：2015-03-18 09:59:47

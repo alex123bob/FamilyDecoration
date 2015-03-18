@@ -15,6 +15,9 @@
 		echo json_encode($result);
 		die();
 	}
+	function startWith($str, $needle) {
+        return strpos($str, $needle) === 0;
+	}
 	function str2GBK($str){
 		$res = '';
 		#$res = is_null($str) ? "" : iconv("UTF-8","GB2312//IGNORE",$str);  //平方米等utf8单位会丢失

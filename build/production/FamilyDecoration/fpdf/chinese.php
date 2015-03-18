@@ -109,17 +109,18 @@ function GetMBStringWidth($s){
 	return $res;
 }
 
-function MultiCell($w, $h, $txt, $border=0, $align='L', $fill=0)
+function MultiCell($w, $h, $txt, $border=0, $align='L', $fill=0,$thisLineHeight)
 {
 	if($this->CurrentFont['type']=='Type0')
-		$this->MBMultiCell($w,$h,$txt,$border,$align,$fill);
+		$this->MBMultiCell($w,$h,$txt,$border,$align,$fill,$thisLineHeight);
 	else
-		parent::MultiCell($w,$h,$txt,$border,$align,$fill);
+		parent::MultiCell($w,$h,$txt,$border,$align,$fill,$thisLineHeight);
 }
 
-function MBMultiCell($w, $h, $txt, $border=0, $align='L', $fill=0)
+function MBMultiCell($w, $h, $txt, $border=0, $align='L', $fill=0,$thisLineHeight)
 {
 	// Multi-byte version of MultiCell()
+	$outPutLines = 0;
 	$cw = &$this->CurrentFont['cw'];
 	if($w==0)
 		$w = $this->w-$this->rMargin-$this->x;
@@ -152,6 +153,12 @@ function MBMultiCell($w, $h, $txt, $border=0, $align='L', $fill=0)
 	$j = 0;
 	$l = 0;
 	$nl = 1;
+	$linesActualNeed = ceil($this->GetStringWidth($txt)/$w);
+	$headblankLines = floor((ceil($thisLineHeight/$h) - $linesActualNeed)/2);
+	while($headblankLines-->0){
+		$this->Cell($w,$h,'',$b,2,$align,$fill);
+		$outPutLines++;
+	}
 	while($i<$nb)
 	{
 		// Get next character
@@ -162,6 +169,7 @@ function MBMultiCell($w, $h, $txt, $border=0, $align='L', $fill=0)
 		{
 			// Explicit line break
 			$this->Cell($w,$h,substr($s,$j,$i-$j),$b,2,$align,$fill);
+			$outPutLines++;
 			$i++;
 			$sep = -1;
 			$j = $i;
@@ -190,10 +198,12 @@ function MBMultiCell($w, $h, $txt, $border=0, $align='L', $fill=0)
 				if($i==$j)
 					$i += $ascii ? 1 : 2;
 				$this->Cell($w,$h,substr($s,$j,$i-$j),$b,2,$align,$fill);
+				$outPutLines++;
 			}
 			else
 			{
 				$this->Cell($w,$h,substr($s,$j,$sep-$j),$b,2,$align,$fill);
+				$outPutLines++;
 				$i = ($s[$sep]==' ') ? $sep+1 : $sep;
 			}
 			$sep = -1;
@@ -206,11 +216,25 @@ function MBMultiCell($w, $h, $txt, $border=0, $align='L', $fill=0)
 		else
 			$i += $ascii ? 1 : 2;
 	}
-	// Last chunk
-	if($border && is_int(strpos($border,'B')))
-		$b .= 'B';
-	$this->Cell($w,$h,substr($s,$j,$i-$j),$b,2,$align,$fill);
-	$this->x = $this->lMargin;
+	$outPutLines++;
+	if($outPutLines*$h >= $thisLineHeight){
+		// Last chunk
+		if($border && is_int(strpos($border,'B')))
+			$b .= 'B';
+		$this->Cell($w,$h,substr($s,$j,$i-$j),$b,2,$align,$fill);
+	}else{
+		$lastB = $b;
+		if($border && is_int(strpos($border,'B')))
+			$lastB .= 'B';
+		$this->Cell($w,$h,substr($s,$j,$i-$j),$b,2,$align,$fill);
+		$outPutLines++;
+		while($outPutLines * $h < $thisLineHeight){
+			$this->Cell($w,$h,'',$b,2,$align,$fill);
+			$outPutLines++;
+		}
+		$this->Cell($w,$h,'',$lastB,2,$align,$fill);
+	}
+	$this->x = $this->lMargin;	
 }
 
 function Write($h, $txt, $link='')

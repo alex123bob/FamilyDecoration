@@ -1,15 +1,19 @@
 <?php
-global $CellWidth,$FirstCellWidth,$titleLeft,$GfontSize; 
-$FirstCellWidth  = array(11,41,9,10,   27,   26,   27,   23,10,95);
-$CellWidth 		 = array(11,41,9,10,11,16,13,13,12,15,10,13,10,95);
-$titleLeft       = array(12,32,63,72,236);
+
+global $CellWidth,$FirstCellWidth,$titleLeft,$GfontSize,$lineHeight; 
+$FirstCellWidth	= array(11,41,9,10,   27,   26,   27,   23,10,95);
+$CellWidth 		= array(11,41,9,10,11,16,13,13,12,15,10,13,10,95);
+$lineHeight 	= 6;
+$titleLeft      = array(12,32,63,72,236);
+$GfontSize		= 10;
+
 include_once "../libs/conn.php";
 include_once '../libs/budgetDB.php'; 
 include_once 'chinese.php';
 include_once 'pdf_chinese.php';
 global $custName;
 global $projectName;
-$GfontSize = 10;
+
 $budget = getBudgetsByBudgetId($_REQUEST["budgetId"]);
 if(count($budget) == 0){
 	throw new Exception("no budget with id ".$_REQUEST["budgetId"]);
@@ -25,41 +29,24 @@ $pdf->Open(); //¿ªÊ¼´´½¨PDF
 $pdf->AddPage(); //Ôö¼ÓÒ»Ò³ 
 $pdf->SetFont('GB','',$GfontSize); //ÉèÖÃ×ÖÌåÑùÊ½ 
 $pdf->AliasNbPages("__totalPage__");
-$lineHeight = 6;
+
 foreach($budgetItems as $bItem){
 	$itemName = $bItem["itemName"];
 	$amount = $bItem["itemAmount"];
 	$itemCode = $bItem["itemCode"];
-	//Õý³£Êä³ö´ó¡¢Ð¡ÏîÊý¾Ý£¬´¦Àí±¸×¢
-	$remark = str_replace(PHP_EOL,'',$bItem["remark"]);
-	$remark = str_split($remark,65);
-	$remarkLineCount = count($remark);
-	$lineToOutput = ceil($remarkLineCount/2);
-	$i = 0;
-	//Êä³ö±¸×¢
-	while($i < $remarkLineCount){
-		$LineRemark = $remark[$i];
-			
-		if(($i+1) != $lineToOutput){
-			$data = array('','','','','','','','','','','','','',$remark[$i]);
-		}else{
-			$data = array($itemCode,$itemName,$bItem["itemUnit"],$amount,
+	
+	
+	$remark = $bItem["remark"];
+	$data = array($itemCode,$itemName,$bItem["itemUnit"],$amount,
 				$bItem["mainMaterialPrice"],$bItem["mainMaterialTotalPrice"],
 				$bItem["auxiliaryMaterialPrice"],$bItem["auxiliaryMaterialTotalPrice"],$bItem["manpowerPrice"],
 				$bItem["manpowerTotalPrice"],$bItem["machineryPrice"],$bItem["machineryTotalPrice"],
-				$bItem["lossPercent"],$LineRemark);
-		}
-		$fontSizes = array($GfontSize,$GfontSize,$GfontSize,$GfontSize,$GfontSize,
+				$bItem["lossPercent"],$remark);
+	$fontSizes = array($GfontSize,$GfontSize,$GfontSize,$GfontSize,$GfontSize,
 							$GfontSize,$GfontSize,$GfontSize,$GfontSize,$GfontSize,
 							$GfontSize,$GfontSize,$GfontSize,8);
-		if($i==($remarkLineCount-1)){
-			$borders = array('LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LBR');
-		}else{
-			$borders = array('L','L','L','L','L','L','L','L','L','L','L','L','L','LR');
-		}
-		$pdf->writeCellLine($CellWidth,$lineHeight,$data,$borders,0,'C',14,$fontSizes);
-		$i++;
-	}
+	$borders = array('LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LBR');
+	$pdf->writeCellLine($CellWidth,$data,$borders,0,'C',14,$fontSizes);
 }
 
 
@@ -105,6 +92,6 @@ $pdf->Cell(200,$titleHeightPosition,'    ×¢£º 1¡¢ ±¾±¨¼Ûµ¥ÎªºÏÍ¬¸½¼þ£¬ ¾ßÓÐÍ¬µÈ·
 $pdf->Ln();
 $pdf->Output($projectName.".pdf", $action == "view" ? "I" : "D" );
 
-$pdf->writeCellLine($CellWidth,$lineHeight,$data,0,0,'R');
+$pdf->writeCellLine($CellWidth,$data,0,0,'R');
 
 ?>  
