@@ -153,10 +153,10 @@ Ext.define('FamilyDecoration.view.budget.EditBudget', {
                 draggable: false,
                 align: 'center',
                 sortable: false,
-                editor: {
+                editor: User.isAdmin() || User.isDesignStaff() || User.isDesignManager() ? {
                     xtype: 'textfield',
                     allowBlank: false
-                },
+                } : null,
                 renderer: function(val, meta, rec) {
                     return rec.raw.itemAmount;
                 }
@@ -282,13 +282,13 @@ Ext.define('FamilyDecoration.view.budget.EditBudget', {
                 flex: 1,
                 draggable: false,
                 sortable: false,
-                editor: {
+                editor: User.isAdmin() || User.isDesignStaff() || User.isDesignManager() ? {
                     xtype: 'textarea',
                     allowBlank: false
-                }
+                } : null
             }],
             listeners: {
-                beforeitemcontextmenu: function(view, rec, item, index, e) {
+                beforeitemcontextmenu: User.isAdmin() || User.isDesignStaff() || User.isDesignManager() ? function(view, rec, item, index, e) {
                     var menu;
                     e.preventDefault();
                     // 小计|空白行
@@ -658,7 +658,7 @@ Ext.define('FamilyDecoration.view.budget.EditBudget', {
                     }
 
                     menu.showAt(e.getPoint());
-                },
+                } : Ext.emptyFn,
                 afterrender: function(grid, opts) {
                     var st = grid.getStore(),
                         view = grid.getView();
