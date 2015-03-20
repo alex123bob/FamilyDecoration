@@ -73,17 +73,26 @@ class PDF extends PDF_Chinese{
 			$w = is_array($widths) ? $widths[$c] : $widths;
 			$stringWidth = $this->GetStringWidth($txt);
 			if($stringWidth > $w){
-				// round 用于精确到小数点后两位，之后向上取整。
-				$tmp = ceil(round($stringWidth/($w-$this->cMargin*2),2))*$lineHeight;
-				$thisLineHeight = $thisLineHeight > $tmp ?  $thisLineHeight : $tmp;
 				
+				// 计算需要几行 . round 用于精确到小数点后两位，之后向上取整。
+				$lines = ceil(round($stringWidth/($w-$this->cMargin*2),2));
+				
+				// 本行行高临时变量
+				$tmp = $lines * ( $c == 13 ? 4 : 5);
+				$thisLineHeight = $thisLineHeight > $tmp ?  $thisLineHeight : $tmp;
+				if($txts['0'] == 'B-8'){
+					//echo "lines:$lines,c:$c,thisLineHeight:$thisLineHeight<br />";
+				}
 			}
-			
 		}
 		
 		$c = 0;
 		$lastCellHeight;
 		//遍历所有表格，输出
+		if($txts['0'] == 'B-8'){
+			//echo 'output<br />';
+		}
+		$isMultiLines = false;
 		for( ; $c < $times ; $c ++){
 			$thisLineFontSize = $fontSizes;
 			if($fontSizes != null && is_array($fontSizes) && isset($fontSizes[$c])){
@@ -94,22 +103,38 @@ class PDF extends PDF_Chinese{
 			$txt = ($txt === null || $txt === "NULL")? "" : $txt;
 			$w = is_array($widths) ? $widths[$c] : $widths;
 			$border = is_array($borders) ? $borders[$c] : $borders;
-					
+			$align = is_array($aligns) ? $aligns[$c] : $aligns;
 			$stringWidth = $this->GetStringWidth($txt);
+			
+			if($txts['0'] == 'B-8'){
+					//echo "c:$c,thisLineHeight:$thisLineHeight,h:".($c == 13 ? 4 : 5)."<br />";
+			}
 			if($stringWidth > $w){
 				$x = $this->getx();
 				$y = $this->gety();
-				$this->MultiCell($w,$lineHeight,$txt,$border,'R',false,$thisLineHeight);
-				$lastCellHeight = $lineHeight;
+				if($c == 1 || $c == 13){
+					//第二列和最后一列靠左对齐。其他居中
+					$align = 'L';
+				}
+				$tmpLineHeight = $c == 13 ? 4 : 5;
+				if($txts['0'] == 'B-8'){
+					//echo "tmpLineHeight:$tmpLineHeight,thisLineHeight:$thisLineHeight,c:$c<br />";
+				}
+				$lastCellHeight = $this->MultiCell($w,$tmpLineHeight,$txt,$border,$align,false,$thisLineHeight);
+				
 				$this->setxy($x+$w,$y);
+				$isMultiLines = true;
 			}else{
-				$this->Cell($w,$thisLineHeight,$txt,$border,'R',is_array($aligns) ? $aligns[$c] : $aligns);
+				$this->Cell($w,$thisLineHeight,$txt,$border,'R',$align);
 				$lastCellHeight = $thisLineHeight;
 			}
 		}
 		$x = $this->getx();
 		$y = $this->gety();
 		$this->setxy($x,$y+$thisLineHeight-$lastCellHeight);
+		if($isMultiLines){
+			
+		}
 		$this->Ln();
 	}
 }

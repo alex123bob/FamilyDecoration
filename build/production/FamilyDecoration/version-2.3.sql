@@ -1,0 +1,2 @@
+ALTER TABLE  `project` ADD  `salesman` VARCHAR( 45 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT  '业务员' AFTER  `supervisor` ,
+ADD  `designer` VARCHAR( 45 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT  '设计师' AFTER  `salesman`

@@ -305,7 +305,9 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					st = grid.getStore(),
 					period = Ext.getCmp('textfield-period'),
 					captain = Ext.getCmp('textfield-captain'),
-					supervisor = Ext.getCmp('textfield-supervisor');
+					supervisor = Ext.getCmp('textfield-supervisor'),
+					salesman = Ext.getCmp('textfield-salesman'),
+					designer = Ext.getCmp('textfield-designer');
 				if (rec) {
 					st.load({
 						params: {
@@ -316,12 +318,16 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					period.setValue(rec.get('period'));
 					captain.setValue(rec.get('captain'));
 					supervisor.setValue(rec.get('supervisor'));
+					salesman.setValue(rec.get('salesman'));
+					designer.setValue(rec.get('designer'));
 				}
 				else {
 					grid.getStore().loadData([]);
 					period.setValue('');
 					captain.setValue('');
 					supervisor.setValue('');
+					salesman.setValue('');
+					designer.setValue('');
 				}
 			},
 			initBtn: function (){
@@ -343,8 +349,8 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				xtype: 'textfield',
 				name: 'textfield-period',
 				id: 'textfield-period',
-				labelWidth: 70,
-				width: 240,
+				labelWidth: 60,
+				width: 140,
 				readOnly: true,
 				fieldLabel: '项目工期'
 			}, {
@@ -352,17 +358,33 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				name: 'textfield-captain',
 				id: 'textfield-captain',
 				labelWidth: 70,
-				width: 240,
+				width: 140,
 				readOnly: true,
 				fieldLabel: '项目负责人'
 			}, {
 				xtype: 'textfield',
 				name: 'textfield-supervisor',
 				id: 'textfield-supervisor',
-				labelWidth: 70,
-				width: 240,
+				labelWidth: 60,
+				width: 140,
 				readOnly: true,
 				fieldLabel: '项目监理'
+			}, {
+				xtype: 'textfield',
+				name: 'textfield-salesman',
+				id: 'textfield-salesman',
+				labelWidth: 44,
+				width: 120,
+				readOnly: true,
+				fieldLabel: '业务员'
+			}, {
+				xtype: 'textfield',
+				name: 'textfield-designer',
+				id: 'textfield-designer',
+				labelWidth: 44,
+				width: 120,
+				readOnly: true,
+				fieldLabel: '设计师'
 			}],
 			bbar: [{
 				hidden: User.isGeneral() ? true : false,
@@ -534,7 +556,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					var win = Ext.create('Ext.window.Window', {
 						title: '编辑置顶信息',
 						width: 500,
-						height: 200,
+						height: 300,
 						layout: 'form',
 						modal: true,
 						defaultType: 'textfield',
@@ -553,6 +575,16 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					        name: 'projectSupervisor',
 					        allowBlank: false,
 					        value: pro ? pro.get('supervisor') : ''
+					    },{
+					        fieldLabel: '业务员',
+					        name: 'projectSalesman',
+					        allowBlank: false,
+					        value: pro ? pro.get('salesman') : ''
+					    },{
+					        fieldLabel: '设计师',
+					        name: 'projectDesigner',
+					        allowBlank: false,
+					        value: pro ? pro.get('designer') : ''
 					    }],
 					    buttons: [{
 					    	text: '确定',
@@ -560,6 +592,8 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					    		var period = win.down('[name="projectPeriod"]'),
 					    			captain = win.down('[name="projectCaptain"]'),
 					    			supervisor = win.down('[name="projectSupervisor"]'),
+					    			salesman = win.down('[name="projectSalesman"]'),
+					    			designer = win.down('[name="projectDesigner"]'),
 					    			gridPanel = Ext.getCmp('gridpanel-projectProgress');
 					    		Ext.Ajax.request({
 					    			url: './libs/project.php?action=editProjectHeadInfo',
@@ -568,7 +602,9 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					    				projectId: pro.getId(),
 					    				period: period.getValue(),
 					    				captain: captain.getValue(),
-					    				supervisor: supervisor.getValue()
+					    				supervisor: supervisor.getValue(),
+					    				salesman: salesman.getValue(),
+					    				designer: designer.getValue()
 					    			},
 					    			callback: function (opts, success, res){
 					    				if (success) {

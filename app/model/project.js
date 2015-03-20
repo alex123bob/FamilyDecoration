@@ -9,6 +9,8 @@ Ext.define('FamilyDecoration.model.Project', {
         {name: 'period', type: 'string'},
         {name: 'captain', type: 'string'},
         {name: 'supervisor', type: 'string'},
+        {name: 'salesman', type: 'string'},
+        {name: 'designer', type: 'string'},
         {name: 'projectProgress', type: 'string'},
         {name: 'projectProgressComment', type: 'string'},
         {name: 'projectChart', type: 'string'},

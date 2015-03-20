@@ -13,6 +13,12 @@ Ext.define('FamilyDecoration.store.Feature', {
                 icon: 'resources/img/menu_item.ico'
             },
             {
+                name: "业务列表",
+                cmp: 'business-index',
+                leaf: true,
+                icon: 'resources/img/menu_item.ico'
+            },
+            {
                 name: "工作日志", 
                 expanded: true, 
                 icon: 'resources/img/menu.ico',
@@ -142,6 +148,10 @@ Ext.define('FamilyDecoration.store.Feature', {
             }
             else if (rec.get('cmp') == 'budget-index') {
                 flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() ? true : false;
+            }
+            // just for internal test first.
+            else if (rec.get('cmp') == 'business-index') {
+                flag = document.URL.slice(document.URL.indexOf('?') + 1).split('=')[0] == 'debug';
             }
             else {
                 flag = true;

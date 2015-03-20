@@ -7,7 +7,7 @@ Ext.define('FamilyDecoration.model.ScrutinizeList', {
         {name: 'userName', type: 'string'},
         {name: 'realName', type: 'string'},
         {name: 'scrutinizeTime', type: 'string', mapping: 'createTime'},
-        {name: 'scrutinizeContent', type: 'string', mapping: 'content'},
+        {name: 'scrutinizeContent', type: 'string', mapping: 'content'}
     ],
     idProperty: 'id',
     proxy: {

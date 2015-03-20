@@ -85,7 +85,7 @@
 				"budgetItemId" => "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
 				"itemName"=>$post["itemName"][$i],
 				"budgetId"=>$post["budgetId"][$i],
-				"itemCode"=>$post["itemCode"][$i],
+				"itemCode"=>$itemCode,
 				"itemUnit"=>$post["itemUnit"][$i],
 				"itemAmount"=>($post["itemAmount"][$i] ),
 				"mainMaterialPrice"=>($post["mainMaterialPrice"][$i] ),
@@ -165,7 +165,8 @@
 	function getBudgetItemsByBudgetId ($budgetId , $isGBK = false,$isNOPQRSAmount = true) {
 		global $mysql;
 		$res= array();
-		$arr = $mysql->DBGetSomeRows("`budget_item`", "*", "where `budgetId` = '$budgetId' and `isDeleted` = 'false' "," order by itemCode asc");
+		$orderBy = "ORDER BY LEFT( itemCode, 2 ) ASC , ( SUBSTRING( itemCode, 2 ) ) *1 DESC ";
+		$arr = $mysql->DBGetSomeRows("`budget_item`", "*", "where `budgetId` = '$budgetId' and `isDeleted` = 'false' ",$orderBy);
 		$count = 0;
 		$smallCount = array(0,0,0,0);
 		$directFee = 0;

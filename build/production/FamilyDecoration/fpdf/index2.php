@@ -31,10 +31,17 @@ $pdf->SetFont('GB','',$GfontSize); //设置字体样式
 $pdf->AliasNbPages("__totalPage__");
 
 foreach($budgetItems as $bItem){
+	//保留小数点后两位
+	foreach($bItem as $key=> $val){
+		if(is_numeric($val)){
+			//echo $key.':'.$val.':'.round($val,2).'<br />';
+			$bItem[$key] = round($val,2);
+		}
+	}
+	
 	$itemName = $bItem["itemName"];
 	$amount = $bItem["itemAmount"];
 	$itemCode = $bItem["itemCode"];
-	
 	
 	$remark = $bItem["remark"];
 	$data = array($itemCode,$itemName,$bItem["itemUnit"],$amount,
@@ -46,7 +53,8 @@ foreach($budgetItems as $bItem){
 							$GfontSize,$GfontSize,$GfontSize,$GfontSize,$GfontSize,
 							$GfontSize,$GfontSize,$GfontSize,8);
 	$borders = array('LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LBR');
-	$pdf->writeCellLine($CellWidth,$data,$borders,0,'C',14,$fontSizes);
+	$align = array('C','L','C','C','C','C','C','C','C','C','C','C','C','L');
+	$pdf->writeCellLine($CellWidth,$data,$borders,0,$align,14,$fontSizes);
 }
 
 
@@ -88,7 +96,7 @@ while($i < $arrayCount){
 }
 $pdf->Ln();
 $pdf->Cell(11,21,"");
-$pdf->Cell(200,$titleHeightPosition,'    注： 1、 本报价单为合同附件， 具有同等法律效力， 业主签字后生效。');
+//$pdf->Cell(200,$titleHeightPosition,'    注： 1、 本报价单为合同附件， 具有同等法律效力， 业主签字后生效。');
 $pdf->Ln();
 $pdf->Output($projectName.".pdf", $action == "view" ? "I" : "D" );
 

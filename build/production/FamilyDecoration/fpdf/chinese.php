@@ -112,7 +112,7 @@ function GetMBStringWidth($s){
 function MultiCell($w, $h, $txt, $border=0, $align='L', $fill=0,$thisLineHeight)
 {
 	if($this->CurrentFont['type']=='Type0')
-		$this->MBMultiCell($w,$h,$txt,$border,$align,$fill,$thisLineHeight);
+		return $this->MBMultiCell($w,$h,$txt,$border,$align,$fill,$thisLineHeight);
 	else
 		parent::MultiCell($w,$h,$txt,$border,$align,$fill,$thisLineHeight);
 }
@@ -153,11 +153,15 @@ function MBMultiCell($w, $h, $txt, $border=0, $align='L', $fill=0,$thisLineHeigh
 	$j = 0;
 	$l = 0;
 	$nl = 1;
-	$linesActualNeed = ceil($this->GetStringWidth($txt)/$w);
-	$headblankLines = floor((ceil($thisLineHeight/$h) - $linesActualNeed)/2);
-	while($headblankLines-->0){
-		$this->Cell($w,$h,'',$b,2,$align,$fill);
-		$outPutLines++;
+	$headBlankLineHeight = 0;
+	$tailBlankLineHeight = 0;
+	if($thisLineHeight > $h){
+		//如果预期行高比实际行高高，则要在前后各输出空行，做到垂直居中
+		$linesActualNeed = ceil($this->GetStringWidth($txt)/$w);
+		$blankHeight = $thisLineHeight - $linesActualNeed * $h;
+		$headBlankLineHeight = floor($blankHeight/2);
+		$tailBlankLineHeight = $blankHeight - $headBlankLineHeight;
+		$this->Cell($w,$headBlankLineHeight,'',$b,2,$align,$fill);
 	}
 	while($i<$nb)
 	{
@@ -216,25 +220,22 @@ function MBMultiCell($w, $h, $txt, $border=0, $align='L', $fill=0,$thisLineHeigh
 		else
 			$i += $ascii ? 1 : 2;
 	}
-	$outPutLines++;
-	if($outPutLines*$h >= $thisLineHeight){
+	$lastLineHeight = $h;
+	if($tailBlankLineHeight == 0){
 		// Last chunk
 		if($border && is_int(strpos($border,'B')))
 			$b .= 'B';
 		$this->Cell($w,$h,substr($s,$j,$i-$j),$b,2,$align,$fill);
 	}else{
-		$lastB = $b;
-		if($border && is_int(strpos($border,'B')))
-			$lastB .= 'B';
+		// Last chunk
 		$this->Cell($w,$h,substr($s,$j,$i-$j),$b,2,$align,$fill);
-		$outPutLines++;
-		while($outPutLines * $h < $thisLineHeight){
-			$this->Cell($w,$h,'',$b,2,$align,$fill);
-			$outPutLines++;
-		}
-		$this->Cell($w,$h,'',$lastB,2,$align,$fill);
+		if($border && is_int(strpos($border,'B')))
+			$b .= 'B';
+		$this->Cell($w,$tailBlankLineHeight,'',$b,2,$align,$fill);
+		$lastLineHeight = $tailBlankLineHeight;
 	}
 	$this->x = $this->lMargin;	
+	return $lastLineHeight;
 }
 
 function Write($h, $txt, $link='')

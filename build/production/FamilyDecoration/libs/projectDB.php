@@ -4,7 +4,7 @@
 	function addProject (array $pro){
 		global $mysql;
 		// fields that could be edit.
-		$fields = array('projectId','projectName','period','captain','supervisor','projectChart','projectTime','budgetId','isFrozen');
+		$fields = array('projectId','projectName','period','captain','supervisor', 'salesman', 'designer', 'projectChart','projectTime','budgetId','isFrozen');
 		
 		$keys = " `projectId`";
 		$values = " '".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT)."'";
@@ -91,6 +91,8 @@
 			$res[$key]['period'] = urlencode($val['period']);
 			$res[$key]['captain'] = urlencode($val['captain']);
 			$res[$key]['supervisor'] = urlencode($val['supervisor']);
+			$res[$key]['salesman'] = urlencode($val['salesman']);
+			$res[$key]['designer'] = urlencode($val['designer']);
 			$res[$key]['projectTime'] = $val['projectTime'];
 			$res[$key]['isFrozen'] = $val['isFrozen'];
 		}
@@ -110,6 +112,8 @@
 				$res[$key]['isFrozen'] = $val['isFrozen'];
 				$res[$key]['captain'] = urlencode($val['captain']);
 				$res[$key]['supervisor'] = urlencode($val['supervisor']);
+				$res[$key]['salesman'] = urlencode($val['salesman']);
+				$res[$key]['designer'] = urlencode($val['designer']);
 				$res[$key]['projectTime'] = $val['projectTime'];
 			}
 		}
@@ -121,7 +125,7 @@
 		$projectId = $pro['projectId'];
 		$setValue = " isDeleted = isDeleted ";
 		// fields that could be edit.
-		$keys = array('projectName','period','captain','supervisor','projectChart','projectTime','budgetId','isFrozen');
+		$keys = array('projectName','period','captain','supervisor', 'salesman', 'designer','projectChart','projectTime','budgetId','isFrozen');
 		foreach($keys as $key){
 			if(isset($pro[$key])){
 				$tmp = $pro[$key];
@@ -137,7 +141,7 @@
 		$projectName = $pro['projectName'];
 		$setValue = " isDeleted = isDeleted ";
 		// fields that could be edit.
-		$keys = array('projectName','period','captain','supervisor','projectChart','projectTime','budgetId','isFrozen');
+		$keys = array('projectName','period','captain','supervisor', 'salesman', 'designer', 'projectChart','projectTime','budgetId','isFrozen');
 		foreach($keys as $key){
 			if(isset($pro[$key])){
 				$tmp = $pro[$key];
