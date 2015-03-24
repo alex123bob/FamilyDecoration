@@ -26,6 +26,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.model.BasicSubItem": "app/model/basicsubitem.js",
   "FamilyDecoration.model.Budget": "app/model/budget.js",
   "FamilyDecoration.model.BudgetItem": "app/model/budgetitem.js",
+  "FamilyDecoration.model.Bulletin": "app/model/bulletin.js",
   "FamilyDecoration.model.Business": "app/model/business.js",
   "FamilyDecoration.model.BusinessDetail": "app/model/businessdetail.js",
   "FamilyDecoration.model.Chart": "app/model/chart.js",
@@ -42,6 +43,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.store.BasicSubItem": "app/store/basicsubitem.js",
   "FamilyDecoration.store.Budget": "app/store/budget.js",
   "FamilyDecoration.store.BudgetItem": "app/store/budgetitem.js",
+  "FamilyDecoration.store.Bulletin": "app/store/bulletin.js",
   "FamilyDecoration.store.Business": "app/store/business.js",
   "FamilyDecoration.store.BusinessDetail": "app/store/businessdetail.js",
   "FamilyDecoration.store.Chart": "app/store/chart.js",
@@ -66,6 +68,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.budget.History": "app/view/budget/history.js",
   "FamilyDecoration.view.budget.Index": "app/view/budget/index.js",
   "FamilyDecoration.view.budget.Preview": "app/view/budget/preview.js",
+  "FamilyDecoration.view.bulletin.EditBulletin": "app/view/bulletin/editbulletin.js",
   "FamilyDecoration.view.bulletin.Index": "app/view/bulletin/index.js",
   "FamilyDecoration.view.business.EditClient": "app/view/business/editclient.js",
   "FamilyDecoration.view.business.EditCommunity": "app/view/business/editcommunity.js",
@@ -90,6 +93,8 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.progress.EditProject": "app/view/progress/editproject.js",
   "FamilyDecoration.view.progress.Index": "app/view/progress/index.js",
   "FamilyDecoration.view.progress.ProjectList": "app/view/progress/projectlist.js",
+  "FamilyDecoration.view.progress.SearchFieldTree": "app/view/progress/searchfieldtree.js",
+  "FamilyDecoration.view.progress.TreeFilter": "app/view/progress/treefilter.js",
   "FamilyDecoration.view.setting.AddAccount": "app/view/setting/addaccount.js",
   "FamilyDecoration.view.setting.Index": "app/view/setting/index.js"
 });
@@ -957,6 +962,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.model.BasicSubItem": [],
   "FamilyDecoration.model.Budget": [],
   "FamilyDecoration.model.BudgetItem": [],
+  "FamilyDecoration.model.Bulletin": [],
   "FamilyDecoration.model.Business": [],
   "FamilyDecoration.model.BusinessDetail": [],
   "FamilyDecoration.model.Chart": [],
@@ -973,6 +979,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.store.BasicSubItem": [],
   "FamilyDecoration.store.Budget": [],
   "FamilyDecoration.store.BudgetItem": [],
+  "FamilyDecoration.store.Bulletin": [],
   "FamilyDecoration.store.Business": [],
   "FamilyDecoration.store.BusinessDetail": [],
   "FamilyDecoration.store.Chart": [],
@@ -997,6 +1004,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.budget.History": [],
   "FamilyDecoration.view.budget.Index": [],
   "FamilyDecoration.view.budget.Preview": [],
+  "FamilyDecoration.view.bulletin.EditBulletin": [],
   "FamilyDecoration.view.bulletin.Index": [],
   "FamilyDecoration.view.business.EditClient": [],
   "FamilyDecoration.view.business.EditCommunity": [],
@@ -1021,6 +1029,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.progress.EditProject": [],
   "FamilyDecoration.view.progress.Index": [],
   "FamilyDecoration.view.progress.ProjectList": [],
+  "FamilyDecoration.view.progress.SearchFieldTree": [],
+  "FamilyDecoration.view.progress.TreeFilter": [],
   "FamilyDecoration.view.setting.AddAccount": [],
   "FamilyDecoration.view.setting.Index": []
 });
@@ -2055,6 +2065,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.model.BasicSubItem": [],
   "FamilyDecoration.model.Budget": [],
   "FamilyDecoration.model.BudgetItem": [],
+  "FamilyDecoration.model.Bulletin": [],
   "FamilyDecoration.model.Business": [],
   "FamilyDecoration.model.BusinessDetail": [],
   "FamilyDecoration.model.Chart": [],
@@ -2071,6 +2082,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.store.BasicSubItem": [],
   "FamilyDecoration.store.Budget": [],
   "FamilyDecoration.store.BudgetItem": [],
+  "FamilyDecoration.store.Bulletin": [],
   "FamilyDecoration.store.Business": [],
   "FamilyDecoration.store.BusinessDetail": [],
   "FamilyDecoration.store.Chart": [],
@@ -2119,6 +2131,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.budget.Preview": [
     "widget.budget-preview"
   ],
+  "FamilyDecoration.view.bulletin.EditBulletin": [],
   "FamilyDecoration.view.bulletin.Index": [
     "widget.bulletin-index"
   ],
@@ -2190,6 +2203,12 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.progress.ProjectList": [
     "widget.progress-projectlist"
+  ],
+  "FamilyDecoration.view.progress.SearchFieldTree": [
+    "widget.searchfieldtree"
+  ],
+  "FamilyDecoration.view.progress.TreeFilter": [
+    "plugin.treefilter"
   ],
   "FamilyDecoration.view.setting.AddAccount": [
     "widget.setting-addaccount"

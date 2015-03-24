@@ -205,6 +205,10 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 							btnAddLogDetail.disable();
 							btnAskLeave.disable();
 						}
+					},
+					load: function (){
+						var treePanel = Ext.getCmp('treepanel-logName');
+						treePanel.expandAll();
 					}
 				}
 			}, {

@@ -20,8 +20,25 @@ Ext.define('Ext.ux.form.SearchField', {
             }
         });
 
+        // Add change event to monitor changing. Edit by Alexander Lee.
+        me.on({
+            'change': {
+                fn: function (field, newVal){
+                    if (newVal == '') {
+                        this.onTrigger1Click();
+                    }
+                    else {
+                        this.onTrigger2Click();
+                    }
+                },
+                scope: this,
+                buffer: 200
+            }
+        });
+
         // We're going to use filtering
-        me.store.remoteFilter = true;
+        // Close remoteFilter. if you wanna remote filter, open it in store manually. Edit by Alexander Lee
+        // me.store.remoteFilter = true;  
 
         // Set up the proxy to encode the filter in the simplest way as a name/value pair
 
@@ -61,7 +78,7 @@ Ext.define('Ext.ux.form.SearchField', {
             me.store.filter({
                 id: me.paramName,
                 property: me.paramName,
-                value: value
+                value: new RegExp(value) // edit by Alexander Lee
             });
             me.hasSearch = true;
             me.triggerCell.item(0).setDisplayed(true);

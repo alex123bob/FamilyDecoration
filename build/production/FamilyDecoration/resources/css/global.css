@@ -38,16 +38,15 @@ table.pros td{
 	margin: 0 4px 0 0;
 }
 
-.announcement {
-	padding: 8px;
+#gridpanel-bulletin .x-grid-cell-inner {
 	font-family: 黑体;
+  line-height: 22px;
 	font-size: 20px;
-	text-align: center;
-	word-wrap: break-word;
-    overflow: hidden;
+	white-space: normal;
+  word-wrap: break-word;
 }
 
-#gridpanel-projectProgress .x-grid-cell-inner, #gridpanel-logDetail .x-grid-cell-inner, #gridpanel-logDetailByUser .x-grid-cell-inner, #gridpanel-businessInfo .x-grid-cell-inner {
+#gridpanel-projectProgress .x-grid-cell-inner, #gridpanel-logDetail .x-grid-cell-inner, #gridpanel-logDetailByUser .x-grid-cell-inner, #gridpanel-businessInfo .x-grid-cell-inner, #gridpanel-historyBusinessDetail .x-grid-cell-inner, #gridpanel-scrutinizeForCheckLog .x-grid-cell-inner {
   white-space: normal;
 }
 /* keen dashboard */

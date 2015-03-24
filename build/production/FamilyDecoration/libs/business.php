@@ -25,11 +25,15 @@
 		//根据小区获取所有业务
 		case "getBusinessByRegion":
 			$isFrozen = isset($_REQUEST["isFrozen"])? $_REQUEST["isFrozen"] : 'false';
-			$res = getBusinessByRegion($_REQUEST["regionId"],$isFrozen);
+			$isTransfered = isset($_REQUEST["isTransfered"])? $_REQUEST["isTransfered"] : 'false';
+			$res = getBusinessByRegion($_REQUEST["regionId"],$isFrozen,$isTransfered);
 			break;
 		//新增业务
 		case "addBusiness":
 			$res = addBusiness($_REQUEST);
+			break;
+		case "getBusinessById":
+			$res = getBusinessById($_REQUEST['businessId']);
 			break;
 		//修改业务
 		case "editBusiness":
@@ -59,8 +63,13 @@
 		case "frozeBusiness":
 			$res = frozeBusiness($_REQUEST['businessId']);
 			break;
+		//将死单的业务转为活单
 		case "defrostBusiness":
 			$res = defrostBusiness($_REQUEST['businessId']);
+			break;
+		//将业务转为工程
+		case "transferBusinessToProject":
+			$res = transferBusinessToProject($_REQUEST);
 			break;
 		default: 
 			throw new Exception("unknown action:".$action);

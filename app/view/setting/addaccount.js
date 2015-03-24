@@ -352,6 +352,7 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 							layout: 'fit',
 							items: [{
 								xtype: 'progress-projectlist',
+								searchFilter: true,
 								listeners: {
 									itemclick: function (view, rec){
 										if (rec.get('projectName')) {

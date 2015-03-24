@@ -12,16 +12,48 @@ $Big5_widths = array(' '=>250,'!'=>250,'"'=>408,'#'=>668,'$'=>490,'%'=>875,'&'=>
 	'n'=>531,'o'=>500,'p'=>521,'q'=>521,'r'=>365,'s'=>333,'t'=>292,'u'=>521,'v'=>458,'w'=>677,
 	'x'=>479,'y'=>458,'z'=>427,'{'=>480,'|'=>496,'}'=>480,'~'=>667);
 
-$GB_widths = array(' '=>207,'!'=>270,'"'=>342,'#'=>467,'$'=>462,'%'=>797,'&'=>710,'\''=>239,
-	'('=>374,')'=>374,'*'=>423,'+'=>605,','=>238,'-'=>375,'.'=>238,'/'=>334,'0'=>462,'1'=>462,
-	'2'=>480,'3'=>462,'4'=>462,'5'=>462,'6'=>462,'7'=>462,'8'=>462,'9'=>462,':'=>238,';'=>238,
-	'<'=>480,'='=>605,'>'=>605,'?'=>344,'@'=>748,'A'=>480,'B'=>480,'C'=>480,'D'=>480,'E'=>480,
+$GB_widths = array(' '=>207,'!'=>270,'"'=>442,'#'=>527,'$'=>522,'%'=>600,'&'=>610,'\''=>239,
+	'('=>374,')'=>374,'*'=>523,'+'=>605,','=>238,'-'=>375,'.'=>238,'/'=>334,'0'=>462,'1'=>462,
+	'2'=>480,'3'=>462,'4'=>462,'5'=>462,'6'=>462,'7'=>462,'8'=>462,'9'=>462,':'=>438,';'=>438,
+	'<'=>480,'='=>605,'>'=>605,'?'=>464,'@'=>608,'A'=>480,'B'=>480,'C'=>480,'D'=>480,'E'=>480,
 	'F'=>480,'G'=>480,'H'=>480,'I'=>480,'J'=>480,'K'=>480,'L'=>480,'M'=>480,'N'=>480,'O'=>480,
 	'P'=>480,'Q'=>480,'R'=>480,'S'=>480,'T'=>480,'U'=>480,'V'=>480,'W'=>480,'X'=>480,'Y'=>480,
 	'Z'=>480,'['=>480,'\\'=>480,']'=>480,'^'=>480,'_'=>480,'`'=>480,'a'=>480,'b'=>480,'c'=>480,
 	'd'=>480,'e'=>480,'f'=>480,'g'=>480,'h'=>480,'i'=>480,'j'=>480,'k'=>480,'l'=>480,'m'=>480,
 	'n'=>480,'o'=>480,'p'=>480,'q'=>480,'r'=>480,'s'=>480,'t'=>480,'u'=>480,'v'=>480,'w'=>480,
 	'x'=>480,'y'=>480,'z'=>480,'{'=>480,'|'=>480,'}'=>480,'~'=>480);
+	
+$GB_widths_for_safrai = array(' '=>407,'!'=>270,'"'=>342,'#'=>640,'$'=>562,'%'=>797,'&'=>710,'\''=>360,
+	'('=>374,')'=>374,'*'=>523,'+'=>665,','=>238,'-'=>400,'.'=>300,'/'=>400,'0'=>600,'1'=>460,
+	'2'=>600,'3'=>600,'4'=>600,'5'=>600,'6'=>600,'7'=>600,'8'=>600,'9'=>600,':'=>338,';'=>338,
+	'<'=>600,'='=>605,'>'=>605,'?'=>444,'@'=>848,'A'=>700,'B'=>600,'C'=>740,'D'=>700,'E'=>600,
+	'F'=>480,'G'=>900,'H'=>660,'I'=>400,'J'=>600,'K'=>600,'L'=>600,'M'=>900,'N'=>800,'O'=>840,
+	'P'=>600,'Q'=>840,'R'=>600,'S'=>500,'T'=>500,'U'=>650,'V'=>680,'W'=>950,'X'=>680,'Y'=>600,
+	'Z'=>600,'['=>600,'\\'=>600,']'=>600,'^'=>600,'_'=>600,'`'=>600,'a'=>700,'b'=>700,'c'=>700,
+	'd'=>750,'e'=>650,'f'=>350,'g'=>700,'h'=>620,'i'=>300,'j'=>300,'k'=>550,'l'=>280,'m'=>950,
+	'n'=>650,'o'=>700,'p'=>680,'q'=>700,'r'=>370,'s'=>450,'t'=>400,'u'=>630,'v'=>600,'w'=>900,
+	'x'=>550,'y'=>600,'z'=>520,'{'=>320,'|'=>600,'}'=>400,'~'=>600);
+	
+$GB_widths_for_chrome_mac = array(' '=>407,'!'=>270,'"'=>342,'#'=>800,'$'=>562,'%'=>900,'&'=>710,'\''=>360,
+	'('=>374,')'=>374,'*'=>523,'+'=>665,','=>238,'-'=>400,'.'=>300,'/'=>550,'0'=>600,'1'=>460,
+	'2'=>500,'3'=>500,'4'=>500,'5'=>560,'6'=>500,'7'=>500,'8'=>500,'9'=>500,':'=>338,';'=>338,
+	'<'=>650,'='=>605,'>'=>605,'?'=>444,'@'=>890,'A'=>750,'B'=>700,'C'=>780,'D'=>800,'E'=>700,
+	'F'=>580,'G'=>800,'H'=>8440,'I'=>500,'J'=>500,'K'=>600,'L'=>600,'M'=>900,'N'=>800,'O'=>840,
+	'P'=>600,'Q'=>840,'R'=>650,'S'=>500,'T'=>600,'U'=>700,'V'=>720,'W'=>950,'X'=>720,'Y'=>700,
+	'Z'=>650,'['=>600,'\\'=>600,']'=>380,'^'=>600,'_'=>600,'`'=>600,'a'=>500,'b'=>520,'c'=>420,
+	'd'=>520,'e'=>480,'f'=>420,'g'=>520,'h'=>580,'i'=>300,'j'=>300,'k'=>550,'l'=>280,'m'=>730,
+	'n'=>550,'o'=>530,'p'=>570,'q'=>550,'r'=>430,'s'=>420,'t'=>400,'u'=>520,'v'=>480,'w'=>700,
+	'x'=>500,'y'=>450,'z'=>450,'{'=>560,'|'=>500,'}'=>400,'~'=>680);
+	
+global $isClientSafari;
+
+switch($UserBrowserClient){
+	case "safari":$GB_widths = $GB_widths_for_safrai;break;
+	case "chrome_mac":$GB_widths = $GB_widths_for_chrome_mac;break;
+	default:/*do nothing,using default;*/break;
+	
+}
+
 
 class PDF_Chinese extends FPDF
 {
@@ -63,7 +95,7 @@ function AddBig5hwFont($family='Big5-hw', $name='MSungStd-Light-Acro')
 }
 
 function AddGBFont($family='GB', $name='STSongStd-Light-Acro')
-{
+{  
 	// Add GB font with proportional Latin
 	$cw = $GLOBALS['GB_widths'];
 	$CMap = 'GBKp-EUC-H';
@@ -111,35 +143,134 @@ function GetMBStringWidth($s){
 
 function MultiCell($w, $h, $txt, $border=0, $align='L', $fill=0,$thisLineHeight)
 {
-	if($this->CurrentFont['type']=='Type0')
+	if($this->CurrentFont['type']=='Type0'){
 		return $this->MBMultiCell($w,$h,$txt,$border,$align,$fill,$thisLineHeight);
-	else
+	}else{
 		parent::MultiCell($w,$h,$txt,$border,$align,$fill,$thisLineHeight);
+	}
+}
+
+function ContainsChinese($string=''){
+	$strLen = strlen($string);
+	for($count = 0;$count < $strLen;$count++){
+		if(ord($string[$count])>=128)
+			return true;
+	}
+	return false;
+}
+//返回显示字符串需要多少行,最少为1.空也为1行。
+function GetStringShowLines($string='',$w){
+	//原来的算法，碰到计算宽度有问题。
+	// G-1 墙上漆 px 0.00 12.00 0.00 213.00 0.00 123.00 0.00 113.00 0.00 204.75
+	// 实际只需一行，计算是两行。不解。
+	/*if($string==='')
+		return 1;
+	$widthForShow = ($w - $this->cMargin*2);
+	//echo "widthForShow:$widthForShow<br />";
+	$strLen = strlen($string);
+	$linesNeed = 0;
+	$line = '';
+	for($count = 0;$count < $strLen;$count++){
+		$char = $string[$count];
+		if($char == '\n'){
+			$linesNeed++;
+			$line = '';
+			continue;
+		}
+		$line .= $char;
+		$tmpLineWidth = $this->GetStringWidth($line);
+		if($tmpLineWidth > $widthForShow){
+			$line = $char;
+			$linesNeed++;
+		}else if($tmpLineWidth == $widthForShow){
+			$line = '';
+			$linesNeed++;
+		}else{
+			//continue next char.
+		}
+	}
+	if($line !== ''){
+		$linesNeed ++;
+	}
+	return $linesNeed;
+	*/
+	
+	// Multi-byte version of MultiCell()
+	// 用multicell里面的方法计算行数。
+	$linesNeed = 0;
+	$currentFont = &$this->CurrentFont['cw'];
+	$wmax = ($w-2*$this->cMargin)*1000/$this->FontSize;
+	//echo "wmax:$wmax<br />";
+	$string = str_replace("\r",'',$string);
+	$slength = strlen($string);
+	if($slength>0 && $string[$slength-1] == "\n"){
+		$slength--;
+	}
+	$sep = -1;
+	$i = 0;
+	$j = 0;
+	$l = 0;
+	$nl = 1;
+	while($i<$slength){
+		$char = $string[$i];  // Get next character
+		$ascii = (ord($char)<128);  // Check if ASCII or MB
+		if($char == "\n"){ // Explicit line break
+			$linesNeed++;
+			//echo "linesNeed1 ";
+			$i++;
+			$sep = -1;
+			$j = $i;
+			$l = 0;
+			$nl++;
+			continue;
+		}
+		if(!$ascii){
+			$sep = $i;
+			$ls = $l;
+		}elseif($char==' '){
+			$sep = $i;
+			$ls = $l;
+		}
+		$l += $ascii ? $currentFont[$char] : 1000;
+		if($l>$wmax){
+			// Automatic line break
+			if($sep==-1 || $i==$j){
+				if($i==$j)
+					$i += $ascii ? 1 : 2;
+			}else{
+				$i = ($string[$sep]==' ') ? $sep+1 : $sep;
+			}
+			$linesNeed++;
+			$sep = -1;
+			$j = $i;
+			$l = 0;
+			$nl++;
+		}else{
+			$i += $ascii ? 1 : 2;
+		}
+	}
+	return ++$linesNeed;
 }
 
 function MBMultiCell($w, $h, $txt, $border=0, $align='L', $fill=0,$thisLineHeight)
 {
 	// Multi-byte version of MultiCell()
-	$outPutLines = 0;
-	$cw = &$this->CurrentFont['cw'];
+	$currentFont = &$this->CurrentFont['cw'];
 	if($w==0)
 		$w = $this->w-$this->rMargin-$this->x;
 	$wmax = ($w-2*$this->cMargin)*1000/$this->FontSize;
-	$s = str_replace("\r",'',$txt);
-	$nb = strlen($s);
-	if($nb>0 && $s[$nb-1]=="\n")
-		$nb--;
+	$string = str_replace("\r",'',$txt);
+	$slength = strlen($string);
+	if($slength>0 && $string[$slength-1] == "\n"){
+		$slength--;
+	}		
 	$b = 0;
-	if($border)
-	{
-		if($border==1)
-		{
+	if($border){
+		if($border==1){
 			$border = 'LTRB';
 			$b = 'LRT';
 			$b2 = 'LR';
-		}
-		else
-		{
+		}else{
 			$b2 = '';
 			if(is_int(strpos($border,'L')))
 				$b2 .= 'L';
@@ -155,45 +286,38 @@ function MBMultiCell($w, $h, $txt, $border=0, $align='L', $fill=0,$thisLineHeigh
 	$nl = 1;
 	$headBlankLineHeight = 0;
 	$tailBlankLineHeight = 0;
-	if($thisLineHeight > $h){
+	if($thisLineHeight > $h){		
 		//如果预期行高比实际行高高，则要在前后各输出空行，做到垂直居中
-		$linesActualNeed = ceil($this->GetStringWidth($txt)/$w);
+		$linesActualNeed = $this->GetStringShowLines($txt,$w);
 		$blankHeight = $thisLineHeight - $linesActualNeed * $h;
 		$headBlankLineHeight = floor($blankHeight/2);
 		$tailBlankLineHeight = $blankHeight - $headBlankLineHeight;
 		$this->Cell($w,$headBlankLineHeight,'',$b,2,$align,$fill);
 	}
-	while($i<$nb)
-	{
-		// Get next character
-		$c = $s[$i];
-		// Check if ASCII or MB
-		$ascii = (ord($c)<128);
-		if($c=="\n")
-		{
-			// Explicit line break
-			$this->Cell($w,$h,substr($s,$j,$i-$j),$b,2,$align,$fill);
-			$outPutLines++;
+	$ssssss = "";
+	while($i<$slength){
+		$char = $string[$i];  // Get next character
+		$ascii = (ord($char)<128);  // Check if ASCII or MB
+		if($char == "\n"){ // Explicit line break
+			$this->Cell($w,$h,substr($string,$j,$i-$j),$b,2,$align,$fill);
 			$i++;
 			$sep = -1;
 			$j = $i;
 			$l = 0;
 			$nl++;
-			if($border && $nl==2)
+			if($border && $nl==2){
 				$b = $b2;
+			}
 			continue;
 		}
-		if(!$ascii)
-		{
+		if(!$ascii){
+			$sep = $i;
+			$ls = $l;
+		}elseif($char==' '){
 			$sep = $i;
 			$ls = $l;
 		}
-		elseif($c==' ')
-		{
-			$sep = $i;
-			$ls = $l;
-		}
-		$l += $ascii ? $cw[$c] : 1000;
+		$l += $ascii ? $currentFont[$char] : 1000;
 		if($l>$wmax)
 		{
 			// Automatic line break
@@ -201,14 +325,12 @@ function MBMultiCell($w, $h, $txt, $border=0, $align='L', $fill=0,$thisLineHeigh
 			{
 				if($i==$j)
 					$i += $ascii ? 1 : 2;
-				$this->Cell($w,$h,substr($s,$j,$i-$j),$b,2,$align,$fill);
-				$outPutLines++;
+				$this->Cell($w,$h,substr($string,$j,$i-$j),$b,2,$align,$fill);
 			}
 			else
 			{
-				$this->Cell($w,$h,substr($s,$j,$sep-$j),$b,2,$align,$fill);
-				$outPutLines++;
-				$i = ($s[$sep]==' ') ? $sep+1 : $sep;
+				$this->Cell($w,$h,substr($string,$j,$sep-$j),$b,2,$align,$fill);
+				$i = ($string[$sep]==' ') ? $sep+1 : $sep;
 			}
 			$sep = -1;
 			$j = $i;
@@ -225,10 +347,10 @@ function MBMultiCell($w, $h, $txt, $border=0, $align='L', $fill=0,$thisLineHeigh
 		// Last chunk
 		if($border && is_int(strpos($border,'B')))
 			$b .= 'B';
-		$this->Cell($w,$h,substr($s,$j,$i-$j),$b,2,$align,$fill);
+		$this->Cell($w,$h,substr($string,$j,$i-$j),$b,2,$align,$fill);
 	}else{
 		// Last chunk
-		$this->Cell($w,$h,substr($s,$j,$i-$j),$b,2,$align,$fill);
+		$this->Cell($w,$h,substr($string,$j,$i-$j),$b,2,$align,$fill);
 		if($border && is_int(strpos($border,'B')))
 			$b .= 'B';
 		$this->Cell($w,$tailBlankLineHeight,'',$b,2,$align,$fill);

@@ -10,6 +10,14 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 	initComponent: function () {
 		var me = this;
 
+		var biSt = Ext.create('FamilyDecoration.store.BasicItem', {
+			autoLoad: true
+		});
+
+		var bsiSt = Ext.create('FamilyDecoration.store.BasicSubItem', {
+			autoLoad: false
+		});
+
 		me.items = [
 			{
 				region: 'west',
@@ -22,12 +30,20 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 					dataIndex: 'itemName',
 					flex: 1
 				}],
+				dockedItems: [{
+					dock: 'top',
+					xtype: 'toolbar',
+					items: [{
+						xtype: 'searchfield',
+						flex: 1,
+						store: biSt,
+						paramName: 'itemName'
+					}]
+				}],
 				title: '大类项目',
 				hideHeaders: true,
 				margin: '0 1 0 0',
-				store: Ext.create('FamilyDecoration.store.BasicItem', {
-					autoLoad: true
-				}),
+				store: biSt,
 				allowDeselect: true,
 				bbar: [{
 					text: '添加',
@@ -142,10 +158,18 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 				id: 'gridpanel-basicSubItem',
 				name: 'gridpanel-basicSubItem',
 				title: '小类项目',
-				store: Ext.create('FamilyDecoration.store.BasicSubItem', {
-					autoLoad: false
-				}),
-				tbar: [{
+				store: bsiSt,
+				dockedItems: [{
+					dock: 'top',
+					xtype: 'toolbar',
+					items: [{
+						xtype: 'searchfield',
+						flex: 1,
+						store: bsiSt,
+						paramName: 'subItemName'
+					}]
+				}],
+				bbar: [{
 					text: '添加',
 					id: 'button-addbasicSubItem',
 					name: 'button-addbasicSubItem',

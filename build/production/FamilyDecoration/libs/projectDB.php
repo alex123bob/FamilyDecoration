@@ -4,10 +4,15 @@
 	function addProject (array $pro){
 		global $mysql;
 		// fields that could be edit.
-		$fields = array('projectId','projectName','period','captain','supervisor', 'salesman', 'designer', 'projectChart','projectTime','budgetId','isFrozen');
-		
+		$fields = array('projectId','businessId','projectName','period','captain','supervisor','createTime', 'salesman', 'designer', 'projectChart','projectTime','budgetId','isFrozen');
+		$projectName = $pro['projectName'];
+		$array = $mysql->DBGetSomeRows("`project`", "`projectName`", " where `isDeleted` = 'false' and `projectName` = '$projectName'");
+		if(count($array) > 0 ){
+			throw new Exception("project Named :$projectName already exsit");
+		}
 		$keys = " `projectId`";
-		$values = " '".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT)."'";
+		$projectId = date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
+		$values = " '$projectId'";
 		foreach($fields as $field){
 			if(isset($pro[$field])){
 				$keys = $keys.",`$field`";
@@ -15,7 +20,7 @@
 			}
 		}
 		$mysql->DBInsert("`project`", $keys , $values );
-		return array('status'=>'successful', 'errMsg' => '');
+		return array('status'=>'successful', 'errMsg' => '','projectId'=>$projectId);
 	}
 
 	function delProject ($projectId){
@@ -95,6 +100,7 @@
 			$res[$key]['designer'] = urlencode($val['designer']);
 			$res[$key]['projectTime'] = $val['projectTime'];
 			$res[$key]['isFrozen'] = $val['isFrozen'];
+			$res[$key]['businessId'] = $val['businessId'];
 		}
 		return $res;
 	}
@@ -115,6 +121,7 @@
 				$res[$key]['salesman'] = urlencode($val['salesman']);
 				$res[$key]['designer'] = urlencode($val['designer']);
 				$res[$key]['projectTime'] = $val['projectTime'];
+				$res[$key]['businessId'] = $val['businessId'];
 			}
 		}
 		return $arr;

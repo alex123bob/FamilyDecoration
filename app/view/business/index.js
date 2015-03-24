@@ -241,6 +241,9 @@ Ext.define('FamilyDecoration.view.business.Index', {
 							});
 							win.show();
 						}
+						else {
+							showMsg('请先选择小区！');
+						}
 					}
 				}, {
 					text: '修改',
@@ -408,7 +411,7 @@ Ext.define('FamilyDecoration.view.business.Index', {
 			}]
 		}, {
 			xtype: 'container',
-			flex: 3,
+			flex: 4,
 			layout: 'fit',
 			items: [{
 				autoScroll: true,
@@ -514,6 +517,9 @@ Ext.define('FamilyDecoration.view.business.Index', {
 							});
 
 							win.show();
+						}
+						else {
+							showMsg('请先选择地址！');
 						}
 					}
 				}, {

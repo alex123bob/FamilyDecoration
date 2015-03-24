@@ -1,4 +1,5 @@
 <?php
+
 class PDF extends PDF_Chinese{
 	
 	function Header(){ //设置页眉 
@@ -6,10 +7,16 @@ class PDF extends PDF_Chinese{
 		global $custName,$projectName,$CellWidth,$FirstCellWidth,$titleLeft,$GfontSize,$lineHeight; 
 		
 		$this->SetFont('GB','B',20); 
-		$this->Image('../resources/img/logo.jpg',60,4,30,30); //增加一张图片，文件名为sight.jpg 
-		$this->Text(95,30,'佳诚装饰室内装修装饰工程 预算单');
+		$this->SetLeftMargin(15);
+		$this->SetRightMargin(15);
+		//$this->SetTopMargin(15);
+		$this->SetAutoPageBreak(true,10);
+		//$this->SetTopMargin(5);
+		//$this->Image('../resources/img/logo.jpg',60,4,30,30); //增加一张图片，文件名为sight.jpg 
+		$this->Image('../resources/img/logo.jpg',60,4,22.5,22.5); //增加一张图片，文件名为sight.jpg 
+		$this->Text(95,20,'佳诚装饰室内装修装饰工程 预算单');
 		$this->SetFont('GB','',$GfontSize); 
-		$this->Ln(26); //换行 
+		$this->Ln(20); //换行 
 		$this->Cell(40,10,"",0,0,'C');
 		$this->Cell(30,10,"客户姓名 ：",0,0,'L');
 		$this->Cell(30,10,$custName,0,0,'L');
@@ -22,7 +29,7 @@ class PDF extends PDF_Chinese{
 		$CellHeight = 6;
 		$borders = array('LT','LT','LT','LT','LT','LT','LT','LT','LT','LTR');
 		$count = 0;
-		$titleHeightPosition = 55;
+		$titleHeightPosition = 50;
 		$this->Cell($FirstCellWidth[$count],$CellHeight,'',$borders[$count],0,'C');
 		$this->Text($titleLeft[$count++],$titleHeightPosition,'编号');
 		$this->Cell($FirstCellWidth[$count],$CellHeight,'',$borders[$count],0,'C');
@@ -38,17 +45,16 @@ class PDF extends PDF_Chinese{
 		$this->Ln();
 		$titles 	= array('   ','   ','   ','   ','单价','总价','单价','总价','单价','总价','单价','总价','单价','');
 		$borders 	= array( 'LRB', 'BR','BR', 'BR', 'BTR', 'BTR', 'BTR', 'BTR', 'BTR', 'BTR', 'BTR', 'BTR',  'BTR', 'BR');
-		$CellHeight = 6;///array(15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15);
+		$CellHeight = 6;
 
 		$count = 0;
 		foreach($titles as $title){
 			$this->Cell($CellWidth[$count],$CellHeight,$title,$borders[$count++],0,'C');
 		}
-		
 		$this->Ln();
 	} 
 	function Footer(){ //设置页脚  
-		$this->SetY(-15); 
+		$this->SetY(-10); 
 		global $GfontSize;
 		$this->SetFont('GB','',$GfontSize); 
 		$this->Cell(170,10,'第'.$this->PageNo().'页  共__totalPage__页',0,0,'R'); 
@@ -69,30 +75,26 @@ class PDF extends PDF_Chinese{
 			$this->SetFont('GB','',$thisLineFontSize);
 			$txt = is_array($txts) ? $txts[$c] : $txts;
 			$txt = ($txt === null || $txt === "NULL")? "" : $txt;
-			
 			$w = is_array($widths) ? $widths[$c] : $widths;
-			$stringWidth = $this->GetStringWidth($txt);
-			if($stringWidth > $w){
-				
-				// 计算需要几行 . round 用于精确到小数点后两位，之后向上取整。
-				$lines = ceil(round($stringWidth/($w-$this->cMargin*2),2));
-				
-				// 本行行高临时变量
-				$tmp = $lines * ( $c == 13 ? 4 : 5);
+			// 计算需要几行 .
+			$linesNeed = $this->GetStringShowLines($txt,$w);
+			if($linesNeed == 1){
+				// do nothing , use default;
+			}else{
+				// multi lines.
+				$tmpLineHeight = ( $c == 13 ? 4 : 5);
+				if(!$this->ContainsChinese($txt)){
+					//没有中文的话，可以行高再减少1
+					$tmpLineHeight--;
+				};
+				$tmp = $linesNeed * $tmpLineHeight;
 				$thisLineHeight = $thisLineHeight > $tmp ?  $thisLineHeight : $tmp;
-				if($txts['0'] == 'B-8'){
-					//echo "lines:$lines,c:$c,thisLineHeight:$thisLineHeight<br />";
-				}
 			}
 		}
 		
 		$c = 0;
 		$lastCellHeight;
 		//遍历所有表格，输出
-		if($txts['0'] == 'B-8'){
-			//echo 'output<br />';
-		}
-		$isMultiLines = false;
 		for( ; $c < $times ; $c ++){
 			$thisLineFontSize = $fontSizes;
 			if($fontSizes != null && is_array($fontSizes) && isset($fontSizes[$c])){
@@ -104,37 +106,32 @@ class PDF extends PDF_Chinese{
 			$w = is_array($widths) ? $widths[$c] : $widths;
 			$border = is_array($borders) ? $borders[$c] : $borders;
 			$align = is_array($aligns) ? $aligns[$c] : $aligns;
-			$stringWidth = $this->GetStringWidth($txt);
+			$linesNeed = $this->GetStringShowLines($txt,$w);
 			
-			if($txts['0'] == 'B-8'){
-					//echo "c:$c,thisLineHeight:$thisLineHeight,h:".($c == 13 ? 4 : 5)."<br />";
-			}
-			if($stringWidth > $w){
+			if($linesNeed > 1){
 				$x = $this->getx();
 				$y = $this->gety();
 				if($c == 1 || $c == 13){
 					//第二列和最后一列靠左对齐。其他居中
 					$align = 'L';
 				}
-				$tmpLineHeight = $c == 13 ? 4 : 5;
-				if($txts['0'] == 'B-8'){
-					//echo "tmpLineHeight:$tmpLineHeight,thisLineHeight:$thisLineHeight,c:$c<br />";
-				}
+				$tmpLineHeight = ( $c == 13 ? 4 : 5);
+				if(!$this->ContainsChinese($txt)){
+					//没有中文的话，可以行高再减少1
+					$tmpLineHeight--;
+				};
+				$tmp = $linesNeed * $tmpLineHeight;
 				$lastCellHeight = $this->MultiCell($w,$tmpLineHeight,$txt,$border,$align,false,$thisLineHeight);
-				
 				$this->setxy($x+$w,$y);
-				$isMultiLines = true;
 			}else{
 				$this->Cell($w,$thisLineHeight,$txt,$border,'R',$align);
 				$lastCellHeight = $thisLineHeight;
 			}
 		}
+
 		$x = $this->getx();
 		$y = $this->gety();
 		$this->setxy($x,$y+$thisLineHeight-$lastCellHeight);
-		if($isMultiLines){
-			
-		}
 		$this->Ln();
 	}
 }

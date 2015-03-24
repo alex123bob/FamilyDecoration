@@ -1,0 +1,58 @@
+<?php
+	include_once "conn.php";
+
+	$action = $_GET["action"];
+
+	$res = "";
+
+	switch($action){
+		case "publish": 				$res = publish();  break;
+		case "view":					$res = view($_GET["start"], $_GET["limit"], $_GET["page"]); break;
+		default: 		throw new Exception("unknown action:".$action);
+	}
+	echo $res;
+
+	/**
+	 * publishes announcement only by administrator
+	 * @return [type] [description]
+	 */
+	function publish (){
+		try {
+			$content = $_POST["content"];
+
+			global $mysql;
+
+			$mysql->DBInsert("`bulletin`", "`content`", "\"$content\"");
+
+			return json_encode(array('status'=>'successful', 'errMsg' => ''));
+
+		}
+		catch (Exception $e) {
+			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
+		}
+	}
+
+	/**
+	 * view the announcement
+	 * @return string
+	 */
+	function view ($start, $limit, $page){
+		try {
+			global $mysql;
+
+			$count = count($mysql->DBGetAllRows("`bulletin`", "*"));
+
+			$start = $start + $limit * ($page - 1);
+			
+			$content = $mysql->DBGetAllRows("`bulletin`", "*", "ORDER by `id` DESC limit $start , $limit");
+
+			$res = array("totalCount" => $count, "resultSet" => $content);
+
+			return json_encode($res);
+
+		}
+		catch (Exception $e) {
+			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
+		}
+	}
+?>

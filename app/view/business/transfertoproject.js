@@ -136,6 +136,7 @@ Ext.define('FamilyDecoration.view.business.TransferToProject', {
 					designer = Ext.getCmp('textfield-designStaff');
 				if (customer.isValid() && address.isValid() && createTime.isValid() && designer.isValid()) {
 					var p = {
+						businessId: me.client.getId(),
 						customer: customer.getValue(),
 						projectName: address.getValue(),
 						createTime: createTime.getValue(),
@@ -148,10 +149,12 @@ Ext.define('FamilyDecoration.view.business.TransferToProject', {
 						params: p,
 						callback: function (opts, success, res){
 							if (success) {
-								var obj = Ext.decode(res.responseText);
+								var obj = Ext.decode(res.responseText),
+									clientGrid = Ext.getCmp('gridpanel-clientInfo');
 								if (obj.status == 'successful') {
 									me.logObj ? showMsg('修改成功！') : showMsg('增加成功！');
 									me.close();
+									clientGrid.refresh(me.community);
 								}
 								else {
 									showMsg(obj.errMsg);

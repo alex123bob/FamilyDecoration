@@ -152,6 +152,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetHeader', {
 							title: '选择对应工程',
 							items: [{
 								xtype: 'progress-projectlist',
+								searchFilter: true,
 								listeners: {
 									itemclick: function (view, rec){
 										return rec.get('projectName') ? true : false;

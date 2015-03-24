@@ -1,8 +1,8 @@
 <?php
 	
-	function getBusinessByRegion($reginId,$isFrozen){
+	function getBusinessByRegion($reginId,$isFrozen,$isTransfered){
 		global $mysql;
-		$where = " where regionId = '$reginId' and `isDeleted` = 'false' and `isFrozen` = '$isFrozen'";
+		$where = " where regionId = '$reginId' and `isDeleted` = 'false' and `isFrozen` = '$isFrozen' and `isTransfered` = '$isTransfered' ";
 		$arr = $mysql->DBGetSomeRows("`business`", " * ", $where,"");
 		$count = 0;
 		$res = array();
@@ -23,7 +23,7 @@
 	}
 	function getBusinessByAddress($address){
 		global $mysql;
-		$arr = $mysql->DBGetSomeRows("`business`", " * "," where address = '$address' and `isDeleted` = 'true' " ,"");
+		$arr = $mysql->DBGetSomeRows("`business`", " * "," where address = '$address' and `isDeleted` = 'false' " ,"");
 		$count = 0;
 		$res = array();
 		foreach($arr as $key => $val) {
@@ -40,6 +40,27 @@
 		    $count ++;
         }
 		return $res;
+	}
+	
+	function getBusinessById($businessId){
+		global $mysql;
+		$arr = $mysql->DBGetSomeRows("`business`", " * "," where id = '$businessId' and `isDeleted` = 'false' " ,"");
+		$count = 0;
+		$res = array();
+		foreach($arr as $key => $val) {
+		    $res[$count]["id"] = $val["id"];
+		    $res[$count]["regionId"] = $val["regionId"];
+		    $res[$count]["address"] = $val["address"];
+			$res[$count]["isFrozen"] = $val["isFrozen"];
+			$res[$count]["isTransfered"] = $val["isTransfered"];
+			$res[$count]["createTime"] = $val["createTime"];
+			$res[$count]["updateTime"] = $val["updateTime"];
+			$res[$count]["customer"] = $val["customer"];
+			$res[$count]["salesman"] = $val["salesman"];
+			$res[$count]["source"] = $val["source"];
+		    $count ++;
+        }
+		return $res;	
 	}
 	function addBusiness($post){
 		$address = $post["address"];
@@ -99,5 +120,24 @@
 		$setValue = " `isFrozen` = 'false',`updateTime` = now() ";
 		$mysql->DBUpdateSomeCols("`business`", $condition, $setValue);
 		return array('status'=>'successful', 'errMsg' => '');
+	}
+	
+	function transferBusinessToProject($request){
+		global $mysql;
+		$businessId = $request['businessId'];
+		$pro = array(  	'customer'=>$request['customer'],
+						'projectTime'=>$request['createTime'],
+						'projectName'=>$request['projectName'],
+						'designer'=>$request['designer'],
+						'businessId'=>$businessId,
+						'salesman'=>$request['salesman']
+					);
+		include_once "projectDB.php";
+		$pro = addProject($pro);
+		
+		$condition = "`id` = '$businessId' ";
+		$setValue = " `isTransfered` = 'true',`updateTime` = now() ";
+		$mysql->DBUpdateSomeCols("`business`", $condition, $setValue);
+		return array('status'=>'successful', 'errMsg' => '','projectId'=>$pro['projectId']);
 	}
 ?>

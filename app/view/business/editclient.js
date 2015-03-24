@@ -76,7 +76,7 @@ Ext.define('FamilyDecoration.view.business.EditClient', {
 								var obj = Ext.decode(res.responseText),
 									grid = Ext.getCmp('gridpanel-clientInfo');
 								if (obj.status == 'successful') {
-									me.logObj ? showMsg('修改成功！') : showMsg('增加成功！');
+									me.client ? showMsg('修改成功！') : showMsg('增加成功！');
 									me.close();
 									grid.refresh(me.community);
 								}

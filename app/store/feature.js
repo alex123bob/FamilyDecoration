@@ -149,9 +149,8 @@ Ext.define('FamilyDecoration.store.Feature', {
             else if (rec.get('cmp') == 'budget-index') {
                 flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() ? true : false;
             }
-            // just for internal test first.
             else if (rec.get('cmp') == 'business-index') {
-                flag = document.URL.slice(document.URL.indexOf('?') + 1).split('=')[0] == 'debug';
+                flag = User.isAdmin() || User.isBusinessManager() || User.isBusinessStaff() ? true : false;
             }
             else {
                 flag = true;

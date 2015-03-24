@@ -85,7 +85,7 @@
 				"budgetItemId" => "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
 				"itemName"=>$post["itemName"][$i],
 				"budgetId"=>$post["budgetId"][$i],
-				"itemCode"=>$itemCode,
+				"itemCode"=>$post["itemCode"][$i],
 				"itemUnit"=>$post["itemUnit"][$i],
 				"itemAmount"=>($post["itemAmount"][$i] ),
 				"mainMaterialPrice"=>($post["mainMaterialPrice"][$i] ),

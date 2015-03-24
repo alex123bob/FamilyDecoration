@@ -15,41 +15,113 @@ Ext.define('FamilyDecoration.view.plan.EditPlan', {
 		var me = this,
 			st = Ext.create('FamilyDecoration.store.PlanCategory', {
 				data: [{
-					name: 'prework',
-					dispValue: '前期工作：',
-					content: me.plan ? me.plan['prework'] : ''
+					name: 'conCleaHeatDefine',
+					dispValue: '空调、洁具、热水器确定：',
+					content: me.plan ? me.plan['conCleaHeatDefine'] : ''
 				}, {
-					name: 'matPrepare',
-					dispValue: '材料准备：',
-					content: me.plan ? me.plan['matPrepare'] : ''
+					name: 'bottomDig',
+					dispValue: '底层下挖：',
+					content: me.plan ? me.plan['bottomDig'] : ''
 				}, {
-					name: 'waterPower',
+					name: 'toiletBalCheck',
+					dispValue: '卫生间、阳台养水验房：',
+					content: me.plan ? me.plan['toiletBalCheck'] : ''
+				}, {
+					name: 'plumbElecCheck',
+					dispValue: '上下水、电路检查：',
+					content: me.plan ? me.plan['plumbElecCheck'] : ''
+				}, {
+					name: 'knockWall',
+					dispValue: '敲墙：',
+					content: me.plan ? me.plan['knockWall'] : ''
+				}, {
+					name: 'tileMarbleCabiDefine',
+					dispValue: '瓷砖、大理石、橱柜确定：',
+					content: me.plan ? me.plan['tileMarbleCabiDefine'] : ''
+				}, {
+					name: 'waterElecCheck',
+					dispValue: '水电材料进场、验收：',
+					content: me.plan ? me.plan['waterElecCheck'] : ''
+				}, {
+					name: 'waterElecConstruct',
 					dispValue: '水电施工：',
-					content: me.plan ? me.plan['waterPower'] : ''
+					content: me.plan ? me.plan['waterElecConstruct'] : ''
 				}, {
-					name: 'cementBasic',
-					dispValue: '泥工基础施工：',
-					content: me.plan ? me.plan['cementBasic'] : ''
+					name: 'waterElecPhoto',
+					dispValue: '水电工程验收、拍照：',
+					content: me.plan ? me.plan['waterElecPhoto'] : ''
 				}, {
-					name: 'cementAdvanced',
-					dispValue: '泥工饰面施工：',
-					content: me.plan ? me.plan['cementAdvanced'] : ''
+					name: 'tilerMateConstruct',
+					dispValue: '泥工材料进场、施工：',
+					content: me.plan ? me.plan['tilerMateConstruct'] : ''
 				}, {
-					name: 'woods',
-					dispValue: '木工施工：',
-					content: me.plan ? me.plan['woods'] : ''
+					name: 'tilerProCheck',
+					dispValue: '泥工工程验收：',
+					content: me.plan ? me.plan['tilerProCheck'] : ''
 				}, {
-					name: 'painting',
-					dispValue: '油漆施工：',
-					content: me.plan ? me.plan['painting'] : ''
+					name: 'woodMateCheck',
+					dispValue: '木工材料进场、验收：',
+					content: me.plan ? me.plan['woodMateCheck'] : ''
 				}, {
-					name: 'cleaning',
-					dispValue: '保洁：',
-					content: me.plan ? me.plan['cleaning'] : ''
+					name: 'woodProConstruct',
+					dispValue: '木工工程施工：',
+					content: me.plan ? me.plan['woodProConstruct'] : ''
 				}, {
-					name: 'wallFloor',
-					dispValue: '洁具、墙纸、木地板：',
-					content: me.plan ? me.plan['wallFloor'] : ''
+					name: 'woodProCheck',
+					dispValue: '木工工程验收：',
+					content: me.plan ? me.plan['woodProCheck'] : ''
+				}, {
+					name: 'paintMateCheck',
+					dispValue: '油漆材料进场、验收：',
+					content: me.plan ? me.plan['paintMateCheck'] : ''
+				}, {
+					name: 'paintProConstruct',
+					dispValue: '油漆工程施工：',
+					content: me.plan ? me.plan['paintProConstruct'] : ''
+				}, {
+					name: 'cabiInstall',
+					dispValue: '橱柜安装：',
+					content: me.plan ? me.plan['cabiInstall'] : ''
+				}, {
+					name: 'toilKitchSuspend',
+					dispValue: '卫生间、厨房吊顶：',
+					content: me.plan ? me.plan['toilKitchSuspend'] : ''
+				}, {
+					name: 'paintProCheck',
+					dispValue: '油漆工程验收：',
+					content: me.plan ? me.plan['paintProCheck'] : ''
+				}, {
+					name: 'switchSocketInstall',
+					dispValue: '开关、插座安装：',
+					content: me.plan ? me.plan['switchSocketInstall'] : ''
+				}, {
+					name: 'lampSanitInstall',
+					dispValue: '灯具、洁具安装：',
+					content: me.plan ? me.plan['lampSanitInstall'] : ''
+				}, {
+					name: 'floorInstall',
+					dispValue: '地板安装：',
+					content: me.plan ? me.plan['floorInstall'] : ''
+				}, {
+					name: 'paintRepair',
+					dispValue: '油漆修补：',
+					content: me.plan ? me.plan['paintRepair'] : ''
+				}, {
+					name: 'wallpaperPave',
+					dispValue: '墙纸铺贴：',
+					content: me.plan ? me.plan['wallpaperPave'] : ''
+				}, {
+					name: 'housekeepingClean',
+					dispValue: '家政保洁：',
+					content: me.plan ? me.plan['housekeepingClean'] : ''
+				}, {
+					name: 'elecInstall',
+					dispValue: '电器安装：',
+					content: me.plan ? me.plan['elecInstall'] : ''
+				}, {
+					name: 'curtainFuniInstall',
+					dispValue: '窗帘、家具安装：',
+					content: me.plan ? me.plan['curtainFuniInstall'] : ''
 				}]
 			});
 
@@ -71,7 +143,12 @@ Ext.define('FamilyDecoration.view.plan.EditPlan', {
 		        	dataIndex: 'content', 
 		        	flex: 1,
 		        	renderer: function (val){
-		        		return val.replace(/\n/gi, '<br />');
+		        		if (val != null) {
+		        			return val.replace(/\n/gi, '<br />');
+		        		}
+		        		else {
+		        			return '';
+		        		}
 		        	},
 		        	draggable: false,
 		        	menuDisabled: true,

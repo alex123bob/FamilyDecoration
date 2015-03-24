@@ -1,13 +1,36 @@
 Ext.define('FamilyDecoration.view.progress.ProjectList', {
 	extend: 'Ext.tree.Panel',
-	requires: ['Ext.tree.Panel'],
+	requires: ['Ext.tree.Panel', 'FamilyDecoration.view.progress.SearchFieldTree', 'FamilyDecoration.view.progress.TreeFilter'],
 	alias: 'widget.progress-projectlist',
 	isForChart: false,
 	isForAddCategory: false,
 	isForFrozen: false,
 
+	loadAll: true,
+	searchFilter: false,
+
 	initComponent: function (){
 		var me = this;
+
+		if (me.searchFilter) {
+			me.plugins = [{
+				ptype: 'treefilter',
+				allowParentFolders: true,
+				collapseOnClear:false
+		    }];
+
+		    me.dockedItems = [
+				{
+				  dock: 'top',
+				  xtype: 'toolbar',
+				  items:[
+				     {
+				         xtype: 'searchfieldtree'
+				     }
+				  ]
+				}
+			];
+		}
 
 		Ext.apply(me, {
 			rootVisible: false,
@@ -167,6 +190,10 @@ Ext.define('FamilyDecoration.view.progress.ProjectList', {
 	            				}
 	            			}
 	            			delete window.pro;
+	            		}
+
+	            		if (me.loadAll) {
+	            			me.expandAll();
 	            		}
 	            	}
 	            }

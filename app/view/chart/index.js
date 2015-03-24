@@ -24,6 +24,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 				xtype: 'progress-projectlist',
 				id: 'treepanel-chartCategory',
 				name: 'treepanel-chartCategory',
+				searchFilter: true,
 				isForChart: true,
 				autoScroll: true,
 				flex: 4,

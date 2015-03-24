@@ -54,6 +54,10 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 								}
 							});
 						}
+					},
+					load: function (){
+						var treepanel = Ext.getCmp('treepanel-memberName');
+						treepanel.expandAll();
 					}
 				}
 			}]
@@ -103,6 +107,10 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 							btnCensor.disable();
 						}
 						
+					},
+					load: function (){
+						var treepanel = Ext.getCmp('treepanel-logNameByUser');
+						treepanel.expandAll();
 					}
 				}
 			}]

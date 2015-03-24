@@ -72,6 +72,9 @@ Ext.define('FamilyDecoration.view.progress.EditProject', {
 										}
 									});
 								}
+								else {
+									showMsg(obj.errMsg);
+								}
 							}
 						}
 					});

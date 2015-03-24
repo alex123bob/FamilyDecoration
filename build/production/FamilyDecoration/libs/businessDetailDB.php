@@ -2,7 +2,7 @@
 	
 	function getBusinessDetails($businessId){
 		global $mysql;
-		$arr = $mysql->DBGetSomeRows("`business_detail`", " * "," where businessId = '$businessId' and `isDeleted` = 'false' " ,"");
+		$arr = $mysql->DBGetSomeRows("`business_detail`", " * "," where businessId = '$businessId' and `isDeleted` = 'false' " ,"ORDER BY  `id` DESC");
 		$count = 0;
 		$res = array();
 		foreach($arr as $key => $val) {

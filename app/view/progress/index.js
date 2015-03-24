@@ -4,7 +4,8 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 	requires: [
 		'FamilyDecoration.store.Project', 'FamilyDecoration.view.progress.EditProject', 'Ext.tree.Panel',
 		'FamilyDecoration.view.progress.EditProgress', 'FamilyDecoration.view.progress.ProjectList',
-		'FamilyDecoration.view.budget.EditBudget', 'Ext.layout.container.Form', 'FamilyDecoration.model.Progress'
+		'FamilyDecoration.view.budget.EditBudget', 'Ext.layout.container.Form', 'FamilyDecoration.model.Progress',
+		'FamilyDecoration.store.BusinessDetail'
 	],
 	autoScroll: true,
 	layout: 'border',
@@ -22,6 +23,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 			margin: '0 1 0 0',
 			items: [{
 				xtype: 'progress-projectlist',
+				searchFilter: true,
 				title: '工程项目名称',
 				id: 'treepanel-projectName',
 				name: 'treepanel-projectName',
@@ -79,7 +81,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 						});
 					}
 				}],
-				tbar: [{
+				bbar: [{
 					hidden: User.isGeneral() ? true : false,
 					text: '添加',
 					handler: function (){
@@ -178,7 +180,8 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 							frozeProjectBtn = Ext.getCmp('tool-frozeProject'),
 							showPlanBtn = Ext.getCmp('button-showProjectPlan'),
 							editHeadInfoBtn = Ext.getCmp('button-editTopInfo'),
-							progressPanel = Ext.getCmp('gridpanel-projectProgress');
+							progressPanel = Ext.getCmp('gridpanel-projectProgress'),
+							checkBusinessBtn = Ext.getCmp('tool-originalBusiness');
 						if (!rec) {
 							delProjectBtn.disable();
 							editProjectBtn.disable();
@@ -188,6 +191,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 							frozeProjectBtn.disable();
 							editHeadInfoBtn.disable();
 							progressPanel.refresh();
+							checkBusinessBtn.disable();
 						}
 						else {
 							delProjectBtn.setDisabled(!rec.get('projectName'));
@@ -195,6 +199,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 							addProgressBtn.setDisabled(!rec.get('projectName'));
 							frozeProjectBtn.setDisabled(!rec.get('projectName'));
 							editHeadInfoBtn.setDisabled(!rec.get('projectName'));
+							checkBusinessBtn.setDisabled(!rec.get('projectName'));
 							if (rec.get('projectName') && rec.get('projectChart') != '') {
 								showChartBtn.enable();
 							}
@@ -226,6 +231,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				title: '已封存项目',
 				id: 'treepanel-frozenProject',
 				name: 'treepanel-frozenProject',
+				loadAll: false,
 				tools: [{
 					type: 'gear',
 					disabled: true,
@@ -386,6 +392,96 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				readOnly: true,
 				fieldLabel: '设计师'
 			}],
+			tools: [{
+				id: 'tool-originalBusiness',
+				name: 'tool-originalBusiness',
+		        type: 'down',
+		        tooltip: '查看原始业务',
+		        disabled: true,
+		        callback: function() {
+		            var treePanel = Ext.getCmp('treepanel-projectName'),
+		            	pro = treePanel.getSelectionModel().getSelection()[0];
+
+		            if (pro.get('businessId')) {
+		            	var win = Ext.create('Ext.window.Window', {
+		            		title: '原始业务数据',
+		            		layout: 'fit',
+		            		modal: true,
+		            		width: 500,
+		            		height: 400,
+		            		tbar: [{
+		            			xtype: 'displayfield',
+		            			fieldLabel: '客户姓名',
+		            			name: 'displayfield-customer',
+		            			id: 'displayfield-customer'
+		            		}, '->', {
+		            			xtype: 'displayfield',
+		            			fieldLabel: '业务来源',
+		            			name: 'displayfield-source',
+		            			id: 'displayfield-source'
+		            		}],
+		            		items: [{
+		            			xtype: 'gridpanel',
+		            			id: 'gridpanel-historyBusinessDetail',
+		            			name: 'gridpanel-historyBusinessDetail',
+		            			autoScroll: true,
+		            			hideHeaders: true,
+		            			columns: [{
+		            				text: '信息',
+		            				flex: 1,
+		            				dataIndex: 'content',
+		            				renderer: function (val, meta, rec){
+										return val.replace(/\n/ig, '<br />');
+									}
+		            			}],
+		            			store: Ext.create('FamilyDecoration.store.BusinessDetail', {
+							    	autoLoad: true,
+							    	proxy: {
+										type: 'rest',
+								    	url: './libs/business.php?action=getBusinessDetails',
+								        reader: {
+								            type: 'json'
+								        },
+								        extraParams: {
+								        	businessId: pro.get('businessId')
+								        }
+									}
+							    })
+		            		}],
+		            		listeners: {
+		            			show: function (win){
+		            				Ext.Ajax.request({
+		            					url: './libs/business.php?action=getBusinessById',
+		            					method: 'GET',
+		            					params: {
+		            						businessId: pro.get('businessId')
+		            					},
+		            					callback: function (opts, success, res){
+		            						if (success) {
+		            							var obj = Ext.decode(res.responseText),
+		            								customer = Ext.getCmp('displayfield-customer'),
+		            								source = Ext.getCmp('displayfield-source');
+		            							if (obj.length > 0) {
+		            								customer.setValue(obj[0]['customer']);
+		            								source.setValue(obj[0]['source']);
+		            							}
+		            							else {
+		            								showMsg(obj.errMsg);
+		            							}
+		            						}
+		            					}
+		            				})
+		            			}
+		            		}
+		            	});
+
+		            	win.show();
+		            }
+		            else {
+		            	showMsg('没有原始业务！');
+		            }
+		        }
+		    }],
 			bbar: [{
 				hidden: User.isGeneral() ? true : false,
 				text: '添加',
