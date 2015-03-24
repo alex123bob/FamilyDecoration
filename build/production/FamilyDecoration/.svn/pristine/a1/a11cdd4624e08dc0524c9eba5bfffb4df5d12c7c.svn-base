@@ -1,1 +1,0 @@
-1、装完zend后更改Zend/ZendServer/etc/php.ini，最后加一行max_file_uploads = 1000，解决上传文件问题。

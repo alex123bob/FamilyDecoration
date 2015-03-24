@@ -1,9 +1,0 @@
-table.pros {
-    color: #333;
-    padding: 10px;
-}
-
-table.pros td{
-    padding: 3px 5px;
-    white-space:nowrap;
-}

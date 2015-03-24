@@ -1,2 +1,0 @@
-1、装完zend后更改Zend/ZendServer/etc/php.ini，最后加一行max_file_uploads = 1000，解决上传文件问题。
-2、装完Zend如果不能解析php或者不能访问phpMyAdmin之类的报出服务器端错误的问题，请停掉一个server，然后再看，不行就停另外一个。一般来说两个server，apache和zendserver只要启动一个就行了。
