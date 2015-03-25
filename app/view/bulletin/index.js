@@ -29,6 +29,9 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 align: 'center',
                 renderer: function (val, meta, rec){
                     val = unescape(val);
+                    if (rec.get('isStickTop') == 'true') {
+                        val += '<sup style="color: red; font-size: 10px;">置顶公告</sup>'
+                    }
                     return val.replace(/\n/ig, '<br />');
                 }
             }],
