@@ -29,6 +29,9 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 align: 'center',
                 renderer: function (val, meta, rec){
                     val = unescape(val);
+                    if (rec.get('isStickTop') == 'true') {
+                        meta.style = 'background:#ffb3a7';
+                    }
                     return val.replace(/\n/ig, '<br />');
                 }
             }],
