@@ -29,9 +29,6 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 align: 'center',
                 renderer: function (val, meta, rec){
                     val = unescape(val);
-                    if (rec.get('isStickTop') == 'true') {
-                        meta.style = 'background:#ffb3a7';
-                    }
                     return val.replace(/\n/ig, '<br />');
                 }
             }],
@@ -180,7 +177,30 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                         showMsg('请选择要取消置顶的公告！');
                     }
                 }
-            }]
+            }],
+            listeners: {
+                afterrender: function(grid, opts) {
+                    var view = grid.getView();
+                    var tip = Ext.create('Ext.tip.ToolTip', {
+                        target: view.el,
+                        delegate: view.cellSelector,
+                        trackMouse: true,
+                        renderTo: Ext.getBody(),
+                        listeners: {
+                            beforeshow: function(tip) {
+                                var rec = view.getRecord(tip.triggerElement.parentNode);
+                                if (rec && rec.get('isStickTop') == 'true') {
+                                    tip.update('置顶信息');
+                                }
+                                else {
+                                    return false;
+                                }
+                                console.log(rec);
+                            }
+                        }
+                    });
+                }
+            }
         }];
 
         this.callParent();
