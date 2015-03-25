@@ -1,1 +1,0 @@
-ALTER TABLE  `bulletin` ADD  `isStickTop` VARCHAR( 5 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT  'false' COMMENT  '是否置顶'

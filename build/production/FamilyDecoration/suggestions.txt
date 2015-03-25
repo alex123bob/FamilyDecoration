@@ -1,1 +1,0 @@
-1. move plan into progress panel, so that it can be more clear.
