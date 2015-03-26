@@ -56,6 +56,7 @@
                 echo '<a href="javascript:void(0);" id="keen-io-chart">图表</a>';
             }
         ?>
+        <a href="javascript:void(0);" id="feedback">反馈</a>
     </div>
 
     <div id="tipBox" style="position:absolute;height:0px;top:10px;width:100%;text-align: right;line-height: 24px;display: none;">
@@ -444,6 +445,65 @@
 
         document.getElementById('logout').onclick = function (){
             logout();
+        }
+
+        document.getElementById('feedback').onclick = function (){
+            if (Ext) {
+                var win = Ext.create('Ext.window.Window', {
+                    title: '用户使用问题和意见反馈',
+                    width: 500,
+                    height: 300,
+                    layout: 'fit',
+                    modal: true,
+                    items: [{
+                        xtype: 'textarea',
+                        autoScroll: true,
+                        id: 'textarea-feedback',
+                        name: 'textarea-feedback',
+                        hideLabel: true
+                    }],
+                    buttons: [{
+                        text: '确定',
+                        handler: function (){
+                            var area = Ext.getCmp('textarea-feedback');
+                            if (!Ext.isEmpty(area.getValue())) {
+                                Ext.Ajax.request({
+                                    url: './libs/feedback.php?action=send',
+                                    method: 'POST',
+                                    params: {
+                                        name: User.getName(),
+                                        realname: User.getRealName(),
+                                        level: User.level,
+                                        content: area.getValue()
+                                    },
+                                    callback: function (opts, success, res){
+                                        if (success) {
+                                            var obj = Ext.decode(res.responseText);
+                                            if (obj.status == 'successful') {
+                                                showMsg('发送成功，谢谢您的反馈，我们会及时处理您的问题。');
+                                                win.close();
+                                            }
+                                            else {
+                                                showMsg(obj.errMsg);
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                            else {
+                                showMsg('请输入内容！');
+                            }
+                        }
+                    }, {
+                        text: '取消',
+                        handler: function (){
+                            win.close();
+                        }
+                    }]
+                });
+
+                win.show();
+            }
         }        
     </script>
 </body>
