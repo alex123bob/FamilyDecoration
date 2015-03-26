@@ -30,7 +30,8 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 renderer: function (val, meta, rec){
                     val = unescape(val);
                     if (rec.get('isStickTop') == 'true') {
-                        val += '<sup style="color: red; font-size: 10px;">置顶公告</sup>'
+                        // val += '<sup style="color: red; font-size: 10px;">置顶公告</sup>';
+                        val += '<img src="./resources/img/pin.png" width="20" height="20" />';
                     }
                     return val.replace(/\n/ig, '<br />');
                 }

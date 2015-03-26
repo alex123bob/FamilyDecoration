@@ -117,13 +117,15 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 		}, {
 			xtype: 'container',
 			flex: 4,
+			layout: 'border',
 			items: [{
 				xtype: 'gridpanel',
 				id: 'gridpanel-logDetailByUser',
 				name: 'gridpanel-logDetailByUser',
 				title: '日志内容',
-				height: 400,
+				height: 500,
 				autoScroll: true,
+				region: 'north',
 				refresh: function (rec){
 					var grid = this;
 					if (rec) {
@@ -240,6 +242,8 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 				store: Ext.create('FamilyDecoration.store.ScrutinizeList', {
 					autoLoad: false
 				}),
+				autoScroll: true,
+				region: 'center',
 				// hideHeaders: true,
 				columns: [{
 					text: '批阅内容',
