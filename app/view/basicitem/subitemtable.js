@@ -210,6 +210,30 @@ Ext.define('FamilyDecoration.view.basicitem.SubItemTable', {
 	        }
 		];
 
+		me.on('afterrender', function(grid, opts) {
+	          var view = grid.getView();
+	          var tip = Ext.create('Ext.tip.ToolTip', {
+	                target: view.el,
+	                delegate: view.cellSelector,
+	                trackMouse: true,
+	                renderTo: Ext.getBody(),
+	                listeners: {
+	                      beforeshow: function(tip) {
+	                            var gridColumns = view.getGridColumns();
+	                            var column = gridColumns[tip.triggerElement.cellIndex];
+	                            var val = view.getRecord(tip.triggerElement.parentNode).get(column.dataIndex);
+	                           	if (val) {
+	                           		val.replace && (val = val.replace(/\n/g, '<br />'));
+				                	tip.update(val);
+	                           	}
+	                           	else {
+	                           		return false;
+	                           	}
+	                      }
+	                }
+	          });
+	    });
+
 		this.callParent();
 	}
 });
