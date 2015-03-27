@@ -745,10 +745,13 @@ Ext.define('FamilyDecoration.view.budget.BudgetContent', {
 					        	var gridColumns = view.getGridColumns();
 					        	var column = gridColumns[tip.triggerElement.cellIndex];
 				                var val=view.getRecord(tip.triggerElement.parentNode).get(column.dataIndex);
-				                if (val.replace) {
-				                	val = val.replace(/\n/g, '<br />');
+				                if (val) {
+				                	val.replace && (val = val.replace(/\n/g, '<br />'));
+				                	tip.update(val);
 				                }
-				                tip.update(val);
+				                else {
+				                	return false;
+				                }
 					        }
 					    }
 					});

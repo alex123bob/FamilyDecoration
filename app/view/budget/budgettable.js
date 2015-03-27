@@ -226,8 +226,13 @@ Ext.define('FamilyDecoration.view.budget.BudgetTable', {
                                                 var gridColumns = view.getGridColumns();
                                                 var column = gridColumns[tip.triggerElement.cellIndex];
                                                 var val = view.getRecord(tip.triggerElement.parentNode).get(column.dataIndex);
-                                                val.replace && val.replace(/\n/gi, '<br />');
-                                                tip.update(val);
+                                                if (val) {
+                                                      val.replace && (val = val.replace(/\n/g, '<br />'));
+                                                      tip.update(val);
+                                                }
+                                                else {
+                                                      return false;
+                                                }
                                           }
                                     }
                               });
