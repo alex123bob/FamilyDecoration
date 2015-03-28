@@ -126,7 +126,7 @@ Ext.define('FamilyDecoration.store.Feature', {
                 flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'chart-index') {
-                flag = true;
+                flag = false;
             }
             else if (rec.get('cmp') == 'project-parent') {
                 flag = true;
@@ -150,7 +150,7 @@ Ext.define('FamilyDecoration.store.Feature', {
                 flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'business-index') {
-                flag = User.isAdmin() || User.isBusinessManager() || User.isBusinessStaff() ? true : false;
+                flag = User.isAdmin() || User.isBusinessManager() || User.isBusinessStaff() || User.isDesignStaff() ? true : false;
             }
             else {
                 flag = true;
