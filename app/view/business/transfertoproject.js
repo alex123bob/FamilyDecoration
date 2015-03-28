@@ -95,12 +95,7 @@ Ext.define('FamilyDecoration.view.business.TransferToProject', {
 								autoLoad: true,
 								filters: [
 									function (item) {
-										if (User.isBusinessStaff()) {
-											return item.get('level') == '006-001';
-										}
-										else if (User.isAdmin()) {
-											return true;
-										}
+										return /^002-\d{3}$/i.test(item.get('level'));
 									}
 								]
 							})

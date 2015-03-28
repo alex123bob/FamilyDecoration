@@ -24,7 +24,7 @@ Ext.define('FamilyDecoration.view.chart.BatchRemove', {
 
 		if (ctype == 'project') {
 			Ext.Ajax.request({
-				url: './libs/getprojectbyid.php',
+				url: './libs/project.php?action=getprojectbyid',
 				method: 'GET',
 				params: {
 					projectId: cid
@@ -97,7 +97,12 @@ Ext.define('FamilyDecoration.view.chart.BatchRemove', {
 					dataIndex: 'picContent',
 					renderer: function (val){
 						if (val) {
-							val = val.slice(1);
+							if (/^http|https/.test(val)) {
+								// todo
+							}
+							else {
+								val = val.slice(1);
+							}
 							return '<img src="' + val + '" alt="pic" width="50" height="50" />';
 						}
 						else {
@@ -167,7 +172,7 @@ Ext.define('FamilyDecoration.view.chart.BatchRemove', {
 												}
 												p.projectChart = (arr.length > 0) ? arr.join('<>') : '1';
 												Ext.Ajax.request({
-													url: './libs/editproject.php',
+													url: './libs/project.php?action=editproject',
 													method: 'POST',
 													params: p,
 													callback: function (opts, success, res){

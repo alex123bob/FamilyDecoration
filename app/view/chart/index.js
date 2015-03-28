@@ -439,7 +439,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 					Ext.Msg.warning('是否删除当前图片吗？', function (btnId){
 						if (btnId == 'yes') {
 							Ext.Ajax.request({
-								url: cate ? './libs/editcategory.php' : './libs/editproject.php',
+								url: cate ? './libs/editcategory.php' : './libs/project.php?action=editproject',
 								method: 'POST',
 								params: p,
 								callback: function (opts, success, res){
@@ -551,7 +551,14 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 				dataIndex: 'chartContent',
 				flex: 3,
 				renderer: function (val){
-					val = val.slice(1);
+					if (val) {
+						if (/^http|https/.test(val)) {
+							// todo
+						}
+						else {
+							val = val.slice(1);
+						}
+					}				
 					return '<img src="' + val + '" width="360" height="200" />';
 				}
 			}],
@@ -572,7 +579,12 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 				},
 				itemdblclick: function (view, rec, item, index, e, eOpts) {
 					var url = rec.get('chartContent');
-					url = url.slice(3, url.length);
+					if (url && !/^http|https/.test(url)) {
+						url = url.slice(3, url.length);
+					}
+					else {
+						// todo
+					}
 
 					var win = Ext.create('Ext.window.Window', {
 						layout: 'fit',

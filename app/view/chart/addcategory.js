@@ -102,7 +102,7 @@ Ext.define('FamilyDecoration.view.chart.AddCategory', {
 							projectChart: 1
 						})
 						Ext.Ajax.request({
-							url: './libs/editproject.php',
+							url: './libs/project.php?action=editproject',
 							method: 'POST',
 							params: params,
 							callback: function (opts, success, res){
@@ -111,7 +111,7 @@ Ext.define('FamilyDecoration.view.chart.AddCategory', {
 									if (obj.status == 'successful') {
 										showMsg('图库类别添加成功！');
 										me.close();
-										st.getProxy().url = 'libs/getprojectyears.php';
+										st.getProxy().url = 'libs/project.php?action=getprojectyears';
 										st.getProxy().extraParams = {};
 										st.load({
 											node: projectCategory.getRootNode()

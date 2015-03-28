@@ -123,7 +123,7 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 				id: 'gridpanel-logDetailByUser',
 				name: 'gridpanel-logDetailByUser',
 				title: '日志内容',
-				height: 500,
+				height: 320,
 				autoScroll: true,
 				region: 'north',
 				refresh: function (rec){
