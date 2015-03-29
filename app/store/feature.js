@@ -35,6 +35,18 @@ Ext.define('FamilyDecoration.store.Feature', {
                         cmp: 'checklog-index',
                         leaf: true,
                         icon: 'resources/img/menu_item.ico'
+                    },
+                    {
+                        name: '我的任务',
+                        cmp: 'mytask-index',
+                        leaf: true,
+                        icon: 'resources/img/menu_item.ico'
+                    },
+                    {
+                        name: '任务分配',
+                        cmp: 'taskassign-index',
+                        leaf: true,
+                        icon: 'resources/img/menu_item.ico'
                     }
                 ] 
             },
@@ -122,11 +134,17 @@ Ext.define('FamilyDecoration.store.Feature', {
             else if (rec.get('cmp') == 'checklog-index') {
                 flag = User.isAdmin() || User.isManager() ? true : false;
             }
+            else if (rec.get('cmp') == 'mytask-index') {
+                flag = true;
+            }
+            else if (rec.get('cmp') == 'taskassign-index') {
+                flag = User.isAdmin() || User.isManager() ? true : false;
+            }
             else if (rec.get('cmp') == 'budget-parent') {
                 flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'chart-index') {
-                flag = false;
+                flag = true;
             }
             else if (rec.get('cmp') == 'project-parent') {
                 flag = true;
