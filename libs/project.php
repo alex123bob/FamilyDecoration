@@ -17,6 +17,7 @@
 			$res = delProject($_REQUEST["projectId"]);
 			break;
 		case "editProject":
+        case "editproject":
 		case "editProjectHeadInfo":
 			$res = editProject($_REQUEST);
 			break;
@@ -24,6 +25,7 @@
 			$res = editProjectByProjectName($_REQUEST);
 			break;
 		case "getProjectsByProjectId":
+        case "getprojectbyid":
 			$res = getProjectsByProjectId($_REQUEST['projectId']);
 			break;
 		case "getProjectNames":

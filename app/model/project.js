@@ -22,7 +22,7 @@ Ext.define('FamilyDecoration.model.Project', {
     idProperty: 'projectId',
     proxy: {
     	type: 'rest',
-    	url: './libs/getprojects.php',
+    	url: './libs/project.php?action=getprojects',
         reader: {
             type: 'json'
         }

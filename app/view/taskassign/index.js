@@ -1,6 +1,6 @@
-Ext.define('FamilyDecoration.view.checklog.Index', {
+Ext.define('FamilyDecoration.view.taskassign.Index', {
 	extend: 'Ext.container.Container',
-	alias: 'widget.checklog-index',
+	alias: 'widget.taskassign-index',
 	requires: [
 		'FamilyDecoration.view.checklog.MemberList',
 		'FamilyDecoration.view.checklog.UserLogList',
