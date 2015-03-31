@@ -163,7 +163,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 														isDeleted: true
 													});
 													Ext.Ajax.request({
-														url: './libs/editCategory.php',
+														url: './libs/editcategory.php',
 														method: 'POST',
 														params: p,
 														callback: function (opts, success, res){
