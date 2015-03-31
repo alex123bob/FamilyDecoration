@@ -4,7 +4,7 @@
 	function addProject (array $pro){
 		global $mysql;
 		// fields that could be edit.
-		$fields = array('projectId','businessId','projectName','period','captain','supervisor','createTime', 'salesman', 'designer', 'projectChart','projectTime','budgetId','isFrozen');
+		$fields = array('projectId','businessId','projectName','period','captain','supervisor','createTime', 'salesman', 'designer','projectTime','budgetId','isFrozen');
 		$projectName = $pro['projectName'];
 		$array = $mysql->DBGetSomeRows("`project`", "`projectName`", " where `isDeleted` = 'false' and `projectName` = '$projectName'");
 		if(count($array) > 0 ){
@@ -89,7 +89,6 @@
 		foreach($arr as $key => $val) {
 			$res[$key]['projectName'] = urlencode($val['projectName']);
 			$res[$key]['projectId'] = urlencode($val['projectId']);
-			$res[$key]['projectChart'] = urlencode($val['projectChart']);
 			$res[$key]['projectYear'] = date("Y", strtotime($val["projectTime"]));
 			$res[$key]['projectMonth'] = date("m", strtotime($val["projectTime"]));
 			$res[$key]['budgetId'] = urlencode($val['budgetId']);
@@ -101,6 +100,7 @@
 			$res[$key]['projectTime'] = $val['projectTime'];
 			$res[$key]['isFrozen'] = $val['isFrozen'];
 			$res[$key]['businessId'] = $val['businessId'];
+			$res[$key]['hasChart'] = $val['hasChart'];
 		}
 		return $res;
 	}
@@ -112,7 +112,6 @@
 			foreach($arr as $key => $val) {
 				$res[$key]['projectName'] = urlencode($val['projectName']);
 				$res[$key]['projectId'] = urlencode($val['projectId']);
-				$res[$key]['projectChart'] = urlencode($val['projectChart']);
 				$res[$key]['budgetId'] = urlencode($val['budgetId']);
 				$res[$key]['period'] = urlencode($val['period']);
 				$res[$key]['isFrozen'] = $val['isFrozen'];
@@ -122,6 +121,7 @@
 				$res[$key]['designer'] = urlencode($val['designer']);
 				$res[$key]['projectTime'] = $val['projectTime'];
 				$res[$key]['businessId'] = $val['businessId'];
+				$res[$key]['hasChart'] = $val['hasChart'];
 			}
 		}
 		return $arr;
@@ -132,7 +132,7 @@
 		$projectId = $pro['projectId'];
 		$setValue = " isDeleted = isDeleted ";
 		// fields that could be edit.
-		$keys = array('projectName','period','captain','supervisor', 'salesman', 'designer','projectChart','projectTime','budgetId','isFrozen');
+		$keys = array('projectName','period','captain','supervisor', 'salesman', 'designer','projectTime','budgetId','isFrozen', 'hasChart');
 		foreach($keys as $key){
 			if(isset($pro[$key])){
 				$tmp = $pro[$key];
@@ -148,7 +148,7 @@
 		$projectName = $pro['projectName'];
 		$setValue = " isDeleted = isDeleted ";
 		// fields that could be edit.
-		$keys = array('projectName','period','captain','supervisor', 'salesman', 'designer', 'projectChart','projectTime','budgetId','isFrozen');
+		$keys = array('projectName','period','captain','supervisor', 'salesman', 'designer','projectTime','budgetId','isFrozen');
 		foreach($keys as $key){
 			if(isset($pro[$key])){
 				$tmp = $pro[$key];

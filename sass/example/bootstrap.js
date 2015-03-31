@@ -21,6 +21,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.Plan": "../../app/controller/plan.js",
   "FamilyDecoration.controller.Progress": "../../app/controller/progress.js",
   "FamilyDecoration.controller.Setting": "../../app/controller/setting.js",
+  "FamilyDecoration.controller.TaskAssign": "../../app/controller/taskassign.js",
   "FamilyDecoration.controller.Viewport": "../../app/controller/viewport.js",
   "FamilyDecoration.model.BasicItem": "../../app/model/basicitem.js",
   "FamilyDecoration.model.BasicSubItem": "../../app/model/basicsubitem.js",
@@ -96,7 +97,8 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.progress.SearchFieldTree": "../../app/view/progress/searchfieldtree.js",
   "FamilyDecoration.view.progress.TreeFilter": "../../app/view/progress/treefilter.js",
   "FamilyDecoration.view.setting.AddAccount": "../../app/view/setting/addaccount.js",
-  "FamilyDecoration.view.setting.Index": "../../app/view/setting/index.js"
+  "FamilyDecoration.view.setting.Index": "../../app/view/setting/index.js",
+  "FamilyDecoration.view.taskassign.Index": "../../app/view/taskassign/index.js"
 });
 Ext.ClassManager.addNameAlternateMappings({
   "Ext.AbstractComponent": [],
@@ -957,6 +959,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.Plan": [],
   "FamilyDecoration.controller.Progress": [],
   "FamilyDecoration.controller.Setting": [],
+  "FamilyDecoration.controller.TaskAssign": [],
   "FamilyDecoration.controller.Viewport": [],
   "FamilyDecoration.model.BasicItem": [],
   "FamilyDecoration.model.BasicSubItem": [],
@@ -1032,7 +1035,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.progress.SearchFieldTree": [],
   "FamilyDecoration.view.progress.TreeFilter": [],
   "FamilyDecoration.view.setting.AddAccount": [],
-  "FamilyDecoration.view.setting.Index": []
+  "FamilyDecoration.view.setting.Index": [],
+  "FamilyDecoration.view.taskassign.Index": []
 });
 Ext.ClassManager.addNameAliasMappings({
   "Ext.AbstractComponent": [],
@@ -2060,6 +2064,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.Plan": [],
   "FamilyDecoration.controller.Progress": [],
   "FamilyDecoration.controller.Setting": [],
+  "FamilyDecoration.controller.TaskAssign": [],
   "FamilyDecoration.controller.Viewport": [],
   "FamilyDecoration.model.BasicItem": [],
   "FamilyDecoration.model.BasicSubItem": [],
@@ -2215,6 +2220,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.setting.Index": [
     "widget.setting-index"
+  ],
+  "FamilyDecoration.view.taskassign.Index": [
+    "widget.taskassign-index"
   ]
 });
 Ext.setVersion("ext-theme-base", "4.2.2");

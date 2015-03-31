@@ -38,7 +38,6 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 						if (rec.get('projectName')) {
 							var chartList = Ext.getCmp('gridpanel-chartList'),
 								chartCategory = Ext.getCmp('gridpanel-chartCategory');
-							rec.set('chartContent', (rec.get('projectChart') == 1 ? '' : rec.get('projectChart')));
 							chartList.refresh(rec);
 							chartCategory.getSelectionModel().deselectAll();
 						}
@@ -102,6 +101,8 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 					handler: function (){
 						var grid = Ext.getCmp('gridpanel-chartCategory'),
 							rec = grid.getSelectionModel().getSelection()[0],
+							selModel = grid.getSelectionModel(),
+							st = grid.getStore(),
 							params = {};
 						Ext.Msg.prompt('修改类别名称', '请输入新类别名称', function (btnId, name){
 							if (btnId == 'ok') {
@@ -118,7 +119,12 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 											var obj = Ext.decode(res.responseText);
 											if (obj.status == 'successful') {
 												showMsg('修改成功！');
-												grid.getStore().reload();
+												st.reload({
+													callback: function (){
+														selModel.deselectAll();
+														selModel.select(st.indexOf(rec));
+													}
+												});
 											}
 										}
 									}
@@ -145,18 +151,19 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 										projectId: treeRec.getId()
 									};
 								Ext.Ajax.request({
-									url: './libs/deletechart.php',
+									url: rec ? './libs/chartdetail.php?action=delChartsByChartId' : './libs/chartdetail.php?action=delChartsByProjectId',
 									method: 'POST',
-									params: {
-										filename: rec ? rec.get('chartContent') : (treeRec.get('projectChart') && treeRec.get('projectChart') != 1 ? treeRec.get('projectChart') : '')
-									},
+									params: p,
 									callback: function (opts, success, res){
 										if (success) {
 											var obj = Ext.decode(res.responseText);
 											if (obj.status == 'successful') {
 												if (rec) {
+													Ext.apply(p, {
+														isDeleted: true
+													});
 													Ext.Ajax.request({
-														url: './libs/deletecategory.php',
+														url: './libs/editCategory.php',
 														method: 'POST',
 														params: p,
 														callback: function (opts, success, res){
@@ -177,10 +184,10 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 												}
 												else {
 													Ext.apply(p, {
-														projectChart: ''
+														hasChart: 0
 													});
 													Ext.Ajax.request({
-														url: './libs/deletecategory.php',
+														url: './libs/project.php?action=editProject',
 														method: 'POST',
 														params: p,
 														callback: function (opts, success, res){
@@ -234,11 +241,11 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 			id: 'gridpanel-chartList',
 			name: 'gridpanel-chartList',
 			title: '图片显示',
-			refresh: function (chart){
-				if (chart) {
-					if (chart.get('chartId')) {
-						var cid = chart.getId(),
-							content = chart.get('chartContent'),
+			refresh: function (rec){
+				if (rec) {
+					if (rec.get('chartId')) {
+						var cid = rec.getId(),
+							content = rec.get('chartContent'),
 							chartList = this;
 							arr = [];
 						if (content) {
@@ -256,9 +263,9 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 							chartList.getStore().removeAll();
 						}
 					}
-					else if (chart.get('projectId')) {
-						var cid = chart.getId(),
-							content = chart.get('projectChart'),
+					else if (rec.get('projectId')) {
+						var cid = rec.getId(),
+							content = rec.get('projectChart'),
 							chartList = this;
 							arr = [];
 						if (content && content != 1) {
@@ -295,24 +302,30 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 							var tree = Ext.getCmp('treepanel-chartCategory'),
 								chartList = Ext.getCmp('gridpanel-chartList'),
 								rec = tree.getSelectionModel().getSelection()[0],
-								p = {
-									chartId: rec.getId()
-								},
+								p = {},
+								flag = '>>><<<',
 								content = '',
+								originalName = '',
+								projectId = '',
 								details = o.result.details;
 
 								Ext.each(details, function (val, i, arr){
 									if (val['success']) {
-										content += val['file'] + '||' + val['original_file_name'] + '<>';
+										content += val['file'] + flag;
+										originalName += val['original_file_name'] + flag;
+										projectId += rec.getId() + flag;
 									}
 								});
-								content = content.slice(0, -2);
+								content = content.slice(0, parseInt('-' + flag.length, 10));
+								originalName = originalName.slice(0, parseInt('-' + flag.length, 10));
+								projectId = projectId.slice(0, parseInt('-' + flag.length, 10));
 								Ext.apply(p, {
-									chartContent: content,
-									chartType: 'project'
+									content: content,
+									originalName: originalName,
+									projectId: projectId
 								});
 								Ext.Ajax.request({
-									url: './libs/addchart.php',
+									url: './libs/chartdetail.php?action=addCharts',
 									method: 'POST',
 									params: p,
 									callback: function(opts, success, res) {
@@ -354,25 +367,31 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 							var grid = Ext.getCmp('gridpanel-chartCategory'),
 								chartList = Ext.getCmp('gridpanel-chartList'),
 								rec = grid.getSelectionModel().getSelection()[0],
-								p = {
-									chartId: rec.getId()
-								},
+								p = {},
+								flag = '>>><<<',
 								content = '',
+								originalName = '',
+								chartId = '',
 								details = o.result.details;
 
 								Ext.each(details, function (val, i, arr){
 									if (val['success']) {
-										content += val['file'] + '||' + val['original_file_name'] + '<>';
+										content += val['file'] + flag;
+										originalName += val['original_file_name'] + flag;
+										chartId += rec.getId() + flag;
 									}
 								});
-								content = content.slice(0, -2);
+								content = content.slice(0, parseInt('-' + flag.length, 10));
+								originalName = originalName.slice(0, parseInt('-' + flag.length, 10));
+								chartId = chartId.slice(0, parseInt('-' + flag.length, 10));
 
 								Ext.apply(p, {
-									chartContent: content,
-									chartType: 'customized'
+									content: content,
+									originalName: originalName,
+									chartId: chartId
 								});
 								Ext.Ajax.request({
-									url: './libs/addchart.php',
+									url: './libs/chartdetail.php?action=addCharts',
 									method: 'POST',
 									params: p,
 									callback: function(opts, success, res) {
