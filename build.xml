@@ -43,22 +43,22 @@
             <fileset dir="${app.dir}" includes="index.php" />
             <fileset dir="${app.dir}" includes="myapp.php" />
         </copy> -->
-        <copy todir="${build.dir}/libs">
+        <copy todir="${build.dir}/libs" overwrite="true">
             <fileset dir="${app.dir}/libs" />
         </copy>
-        <copy todir="${build.dir}/fpdf">
+        <copy todir="${build.dir}/fpdf" overwrite="true">
             <fileset dir="${app.dir}/fpdf" />
         </copy>
-        <copy todir="${build.dir}/tools">
+        <copy todir="${build.dir}/tools" overwrite="true">
             <fileset dir="${app.dir}/tools" />
         </copy>
-        <copy todir="${build.dir}/phpexcel">
+        <copy todir="${build.dir}/phpexcel" overwrite="true">
             <fileset dir="${app.dir}/phpexcel" />
         </copy>
-        <copy todir="${build.dir}">
+        <copy todir="${build.dir}" overwrite="true">
             <fileset dir="${app.dir}" includes="login.html" />
         </copy>
-        <copy todir="${build.dir}/highchart">
+        <copy todir="${build.dir}/highchart" overwrite="true">
             <fileset dir="${app.dir}/highchart" />
         </copy>
         <!-- <copy todir="${build.dir}/config">

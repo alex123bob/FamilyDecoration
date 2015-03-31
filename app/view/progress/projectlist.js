@@ -90,7 +90,7 @@ Ext.define('FamilyDecoration.view.progress.ProjectList', {
 	            					// if (node.get('isFrozen') != 1) {
 
 	            					// 图库面板，工程没有图库就不出现工程名
-	            					if (node.get('projectChart') && node.get('isFrozen') != 1) {
+	            					if (node.get('hasChart') == 1 && node.get('isFrozen') != 1) {
 	            						node.set({
 		            						leaf: true,
 		            						icon: 'resources/img/project.gif'
@@ -108,7 +108,7 @@ Ext.define('FamilyDecoration.view.progress.ProjectList', {
 	            			}
 	            			else if (me.isForAddCategory) {
 	            				if (node.get('projectName')) {
-	            					if (!node.get('projectChart') && node.get('isFrozen') != 1) {
+	            					if (node.get('hasChart') == 0 && node.get('isFrozen') != 1) {
 	            						node.set({
 		            						leaf: true,
 		            						icon: 'resources/img/project.gif'

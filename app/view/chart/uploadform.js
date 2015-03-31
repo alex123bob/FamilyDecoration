@@ -144,6 +144,7 @@ Ext.define('FamilyDecoration.view.chart.UploadForm', {
 									}
 									st.loadData(res);
 									me.afterUpload(fp, o);
+									files.supportMultFn();
 								},
 								failure: function(form, action) {
 									switch (action.failureType) {

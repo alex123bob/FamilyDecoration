@@ -8,8 +8,8 @@
 	function addCategory (array $category){
 		try {
 			global $mysql;
-			$mysql->DBInsert("`chart`", "`chartId`, `chartCategory`, `chartContent`",
-			 	"'".$category['chartId']."', '".$category['chartCategory']."', '".$category['chartContent']."'");
+			$mysql->DBInsert("`chart`", "`chartId`, `chartCategory`",
+			 	"'".$category['chartId']."', '".$category['chartCategory']."'");
 			return json_encode(array('status'=>'successful', 'errMsg' => ''));
 		}
 		catch (Exception $e) {
@@ -24,7 +24,7 @@
 	function getCategories (){
 		try {
 			global $mysql;
-			$arr = $mysql->DBGetAllRows("`chart`", "*");
+			$arr = $mysql->DBGetSomeRows("`chart`", "*", "where `isDeleted` = 'false'");
 
 			if ($arr) {
 				// Url encode Chinese characters and then decode them, in order to avert garbled characters.

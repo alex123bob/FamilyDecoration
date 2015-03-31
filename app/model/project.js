@@ -13,11 +13,11 @@ Ext.define('FamilyDecoration.model.Project', {
         {name: 'designer', type: 'string'},
         {name: 'projectProgress', type: 'string'},
         {name: 'projectProgressComment', type: 'string'},
-        {name: 'projectChart', type: 'string'},
         {name: 'text', type: 'string', mapping: 'projectName'},
         {name: 'budgetId', type: 'string'},
         {name: 'isFrozen', type: 'string'},
-        {name: 'businessId', type: 'string'}
+        {name: 'businessId', type: 'string'},
+        {name: 'hasChart', type: 'string'}
     ],
     idProperty: 'projectId',
     proxy: {

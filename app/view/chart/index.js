@@ -3,7 +3,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 	alias: 'widget.chart-index',
 	requires: ['FamilyDecoration.view.chart.AddCategory', 'FamilyDecoration.store.Chart', 'Ext.form.field.File',
 			   'FamilyDecoration.view.progress.ProjectList', 'FamilyDecoration.view.chart.UploadForm',
-			   'FamilyDecoration.view.chart.BatchRemove'],
+			   'FamilyDecoration.view.chart.BatchRemove', 'FamilyDecoration.model.ChartDetail'],
 
 	autoScroll: true,
 	layout: 'border',
@@ -38,7 +38,6 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 						if (rec.get('projectName')) {
 							var chartList = Ext.getCmp('gridpanel-chartList'),
 								chartCategory = Ext.getCmp('gridpanel-chartCategory');
-							rec.set('chartContent', (rec.get('projectChart') == 1 ? '' : rec.get('projectChart')));
 							chartList.refresh(rec);
 							chartCategory.getSelectionModel().deselectAll();
 						}
@@ -102,6 +101,8 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 					handler: function (){
 						var grid = Ext.getCmp('gridpanel-chartCategory'),
 							rec = grid.getSelectionModel().getSelection()[0],
+							selModel = grid.getSelectionModel(),
+							st = grid.getStore(),
 							params = {};
 						Ext.Msg.prompt('修改类别名称', '请输入新类别名称', function (btnId, name){
 							if (btnId == 'ok') {
@@ -118,7 +119,12 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 											var obj = Ext.decode(res.responseText);
 											if (obj.status == 'successful') {
 												showMsg('修改成功！');
-												grid.getStore().reload();
+												st.reload({
+													callback: function (){
+														selModel.deselectAll();
+														selModel.select(st.indexOf(rec));
+													}
+												});
 											}
 										}
 									}
@@ -145,18 +151,19 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 										projectId: treeRec.getId()
 									};
 								Ext.Ajax.request({
-									url: './libs/deletechart.php',
+									url: rec ? './libs/chartdetail.php?action=delChartsByChartId' : './libs/chartdetail.php?action=delChartsByProjectId',
 									method: 'POST',
-									params: {
-										filename: rec ? rec.get('chartContent') : (treeRec.get('projectChart') && treeRec.get('projectChart') != 1 ? treeRec.get('projectChart') : '')
-									},
+									params: p,
 									callback: function (opts, success, res){
 										if (success) {
 											var obj = Ext.decode(res.responseText);
 											if (obj.status == 'successful') {
 												if (rec) {
+													Ext.apply(p, {
+														isDeleted: true
+													});
 													Ext.Ajax.request({
-														url: './libs/deletecategory.php',
+														url: './libs/editcategory.php',
 														method: 'POST',
 														params: p,
 														callback: function (opts, success, res){
@@ -177,10 +184,10 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 												}
 												else {
 													Ext.apply(p, {
-														projectChart: ''
+														hasChart: 0
 													});
 													Ext.Ajax.request({
-														url: './libs/deletecategory.php',
+														url: './libs/project.php?action=editProject',
 														method: 'POST',
 														params: p,
 														callback: function (opts, success, res){
@@ -234,47 +241,27 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 			id: 'gridpanel-chartList',
 			name: 'gridpanel-chartList',
 			title: '图片显示',
-			refresh: function (chart){
-				if (chart) {
-					if (chart.get('chartId')) {
-						var cid = chart.getId(),
-							content = chart.get('chartContent'),
-							chartList = this;
-							arr = [];
-						if (content) {
-							content = content.split('<>');
-							Ext.each(content, function (val, i){
-								arr.push({
-									chartListId: cid + '-' + i,
-									chartContent: val.split('||')[0],
-									chartDispValue: val.split('||')[1]
-								});
-							});
-							chartList.getStore().loadData(arr);
-						}
-						else {
-							chartList.getStore().removeAll();
-						}
+			refresh: function (rec){
+				if (rec) {
+					if (rec.get('chartId')) {
+						var chartList = this,
+							st = chartList.getStore();
+						st.load({
+							params: {
+								action: 'getChartsByChartId',
+								chartId: rec.getId()
+							}
+						});
 					}
-					else if (chart.get('projectId')) {
-						var cid = chart.getId(),
-							content = chart.get('projectChart'),
-							chartList = this;
-							arr = [];
-						if (content && content != 1) {
-							content = content.split('<>');
-							Ext.each(content, function (val, i){
-								arr.push({
-									chartListId: cid + '-' + i,
-									chartContent: val.split('||')[0],
-									chartDispValue: val.split('||')[1]
-								});
-							});
-							chartList.getStore().loadData(arr);
-						}
-						else {
-							chartList.getStore().removeAll();
-						}
+					else if (rec.get('projectId')) {
+						var chartList = this,
+							st = chartList.getStore();
+						st.load({
+							params: {
+								action: 'getChartsByProjectId',
+								projectId: rec.getId()
+							}
+						});
 					}
 				}
 				else {
@@ -295,24 +282,30 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 							var tree = Ext.getCmp('treepanel-chartCategory'),
 								chartList = Ext.getCmp('gridpanel-chartList'),
 								rec = tree.getSelectionModel().getSelection()[0],
-								p = {
-									chartId: rec.getId()
-								},
+								p = {},
+								flag = '>>><<<',
 								content = '',
+								originalName = '',
+								projectId = '',
 								details = o.result.details;
 
 								Ext.each(details, function (val, i, arr){
 									if (val['success']) {
-										content += val['file'] + '||' + val['original_file_name'] + '<>';
+										content += val['file'] + flag;
+										originalName += val['original_file_name'] + flag;
+										projectId += rec.getId() + flag;
 									}
 								});
-								content = content.slice(0, -2);
+								content = content.slice(0, parseInt('-' + flag.length, 10));
+								originalName = originalName.slice(0, parseInt('-' + flag.length, 10));
+								projectId = projectId.slice(0, parseInt('-' + flag.length, 10));
 								Ext.apply(p, {
-									chartContent: content,
-									chartType: 'project'
+									content: content,
+									originalName: originalName,
+									projectId: projectId
 								});
 								Ext.Ajax.request({
-									url: './libs/addchart.php',
+									url: './libs/chartdetail.php?action=addCharts',
 									method: 'POST',
 									params: p,
 									callback: function(opts, success, res) {
@@ -354,25 +347,31 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 							var grid = Ext.getCmp('gridpanel-chartCategory'),
 								chartList = Ext.getCmp('gridpanel-chartList'),
 								rec = grid.getSelectionModel().getSelection()[0],
-								p = {
-									chartId: rec.getId()
-								},
+								p = {},
+								flag = '>>><<<',
 								content = '',
+								originalName = '',
+								chartId = '',
 								details = o.result.details;
 
 								Ext.each(details, function (val, i, arr){
 									if (val['success']) {
-										content += val['file'] + '||' + val['original_file_name'] + '<>';
+										content += val['file'] + flag;
+										originalName += val['original_file_name'] + flag;
+										chartId += rec.getId() + flag;
 									}
 								});
-								content = content.slice(0, -2);
+								content = content.slice(0, parseInt('-' + flag.length, 10));
+								originalName = originalName.slice(0, parseInt('-' + flag.length, 10));
+								chartId = chartId.slice(0, parseInt('-' + flag.length, 10));
 
 								Ext.apply(p, {
-									chartContent: content,
-									chartType: 'customized'
+									content: content,
+									originalName: originalName,
+									chartId: chartId
 								});
 								Ext.Ajax.request({
-									url: './libs/addchart.php',
+									url: './libs/chartdetail.php?action=addCharts',
 									method: 'POST',
 									params: p,
 									callback: function(opts, success, res) {
@@ -405,83 +404,36 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 				disabled: true,
 				handler: function (){
 					var chartList = Ext.getCmp('gridpanel-chartList'),
-						categoryList = Ext.getCmp('gridpanel-chartCategory'),
-						treeCategory = Ext.getCmp('treepanel-chartCategory'),
-						cate = categoryList.getSelectionModel().getSelection()[0],
-						treeCate = treeCategory.getSelectionModel().getSelection()[0],
-						treeSt = treeCategory.getStore(),
-						chart = chartList.getSelectionModel().getSelection()[0],
-						arr = chartList.getStore().data.items,
-						content = '',
-						p = cate ? {
-							chartId: cate.getId()
-						} : {
-							projectId: treeCate.getId()
-						};
-					for (var i = 0; i < arr.length; i++) {
-						if (arr[i].raw.chartListId == chart.raw.chartListId) {
-							continue;
-						}
-						else {
-							if (content) {
-								content += '<>' + arr[i].get('chartContent') + '||' + arr[i].get('chartDispValue');
-							}
-							else {
-								content = arr[i].get('chartContent') + '||' + arr[i].get('chartDispValue');
-							}
-						}
-					}
-					Ext.apply(p, cate ? {
-						chartContent: content
-					} : {
-						projectChart: content ? content : 1
-					});
-					Ext.Msg.warning('是否删除当前图片吗？', function (btnId){
-						if (btnId == 'yes') {
-							Ext.Ajax.request({
-								url: cate ? './libs/editcategory.php' : './libs/project.php?action=editproject',
-								method: 'POST',
-								params: p,
-								callback: function (opts, success, res){
-									var obj = Ext.decode(res.responseText);
-									if (success && obj.status == 'successful') {
-										Ext.Ajax.request({
-											url: './libs/deletechart.php',
-											method: 'POST',
-											params: {
-												filename: chart.get('chartContent')
-											},
-											callback: function (opts, success, res){
-												if (success) {
-													var innerObj = Ext.decode(res.responseText);
-													if (innerObj.status == 'successful') {
-														showMsg('图片删除成功！');
-														if (cate) {
-															categoryList.getStore().reload({
-																callback: function (recs, ope, success){
-																	chartList.refresh(recs[cate.index]);
-																}
-															});
-														}
-														else {
-															treeSt.load({
-																node: treeCate.parentNode,
-																callback: function (recs, ope, success){
-																	var node = ope.node.findChild('projectId', treeCate.getId());
-																	chartList.refresh();
-																	treeCategory.getSelectionModel().select(node);
-																}
-															});
-														}
-													}
-												}
+						st = chartList.getStore(),
+						rec = chartList.getSelectionModel().getSelection()[0];
+					if (rec) {
+						Ext.Msg.warning('是否删除当前图片吗？', function (btnId){
+							if (btnId == 'yes') {
+								Ext.Ajax.request({
+									url: './libs/chartdetail.php?action=delChartsById',
+									params: {
+										ids: rec.getId()
+									},
+									method: 'POST',
+									callback: function (opts, success, res) {
+										if (success) {
+											var obj = Ext.decode(res.responseText);
+											if ('successful' == obj.status) {
+												showMsg('图片删除成功！');
+												st.reload();
 											}
-										})
+											else {
+												showMsg(obj.errMsg);
+											}
+										}
 									}
-								}
-							});
-						}
-					})
+								})
+							}
+						});
+					}
+					else {
+						showMsg('请选择要删除的图片！');
+					}
 				}
 			}, {
 				hidden: User.isGeneral() ? true : false,
@@ -498,27 +450,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 					var win = Ext.create('FamilyDecoration.view.chart.BatchRemove', {
 						categoryId: rec.getId(),
 						afterremoveFn: function (){
-							var type = /chart/.test(rec.getId()) ? 'chart' : 'project';
-							if ('chart' == type) {
-								categoryList.getStore().reload({
-									callback: function(recs, ope, success) {
-										if (success) {
-											index = categoryList.getSelectionModel().getSelection()[0].index;
-											chartList.refresh(recs[index]);
-										}
-									}
-								});
-							}
-							else if ('project' == type) {
-								treeCategory.getStore().load({
-									node: rec.parentNode,
-									callback: function (recs, ope, success){
-										var node = ope.node.findChild('projectId', rec.getId());
-										chartList.refresh();
-										treeCategory.getSelectionModel().select(node);
-									}
-								})
-							}
+							chartList.getStore().reload();
 						}
 					});
 					win.show();
@@ -544,11 +476,11 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 			hideHeaders: true,
 			columns: [{
 				text: '图片列表',
-				dataIndex: 'chartDispValue',
+				dataIndex: 'originalName',
 				flex: 1
 			}, {
 				text: '图片内容',
-				dataIndex: 'chartContent',
+				dataIndex: 'content',
 				flex: 3,
 				renderer: function (val){
 					if (val) {
@@ -562,8 +494,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 					return '<img src="' + val + '" width="360" height="200" />';
 				}
 			}],
-			store: Ext.create('Ext.data.Store', {
-				model: 'FamilyDecoration.model.Chart',
+			store: Ext.create('FamilyDecoration.store.ChartDetail', {
 				autoLoad: false
 			}),
 			listeners: {
@@ -578,7 +509,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 					}
 				},
 				itemdblclick: function (view, rec, item, index, e, eOpts) {
-					var url = rec.get('chartContent');
+					var url = rec.get('content');
 					if (url && !/^http|https/.test(url)) {
 						url = url.slice(3, url.length);
 					}
