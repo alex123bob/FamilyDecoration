@@ -509,7 +509,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 					}
 				},
 				itemdblclick: function (view, rec, item, index, e, eOpts) {
-					var url = rec.get('chartContent');
+					var url = rec.get('content');
 					if (url && !/^http|https/.test(url)) {
 						url = url.slice(3, url.length);
 					}
