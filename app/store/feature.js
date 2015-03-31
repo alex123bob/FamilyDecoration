@@ -135,10 +135,12 @@ Ext.define('FamilyDecoration.store.Feature', {
                 flag = User.isAdmin() || User.isManager() ? true : false;
             }
             else if (rec.get('cmp') == 'mytask-index') {
-                flag = true;
+                // flag = true;
+                flag = false;
             }
             else if (rec.get('cmp') == 'taskassign-index') {
-                flag = User.isAdmin() || User.isManager() ? true : false;
+                // flag = User.isAdmin() || User.isManager() ? true : false;
+                flag = false;
             }
             else if (rec.get('cmp') == 'budget-parent') {
                 flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() ? true : false;
