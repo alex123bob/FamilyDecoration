@@ -3,7 +3,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 	alias: 'widget.chart-index',
 	requires: ['FamilyDecoration.view.chart.AddCategory', 'FamilyDecoration.store.Chart', 'Ext.form.field.File',
 			   'FamilyDecoration.view.progress.ProjectList', 'FamilyDecoration.view.chart.UploadForm',
-			   'FamilyDecoration.view.chart.BatchRemove'],
+			   'FamilyDecoration.view.chart.BatchRemove', 'FamilyDecoration.model.ChartDetail'],
 
 	autoScroll: true,
 	layout: 'border',
@@ -244,44 +244,24 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 			refresh: function (rec){
 				if (rec) {
 					if (rec.get('chartId')) {
-						var cid = rec.getId(),
-							content = rec.get('chartContent'),
-							chartList = this;
-							arr = [];
-						if (content) {
-							content = content.split('<>');
-							Ext.each(content, function (val, i){
-								arr.push({
-									chartListId: cid + '-' + i,
-									chartContent: val.split('||')[0],
-									chartDispValue: val.split('||')[1]
-								});
-							});
-							chartList.getStore().loadData(arr);
-						}
-						else {
-							chartList.getStore().removeAll();
-						}
+						var chartList = this,
+							st = chartList.getStore();
+						st.load({
+							params: {
+								action: 'getChartsByChartId',
+								chartId: rec.getId()
+							}
+						});
 					}
 					else if (rec.get('projectId')) {
-						var cid = rec.getId(),
-							content = rec.get('projectChart'),
-							chartList = this;
-							arr = [];
-						if (content && content != 1) {
-							content = content.split('<>');
-							Ext.each(content, function (val, i){
-								arr.push({
-									chartListId: cid + '-' + i,
-									chartContent: val.split('||')[0],
-									chartDispValue: val.split('||')[1]
-								});
-							});
-							chartList.getStore().loadData(arr);
-						}
-						else {
-							chartList.getStore().removeAll();
-						}
+						var chartList = this,
+							st = chartList.getStore();
+						st.load({
+							params: {
+								action: 'getChartsByProjectId',
+								projectId: rec.getId()
+							}
+						});
 					}
 				}
 				else {
@@ -424,83 +404,36 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 				disabled: true,
 				handler: function (){
 					var chartList = Ext.getCmp('gridpanel-chartList'),
-						categoryList = Ext.getCmp('gridpanel-chartCategory'),
-						treeCategory = Ext.getCmp('treepanel-chartCategory'),
-						cate = categoryList.getSelectionModel().getSelection()[0],
-						treeCate = treeCategory.getSelectionModel().getSelection()[0],
-						treeSt = treeCategory.getStore(),
-						chart = chartList.getSelectionModel().getSelection()[0],
-						arr = chartList.getStore().data.items,
-						content = '',
-						p = cate ? {
-							chartId: cate.getId()
-						} : {
-							projectId: treeCate.getId()
-						};
-					for (var i = 0; i < arr.length; i++) {
-						if (arr[i].raw.chartListId == chart.raw.chartListId) {
-							continue;
-						}
-						else {
-							if (content) {
-								content += '<>' + arr[i].get('chartContent') + '||' + arr[i].get('chartDispValue');
-							}
-							else {
-								content = arr[i].get('chartContent') + '||' + arr[i].get('chartDispValue');
-							}
-						}
-					}
-					Ext.apply(p, cate ? {
-						chartContent: content
-					} : {
-						projectChart: content ? content : 1
-					});
-					Ext.Msg.warning('是否删除当前图片吗？', function (btnId){
-						if (btnId == 'yes') {
-							Ext.Ajax.request({
-								url: cate ? './libs/editcategory.php' : './libs/project.php?action=editproject',
-								method: 'POST',
-								params: p,
-								callback: function (opts, success, res){
-									var obj = Ext.decode(res.responseText);
-									if (success && obj.status == 'successful') {
-										Ext.Ajax.request({
-											url: './libs/deletechart.php',
-											method: 'POST',
-											params: {
-												filename: chart.get('chartContent')
-											},
-											callback: function (opts, success, res){
-												if (success) {
-													var innerObj = Ext.decode(res.responseText);
-													if (innerObj.status == 'successful') {
-														showMsg('图片删除成功！');
-														if (cate) {
-															categoryList.getStore().reload({
-																callback: function (recs, ope, success){
-																	chartList.refresh(recs[cate.index]);
-																}
-															});
-														}
-														else {
-															treeSt.load({
-																node: treeCate.parentNode,
-																callback: function (recs, ope, success){
-																	var node = ope.node.findChild('projectId', treeCate.getId());
-																	chartList.refresh();
-																	treeCategory.getSelectionModel().select(node);
-																}
-															});
-														}
-													}
-												}
+						st = chartList.getStore(),
+						rec = chartList.getSelectionModel().getSelection()[0];
+					if (rec) {
+						Ext.Msg.warning('是否删除当前图片吗？', function (btnId){
+							if (btnId == 'yes') {
+								Ext.Ajax.request({
+									url: './libs/chartdetail.php?action=delChartsById',
+									params: {
+										ids: rec.getId()
+									},
+									method: 'POST',
+									callback: function (opts, success, res) {
+										if (success) {
+											var obj = Ext.decode(res.responseText);
+											if ('successful' == obj.status) {
+												showMsg('图片删除成功！');
+												st.reload();
 											}
-										})
+											else {
+												showMsg(obj.errMsg);
+											}
+										}
 									}
-								}
-							});
-						}
-					})
+								})
+							}
+						});
+					}
+					else {
+						showMsg('请选择要删除的图片！');
+					}
 				}
 			}, {
 				hidden: User.isGeneral() ? true : false,
@@ -517,27 +450,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 					var win = Ext.create('FamilyDecoration.view.chart.BatchRemove', {
 						categoryId: rec.getId(),
 						afterremoveFn: function (){
-							var type = /chart/.test(rec.getId()) ? 'chart' : 'project';
-							if ('chart' == type) {
-								categoryList.getStore().reload({
-									callback: function(recs, ope, success) {
-										if (success) {
-											index = categoryList.getSelectionModel().getSelection()[0].index;
-											chartList.refresh(recs[index]);
-										}
-									}
-								});
-							}
-							else if ('project' == type) {
-								treeCategory.getStore().load({
-									node: rec.parentNode,
-									callback: function (recs, ope, success){
-										var node = ope.node.findChild('projectId', rec.getId());
-										chartList.refresh();
-										treeCategory.getSelectionModel().select(node);
-									}
-								})
-							}
+							chartList.getStore().reload();
 						}
 					});
 					win.show();
@@ -563,11 +476,11 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 			hideHeaders: true,
 			columns: [{
 				text: '图片列表',
-				dataIndex: 'chartDispValue',
+				dataIndex: 'originalName',
 				flex: 1
 			}, {
 				text: '图片内容',
-				dataIndex: 'chartContent',
+				dataIndex: 'content',
 				flex: 3,
 				renderer: function (val){
 					if (val) {
@@ -581,8 +494,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 					return '<img src="' + val + '" width="360" height="200" />';
 				}
 			}],
-			store: Ext.create('Ext.data.Store', {
-				model: 'FamilyDecoration.model.Chart',
+			store: Ext.create('FamilyDecoration.store.ChartDetail', {
 				autoLoad: false
 			}),
 			listeners: {

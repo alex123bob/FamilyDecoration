@@ -1,7 +1,7 @@
 Ext.define('FamilyDecoration.view.chart.BatchRemove', {
 	extend: 'Ext.window.Window',
 	alias: 'widget.chart-batchremove',
-	requires: [],
+	requires: ['FamilyDecoration.store.ChartDetail'],
 
 	autoScroll: true,
 	width: 500,
@@ -20,64 +20,20 @@ Ext.define('FamilyDecoration.view.chart.BatchRemove', {
 		var me = this;
 
 		var cid = me.categoryId,
-			ctype = /chart/.test(cid) ? 'chart' : 'project';
+			ctype = /chart/.test(cid) ? 'chart' : 'project',
+			p = {};
 
 		if (ctype == 'project') {
-			Ext.Ajax.request({
-				url: './libs/project.php?action=getprojectbyid',
-				method: 'GET',
-				params: {
-					projectId: cid
-				},
-				callback: function (opts, success, res){
-					if (success) {
-						var obj = Ext.decode(res.responseText);
-						var charts = obj[0]['projectChart'];
-						var grid = Ext.getCmp('gridpanel-picturelist'),
-							st = grid.getStore(),
-							data = [], tmp;
-						charts = charts.split('<>');
-						charts = (charts == '1') ? [] : charts;
-						for (var i = 0; i < charts.length; i++) {
-							tmp = charts[i].split('||');
-							data.push({
-								picId: i,
-								picName: tmp[1],
-								picContent: tmp[0]
-							});
-						}
-						st.loadData(data);
-					}
-				}
+			Ext.apply(p, {
+				action: 'getChartsByProjectId',
+				projectId: cid
 			});
 		}
 		else if (ctype == 'chart') {
-			Ext.Ajax.request({
-				url: './libs/getcategorybyid.php',
-				method: 'GET',
-				params: {
-					chartId: cid
-				},
-				callback: function (opts, success, res){
-					if (success) {
-						var obj = Ext.decode(res.responseText);
-						var charts = obj[0]['chartContent'];
-						var grid = Ext.getCmp('gridpanel-picturelist'),
-							st = grid.getStore(),
-							data = [], tmp;
-						charts = (charts != '') ? charts.split('<>') : [];
-						for (var i = 0; i < charts.length; i++) {
-							tmp = charts[i].split('||');
-							data.push({
-								picId: i,
-								picName: tmp[1],
-								picContent: tmp[0]
-							});
-						}
-						st.loadData(data);
-					}
-				}
-			})
+			Ext.apply(p, {
+				action: 'getChartsByChartId',
+				chartId: cid
+			});
 		}
 
 		me.items = [{
@@ -89,12 +45,12 @@ Ext.define('FamilyDecoration.view.chart.BatchRemove', {
 				{
 					text: '图片名称',
 					flex: 3,
-					dataIndex: 'picName'
+					dataIndex: 'originalName'
 				},
 				{
 					text: '图片内容',
 					flex: 1,
-					dataIndex: 'picContent',
+					dataIndex: 'content',
 					renderer: function (val){
 						if (val) {
 							if (/^http|https/.test(val)) {
@@ -111,14 +67,15 @@ Ext.define('FamilyDecoration.view.chart.BatchRemove', {
 					}
 				}
 			],
-			store: Ext.create('Ext.data.Store', {
-				fields: ['picId', 'picName', 'picContent'],
-				autoLoad: false,
+			store: Ext.create('FamilyDecoration.store.ChartDetail', {
+				autoLoad: true,
 				proxy: {
-					type: 'memory',
-					reader: {
-						type: 'json'
-					}
+					type: 'rest',
+			    	url: './libs/chartdetail.php',
+			        reader: {
+			            type: 'json'
+			        },
+			        extraParams: p
 				}
 			}),
 			listeners: {
@@ -140,103 +97,32 @@ Ext.define('FamilyDecoration.view.chart.BatchRemove', {
 						var grid = Ext.getCmp('gridpanel-picturelist'),
 							st = grid.getStore(),
 							recs = grid.getSelectionModel().getSelection(),
-							filename = [];
+							ids = [], p = {};
 
 						if (recs.length > 0) {
-							if (ctype == 'project') {
-								// delete files
-								for (var i = 0; i < recs.length; i++) {
-									filename.push(recs[i].get('picContent'));
-								}
-								filename = filename.join('<>');
-								Ext.Ajax.request({
-									url: './libs/deletechart.php',
-									method: 'POST',
-									params: {
-										filename: filename
-									},
-									callback: function (opts, success, res){
-										if (success) {
-											var obj = Ext.decode(res.responseText),
-												p = {
-													projectId: cid,
-													projectChart: ''
-												},
-												arr = [];
-											if (obj.status == 'successful') {
-												// edit database
-												st.remove(recs);
-												recs = st.data.items;
-												for (i = 0; i < recs.length; i++) {
-													arr.push(recs[i].get('picContent') + '||' + recs[i].get('picName'));
-												}
-												p.projectChart = (arr.length > 0) ? arr.join('<>') : '1';
-												Ext.Ajax.request({
-													url: './libs/project.php?action=editproject',
-													method: 'POST',
-													params: p,
-													callback: function (opts, success, res){
-														if (success) {
-															var innerObj = Ext.decode(res.responseText);
-															if (innerObj.status == 'successful') {
-																showMsg('删除成功！');
-																me.afterremoveFn();
-															}
-														}
-													}
-												})
-											}
+							for (var i = 0; i < recs.length; i++) {
+								ids.push(recs[i].getId());
+							}
+							p = {
+								ids: ids.join('>>><<<')
+							}
+							Ext.Ajax.request({
+								url: './libs/chartdetail.php?action=delChartsById',
+								method: 'POST',
+								params: {
+									ids: p
+								},
+								callback: function (opts, success, res){
+									if (success) {
+										var obj = Ext.decode(res.responseText);
+										if (obj.status == 'successful') {
+											showMsg('批量删除成功！');
+											st.reload();
+											me.afterremoveFn();
 										}
 									}
-								});
-							}
-							else if (ctype == 'chart') {
-								// delete files
-								for (var i = 0; i < recs.length; i++) {
-									filename.push(recs[i].get('picContent'));
 								}
-								filename = filename.join('<>');
-								Ext.Ajax.request({
-									url: './libs/deletechart.php',
-									method: 'POST',
-									params: {
-										filename: filename
-									},
-									callback: function (opts, success, res){
-										if (success) {
-											var obj = Ext.decode(res.responseText),
-												p = {
-													chartId: cid,
-													chartContent: ''
-												},
-												arr = [];
-											if (obj.status == 'successful') {
-												// edit database
-												st.remove(recs);
-												recs = st.data.items;
-												for (i = 0; i < recs.length; i++) {
-													arr.push(recs[i].get('picContent') + '||' + recs[i].get('picName'));
-												}
-												p.chartContent = arr.join('<>');
-												Ext.Ajax.request({
-													url: './libs/editcategory.php',
-													method: 'POST',
-													params: p,
-													callback: function (opts, success, res){
-														if (success) {
-															var innerObj = Ext.decode(res.responseText);
-															if (innerObj.status == 'successful') {
-																showMsg('删除成功！');
-																me.afterremoveFn();
-															}
-														}
-													}
-												})
-											}
-										}
-									}
-								});
-							}
+							});
 						}
 					}
 				});

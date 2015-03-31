@@ -565,13 +565,18 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 						month = project.get('projectMonth'),
 						pid = project.getId();
 
-					window.pro = {
-						year: year,
-						month: month,
-						pid: pid
-					};
+					if (project.get('hasChart') == '1') {
+						window.pro = {
+							year: year,
+							month: month,
+							pid: pid
+						};
 
-					changeMainCt('chart-index');
+						changeMainCt('chart-index');
+					}
+					else {
+						showMsg('该工程没有图库！');
+					}
 				}
 			}, {
 				hidden: User.isGeneral() ? true : false,
