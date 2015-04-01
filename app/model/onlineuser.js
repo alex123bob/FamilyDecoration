@@ -3,6 +3,7 @@ Ext.define('FamilyDecoration.model.OnlineUser', {
 	fields: [
 		{name: 'sessionId', type: 'string'},
 		{name: 'userName', type: 'string'},
+		{name: 'realName', type: 'string'},
 		{name: 'userAgent', type: 'string'},
 		{name: 'onlineTime', type: 'string'},
 		{name: 'offlineTime', type: 'string'},
