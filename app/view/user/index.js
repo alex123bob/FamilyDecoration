@@ -10,16 +10,6 @@ Ext.define('FamilyDecoration.view.user.Index', {
 	layout: 'fit',
 	maximizable: true,
 	modal: true,
-	tools: [{
-        itemId: 'refresh',
-        tooltip: '刷新列表',
-        type: 'refresh',
-        callback: function() {
-            var grid = Ext.getCmp('gridpanel-onlineusercheck'),
-            	st = grid.getStore();
-            st.reload();
-        }
-    }],
 
 	initComponent: function (){
 		var me = this,
