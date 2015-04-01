@@ -78,8 +78,8 @@ Ext.define('FamilyDecoration.view.user.Index', {
                 displayInfo: true
             }],
 			columns: [{
-				text: '用户名',
-				dataIndex: 'userName',
+				text: '姓名',
+				dataIndex: 'realName',
 				flex: 1
 			}, {
 				text: '用户终端',
