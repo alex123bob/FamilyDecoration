@@ -40,6 +40,7 @@ Ext.define('FamilyDecoration.view.Viewport', {
             margin: '8 1 2 8',
             tools: [{
                 type: 'help',
+                hidden: !User.isAdmin(),
                 tooltip: '用户监管平台',
                 callback: function() {
                     var win = Ext.create('FamilyDecoration.view.user.Index');
