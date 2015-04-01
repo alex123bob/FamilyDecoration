@@ -102,6 +102,10 @@ Ext.define('FamilyDecoration.view.user.Index', {
 				dataIndex: 'ip',
 				flex: 1
 			}, {
+				text: '登录地点',
+				dataIndex: 'location',
+				flex: 1
+			}, {
 				text: 'sessionId',
 				dataIndex: 'sessionId',
 				flex: 1

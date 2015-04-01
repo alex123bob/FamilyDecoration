@@ -8,6 +8,7 @@ Ext.define('FamilyDecoration.model.OnlineUser', {
 		{name: 'onlineTime', type: 'string'},
 		{name: 'offlineTime', type: 'string'},
 		{name: 'lastUpdateTime', type: 'string'},
-		{name: 'ip', type: 'string'}
+		{name: 'ip', type: 'string'},
+		{name: 'location', type: 'string'}
 	]
 });
