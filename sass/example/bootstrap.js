@@ -22,6 +22,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.Progress": "../../app/controller/progress.js",
   "FamilyDecoration.controller.Setting": "../../app/controller/setting.js",
   "FamilyDecoration.controller.TaskAssign": "../../app/controller/taskassign.js",
+  "FamilyDecoration.controller.User": "../../app/controller/user.js",
   "FamilyDecoration.controller.Viewport": "../../app/controller/viewport.js",
   "FamilyDecoration.model.BasicItem": "../../app/model/basicitem.js",
   "FamilyDecoration.model.BasicSubItem": "../../app/model/basicsubitem.js",
@@ -36,6 +37,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.model.Feature": "../../app/model/feature.js",
   "FamilyDecoration.model.LogList": "../../app/model/loglist.js",
   "FamilyDecoration.model.MemberList": "../../app/model/memberlist.js",
+  "FamilyDecoration.model.OnlineUser": "../../app/model/onlineuser.js",
   "FamilyDecoration.model.Plan": "../../app/model/plan.js",
   "FamilyDecoration.model.Progress": "../../app/model/progress.js",
   "FamilyDecoration.model.Project": "../../app/model/project.js",
@@ -54,6 +56,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.store.Feature": "../../app/store/feature.js",
   "FamilyDecoration.store.LogList": "../../app/store/loglist.js",
   "FamilyDecoration.store.MemberList": "../../app/store/memberlist.js",
+  "FamilyDecoration.store.OnlineUser": "../../app/store/onlineuser.js",
   "FamilyDecoration.store.PlanCategory": "../../app/store/plancategory.js",
   "FamilyDecoration.store.Project": "../../app/store/project.js",
   "FamilyDecoration.store.ScrutinizeList": "../../app/store/scrutinizelist.js",
@@ -100,7 +103,8 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.progress.TreeFilter": "../../app/view/progress/treefilter.js",
   "FamilyDecoration.view.setting.AddAccount": "../../app/view/setting/addaccount.js",
   "FamilyDecoration.view.setting.Index": "../../app/view/setting/index.js",
-  "FamilyDecoration.view.taskassign.Index": "../../app/view/taskassign/index.js"
+  "FamilyDecoration.view.taskassign.Index": "../../app/view/taskassign/index.js",
+  "FamilyDecoration.view.user.Index": "../../app/view/user/index.js"
 });
 Ext.ClassManager.addNameAlternateMappings({
   "Ext.AbstractComponent": [],
@@ -962,6 +966,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.Progress": [],
   "FamilyDecoration.controller.Setting": [],
   "FamilyDecoration.controller.TaskAssign": [],
+  "FamilyDecoration.controller.User": [],
   "FamilyDecoration.controller.Viewport": [],
   "FamilyDecoration.model.BasicItem": [],
   "FamilyDecoration.model.BasicSubItem": [],
@@ -976,6 +981,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.model.Feature": [],
   "FamilyDecoration.model.LogList": [],
   "FamilyDecoration.model.MemberList": [],
+  "FamilyDecoration.model.OnlineUser": [],
   "FamilyDecoration.model.Plan": [],
   "FamilyDecoration.model.Progress": [],
   "FamilyDecoration.model.Project": [],
@@ -994,6 +1000,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.store.Feature": [],
   "FamilyDecoration.store.LogList": [],
   "FamilyDecoration.store.MemberList": [],
+  "FamilyDecoration.store.OnlineUser": [],
   "FamilyDecoration.store.PlanCategory": [],
   "FamilyDecoration.store.Project": [],
   "FamilyDecoration.store.ScrutinizeList": [],
@@ -1040,7 +1047,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.progress.TreeFilter": [],
   "FamilyDecoration.view.setting.AddAccount": [],
   "FamilyDecoration.view.setting.Index": [],
-  "FamilyDecoration.view.taskassign.Index": []
+  "FamilyDecoration.view.taskassign.Index": [],
+  "FamilyDecoration.view.user.Index": []
 });
 Ext.ClassManager.addNameAliasMappings({
   "Ext.AbstractComponent": [],
@@ -2069,6 +2077,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.Progress": [],
   "FamilyDecoration.controller.Setting": [],
   "FamilyDecoration.controller.TaskAssign": [],
+  "FamilyDecoration.controller.User": [],
   "FamilyDecoration.controller.Viewport": [],
   "FamilyDecoration.model.BasicItem": [],
   "FamilyDecoration.model.BasicSubItem": [],
@@ -2083,6 +2092,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.model.Feature": [],
   "FamilyDecoration.model.LogList": [],
   "FamilyDecoration.model.MemberList": [],
+  "FamilyDecoration.model.OnlineUser": [],
   "FamilyDecoration.model.Plan": [],
   "FamilyDecoration.model.Progress": [],
   "FamilyDecoration.model.Project": [],
@@ -2101,6 +2111,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.store.Feature": [],
   "FamilyDecoration.store.LogList": [],
   "FamilyDecoration.store.MemberList": [],
+  "FamilyDecoration.store.OnlineUser": [],
   "FamilyDecoration.store.PlanCategory": [],
   "FamilyDecoration.store.Project": [],
   "FamilyDecoration.store.ScrutinizeList": [],
@@ -2229,6 +2240,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.taskassign.Index": [
     "widget.taskassign-index"
+  ],
+  "FamilyDecoration.view.user.Index": [
+    "widget.user-index"
   ]
 });
 Ext.setVersion("ext-theme-base", "4.2.2");

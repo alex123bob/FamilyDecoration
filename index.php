@@ -504,7 +504,7 @@
 
                 win.show();
             }
-        }        
+        }
     </script>
 </body>
 </html>

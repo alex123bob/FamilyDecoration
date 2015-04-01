@@ -235,7 +235,7 @@
 	function getMembersByDepartment($department){
 		global $mysql;
         $res= array();
-        $whereSql = "where level like '".$department."-%'";
+        $whereSql = "where level like '".$department."-%' and `isDeleted` = 'false' ";
 
         $arr = $mysql->DBGetSomeRows("`user`", "*", $whereSql);
 
