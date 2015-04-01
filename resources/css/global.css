@@ -46,8 +46,9 @@ table.pros td{
   word-wrap: break-word;
 }
 
-#gridpanel-projectProgress .x-grid-cell-inner, #gridpanel-logDetail .x-grid-cell-inner, #gridpanel-logDetailByUser .x-grid-cell-inner, #gridpanel-businessInfo .x-grid-cell-inner, #gridpanel-historyBusinessDetail .x-grid-cell-inner, #gridpanel-scrutinizeForCheckLog .x-grid-cell-inner {
+#gridpanel-projectProgress .x-grid-cell-inner, #gridpanel-logDetail .x-grid-cell-inner, #gridpanel-logDetailByUser .x-grid-cell-inner, #gridpanel-businessInfo .x-grid-cell-inner, #gridpanel-historyBusinessDetail .x-grid-cell-inner, #gridpanel-scrutinizeForCheckLog .x-grid-cell-inner, #gridpanel-scrutinize .x-grid-cell-inner {
   white-space: normal;
+  word-wrap: break-word;
 }
 /* keen dashboard */
 

@@ -19,7 +19,8 @@ Ext.define('FamilyDecoration.Application', {
         'CheckLog',
         'Plan',
         'Business',
-        'TaskAssign'
+        'TaskAssign',
+        'User'
     ],
 
     stores: [

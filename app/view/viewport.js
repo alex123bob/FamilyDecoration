@@ -5,7 +5,8 @@ Ext.define('FamilyDecoration.view.Viewport', {
         'Ext.grid.Panel',
         'Ext.layout.container.Border',
         'FamilyDecoration.store.Feature',
-        'FamilyDecoration.view.chat.Index'
+        'FamilyDecoration.view.chat.Index',
+        'FamilyDecoration.view.user.Index'
     ],
 
     layout: {
@@ -37,6 +38,14 @@ Ext.define('FamilyDecoration.view.Viewport', {
             maxWidth: 400,
             store: featureStore,
             margin: '8 1 2 8',
+            tools: [{
+                type: 'help',
+                tooltip: '用户监管平台',
+                callback: function() {
+                    var win = Ext.create('FamilyDecoration.view.user.Index');
+                    win.show();
+                }
+            }],
             listeners: {
                 itemclick: function (view, rec){
                     if (/-parent/i.test(rec.get('cmp'))) {

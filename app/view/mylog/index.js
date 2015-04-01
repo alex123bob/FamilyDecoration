@@ -413,7 +413,7 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 					}
 				}, {
 					text: '批阅人',
-					dataIndex: 'userName',
+					dataIndex: 'realName',
 					flex: 1,
 					menuDisabled: true,
 					draggable: false,
