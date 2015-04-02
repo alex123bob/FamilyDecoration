@@ -10,7 +10,8 @@ Ext.define('FamilyDecoration.store.OnlineUser', {
             totalProperty: 'total'
         },
         extraParams: {
-            limit: 30
+            limit: 30,
+            order: 'desc'
         }
     }
 });
