@@ -241,4 +241,12 @@
 
         return $arr;
 	}
+
+	function getAllLogLists() {
+		global $mysql;
+
+        $arr = $mysql->DBGetAllRows("`log_list`");
+
+        return $arr;
+	}
 ?>

@@ -19,4 +19,10 @@
 		$mysql->DBInsert("`feedback`", $keys , $values );
 		return array('status'=>'successful', 'errMsg' => '','feedbackId'=>$id);
 	}
+
+	function fetchFeedbacks (){
+		global $mysql;
+		$res = $mysql->DBGetAllRows("`feedback`", "*", " ORDER BY `id` DESC");
+		return $res;
+	}
 ?>

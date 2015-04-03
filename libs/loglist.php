@@ -17,6 +17,7 @@
 		case "getLogListYearsByUser":$res = getLogListYearsByUser($_GET['user']);break;
 		case "getLogListMonthsByUser":$res = getLogListMonthsByUser($_GET["year"],$_GET['user']);break;
 		case "getLogListByMonthByUser":$res = getLogListByMonthByUser($_GET["year"],$_GET["month"],$_GET['user']);break;
+		case "getAllLogLists": $res = getAllLogLists(); break;
 		
 		case "getLogDetailsByLogListId":$res = getLogDetailsByLogListId($_GET["logListId"]);break;
 		case "addOrEditLogDetail":$res = isset($_POST["id"]) ? editLogDetail($_POST) : addLogDetail($_REQUEST);break;
