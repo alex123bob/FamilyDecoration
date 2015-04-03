@@ -17,6 +17,10 @@
     <!-- </x-compile> -->
     <link href="resources/css/global.css" rel="stylesheet" />
     <script type="text/javascript" src="resources/locale/ext-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="tools/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="highchart/js/highcharts.js"></script>
+    <script type="text/javascript" src="highchart/js/highcharts-3d.js"></script>
+    <script type="text/javascript" src="highchart/js/exporting.js"></script>
     <?php
         function curPageURL() {
              $pageURL = 'http';
@@ -35,12 +39,8 @@
         $pageurl = curPageURL();
         $isLocal = preg_match("/localhost/i", $pageurl, $arr);
         if ($isLocal) {
-            echo    '<script type="text/javascript" src="tools/jquery-1.11.1.min.js"></script>'.
-                    '<script src="https://d26b395fwzu5fz.cloudfront.net/3.2.3/keen.min.js" type="text/javascript"></script>'.
-                    '<script type="text/javascript" src="highchart/js/highcharts.js"></script>'.
-                    '<script type="text/javascript" src="highchart/js/highcharts-3d.js"></script>'.
-                    '<script type="text/javascript" src="highchart/js/exporting.js"></script>'.
-                    '<script type="text/javascript" src="highchart/chart.js"></script>';
+            // echo '<script src="https://d26b395fwzu5fz.cloudfront.net/3.2.3/keen.min.js" type="text/javascript"></script>'.
+            //      '<script type="text/javascript" src="highchart/chart.js"></script>';
         }
     ?>
 </head>
@@ -51,12 +51,13 @@
         <span name="account"></span>
         <span name="authority"></span>
         <a href="javascript:void(0);" id="logout">注销</a>
+        <a href="javascript:void(0);" id="feedback">反馈</a>
         <?php
-            if ($isLocal) {
-                echo '<a href="javascript:void(0);" id="keen-io-chart">图表</a>';
+            if (preg_match('/001-\d{3}/', $_SESSION["level"])) {
+                echo '<a href="javascript:void(0);" id="analysisChart">图表</a>'.
+                     '<a href="javascript:void(0);" id="checkFeedback">反馈建议</a>';
             }
         ?>
-        <a href="javascript:void(0);" id="feedback">反馈</a>
     </div>
 
     <div id="tipBox" style="position:absolute;height:0px;top:10px;width:100%;text-align: right;line-height: 24px;display: none;">
@@ -65,110 +66,7 @@
 
     <div id="topMask" style="display:none;position: absolute;width: 100%;height:100%;z-index: 999999999;cursor:wait;"></div>
 
-    <div class="container-fluid x-hide-display" id="chartContainer">
-        <div class="row">
-            <div class="col-md-8">
-                <div class="chart-wrapper">
-                    <div class="chart-title">
-                        Chart Title
-                    </div>
-                    <div class="chart-stage">
-                        <div id="grid-1-1">
-                            
-                        </div>
-                    </div>
-                    <div class="chart-notes">
-                        Notes about this chart (optional)
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="chart-wrapper">
-                    <div class="chart-title">
-                        Chart Title
-                    </div>
-                    <div class="chart-stage">
-                        <div id="grid-1-2">
-                            
-                        </div>
-                    </div>
-                    <div class="chart-notes">
-                        Notes about this chart (optional)
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-8">
-                <div class="chart-wrapper">
-                    <div class="chart-title">
-                        Chart Title
-                    </div>
-                    <div class="chart-stage">
-                        <div id="grid-2-1">
-                            <!-- chart goes here! -->
-                        </div>
-                    </div>
-                    <div class="chart-notes">
-                        Notes about this chart (optional)
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="chart-wrapper">
-                    <div class="chart-title">
-                        Chart Title
-                    </div>
-                    <div class="chart-stage">
-                        <div id="grid-2-2">
-                            <!-- chart goes here! -->
-                        </div>
-                    </div>
-                    <div class="chart-notes">
-                        Notes about this chart (optional)
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="chart-wrapper">
-                    <div class="chart-title">
-                        Chart Title
-                    </div>
-                    <div class="chart-stage">
-                        <div id="grid-3-1">
-                            
-                        </div>
-                    </div>
-                    <div class="chart-notes">
-                        Notes about this chart (optional)
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="chart-wrapper">
-                    <div class="chart-title">
-                        Chart Title
-                    </div>
-                    <div class="chart-stage">
-                        <div id="grid-4-1">
-                            
-                        </div>
-                    </div>
-                    <div class="chart-notes">
-                        Notes about this chart (optional)
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="x-hide-display" id="chartContainer">
 
     </div>
 
@@ -505,6 +403,59 @@
                 win.show();
             }
         }
+
+        if (document.getElementById('checkFeedback')) {
+            document.getElementById('checkFeedback').onclick = function (){
+                if (Ext) {
+                    var win = Ext.create('Ext.window.Window', {
+                        title: '用户使用问题和意见反馈',
+                        width: 700,
+                        height: 500,
+                        layout: 'fit',
+                        modal: true,
+                        items: [{
+                            xtype: 'gridpanel',
+                            autoScroll: true,
+                            id: 'gridpanel-checkFeedback',
+                            name: 'gridpanel-checkFeedback',
+                            columns: [{
+                                text: '姓名',
+                                dataIndex: 'realname',
+                                flex: 1
+                            }, {
+                                text: '内容',
+                                dataIndex: 'content',
+                                flex: 1,
+                                renderer: function (val) {
+                                    return val.replace(/\n/ig, '<br />');
+                                }
+                            }],
+                            store: Ext.create('Ext.data.Store', {
+                                fields: ['id', 'name', 'realname', 'level', 'content'],
+                                autoLoad: true,
+                                proxy: {
+                                    type: 'rest',
+                                    url: './libs/feedback.php?action=fetchFeedbacks',
+                                    reader: {
+                                        type: 'json'
+                                    }
+                                }
+                            })
+                        }],
+                        buttons: [{
+                            text: '关闭',
+                            handler: function (){
+                                win.close();
+                            }
+                        }]
+                    });
+
+                    win.show();
+                }
+            }
+        }
+        
     </script>
+    <script type="text/javascript" src="highchart/index.js"></script>
 </body>
 </html>
