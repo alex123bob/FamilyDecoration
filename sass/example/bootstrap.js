@@ -18,6 +18,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.Chat": "../../app/controller/chat.js",
   "FamilyDecoration.controller.CheckLog": "../../app/controller/checklog.js",
   "FamilyDecoration.controller.MyLog": "../../app/controller/mylog.js",
+  "FamilyDecoration.controller.MyTask": "../../app/controller/mytask.js",
   "FamilyDecoration.controller.Plan": "../../app/controller/plan.js",
   "FamilyDecoration.controller.Progress": "../../app/controller/progress.js",
   "FamilyDecoration.controller.Setting": "../../app/controller/setting.js",
@@ -93,6 +94,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.mylog.EditLogDetail": "../../app/view/mylog/editlogdetail.js",
   "FamilyDecoration.view.mylog.Index": "../../app/view/mylog/index.js",
   "FamilyDecoration.view.mylog.LogList": "../../app/view/mylog/loglist.js",
+  "FamilyDecoration.view.mytask.Index": "../../app/view/mytask/index.js",
   "FamilyDecoration.view.plan.EditPlan": "../../app/view/plan/editplan.js",
   "FamilyDecoration.view.plan.Index": "../../app/view/plan/index.js",
   "FamilyDecoration.view.progress.EditProgress": "../../app/view/progress/editprogress.js",
@@ -962,6 +964,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.Chat": [],
   "FamilyDecoration.controller.CheckLog": [],
   "FamilyDecoration.controller.MyLog": [],
+  "FamilyDecoration.controller.MyTask": [],
   "FamilyDecoration.controller.Plan": [],
   "FamilyDecoration.controller.Progress": [],
   "FamilyDecoration.controller.Setting": [],
@@ -1037,6 +1040,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.mylog.EditLogDetail": [],
   "FamilyDecoration.view.mylog.Index": [],
   "FamilyDecoration.view.mylog.LogList": [],
+  "FamilyDecoration.view.mytask.Index": [],
   "FamilyDecoration.view.plan.EditPlan": [],
   "FamilyDecoration.view.plan.Index": [],
   "FamilyDecoration.view.progress.EditProgress": [],
@@ -2073,6 +2077,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.Chat": [],
   "FamilyDecoration.controller.CheckLog": [],
   "FamilyDecoration.controller.MyLog": [],
+  "FamilyDecoration.controller.MyTask": [],
   "FamilyDecoration.controller.Plan": [],
   "FamilyDecoration.controller.Progress": [],
   "FamilyDecoration.controller.Setting": [],
@@ -2207,6 +2212,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.mylog.LogList": [
     "widget.mylog-loglist"
+  ],
+  "FamilyDecoration.view.mytask.Index": [
+    "widget.mytask-index"
   ],
   "FamilyDecoration.view.plan.EditPlan": [
     "widget.plan-editplan"
