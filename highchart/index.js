@@ -22,10 +22,19 @@ if (document.getElementById('analysisChart')) {
             method: 'GET',
             callback: function (opts, success, res){
                 if (success) {
-                    var obj = Ext.decode(res.responseText);
+                    var obj = Ext.decode(res.responseText),
+                        tmp = {};
                     if (obj.length > 0) {
                         for (var i = 0; i < obj.length; i++) {
-                            data.push([obj['logName'], 1]);
+                            if (tmp[obj[i]['userName']] != undefined) {
+                                tmp[obj[i]['userName']][1] ++;
+                            }
+                            else {
+                                tmp[obj[i]['userName']] = [obj[i]['realName'], 0];
+                            }
+                        }
+                        for (var pro in tmp) {
+                            data.push(tmp[pro]);
                         }
                         // Build the chart
                         $('#chartContainer').highcharts({
@@ -55,7 +64,7 @@ if (document.getElementById('analysisChart')) {
                             },
                             series: [{
                                 type: 'pie',
-                                name: 'Browser share',
+                                name: '日志比例',
                                 data: data
                             }]
                         });

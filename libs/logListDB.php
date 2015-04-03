@@ -242,10 +242,13 @@
         return $arr;
 	}
 
+	// This is used for chart generation
 	function getAllLogLists() {
 		global $mysql;
 
-        $arr = $mysql->DBGetAllRows("`log_list`");
+		$condition = "left join `user` on `user`.`name` = `log_list`.`userName` where `log_list`.`isDeleted` = 'false' ";
+
+        $arr = $mysql->DBGetSomeRows("`log_list`", "`log_list`.`id`, `logName`, `log_list`.`createTime`, `userName`, `realName`", $condition);
 
         return $arr;
 	}
