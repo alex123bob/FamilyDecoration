@@ -3,7 +3,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 	alias: 'widget.taskassign-index',
 	requires: [
 		'FamilyDecoration.view.checklog.MemberList',
-		'FamilyDecoration.view.checklog.UserLogList',
+		'FamilyDecoration.view.taskassign.UserTaskList',
 		'FamilyDecoration.store.ScrutinizeList'
 	],
 	autoScroll: true,
@@ -22,8 +22,8 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 			items: [{
 				xtype: 'checklog-memberlist',
 				title: '成员列表',
-				id: 'treepanel-memberName',
-				name: 'treepanel-memberName',
+				id: 'treepanel-taskMemberName',
+				name: 'treepanel-taskMemberName',
 				style: {
 					borderRightStyle: 'solid',
 					borderRightWidth: '1px'
@@ -31,18 +31,16 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 				listeners: {
 					itemclick: function (view, rec){
 						if (rec.get('level') && rec.get('name')) {
-							var userLogPanel = Ext.getCmp('treepanel-logNameByUser'),
-								st = Ext.getCmp('treepanel-logNameByUser').getStore(),
-								gridLogContent = Ext.getCmp('gridpanel-logDetailByUser'),
-								btnCensor = Ext.getCmp('button-censorship');
+							var userTaskPanel = Ext.getCmp('treepanel-taskNameByUser'),
+								st = userTaskPanel.getStore(),
+								taskDetailPanel = Ext.getCmp('panel-taskDetailByUser');
 
-							userLogPanel.getSelectionModel().deselectAll();
-							gridLogContent.getStore().removeAll();
-							btnCensor.disable();
-							userLogPanel.userName = rec.get('name');
-							st.proxy.url = './libs/loglist.php';
+							userTaskPanel.getSelectionModel().deselectAll();
+
+							userTaskPanel.userName = rec.get('name');
+							st.proxy.url = './libs/tasklist.php';
 							st.proxy.extraParams = {
-								action: 'getLogListYearsByUser',
+								action: 'getTaskListYearsByUser',
 								user: rec.get('name')
 							};
 							st.load({
@@ -56,7 +54,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 						}
 					},
 					load: function (){
-						var treepanel = Ext.getCmp('treepanel-memberName');
+						var treepanel = Ext.getCmp('treepanel-taskMemberName');
 						treepanel.expandAll();
 					}
 				}
@@ -67,10 +65,10 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 			layout: 'fit',
 			margin: '0 1 0 0',
 			items: [{
-				xtype: 'checklog-userloglist',
-				title: '用户日志',
-				id: 'treepanel-logNameByUser',
-				name: 'treepanel-logNameByUser',
+				xtype: 'taskassign-usertasklist',
+				title: '任务目录',
+				id: 'treepanel-taskNameByUser',
+				name: 'treepanel-taskNameByUser',
 				isQuarter: true,
 				flex: 4,
 				style: {
@@ -81,35 +79,26 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 				autoScroll: true,
 				listeners: {
 					itemclick: function (view, rec){
+
 					},
 					selectionchange: function (selModel, sels, opts){
 						var rec = sels[0],
-							btnCensor = Ext.getCmp('button-censorship'),
-							gridLogContent = Ext.getCmp('gridpanel-logDetailByUser'),
+							userTaskPanel = Ext.getCmp('panel-taskDetailByUser'),
+							userTaskProcessPanel = Ext.getCmp('panel-taskProcess'),
 							scrutinizeGrid = Ext.getCmp('gridpanel-scrutinizeForCheckLog'),
 							st = scrutinizeGrid.getStore();
-						gridLogContent.refresh(rec);
+						
 						if (rec) {
-							btnCensor.setDisabled(!rec.get('logName'));
-							if (rec.get('logName')) {
-								st.reload({
-									params: {
-										logListId: rec.getId()
-									}
-								});
-							}
-							else {
-								st.removeAll();
-							}
+							userTaskPanel.refresh(rec);
+							userTaskProcessPanel.refresh(rec);
 						}
 						else {
 							st.removeAll();
-							btnCensor.disable();
 						}
 						
 					},
 					load: function (){
-						var treepanel = Ext.getCmp('treepanel-logNameByUser');
+						var treepanel = Ext.getCmp('treepanel-taskNameByUser');
 						treepanel.expandAll();
 					}
 				}
@@ -119,122 +108,32 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 			flex: 4,
 			layout: 'border',
 			items: [{
-				xtype: 'gridpanel',
-				id: 'gridpanel-logDetailByUser',
-				name: 'gridpanel-logDetailByUser',
-				title: '日志内容',
+				xtype: 'panel',
+				id: 'panel-taskDetailByUser',
+				name: 'panel-taskDetailByUser',
+				title: '任务内容',
+				autoRender: true,
+				width: 300,
 				height: 320,
 				autoScroll: true,
-				region: 'north',
+				margin: '0 1 0 0',
+				region: 'west',
 				refresh: function (rec){
-					var grid = this;
 					if (rec) {
-						Ext.Ajax.request({
-							url: 'libs/loglist.php?action=getLogDetailsByLogListId',
-							params: {
-								logListId: rec.getId()
-							},
-							method: 'GET',
-							callback: function (opts, success, res){
-								if (success) {
-									var obj = Ext.decode(res.responseText);
-									grid.getStore().loadData(obj);
-								}
-							}
-						});
+						this.body.update(rec.get('taskContent'));
 					}
-					else {
-						grid.getStore().loadData([]);
+				}
+			}, {
+				xtype: 'panel',
+				title: '完成情况',
+				region: 'center',
+				id: 'panel-taskProcess',
+				name: 'panel-taskProcess',
+				refresh: function (rec){
+					if (rec) {
+						this.body.update(rec.get('taskProcess'));
 					}
-				},
-				tbar: [{
-					text: '批阅',
-					disabled: true,
-					id: 'button-censorship',
-					name: 'button-censorship',
-					handler: function (){
-						var win = Ext.create('Ext.window.Window', {
-							title: '批阅内容',
-							modal: true,
-							width: 500,
-							height: 300,
-							layout: 'fit',
-							items: [{
-								xtype: 'textarea',
-								autoScroll: true,
-								id: 'textarea-censorship',
-								name: 'textarea-censorship'
-							}],
-							buttons: [{
-								text: '批阅',
-								handler: function (){
-									var textarea = Ext.getCmp('textarea-censorship'),
-										content = textarea.getValue(),
-										logPanel = Ext.getCmp('treepanel-logNameByUser'),
-										logItem = logPanel.getSelectionModel().getSelection()[0],
-										scrutinizeGrid = Ext.getCmp('gridpanel-scrutinizeForCheckLog'),
-										st = scrutinizeGrid.getStore();
-									if (content) {
-										Ext.Ajax.request({
-											url: './libs/censorship.php?action=mark',
-											method: 'POST',
-											params: {
-												content: content,
-												logListId: logItem.getId()
-											},
-											callback: function (opts, success, res){
-												if (success) {
-													var obj = Ext.decode(res.responseText);
-													if (obj.status == 'successful') {
-														showMsg('批阅成功！');
-														win.close();
-														st.reload({
-															params: {
-																logListId: logItem.getId()
-															}
-														});
-													}
-												}
-											}
-										});
-									}
-									else {
-										showMsg('请填写内容！');
-									}
-								}
-							}, {
-								text: '取消',
-								handler: function (){
-									win.close();
-								}
-							}]
-						});
-						win.show();
-					}
-				}],
-				store: Ext.create('Ext.data.Store', {
-					fields: ['content', 'id', 'createTime'],
-					autoLoad: false
-				}),
-				columns: [
-			        {
-			        	text: '日志内容', 
-			        	dataIndex: 'content', 
-			        	flex: 1,
-			        	renderer: function (val){
-			        		return val.replace(/\n/g, '<br />');
-			        	}
-			        },
-			        {
-			        	text: '创建时间', 
-			        	dataIndex: 'createTime', 
-			        	flex: 1
-			        }
-			    ],
-			    listeners: {
-			    	selectionchange: function (view, sels){
-			    	}
-			    }
+				}
 			}, {
 				xtype: 'gridpanel',
 				id: 'gridpanel-scrutinizeForCheckLog',
@@ -243,7 +142,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 					autoLoad: false
 				}),
 				autoScroll: true,
-				region: 'center',
+				region: 'south',
 				// hideHeaders: true,
 				columns: [{
 					text: '批阅内容',
@@ -271,6 +170,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 					sortable: false
 				}],
 				width: '100%',
+				height: 300,
 				title: '批阅内容'
 			}]
 		}];

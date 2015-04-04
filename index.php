@@ -91,7 +91,7 @@
                     // admin
                     flag = false;
                 }
-                else if (/^00[2345]-001$/.test(level)) {
+                else if (/^00[23457]-001$/.test(level)) {
                     // manager
                     flag = true;
                 }
