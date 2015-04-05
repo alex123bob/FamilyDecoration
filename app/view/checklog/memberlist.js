@@ -2,6 +2,7 @@ Ext.define('FamilyDecoration.view.checklog.MemberList', {
 	extend: 'Ext.tree.Panel',
 	requires: ['Ext.tree.Panel', 'FamilyDecoration.store.MemberList'],
 	alias: 'widget.checklog-memberlist',
+	isCheckMode: false,
 
 	initComponent: function (){
 		var me = this;
@@ -54,7 +55,8 @@ Ext.define('FamilyDecoration.view.checklog.MemberList', {
 	            				node.set({
 	            					text: node.get('realname'),
 	            					leaf: true,
-	            					icon: 'resources/img/user.ico'
+	            					icon: 'resources/img/user.ico',
+	            					checked: me.isCheckMode ? false : null
 	            				})
 	            			}
 	            		}

@@ -5,7 +5,7 @@
 	$res = "";
 	// $isQuarter = isset($_GET["isQuarter"])?$_GET["isQuarter"]:null;
 	switch($action){
-		case "addLogList": 	$res = addLogList($_REQUEST);  break;
+		case "addTaskList": 	$res = addTaskList($_REQUEST);  break;
 		case "deleteLogList":$res = deleteLogList($_POST["id"]);break;
 		case "deleteLogDetail":$res = deleteLogDetail($_POST["logDetailId"]);break;
 		case "addLogDetail":$res = addLogDetail($_POST);break;

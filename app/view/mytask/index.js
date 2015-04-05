@@ -38,7 +38,7 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 		}, {
 			region: 'center',
 			xtype: 'container',
-			layout: 'border',
+			layout: 'vbox',
 			items: [{
 				xtype: 'gridpanel',
 				id: 'gridpanel-logDetail',

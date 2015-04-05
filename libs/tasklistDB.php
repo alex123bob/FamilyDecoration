@@ -19,16 +19,19 @@
 		return array('status'=>'successful', 'errMsg' => 'delete LogDetail Ok');
 	}
 	
-	function addLogList($post){		
+	function addTaskList($post){		
 		$obj = array(
 			"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
-			"logName"=>$post["logName"],
-			"createTime"=>$post["createTime"],
-			"userName"=>$post["userName"]
+			"taskName"=>$post["taskName"],
+			"taskContent"=>$post["taskContent"],
+			"taskDispatcher"=>$_SESSION["name"],
+			"taskExecutor"=>$post["taskExecutor"],
+			"taskProcess"=>0,
+			"selfAssessment"=>""
 		);
 		global $mysql;
-		$mysql->DBInsertAsArray("`log_list`",$obj);
-		return array('status'=>'successful', 'errMsg' => '','logListId'=> $obj["id"]);
+		$mysql->DBInsertAsArray("`task_list`",$obj);
+		return array('status'=>'successful', 'errMsg' => '','taskListId'=> $obj["id"]);
 	}
 
 	function addLogDetail($post){		
@@ -66,7 +69,7 @@
 		//if($currentUserLevel == "001-001" || $currentUserLevel == "001-002"){
 		//	$whereSql = " where isDeleted = 'false' ";
 		//}else{
-			$whereSql = " where isDeleted = 'false' and taskExecutor = '$currentUser' ";
+			$whereSql = " where isDeleted = 'false' and taskExecutor like '%$currentUser%' ";
 		//}
 		$arr = $mysql->DBGetSomeRows("`task_list`", " DISTINCT year(createTime) ",$whereSql ,$orderBy);
 		$count = 0;
@@ -81,7 +84,7 @@
 		global $mysql;
         $res= array();
         $orderBy = " order by createTime ";
-		$whereSql = " where isDeleted = 'false' and taskExecutor = '$user' ";
+		$whereSql = " where isDeleted = 'false' and taskExecutor like '%$user%' ";
 		$arr = $mysql->DBGetSomeRows("`task_list`", " DISTINCT year(createTime) ",$whereSql ,$orderBy);
 		$count = 0;
 		foreach($arr as $key => $val) {
@@ -127,7 +130,7 @@
 	function getTaskListMonthsByUser($year,$user){
 		global $mysql;
         $res= array();
-		$condition = " where taskExecutor = '$user' and isDeleted = 'false' and year(createTime) = '$year'";
+		$condition = " where taskExecutor like '%$user%' and isDeleted = 'false' and year(createTime) = '$year'";
         $orderBy = " order by createTime ";
 		$arr = $mysql->DBGetSomeRows("`task_list`", " DISTINCT month(createTime)  ",$condition,$orderBy);
 		$count = 0;
@@ -148,7 +151,7 @@
         $orderBy = " order by createTime ";
 		//默认只有管理员能看到所有人日志
 		//if($currentUserLevel != "001-001" && $currentUserLevel != "001-002"){
-			$condition = $condition." and taskExecutor = '$currentUser' ";
+			$condition = $condition." and taskExecutor like '%$currentUser%' ";
 		//}
 		$arr = $mysql->DBGetSomeRows("`task_list`", " * ",$condition,$orderBy);
 		$count = 0;
@@ -167,7 +170,7 @@
         $res= array();
         $condition = " where isDeleted = 'false' and year(createTime) = '$year' and month(createTime) = '$month' ";
         $orderBy = " order by createTime ";
-		$condition = $condition." and taskExecutor = '$user' ";
+		$condition = $condition." and taskExecutor like '%$user%' ";
 		$arr = $mysql->DBGetSomeRows("`task_list`", " * ",$condition,$orderBy);
 		$count = 0;
 		foreach($arr as $key => $val) {
