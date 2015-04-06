@@ -15,6 +15,10 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 
 	initComponent: function (){
 		var me = this;
+		if (!$('#completeProcess').length) {
+			$('body').append('<div class="x-hide-display" id="completeProcess"></div>');
+		}
+
 		me.items = [{
 			xtype: 'container',
 			margin: '0 1 0 0',
@@ -32,10 +36,19 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 				listeners: {
 					itemclick: function (view, rec){
 						if (rec.get('level') && rec.get('name')) {
-							var userTaskPanel = Ext.getCmp('treepanel-taskNameByUser'),
-								st = userTaskPanel.getStore(),
-								taskDetailPanel = Ext.getCmp('panel-taskDetailByUser');
+							return true;
+						}
+						else {
+							return false;
+						}
+					},
+					selectionchange: function (selModel, sels, opts){
+						var rec = sels[0],
+							userTaskPanel = Ext.getCmp('treepanel-taskNameByUser'),
+							st = userTaskPanel.getStore(),
+							taskDetailPanel = Ext.getCmp('panel-taskDetailByUser');
 
+						if (rec && rec.get('level') && rec.get('name')) {
 							userTaskPanel.getSelectionModel().deselectAll();
 
 							userTaskPanel.userName = rec.get('name');
@@ -54,6 +67,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 							});
 						}
 						else {
+							st.removeAll();
 						}
 					},
 					load: function (){
@@ -84,7 +98,6 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 					name: 'button-addTask',
 					handler: function (){
 						var win = Ext.create('FamilyDecoration.view.taskassign.AssignTaskWin', {
-
 						});
 						win.show();
 					}
@@ -92,12 +105,79 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 					text: '修改',
 					id: 'button-editTask',
 					name: 'button-editTask',
-					disabled: true
+					disabled: true,
+					handler: function (){
+						var tree = Ext.getCmp('treepanel-taskNameByUser'),
+							task = tree.getSelectionModel().getSelection()[0];
+						if (task) {
+							var win = Ext.create('FamilyDecoration.view.taskassign.AssignTaskWin', {
+								task: task
+							});
+							win.show();
+						}
+						else {
+							showMsg('请选择任务！');
+						}
+					}
 				}, {
 					text: '删除',
 					id: 'button-delTask',
 					name: 'button-delTask',
-					disabled: true
+					disabled: true,
+					handler: function (){
+						var tree = Ext.getCmp('treepanel-taskNameByUser'),
+							task = tree.getSelectionModel().getSelection()[0],
+							taskSt = tree.getStore(),
+							memberTree = Ext.getCmp('treepanel-taskMemberName'),
+							memberSt = memberTree.getStore();
+						if (task) {
+							Ext.Msg.warning('确定要删除当前任务吗？', function (btnId){
+								if ('yes' == btnId) {
+									Ext.Ajax.request({
+										url: './libs/tasklist.php?action=editTaskList',
+										method: 'POST',
+										params: {
+											id: task.getId(),
+											isDeleted: 'true'
+										},
+										callback: function (opts, success, res){
+											if (success) {
+												var obj = Ext.decode(res.responseText);
+												if (obj.status == 'successful') {
+													showMsg('删除任务成功！');
+													memberSt.getProxy().url = './libs/loglist.php?action=getLogListDepartments';
+													memberSt.getProxy().extraParams = {};
+													memberSt.load({
+														node: memberSt.getRootNode(),
+														callback: function (recs, ope, success){
+															if (success) {
+																taskSt.getProxy().extraParams = {
+																	user: memberTree.getSelectionModel().getSelection()[0].get('name')
+																};
+																taskSt.getProxy().url = './libs/tasklist.php?action=getTaskListYearsByUser';
+																taskSt.load({
+																	node: taskSt.getRootNode(),
+																	callback: function (){
+																		tree.getSelectionModel().deselectAll();
+																	}
+																});												
+															}
+														}
+													});
+												}
+												else {
+													showMsg(obj.errMsg);
+												}
+											}
+										}
+									})
+								}
+							});
+						}
+						else {
+							showMsg('请选择任务！');
+						}
+					}
 				}],
 				width: '100%',
 				autoScroll: true,
@@ -163,7 +243,8 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 				region: 'west',
 				refresh: function (rec){
 					if (rec) {
-						this.body.update(rec.get('taskContent'));
+						var content = rec.get('taskContent').replace(/\n/ig, '<br />');
+						this.body.update(content);
 					}
 					else {
 						this.body.update('');
@@ -175,12 +256,51 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 				region: 'center',
 				id: 'panel-taskProcess',
 				name: 'panel-taskProcess',
+				contentEl: 'completeProcess',
+				autoScroll: true,
 				refresh: function (rec){
 					if (rec) {
-						this.body.update(rec.get('taskProcess'));
+						var completed = parseFloat(rec.get('taskProcess')),
+							uncompleted = parseFloat(completed.sub(1));
+						$('#completeProcess').highcharts({
+					        chart: {
+					            type: 'pie',
+					            options3d: {
+					                enabled: true,
+					                alpha: 45,
+					                beta: 0
+					            },
+					            height: 270
+					        },
+					        title: {
+					            text: '任务完成情况'
+					        },
+					        tooltip: {
+					            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+					        },
+					        plotOptions: {
+					            pie: {
+					                allowPointSelect: true,
+					                cursor: 'pointer',
+					                depth: 30,
+					                dataLabels: {
+					                    enabled: true,
+					                    format: '{point.name}'
+					                }
+					            }
+					        },
+					        series: [{
+					            type: 'pie',
+					            name: '百分比',
+					            data: [
+					            	['已完成', completed],
+					            	['未完成', uncompleted]
+					            ]
+					        }]
+					    });
 					}
 					else {
-						this.body.update('');
+						$('#completeProcess').html('');
 					}
 				}
 			}, {

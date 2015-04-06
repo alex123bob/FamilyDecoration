@@ -1,24 +1,4 @@
 <?php
-	function deleteLogList($logListId){
-		global $mysql;
-		$condition = "`id` = '$logListId' ";
-		$setValue = " `isDeleted` = 'true'";
-		$mysql->DBUpdateSomeCols("`log_list`", $condition, $setValue);
-
-		$condition = "`logListId` = '$logListId' ";
-		$setValue = " `isDeleted` = 'true'";
-		$mysql->DBUpdateSomeCols("`log_detail`", $condition, $setValue);
-		return array('status'=>'successful', 'errMsg' => '');
-	}
-
-	function deleteLogDetail($logDetailId){
-		global $mysql;
-		$condition = "`id` = '$logDetailId' ";
-		$setValue = " `isDeleted` = 'true'";
-		$mysql->DBUpdateSomeCols("`log_detail`", $condition, $setValue);
-		return array('status'=>'successful', 'errMsg' => 'delete LogDetail Ok');
-	}
-	
 	function addTaskList($post){		
 		$obj = array(
 			"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
@@ -26,37 +6,60 @@
 			"taskContent"=>$post["taskContent"],
 			"taskDispatcher"=>$_SESSION["name"],
 			"taskExecutor"=>$post["taskExecutor"],
-			"taskProcess"=>0,
-			"selfAssessment"=>""
+			"taskProcess"=>0
 		);
 		global $mysql;
 		$mysql->DBInsertAsArray("`task_list`",$obj);
 		return array('status'=>'successful', 'errMsg' => '','taskListId'=> $obj["id"]);
 	}
 
-	function addLogDetail($post){		
+	function addTaskAssessment ($post){
+		global $mysql;
 		$obj = array(
 			"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
-			"logListId"=>$post["logListId"],
-			"content"=>$post["content"]
+			"taskListId"=>$post["taskListId"],
+			"taskExecutor"=>$_SESSION["name"],
+			"selfAssessment"=>$post["selfAssessment"]
 		);
-		global $mysql;
-		$mysql->DBInsertAsArray("`log_detail`",$obj);
-		return array('status'=>'successful', 'errMsg' => 'add logDetail OK');
+		$mysql->DBInsertAsArray("`task_self_assessment`", $obj);
+		return array('status'=>'successful', 'errMsg' => '','taskListId'=> $obj["id"]);
 	}
 
-	function getLogDetailsByLogListId($logListId){
+	function editTaskAssessment ($post){
 		global $mysql;
-        $res= array();
-        $condition = " where isDeleted = 'false' and logListId = '$logListId' ";
-        $orderBy = " order by createTime ";
-		$arr = $mysql->DBGetSomeRows("`log_detail`", " * ",$condition,$orderBy);
+		$condition = "`id` = '".$post["id"]."' ";
+		$setValue = array();
+		$fields = array("id", "taskListId", "taskExecutor", "selfAssessment");
+		foreach ($fields as $field) {
+			if (isset($post[$field])) {
+				array_push($setValue, " `$field` = '".$post[$field]."'");
+			}
+		}
+		$setValue = implode(",", $setValue);
+		// $setValue = " `taskName` = '".$post["taskName"]."', `taskContent` = '".$post["taskContent"]."', `taskExecutor` = '".$data["taskExecutor"]."'";
+		$mysql->DBUpdateSomeCols("`task_self_assessment`", $condition, $setValue);
+		return array('status'=>'successful', 'errMsg' => 'edit task assessment ok');
+	}
+
+	function getTaskAssessmentByTaskListId ($taskListId){
+		global $mysql;
+		$res = array();
+		$orderBy = " order by createTime ";
+		$currentUser = $_SESSION["name"];
+		$whereSql = " where `isDeleted` = 'false' and `taskListId` = '$taskListId' and `taskExecutor` = '$currentUser' ";
+		$arr = $mysql->DBGetSomeRows("`task_self_assessment`", "*", $whereSql, $orderBy);
+
 		$count = 0;
 		foreach($arr as $key => $val) {
-		    $res[$count] = array("id"=>$val["id"],"createTime"=>$val["createTime"],"content"=>$val["content"]);
+		    $res[$count]["id"] = $val["id"];
+		    $res[$count]["taskListId"] = $val["taskListId"];
+		    $res[$count]["isDeleted"] = $val["isDeleted"];
+		    $res[$count]["createTime"] = $val["createTime"];
+		    $res[$count]["taskExecutor"] = $val["taskExecutor"];
+		    $res[$count]["selfAssessment"] = $val["selfAssessment"];
 		    $count ++;
         }
-		return $res;
+        return $res;
 	}
 
 	function getTaskListYears(){
@@ -94,31 +97,19 @@
 		return $res;
 	}
 
-	function getLogListMonths($year,$isQuarter){
+	function getTaskListMonths($year){
 		global $mysql;
         $res= array();
         $orderBy = "order by createTime";
-        $monthOfQuarters = array(
-				1=>"1,2,3",2=>"1,2,3",3=>"1,2,3",
-				4=>"4,5,6",5=>"4,5,6",6=>"4,5,6",
-				7=>"7,8,9",8=>"7,8,9",9=>"7,8,9",
-				10=>"10,11,12",11=>"10,11,12",12=>"10,11,12");
 		$condition = " where isDeleted = 'false' and year(createTime) = '$year' " ;
-		if($isQuarter == "true"){    
-			$condition = $condition." and month(createTime) in (".$monthOfQuarters[date('n',time())].") ";
-		}else{
-			if($year == date('Y',time())){
-	        	$condition = $condition." and date_format(createTime,'%c') not in (".$monthOfQuarters[date('n',time())].") ";
-			}
-		}
 		$currentUser = $_SESSION["name"];
 		$currentUserLevel = $_SESSION["level"];
         $orderBy = " order by createTime ";
 		//默认只有管理员能看到所有人日志
 		//if($currentUserLevel != "001-001" && $currentUserLevel != "001-002"){
-			$condition = $condition." and userName = '$currentUser' ";
+			$condition = $condition." and taskExecutor like '%$currentUser%' ";
 		//}
-		$arr = $mysql->DBGetSomeRows("`log_list`", " DISTINCT month(createTime)  ",$condition,$orderBy);
+		$arr = $mysql->DBGetSomeRows("`task_list`", " DISTINCT month(createTime)  ",$condition,$orderBy);
 		$count = 0;
 		foreach($arr as $key => $val) {
 		    $res[$count] = array("month"=>$val[0]);
@@ -160,6 +151,8 @@
 		    $res[$count]["taskName"] = $val["taskName"];
 		    $res[$count]["createTime"] = $val["createTime"];
 		    $res[$count]["taskExecutor"] = $val["taskExecutor"];
+		    $res[$count]["taskContent"] = $val["taskContent"];
+		    $res[$count]["taskProcess"] = $val["taskProcess"];
 		    $count ++;
         }
 		return $res;
@@ -185,71 +178,19 @@
 		return $res;
 	}
 
-	function editLogDetail($data){
+	function editTaskList($data){
 		global $mysql;
 		$condition = "`id` = '".$data["id"]."' ";
-		$setValue = " `content` = '".$data["content"]."'";
-		$mysql->DBUpdateSomeCols("`log_detail`", $condition, $setValue);
-		return array('status'=>'successful', 'errMsg' => 'edit logdetail ok');
-	}
-
-	function getLogListDepartments(){
-		$currentUser = $_SESSION["name"];
-		$currentUserLevel = $_SESSION["level"];
-		global $mysql;
-        $res= array();
-
-		//如果是管理员,管理员默认能看到所有部门的所有人的日志
-		if($currentUserLevel == "001-001" || $currentUserLevel == "001-002"){
-			$whereSql = " where `name` in (select `userName` from `log_list`) ";
-			$orderBy = " ORDER BY `user`.`level` ASC ";
-			$arr = $mysql->DBGetSomeRows("`user`", " DISTINCT `level` ",$whereSql ,$orderBy);
-			foreach($arr as $key => $val) {
-				$depa = explode("-", $val[0]);
-				$depa = $depa[0];
-				// if ($depa != "001") {
-				$flag = false;
-				for ($i = 0; $i < count($res); $i++) {
-					$tmp = preg_match("/^".$depa."-\d{3}$/", $res[$i]["level"]);
-					if ($tmp == 1) {
-						$flag = true;
-						break;
-					}
-				}
-				if ($flag) {
-					// todo
-				}
-				else {
-					array_push($res, array("level"=>$val[0]));
-				}
-				// }
-	        }
+		$setValue = array();
+		$fields = array("id", "taskName", "taskContent", "createTime", "taskDispatcher", "taskExecutor", "isDeleted", "taskProcess");
+		foreach ($fields as $field) {
+			if (isset($data[$field])) {
+				array_push($setValue, " `$field` = '".$data[$field]."'");
+			}
 		}
-		else {
-			$res[0] = array("level"=>$currentUserLevel);
-		}
-		
-		return $res;
-	}
-
-	function getMembersByDepartment($department){
-		global $mysql;
-        $res= array();
-        $whereSql = "where level like '".$department."-%' and `isDeleted` = 'false' ";
-
-        $arr = $mysql->DBGetSomeRows("`user`", "*", $whereSql);
-
-        return $arr;
-	}
-
-	// This is used for chart generation
-	function getAllLogLists() {
-		global $mysql;
-
-		$condition = "left join `user` on `user`.`name` = `log_list`.`userName` where `log_list`.`isDeleted` = 'false' ";
-
-        $arr = $mysql->DBGetSomeRows("`log_list`", "`log_list`.`id`, `logName`, `log_list`.`createTime`, `userName`, `realName`", $condition);
-
-        return $arr;
+		$setValue = implode(",", $setValue);
+		// $setValue = " `taskName` = '".$data["taskName"]."', `taskContent` = '".$data["taskContent"]."', `taskExecutor` = '".$data["taskExecutor"]."'";
+		$mysql->DBUpdateSomeCols("`task_list`", $condition, $setValue);
+		return array('status'=>'successful', 'errMsg' => 'edit tasklist ok');
 	}
 ?>

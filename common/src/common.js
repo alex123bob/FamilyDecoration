@@ -389,7 +389,7 @@ function accSub(arg1, arg2) {
 
 // 给Number类型增加一个mul方法，调用起来更加方便。
 Number.prototype.sub = function (arg) {
-    return accMul(arg, this);
+    return accSub(arg, this);
 };
 
 /**

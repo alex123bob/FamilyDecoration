@@ -3,6 +3,7 @@ Ext.define('FamilyDecoration.view.checklog.MemberList', {
 	requires: ['Ext.tree.Panel', 'FamilyDecoration.store.MemberList'],
 	alias: 'widget.checklog-memberlist',
 	isCheckMode: false,
+	assignees: undefined,
 
 	initComponent: function (){
 		var me = this;
@@ -52,11 +53,22 @@ Ext.define('FamilyDecoration.view.checklog.MemberList', {
 	            				});
 	            			}
 	            			else {
+	            				var checkStat = me.isCheckMode ? false : null,
+	            					result;
+	            				if (me.assignees) {
+	            					result = Ext.Array.indexOf(me.assignees, node.get('name'));
+	            					if (result != -1) {
+	            						checkStat = true;
+	            					}
+	            					else if (result == -1) {
+	            						checkStat = false;
+	            					}
+	            				}
 	            				node.set({
 	            					text: node.get('realname'),
 	            					leaf: true,
 	            					icon: 'resources/img/user.ico',
-	            					checked: me.isCheckMode ? false : null
+	            					checked: checkStat
 	            				})
 	            			}
 	            		}

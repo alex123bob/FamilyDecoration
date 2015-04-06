@@ -10,6 +10,7 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 		align: 'stretch'
 	},
 	modal: true,
+	task: null,
 
 	initComponent: function (){
 		var me = this;
@@ -27,6 +28,7 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 				height: 20,
 				margin: '0 0 1 0',
 				emptyText: '任务名称',
+				value: me.task ? me.task.get('taskName') : '',
 				allowBlank: false
 			}, {
 				xtype: 'textarea',
@@ -37,7 +39,8 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 				margin: 0,
 				autoScroll: true,
 				emptyText: '任务内容',
-				allowBlank: false
+				allowBlank: false,
+				value: me.task ? me.task.get('taskContent') : ''
 			}]
 		}, {
 			xtype: 'checklog-memberlist',
@@ -46,6 +49,7 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 			name: 'treepanel-taskassignee',
 			isCheckMode: true,
 			flex: 1,
+			assignees: me.task ? me.task.get('taskExecutor').split(',') : undefined,
 			listeners: {
 				load: function (){
 					var treepanel = Ext.getCmp('treepanel-taskassignee');
@@ -63,7 +67,15 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 				var name = Ext.getCmp('textfield-taskName'),
 					content = Ext.getCmp('textarea-taskContent'),
 					tree = Ext.getCmp('treepanel-taskassignee'),
-					executor = [];
+					executor = [], 
+					p = {
+						taskName: name.getValue(),
+						taskContent: content.getValue()
+					},
+					memberList = Ext.getCmp('treepanel-taskMemberName'),
+					memberSt = memberList.getStore(),
+					taskList = Ext.getCmp('treepanel-taskNameByUser'),
+					taskSt = taskList.getStore();
 				if (name.isValid() && content.isValid()) {
 					var assignees = tree.getChecked();
 					if (assignees.length > 0) {
@@ -71,20 +83,46 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 							executor.push(assignees[i].get('name'));
 						}
 						executor = executor.join(',');
+						Ext.apply(p, {
+							taskExecutor: executor
+						});
+						if (me.task) {
+							Ext.apply(p, {
+								id: me.task.getId()
+							});
+						}
 						Ext.Ajax.request({
-							url: './libs/tasklist.php?action=addTaskList',
+							url: me.task ? './libs/tasklist.php?action=editTaskList' : './libs/tasklist.php?action=addTaskList',
 							method: 'POST',
-							params: {
-								taskName: name.getValue(),
-								taskContent: content.getValue(),
-								taskExecutor: executor
-							},
+							params: p,
 							callback: function (opts, success, res){
 								if (success) {
 									var obj = Ext.decode(res.responseText);
 									if (obj.status == 'successful') {
-										showMsg('任务分配成功！');
+										me.task ? showMsg('任务编辑成功！') : showMsg('任务分配成功！');
+										memberSt.getProxy().url = './libs/loglist.php?action=getLogListDepartments';
+										memberSt.getProxy().extraParams = {};
+										memberSt.load({
+											node: memberSt.getRootNode(),
+											callback: function (recs, ope, success){
+												if (success) {
+													taskSt.getProxy().extraParams = {
+														user: memberList.getSelectionModel().getSelection()[0].get('name')
+													};
+													taskSt.getProxy().url = './libs/tasklist.php?action=getTaskListYearsByUser';
+													taskSt.load({
+														node: taskSt.getRootNode(),
+														callback: function (){
+															taskList.getSelectionModel().deselectAll();
+														}
+													});												
+												}
+											}
+										});
 										me.close();
+									}
+									else {
+										showMsg(obj.errMsg);
 									}
 								}
 							}

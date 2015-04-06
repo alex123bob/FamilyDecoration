@@ -70,6 +70,14 @@
 
     </div>
 
+    <div class="x-hide-display" id="completeProcess">
+        
+    </div>
+
+    <div id="mytaskCompleteProcess" class="x-hide-display">
+        
+    </div>
+
     <script type="text/javascript">
         Ext.define('User', {
             singleton: true,

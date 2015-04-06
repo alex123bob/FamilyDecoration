@@ -9,7 +9,6 @@ Ext.define('FamilyDecoration.model.TaskList', {
         {name: 'taskExecutor', type: 'string'},
         {name: 'isDeleted', type: 'boolean'},
         {name: 'taskProcess', type: 'string'},
-        {name: 'selfAssessment', type: 'string'},
         {name: 'year', type: 'string'},
         {name: 'month', type: 'string'}
     ],
