@@ -366,7 +366,9 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 									buttons: [{
 										text: '批阅',
 										handler: function (){
-											var content = win.down('textarea').getValue();
+											var content = win.down('textarea').getValue(),
+												memberTree = Ext.getCmp('treepanel-taskMemberName'),
+												member = memberTree.getSelectionModel().getSelection()[0];
 
 											if (task) {
 												Ext.Ajax.request({
@@ -380,6 +382,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 														if (success) {
 															var obj = Ext.decode(res.responseText);
 															if (obj.status == 'successful') {
+																sendMsg(User.getName(), member.get('name'), User.getRealName() + '批阅了任务"' + task.get('taskName') + '"，批阅内容：' + content + '；');
 																showMsg('批阅成功！');
 																win.close();
 																taskCheckGrid.getStore().reload();
