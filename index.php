@@ -70,6 +70,14 @@
 
     </div>
 
+    <div class="x-hide-display" id="completeProcess">
+        
+    </div>
+
+    <div id="mytaskCompleteProcess" class="x-hide-display">
+        
+    </div>
+
     <script type="text/javascript">
         Ext.define('User', {
             singleton: true,
@@ -91,7 +99,7 @@
                     // admin
                     flag = false;
                 }
-                else if (/^00[2345]-001$/.test(level)) {
+                else if (/^00[23457]-001$/.test(level)) {
                     // manager
                     flag = true;
                 }

@@ -2,13 +2,17 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 	extend: 'Ext.container.Container',
 	alias: 'widget.mytask-index',
 	requires: [
-		'FamilyDecoration.view.mylog.LogList', 'FamilyDecoration.view.mylog.EditLogDetail',
-		'FamilyDecoration.store.ScrutinizeList', 'FamilyDecoration.view.mylog.AskLeave'
+		'FamilyDecoration.view.mytask.TaskList', 'FamilyDecoration.view.mytask.SelfAssess',
+		'FamilyDecoration.view.mylog.AskLeave', 'FamilyDecoration.model.TaskSelfAssessment',
+		'FamilyDecoration.view.mytask.EditProcess'
 	],
 	autoScroll: true,
 	layout: 'border',
 
 	initComponent: function (){
+		if (!$('#mytaskCompleteProcess').length) {
+			$('body').append('<div class="x-hide-display" id="mytaskCompleteProcess"></div>');
+		}
 		var me = this;
 		me.items = [{
 			xtype: 'container',
@@ -17,20 +21,60 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 			width: 200,
 			margin: '0 1 0 0',
 			items: [{
-				xtype: 'mylog-loglist',
+				xtype: 'mytask-tasklist',
 				title: '任务查看',
-				id: 'treepanel-checkTask',
-				name: 'treepanel-checkTask',
+				id: 'treepanel-myTask',
+				name: 'treepanel-myTask',
 				isQuarter: true,
 				autoScroll: true,
+				refresh: function (){
+					var tree = this,
+						st = tree.getStore();
+					st.getProxy().extraParams = {
+						action: 'getTaskListYears'
+					};
+					st.getProxy().url = 'libs/tasklist.php';
+					st.load({
+						node: tree.getRootNode(),
+						callback: function (recs, ope, success){
+							if (success) {
+								tree.getSelectionModel().deselectAll();
+							}
+						}
+					});
+				},
 				listeners: {
 					itemclick: function (view, rec){
 					},
 					selectionchange: function (selModel, sels, opts){
-						
+						var rec = sels[0],
+							taskContentPanel = Ext.getCmp('panel-taskContent'),
+							scrutinizeGrid = Ext.getCmp('gridpanel-myTaskScrutinizeContent'),
+							assessPanel = Ext.getCmp('panel-selfAssessment'),
+							processPanel = Ext.getCmp('panel-completeProcess'),
+							selfassessBtn = Ext.getCmp('button-selfassess'),
+							editProcessBtn = Ext.getCmp('button-editProcess');
+						if (rec && rec.get('taskName')) {
+							taskContentPanel.refresh(rec);
+							scrutinizeGrid.refresh(rec);
+							assessPanel.refresh(rec);
+							processPanel.refresh(rec);
+
+							selfassessBtn.enable();
+							editProcessBtn.enable();
+						}
+						else {
+							taskContentPanel.refresh();
+							scrutinizeGrid.refresh();
+							assessPanel.refresh();
+							processPanel.refresh();
+
+							selfassessBtn.disable();
+							editProcessBtn.disable();
+						}
 					},
 					load: function (){
-						var treePanel = Ext.getCmp('treepanel-checkTask');
+						var treePanel = Ext.getCmp('treepanel-myTask');
 						treePanel.expandAll();
 					}
 				}
@@ -40,156 +84,43 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 			xtype: 'container',
 			layout: 'border',
 			items: [{
+				id: 'panel-taskContent',
+				name: 'panel-taskContent',
+				title: '任务内容',
+				region: 'west',
+				width: 300,
+				refresh: function (rec){
+					if (rec) {
+						var content = rec.get('taskContent').replace(/\n/ig, '<br />');
+						this.body.update(content);
+					}
+					else {
+						this.body.update('');
+					}
+				},
+				margin: '0 1 0 0'
+			}, {
 				xtype: 'gridpanel',
-				id: 'gridpanel-logDetail',
-				name: 'gridpanel-logDetail',
-				title: '日志内容',
-				flex: 4,
-				width: '100%',
+				id: 'gridpanel-myTaskScrutinizeContent',
+				name: 'gridpanel-myTaskScrutinizeContent',
+				store: Ext.create('FamilyDecoration.store.TaskScrutinize', {
+					autoLoad: false
+				}),
 				refresh: function (rec){
 					var grid = this,
-						btnEditLogDetail = Ext.getCmp('button-editLogDetail'),
-						btnDelLogDetail = Ext.getCmp('button-deleteLogDetail');
+						st = grid.getStore();
 					if (rec) {
-						Ext.Ajax.request({
-							url: 'libs/loglist.php?action=getLogDetailsByLogListId',
+						st.load({
 							params: {
-								logListId: rec.getId()
-							},
-							method: 'GET',
-							callback: function (opts, success, res){
-								if (success) {
-									var obj = Ext.decode(res.responseText);
-									grid.getStore().loadData(obj);
-								}
+								taskListId: rec.getId()
 							}
 						});
 					}
 					else {
-						grid.getStore().loadData([]);
+						st.loadData([]);
 					}
-					btnEditLogDetail.disable();
-					btnDelLogDetail.disable();
 				},
-				tbar: [{
-					text: '增加',
-					id: 'button-addLogDetail',
-					name: 'button-addLogDetail',
-					disabled: true,
-					handler: function (){
-						var tree = Ext.getCmp('treepanel-logName'),
-							logItem = tree.getSelectionModel().getSelection()[0];
-						var win = Ext.create('FamilyDecoration.view.mylog.EditLogDetail', {
-							logListId: logItem.getId()
-						});
-						win.show();
-					}
-				}, {
-					text: '修改',
-					id: 'button-editLogDetail',
-					name: 'button-editLogDetail',
-					disabled: true,
-					handler: function (){
-						var tree = Ext.getCmp('treepanel-logName'),
-							grid = Ext.getCmp('gridpanel-logDetail'),
-							logItem = tree.getSelectionModel().getSelection()[0],
-							logDetailItem = grid.getSelectionModel().getSelection()[0];
-						var win = Ext.create('FamilyDecoration.view.mylog.EditLogDetail', {
-							logListId: logItem.getId(),
-							logObj: logDetailItem
-						});
-						win.show();
-					}
-				}, {
-					text: '删除',
-					id: 'button-deleteLogDetail',
-					name: 'button-deleteLogDetail',
-					disabled: true,
-					handler: function (){
-						var grid = Ext.getCmp('gridpanel-logDetail'),
-							tree = Ext.getCmp('treepanel-logName'),
-							rec = tree.getSelectionModel().getSelection()[0],
-							logItem = grid.getSelectionModel().getSelection()[0];
-						Ext.Msg.warning('确定要删除该条日志吗？', function (btn){
-							if ('yes' == btn) {
-								Ext.Ajax.request({
-									url: 'libs/loglist.php?action=deleteLogDetail',
-									params: {
-										logDetailId: logItem.getId()
-									},
-									method: 'POST',
-									logDetailId: logItem.getId(),
-									callback: function (opts, success, res){
-										if (success) {
-											var obj = Ext.decode(res.responseText);
-											if (obj.status == 'successful') {
-												showMsg('删除成功！');
-												grid.refresh(rec);
-											}
-										}
-									}
-								});
-							}
-						})
-					}
-				}, {
-					text: '请假申请',
-					id: 'button-askLeave',
-					name: 'button-askLeave',
-					hidden: true,
-					disabled: true,
-					handler: function (){
-						var tree = Ext.getCmp('treepanel-logName'),
-							logItem = tree.getSelectionModel().getSelection()[0];
-						var win = Ext.create('FamilyDecoration.view.mylog.AskLeave', {
-							logListId: logItem.getId()
-						});
-						win.show();
-					}
-				}],
-				store: Ext.create('Ext.data.Store', {
-					fields: ['content', 'id', 'createTime'],
-					autoLoad: false
-				}),
-				columns: [
-			        {
-			        	text: '日志内容', 
-			        	dataIndex: 'content', 
-			        	flex: 1,
-			        	renderer: function (val){
-			        		return val.replace(/\n/g, '<br />');
-			        	}
-			        },
-			        {
-			        	text: '创建日期', 
-			        	dataIndex: 'createTime', 
-			        	flex: 1
-			        }
-			    ],
-			    listeners: {
-			    	selectionchange: function (view, sels){
-			    		var rec = sels[0],
-			    			btnEditLogDetail = Ext.getCmp('button-editLogDetail'),
-			    			btnDelLogDetail = Ext.getCmp('button-deleteLogDetail'),
-			    			tree = Ext.getCmp('treepanel-logName'),
-			    			frozenTree = Ext.getCmp('treepanel-frozenLogName');
-			    		if (tree.getSelectionModel().getSelection().length > 0) {
-			    			btnEditLogDetail.setDisabled(!rec);
-			    			btnDelLogDetail.setDisabled(!rec);
-			    		}
-			    		else if (frozenTree.getSelectionModel().getSelection().length > 0) {
-			    			btnEditLogDetail.disable();
-			    			btnDelLogDetail.disable();
-			    		}
-			    	}
-			    }
-			}, {
-				xtype: 'gridpanel',
-				id: 'gridpanel-scrutinize',
-				name: 'gridpanel-scrutinize',
-				store: Ext.create('FamilyDecoration.store.ScrutinizeList', {
-					autoLoad: false
-				}),
+				region: 'center',
 				// hideHeaders: true,
 				columns: [{
 					text: '批阅内容',
@@ -217,8 +148,175 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 					sortable: false
 				}],
 				width: '100%',
-				title: '批阅内容',
-				flex: 2
+				title: '批阅内容'
+			}, {
+				xtype: 'panel',
+				region: 'south',
+				height: 220,
+				width: '100%',
+				header: false,
+				// title: '完成情况及自我评价',
+				id: 'panel-processAndSelfAssessment',
+				name: 'panel-processAndSelfAssessment',
+				layout: 'hbox',
+				
+				items: [{
+					xtype: 'panel',
+					id: 'panel-selfAssessment',
+					name: 'panel-selfAssessment',
+					flex: 1,
+					height: '100%',
+					title: '自我评价',
+					autoScroll: true,
+					bbar: [{
+						text: '评价',
+						id: 'button-selfassess',
+						name: 'button-selfassess',
+						header: false,
+						disabled: true,
+						handler: function (){
+							var taskTree = Ext.getCmp('treepanel-myTask'),
+								task = taskTree.getSelectionModel().getSelection()[0];
+							if (task && task.get('taskName')) {
+								Ext.Ajax.request({
+									url: './libs/tasklist.php?action=getTaskAssessmentByTaskListId',
+									method: 'GET',
+									params: {
+										taskListId: task.getId()
+									},
+									callback: function (opts, success, res){
+										if (success) {
+											var obj = Ext.decode(res.responseText);
+											if (obj.length > 0) {
+												var assessment = Ext.create('FamilyDecoration.model.TaskSelfAssessment', obj[0]);
+												var win = Ext.create('FamilyDecoration.view.mytask.SelfAssess', {
+													task: task,
+													assessment: assessment
+												});
+												win.show();
+											}
+											else {
+												var win = Ext.create('FamilyDecoration.view.mytask.SelfAssess', {
+													task: task
+												});
+												win.show();
+											}
+										}
+									}
+								});
+							}
+							else {
+
+							}
+						}
+					}],
+					refresh: function (rec){
+						if (rec) {
+							var	me = this;
+							if (rec && rec.get('taskName')) {
+								Ext.Ajax.request({
+									url: './libs/tasklist.php?action=getTaskAssessmentByTaskListId',
+									method: 'GET',
+									params: {
+										taskListId: rec.getId()
+									},
+									callback: function (opts, success, res){
+										if (success) {
+											var obj = Ext.decode(res.responseText);
+											if (obj.length > 0) {
+												var content = obj[0]['selfAssessment'].replace(/\n/gi, '<br />');
+												me.body.update(content);
+											}
+											else {
+												me.body.update('');
+											}
+										}
+									}
+								})
+							}
+						}
+						else {
+							this.body.update('');
+						}
+					},
+					style: {
+						borderRightStyle: 'solid',
+						borderRightWidth: '1px'
+					}
+				}, {
+					xtype: 'panel',
+					id: 'panel-completeProcess',
+					name: 'panel-completeProcess',
+					flex: 1,
+					height: '100%',
+					title: '任务完成进度',
+					contentEl: 'mytaskCompleteProcess',
+					autoScroll: true,
+					refresh: function (rec){
+						if (rec) {
+							var completed = parseFloat(rec.get('taskProcess')),
+								uncompleted = parseFloat(completed.sub(1));
+							$('#mytaskCompleteProcess').highcharts({
+						        chart: {
+						            type: 'pie',
+						            options3d: {
+						                enabled: true,
+						                alpha: 45,
+						                beta: 0
+						            },
+						            height: 200
+						        },
+						        title: {
+						            text: '任务完成情况'
+						        },
+						        tooltip: {
+						            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+						        },
+						        plotOptions: {
+						            pie: {
+						                allowPointSelect: true,
+						                cursor: 'pointer',
+						                depth: 30,
+						                dataLabels: {
+						                    enabled: true,
+						                    format: '{point.name}'
+						                }
+						            }
+						        },
+						        series: [{
+						            type: 'pie',
+						            name: '百分比',
+						            data: [
+						            	['已完成', completed],
+						            	['未完成', uncompleted]
+						            ]
+						        }]
+						    });
+						}
+						else {
+							$('#mytaskCompleteProcess').html('');
+						}
+					},
+					bbar: [{
+						text: '编辑完成进度',
+						id: 'button-editProcess',
+						name: 'button-editProcess',
+						disabled: true,
+						handler: function (){
+							var tree = Ext.getCmp('treepanel-myTask'),
+								task = tree.getSelectionModel().getSelection()[0];
+							if (task) {
+								var win = Ext.create('FamilyDecoration.view.mytask.EditProcess', {
+									task: task
+								});
+								win.show();
+							}
+							else {
+								showMsg('没有选择任务！');
+							}
+						}
+					}]
+				}]
 			}]
 		}];
 

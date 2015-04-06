@@ -43,6 +43,9 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.model.Progress": "app/model/progress.js",
   "FamilyDecoration.model.Project": "app/model/project.js",
   "FamilyDecoration.model.ScrutinizeList": "app/model/scrutinizelist.js",
+  "FamilyDecoration.model.TaskList": "app/model/tasklist.js",
+  "FamilyDecoration.model.TaskScrutinize": "app/model/taskscrutinize.js",
+  "FamilyDecoration.model.TaskSelfAssessment": "app/model/taskselfassessment.js",
   "FamilyDecoration.model.User": "app/model/user.js",
   "FamilyDecoration.store.BasicItem": "app/store/basicitem.js",
   "FamilyDecoration.store.BasicSubItem": "app/store/basicsubitem.js",
@@ -61,6 +64,8 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.store.PlanCategory": "app/store/plancategory.js",
   "FamilyDecoration.store.Project": "app/store/project.js",
   "FamilyDecoration.store.ScrutinizeList": "app/store/scrutinizelist.js",
+  "FamilyDecoration.store.TaskList": "app/store/tasklist.js",
+  "FamilyDecoration.store.TaskScrutinize": "app/store/taskscrutinize.js",
   "FamilyDecoration.store.User": "app/store/user.js",
   "FamilyDecoration.view.Viewport": "app/view/viewport.js",
   "FamilyDecoration.view.basicitem.AddBasicItem": "app/view/basicitem/addbasicitem.js",
@@ -94,7 +99,10 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.mylog.EditLogDetail": "app/view/mylog/editlogdetail.js",
   "FamilyDecoration.view.mylog.Index": "app/view/mylog/index.js",
   "FamilyDecoration.view.mylog.LogList": "app/view/mylog/loglist.js",
+  "FamilyDecoration.view.mytask.EditProcess": "app/view/mytask/editprocess.js",
   "FamilyDecoration.view.mytask.Index": "app/view/mytask/index.js",
+  "FamilyDecoration.view.mytask.SelfAssess": "app/view/mytask/selfassess.js",
+  "FamilyDecoration.view.mytask.TaskList": "app/view/mytask/tasklist.js",
   "FamilyDecoration.view.plan.EditPlan": "app/view/plan/editplan.js",
   "FamilyDecoration.view.plan.Index": "app/view/plan/index.js",
   "FamilyDecoration.view.progress.EditProgress": "app/view/progress/editprogress.js",
@@ -105,7 +113,9 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.progress.TreeFilter": "app/view/progress/treefilter.js",
   "FamilyDecoration.view.setting.AddAccount": "app/view/setting/addaccount.js",
   "FamilyDecoration.view.setting.Index": "app/view/setting/index.js",
+  "FamilyDecoration.view.taskassign.AssignTaskWin": "app/view/taskassign/assigntaskwin.js",
   "FamilyDecoration.view.taskassign.Index": "app/view/taskassign/index.js",
+  "FamilyDecoration.view.taskassign.UserTaskList": "app/view/taskassign/usertasklist.js",
   "FamilyDecoration.view.user.Index": "app/view/user/index.js"
 });
 Ext.ClassManager.addNameAlternateMappings({
@@ -989,6 +999,9 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.model.Progress": [],
   "FamilyDecoration.model.Project": [],
   "FamilyDecoration.model.ScrutinizeList": [],
+  "FamilyDecoration.model.TaskList": [],
+  "FamilyDecoration.model.TaskScrutinize": [],
+  "FamilyDecoration.model.TaskSelfAssessment": [],
   "FamilyDecoration.model.User": [],
   "FamilyDecoration.store.BasicItem": [],
   "FamilyDecoration.store.BasicSubItem": [],
@@ -1007,6 +1020,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.store.PlanCategory": [],
   "FamilyDecoration.store.Project": [],
   "FamilyDecoration.store.ScrutinizeList": [],
+  "FamilyDecoration.store.TaskList": [],
+  "FamilyDecoration.store.TaskScrutinize": [],
   "FamilyDecoration.store.User": [],
   "FamilyDecoration.view.Viewport": [],
   "FamilyDecoration.view.basicitem.AddBasicItem": [],
@@ -1040,7 +1055,10 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.mylog.EditLogDetail": [],
   "FamilyDecoration.view.mylog.Index": [],
   "FamilyDecoration.view.mylog.LogList": [],
+  "FamilyDecoration.view.mytask.EditProcess": [],
   "FamilyDecoration.view.mytask.Index": [],
+  "FamilyDecoration.view.mytask.SelfAssess": [],
+  "FamilyDecoration.view.mytask.TaskList": [],
   "FamilyDecoration.view.plan.EditPlan": [],
   "FamilyDecoration.view.plan.Index": [],
   "FamilyDecoration.view.progress.EditProgress": [],
@@ -1051,7 +1069,9 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.progress.TreeFilter": [],
   "FamilyDecoration.view.setting.AddAccount": [],
   "FamilyDecoration.view.setting.Index": [],
+  "FamilyDecoration.view.taskassign.AssignTaskWin": [],
   "FamilyDecoration.view.taskassign.Index": [],
+  "FamilyDecoration.view.taskassign.UserTaskList": [],
   "FamilyDecoration.view.user.Index": []
 });
 Ext.ClassManager.addNameAliasMappings({
@@ -2102,6 +2122,9 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.model.Progress": [],
   "FamilyDecoration.model.Project": [],
   "FamilyDecoration.model.ScrutinizeList": [],
+  "FamilyDecoration.model.TaskList": [],
+  "FamilyDecoration.model.TaskScrutinize": [],
+  "FamilyDecoration.model.TaskSelfAssessment": [],
   "FamilyDecoration.model.User": [],
   "FamilyDecoration.store.BasicItem": [],
   "FamilyDecoration.store.BasicSubItem": [],
@@ -2120,6 +2143,8 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.store.PlanCategory": [],
   "FamilyDecoration.store.Project": [],
   "FamilyDecoration.store.ScrutinizeList": [],
+  "FamilyDecoration.store.TaskList": [],
+  "FamilyDecoration.store.TaskScrutinize": [],
   "FamilyDecoration.store.User": [],
   "FamilyDecoration.view.Viewport": [],
   "FamilyDecoration.view.basicitem.AddBasicItem": [
@@ -2213,8 +2238,17 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.mylog.LogList": [
     "widget.mylog-loglist"
   ],
+  "FamilyDecoration.view.mytask.EditProcess": [
+    "widget.mytask-editprocess"
+  ],
   "FamilyDecoration.view.mytask.Index": [
     "widget.mytask-index"
+  ],
+  "FamilyDecoration.view.mytask.SelfAssess": [
+    "widget.mytask-selfassess"
+  ],
+  "FamilyDecoration.view.mytask.TaskList": [
+    "widget.mytask-tasklist"
   ],
   "FamilyDecoration.view.plan.EditPlan": [
     "widget.plan-editplan"
@@ -2246,8 +2280,14 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.setting.Index": [
     "widget.setting-index"
   ],
+  "FamilyDecoration.view.taskassign.AssignTaskWin": [
+    "widget.taskassign-assigntaskwin"
+  ],
   "FamilyDecoration.view.taskassign.Index": [
     "widget.taskassign-index"
+  ],
+  "FamilyDecoration.view.taskassign.UserTaskList": [
+    "widget.taskassign-usertasklist"
   ],
   "FamilyDecoration.view.user.Index": [
     "widget.user-index"
