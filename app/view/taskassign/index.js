@@ -67,7 +67,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 							});
 						}
 						else {
-							st.removeAll();
+							// todo
 						}
 					},
 					load: function (){
