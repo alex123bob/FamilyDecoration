@@ -19,7 +19,7 @@
 			"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
 			"taskListId"=>$post["taskListId"],
 			"taskExecutor"=>"-".$_SESSION["name"]."-",
-			"selfAssessment"=>$post["selfAssessment"]
+			"selfAssessment"=>mysql_real_escape_string($post["selfAssessment"])
 		);
 		$mysql->DBInsertAsArray("`task_self_assessment`", $obj);
 		return array('status'=>'successful', 'errMsg' => '','taskListId'=> $obj["id"]);
@@ -29,11 +29,14 @@
 		global $mysql;
 		$condition = "`id` = '".$post["id"]."' ";
 		$setValue = array();
-		$fields = array("id", "taskListId","selfAssessment");
+		$fields = array("id", "taskListId");
 		foreach ($fields as $field) {
 			if (isset($post[$field])) {
 				array_push($setValue, " `$field` = '".$post[$field]."'");
 			}
+		}
+		if (isset($post["selfAssessment"])) {
+			array_push($setValue, " `selfAssessment` = '".mysql_real_escape_string($post["selfAssessment"])."'");
 		}
 		if (isset($post["taskExecutor"])) {
 			array_push($setValue, " `taskExecutor` = '-".str_replace(",", "-", $post["taskExecutor"])."-'");
