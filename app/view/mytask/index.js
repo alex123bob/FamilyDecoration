@@ -164,7 +164,7 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 					xtype: 'panel',
 					id: 'panel-selfAssessment',
 					name: 'panel-selfAssessment',
-					flex: 1,
+					width: 300,
 					height: '100%',
 					title: '自我评价',
 					autoScroll: true,

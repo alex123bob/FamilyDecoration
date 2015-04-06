@@ -195,6 +195,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 							userTaskPanel = Ext.getCmp('panel-taskDetailByUser'),
 							userTaskProcessPanel = Ext.getCmp('panel-taskProcess'),
 							scrutinizeGrid = Ext.getCmp('gridpanel-scrutinizeForCheckTask'),
+							selfAssessmentPanel = Ext.getCmp('panel-selfAssessmentForTaskAssign'),
 							st = scrutinizeGrid.getStore(),
 							
 							editTaskBtn = Ext.getCmp('button-editTask'),
@@ -203,6 +204,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 						if (rec) {
 							userTaskPanel.refresh(rec);
 							userTaskProcessPanel.refresh(rec);
+							selfAssessmentPanel.refresh(rec);
 							st.load({
 								params: {
 									taskListId: rec.getId()
@@ -214,6 +216,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 						else {
 							userTaskPanel.refresh();
 							userTaskProcessPanel.refresh();
+							selfAssessmentPanel.refresh();
 							st.removeAll();
 							editTaskBtn.disable();
 							delTaskBtn.disable();
@@ -304,106 +307,156 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 					}
 				}
 			}, {
-				xtype: 'gridpanel',
-				id: 'gridpanel-scrutinizeForCheckTask',
-				name: 'gridpanel-scrutinizeForCheckTask',
-				store: Ext.create('FamilyDecoration.store.TaskScrutinize', {
-					autoLoad: false
-				}),
-				autoScroll: true,
+				xtype: 'container',
 				region: 'south',
-				columns: [{
-					text: '批阅内容',
-					dataIndex: 'scrutinizeContent',
-					flex: 1,
-					menuDisabled: true,
-					draggable: false,
-					sortable: false,
-					renderer: function (val){
-						return val.replace(/\n/ig, '<br />');
-					}
-				}, {
-					text: '批阅人',
-					dataIndex: 'realName',
-					flex: 1,
-					menuDisabled: true,
-					draggable: false,
-					sortable: false
-				}, {
-					text: '批阅时间',
-					dataIndex: 'scrutinizeTime',
-					flex: 1,
-					menuDisabled: true,
-					draggable: false,
-					sortable: false
-				}],
-				bbar: [{
-					text: '批阅',
-					handler: function (){
-						var taskTree = Ext.getCmp('treepanel-taskNameByUser'),
-							task = taskTree.getSelectionModel().getSelection()[0],
-							taskCheckGrid = Ext.getCmp('gridpanel-scrutinizeForCheckTask');
-
-						if (task) {
-							var win = Ext.create('Ext.window.Window', {
-								title: '任务批阅',
-								modal: true,
-								width: 500,
-								height: 400,
-								layout: 'fit',
-								items: [{
-									xtype: 'textarea',
-									autoScroll: true,
-								}],
-								buttons: [{
-									text: '批阅',
-									handler: function (){
-										var content = win.down('textarea').getValue();
-
-										if (task) {
-											Ext.Ajax.request({
-												url: './libs/taskscrutinize.php?action=mark',
-												method: 'POST',
-												params: {
-													taskListId: task.getId(),
-													content: content
-												},
-												callback: function (opts, success, res){
-													if (success) {
-														var obj = Ext.decode(res.responseText);
-														if (obj.status == 'successful') {
-															showMsg('批阅成功！');
-															win.close();
-															taskCheckGrid.getStore().reload();
-														}
-														else {
-															showMsg(obj.errMsg);
-														}
-													}
-												}
-											});
-										}
-										else {
-											showMsg('请选择要批阅的任务！');
-										}
-									}
-								}, {
-									text: '取消',
-									handler: function (){
-										win.close();
-									}
-								}]
-							});
-							win.show();
-						}
-						else {
-							showMsg('请选择要批阅的任务！');
-						}
-					}
-				}],
+				layout: 'hbox',
 				width: '100%',
 				height: 300,
-				title: '批阅内容'
+				items: [{
+					xtype: 'gridpanel',
+					id: 'gridpanel-scrutinizeForCheckTask',
+					name: 'gridpanel-scrutinizeForCheckTask',
+					store: Ext.create('FamilyDecoration.store.TaskScrutinize', {
+						autoLoad: false
+					}),
+					autoScroll: true,
+					columns: [{
+						text: '批阅内容',
+						dataIndex: 'scrutinizeContent',
+						flex: 1,
+						menuDisabled: true,
+						draggable: false,
+						sortable: false,
+						renderer: function (val){
+							return val.replace(/\n/ig, '<br />');
+						}
+					}, {
+						text: '批阅人',
+						dataIndex: 'realName',
+						flex: 1,
+						menuDisabled: true,
+						draggable: false,
+						sortable: false
+					}, {
+						text: '批阅时间',
+						dataIndex: 'scrutinizeTime',
+						flex: 1,
+						menuDisabled: true,
+						draggable: false,
+						sortable: false
+					}],
+					bbar: [{
+						text: '批阅',
+						handler: function (){
+							var taskTree = Ext.getCmp('treepanel-taskNameByUser'),
+								task = taskTree.getSelectionModel().getSelection()[0],
+								taskCheckGrid = Ext.getCmp('gridpanel-scrutinizeForCheckTask');
+
+							if (task) {
+								var win = Ext.create('Ext.window.Window', {
+									title: '任务批阅',
+									modal: true,
+									width: 500,
+									height: 400,
+									layout: 'fit',
+									items: [{
+										xtype: 'textarea',
+										autoScroll: true,
+									}],
+									buttons: [{
+										text: '批阅',
+										handler: function (){
+											var content = win.down('textarea').getValue();
+
+											if (task) {
+												Ext.Ajax.request({
+													url: './libs/taskscrutinize.php?action=mark',
+													method: 'POST',
+													params: {
+														taskListId: task.getId(),
+														content: content
+													},
+													callback: function (opts, success, res){
+														if (success) {
+															var obj = Ext.decode(res.responseText);
+															if (obj.status == 'successful') {
+																showMsg('批阅成功！');
+																win.close();
+																taskCheckGrid.getStore().reload();
+															}
+															else {
+																showMsg(obj.errMsg);
+															}
+														}
+													}
+												});
+											}
+											else {
+												showMsg('请选择要批阅的任务！');
+											}
+										}
+									}, {
+										text: '取消',
+										handler: function (){
+											win.close();
+										}
+									}]
+								});
+								win.show();
+							}
+							else {
+								showMsg('请选择要批阅的任务！');
+							}
+						}
+					}],
+					width: 300,
+					height: '100%',
+					title: '批阅内容',
+					style: {
+						borderRightStyle: 'solid',
+						borderRightWidth: '1px'
+					}
+				}, {
+					xtype: 'panel',
+					title: '自我评价',
+					autoScroll: true,
+					id: 'panel-selfAssessmentForTaskAssign',
+					name: 'panel-selfAssessmentForTaskAssign',
+					height: '100%',
+					flex: 1,
+					refresh: function (rec){
+						if (rec) {
+							var	me = this,
+								memberTree = Ext.getCmp('treepanel-taskMemberName'),
+								user = memberTree.getSelectionModel().getSelection()[0];
+							if (rec && rec.get('taskName')) {
+								Ext.Ajax.request({
+									url: './libs/tasklist.php?action=getTaskAssessmentByTaskListIdByUser',
+									method: 'GET',
+									params: {
+										taskListId: rec.getId(),
+										taskExecutor: user.get('name')
+									},
+									callback: function (opts, success, res){
+										if (success) {
+											var obj = Ext.decode(res.responseText);
+											if (obj.length > 0) {
+												var content = obj[0]['selfAssessment'].replace(/\n/gi, '<br />');
+												me.body.update(content);
+											}
+											else {
+												me.body.update('');
+											}
+										}
+									}
+								})
+							}
+						}
+						else {
+							this.body.update('');
+						}
+					}
+				}]
 			}]
 		}];
 

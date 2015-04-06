@@ -62,6 +62,28 @@
         return $res;
 	}
 
+	function getTaskAssessmentByTaskListIdByUser ($get){
+		global $mysql;
+		$res = array();
+		$orderBy = " order by createTime ";
+		$taskExecutor = $get["taskExecutor"];
+		$taskListId = $get["taskListId"];
+		$whereSql = " where `isDeleted` = 'false' and `taskListId` = '$taskListId' and `taskExecutor` = '$taskExecutor' ";
+		$arr = $mysql->DBGetSomeRows("`task_self_assessment`", "*", $whereSql, $orderBy);
+
+		$count = 0;
+		foreach($arr as $key => $val) {
+		    $res[$count]["id"] = $val["id"];
+		    $res[$count]["taskListId"] = $val["taskListId"];
+		    $res[$count]["isDeleted"] = $val["isDeleted"];
+		    $res[$count]["createTime"] = $val["createTime"];
+		    $res[$count]["taskExecutor"] = $val["taskExecutor"];
+		    $res[$count]["selfAssessment"] = $val["selfAssessment"];
+		    $count ++;
+        }
+        return $res;
+	}
+
 	function getTaskListYears(){
 		$currentUser = $_SESSION["name"];
 		$currentUserLevel = $_SESSION["level"];

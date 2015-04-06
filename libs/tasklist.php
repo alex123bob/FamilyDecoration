@@ -14,6 +14,7 @@
 		case "addTaskAssessment":$res = addTaskAssessment($_POST);break;
 		case "editTaskAssessment":$res = editTaskAssessment($_POST);break;
 		case "getTaskAssessmentByTaskListId":$res = getTaskAssessmentByTaskListId($_GET["taskListId"]);break;
+		case "getTaskAssessmentByTaskListIdByUser":$res = getTaskAssessmentByTaskListIdByUser($_GET);break;
 		
 		case "getTaskListYearsByUser":$res = getTaskListYearsByUser($_GET['user']);break;
 		case "getTaskListMonthsByUser":$res = getTaskListMonthsByUser($_GET["year"],$_GET['user']);break;
