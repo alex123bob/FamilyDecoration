@@ -3,9 +3,9 @@
 		$obj = array(
 			"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
 			"taskName"=>$post["taskName"],
-			"taskContent"=>$post["taskContent"],
-			"taskDispatcher"=>$_SESSION["name"],
-			"taskExecutor"=>$post["taskExecutor"],
+			"taskContent"=>mysql_real_escape_string($post["taskContent"]),
+			"taskDispatcher"=>"-".$_SESSION["name"]."-",
+			"taskExecutor"=>"-".str_replace(",", "-", $post["taskExecutor"])."-",
 			"taskProcess"=>0
 		);
 		global $mysql;
@@ -18,7 +18,7 @@
 		$obj = array(
 			"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
 			"taskListId"=>$post["taskListId"],
-			"taskExecutor"=>$_SESSION["name"],
+			"taskExecutor"=>"-".$_SESSION["name"]."-",
 			"selfAssessment"=>$post["selfAssessment"]
 		);
 		$mysql->DBInsertAsArray("`task_self_assessment`", $obj);
@@ -29,14 +29,16 @@
 		global $mysql;
 		$condition = "`id` = '".$post["id"]."' ";
 		$setValue = array();
-		$fields = array("id", "taskListId", "taskExecutor", "selfAssessment");
+		$fields = array("id", "taskListId","selfAssessment");
 		foreach ($fields as $field) {
 			if (isset($post[$field])) {
 				array_push($setValue, " `$field` = '".$post[$field]."'");
 			}
 		}
+		if (isset($post["taskExecutor"])) {
+			array_push($setValue, " `taskExecutor` = '-".str_replace(",", "-", $post["taskExecutor"])."-'");
+		}
 		$setValue = implode(",", $setValue);
-		// $setValue = " `taskName` = '".$post["taskName"]."', `taskContent` = '".$post["taskContent"]."', `taskExecutor` = '".$data["taskExecutor"]."'";
 		$mysql->DBUpdateSomeCols("`task_self_assessment`", $condition, $setValue);
 		return array('status'=>'successful', 'errMsg' => 'edit task assessment ok');
 	}
@@ -45,7 +47,7 @@
 		global $mysql;
 		$res = array();
 		$orderBy = " order by createTime ";
-		$currentUser = $_SESSION["name"];
+		$currentUser = "-".$_SESSION["name"]."-";
 		$whereSql = " where `isDeleted` = 'false' and `taskListId` = '$taskListId' and `taskExecutor` = '$currentUser' ";
 		$arr = $mysql->DBGetSomeRows("`task_self_assessment`", "*", $whereSql, $orderBy);
 
@@ -55,7 +57,7 @@
 		    $res[$count]["taskListId"] = $val["taskListId"];
 		    $res[$count]["isDeleted"] = $val["isDeleted"];
 		    $res[$count]["createTime"] = $val["createTime"];
-		    $res[$count]["taskExecutor"] = $val["taskExecutor"];
+		    $res[$count]["taskExecutor"] = str_replace("-",",",$val["taskExecutor"]);
 		    $res[$count]["selfAssessment"] = $val["selfAssessment"];
 		    $count ++;
         }
@@ -68,7 +70,7 @@
 		$orderBy = " order by createTime ";
 		$taskExecutor = $get["taskExecutor"];
 		$taskListId = $get["taskListId"];
-		$whereSql = " where `isDeleted` = 'false' and `taskListId` = '$taskListId' and `taskExecutor` = '$taskExecutor' ";
+		$whereSql = " where `isDeleted` = 'false' and `taskListId` = '$taskListId' and `taskExecutor` = '-$taskExecutor-' ";
 		$arr = $mysql->DBGetSomeRows("`task_self_assessment`", "*", $whereSql, $orderBy);
 
 		$count = 0;
@@ -77,7 +79,7 @@
 		    $res[$count]["taskListId"] = $val["taskListId"];
 		    $res[$count]["isDeleted"] = $val["isDeleted"];
 		    $res[$count]["createTime"] = $val["createTime"];
-		    $res[$count]["taskExecutor"] = $val["taskExecutor"];
+		    $res[$count]["taskExecutor"] = str_replace("-",",",$val["taskExecutor"]);
 		    $res[$count]["selfAssessment"] = $val["selfAssessment"];
 		    $count ++;
         }
@@ -94,8 +96,9 @@
 		//if($currentUserLevel == "001-001" || $currentUserLevel == "001-002"){
 		//	$whereSql = " where isDeleted = 'false' ";
 		//}else{
-			$whereSql = " where isDeleted = 'false' and taskExecutor like '%$currentUser%' ";
+			$whereSql = " where isDeleted = 'false' and taskExecutor like '%-$currentUser-%' ";
 		//}
+		//echo $whereSql;
 		$arr = $mysql->DBGetSomeRows("`task_list`", " DISTINCT year(createTime) ",$whereSql ,$orderBy);
 		$count = 0;
 		foreach($arr as $key => $val) {
@@ -109,7 +112,7 @@
 		global $mysql;
         $res= array();
         $orderBy = " order by createTime ";
-		$whereSql = " where isDeleted = 'false' and taskExecutor like '%$user%' ";
+		$whereSql = " where isDeleted = 'false' and taskExecutor like '%-$user-%' ";
 		$arr = $mysql->DBGetSomeRows("`task_list`", " DISTINCT year(createTime) ",$whereSql ,$orderBy);
 		$count = 0;
 		foreach($arr as $key => $val) {
@@ -129,7 +132,7 @@
         $orderBy = " order by createTime ";
 		//默认只有管理员能看到所有人日志
 		//if($currentUserLevel != "001-001" && $currentUserLevel != "001-002"){
-			$condition = $condition." and taskExecutor like '%$currentUser%' ";
+			$condition = $condition." and taskExecutor like '%-$currentUser-%' ";
 		//}
 		$arr = $mysql->DBGetSomeRows("`task_list`", " DISTINCT month(createTime)  ",$condition,$orderBy);
 		$count = 0;
@@ -143,7 +146,7 @@
 	function getTaskListMonthsByUser($year,$user){
 		global $mysql;
         $res= array();
-		$condition = " where taskExecutor like '%$user%' and isDeleted = 'false' and year(createTime) = '$year'";
+		$condition = " where taskExecutor like '%-$user-%' and isDeleted = 'false' and year(createTime) = '$year'";
         $orderBy = " order by createTime ";
 		$arr = $mysql->DBGetSomeRows("`task_list`", " DISTINCT month(createTime)  ",$condition,$orderBy);
 		$count = 0;
@@ -157,24 +160,25 @@
 	function getTaskListByMonth($year,$month){
 		global $mysql;
         $res= array();
-        $orderBy = "order by createTime";
-        $condition = " where isDeleted = 'false' and year(createTime) = '$year' and month(createTime) = '$month' ";
+        $condition = " left join `user` u on u.name = REPLACE(t.taskDispatcher,'-','') where t.isDeleted = 'false' and year(t.createTime) = '$year' and month(t.createTime) = '$month' ";
 		$currentUser = $_SESSION["name"];
 		$currentUserLevel = $_SESSION["level"];
         $orderBy = " order by createTime ";
 		//默认只有管理员能看到所有人日志
 		//if($currentUserLevel != "001-001" && $currentUserLevel != "001-002"){
-			$condition = $condition." and taskExecutor like '%$currentUser%' ";
+			$condition = $condition." and taskExecutor like '%-$currentUser-%' ";
 		//}
-		$arr = $mysql->DBGetSomeRows("`task_list`", " * ",$condition,$orderBy);
+		$arr = $mysql->DBGetSomeRows("`task_list` t", " t.*,u.realname ",$condition,$orderBy);
 		$count = 0;
 		foreach($arr as $key => $val) {
 		    $res[$count]["id"] = $val["id"];
 		    $res[$count]["taskName"] = $val["taskName"];
 		    $res[$count]["createTime"] = $val["createTime"];
-		    $res[$count]["taskExecutor"] = $val["taskExecutor"];
+		    $res[$count]["taskExecutor"] = str_replace("-",",",$val["taskExecutor"]);
 		    $res[$count]["taskContent"] = $val["taskContent"];
 		    $res[$count]["taskProcess"] = $val["taskProcess"];
+			$res[$count]["taskDispatcher"] = str_replace("-","",$val["taskDispatcher"]);
+			$res[$count]["realName"] = $val["realname"];
 		    $count ++;
         }
 		return $res;
@@ -183,17 +187,19 @@
 	function getTaskListByMonthByUser($year,$month,$user){
 		global $mysql;
         $res= array();
-        $condition = " where isDeleted = 'false' and year(createTime) = '$year' and month(createTime) = '$month' ";
-        $orderBy = " order by createTime ";
-		$condition = $condition." and taskExecutor like '%$user%' ";
-		$arr = $mysql->DBGetSomeRows("`task_list`", " * ",$condition,$orderBy);
+        $condition = " left join `user` u on u.name = REPLACE(t.taskDispatcher,'-','') where t.isDeleted = 'false' and year(t.createTime) = '$year' and month(t.createTime) = '$month' ";
+        $orderBy = " order by t.createTime ";
+		$condition = $condition." and taskExecutor like '%-$user-%'  ";
+		$arr = $mysql->DBGetSomeRows("`task_list` t ", " t.* , u.realname ",$condition,$orderBy);
 		$count = 0;
 		foreach($arr as $key => $val) {
 		    $res[$count]["id"] = $val["id"];
 		    $res[$count]["taskName"] = $val["taskName"];
 		    $res[$count]["createTime"] = $val["createTime"];
-		    $res[$count]["taskExecutor"] = $val["taskExecutor"];
+		    $res[$count]["taskExecutor"] = str_replace("-",",",$val["taskExecutor"]);
 		    $res[$count]["taskContent"] = $val["taskContent"];
+			$res[$count]["taskDispatcher"] = str_replace("-","",$val["taskDispatcher"]);
+			$res[$count]["realName"] = $val["realname"];
 		    $res[$count]["taskProcess"] = $val["taskProcess"];
 		    $count ++;
         }
@@ -204,14 +210,24 @@
 		global $mysql;
 		$condition = "`id` = '".$data["id"]."' ";
 		$setValue = array();
-		$fields = array("id", "taskName", "taskContent", "createTime", "taskDispatcher", "taskExecutor", "isDeleted", "taskProcess");
+		$fields = array("id", "taskName","createTime", "isDeleted", "taskProcess");
 		foreach ($fields as $field) {
 			if (isset($data[$field])) {
 				array_push($setValue, " `$field` = '".$data[$field]."'");
 			}
 		}
+		
+		if (isset($data['taskDispatcher'])) {
+			array_push($setValue, " `taskDispatcher` = '-".$data["taskDispatcher"]."-'");
+		}
+		if (isset($data['taskContent'])) {
+			array_push($setValue, " `taskContent` = '".mysql_real_escape_string($data["taskContent"])."'");
+		}
+		if (isset($data['taskExecutor'])) {
+			array_push($setValue, " `taskExecutor` = '-".str_replace(",", "-", $data["taskExecutor"])."-'");
+		}
+		
 		$setValue = implode(",", $setValue);
-		// $setValue = " `taskName` = '".$data["taskName"]."', `taskContent` = '".$data["taskContent"]."', `taskExecutor` = '".$data["taskExecutor"]."'";
 		$mysql->DBUpdateSomeCols("`task_list`", $condition, $setValue);
 		return array('status'=>'successful', 'errMsg' => 'edit tasklist ok');
 	}

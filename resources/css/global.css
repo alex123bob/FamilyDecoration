@@ -62,3 +62,7 @@ table.pros td{
   max-width: 600px; 
   margin: 0 auto;
 }
+
+.pointerCursor {
+  cursor: pointer;
+}

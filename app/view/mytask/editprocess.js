@@ -62,6 +62,7 @@ Ext.define('FamilyDecoration.view.mytask.EditProcess', {
 							if (success) {
 								var obj = Ext.decode(res.responseText);
 								if (obj.status == 'successful') {
+									sendMsg(User.getName(), me.task.get('taskDispatcher'), User.getRealName() + '为任务"' + me.task.get('taskName') + '"编辑了任务进度，当前任务进度为："' + slider.getValue() + '%"；');
 									showMsg('任务进度编辑成功！');
 									me.close();
 									Ext.getCmp('treepanel-myTask').refresh();

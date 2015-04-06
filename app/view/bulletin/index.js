@@ -2,10 +2,11 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
     extend: 'Ext.container.Container',
     alias: 'widget.bulletin-index',
     requires: [
-        'FamilyDecoration.store.Bulletin', 'FamilyDecoration.view.bulletin.EditBulletin'
+        'FamilyDecoration.store.Bulletin', 'FamilyDecoration.view.bulletin.EditBulletin',
+        'FamilyDecoration.store.Message', 'Ext.grid.column.Action'
     ],
     autoScroll: true,
-    layout: 'fit',
+    layout: 'vbox',
 
     initComponent: function (){
         var me = this,
@@ -20,6 +21,8 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
             id: 'gridpanel-bulletin',
             name: 'gridpanel-bulletin',
             title: '查看公告',
+            flex: 2,
+            width: '100%',
             autoScroll: true,
             hideHeaders: true,
             columns: [{
@@ -199,10 +202,76 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                 else {
                                     return false;
                                 }
-                                console.log(rec);
                             }
                         }
                     });
+                }
+            }
+        }, {
+            xtype: 'gridpanel',
+            flex: 1,
+            id: 'gridpanel-message',
+            name: 'gridpanel-message',
+            title: '动态消息',
+            width: '100%',
+            hideHeaders: true,
+            autoScroll: true,
+            columns: [{
+                text: '内容',
+                dataIndex: 'content',
+                flex: 12
+            }, {
+                xtype: 'actioncolumn',
+                flex: 1,
+                items: [{
+                    icon: './resources/img/document_edit.png',  // Use a URL in the icon config
+                    tooltip: '置为已读',
+                    iconCls: 'pointerCursor',
+                    handler: function(grid, rowIndex, colIndex, item, e, rec) {
+                        Ext.Ajax.request({
+                            url: './libs/message.php',
+                            method: 'POST',
+                            params: {
+                                action: 'read',
+                                id: rec.getId()
+                            },
+                            callback: function (otps, success, res){
+                                if (success) {
+                                    var obj = Ext.decode(res.responseText),
+                                        msgGrid = Ext.getCmp('gridpanel-message');
+                                    if (obj.status == 'successful') {
+                                        showMsg('已置为已读');
+                                        msgGrid.refresh();
+                                    }
+                                    else {
+                                        showMsg(obj.errMsg);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }]
+            }],
+            store: Ext.create('FamilyDecoration.store.Message', {
+                autoLoad: false
+            }),
+            refresh: function (){
+                var msgGrid = this,
+                    msgSt = msgGrid.getStore();
+                msgSt.load({
+                    params: {
+                        isDeleted: 'false',
+                        isRead: 'false',
+                        receiver: User.getName()
+                    },
+                    callback: function (){
+                        
+                    }
+                })
+            },
+            listeners: {
+                afterrender: function(grid, opts) {
+                    grid.refresh();
                 }
             }
         }];

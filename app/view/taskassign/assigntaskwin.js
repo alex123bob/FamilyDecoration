@@ -90,13 +90,20 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 							Ext.apply(p, {
 								id: me.task.getId()
 							});
-						}
+						};
 						Ext.Ajax.request({
 							url: me.task ? './libs/tasklist.php?action=editTaskList' : './libs/tasklist.php?action=addTaskList',
 							method: 'POST',
 							params: p,
 							callback: function (opts, success, res){
 								if (success) {
+									if (me.task) {
+										sendMsg(User.getName(), executor, User.getRealName() + '编辑了任务，任务名称：' + name.getValue() + '，任务内容：' + content.getValue() + '；');
+									}
+									else {
+										sendMsg(User.getName(), executor, User.getRealName() + '给您分配了任务，任务名称：' + name.getValue() + '，任务内容：' + content.getValue() + '；');
+									}
+
 									var obj = Ext.decode(res.responseText);
 									if (obj.status == 'successful') {
 										me.task ? showMsg('任务编辑成功！') : showMsg('任务分配成功！');
