@@ -448,4 +448,28 @@ Number.prototype.div = function (arg) {
     return accDiv(this, arg);
 };
 
+// send message to make a record.
+function sendMsg (sender, receiver, content){
+    Ext.Ajax.request({
+        url: './libs/message.php',
+        method: 'POST',
+        params: {
+            action: 'add',
+            sender: sender,
+            content: content,
+            receiver: receiver
+        },
+        callback: function (opts, success, res){
+            if (success) {
+                var obj = Ext.decode(res.responseText);
+                if (obj.status == 'successful') {
+                }
+                else {
+                    showMsg(obj.errMsg);
+                }
+            }
+        }
+    });
+}
+
 Ext.define('FamilyDecoration.Common', {});

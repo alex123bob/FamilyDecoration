@@ -88,6 +88,7 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 				name: 'panel-taskContent',
 				title: '任务内容',
 				region: 'west',
+				autoScroll: true,
 				width: 300,
 				refresh: function (rec){
 					if (rec) {

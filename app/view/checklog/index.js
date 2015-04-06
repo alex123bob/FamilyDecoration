@@ -173,7 +173,9 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 										logPanel = Ext.getCmp('treepanel-logNameByUser'),
 										logItem = logPanel.getSelectionModel().getSelection()[0],
 										scrutinizeGrid = Ext.getCmp('gridpanel-scrutinizeForCheckLog'),
-										st = scrutinizeGrid.getStore();
+										st = scrutinizeGrid.getStore(),
+										memberTree = Ext.getCmp('treepanel-memberName'),
+										selMember = memberTree.getSelectionModel().getSelection()[0];
 									if (content) {
 										Ext.Ajax.request({
 											url: './libs/censorship.php?action=mark',
@@ -187,6 +189,7 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 													var obj = Ext.decode(res.responseText);
 													if (obj.status == 'successful') {
 														showMsg('批阅成功！');
+														sendMsg(User.getName(), selMember.get('name'), User.getRealName() + '批阅了您的日志"' + logItem.get('logName') + '"，批阅内容："' + content + '"；');
 														win.close();
 														st.reload({
 															params: {

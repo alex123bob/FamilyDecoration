@@ -135,6 +135,8 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 			items: [{
 				fieldLabel: '用户名',
 				name: 'name',
+				regex: new RegExp('^(?!.*/)', 'ig'),
+				regexText: '用户名不能含有符号"/"',
 				allowBlank: false,
 				readOnly: account ? true : false,
 				value: account ? account.get('name') : ''

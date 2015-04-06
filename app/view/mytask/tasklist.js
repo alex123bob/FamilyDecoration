@@ -47,7 +47,7 @@ Ext.define('FamilyDecoration.view.mytask.TaskList', {
 	            	beforeappend: function (pNode, node){
 	            		if (pNode) {
 	            			node.set({
-	            				text: node.get('year') || node.get('month') || node.get('taskName')
+	            				text: node.get('year') || node.get('month') || (node.get('taskName') + '(分配人:' + node.get('realName') + ')' )
 	            			});
 	            			if (node.get('year') || node.get('month')) {
 	            				node.set({

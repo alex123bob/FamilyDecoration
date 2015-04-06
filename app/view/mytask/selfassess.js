@@ -47,6 +47,7 @@ Ext.define('FamilyDecoration.view.mytask.SelfAssess', {
 							if (success) {
 								var obj = Ext.decode(res.responseText);
 								if (obj.status == 'successful') {
+									sendMsg(User.getName(), me.task.get('taskDispatcher'), User.getRealName() + '为任务"' + me.task.get('taskName') + '"编写了自我评价，评价内容："' + txtArea.getValue() + '"；');
 									showMsg('编写成功！');
 									me.close();
 									Ext.getCmp('panel-selfAssessment').refresh(me.task);

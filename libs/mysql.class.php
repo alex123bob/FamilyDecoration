@@ -228,13 +228,13 @@
 						$values .= " '".($value?"true":"false")."' ,";
 						break;
 					case "integer":
-						$values .= " $value ,";
+						$values .= " ".mysql_real_escape_string($value)." ,";
 						break;
 					case "NULL":
 						$values .= " null ,";
 						break;
 					case "string":
-						$values .= " '$value' ,";
+						$values .= " '".mysql_real_escape_string($value)."' ,";
 						break;
 					default:
 						throw new Exception("unknown type:".$type." of value:".$value." key:".$key);
