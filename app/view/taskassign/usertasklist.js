@@ -60,7 +60,8 @@ Ext.define('FamilyDecoration.view.taskassign.UserTaskList', {
 	            			else if (node.get('taskName')) {
 	            				node.set({
 	            					icon: 'resources/img/log.ico',
-	            					leaf: true
+	            					leaf: true,
+	            					qtip: '任务名称：' + node.get('taskName') + '<br />' + '分配人：' + node.get('realName')
 	            				});
 	            			}
 	            		}
