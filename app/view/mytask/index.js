@@ -153,7 +153,7 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 			}, {
 				xtype: 'panel',
 				region: 'south',
-				height: 220,
+				height: 300,
 				width: '100%',
 				header: false,
 				// title: '完成情况及自我评价',
@@ -258,41 +258,37 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 							var completed = parseFloat(rec.get('taskProcess')),
 								uncompleted = parseFloat(completed.sub(1));
 							$('#mytaskCompleteProcess').highcharts({
-						        chart: {
-						            type: 'pie',
-						            options3d: {
-						                enabled: true,
-						                alpha: 45,
-						                beta: 0
-						            },
-						            height: 200
-						        },
-						        title: {
-						            text: '任务完成情况'
-						        },
-						        tooltip: {
-						            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-						        },
-						        plotOptions: {
-						            pie: {
-						                allowPointSelect: true,
-						                cursor: 'pointer',
-						                depth: 30,
-						                dataLabels: {
-						                    enabled: true,
-						                    format: '{point.name}'
-						                }
-						            }
-						        },
-						        series: [{
-						            type: 'pie',
-						            name: '百分比',
-						            data: [
+					            chart: {
+					                plotBackgroundColor: null,
+					                plotBorderWidth: null,
+					                plotShadow: false,
+					                height: 220
+					            },
+					            title: {
+					                text: '任务完成情况'
+					            },
+					            tooltip: {
+					                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+					            },
+					            plotOptions: {
+					                pie: {
+					                    allowPointSelect: true,
+					                    cursor: 'pointer',
+					                    dataLabels: {
+					                        enabled: false
+					                    },
+					                    showInLegend: true
+					                }
+					            },
+					            series: [{
+					                type: 'pie',
+					                name: '百分比',
+					                data: [
 						            	['已完成', completed],
 						            	['未完成', uncompleted]
 						            ]
-						        }]
-						    });
+					            }]
+					        });
 						}
 						else {
 							$('#mytaskCompleteProcess').html('');
