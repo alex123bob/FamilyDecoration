@@ -219,7 +219,15 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
             columns: [{
                 text: '内容',
                 dataIndex: 'content',
-                flex: 12
+                flex: 12,
+                renderer: function (val){
+                    if (val) {
+                        return val.replace(/\n/ig, '<br />');
+                    }
+                    else {
+                        return val;
+                    }
+                }
             }, {
                 xtype: 'actioncolumn',
                 flex: 1,

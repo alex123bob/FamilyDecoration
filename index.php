@@ -437,9 +437,22 @@
                                 renderer: function (val) {
                                     return val.replace(/\n/ig, '<br />');
                                 }
+                            }, {
+                                text: '结果',
+                                dataIndex: 'result',
+                                flex: 1,
+                                renderer: function (val, meta, rec) {
+                                    meta.style = 'cursor: pointer;';
+                                    if (val) {
+                                        return val.replace(/\n/ig, '<br />');
+                                    }
+                                    else {
+                                        return val;
+                                    }
+                                }
                             }],
                             store: Ext.create('Ext.data.Store', {
-                                fields: ['id', 'name', 'realname', 'level', 'content'],
+                                fields: ['id', 'name', 'realname', 'level', 'content', 'result'],
                                 autoLoad: true,
                                 proxy: {
                                     type: 'rest',
@@ -448,7 +461,92 @@
                                         type: 'json'
                                     }
                                 }
-                            })
+                            }),
+                            listeners: {
+                                cellclick: function (table, td, cellIndex, rec, tr, rowIndex, e, eOpts) {
+                                    if (2 == cellIndex) {
+                                        Ext.Msg.prompt('提示', '请输入开发人员口令进行编辑。', function (btn, txt){
+                                            if (btn == 'ok') {
+                                                if (txt == 'iloveyou') {
+                                                    var win = Ext.create('Ext.window.Window', {
+                                                        title: '编辑修复结果',
+                                                        width: 500,
+                                                        height: 300,
+                                                        layout: 'fit',
+                                                        items: [{
+                                                            xtype: 'textarea',
+                                                            autoScroll: true,
+                                                            value: rec.get('result')
+                                                        }],
+                                                        buttons: [{
+                                                            text: '确定',
+                                                            handler: function (){
+                                                                var resultContent = win.down('textarea').getValue();
+                                                                Ext.Ajax.request({
+                                                                    url: './libs/feedback.php?action=editFeedback',
+                                                                    method: 'POST',
+                                                                    params: {
+                                                                        id: rec.getId(),
+                                                                        result: resultContent
+                                                                    },
+                                                                    callback: function (opts, success, res){
+                                                                        if (success) {
+                                                                            var obj = Ext.decode(res.responseText);
+                                                                            if (obj.status == 'successful') {
+                                                                                var grid = Ext.getCmp('gridpanel-checkFeedback');
+                                                                                showMsg('编辑成功！');
+                                                                                grid.getStore().reload();
+                                                                                sendMsg(User.getName(), rec.get('name'), '李嘉编辑了您提出的反馈意见"' + rec.get('content') + '"，编辑内容为：' + resultContent);
+                                                                                win.close();
+                                                                                if (User.getName() == rec.get('name') && Ext.util.Cookies.get('lastXtype') == 'bulletin-index') {
+                                                                                    var msgGrid = Ext.getCmp('gridpanel-message');
+                                                                                    msgGrid && msgGrid.getStore().reload();
+                                                                                }
+                                                                            }
+                                                                            else {
+                                                                                showMsg(obj.errMsg);
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                })
+                                                            }
+                                                        }, {
+                                                            text: '取消',
+                                                            handler: function (){
+                                                                win.close();
+                                                            }
+                                                        }]
+                                                    });
+                                                    win.show();
+                                                }
+                                                else {
+                                                    Ext.Msg.error('口令错误！');
+                                                }
+                                            }
+                                        });
+                                    }
+                                },
+                                afterrender: function(grid, opts) {
+                                    var view = grid.getView();
+                                    var tip = Ext.create('Ext.tip.ToolTip', {
+                                        target: view.el,
+                                        delegate: view.cellSelector,
+                                        trackMouse: true,
+                                        renderTo: Ext.getBody(),
+                                        listeners: {
+                                            beforeshow: function(tip) {
+                                                var gridColumns = view.getGridColumns();
+                                                if (tip.triggerElement.cellIndex == 2) {
+                                                    tip.update('单击栏目，编辑内容');
+                                                }
+                                                else {
+                                                    return false;
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
+                            }
                         }],
                         buttons: [{
                             text: '关闭',

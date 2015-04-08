@@ -135,7 +135,7 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 					}
 				}, {
 					text: '批阅人',
-					dataIndex: 'userName',
+					dataIndex: 'realName',
 					flex: 1,
 					menuDisabled: true,
 					draggable: false,

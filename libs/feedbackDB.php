@@ -25,4 +25,16 @@
 		$res = $mysql->DBGetAllRows("`feedback`", "*", " ORDER BY `id` DESC");
 		return $res;
 	}
+
+	function editFeedback ($data) {
+		global $mysql;
+		$id = $data["id"];
+		$condition = "`id` = '$id' ";
+		if(isset($data["result"])){
+			$tmp = $data["result"];
+			$setValue = "`result` = '$tmp' ";
+		}
+		$mysql->DBUpdateSomeCols("`feedback`", $condition, $setValue);
+		return array('status'=>'successful', 'errMsg' => 'edit feedback ok');
+	}
 ?>
