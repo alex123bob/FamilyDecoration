@@ -18,6 +18,7 @@ Ext.define('FamilyDecoration.Application', {
         'MyLog',
         'CheckLog',
         'Plan',
+        'MainMaterial',
         'Business',
         'TaskAssign',
         'User',

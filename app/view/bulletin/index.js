@@ -9,6 +9,10 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
     layout: 'vbox',
 
     initComponent: function (){
+        if (!$('#homepageChartContainer').length) {
+            $('body').append('<div class="x-hide-display" id="homepageChartContainer"></div>');
+        }
+
         var me = this,
             itemsPerPage = 3,
             bulletinSt = Ext.create('FamilyDecoration.store.Bulletin', {
@@ -21,7 +25,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
             id: 'gridpanel-bulletin',
             name: 'gridpanel-bulletin',
             title: '查看公告',
-            flex: 2,
+            flex: 3,
             width: '100%',
             autoScroll: true,
             hideHeaders: true,
@@ -208,80 +212,157 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 }
             }
         }, {
-            xtype: 'gridpanel',
-            flex: 1,
-            id: 'gridpanel-message',
-            name: 'gridpanel-message',
-            title: '动态消息',
+            xtype: 'container',
+            flex: 2,
+            layout: 'hbox',
             width: '100%',
-            hideHeaders: true,
-            autoScroll: true,
-            columns: [{
-                text: '内容',
-                dataIndex: 'content',
-                flex: 12,
-                renderer: function (val){
-                    if (val) {
-                        return val.replace(/\n/ig, '<br />');
+            items: [{
+                xtype: 'gridpanel',
+                id: 'gridpanel-message',
+                name: 'gridpanel-message',
+                title: '动态消息',
+                height: '100%',
+                flex: 2,
+                hideHeaders: true,
+                autoScroll: true,
+                style: {
+                    borderRightStyle: 'solid',
+                    borderRightWidth: '1px'
+                },
+                columns: [{
+                    text: '内容',
+                    dataIndex: 'content',
+                    flex: 12,
+                    renderer: function (val){
+                        if (val) {
+                            return val.replace(/\n/ig, '<br />');
+                        }
+                        else {
+                            return val;
+                        }
                     }
-                    else {
-                        return val;
+                }, {
+                    xtype: 'actioncolumn',
+                    flex: 1,
+                    items: [{
+                        icon: './resources/img/document_edit.png',  // Use a URL in the icon config
+                        tooltip: '置为已读',
+                        iconCls: 'pointerCursor',
+                        handler: function(grid, rowIndex, colIndex, item, e, rec) {
+                            Ext.Ajax.request({
+                                url: './libs/message.php',
+                                method: 'POST',
+                                params: {
+                                    action: 'read',
+                                    id: rec.getId()
+                                },
+                                callback: function (otps, success, res){
+                                    if (success) {
+                                        var obj = Ext.decode(res.responseText),
+                                            msgGrid = Ext.getCmp('gridpanel-message');
+                                        if (obj.status == 'successful') {
+                                            showMsg('已置为已读');
+                                            msgGrid.refresh();
+                                        }
+                                        else {
+                                            showMsg(obj.errMsg);
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }]
+                }],
+                store: Ext.create('FamilyDecoration.store.Message', {
+                    autoLoad: false
+                }),
+                refresh: function (){
+                    var msgGrid = this,
+                        msgSt = msgGrid.getStore();
+                    msgSt.load({
+                        params: {
+                            isDeleted: 'false',
+                            isRead: 'false',
+                            receiver: User.getName()
+                        },
+                        callback: function (){
+                            
+                        }
+                    })
+                },
+                listeners: {
+                    afterrender: function(grid, opts) {
+                        grid.refresh();
                     }
                 }
             }, {
-                xtype: 'actioncolumn',
+                xtype: 'panel',
                 flex: 1,
-                items: [{
-                    icon: './resources/img/document_edit.png',  // Use a URL in the icon config
-                    tooltip: '置为已读',
-                    iconCls: 'pointerCursor',
-                    handler: function(grid, rowIndex, colIndex, item, e, rec) {
-                        Ext.Ajax.request({
-                            url: './libs/message.php',
-                            method: 'POST',
-                            params: {
-                                action: 'read',
-                                id: rec.getId()
-                            },
-                            callback: function (otps, success, res){
-                                if (success) {
-                                    var obj = Ext.decode(res.responseText),
-                                        msgGrid = Ext.getCmp('gridpanel-message');
-                                    if (obj.status == 'successful') {
-                                        showMsg('已置为已读');
-                                        msgGrid.refresh();
+                height: '100%',
+                title: '用户日志统计图表',
+                autoScroll: true,
+                contentEl: 'homepageChartContainer',
+                refresh: function (){
+                    var data = [];
+
+                    Ext.Ajax.request({
+                        url: './libs/loglist.php?action=getAllLogLists',
+                        method: 'GET',
+                        callback: function (opts, success, res){
+                            if (success) {
+                                var obj = Ext.decode(res.responseText),
+                                    tmp = {};
+                                if (obj.length > 0) {
+                                    for (var i = 0; i < obj.length; i++) {
+                                        if (tmp[obj[i]['userName']] != undefined) {
+                                            tmp[obj[i]['userName']][1] ++;
+                                        }
+                                        else {
+                                            tmp[obj[i]['userName']] = [obj[i]['realName'], 0];
+                                        }
                                     }
-                                    else {
-                                        showMsg(obj.errMsg);
+                                    for (var pro in tmp) {
+                                        data.push(tmp[pro]);
                                     }
+                                    // Build the chart
+                                    $('#homepageChartContainer').highcharts({
+                                        chart: {
+                                            plotBackgroundColor: null,
+                                            plotBorderWidth: null,
+                                            plotShadow: false,
+                                            height: 300
+                                        },
+                                        title: false,
+                                        tooltip: {
+                                            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                        },
+                                        plotOptions: {
+                                            pie: {
+                                                allowPointSelect: true,
+                                                cursor: 'pointer',
+                                                dataLabels: {
+                                                    enabled: false
+                                                },
+                                                showInLegend: true
+                                            }
+                                        },
+                                        series: [{
+                                            type: 'pie',
+                                            name: '日志比例',
+                                            data: data
+                                        }]
+                                    });
                                 }
                             }
-                        });
+                        }
+                    });
+                },
+                listeners: {
+                    afterrender: function (cmp, opts){
+                        cmp.refresh();
                     }
-                }]
-            }],
-            store: Ext.create('FamilyDecoration.store.Message', {
-                autoLoad: false
-            }),
-            refresh: function (){
-                var msgGrid = this,
-                    msgSt = msgGrid.getStore();
-                msgSt.load({
-                    params: {
-                        isDeleted: 'false',
-                        isRead: 'false',
-                        receiver: User.getName()
-                    },
-                    callback: function (){
-                        
-                    }
-                })
-            },
-            listeners: {
-                afterrender: function(grid, opts) {
-                    grid.refresh();
                 }
-            }
+            }]
         }];
 
         this.callParent();

@@ -91,7 +91,12 @@ Ext.define('FamilyDecoration.store.Feature', {
                     {
                         name: "计划生成",
                         cmp: 'plan-index',
-                        // cmp: '',
+                        leaf: true,
+                        icon: 'resources/img/menu_item.ico'
+                    },
+                    {
+                        name: '主材订购单',
+                        cmp: 'mainmaterial-index',
                         leaf: true,
                         icon: 'resources/img/menu_item.ico'
                     }
@@ -153,6 +158,9 @@ Ext.define('FamilyDecoration.store.Feature', {
                 flag = true;
             }
             else if (rec.get('cmp') == 'plan-index') {
+                flag = User.isAdmin() || User.isProjectManager() || User.isProjectStaff() ? true : false;
+            }
+            else if (rec.get('cmp') == 'mainmaterial-index') {
                 flag = User.isAdmin() || User.isProjectManager() || User.isProjectStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'setting-parent') {
