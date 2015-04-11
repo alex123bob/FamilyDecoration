@@ -20,25 +20,15 @@
 	 * @return [type] [description]
 	 */
 	function publish (){
-		try {
-			global $mysql;
-
-			$content = $_POST["content"];
-
-			if (isset($_POST["id"])) {
-				$id = $_POST["id"];
-				$mysql->DBUpdateSomeCols("`bulletin`", "`id` = $id", "`content` = \"$content\" ");
-			}
-			else {
-				$mysql->DBInsert("`bulletin`", "`content`", "\"$content\"");
-			}
-
-			return json_encode(array('status'=>'successful', 'errMsg' => ''));
-
+		global $mysql;
+		$content = $_POST["content"];
+		if (isset($_POST["id"])) {
+			$id = $_POST["id"];
+			$mysql->DBUpdateSomeCols("`bulletin`", "`id` = $id", "`content` = \"$content\" ");
+		}else {
+			$mysql->DBInsertAsArray('bulletin',array('content'=>$content));
 		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 
 	/**

@@ -11,16 +11,6 @@ Ext.define('FamilyDecoration.view.budget.Index', {
 
 		me.items = [
 			{
-				xtype: 'budget-budgetheader',
-				id: 'gridpanel-budgetheader',
-				name: 'gridpanel-budgetheader',
-				region: 'west',
-				header: false,
-				hideHeaders: true,
-				width: 200,
-				margin: '0 1 0 0'
-			}, 
-			{
 				xtype: 'budget-budgetcontent',
 				name: 'panel-budgetContent',
 				id: 'panel-budgetContent',
@@ -360,7 +350,37 @@ Ext.define('FamilyDecoration.view.budget.Index', {
 				}],
 				region: 'center'
 			}
-		]
+		];
+
+		me.listeners = {
+			afterrender: function (){
+				var win = Ext.create('Ext.window.Window', {
+					title: '新建预算头信息',
+					width: 500,
+					height: 400,
+					layout: 'fit',
+					modal: true,
+					closable: false,
+					items: [{
+						header: false,
+						xtype: 'budget-budgetheader'
+					}],
+					buttons: [{
+						text: '确定',
+						handler: function (){
+
+						}
+					}, {
+						text: '取消',
+						handler: function (){
+							changeMainCt('bulletin-index');
+							win.close();
+						}
+					}]
+				});
+				win.show();
+			}
+		}
 
 		this.callParent();
 	}

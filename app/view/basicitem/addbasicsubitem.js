@@ -180,7 +180,7 @@ Ext.define('FamilyDecoration.view.basicitem.AddBasicSubItem', {
 						}
 
 						Ext.Ajax.request({
-							url: me.subItem ? './libs/subitem.php?action=edit' : './libs/subitem.php?action=add',
+							url: me.subItem ? './libs/subitem.php?action=edit' : './libs/subitem.php?action=addsome',
 							method: 'POST',
 							params: p,
 							callback: function (opts, success, res){

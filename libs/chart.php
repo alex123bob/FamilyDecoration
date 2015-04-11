@@ -8,8 +8,8 @@
 	function addCategory (array $category){
 		try {
 			global $mysql;
-			$mysql->DBInsert("`chart`", "`chartId`, `chartCategory`",
-			 	"'".$category['chartId']."', '".$category['chartCategory']."'");
+			$obj = array('chartId'=>$category['chartId'],'chartCategory'=> $category['chartCategory']);
+			$mysql->DBInsertAsArray('chart',$obj);
 			return json_encode(array('status'=>'successful', 'errMsg' => ''));
 		}
 		catch (Exception $e) {

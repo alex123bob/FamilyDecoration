@@ -54,7 +54,7 @@
 		global $mysql;
 		$obj = array();
 		$obj['subItemId'] = isset($item['subItemId']) ? $item['subItemId'] : date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
-		$fields = array("remark","workCategory","subItemName","subItemUnit","mainMaterialPrice",
+		$fields = array("remark","workCategory","subItemName","subItemUnit","mainMaterialPrice", 'manpowerPrice',
 		"auxiliaryMaterialPrice","machineryPrice","lossPercent","parentId","mainMaterialCost","manpowerCost");
 		foreach($fields as $field){
 			if(isset($item[$field])){

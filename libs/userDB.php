@@ -31,7 +31,8 @@
 				throw new Exception('用户已经存在！');
 			}
 			$password = md5($prefix.$password);
-			$mysql->DBInsert("`user`", "`name`, `realname`, `password`, `level` , `projectId`" ,"'".$name."', '".$realname."', '".$password."', '".$level."','".$projectId."'");
+			$obj = array('name'=>$name,'realname'=>$realname,'password'=>$password,'level'=>$level,'projectId'=>$projectId);
+			$mysql->DBInsertAsArray("`user`",$obj);
 			return (array('status'=>'successful', 'errMsg' => ''));
 	}
 
@@ -56,7 +57,8 @@
 			$userAgent = $_SERVER['HTTP_USER_AGENT'];
 			//update
 			$mysql->DBUpdateSomeCols("`online_user`"," `userName` = '$userName' and `offlineTime` is null ", "`lastUpdateTime` = now(),`offlineTime` = now() ");
-			$mysql->DBInsert("`online_user`", "`userName`, `onlineTime`,`sessionId`, `lastUpdateTime`,`ip`,`userAgent`" ," '$name', now(),'$sessionId', now(),'$ip','$userAgent' ");
+			$obj = array('userName'=>$name,'onlineTime'=>'now()','sessionId'=>$sessionId,'lastUpdateTime'=>'now()','ip'=>$ip,'userAgent'=>$userAgent);
+			$mysql->DBInsertAsArray("`online_user`",$obj);
 			return (array('status'=>'successful', 'errMsg'=>'','token'=>$sessionId));
 		}
 		throw new Exception('用户或密码不正确！');

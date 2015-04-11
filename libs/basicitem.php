@@ -12,7 +12,6 @@
 			$res = getBasicItems();
 			break;
 		case "deletebasicitem":
-			$res = deleteBasicItem();
 			$id = $_POST['itemId'];
 			deleteBasicItem($id);
 			deleteBasicSubItemByParentId($id);

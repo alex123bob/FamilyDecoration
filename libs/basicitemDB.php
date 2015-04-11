@@ -27,7 +27,10 @@
 	 */
 	function addBasicItem (array $item){
 		global $mysql;
-		$mysql->DBInsert("`basic_item`", "`itemId`, `itemName`","'".$item['itemId']."', '".$item['itemName']."'");
+		$obj = array();
+		$obj['itemId'] = $item['itemId'];
+		$obj['itemName'] = $item['itemName'];
+		$mysql->DBInsertAsArray("`basic_item`",$obj);
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 

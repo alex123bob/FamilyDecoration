@@ -10,16 +10,13 @@
 		if(count($array) > 0 ){
 			throw new Exception("project Named :$projectName already exsit");
 		}
-		$keys = " `projectId`";
 		$projectId = date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
-		$values = " '$projectId'";
+		$obj = array('projectId'=>$projectId);
 		foreach($fields as $field){
-			if(isset($pro[$field])){
-				$keys = $keys.",`$field`";
-				$values = $values.",'".$pro[$field]."'";
-			}
+			if(isset($pro[$field]))
+				$obj[$field] = $pro[$field];
 		}
-		$mysql->DBInsert("`project`", $keys , $values );
+		$mysql->DBInsertAsArray("`project`", $obj);
 		return array('status'=>'successful', 'errMsg' => '','projectId'=>$projectId);
 	}
 

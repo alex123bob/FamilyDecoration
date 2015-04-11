@@ -225,13 +225,17 @@
 						$values .= " '".($value?"true":"false")."' ,";
 						break;
 					case "integer":
-						$values .= " ".mysql_real_escape_string($value)." ,";
+						$values .= " ".myStrEscape($value)." ,";
 						break;
 					case "NULL":
 						$values .= " null ,";
 						break;
 					case "string":
-						$values .= " '".mysql_real_escape_string($value)."' ,";
+						if(strtolower($value) == "now()"){
+							$values .= " now() ,";
+						}else{
+							$values .= " '".myStrEscape($value)."' ,";
+						}
 						break;
 					default:
 						throw new Exception("unknown type:".$type." of value:".$value." key:".$key);
@@ -288,26 +292,6 @@
 			else
 			{
 				$partStr = "UPDATE $tableValue SET $setValue WHERE $conditionValue";
-			}
-			$this->dbSQL = $partStr;
-			$this->DBExecute($this->dbSQL);
-		}
-
-
-
-		//插入操作insert into，其中$fieldsValue（字段）的值用
-		//三个参数均以字符串的形式传入，$fieldsValue以逗号隔开，
-		//$insertValue也用逗号隔开，碰到其中为字符串的值，要再加\"或者是'来表示。
-		public function DBInsert($tableValue, $fieldsValue, $insertValue)		//表名，字段名，内容
-		{
-			$partStr = "INSERT INTO $tableValue";
-			if ($fieldsValue == "")
-			{
-				$partStr .= " VALUES($insertValue)";
-			}
-			else
-			{
-				$partStr .= "($fieldsValue) VALUES($insertValue)";
 			}
 			$this->dbSQL = $partStr;
 			$this->DBExecute($this->dbSQL);

@@ -110,7 +110,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetContent', {
 		            	edit: function (editor, e){
 		            		Ext.suspendLayouts();
 		            		if (e.field != 'remark') {
-		            			var mainT, auxiliaryT, manT, machineryT, costT,
+		            			var mainT, auxiliaryT, manT, machineryT, manpowerCostT, mainMaterialCostT,
 			            			rec = e.record,
 			            			grid = e.grid,
 			            			st = grid.getStore(),
@@ -122,7 +122,14 @@ Ext.define('FamilyDecoration.view.budget.BudgetContent', {
 			            		auxiliaryT = rec.get('auxiliaryMaterialPrice').mul(number);
 			            		manT = rec.get('manpowerPrice').mul(number);
 			            		machineryT = rec.get('machineryPrice').mul(number);
-			            		User.isAdmin() && rec.raw.originalCost && (costT = rec.raw.originalCost.mul(number)); // Should operates acting as the admin
+			            		if (User.isAdmin()) {
+			            			if (rec.raw.originalManPowerCost) {
+			            				manpowerCostT = rec.raw.originalManPowerCost.mul(number);
+			            			}
+			            			if (rec.raw.originalMainMaterialCost) {
+			            				mainMaterialCostT = rec.raw.originalMainMaterialCost.mul(number);
+			            			}
+			            		}
 			            		rec.set({
 			            			mainMaterialTotalPrice: mainT,
 			            			auxiliaryMaterialTotalPrice: auxiliaryT,
@@ -130,11 +137,17 @@ Ext.define('FamilyDecoration.view.budget.BudgetContent', {
 			            			machineryTotalPrice: machineryT
 			            		});
 			            		if (User.isAdmin()) {
-			            			if (costT == 0) {
-			            				rec.set('cost', rec.raw.originalCost);
+			            			if (manpowerCostT == 0) {
+			            				rec.set('manpowerCost', rec.raw.originalManPowerCost);
 			            			}
 			            			else {
-			            				rec.set('cost', costT);
+			            				rec.set('manpowerCost', manpowerCostT);
+			            			}
+			            			if (mainMaterialCostT == 0) {
+			            				rec.set('mainMaterialCost', rec.raw.originalMainMaterialCost);
+			            			}
+			            			else {
+			            				rec.set('mainMaterialCost', mainMaterialCostT);
 			            			}
 			            		}
 			            		rec.commit();

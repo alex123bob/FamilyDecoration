@@ -13,7 +13,7 @@ Ext.define('FamilyDecoration.model.BasicSubItem', {
 		// {name: 'cost', type: 'float'},
 		{name: 'manpowerCost', type: 'float'},
 		{name: 'mainMaterialCost', type: 'float'},
-		{name: 'workCategory', type: 'float'},
+		{name: 'workCategory', type: 'string'},
 		{name: 'remark', type: 'string'}
 	],
 	idProperty: 'subItemId'
