@@ -9,7 +9,8 @@
 			"productType" => $post["productType"],
 			"productNumber" => $post["productNumber"],
 			"productMerchant" => $post["productMerchant"],
-			"productContact" => $post["productContact"]
+			"productSchedule" => $post["productSchedule"],
+			"productDeliver" => $post["productDeliver"]
 		);
 		global $mysql;
 		$mysql->DBInsertAsArray("`mainmaterial`",$obj);
@@ -45,7 +46,8 @@
 			$res[$count]["productType"] = $val["productType"];
 			$res[$count]["productNumber"] = $val["productNumber"];
 			$res[$count]["productMerchant"] = $val["productMerchant"];
-			$res[$count]["productContact"] = $val["productContact"];
+			$res[$count]["productSchedule"] = $val["productSchedule"];
+			$res[$count]["productDeliver"] = $val["productDeliver"];
 			$res[$count]["isDeleted"] = $val["isDeleted"];
 		    $count ++;
         }
@@ -65,7 +67,8 @@
 			$res[$count]["productType"] = $val["productType"];
 			$res[$count]["productNumber"] = $val["productNumber"];
 			$res[$count]["productMerchant"] = $val["productMerchant"];
-			$res[$count]["productContact"] = $val["productContact"];
+			$res[$count]["productSchedule"] = $val["productSchedule"];
+			$res[$count]["productDeliver"] = $val["productDeliver"];
 			$res[$count]["isDeleted"] = $val["isDeleted"];
 		    $count ++;
         }
@@ -80,7 +83,8 @@
 		$setValue = $setValue." , `productType` = '".$data["productType"]."'";
 		$setValue = $setValue." , `productNumber` = '".$data["productNumber"]."'";
 		$setValue = $setValue." , `productMerchant` = '".$data["productMerchant"]."'";
-		$setValue = $setValue." , `productContact` = '".$data["productContact"]."'";
+		$setValue = $setValue." , `productSchedule` = '".$data["productSchedule"]."'";
+		$setValue = $setValue." , `productDeliver` = '".$data["productDeliver"]."'";
 		$mysql->DBUpdateSomeCols("`mainmaterial`", $condition, $setValue);
 		return array('status'=>'successful', 'errMsg' => 'edit mainmaterial ok');
 	}

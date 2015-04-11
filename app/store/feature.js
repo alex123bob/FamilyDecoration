@@ -158,10 +158,10 @@ Ext.define('FamilyDecoration.store.Feature', {
                 flag = true;
             }
             else if (rec.get('cmp') == 'plan-index') {
-                flag = User.isAdmin() || User.isProjectManager() || User.isProjectStaff() ? true : false;
+                flag = User.isGeneral() ? false : true;
             }
             else if (rec.get('cmp') == 'mainmaterial-index') {
-                flag = User.isAdmin() || User.isProjectManager() || User.isProjectStaff() ? true : false;
+                flag = User.isAdmin() || User.isProjectManager() || User.isProjectStaff() || User.isDesignManager() || User.isDesignStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'setting-parent') {
                 flag = User.isAdmin() || User.isBusinessStaff() ? true : false;
@@ -176,7 +176,7 @@ Ext.define('FamilyDecoration.store.Feature', {
                 flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'business-index') {
-                flag = User.isAdmin() || User.isBusinessManager() || User.isBusinessStaff() || User.isDesignStaff() ? true : false;
+                flag = User.isGeneral() ? false : true;
             }
             else {
                 flag = true;

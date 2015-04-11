@@ -67,6 +67,11 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 				st.load({
 					params: {
 						projectId: rec.getId()
+					},
+					callback: function (recs, ope, success){
+						if (success) {
+							grid.getSelectionModel().deselectAll();
+						}
 					}
 				});
 			},
@@ -161,13 +166,13 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 		        {
 		        	text: '数量',
 		        	dataIndex: 'productNumber', 
-		        	flex: 1,
+		        	flex: 0.5,
 		        	draggable: false,
 		        	menuDisabled: true,
 		        	sortable: false
 		        },
 		        {
-		        	text: '商家',
+		        	text: '商家及联系人',
 		        	dataIndex: 'productMerchant', 
 		        	flex: 1,
 		        	draggable: false,
@@ -175,8 +180,16 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 		        	sortable: false
 		        },
 		        {
-		        	text: '联系人及联系号码',
-		        	dataIndex: 'productContact', 
+		        	text: '预定时间及预定人',
+		        	dataIndex: 'productSchedule', 
+		        	flex: 1,
+		        	draggable: false,
+		        	menuDisabled: true,
+		        	sortable: false
+		        },
+		        {
+		        	text: '送货时间',
+		        	dataIndex: 'productDeliver', 
 		        	flex: 1,
 		        	draggable: false,
 		        	menuDisabled: true,

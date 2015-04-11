@@ -8,8 +8,9 @@ Ext.define('FamilyDecoration.model.MainMaterial', {
 		{name: 'productName', type: 'string'},  // 产品名称
 		{name: 'productType', type: 'string'}, // 型号
 		{name: 'productNumber', type: 'string'}, // 数量
-		{name: 'productMerchant', type: 'string'}, // 商家
-		{name: 'productContact', type: 'string'}, // 联系人及联系号码
+		{name: 'productMerchant', type: 'string'}, // 商家及联系人
+		{name: 'productSchedule', type: 'string'}, // 预定时间及预定人
+		{name: 'productDeliver', type: 'string'} // 送货时间
 	],
 	idProperty: 'id'
 });
