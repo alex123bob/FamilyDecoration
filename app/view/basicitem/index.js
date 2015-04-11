@@ -68,7 +68,7 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 							if (btnId == 'ok') {
 								if (!Ext.isEmpty(newName)) {
 									Ext.Ajax.request({
-										url: './libs/editbasicitem.php',
+										url: './libs/basicitem.php?action=editbasicitem',
 										method: 'POST',
 										params: {
 											itemId: id,
@@ -105,7 +105,7 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 						Ext.Msg.warning('【注意】：删除基础大项会删除其下的所有小项目！<br />确定要删除此项目吗？', function (btnId){
 							if (btnId == 'yes') {
 								Ext.Ajax.request({
-									url: './libs/deletebasicitem.php',
+									url: './libs/basicitem.php?action=deletebasicitem',
 									method: 'POST',
 									params: {
 										itemId: id
@@ -228,7 +228,7 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 							if (btnId == 'yes') {
 								if (rec) {
 									Ext.Ajax.request({
-										url: './libs/deletebasicsubitem.php',
+										url: './libs/subitem.php?action=delete',
 										method: 'POST',
 										params: {
 											subItemId: rec.getId()

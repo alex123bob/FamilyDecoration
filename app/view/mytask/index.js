@@ -92,7 +92,7 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 				width: 300,
 				refresh: function (rec){
 					if (rec) {
-						var content = rec.get('taskContent').replace(/\n/ig, '<br />');
+						var content = rec.get('taskContent').replace(/\\n/ig, '<br />');
 						this.body.update(content);
 					}
 					else {
@@ -225,7 +225,7 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 										if (success) {
 											var obj = Ext.decode(res.responseText);
 											if (obj.length > 0) {
-												var content = obj[0]['selfAssessment'].replace(/\n/gi, '<br />');
+												var content = obj[0]['selfAssessment'].replace(/\\n/gi, '<br />');
 												me.body.update(content);
 											}
 											else {

@@ -3,7 +3,7 @@
 		$obj = array(
 			"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
 			"taskName"=>$post["taskName"],
-			"taskContent"=>mysql_real_escape_string($post["taskContent"]),
+			"taskContent"=>myStrEscape($post["taskContent"]),
 			"taskDispatcher"=>"-".$_SESSION["name"]."-",
 			"taskExecutor"=>"-".str_replace(",", "-", $post["taskExecutor"])."-",
 			"taskProcess"=>0
@@ -19,7 +19,7 @@
 			"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
 			"taskListId"=>$post["taskListId"],
 			"taskExecutor"=>"-".$_SESSION["name"]."-",
-			"selfAssessment"=>mysql_real_escape_string($post["selfAssessment"])
+			"selfAssessment"=>myStrEscape($post["selfAssessment"])
 		);
 		$mysql->DBInsertAsArray("`task_self_assessment`", $obj);
 		return array('status'=>'successful', 'errMsg' => '','taskListId'=> $obj["id"]);
@@ -36,7 +36,7 @@
 			}
 		}
 		if (isset($post["selfAssessment"])) {
-			array_push($setValue, " `selfAssessment` = '".mysql_real_escape_string($post["selfAssessment"])."'");
+			array_push($setValue, " `selfAssessment` = '".myStrEscape($post["selfAssessment"])."'");
 		}
 		if (isset($post["taskExecutor"])) {
 			array_push($setValue, " `taskExecutor` = '-".str_replace(",", "-", $post["taskExecutor"])."-'");
@@ -224,7 +224,7 @@
 			array_push($setValue, " `taskDispatcher` = '-".$data["taskDispatcher"]."-'");
 		}
 		if (isset($data['taskContent'])) {
-			array_push($setValue, " `taskContent` = '".mysql_real_escape_string($data["taskContent"])."'");
+			array_push($setValue, " `taskContent` = '".myStrEscape($data["taskContent"])."'");
 		}
 		if (isset($data['taskExecutor'])) {
 			array_push($setValue, " `taskExecutor` = '-".str_replace(",", "-", $data["taskExecutor"])."-'");

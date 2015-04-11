@@ -513,7 +513,7 @@ Ext.define('FamilyDecoration.view.budget.EditBudget', {
                                 handler: function (){
                                     var basicItemId = rec.get('basicItemId');
                                     Ext.Ajax.request({
-                                        url: 'libs/getbasicsubitems.php',
+                                        url: 'libs/subitem.php?action=get',
                                         params: {
                                             parentId: basicItemId
                                         },

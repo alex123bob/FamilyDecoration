@@ -1,6 +1,7 @@
 Ext.define('FamilyDecoration.view.basicitem.SubItemTable', {
 	extend: 'Ext.grid.Panel',
 	alias: 'widget.basicitem-subitemtable',
+	requires: ['FamilyDecoration.store.WorkCategory'],
 
 	title: '小类项目',
 	width: 500,
@@ -185,14 +186,30 @@ Ext.define('FamilyDecoration.view.basicitem.SubItemTable', {
 	        },
 	        {
 	        	text: '成本',
-	        	dataIndex: 'cost',
-	        	flex: 1,
-            	draggable: false,
-            	align: 'center',
-            	editor: {
-            		xtype: 'textfield',
-            		allowBlank: false
-            	}
+	        	columns: [
+	        		{
+	        			text: '人工',
+	        			dataIndex: 'manpowerCost',
+	        			flex: 0.5,
+	        			draggable: false,
+	        			align: 'center',
+	        			editor: {
+	        				xtype: 'textfield',
+	        				allowBlank: false
+	        			}
+	        		},
+	        		{
+	        			text: '主材',
+	        			dataIndex: 'mainMaterialCost',
+	        			flex: 0.5,
+	        			draggable: false,
+	        			align: 'center',
+	        			editor: {
+	        				xtype: 'textfield',
+	        				allowBlank: false
+	        			}
+	        		}
+	        	]
 	        },
 	        {
 	        	text: '备注',
@@ -206,6 +223,29 @@ Ext.define('FamilyDecoration.view.basicitem.SubItemTable', {
 	        	},
 	        	renderer: function (val, meta, rec){
     				return val.replace(/\n/g, '<br />');
+	        	}
+	        },
+	        {
+	        	text: '工种',
+	        	dataIndex: 'workCategory',
+	        	flex: 1,
+	        	draggable: false,
+	        	align: 'center',
+	        	renderer: function (val){
+	        		if (val) {
+	        			return FamilyDecoration.store.WorkCategory.renderer(val);
+	        		}
+	        		else {
+	        			return '';
+	        		}
+	        	},
+	        	editor: {
+	        		xtype: 'combobox',
+	        		queryMode: 'local',
+	        		displayField: 'name',
+	        		valueField: 'value',
+	        		editable: false,
+	        		store: FamilyDecoration.store.WorkCategory
 	        	}
 	        }
 		];

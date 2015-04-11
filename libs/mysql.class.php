@@ -150,17 +150,14 @@
 			}
 			$this->dbSQL = $partStr;
 			$this->DBExecute($this->dbSQL);
-			if (mysql_num_rows($this->dbResult) > 0)
-			{
+			if (mysql_num_rows($this->dbResult) > 0) {
 				while($partRows = mysql_fetch_array($this->dbResult))
 				{
 					$partAllRows[] = $partRows;
 				}
 				return $partAllRows;
-			}
-			else
-			{
-				return false;
+			} else {
+				return array();
 			}
 		}
 
