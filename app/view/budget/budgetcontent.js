@@ -550,20 +550,48 @@ Ext.define('FamilyDecoration.view.budget.BudgetContent', {
 		        {
 		        	text: '成本',
 		        	hidden: User.isAdmin() ? false : true,
-		        	flex: 0.5,
 		        	draggable: false,
 		        	align: 'center',
-		        	dataIndex: 'cost',
-		        	sortable: false,
 		        	menuDisabled: true,
-		        	renderer: function (val, meta, rec) {
-		        		if (!rec.get('parentId') || !rec.get('itemUnit') || 'NOPQRS'.indexOf(rec.get('itemCode')) != -1) {
-        					return '';
-        				}
-        				else {
-        					return val;
-        				}
-		        	}
+		        	columns: [
+		        		{
+		        			text: '人工',
+		        			dataIndex: 'manpowerCost',
+		        			flex: 0.5,
+		        			draggable: false,
+		        			align: 'center',
+		        			sortable: false,
+		        			menuDisabled: true,
+		        			renderer: function (val, meta, rec){
+		        				if (!rec.get('parentId') || !rec.get('itemUnit') || 'NOPQRS'.indexOf(rec.get('itemCode')) != -1) {
+		        					return '';
+		        				}
+		        				else {
+		        					return val;
+		        				}
+
+		        			}
+		        		},
+		        		{
+		        			text: '主材',
+		        			dataIndex: 'mainMaterialCost',
+		        			flex: 0.5,
+		        			draggable: false,
+		        			align: 'center',
+		        			sortable: false,
+		        			menuDisabled: true,
+		        			renderer: function (val, meta, rec){
+		        				if (!rec.get('parentId') || !rec.get('itemUnit') || 'NOPQRS'.indexOf(rec.get('itemCode')) != -1) {
+		        					return '';
+		        				}
+		        				else {
+		        					return val;
+		        				}
+
+		        			}
+
+		        		}
+		        	]
 		        }
 		    ],
 		    listeners: {
