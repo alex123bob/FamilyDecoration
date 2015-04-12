@@ -731,6 +731,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					    									treePanel.getSelectionModel().deselectAll()
 					    									treePanel.getSelectionModel().select(newPro);
 					    									win.close();
+					    									showMsg('编辑成功！');
 					    								}
 					    							}
 					    						})
