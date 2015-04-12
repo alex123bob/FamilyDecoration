@@ -357,7 +357,7 @@ Ext.define('FamilyDecoration.view.budget.Index', {
 				var win = Ext.create('Ext.window.Window', {
 					title: '新建预算头信息',
 					width: 500,
-					height: 400,
+					height: 300,
 					layout: 'fit',
 					modal: true,
 					closable: false,
@@ -368,7 +368,33 @@ Ext.define('FamilyDecoration.view.budget.Index', {
 					buttons: [{
 						text: '确定',
 						handler: function (){
-
+							var grid = win.down('budget-budgetheader');
+							if (grid.isEmpty()) {
+								showMsg('头信息填写不完整！');
+							}
+							else {
+								var data = grid.getValue();
+								Ext.apply(data, {
+									totalFee: ''
+								});
+								Ext.Ajax.request({
+									url: './libs/budget.php?action=add',
+									method: 'POST',
+									params: data,
+									callback: function (opts, success, res){
+										if (success) {
+											var obj = Ext.decode(res.responseText);
+											if (obj.status == 'successful') {
+												showMsg('预算头信息设置成功！');
+												win.close();
+											}
+											else {
+												showMsg(obj.errMsg);
+											}
+										}
+									}
+								});
+							}
 						}
 					}, {
 						text: '取消',

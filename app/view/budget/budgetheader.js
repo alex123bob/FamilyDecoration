@@ -5,6 +5,31 @@ Ext.define('FamilyDecoration.view.budget.BudgetHeader', {
 
 	title: '预算头信息',
 
+	getValue: function (){
+		var grid = this,
+			st = grid.getStore();
+		var data = st.data.items,
+			res = {};
+		for (var i = 0; i < data.length; i++) {
+			res[data[i].get('name')] = data[i].get('content');
+		}
+		return res;
+	},
+
+	isEmpty: function (){
+		var grid = this,
+			st = grid.getStore(),
+			data = st.data.items,
+			flag = false;
+		for (var i = 0; i < data.length; i++) {
+			if (data[i].get('content') == '') {
+				flag = true;
+				break;
+			}
+		}
+		return flag;
+	},
+
 	initComponent: function (){
 		var me = this;
 
@@ -12,11 +37,17 @@ Ext.define('FamilyDecoration.view.budget.BudgetHeader', {
 			columns: [{
 				text: '名称',
 				flex: 1,
-				dataIndex: 'dispValue'
+				dataIndex: 'dispValue',
+				draggable: false,
+				menuDisabled: true,
+				sortable: false
 			}, {
 				text: '内容',
 				flex: 1,
 				dataIndex: 'content',
+				draggable: false,
+				menuDisabled: true,
+				sortable: false,
 				editor: {
 					xtype: 'textfield'
 				},
@@ -39,27 +70,33 @@ Ext.define('FamilyDecoration.view.budget.BudgetHeader', {
 			store: Ext.create('Ext.data.Store', {
 				autoLoad: true,
 				fields: ['name', 'dispValue', 'content'],
-				data: [{
-					name: 'custName',
-					dispValue: '客户名称：',
-					content: ''
-				}, {
-					name: 'projectName',
-					dispValue: '工程地址：',
-					content: ''
-				}, {
-					name: 'areaSize',
-					dispValue: '户型大小：',
-					content: ''
-				}, {
-					name: 'totalFee',
-					dispValue: '合计费用：',
-					content: ''
-				}, {
-					name: 'comments',
-					dispValue: '预算说明：',
-					content: ''
-				}],
+				data: [
+					{
+						name: 'custName',
+						dispValue: '客户名称：',
+						content: ''
+					}, 
+					{
+						name: 'projectName',
+						dispValue: '工程地址：',
+						content: ''
+					}, 
+					{
+						name: 'areaSize',
+						dispValue: '户型大小：',
+						content: ''
+					}, 
+					// {
+					// 	name: 'totalFee',
+					// 	dispValue: '合计费用：',
+					// 	content: ''
+					// }, 
+					{
+						name: 'comments',
+						dispValue: '预算说明：',
+						content: ''
+					}
+				],
 				proxy: {
 					type: 'memory'
 				}
