@@ -15,17 +15,13 @@
 
 	function deleteProgress($progressId){
 		global $mysql;
-		$condition = "`id` = '$progressId' ";
-		$setValue = " `isDeleted` = 'true'";
-		$mysql->DBUpdateSomeCols("`progress`", $condition, $setValue);
+		$mysql->DBUpdate("progress",array('isDeleted'=>true),"`id` = '?' ",array($progressId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
 	function deleteProgressByProjectId($projectId){
 		global $mysql;
-		$condition = "`projectId` = '$projectId' ";
-		$setValue = " `isDeleted` = 'true'";
-		$mysql->DBUpdateSomeCols("`progress`", $condition, $setValue);
+		$mysql->DBUpdate("progress",array('isDeleted'=>true),"`projectId` = '?' ",array($progressId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
@@ -63,18 +59,19 @@
 
 	function editProgress($data){
 		global $mysql;
-		$id = $data["id"];
-		$condition = "`id` = '$id' ";
-		$setValue = " isDeleted = isDeleted ";
-		if(isset($data["progress"])){
-			$tmp = $data["progress"];
-			$setValue = $setValue.",`progress` = '$tmp' ";
+		$obj = array();
+		$ok = false;
+		if(isset($data['comments'])){
+			$obj['comments'] = $data['comments'];
+			$ok = true;
 		}
-		if(isset($data["comments"])){
-			$tmp = $data["comments"];
-			$setValue = $setValue.",`comments` = '$tmp' ";
+		if(isset($data['progress'])){
+			$obj['progress'] = $data['progress'];
+			$ok = true;
 		}
-		$mysql->DBUpdateSomeCols("`progress`", $condition, $setValue);
+		if(!$ok) 
+			return array('status'=>'successful', 'errMsg' => 'edit progress ok');
+		$mysql->DBUpdate("progress",$obj,"`id` = '?' ",array($data['id']));
 		return array('status'=>'successful', 'errMsg' => 'edit progress ok');
 	}
 ?>

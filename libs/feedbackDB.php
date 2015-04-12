@@ -23,14 +23,11 @@
 	}
 
 	function editFeedback ($data) {
-		global $mysql;
-		$id = $data["id"];
-		$condition = "`id` = '$id' ";
-		if(isset($data["result"])){
-			$tmp = $data["result"];
-			$setValue = "`result` = '$tmp' ";
+		if(!isset($data["result"])){
+			return array('status'=>'successful', 'errMsg' => 'edit feedback ok');
 		}
-		$mysql->DBUpdateSomeCols("`feedback`", $condition, $setValue);
+		global $mysql;
+		$mysql->DBUpdate("`feedback`",array('result'=>$data['result']),"`id` = '?' ",array($data["id"]));
 		return array('status'=>'successful', 'errMsg' => 'edit feedback ok');
 	}
 ?>

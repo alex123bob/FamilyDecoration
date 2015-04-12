@@ -53,17 +53,13 @@
 	 */
 	function editBasicItem ($item){
 		global $mysql;
-		$setValue = "";
+		$obj=array();
 		foreach ($item as $key => $val) {
-			if ($key == "itemId" || is_numeric ($key)) {
+			if ($key == "itemId" || is_numeric ($key))
 				continue;
-			} else {
-				$setValue .= " `".$key."` = '".$val."',";
-			}
+			$obj[$key]=$val;
 		}
-		$setValue = substr($setValue, 0, -1);
-		$condition = "`itemId` = '".$item['itemId']."'";
-		$mysql->DBUpdateSomeCols("`basic_item`", $condition, $setValue);
+		$mysql->DBUpdate("basic_item",$obj,"`itemId` = ? ",array($item['itemId']));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 ?>

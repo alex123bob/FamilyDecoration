@@ -1,5 +1,4 @@
 <?php
-	
 	function getBusinessDetails($businessId){
 		global $mysql;
 		$arr = $mysql->DBGetSomeRows("`business_detail`", " * "," where businessId = '$businessId' and `isDeleted` = 'false' " ,"ORDER BY  `id` DESC");
@@ -26,18 +25,14 @@
 
 	function deleteBusinessDetail($businessDetailId){
 		global $mysql;
-		$condition = "`id` = '$businessDetailId' ";
-		$setValue = " `isDeleted` = 'true' ";
-		$mysql->DBUpdateSomeCols("`business_detail`", $condition, $setValue);
+		$mysql->DBUpdate("business_detail",array('isDeleted'=>true),"`id`='?'",array($businessDetailId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
 	function editBusinessDetail($data){
 		global $mysql;
 		$id = $data["id"];
-		$condition = "`id` = '$id' ";
-		$setValue = " `content` = '".$data["content"]."'";
-		$mysql->DBUpdateSomeCols("`business_detail`", $condition, $setValue);
+		$mysql->DBUpdate("business_detail",array('content'=>$data['content']),"`id` = '?'",array($id));
 		return array('status'=>'successful', 'errMsg' => 'edit business detail ok');
 	}
 ?>

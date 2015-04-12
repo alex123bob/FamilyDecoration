@@ -1,6 +1,5 @@
 <?php
 	function addMessage($data){
-		$tableName = '`message`';
 		$receiver = $data["receiver"];
 		$receivers = explode(',',$receiver); 
 		global $mysql;
@@ -11,43 +10,35 @@
 				"sender"=>$data["sender"],
 				"receiver"=>$re
 			);
-			$mysql->DBInsertAsArray($tableName,$obj);
+			$mysql->DBInsertAsArray('message',$obj);
 		}
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 	function deleteMessage($id){
-		$tableName = '`message`';
 		global $mysql;
-		$condition = "`id` = '$id' ";
-		$setValue = " `isDeleted` = 'true' , `readTime` = now() ";
-		$mysql->DBUpdateSomeCols($tableName, $condition, $setValue);
+		$mysql->DBUpdate('message',array('isDeleted'=>true,'readTime'=>'now()'),"`id` = '?'",array($id));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 	function editMessage($data){
-		$tableName = '`message`';
 		global $mysql;
+		$obj = array();
 		$id = $data['id'];
-		$condition = "`id` = '$id' ";
-		$setValue = " `isDeleted` = 'isDeleted' ";
 		if(isset($data['content'])){
-			$setValue = $setValue." ,`content`= '".mysql_real_escape_string($data['content'])."'";
+			$obj['content'] = $data['content'];
 		}
 		if(isset($data['sender'])){
-			$setValue = $setValue." ,`sender`= '".$data['sender']."'";
+			$obj['sender'] = $data['sender'];
 		}
 		if(isset($data['receiver'])){
-			$setValue = $setValue." ,`receiver`= '".$data['receiver']."'";
+			$obj['receiver'] = $data['receiver'];
 		}
-		$mysql->DBUpdateSomeCols($tableName, $condition, $setValue);
+		$mysql->DBUpdate('message',$obj,"`id` = '?' ",array($id));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 	
 	function read($id){
-		$tableName = '`message`';
 		global $mysql;
-		$condition = "`id` = '$id' ";
-		$setValue = " `isRead` = 'true' , `readTime` = now() ";
-		$mysql->DBUpdateSomeCols($tableName, $condition, $setValue);
+		$mysql->DBUpdate('message',array('isRead'=>true,'readTime'=>'now()'),"`id` = '?'",array($id));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 	

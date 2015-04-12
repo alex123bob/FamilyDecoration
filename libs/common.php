@@ -18,6 +18,9 @@
 	function startWith($str, $needle) {
         return strpos($str, $needle) === 0;
 	}
+	function contains($string, $needle) { 
+		return false !== strpos($string, $needle); 
+	} 
 	function str2GBK($str){
 		$res = '';
 		#$res = is_null($str) ? "" : iconv("UTF-8","GB2312//IGNORE",$str);  //平方米等utf8单位会丢失
@@ -55,8 +58,13 @@
 			session_destroy();
 			throw new Exception($userName."已在别处登陆！");
 		}
-		$mysql->DBUpdateSomeCols("`online_user`", " `userName` = '$userName'  and `sessionId` = '$sessionId' and `offlineTime` is null ","`lastUpdateTime` = now() ");
+		$mysql->DBUpdate("online_user",array('lastUpdateTime'=>'now()'),"`userName` = '?'  and `sessionId` = '?' and `offlineTime` is null ",array($userName,$sessionId));
 		return array("status" => "ok","errMsg" =>"");
+	}
+	function str_replace_once($haystack,$needle,$replace) {
+		$pos = strpos($haystack, $needle);
+		if ($pos === false)	return $haystack;
+		return substr_replace($haystack, $replace, $pos, strlen($needle));
 	}
 	function myStrEscape($arg){
 		if(is_array($arg)){

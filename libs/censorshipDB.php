@@ -15,17 +15,13 @@
 
 	function deleteCensorship($censorshipId){
 		global $mysql;
-		$condition = "`id` = '$censorshipId' ";
-		$setValue = " `isDeleted` = 'true'";
-		$mysql->DBUpdateSomeCols("`censorship`", $condition, $setValue);
+		$mysql->DBUpdate("censorship",array('isDeleted'=>true),"`id` = '?' ",array($censorshipId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
 	function deleteCensorshipByLogListId($logListId){
 		global $mysql;
-		$condition = "`logListId` = '$logListId' ";
-		$setValue = " `isDeleted` = 'true'";
-		$mysql->DBUpdateSomeCols("`censorship`", $condition, $setValue);
+		$mysql->DBUpdate("censorship",array('isDeleted'=>true),"`logListId` = '?' ",array($logListId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
@@ -80,9 +76,7 @@
 	
 	function editCensorship($data){
 		global $mysql;
-		$condition = "`id` = '".$data["id"]."' ";
-		$setValue = " `content` = '".$data["content"]."'";
-		$mysql->DBUpdateSomeCols("`censorship`", $condition, $setValue);
+		$mysql->DBUpdate("censorship",array('content'=>$data["content"]),"`id` = '?' ",array($data["id"]));
 		return array('status'=>'successful', 'errMsg' => 'edit censorship ok');
 	}
 ?>

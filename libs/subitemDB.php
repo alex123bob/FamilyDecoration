@@ -79,16 +79,12 @@
 
 	function editBasicSubItem (array $item){
 		global $mysql;
-		$setValue = "";
+		$obj = array();
 		foreach ($item as $key => $val) {
-			if ($key == "subItemId" || is_numeric ($key)) {
+			if ($key == "subItemId" || is_numeric ($key))
 				continue;
-			} else {
-				$setValue .= " `".$key."` = '".$val."',";
-			}
+			$obj[$key]=$val;
 		}
-		$setValue = substr($setValue, 0, -1);
-		$condition = "`subItemId` = '".$item['subItemId']."'";
-		$mysql->DBUpdateSomeCols("`basic_sub_item`", $condition, $setValue);
+		$mysql->DBUpdate('basic_sub_item',$obj,"`subItemId` = '?'",array($item['subItemId']));
 	}
 ?>

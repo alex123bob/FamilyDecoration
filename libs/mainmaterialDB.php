@@ -19,17 +19,13 @@
 
 	function deleteMaterial($materialId){
 		global $mysql;
-		$condition = "`id` = '$materialId' ";
-		$setValue = " `isDeleted` = 'true'";
-		$mysql->DBUpdateSomeCols("`mainmaterial`", $condition, $setValue);
+		$mysql->DBUpdate("mainmaterial",array('isDeleted'=>true),"`id` = '?'",array($materialId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
 	function deleteMaterialsByProjectId($projectId){
 		global $mysql;
-		$condition = "`projectId` = '$projectId' ";
-		$setValue = " `isDeleted` = 'true'";
-		$mysql->DBUpdateSomeCols("`mainmaterial`", $condition, $setValue);
+		$mysql->DBUpdate("mainmaterial",array('isDeleted'=>true),"`projectId` = '?' ",array($projectId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
@@ -77,15 +73,15 @@
 
 	function editMaterial($data){
 		global $mysql;
-		$condition = "`id` = '".$data["id"]."' ";
-		$setValue = " `projectId` = '".$data["projectId"]."'";
-		$setValue = $setValue." , `productName` = '".$data["productName"]."'";
-		$setValue = $setValue." , `productType` = '".$data["productType"]."'";
-		$setValue = $setValue." , `productNumber` = '".$data["productNumber"]."'";
-		$setValue = $setValue." , `productMerchant` = '".$data["productMerchant"]."'";
-		$setValue = $setValue." , `productSchedule` = '".$data["productSchedule"]."'";
-		$setValue = $setValue." , `productDeliver` = '".$data["productDeliver"]."'";
-		$mysql->DBUpdateSomeCols("`mainmaterial`", $condition, $setValue);
+		$obj= array();
+		$obj['projectId'] = $data['projectId'];
+		$obj['productName'] = $data['productName'];
+		$obj['productType'] = $data['productType'];
+		$obj['productNumber'] = $data['productNumber'];
+		$obj['productDeliver'] = $data['productDeliver'];
+		$obj['productMerchant'] = $data['productMerchant'];
+		$obj['productSchedule'] = $data['productSchedule'];
+		$mysql->DBUpdate("`mainmaterial`",$obj,"`id` = '?' ",array($data["id"]));
 		return array('status'=>'successful', 'errMsg' => 'edit mainmaterial ok');
 	}
 ?>

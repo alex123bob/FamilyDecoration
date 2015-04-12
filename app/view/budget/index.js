@@ -4,7 +4,9 @@ Ext.define('FamilyDecoration.view.budget.Index', {
 	requires: ['FamilyDecoration.model.Budget', 'FamilyDecoration.view.budget.BudgetHeader', 'FamilyDecoration.view.budget.BudgetContent',
 			   'FamilyDecoration.view.budget.AddBasicItem', 'FamilyDecoration.view.budget.Preview', 'FamilyDecoration.view.budget.History'],
 	autoScroll: true,
-	layout: 'border',	
+	layout: 'border',
+	budgetId: null,
+	halfEdit: false,
 
 	initComponent: function () {
 		var me = this;
@@ -386,6 +388,8 @@ Ext.define('FamilyDecoration.view.budget.Index', {
 											var obj = Ext.decode(res.responseText);
 											if (obj.status == 'successful') {
 												showMsg('预算头信息设置成功！');
+												me.budgetId = obj['budgetId'];
+												me.halfEdit = true;
 												win.close();
 											}
 											else {
@@ -405,6 +409,28 @@ Ext.define('FamilyDecoration.view.budget.Index', {
 					}]
 				});
 				win.show();
+			},
+			beforedestroy: function (cmp){
+				if (cmp.budgetId && cmp.halfEdit) {
+					Ext.Ajax.request({
+						url: './libs/budget.php?action=delete',
+						params: {
+							budgetId: cmp.budgetId
+						},
+						method: 'POST',
+						callback: function (opts, success, res){
+							if (success) {
+								var obj = Ext.decode(res.responseText);
+								if (obj.status == 'successful') {
+									showMsg('当前未保存预算已销毁！');
+								}
+								else {
+									showMsg(obj.errMsg);
+								}
+							}
+						}
+					})
+				}
 			}
 		}
 

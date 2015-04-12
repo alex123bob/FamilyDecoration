@@ -22,7 +22,7 @@
 
 	function delProject ($projectId){
 		global $mysql;
-		$mysql->DBUpdateSomeCols("`project`","`projectId` = '$projectId'", "`isDeleted` = 'true'");
+		$mysql->DBUpdate("project",array('isDeleted'=>true),"`projectId` = '?'",array($projectId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
@@ -126,17 +126,14 @@
 
 	function editProject (array $pro){
 		global $mysql;
-		$projectId = $pro['projectId'];
-		$setValue = " isDeleted = isDeleted ";
 		// fields that could be edit.
+		$obj = array();
 		$keys = array('projectName','period','captain','supervisor', 'salesman', 'designer','projectTime','budgetId','isFrozen', 'hasChart');
 		foreach($keys as $key){
-			if(isset($pro[$key])){
-				$tmp = $pro[$key];
-				$setValue = $setValue.",`$key` = '$tmp' ";
-			}
+			if(isset($pro[$key]))
+				$obj[$key] = $pro[$key];
 		}	
-		$mysql->DBUpdateSomeCols("`project`","`projectId` = '$projectId'", $setValue);
+		$mysql->DBUpdate("project",$obj,"`projectId` = '?'",array($pro['projectId']));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
@@ -146,13 +143,11 @@
 		$setValue = " isDeleted = isDeleted ";
 		// fields that could be edit.
 		$keys = array('projectName','period','captain','supervisor', 'salesman', 'designer','projectTime','budgetId','isFrozen');
-		foreach($keys as $key){
-			if(isset($pro[$key])){
-				$tmp = $pro[$key];
-				$setValue = $setValue.",`$key` = '$tmp' ";
-			}
-		}	
-		$mysql->DBUpdateSomeCols("`project`","`projectName` = '$projectName'", $setValue);
+		$obj = array();
+		foreach($keys as $key)
+			if(isset($pro[$key]))
+				$obj[$key]=$pro[$key];
+		$mysql->DBUpdate("project",$obj,"`projectName` = '?'",array($pro['projectName']));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 ?>

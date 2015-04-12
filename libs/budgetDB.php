@@ -31,15 +31,11 @@
 		foreach($arr as $item) {
 			$itemCode = $item['itemCode'];
 			$budgetItemId = $item['budgetItemId'];
-			if($itemCode == $ItemCode){
+			if($itemCode == $ItemCode)
 				continue; 
-			}
-			if($itemCode != $ItemCode."-".$itemCodeCount){
-				//update
-				$condition = "`budgetItemId` = '$budgetItemId' ";
-				$setValue = " `itemCode` = '$ItemCode-$itemCodeCount'";
-				$mysql->DBUpdateSomeCols("`budget_item`", $condition, $setValue);
-			}
+			$tmpItemCode = $ItemCode."-".$itemCodeCount;
+			if($itemCode != $tmpItemCode) //update
+				$mysql->DBUpdate("`budget_item`",array('itemCode'=>$tmpItemCode),"`budgetItemId` = '?' ", $budgetItemId);
 			$itemCodeCount++;
 		}
 		return $res;
@@ -47,9 +43,7 @@
 	//删除大项
 	function delBigItem($budgetId,$itemCode){
 		global $mysql;
-		$condition = "`budgetId` = '$budgetId' and `itemCode` like '%$itemCode%' ";
-		$setValue = " `isDeleted` = 'true'";
-		$mysql->DBUpdateSomeCols("`budget_item`", $condition, $setValue);
+		$mysql->DBUpdate("budget_item",array('isDeleted'=>true),"`budgetId` = ? and `itemCode` like '%?%' ",array($budgetId,$itemCode));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 	
@@ -69,7 +63,7 @@
 		);
 		global $mysql;
 		$mysql->DBInsertAsArray("`budget`",$obj);
-		return array('status'=>'successful', 'errMsg' => '');
+		return array('status'=>'successful', 'errMsg' => '', "budgetId" => $obj["budgetId"]);
 	}
 
 	function addBugetItem($post){
@@ -107,18 +101,14 @@
 	
 	function delBudget ($budgetId){
 		global $mysql;
-		$condition = "`budgetId` = '$budgetId' ";
-		$setValue = " `isDeleted` = 'true'";
-		$mysql->DBUpdateSomeCols("`budget`", $condition, $setValue);
-		$mysql->DBUpdateSomeCols("`budget_item`", $condition, $setValue);
+		$mysql->DBUpdate('budget',array('isDeleted'=>true),"`budgetId` = '?' ",array($budgetId));
+		$mysql->DBUpdate('budget_item',array('isDeleted'=>true),"`budgetId` = '?' ",array($budgetId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 		
 	function delBudgetItem($budgetId,$ItemId,$ItemCode){
 		global $mysql;
-		$condition = "`budgetItemId` = '$ItemId' ";
-		$setValue = " `isDeleted` = 'true'";
-		$mysql->DBUpdateSomeCols("`budget_item`", $condition, $setValue);
+		$mysql->DBUpdate('budget_item',array('isDeleted'=>true),"`budgetItemId` = '?' ",array($ItemId));
 		//更新下项的ItemCode
 		renewItemCode($budgetId,$ItemCode);
 		return array('status'=>'successful', 'errMsg' => '');
@@ -411,32 +401,26 @@
 
 	function editBudget (array $pro){
 		global $mysql;
-		$setValue = "";
+		$obj = array();
 		foreach ($pro as $key => $val) {
-			if ($key == "budgetId" || is_numeric ($key)) {
+			if ($key == "budgetId" || is_numeric ($key))
 				continue;
-			} else {
-				$setValue .= " `".$key."` = '".$val."',";
-			}
+			$obj[$key] = $val;
 		}
-		$setValue = substr($setValue, 0, -1);
-		$condition = "`budgetId` = '".$pro['budgetId']."'";
-		$mysql->DBUpdateSomeCols("`Budget`", $condition, $setValue);
+		$mysql->DBUpdate('Budget',$obj,"`budgetId` = '?'",array($pro['budgetId']));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 	
 	function editBudgetItem($pro){
 		global $mysql;
-		$setValue = "";
-		foreach ($pro as $key => $val) {
-			if(is_numeric ($key)) continue;
-			if ($key == "itemAmount" || $key == "remark" || $key == "mainMaterialPrice") {
-				$setValue .= " `".$key."` = '".$val."',";
-			}
-		}
-		$setValue = substr($setValue, 0, -1);
-		$condition = "`budgetItemId` = '".$pro['budgetItemId']."'";
-		$mysql->DBUpdateSomeCols("`budget_item`", $condition, $setValue);
+		$obj = array();
+		if(isset($pro['itemAmount']))
+			$obj['itemAmount'] = $pro['itemAmount'];
+		if(isset($pro['remark']))
+			$obj['remark'] = $pro['remark'];
+		if(isset($pro['mainMaterialPrice']))
+			$obj['mainMaterialPrice'] = $pro['mainMaterialPrice'];
+		$mysql->DBUpdate('budget_item',$obj,"`budgetItemId` = '?'",array($pro['budgetItemId']));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 ?>

@@ -23,8 +23,6 @@
 		default: 
 			throw new Exception("unknown action:".$action);
 	}
-	if(!$res){
-		$res = array('status'=>'successful', 'errMsg' => '');
-	}
+	if(!$res) $res = array('status'=>'successful', 'errMsg' => '');
 	echo urldecode(json_encode($res));
 ?>

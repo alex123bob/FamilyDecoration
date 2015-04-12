@@ -6,13 +6,11 @@
 		global $mysql;
 		$name = $_SESSION["name"];
 		$level = $_SESSION["level"];
-		if($name == $nameToDelete){
+		if($name == $nameToDelete)
 			throw new Exception('不能删除自己！');
-		}
-		if(!startWith($level,'001-')){
+		if(!startWith($level,'001-'))
 			throw new Exception('只有管理员可以删除用户！');
-		}
-		$mysql->DBUpdateSomeCols("`user`"," `name` = '$nameToDelete' ", "`isDeleted` = 'true',`updateTime` = now() ");
+		$mysql->DBUpdate('user',array('isDeleted'=>true,'updateTime'=>'now()')," `name` = '?' ",array($nameToDelete));
 		return (array('status'=>'successful', 'errMsg' => ''));
 	}
 	/**
@@ -56,7 +54,7 @@
 			$ip = getIP();
 			$userAgent = $_SERVER['HTTP_USER_AGENT'];
 			//update
-			$mysql->DBUpdateSomeCols("`online_user`"," `userName` = '$userName' and `offlineTime` is null ", "`lastUpdateTime` = now(),`offlineTime` = now() ");
+			$mysql->DBUpdate('online_user',array('lastUpdateTime'=>'now()','offlineTime'=>'now()'),"`userName` = '?' and `offlineTime` is null ",array($userName));
 			$obj = array('userName'=>$name,'onlineTime'=>'now()','sessionId'=>$sessionId,'lastUpdateTime'=>'now()','ip'=>$ip,'userAgent'=>$userAgent);
 			$mysql->DBInsertAsArray("`online_user`",$obj);
 			return (array('status'=>'successful', 'errMsg'=>'','token'=>$sessionId));
@@ -75,7 +73,7 @@
 		$sessionId = session_id();
 		$userName = $_SESSION["name"];
 		global $mysql;
-		$mysql->DBUpdateSomeCols("`online_user`"," `userName` = '$userName' and `offlineTime` is null and `sessionId` = '$sessionId' ", "`lastUpdateTime` = now(),`offlineTime` = now() ");
+		$mysql->DBUpdate('online_user',array('offlineTime'=>'now()'),"`userName` = '?' and `offlineTime` is null and `sessionId` = '?'",array($userName,$sessionId));
 		session_unset();
 		session_destroy();
 		return array('status'=>'successful', 'errMsg'=>'log out ok');
@@ -90,24 +88,18 @@
 		$oldpassword= $_POST['oldpassword'];
 		$newpassword= $_POST['newpassword'];
 		$level = $_POST["level"];
-
 		global $mysql, $prefix;
-
 		$oldpassword = md5($prefix.$oldpassword);
 		$newpassword = md5($prefix.$newpassword);
-
 		$user = $mysql->DBGetOneRow("`user`", "*", "`name` = '$name'");
-
 		if ($user["name"] == $name) {
 			if ($user["password"] == $oldpassword) {
-				$mysql->DBUpdateOneCol("`user`", "`name` = '".$user["name"]."'", "`password`", $newpassword);
+				$mysql->DBUpdate('user',array('password'=>$newpassword),"`name`= '?' ",array($user["name"]));
 				return (array('status'=>'successful', 'errMsg'=>''));
-			} else {
-				throw new Exception('原密码不正确！');
 			}
-		} else {
-			throw new Exception('用户不存在！');
+			throw new Exception('原密码不正确！');
 		}
+		throw new Exception('用户不存在！');
 	}
 
 	/**
@@ -122,7 +114,7 @@
 		$projectId = isset($_POST["projectId"]) ? $_POST["projectId"] : '';
 		global $mysql, $prefix;
 		$password = md5($prefix.$password);
-		$mysql->DBUpdateSomeCols("`user`", "`name` = '$name'", "`realname` = '$realname', `password` = '$password', `level` = '$level' , `projectId` = '$projectId' ");
+		$mysql->DBUpdate('user',array('realname'=>$realname,'password'=>$password,'level'=>$level,'projectId'=>$projectId),"`name`='?'",array($name));
 		return (array('status'=>'successful', 'errMsg' => ''));
 	}
 
@@ -140,7 +132,7 @@
 		$user = $mysql->DBGetOneRow("`user`", "*", "`name` = '$name'");
 
 		if ($user["name"] == $name) {
-			$mysql->DBUpdateOneCol("`user`", "`name` = '".$user["name"]."'", "`password`", $newpassword);
+			$mysql->DBUpdate('user',array('password'=>$newpassword),"`name`='?'",array($user["name"]));
 			return (array('status'=>'successful', 'errMsg'=>''));
 		} else {
 			return (array('status'=>'failing', 'errMsg'=>'用户不存在！'));

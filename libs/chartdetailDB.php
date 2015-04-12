@@ -35,13 +35,13 @@
 
 	function delChartsByProjectId ($projectId){
 		global $mysql;
-		$mysql->DBUpdateSomeCols("`chart_detail`","`projectId` = '$projectId'", "`isDeleted` = 'true'");
+		$mysql->DBUpdate("chart_detail",array('isDeleted'=>true),"`projectId` = '?'",array($projectId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
 	function delChartsByChartId ($chartId){
 		global $mysql;
-		$mysql->DBUpdateSomeCols("`chart_detail`","`chartId` = '$chartId'", "`isDeleted` = 'true'");
+		$mysql->DBUpdate("chart_detail",array('isDeleted'=>true),"`chartId` = '?'",array($chartId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
@@ -50,7 +50,7 @@
 		$arr = explode(">>><<<", $ids);
 		for ($i = 0; $i < count($arr); $i++) {
 			$id = $arr[$i];
-			$mysql->DBUpdateSomeCols("`chart_detail`","`id` = $id", "`isDeleted` = 'true'");
+			$mysql->DBUpdate("chart_detail",array('isDeleted'=>true),"`id` = '?'",array($id));
 		}
 		return array('status'=>'successful', 'errMsg' => '');
 	}
@@ -79,37 +79,6 @@
 			}
 			$mysql->DBInsertAsArray("`chart_detail`",$obj);
 		}
-		
 		return array('status'=>'successful', 'errMsg' => '');
 	}
-
-	// function editChartDetailByProjectId (array $chart){
-	// 	global $mysql;
-	// 	$projectId = $chart['projectId'];
-	// 	// fields that could be edit.
-	// 	$keys = array('chartId','content','createTime', 'updateTime', 'isDeleted');
-	// 	foreach($keys as $key){
-	// 		if(isset($chart[$key])){
-	// 			$tmp = $chart[$key];
-	// 			$setValue = $setValue.",`$key` = '$tmp' ";
-	// 		}
-	// 	}	
-	// 	$mysql->DBUpdateSomeCols("`chart_detail`","`projectId` = '$projectId'", $setValue);
-	// 	return array('status'=>'successful', 'errMsg' => '');
-	// }
-
-	// function editChartDetailByChartId (array $chart){
-	// 	global $mysql;
-	// 	$chartId = $chart['chartId'];
-	// 	// fields that could be edit.
-	// 	$keys = array('projectId','content','createTime', 'updateTime', 'isDeleted');
-	// 	foreach($keys as $key){
-	// 		if(isset($chart[$key])){
-	// 			$tmp = $chart[$key];
-	// 			$setValue = $setValue.",`$key` = '$tmp' ";
-	// 		}
-	// 	}	
-	// 	$mysql->DBUpdateSomeCols("`chart_detail`","`chartId` = '$chartId'", $setValue);
-	// 	return array('status'=>'successful', 'errMsg' => '');
-	// }
 ?>
