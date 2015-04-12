@@ -188,6 +188,9 @@
 					case "integer":
 						$values .= " ".$value." ,";
 						break;
+					case "double":
+						$values .= $value.",";
+						break;
 					case "NULL":
 						$values .= " null ,";
 						break;
@@ -226,6 +229,9 @@
 					case "integer":
 						$sql .= $value.",";
 						break;
+					case "double":
+						$sql .= $value.",";
+						break;
 					case "NULL":
 						$sql .= "null,";
 						break;
@@ -258,6 +264,7 @@
 						break;
 					case "integer":
 					case "NULL":
+					case "double":
 						break;
 					case "string":
 						$value = myStrEscape($value);
