@@ -1,162 +1,155 @@
 <?php
-	//获取项目下一个ItemCode
-	function getNextItemCode($budgetId){
+	//获取项目下一个ItemCode编码
+	function _getNextItemCode($budgetId){
 		global $mysql;
-		$arr = $mysql->DBGetSomeRows("`budget_item`", " itemCode", " where `isDeleted` = 'false' and `budgetId` = '$budgetId' "," order by itemCode asc");
-		$existItemCode = array();
-		foreach($arr as $item){
-			$itemCode = $item["itemCode"];
-			if(strlen($itemCode) == 1 && !in_array($itemCode,array('N','O','P','Q','R','S'))){
-				$existItemCode[$itemCode] = $itemCode;
-			}
-		}
+		$sql = "SELECT DISTINCT LEFT( itemCode, 1 ) as code , itemName FROM  `budget_item` WHERE `isDeleted` = 'false' and `budgetId` = '?' and LEFT( itemCode, 1 ) NOT IN ('N','O','P','Q','R','S') order by code asc";
+		$existItemCodes = $mysql->DBGetAsOneArray($sql,$budgetId);
 		$ItemCodeList = array("A","B","C","D","E","F","G","H","I","J","K","L","M");
-		$count = 0;
-		foreach($ItemCodeList as $count){
-			if(!in_array($count,$existItemCode)){
-				return array('status'=>'successful', 'errMsg' => '','itemCode'=>$count);
+		foreach($ItemCodeList as $char){
+			if(!in_array($char,$existItemCodes)){
+				return $char;
 			}
 		}
-		throw "超过itemCode最大值M";
+		throw new Exception("超过itemCode最大值M");
 	}
-	//更新项目ItemCode
-	function renewItemCode($budgetId,$ItemCode){
+	//获取大项下一个小项的itemCode编码
+	function _getNextBasicCode($budgetId,$ItemCode){
 		global $mysql;
-		$res= array();
-		if(strlen($ItemCode) != 1){
-			$ItemCode = substr($ItemCode, 0, 1);
+		$sql = "SELECT SUBSTRING(itemCode,3) as code  FROM `budget_item` where `isDeleted` = 'false' and `budgetId` = '?' and `itemCode` like '%?%' and SUBSTRING(itemCode,3) != \"\" order by code asc ";
+		$existItemCodes = $mysql->DBGetAsOneArray($sql,$budgetId,$ItemCode);
+		$count = 1;
+		while(in_array($count."",$existItemCodes)){
+			$count ++;
 		}
-		$arr = $mysql->DBGetSomeRows("`budget_item`", " itemCode,budgetItemId", " where `isDeleted` = 'false' and `budgetId` = '$budgetId' and `itemCode` like '%$ItemCode%' "," order by itemCode asc");
-		$itemCodeCount = 1;
-		foreach($arr as $item) {
-			$itemCode = $item['itemCode'];
-			$budgetItemId = $item['budgetItemId'];
-			if($itemCode == $ItemCode)
-				continue; 
-			$tmpItemCode = $ItemCode."-".$itemCodeCount;
-			if($itemCode != $tmpItemCode) //update
-				$mysql->DBUpdate("`budget_item`",array('itemCode'=>$tmpItemCode),"`budgetItemId` = '?' ", $budgetItemId);
-			$itemCodeCount++;
-		}
-		return $res;
+		return $ItemCode."-".$count;
 	}
-	//删除大项
-	function delBigItem($budgetId,$itemCode){
+	//添加大项
+	function addBigItem($post){
+		$itemCode = _getNextItemCode($post["budgetId"]);
 		global $mysql;
-		$mysql->DBUpdate("budget_item",array('isDeleted'=>true),"`budgetId` = ? and `itemCode` like '%?%' ",array($budgetId,$itemCode));
+		$fields = array('itemName','budgetId','itemUnit','itemAmount','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','lossPercent','remark','basicItemId','basicSubItemId');
+		$obj = array('itemCode'=>$itemCode,'budgetItemId' => "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT));
+		foreach($fields as $field){
+			if(isset($post[$field]))
+				$obj[$field] = $post[$field];
+		}
+		$mysql->DBInsertAsArray("`budget_item`",$obj);
+		return array('status'=>'successful', 'errMsg' => '','itemCode'=>$itemCode);
+	}
+	//添加小项
+	function addItem($post){
+		$itemCode = _getNextBasicCode($post["budgetId"],$post["itemCode"]);
+		global $mysql;
+		$fields = array('itemName','budgetId','itemUnit','itemAmount','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','lossPercent','remark','basicItemId','basicSubItemId');
+		$obj = array('itemCode'=>$itemCode,'budgetItemId' => "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT));
+		foreach($fields as $field){
+			if(isset($post[$field]))
+				$obj[$field] = $post[$field];
+		}
+		$mysql->DBInsertAsArray("`budget_item`",$obj);
+		return array('status'=>'successful', 'errMsg' => '','itemCode'=>$itemCode);
+	}
+	//修改项
+	function editItem($post){
+		global $mysql;
+		$fields = array('itemName','budgetId','itemUnit','itemAmount','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','lossPercent','remark','basicItemId','basicSubItemId');
+		$obj = array('budgetItemId'=>$post["budgetItemId"]);
+		foreach($fields as $field){
+			if(isset($post[$field]))
+				$obj[$field] = $post[$field];
+		}
+		$mysql->DBInsertAsArray("`budget_item`",$obj);
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 	
-	// ---end of the page
+	//删除项，不区分大小项
+	function delItem($budgetId,$itemId,$itemCode){
+		global $mysql;
+		if(strlen($itemCode) == 1){
+			//删除大项		
+			$mysql->DBUpdate("budget_item",array('isDeleted'=>true),"`budgetId` = '?' and `itemCode` like '%?%' ",array($budgetId,$itemCode));			
+		}else{
+			//删除小项
+			$mysql->DBUpdate('budget_item',array('isDeleted'=>true),"`budgetItemId` = '?' ",array($ItemId));
+			$sql = "SELECT budgetItemId FROM  `budget_item` WHERE `isDeleted` = 'false' and `budgetId` = '?' and SUBSTRING(itemCode,3) > ? ";
+			$budgetItemId = $mysql->DBGetAsOneArray($sql,$budgetId,intval(substr($itemCode,3)));
+			$mysql->DBUpdate('budget_item',array('isDeleted'=>true),"`budgetItemId` = '?' ",array($ItemId));
+		}
+		return array('status'=>'successful', 'errMsg' => '');
+	}
+
+	//添加预算
 	function addBudget($post){
-		$count = count(getBudgetsByProjectName($_REQUEST["projectName"]));
-		if($count > 0) 
-			throw new Exception("项目 : '".$_REQUEST["projectName"]."' 已经存在!");
+		global $mysql;
+		$projectId = $post["projectId"];
+		$budgets = $mysql->DBGetAsMap("SELECT b.*,p.projectName FROM `budget` b left join `project` p on b.budgetId=p.budgetId where b.`isDeleted` = 'false' and p.`projectId` = '?' ",$projectId);
+		if(count($budgets) > 0) 
+			throw new Exception("项目 : '$projectId' 已经存在预算!");
 		$obj = array(
 			"budgetId" => "budget-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
-			"projectName"=>$post["projectName"],
 			"custName"=>$post["custName"],
 			"areaSize"=>$post["areaSize"],
 			"totalFee"=>$post["totalFee"],
 			"comments"=>$post["comments"],
 			"isDeleted"=>false
 		);
-		global $mysql;
+		$mysql->DBUpdate("project",array('budgetId'=>$obj["budgetId"]),"`projectId` = '?' and `isDeleted`='false' ",array($projectId));
 		$mysql->DBInsertAsArray("`budget`",$obj);
 		return array('status'=>'successful', 'errMsg' => '', "budgetId" => $obj["budgetId"]);
 	}
 
-	function addBugetItem($post){
-		foreach ($post as $key => $value) {
-			$post[$key] = explode(">>><<<", $value);
-		}
-		$len = count($post["itemName"]);
-
-		global $mysql;
-
-		for ($i = 0; $i < $len; $i++) {
-			$obj = array(
-				"budgetItemId" => "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
-				"itemName"=>$post["itemName"][$i],
-				"budgetId"=>$post["budgetId"][$i],
-				"itemCode"=>$post["itemCode"][$i],
-				"itemUnit"=>$post["itemUnit"][$i],
-				"itemAmount"=>($post["itemAmount"][$i] ),
-				"mainMaterialPrice"=>($post["mainMaterialPrice"][$i] ),
-				"auxiliaryMaterialPrice"=>($post["auxiliaryMaterialPrice"][$i] ),
-				"manpowerPrice"=>($post["manpowerPrice"][$i] ),
-				"machineryPrice"=>($post["machineryPrice"][$i] ),
-				"lossPercent"=>($post["lossPercent"][$i] ),
-				"isDeleted"=>false,
-				"remark"=>$post["remark"][$i],
-				"basicItemId"=>$post["basicItemId"][$i],
-				"basicSubItemId"=>$post["basicSubItemId"][$i]
-			);
-			$mysql->DBInsertAsArray("`budget_item`",$obj);
-		}
-		//更新下项的ItemCode
-		renewItemCode($post["budgetId"][0],$post["itemCode"][0]);
-		return array('status'=>'successful', 'errMsg' => '');
-	}
-	
+	//删除预算
 	function delBudget ($budgetId){
 		global $mysql;
+		$mysql->DBUpdate('project',array('budgetId'=>''),"`budgetId` = '?' ",array($budgetId));
 		$mysql->DBUpdate('budget',array('isDeleted'=>true),"`budgetId` = '?' ",array($budgetId));
 		$mysql->DBUpdate('budget_item',array('isDeleted'=>true),"`budgetId` = '?' ",array($budgetId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
-		
-	function delBudgetItem($budgetId,$ItemId,$ItemCode){
-		global $mysql;
-		$mysql->DBUpdate('budget_item',array('isDeleted'=>true),"`budgetItemId` = '?' ",array($ItemId));
-		//更新下项的ItemCode
-		renewItemCode($budgetId,$ItemCode);
-		return array('status'=>'successful', 'errMsg' => '');
-	}
+
 	//供本地备份脚本使用
 	function getBudgetIds (){
 		global $mysql;
-		$res= array();
-		$arr = $mysql->DBGetSomeRows("`budget`", "budgetId,projectName", " where `isDeleted` = 'false' ");
+		$arr = $mysql->DBGetAsMap("SELECT b.budgetId,p.projectName FROM `budget` b left join `project` p on b.budgetId=p.budgetId where b.`isDeleted` = 'false' ");
 		foreach($arr as $key => $val) {
 			echo $val['budgetId'].">".str2GBK($val['projectName'])."\n";
 		}
 	}
 	function getBudgets (){
 		global $mysql;
-		$res= array();
-		$arr = $mysql->DBGetSomeRows("`budget`", "*", " where `isDeleted` = 'false' ");
-		foreach($arr as $key => $val) {
-			$res[$key]['projectName'] = urlencode($val['projectName']);
-			$res[$key]['budgetId'] = urlencode($val['budgetId']);
-			$res[$key]['custName'] = urlencode($val['custName']);
-			$res[$key]['areaSize'] = urlencode($val['areaSize']);
-			$res[$key]['totalFee'] = urlencode($val['totalFee']);
-			$res[$key]['comments'] = urlencode(addslashes($val['comments']));
-		}
-		return $res;
+		return $mysql->DBGetAsMap("SELECT b.*,p.projectName FROM `budget` b left join `project` p on b.budgetId=p.budgetId where b.`isDeleted` = 'false' ");
 	}
 	
 	function getBudgetsByBudgetId ($budgetId){
 		global $mysql;
-		$res= array();
-		$arr = $mysql->DBGetSomeRows("`budget`", "*", "where `budgetId` = '$budgetId' ");
-		foreach($arr as $key => $val) {
-			$res[$key]['projectName'] = urlencode($val['projectName']);
-			$res[$key]['budgetId'] = urlencode($val['budgetId']);
-			$res[$key]['custName'] = urlencode($val['custName']);
-			$res[$key]['areaSize'] = urlencode($val['areaSize']);
-			$res[$key]['totalFee'] = urlencode($val['totalFee']);
-			$res[$key]['comments'] = urlencode(addslashes($val['comments']));
-		}
-		return $res;
+		return $mysql->DBGetAsMap("SELECT b.*,p.projectName FROM `budget` b left join `project` p on b.budgetId=p.budgetId where b.`isDeleted` = 'false' and b.`budgetId` = '?' ",$budgetId);
 	}
+	
+	function compareBudgetItem($arg1,$arg2){
+		return strcasecmp($arg1["itemCode"],$arg2["itemCode"]);
+	}
+	//修改预算
+	function editBudget (array $pro){
+		global $mysql;
+		$obj = array();
+		$fields = array("custName","areaSize", "totalFee", "comments");
+		foreach($fields as $field) {
+			if (isset($pro[$field])) {
+				$obj[$field] = $pro[$field];
+			}
+		}
+		$mysql->DBUpdate('budget',$obj,"`budgetId` = '?'",array($pro['budgetId']));
+		if(isset($pro['projectId']))
+			$mysql->DBUpdate('project',array('budgetId'=>$pro['budgetId']),"`projectId` = '?'",array($pro['projectId']));
+		return array('status'=>'successful', 'errMsg' => '');
+	}
+	
 
+	
 	function getBudgetItemsByBudgetId ($budgetId , $isGBK = false,$isNOPQRSAmount = true) {
 		global $mysql;
 		$res= array();
-		$orderBy = "ORDER BY LEFT( itemCode, 2 ) ASC , ( SUBSTRING( itemCode, 2 ) ) *1 DESC ";
-		$arr = $mysql->DBGetSomeRows("`budget_item`", "*", "where `budgetId` = '$budgetId' and `isDeleted` = 'false' ",$orderBy);
+		$arr = $mysql->DBGetAsMap(" select * from `budget_item` where `budgetId` = '?' and `isDeleted` = 'false' ORDER BY LEFT( itemCode, 2 ) ASC , ( SUBSTRING( itemCode, 2 ) ) *1 DESC ",$budgetId);
 		$count = 0;
 		$smallCount = array(0,0,0,0);
 		$directFee = 0;
@@ -380,47 +373,5 @@
 			editBudgetItem($item);
 		}
 		return $res;
-	}
-	function compareBudgetItem($arg1,$arg2){
-		return strcasecmp($arg1["itemCode"],$arg2["itemCode"]);
-	}
-	function getBudgetsByProjectName ($projectName){
-		global $mysql;
-		$res= array();
-		$arr = $mysql->DBGetSomeRows("`budget`", "*", "where `projectName` = '$projectName' and `isDeleted` = 'false' ");
-		foreach($arr as $key => $val) {
-			$res[$key]['projectName'] = urlencode($val['projectName']);
-			$res[$key]['budgetId'] = urlencode($val['budgetId']);
-			$res[$key]['custName'] = urlencode($val['custName']);
-			$res[$key]['areaSize'] = urlencode($val['areaSize']);
-			$res[$key]['totalFee'] = urlencode($val['totalFee']);
-			$res[$key]['comments'] = urlencode(addslashes($val['comments']));
-		}
-		return $res;
-	}
-
-	function editBudget (array $pro){
-		global $mysql;
-		$obj = array();
-		foreach ($pro as $key => $val) {
-			if ($key == "budgetId" || is_numeric ($key))
-				continue;
-			$obj[$key] = $val;
-		}
-		$mysql->DBUpdate('Budget',$obj,"`budgetId` = '?'",array($pro['budgetId']));
-		return array('status'=>'successful', 'errMsg' => '');
-	}
-	
-	function editBudgetItem($pro){
-		global $mysql;
-		$obj = array();
-		if(isset($pro['itemAmount']))
-			$obj['itemAmount'] = $pro['itemAmount'];
-		if(isset($pro['remark']))
-			$obj['remark'] = $pro['remark'];
-		if(isset($pro['mainMaterialPrice']))
-			$obj['mainMaterialPrice'] = $pro['mainMaterialPrice'];
-		$mysql->DBUpdate('budget_item',$obj,"`budgetItemId` = '?'",array($pro['budgetItemId']));
-		return array('status'=>'successful', 'errMsg' => '');
 	}
 ?>

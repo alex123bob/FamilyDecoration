@@ -171,6 +171,81 @@
 			}
 			return array();
 		}
+		
+		public function DBGetAsMap($sql){
+			$count = substr_count($sql,"?");
+			$count2 = func_num_args() - 1;
+			if($count != $count2)
+				throw new Exception("sql:$sql need $count values but get $count2 !");
+			$i = 0;
+			$index = 0;
+			for(;$i<$count;$i++){
+				$value = func_get_arg($i+1);
+				$type = gettype($value);
+				switch($type){
+					case "boolean":
+						$value = ($value ? "true" : "false");
+						break;
+					case "integer":
+					case "NULL":
+					case "double":
+						break;
+					case "string":
+						$value = myStrEscape($value);
+						break;
+					default:
+						throw new Exception("unknown type:".$type." of value:".$value);
+						break;
+				}
+				$sql = str_replace_once($sql,"?",$value);
+			}
+			$this->dbSQL = $sql;
+			$this->DBExecute($this->dbSQL);
+			if (mysql_num_rows($this->dbResult) > 0){
+				while($partRows = mysql_fetch_array($this->dbResult,MYSQL_ASSOC))
+					$partSomeRows[] = $partRows;
+				return $partSomeRows;
+			}
+			return array();
+		}
+		
+		public function DBGetAsOneArray($sql){
+			$count = substr_count($sql,"?");
+			$count2 = func_num_args() - 1;
+			if($count != $count2)
+				throw new Exception("sql:$sql need $count values but get $count2 !");
+			$i = 0;
+			$index = 0;
+			for(;$i<$count;$i++){
+				$value = func_get_arg($i+1);
+				$type = gettype($value);
+				switch($type){
+					case "boolean":
+						$value = ($value ? "true" : "false");
+						break;
+					case "integer":
+					case "NULL":
+					case "double":
+						break;
+					case "string":
+						$value = myStrEscape($value);
+						break;
+					default:
+						throw new Exception("unknown type:".$type." of value:".$value);
+						break;
+				}
+				$sql = str_replace_once($sql,"?",$value);
+			}
+			$this->dbSQL = $sql;
+			$this->DBExecute($this->dbSQL);
+			$partSomeRows = array();
+			if (mysql_num_rows($this->dbResult) > 0){
+				while($partRows = mysql_fetch_array($this->dbResult,MYSQL_NUM))
+					$partSomeRows = array_merge($partSomeRows,$partRows);
+				return $partSomeRows;
+			}
+			return array();
+		}
 
 		public function DBInsertAsArray($tableValue, $obj){		//表名，字段数组，内容数组
 			//foreach 实际上是HashTable实现的，按照添加顺序遍历，for才按索引

@@ -4,6 +4,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetHeader', {
 	requires: ['FamilyDecoration.view.progress.ProjectList'],
 
 	title: '预算头信息',
+	budget: null,
 
 	getValue: function (){
 		var grid = this,
@@ -74,17 +75,17 @@ Ext.define('FamilyDecoration.view.budget.BudgetHeader', {
 					{
 						name: 'custName',
 						dispValue: '客户名称：',
-						content: ''
+						content: me.budget ? me.budget['custName'] : ''
 					}, 
 					{
 						name: 'projectName',
 						dispValue: '工程地址：',
-						content: ''
+						content: me.budget ? me.budget['projectName'] : ''
 					}, 
 					{
 						name: 'areaSize',
 						dispValue: '户型大小：',
-						content: ''
+						content: me.budget ? me.budget['areaSize'] : ''
 					}, 
 					// {
 					// 	name: 'totalFee',
@@ -94,7 +95,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetHeader', {
 					{
 						name: 'comments',
 						dispValue: '预算说明：',
-						content: ''
+						content: me.budget ? me.budget['comments'] : ''
 					}
 				],
 				proxy: {
@@ -180,7 +181,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetHeader', {
 						});
 						win.show();
 					}
-					else if (rec.get('name') == 'projectName') {
+					else if (rec.get('name') == 'projectName' && !me.budget) {
 						var win = Ext.create('Ext.window.Window', {
 							width: 500,
 							height: 400,

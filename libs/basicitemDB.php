@@ -59,7 +59,7 @@
 				continue;
 			$obj[$key]=$val;
 		}
-		$mysql->DBUpdate("basic_item",$obj,"`itemId` = ? ",array($item['itemId']));
+		$mysql->DBUpdate("basic_item",$obj,"`itemId` = '?' ",array($item['itemId']));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 ?>
