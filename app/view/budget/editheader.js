@@ -42,7 +42,8 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 			custName: custName.getValue(),
 			areaSize: areaSize.getValue(),
 			totalFee: "0",
-			comments: desciption.getValue()
+			comments: desciption.getValue(),
+			projectName: projectName.getValue()
 		});
 		return obj;
 	},
@@ -129,7 +130,8 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 					},
 					{
 						xtype: 'hidden',
-						itemId: 'hidden-projectId'
+						itemId: 'hidden-projectId',
+						value: me.budget ? me.budget['projectId'] : ''
 					}
 				]
 			},
@@ -153,7 +155,7 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 				if (me.isValid()) {
 					var p = me.getValue();
 					me.budget && Ext.apply(p, {
-						budgetId: me.budget['id']
+						budgetId: me.budget['budgetId']
 					});
 					Ext.Ajax.request({
 						url: me.budget ? './libs/budget.php?action=edit' : './libs/budget.php?action=add',
@@ -168,7 +170,9 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 								else {
 									me.budgetPanel.budgetId = obj['budgetId'];
 									showMsg('新建预算头信息成功！');
+									me.budgetPanel.initBtn();
 								}
+								me.budgetPanel.initBudgetHeader(p['custName'], p['projectName']);
 								me.close();
 							}
 						}

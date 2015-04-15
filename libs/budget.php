@@ -15,7 +15,7 @@
 		//添加大项
 		case "addBigItem":	$res = addBigItem($_REQUEST);  break;
 		//删除项，不区分大项，小项
-		case "delItem":$res = delItem($_REQUEST['ItemId'],$_REQUEST['BudgetItemId'],$_REQUEST['ItemCode']);break;
+		case "delItem":$res = delItem($_REQUEST['budgetItemId']);break;
 		//修改项，不区分大项，小项
 		case "editItem":$res = editBudgetItem($_REQUEST);  break;
 		//修改预算

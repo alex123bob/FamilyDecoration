@@ -3,13 +3,30 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 	alias: 'widget.budget-budgetpanel',
 	width: '100%',
 	height: '100%',
-	requires: ['Ext.form.FieldContainer', 'FamilyDecoration.store.BudgetItem', 'FamilyDecoration.view.budget.EditHeader'],
+	requires: ['Ext.form.FieldContainer', 'FamilyDecoration.store.BudgetItem', 'FamilyDecoration.view.budget.EditHeader',
+			   'FamilyDecoration.view.budget.AddBasicItem'],
 
 	title: '预算面板',
 	header: false,
 
 	// indicator: tells us if there is an budget existed in current panel
 	budgetId: null,
+
+	initBtn: function (){
+		var panel = this,
+			addNewBtn = panel.down('[name="button-addNewItem"]'),
+			addSmallBtn = panel.down('[name="button-addSmallItemToBigItem"]');
+		addNewBtn.show();
+		addSmallBtn.show();
+	},
+
+	initBudgetHeader: function (custName, projectName){
+		var panel = this,
+			custNameField = panel.down('[name="displayfield-custName"]'),
+			projectNameField = panel.down('[name="displayfield-projectName"]');
+		custNameField.setValue(custName);
+		projectNameField.setValue(projectName);
+	},
 
 	initComponent: function (){
 		var me = this;
@@ -51,7 +68,12 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				name: 'button-addNewItem',
 				hidden: true,
 				handler: function (){
+					var win = Ext.create('FamilyDecoration.view.budget.AddBasicItem', {
+						grid: me.getComponent('gridpanel-budgetContent'),
+						budgetId: me.budgetId
+					});
 
+					win.show();
 				}
 			},
 			{
@@ -114,6 +136,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				xtype: 'gridpanel',
 				header: false,
 				autoScroll: true,
+				itemId: 'gridpanel-budgetContent',
 				width: '100%',
 				plugins: [
 					Ext.create('Ext.grid.plugin.CellEditing', {

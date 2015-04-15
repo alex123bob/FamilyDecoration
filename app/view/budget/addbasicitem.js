@@ -13,7 +13,7 @@ Ext.define('FamilyDecoration.view.budget.AddBasicItem', {
 	autoScroll: true,
 
 	grid: null, // 预算表格
-	budgetPanel: null, // 预算最外层panel
+	budgetId: undefined, // 预算id
 
 	initComponent: function () {
 		var me = this;
@@ -35,12 +35,59 @@ Ext.define('FamilyDecoration.view.budget.AddBasicItem', {
 						if (btnId == 'ok') {
 							data.push({
 								itemName: txt == '' ? mainRec.get('itemName') : txt,
-								budgetId: budgetPanel.budgetId
+								budgetId: me.budgetId,
+								basicItemId: mainRec.getId()
 							});
 						}
 						for (var i = 0; i < subRecs.length; i++) {
-							
+							data.push({
+								itenName: subRecs[i].get('subItemName'),
+								budgetId: me.budgetId,
+								basicSubItemId: subRecs[i].getId(),
+								itemUnit: subRecs[i].get('subItemUnit'),
+								mainMaterialPrice: subRecs[i].get('mainMaterialPrice'),
+								auxiliaryMaterialPrice: subRecs[i].get('auxiliaryMaterialPrice'),
+								manpowerPrice: subRecs[i].get('manpowerPrice'),
+								machineryPrice: subRecs[i].get('machineryPrice'),
+								lossPercent: subRecs[i].get('lossPercent'),
+								remark: subRecs[i].get('remark')
+							});
 						}
+						var index = 0;
+						function add (url, index, code){
+							var p = data[index];
+							code && Ext.apply(p, {
+								itemCode: code
+							});
+							Ext.Ajax.request({
+								url: url,
+								method: 'POST',
+								params: data[index],
+								callback: function (opts, success, res){
+									if (success) {
+										var obj = Ext.decode(res.responseText);
+										if (obj.status == 'successful') {
+											var itemCode = obj['itemCode'];
+										}
+										else {
+											showMsg(obj.errMsg);
+										}
+										if (index <= data.length) {
+											if (code) {
+												add('./libs/budget.php?action=addItem', ++index, code);
+											}
+											else {
+												add('./libs/budget.php?action=addItem', ++index, itemCode);
+											}
+										}
+										else {
+											showMsg('添加新项完毕！');
+										}
+									}
+								}
+							})
+						}
+						add('./libs/budget.php?action=addBigItem', 0);
 					});
 				}
 				else {

@@ -5,7 +5,7 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 	layout: 'border',
 
 	requires: ['FamilyDecoration.store.BasicItem', 'FamilyDecoration.view.basicitem.AddBasicItem', 'FamilyDecoration.store.BasicSubItem',
-			   'FamilyDecoration.view.basicitem.SubItemTable', 'FamilyDecoration.view.basicitem.AddBasicSubItem'],
+			   'FamilyDecoration.view.basicitem.SubItemTable', 'FamilyDecoration.view.basicitem.AddBasicSubItem', 'Ext.ux.form.SearchField'],
 
 	initComponent: function () {
 		var me = this;
