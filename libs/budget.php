@@ -11,7 +11,7 @@
 		//添加预算
 		case "add":  	$res = addBudget($_REQUEST);  break;
 		//添加小项
-		case "addItem":	$res = addBugetItem($_REQUEST);  break;
+		case "addItem":	$res = addItem($_REQUEST);  break;
 		//添加大项
 		case "addBigItem":	$res = addBigItem($_REQUEST);  break;
 		//删除项，不区分大项，小项

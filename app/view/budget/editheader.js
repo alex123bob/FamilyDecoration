@@ -164,16 +164,26 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 						callback: function (opts, success, res){
 							if (success) {
 								var obj = Ext.decode(res.responseText);
-								if (me.budget) {
-									showMsg('编辑头信息成功！');
+								if (obj.status == 'successful') {
+									var o = {
+										custName: p['custName'],
+										projectName: p['projectName']
+									};
+									if (me.budget) {
+										showMsg('编辑头信息成功！');
+									}
+									else {
+										Ext.apply(o, {
+											budgetId: obj['budgetId']
+										});
+										showMsg('新建预算头信息成功！');
+									}
+									me.budgetPanel.loadBudget(o);
+									me.close();
 								}
 								else {
-									me.budgetPanel.budgetId = obj['budgetId'];
-									showMsg('新建预算头信息成功！');
-									me.budgetPanel.initBtn();
+									showMsg(obj.errMsg);
 								}
-								me.budgetPanel.initBudgetHeader(p['custName'], p['projectName']);
-								me.close();
 							}
 						}
 					})
@@ -188,4 +198,4 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 
 		me.callParent();
 	}
-})
+});

@@ -3,29 +3,81 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 	alias: 'widget.budget-budgetpanel',
 	width: '100%',
 	height: '100%',
+	layout: 'vbox',
 	requires: ['Ext.form.FieldContainer', 'FamilyDecoration.store.BudgetItem', 'FamilyDecoration.view.budget.EditHeader',
-			   'FamilyDecoration.view.budget.AddBasicItem'],
+			   'FamilyDecoration.view.budget.AddBasicItem', 'FamilyDecoration.view.budget.AddExistedItem',
+			   'FamilyDecoration.view.budget.HistoryBudget'],
 
 	title: '预算面板',
 	header: false,
 
 	// indicator: tells us if there is an budget existed in current panel
-	budgetId: null,
+	budgetId: undefined,
 
-	initBtn: function (){
-		var panel = this,
-			addNewBtn = panel.down('[name="button-addNewItem"]'),
-			addSmallBtn = panel.down('[name="button-addSmallItemToBigItem"]');
-		addNewBtn.show();
-		addSmallBtn.show();
+	// obj: budgetId, custName, projectName
+	loadBudget: function (obj){
+		var cmp = this,
+			custNameField = cmp.down('[name="displayfield-custName"]'),
+			projectNameField = cmp.down('[name="displayfield-projectName"]');
+		obj.custName && custNameField.setValue(obj.custName);
+		obj.projectName && projectNameField.setValue(obj.projectName);
+		cmp.initBtn();
+		if (obj.budgetId) {
+			cmp.budgetId = obj.budgetId;
+			cmp.refresh();
+		}
 	},
 
-	initBudgetHeader: function (custName, projectName){
+	initBtn: function (rec){
 		var panel = this,
-			custNameField = panel.down('[name="displayfield-custName"]'),
-			projectNameField = panel.down('[name="displayfield-projectName"]');
-		custNameField.setValue(custName);
-		projectNameField.setValue(projectName);
+			addNewBtn = panel.down('[name="button-addNewItem"]'),
+			addSmallBtn = panel.down('[name="button-addSmallItemToBigItem"]'),
+			delItemBtn = panel.down('[name="button-deleteItem"]');
+		addNewBtn.isHidden() && addNewBtn.show();
+		addSmallBtn.isHidden() && addSmallBtn.show();
+		delItemBtn.isHidden() && delItemBtn.show();
+		if (rec) {
+			if (rec.get('basicItemId') && !rec.get('basicSubItemId')) {
+    			addSmallBtn.enable();
+    		}
+    		else {
+    			addSmallBtn.disable();
+    		}
+    		delItemBtn.enable();
+		}
+		else {
+			addSmallBtn.disable();
+			delItemBtn.disable();
+		}
+	},
+
+	initialize: function (){
+		var cmp = this,
+			grid = cmp.getComponent('gridpanel-budgetContent'),
+			st = grid.getStore(),
+			custNameField = cmp.down('[name="displayfield-custName"]'),
+			projectNameField = cmp.down('[name="displayfield-projectName"]'),
+			addNewBtn = cmp.down('[name="button-addNewItem"]'),
+			addSmallBtn = cmp.down('[name="button-addSmallItemToBigItem"]'),
+			delItemBtn = cmp.down('[name="button-deleteItem"]');
+		st.removeAll();
+		cmp.budgetId = undefined;
+		custNameField.setValue('');
+		projectNameField.setValue('');
+		addNewBtn.hide();
+		addSmallBtn.hide();
+		delItemBtn.hide();
+	},
+
+	refresh: function (){
+		var panel = this,
+			grid = panel.getComponent('gridpanel-budgetContent'),
+			st = grid.getStore();
+		st.load({
+			params: {
+				budgetId: panel.budgetId
+			}
+		});
 	},
 
 	initComponent: function (){
@@ -33,7 +85,8 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 
 		me.tbar = [
 			{
-				text: '编辑预算头信息',
+				text: '预算头',
+				tooltip: '新建或编辑预算头部信息',
 				name: 'button-addBudget',
 				handler: function (){
 					if (me.budgetId) {
@@ -64,7 +117,8 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				}
 			},
 			{
-				text: '添加新项',
+				text: '新项',
+				tooltip: '添加新的基础大项',
 				name: 'button-addNewItem',
 				hidden: true,
 				handler: function (){
@@ -77,11 +131,92 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				}
 			},
 			{
-				text: '添加小项到已有大项',
+				text: '补充',
+				tooltip: '为已有大项添加小项',
 				name: 'button-addSmallItemToBigItem',
+				disabled: true,
 				hidden: true,
 				handler: function (){
+					var grid = me.getComponent('gridpanel-budgetContent'),
+						rec = grid.getSelectionModel().getSelection()[0];
+					if (rec) {
+						if (rec.get('basicItemId') && !rec.get('basicSubItemId')) {
+							var win = Ext.create('FamilyDecoration.view.budget.AddExistedItem', {
+								grid: me.getComponent('gridpanel-budgetContent'),
+								budgetId: me.budgetId,
+								bigItem: rec
+							});
 
+							win.show();
+						}
+						else {
+							showMsg('选择项不是大项！');
+						}
+					}
+					else {
+						showMsg('请选择大项！');
+					}
+				}
+			},
+			{
+				text: '删除',
+				tooltip: '删除预算项目',
+				name: 'button-deleteItem',
+				disabled: true,
+				hidden: true,
+				handler: function (){
+					var grid = me.getComponent('gridpanel-budgetContent'),
+						rec = grid.getSelectionModel().getSelection()[0];
+					if (rec) {
+						Ext.Msg.warning('确定要删除选中项目吗？', function (btnId){
+							if (btnId == 'yes') {
+								Ext.Ajax.request({
+									url: 'libs/budget.php?action=delItem',
+									method: 'POST',
+									params: {
+										budgetItemId: rec.getId()
+									},
+									callback: function (opts, success, res){
+										if (success) {
+											var obj = Ext.decode(res.responseText);
+											if (obj.status == 'successful') {
+												showMsg('删除成功！');
+												me.refresh();
+											}
+											else {
+												showMsg(obj.errMsg);
+											}
+										}
+									}
+								})
+							}
+						})
+					}
+					else {
+						showMsg('请选择项目！');
+					}
+				}
+			},
+			{
+				text: '历史',
+				tooltip: '查看、加载历史预算',
+				name: 'button-historyBudget',
+				handler: function (){
+					var win = Ext.create('FamilyDecoration.view.budget.HistoryBudget', {
+						budgetPanel: me
+					});
+					win.show();
+				}
+			}
+		];
+
+		me.bbar = [
+			{
+				text: '初始化',
+				tooltip: '清空当前预算信息，用于已经加载了预算情况后进行新建预算',
+				name: 'button-initialize',
+				handler: function (){
+					me.initialize();
 				}
 			}
 		];
@@ -130,7 +265,8 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 					name: 'displayfield-projectName',
 					flex: 1
 				}],
-				width: '100%'
+				width: '100%',
+				flex: 1
 			},
 			{
 				xtype: 'gridpanel',
@@ -138,6 +274,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				autoScroll: true,
 				itemId: 'gridpanel-budgetContent',
 				width: '100%',
+				flex: 15,
 				plugins: [
 					Ext.create('Ext.grid.plugin.CellEditing', {
 			            clicksToEdit: 1,
@@ -390,7 +527,13 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			        		}
 			        	]
 			        }
-			    ]
+			    ],
+			    listeners: {
+			    	selectionchange: function (cmp, sels, opts){
+			    		var rec = sels[0];
+			    		me.initBtn(rec);
+			    	}
+			    }
 			}
 		];
 

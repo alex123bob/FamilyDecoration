@@ -80,6 +80,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.basicitem.Index": "../../app/view/basicitem/index.js",
   "FamilyDecoration.view.basicitem.SubItemTable": "../../app/view/basicitem/subitemtable.js",
   "FamilyDecoration.view.budget.AddBasicItem": "../../app/view/budget/addbasicitem.js",
+  "FamilyDecoration.view.budget.AddExistedItem": "../../app/view/budget/addexisteditem.js",
   "FamilyDecoration.view.budget.BudgetContent": "../../app/view/budget/budgetcontent.js",
   "FamilyDecoration.view.budget.BudgetHeader": "../../app/view/budget/budgetheader.js",
   "FamilyDecoration.view.budget.BudgetPanel": "../../app/view/budget/budgetpanel.js",
@@ -88,6 +89,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.budget.EditBudgetHeader": "../../app/view/budget/editbudgetheader.js",
   "FamilyDecoration.view.budget.EditHeader": "../../app/view/budget/editheader.js",
   "FamilyDecoration.view.budget.History": "../../app/view/budget/history.js",
+  "FamilyDecoration.view.budget.HistoryBudget": "../../app/view/budget/historybudget.js",
   "FamilyDecoration.view.budget.Index": "../../app/view/budget/index.js",
   "FamilyDecoration.view.budget.Preview": "../../app/view/budget/preview.js",
   "FamilyDecoration.view.bulletin.EditBulletin": "../../app/view/bulletin/editbulletin.js",
@@ -1048,6 +1050,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.basicitem.Index": [],
   "FamilyDecoration.view.basicitem.SubItemTable": [],
   "FamilyDecoration.view.budget.AddBasicItem": [],
+  "FamilyDecoration.view.budget.AddExistedItem": [],
   "FamilyDecoration.view.budget.BudgetContent": [],
   "FamilyDecoration.view.budget.BudgetHeader": [],
   "FamilyDecoration.view.budget.BudgetPanel": [],
@@ -1056,6 +1059,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.budget.EditBudgetHeader": [],
   "FamilyDecoration.view.budget.EditHeader": [],
   "FamilyDecoration.view.budget.History": [],
+  "FamilyDecoration.view.budget.HistoryBudget": [],
   "FamilyDecoration.view.budget.Index": [],
   "FamilyDecoration.view.budget.Preview": [],
   "FamilyDecoration.view.bulletin.EditBulletin": [],
@@ -2193,6 +2197,9 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.budget.AddBasicItem": [
     "widget.budget-addbasicitem"
   ],
+  "FamilyDecoration.view.budget.AddExistedItem": [
+    "widget.budget-addexisteditem"
+  ],
   "FamilyDecoration.view.budget.BudgetContent": [
     "widget.budget-budgetcontent"
   ],
@@ -2212,6 +2219,9 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.budget.EditHeader": [],
   "FamilyDecoration.view.budget.History": [
     "widget.budget-history"
+  ],
+  "FamilyDecoration.view.budget.HistoryBudget": [
+    "widget.budget-historybudget"
   ],
   "FamilyDecoration.view.budget.Index": [
     "widget.budget-index"
