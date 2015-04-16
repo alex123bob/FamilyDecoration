@@ -43,7 +43,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
     		else {
     			addSmallBtn.disable();
     		}
-    		delItemBtn.enable();
+    		delItemBtn.setDisabled(!rec.get('isEditable'));
 		}
 		else {
 			addSmallBtn.disable();
@@ -167,7 +167,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				handler: function (){
 					var grid = me.getComponent('gridpanel-budgetContent'),
 						rec = grid.getSelectionModel().getSelection()[0];
-					if (rec) {
+					if (rec && rec.get('isEditable')) {
 						Ext.Msg.warning('确定要删除选中项目吗？', function (btnId){
 							if (btnId == 'yes') {
 								Ext.Ajax.request({
@@ -193,7 +193,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 						})
 					}
 					else {
-						showMsg('请选择项目！');
+						showMsg('未选择项目或者项目不可编辑！');
 					}
 				}
 			},
@@ -220,6 +220,74 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				}
 			}
 		];
+
+		me.columnRenderer = function (val, meta, rec, rowIndex, colIndex, st, view){
+			// 小项
+			if (rec.get('basicSubItemId') && !rec.get('basicItemId')) {
+				return val;
+			}
+			// 大项
+			else if (!rec.get('basicSubItemId') && rec.get('basicItemId')) {
+				return '';
+			}
+			// 空项
+			else if (rec.get('itemName') == '') {
+				return '';
+			}
+			// 特殊项
+			else if ('NOPQRS'.indexOf(rec.get('itemCode')) != -1 && rec.get('itemCode') != '') {
+				switch (colIndex) {
+					// 主单
+					case 4:
+					// 辅单
+					case 6:
+					// 辅总
+					case 7:
+					// 人单
+					case 8:
+					// 人总
+					case 9:
+					// 机单
+					case 10:
+					// 机总
+					case 11:
+					// 损耗
+					case 12:
+					// 人成本
+					case 14:
+					// 主成本
+					case 15:
+					val = '';
+				}
+				return val;
+			}
+			// 小计
+			else if (!rec.get('basicItemId') && !rec.get('basicSubItemId') && rec.get('itemCode') == '') {
+				switch (colIndex) {
+					// 数量
+					case 3:
+					// 主单
+					case 4:
+					// 辅单
+					case 6:
+					// 人单
+					case 8:
+					// 机单
+					case 10:
+					// 损耗
+					case 12:
+					// 人成本
+					case 14:
+					// 主成本
+					case 15:
+					val = '';
+				}
+				return val;
+			}
+			else {
+				return '';
+			}
+		}
 
 		me.items = [
 			{
@@ -282,7 +350,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			            	beforeedit: function (editor, e) {
 			            		var rec = e.record;
 			            		if (e.field == 'itemAmount') {
-									if (rec.get('parentId') && rec.get('itemUnit')) {
+									if (rec.get('basicSubItemId')) {
 										return true;
 									}
 									// 效果图编辑数量
@@ -296,22 +364,48 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 									// 税金百分比
 									else if (rec.get('itemCode') == 'R') {
 										return true;
-									} else {
+									} 
+									else {
 										return false;
 									}
 			            		}
 			            		else if (e.field == 'remark') {
-			            			if (rec.get('parentId') && rec.get('itemUnit')) {
-			            				return true;
-			            			}
-			            			else {
-			            				return false;
-			            			}
+			            			return false;
 			            		}
 			            	},
 			            	edit: function (editor, e){
 			            		Ext.suspendLayouts();
+
+			            		var rec = e.record,
+			            			field = e.field;
+			            		if (field == 'itemAmount') {
+			            			Ext.Ajax.request({
+				            			url: './libs/budget.php?action=editItem',
+				            			method: 'POST',
+				            			params: {
+				            				budgetItemId: rec.getId(),
+				            				itemAmount: rec.get('itemAmount')
+				            			},
+				            			callback: function (opts, success, res){
+				            				if (success) {
+				            					var obj = Ext.decode(res.responseText);
+				            					if (obj.status == 'successful') {
+				            						showMsg('编辑成功！');
+				            					}
+				            					else {
+				            						showMsg(obj.errMsg);
+				            					}
+				            				}
+				            			}
+				            		});
+			            		}
+			            		else if (field == 'remark') {
+			            			// todo
+			            		}
+			            		
 			            		Ext.resumeLayouts();
+
+			            		me.refresh();
 			            	}
 			            }
 			        })
@@ -328,7 +422,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 	                	menuDisabled: true
 			        },
 			        {
-			        	text: '项目名称',
+			        	text: '名称',
 			        	dataIndex: 'itemName',
 			        	flex: 0.8,
 	                	draggable: false,
@@ -356,7 +450,8 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 	                		allowBlank: false
 	                	},
 	                	sortable: false,
-	                	menuDisabled: true
+	                	menuDisabled: true,
+	                	renderer: me.columnRenderer
 			        },
 			        {
 			        	text: '主材',
@@ -366,21 +461,23 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			        			text: '单价',
 			        			dataIndex: 'mainMaterialPrice',
 			        			// flex: 0.5,
-			        			width: 49,
-	                			draggable: false,
-	                			align: 'center',
-	                			sortable: false,
-	                			menuDisabled: true
-			        		},
-			        		{
-			        			text: '总价',
-			        			// flex: 0.5,
-			        			width: 48,
+			        			width: 60,
 	                			draggable: false,
 	                			align: 'center',
 	                			sortable: false,
 	                			menuDisabled: true,
-	                			dataIndex: 'mainMaterialTotalPrice'
+	                			renderer: me.columnRenderer
+			        		},
+			        		{
+			        			text: '总价',
+			        			// flex: 0.5,
+			        			width: 59,
+	                			draggable: false,
+	                			align: 'center',
+	                			sortable: false,
+	                			menuDisabled: true,
+	                			dataIndex: 'mainMaterialTotalPrice',
+	                			renderer: me.columnRenderer
 			        		}
 			        	],
 	                	draggable: false,
@@ -394,21 +491,23 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			        			text: '单价',
 			        			dataIndex: 'auxiliaryMaterialPrice',
 			        			// flex: 0.5,
-			        			width: 49,
-	                			draggable: false,
-	                			align: 'center',
-	                			sortable: false,
-	                			menuDisabled: true
-			        		},
-			        		{
-			        			text: '总价',
-			        			// flex: 0.5,
-			        			width: 48,
+			        			width: 60,
 	                			draggable: false,
 	                			align: 'center',
 	                			sortable: false,
 	                			menuDisabled: true,
-	                			dataIndex: 'auxiliaryMaterialTotalPrice'
+	                			renderer: me.columnRenderer
+			        		},
+			        		{
+			        			text: '总价',
+			        			// flex: 0.5,
+			        			width: 59,
+	                			draggable: false,
+	                			align: 'center',
+	                			sortable: false,
+	                			menuDisabled: true,
+	                			dataIndex: 'auxiliaryMaterialTotalPrice',
+	                			renderer: me.columnRenderer
 			        		}
 			        	],
 	                	draggable: false,
@@ -422,21 +521,23 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			        			text: '单价',
 			        			dataIndex: 'manpowerPrice',
 			        			// flex: 0.5,
-			        			width: 49,
-	                			draggable: false,
-	                			align: 'center',
-	                			sortable: false,
-	                			menuDisabled: true
-			        		},
-			        		{
-			        			text: '总价',
-			        			// flex: 0.5,
-			        			width: 48,
+			        			width: 60,
 	                			draggable: false,
 	                			align: 'center',
 	                			sortable: false,
 	                			menuDisabled: true,
-	                			dataIndex: 'manpowerTotalPrice'
+	                			renderer: me.columnRenderer
+			        		},
+			        		{
+			        			text: '总价',
+			        			// flex: 0.5,
+			        			width: 59,
+	                			draggable: false,
+	                			align: 'center',
+	                			sortable: false,
+	                			menuDisabled: true,
+	                			dataIndex: 'manpowerTotalPrice',
+	                			renderer: me.columnRenderer
 			        		}
 			        	],
 	                	draggable: false,
@@ -450,21 +551,23 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			        			text: '单价',
 			        			dataIndex: 'machineryPrice',
 			        			// flex: 0.5,
-			        			width: 49,
-	                			draggable: false,
-	                			align: 'center',
-	                			sortable: false,
-	                			menuDisabled: true
-			        		},
-			        		{
-			        			text: '总价',
-			        			// flex: 0.5,
-			        			width: 48,
+			        			width: 60,
 	                			draggable: false,
 	                			align: 'center',
 	                			sortable: false,
 	                			menuDisabled: true,
-	                			dataIndex: 'machineryTotalPrice'
+	                			renderer: me.columnRenderer
+			        		},
+			        		{
+			        			text: '总价',
+			        			// flex: 0.5,
+			        			width: 59,
+	                			draggable: false,
+	                			align: 'center',
+	                			sortable: false,
+	                			menuDisabled: true,
+	                			dataIndex: 'machineryTotalPrice',
+	                			renderer: me.columnRenderer
 			        		}
 			        	],
 	                	draggable: false,
@@ -478,11 +581,12 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			        			text: '单价',
 			        			dataIndex: 'lossPercent',
 			        			// flex: 0.5,
-			        			width: 49,
+			        			width: 60,
 	                			draggable: false,
 	                			align: 'center',
 	                			sortable: false,
-	                			menuDisabled: true
+	                			menuDisabled: true,
+	                			renderer: me.columnRenderer
 			        		}
 			        	],
 	                	draggable: false,
@@ -510,20 +614,22 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			        		{
 			        			text: '人工',
 			        			dataIndex: 'manpowerCost',
-			        			width: 49,
+			        			width: 60,
 			        			draggable: false,
 			        			align: 'center',
 			        			sortable: false,
-			        			menuDisabled: true
+			        			menuDisabled: true,
+			        			renderer: me.columnRenderer
 			        		},
 			        		{
 			        			text: '主材',
 			        			dataIndex: 'mainMaterialCost',
-			        			width: 48,
+			        			width: 59,
 			        			draggable: false,
 			        			align: 'center',
 			        			sortable: false,
-			        			menuDisabled: true
+			        			menuDisabled: true,
+			        			renderer: me.columnRenderer
 			        		}
 			        	]
 			        }

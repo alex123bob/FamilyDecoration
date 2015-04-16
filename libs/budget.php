@@ -17,7 +17,7 @@
 		//删除项，不区分大项，小项
 		case "delItem":$res = delItem($_REQUEST['budgetItemId']);break;
 		//修改项，不区分大项，小项
-		case "editItem":$res = editBudgetItem($_REQUEST);  break;
+		case "editItem":$res = editItem($_REQUEST);  break;
 		//修改预算
 		case "edit":	$res = editBudget($_REQUEST);  break;
 		//删除预算

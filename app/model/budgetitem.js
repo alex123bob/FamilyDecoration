@@ -22,7 +22,8 @@ Ext.define('FamilyDecoration.model.BudgetItem', {
 		{name: 'manpowerCost', type: 'float'},
 		{name: 'mainMaterialCost', type: 'float'},
 		{name: 'basicItemId', type: 'string'}, // 基础项目中大项的id
-		{name: 'basicSubItemId', type: 'string'}
+		{name: 'basicSubItemId', type: 'string'},
+		{name: 'isEditable', type: 'boolean'}
 	],
 	idProperty: 'budgetItemId'
 });
