@@ -29,5 +29,5 @@
 	else if (!$res) {
 		$res = array('status'=>'successful', 'errMsg' => '');
 	}
-	echo urldecode(json_encode($res));
+	echo (json_encode($res));
 ?>

@@ -84,16 +84,16 @@
 		$arr = $mysql->DBGetSomeRows("`project`", "*", "where YEAR(`projectTime`) = $year and MONTH(`projectTime`) = $month and `isDeleted` = 'false' ");
 		$res = array();
 		foreach($arr as $key => $val) {
-			$res[$key]['projectName'] = urlencode($val['projectName']);
-			$res[$key]['projectId'] = urlencode($val['projectId']);
+			$res[$key]['projectName'] = ($val['projectName']);
+			$res[$key]['projectId'] = ($val['projectId']);
 			$res[$key]['projectYear'] = date("Y", strtotime($val["projectTime"]));
 			$res[$key]['projectMonth'] = date("m", strtotime($val["projectTime"]));
-			$res[$key]['budgetId'] = urlencode($val['budgetId']);
-			$res[$key]['period'] = urlencode($val['period']);
-			$res[$key]['captain'] = urlencode($val['captain']);
-			$res[$key]['supervisor'] = urlencode($val['supervisor']);
-			$res[$key]['salesman'] = urlencode($val['salesman']);
-			$res[$key]['designer'] = urlencode($val['designer']);
+			$res[$key]['budgetId'] = ($val['budgetId']);
+			$res[$key]['period'] = ($val['period']);
+			$res[$key]['captain'] = ($val['captain']);
+			$res[$key]['supervisor'] = ($val['supervisor']);
+			$res[$key]['salesman'] = ($val['salesman']);
+			$res[$key]['designer'] = ($val['designer']);
 			$res[$key]['projectTime'] = $val['projectTime'];
 			$res[$key]['isFrozen'] = $val['isFrozen'];
 			$res[$key]['businessId'] = $val['businessId'];
@@ -107,15 +107,15 @@
 		$arr = $mysql->DBGetSomeRows("`project`", "*", "where `projectId` = '$projectId' ");
 		if ($arr) {
 			foreach($arr as $key => $val) {
-				$res[$key]['projectName'] = urlencode($val['projectName']);
-				$res[$key]['projectId'] = urlencode($val['projectId']);
-				$res[$key]['budgetId'] = urlencode($val['budgetId']);
-				$res[$key]['period'] = urlencode($val['period']);
+				$res[$key]['projectName'] = ($val['projectName']);
+				$res[$key]['projectId'] = ($val['projectId']);
+				$res[$key]['budgetId'] = ($val['budgetId']);
+				$res[$key]['period'] = ($val['period']);
 				$res[$key]['isFrozen'] = $val['isFrozen'];
-				$res[$key]['captain'] = urlencode($val['captain']);
-				$res[$key]['supervisor'] = urlencode($val['supervisor']);
-				$res[$key]['salesman'] = urlencode($val['salesman']);
-				$res[$key]['designer'] = urlencode($val['designer']);
+				$res[$key]['captain'] = ($val['captain']);
+				$res[$key]['supervisor'] = ($val['supervisor']);
+				$res[$key]['salesman'] = ($val['salesman']);
+				$res[$key]['designer'] = ($val['designer']);
 				$res[$key]['projectTime'] = $val['projectTime'];
 				$res[$key]['businessId'] = $val['businessId'];
 				$res[$key]['hasChart'] = $val['hasChart'];

@@ -21,5 +21,5 @@
 		case "getTaskListByMonthByUser":$res = getTaskListByMonthByUser($_GET["year"],$_GET["month"],$_GET['user']);break;
 		default: throw new Exception("unknown action:".$action);
 	}
-	echo urldecode(json_encode($res));
+	echo (json_encode($res));
 ?>

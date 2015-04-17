@@ -16,7 +16,7 @@
 		$pChart = trim($item["projectChart"]);
 		$item["projectChart"] =  $pChart == "" || $pChart == "1" ? $chart["chartContent"] : $item["projectChart"]."<>".$chart["chartContent"] ;
 		$res = editProject(array("projectId"=>$item['projectId'], "projectChart"=>$item["projectChart"])); // 这里只需要两个字段即可
-       	echo urldecode(json_encode($res));
+       	echo (json_encode($res));
 	}else if($chartType == "customized"){
 		$arr = getChart($chart);
 		$arr = json_decode($arr, true);

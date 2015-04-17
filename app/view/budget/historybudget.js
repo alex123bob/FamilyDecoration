@@ -22,8 +22,13 @@ Ext.define('FamilyDecoration.view.budget.HistoryBudget', {
 				var grid = me.down('gridpanel'),
 					rec = grid.getSelectionModel().getSelection()[0];
 				if (rec) {
-					me.budgetPanel.loadBudget(rec.data);
-					me.close();
+					if (rec.getId() == me.budgetPanel.budgetId) {
+						showMsg('该预算已经被加载！');
+					}
+					else {
+						me.budgetPanel.loadBudget(rec.data);
+						me.close();
+					}
 				}
 				else {
 					showMsg('请选择预算！');

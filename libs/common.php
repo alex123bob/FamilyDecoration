@@ -69,14 +69,14 @@
 	function myStrEscape($arg){
 		if(is_array($arg)){
 			foreach($arg as $key => $val){
-				$val = str_replace("%","%25",$val);
-				$val = str_replace("+","%2B",$val);
+				//$val = str_replace("%","%25",$val);
+				//$val = str_replace("+","%2B",$val);
 				$val = mysql_real_escape_string($val);
 				$arg[$key] = $val;
 			}
 		}else{
-			$arg = str_replace("%","%25",$arg);
-			$arg = str_replace("+","%2B",$arg);
+			//$arg = str_replace("%","%25",$arg);
+			//$arg = str_replace("+","%2B",$arg);
 			$arg = mysql_real_escape_string($arg);
 		}
 		return $arg;

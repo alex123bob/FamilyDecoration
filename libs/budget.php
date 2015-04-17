@@ -29,6 +29,6 @@
 		default: 		throw new Exception("unknown action:".$action);
 	}
 	if($isParseResut){
-		echo urldecode(json_encode($res));
+		echo (json_encode($res));
 	}	
 ?>

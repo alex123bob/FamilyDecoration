@@ -4,14 +4,14 @@
 		$res= array();
 		$arr = $mysql->DBGetSomeRows("`chart_detail`", "*", "where `projectId` = '$projectId' and `isDeleted` = 'false' ");
 		foreach($arr as $key => $val) {
-			$res[$key]['id'] = urlencode($val['id']);
-			$res[$key]['projectId'] = urlencode($val['projectId']);
-			$res[$key]['chartId'] = urlencode($val['chartId']);
-			$res[$key]['content'] = urlencode($val['content']);
-			$res[$key]['originalName'] = urlencode($val['originalName']);
-			$res[$key]['createTime'] = urlencode($val['createTime']);
-			$res[$key]['updateTime'] = urlencode($val['updateTime']);
-			$res[$key]['isDeleted'] = urlencode($val['isDeleted']);
+			$res[$key]['id'] = ($val['id']);
+			$res[$key]['projectId'] = ($val['projectId']);
+			$res[$key]['chartId'] = ($val['chartId']);
+			$res[$key]['content'] = ($val['content']);
+			$res[$key]['originalName'] = ($val['originalName']);
+			$res[$key]['createTime'] = ($val['createTime']);
+			$res[$key]['updateTime'] = ($val['updateTime']);
+			$res[$key]['isDeleted'] = ($val['isDeleted']);
 		}
 		return $res;
 	}
@@ -21,14 +21,14 @@
 		$res= array();
 		$arr = $mysql->DBGetSomeRows("`chart_detail`", "*", "where `chartId` = '$chartId' and `isDeleted` = 'false' ");
 		foreach($arr as $key => $val) {
-			$res[$key]['id'] = urlencode($val['id']);
-			$res[$key]['projectId'] = urlencode($val['projectId']);
-			$res[$key]['chartId'] = urlencode($val['chartId']);
-			$res[$key]['content'] = urlencode($val['content']);
-			$res[$key]['originalName'] = urlencode($val['originalName']);
-			$res[$key]['createTime'] = urlencode($val['createTime']);
-			$res[$key]['updateTime'] = urlencode($val['updateTime']);
-			$res[$key]['isDeleted'] = urlencode($val['isDeleted']);
+			$res[$key]['id'] = ($val['id']);
+			$res[$key]['projectId'] = ($val['projectId']);
+			$res[$key]['chartId'] = ($val['chartId']);
+			$res[$key]['content'] = ($val['content']);
+			$res[$key]['originalName'] = ($val['originalName']);
+			$res[$key]['createTime'] = ($val['createTime']);
+			$res[$key]['updateTime'] = ($val['updateTime']);
+			$res[$key]['isDeleted'] = ($val['isDeleted']);
 		}
 		return $res;
 	}
