@@ -39,13 +39,21 @@
 	//添加小项
 	function addItem($post){
 		$itemCode = _getNextBasicCode($post["budgetId"],$post["itemCode"]);
+		$discount = isset($post['discount'])? $post['discount'] : 1;
 		global $mysql;
-		$fields = array('itemName','budgetId','itemUnit','itemAmount','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','lossPercent','remark', 'manpowerCost', 'mainMaterialCost', 'basicItemId','basicSubItemId');
+		$fields = array('itemName','budgetId','itemUnit','itemAmount','remark', 'manpowerCost', 'mainMaterialCost', 'basicItemId','basicSubItemId');
 		$obj = array('itemCode'=>$itemCode,'budgetItemId' => "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT));
 		foreach($fields as $field){
 			if(isset($post[$field]))
 				$obj[$field] = $post[$field];
 		}
+		//主材，辅材，人工，机械需要算折扣
+		foreach(array('mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice') as $field){
+			if(isset($post[$field]))
+				$obj[$field] = $post[$field] * $discount;
+		}
+		//损耗=（主材单价+辅料单价）*0.05
+		$obj['lossPercent'] = ($obj['mainMaterialPrice']+$obj['auxiliaryMaterialPrice']) * 0.05;
 		$mysql->DBInsertAsArray("`budget_item`",$obj);
 		return array('status'=>'successful', 'errMsg' => '','itemCode'=>$itemCode);
 	}
@@ -78,7 +86,7 @@
 			//删除大项		
 			$mysql->DBUpdate("budget_item",array('isDeleted'=>true,'itemCode'=>'XXX'),"`budgetId` = '?' and `itemCode` like '%?%' ",array($budgetId,$itemCode));
 			//重排序大项
-			$list = $mysql->DBGetAsOneArray("SELECT  distinct LEFT( itemCode, 1 ) as code FROM `budget_item` where `isDeleted` = 'false' and `budgetId` = '?' and LEFT( itemCode, 1 ) > '?'",$budgetId,$itemCode);
+			$list = $mysql->DBGetAsOneArray("SELECT  distinct LEFT( itemCode, 1 ) as code FROM `budget_item` where `isDeleted` = 'false' and `budgetId` = '?'  and `itemCode` not in ('N','O','P','Q','R','S') and LEFT( itemCode, 1 ) > '?'",$budgetId,$itemCode);
 			foreach($list as $itemCode){
 				$newItemCode = chr(ord($itemCode)-1);
 				$res = $sql = "update  `budget_item` set `itemCode` = REPLACE(`itemCode`,'".$itemCode."','".$newItemCode."') where `isDeleted` = 'false' and `budgetId` = '".$budgetId."' and `itemCode` like '%".$itemCode."%' ";
@@ -210,7 +218,7 @@
 		$res= array();
 		$arr = $mysql->DBGetAsMap(" select * from `budget_item` where `budgetId` = '?' and `isDeleted` = 'false' ORDER BY LEFT( itemCode, 2 ) ASC , ( SUBSTRING( itemCode, 2 ) ) *1 DESC ",$budgetId);
 		$count = 0;
-		$smallCount = array(0,0,0,0,0,0);
+		$smallCount = array(0,0,0,0);
 		$directFee = 0;
 		$isFirstSmallCount = true;
 		$otherItems = array();
@@ -264,7 +272,7 @@
 				$directFee+=$smallCount[1];
 				$directFee+=$smallCount[2];
 				$directFee+=$smallCount[3];
-				$smallCount = array(0,0,0,0,0,0);
+				$smallCount = array(0,0,0,0);
 				}
 			}
 			//正常输出项
@@ -278,8 +286,16 @@
 			$res[$count]['auxiliaryMaterialPrice'] = $val['auxiliaryMaterialPrice'];
 			$res[$count]['manpowerPrice'] = $val['manpowerPrice'];
 			$res[$count]['machineryPrice'] = $val['machineryPrice'];
-			$res[$count]['lossPercent'] = $val['lossPercent'];
-			$res[$count]['mainMaterialTotalPrice'] = $itemAmount * ($val['mainMaterialPrice'] + $val['lossPercent']);
+			//损耗=（主材单价+辅料单价）*0.05
+			$loss = ($val['mainMaterialPrice']+$val['auxiliaryMaterialPrice']) * 0.05;
+			if($val['lossPercent'] != $loss){
+				$val['lossPercent'] = $loss;
+				editItem($val);
+			}
+			$res[$count]['lossPercent'] = $loss;
+			//主材总价=（主菜单价+损耗）* 数量
+			$mainMaterialTotalPrice = $itemAmount * ($val['mainMaterialPrice'] + $loss);
+			$res[$count]['mainMaterialTotalPrice'] = $mainMaterialTotalPrice;
 			$res[$count]['auxiliaryMaterialTotalPrice'] =  $itemAmount * $val['auxiliaryMaterialPrice'];
 			$res[$count]['manpowerTotalPrice'] = $itemAmount * $val['manpowerPrice'];
 			$res[$count]['machineryTotalPrice'] = $itemAmount * $val['machineryPrice'];
@@ -291,13 +307,17 @@
 			$res[$count]['manpowerCost'] = $val['manpowerCost'];
 			$res[$count]['mainMaterialCost'] = $val['mainMaterialCost'];
 			$res[$count]['isEditable'] = true;
-
-			$smallCount[0] +=  $itemAmount * ($val['mainMaterialPrice'] + $val['lossPercent']);
+			/**
+			2.辅材总价=辅材单价*数量
+			3.人工总价=人工单价*数量
+			4.机械总价=机械单价*数量
+			6.小计=各类小项总价之和
+			7.合计=所有小巷综合			
+			**/
+			$smallCount[0] +=  $mainMaterialTotalPrice;
 			$smallCount[1] +=  $itemAmount * $val['auxiliaryMaterialPrice'];
 			$smallCount[2] +=  $itemAmount * $val['manpowerPrice'];
 			$smallCount[3] +=  $itemAmount * $val['machineryPrice'];
-			$smallCount[4] +=  $itemAmount * $val['machineryPrice'];
-			$smallCount[5] +=  $itemAmount * $val['manpowerPrice'];
 			//如果是大项的话，有些字段要清空
 			if(strlen($itemCode) == 1){
 				$res[$count]['itemUnit'] = '';

@@ -10,6 +10,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 
 	title: '预算面板',
 	header: false,
+	html: '<iframe id="exportFrame"  src="javascript:void(0);" style="display:none"></iframe>',
 
 	// indicator: tells us if this is for preview or not
 	isForPreview: false,
@@ -225,6 +226,41 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				name: 'button-initialize',
 				handler: function (){
 					me.initialize();
+				}
+			},
+			{
+				text: '打印预算',
+				handler: function (){
+					if (me.budgetId) {
+						var win = window.open('./fpdf/index2.php?action=view&budgetId=' + me.budgetId,'打印','height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+						win.print();
+					}
+					else {
+						showMsg('没有预算！');
+					}
+				}
+			},
+			{
+				text: '导出预算',
+				handler: function (){
+					if (me.budgetId) {
+						var exportFrame = document.getElementById('exportFrame');
+						exportFrame.src = './fpdf/index2.php?budgetId=' + me.budgetId;
+					}
+					else {
+						showMsg('没有预算！');
+					}
+				}
+			},
+			{
+				text: '预览预算',
+				handler: function (){
+					if (me.budgetId) {
+						var win = window.open('./fpdf/index2.php?action=view&budgetId=' + me.budgetId,'打印','height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+					}
+					else {
+						showMsg('没有预算！');
+					}
 				}
 			}
 		];

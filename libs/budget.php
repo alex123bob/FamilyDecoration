@@ -24,7 +24,8 @@
 		//修改预算
 		case "edit":	$res = editBudget($_REQUEST);  break;
 		//删除预算
-		case "delete":	$res = delBudget($_REQUEST["budgetId"]);  break;;
+		case "delete":	$res = delBudget($_REQUEST["budgetId"]);  break;
+		//根据id获取预算
 		case "view":	$res = getBudgetsByBudgetId($_REQUEST["budgetId"]);  break;
 		default: 		throw new Exception("unknown action:".$action);
 	}

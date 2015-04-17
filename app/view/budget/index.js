@@ -12,7 +12,6 @@ Ext.define('FamilyDecoration.view.budget.Index', {
 				xtype: 'budget-budgetpanel',
 				name: 'panel-budgetPanel',
 				id: 'panel-budgetPanel',
-				html: '<iframe id="exportFrame"  src="javascript:void(0);" style="display:none"></iframe>',
 				// bbar: [{
 				// 	text: '导出预算',
 				// 	handler: function (){

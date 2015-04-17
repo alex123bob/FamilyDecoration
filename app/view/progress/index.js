@@ -4,7 +4,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 	requires: [
 		'FamilyDecoration.store.Project', 'FamilyDecoration.view.progress.EditProject', 'Ext.tree.Panel',
 		'FamilyDecoration.view.progress.EditProgress', 'FamilyDecoration.view.progress.ProjectList',
-		'FamilyDecoration.view.budget.EditBudget', 'Ext.layout.container.Form', 'FamilyDecoration.model.Progress',
+		'FamilyDecoration.view.budget.BudgetPanel', 'Ext.layout.container.Form', 'FamilyDecoration.model.Progress',
 		'FamilyDecoration.store.BusinessDetail'
 	],
 	autoScroll: true,
@@ -601,13 +601,25 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 									var obj = Ext.decode(res.responseText);
 									if (obj.length > 0) {
 										var win = Ext.create('Ext.window.Window', {
+											title: '查看预算',
 											items: [{
-												budget: obj[0],
-												xtype: 'budget-editbudget'
+												xtype: 'budget-budgetpanel'
 											}],
+											width: 800,
+											height: 600,
 											maximizable: true,
 											modal: true,
-											layout: 'fit'
+											layout: 'fit',
+											listeners: {
+												beforeshow: function (win) {
+													var panel = win.items.items[0];
+													panel.loadBudget({
+														budgetId: budgetId,
+														custName: obj[0]['custName'],
+														projectName: obj[0]['projectName']
+													});
+												}
+											}
 										});
 										win.show();
 									}

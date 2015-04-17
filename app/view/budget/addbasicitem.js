@@ -15,99 +15,143 @@ Ext.define('FamilyDecoration.view.budget.AddBasicItem', {
 	grid: null, // 预算表格
 	budgetId: undefined, // 预算id
 
+	discount: 1, // 价格折扣，默认为1，不打折
+
 	initComponent: function () {
 		var me = this;
 
-		me.buttons = [{
-			text: '添加',
-			handler: function (){
-				var mainGrid = me.items.items[0],
-					mainSt = mainGrid.getStore(),
-					subGrid = me.items.items[1],
-					subSt = subGrid.getStore(),
-					mainRec = mainGrid.getSelectionModel().getSelection()[0],
-					subRecs = subGrid.getSelectionModel().getSelection(),
-					grid = me.grid,
-					data = [];
-
-				if (subRecs.length > 0) {
-					Ext.Msg.prompt('提示', '是否为本大类项目进行命名？不填写即为默认名称！', function (btnId, txt){
-						if (btnId == 'ok') {
-							data.push({
-								itemName: txt == '' ? mainRec.get('itemName') : txt,
-								budgetId: me.budgetId,
-								basicItemId: mainRec.getId()
-							});
-							for (var i = 0; i < subRecs.length; i++) {
-								data.push({
-									itemName: subRecs[i].get('subItemName'),
-									budgetId: me.budgetId,
-									basicSubItemId: subRecs[i].getId(),
-									itemUnit: subRecs[i].get('subItemUnit'),
-									mainMaterialPrice: subRecs[i].get('mainMaterialPrice'),
-									auxiliaryMaterialPrice: subRecs[i].get('auxiliaryMaterialPrice'),
-									manpowerPrice: subRecs[i].get('manpowerPrice'),
-									machineryPrice: subRecs[i].get('machineryPrice'),
-									lossPercent: subRecs[i].get('lossPercent'),
-									remark: subRecs[i].get('remark'),
-									manpowerCost: subRecs[i].get('manpowerCost'),
-									mainMaterialCost: subRecs[i].get('mainMaterialCost')
-								});
+		me.buttons = [
+			{
+				text: '折扣',
+				handler: function (){
+					var win = Ext.create('Ext.window.Window', {
+						width: 300,
+						height: 140,
+						// layout: 'fit',
+						title: '折扣价格',
+						items: [{
+							xtype: 'numberfield',
+					        anchor: '100%',
+					        name: 'numberfield-discount',
+					        itemId: 'numberfield-discount',
+					        fieldLabel: '请输入折扣',
+					        value: me.discount.mul(100),
+					        maxValue: 100,
+					        minValue: 1,
+					        afterSubTpl: '%'
+						}],
+						buttons: [{
+							text: '确定',
+							handler: function (){
+								var discount = win.getComponent('numberfield-discount'),
+									val = discount.getValue();
+								me.discount = val.div(100);
+								showMsg('折扣设置成功，当前折扣为' + val + '%');
+								win.close();
 							}
-							var index = 0;
-							function add (url, index, code){
-								var p = data[index];
-								code && Ext.apply(p, {
-									itemCode: code
+						}, {
+							text: '取消',
+							handler: function (){
+								win.close();
+							}
+						}]
+					});
+					win.show();
+				}
+			},
+			{
+				text: '添加',
+				handler: function (){
+					var mainGrid = me.items.items[0],
+						mainSt = mainGrid.getStore(),
+						subGrid = me.items.items[1],
+						subSt = subGrid.getStore(),
+						mainRec = mainGrid.getSelectionModel().getSelection()[0],
+						subRecs = subGrid.getSelectionModel().getSelection(),
+						grid = me.grid,
+						data = [];
+
+					if (subRecs.length > 0) {
+						Ext.Msg.prompt('提示', '是否为本大类项目进行命名？不填写即为默认名称！', function (btnId, txt){
+							if (btnId == 'ok') {
+								data.push({
+									itemName: txt == '' ? mainRec.get('itemName') : txt,
+									budgetId: me.budgetId,
+									basicItemId: mainRec.getId()
 								});
-								Ext.Ajax.request({
-									url: url,
-									method: 'POST',
-									params: data[index],
-									callback: function (opts, success, res){
-										if (success) {
-											var obj = Ext.decode(res.responseText);
-											if (obj.status == 'successful') {
-												var itemCode = obj['itemCode'];
-											}
-											else {
-												showMsg(obj.errMsg);
-											}
-											if (index < data.length - 1) {
-												if (code) {
-													add('./libs/budget.php?action=addItem', ++index, code);
+								for (var i = 0; i < subRecs.length; i++) {
+									data.push({
+										itemName: subRecs[i].get('subItemName'),
+										budgetId: me.budgetId,
+										basicSubItemId: subRecs[i].getId(),
+										itemUnit: subRecs[i].get('subItemUnit'),
+										mainMaterialPrice: subRecs[i].get('mainMaterialPrice'),
+										auxiliaryMaterialPrice: subRecs[i].get('auxiliaryMaterialPrice'),
+										manpowerPrice: subRecs[i].get('manpowerPrice'),
+										machineryPrice: subRecs[i].get('machineryPrice'),
+										lossPercent: subRecs[i].get('lossPercent'),
+										remark: subRecs[i].get('remark'),
+										manpowerCost: subRecs[i].get('manpowerCost'),
+										mainMaterialCost: subRecs[i].get('mainMaterialCost'),
+										discount: me.discount
+									});
+								}
+								var index = 0;
+								function add (url, index, code){
+									var p = data[index];
+									code && Ext.apply(p, {
+										itemCode: code
+									});
+									Ext.Ajax.request({
+										url: url,
+										method: 'POST',
+										params: data[index],
+										callback: function (opts, success, res){
+											if (success) {
+												var obj = Ext.decode(res.responseText);
+												if (obj.status == 'successful') {
+													var itemCode = obj['itemCode'];
 												}
 												else {
-													add('./libs/budget.php?action=addItem', ++index, itemCode);
+													showMsg(obj.errMsg);
+												}
+												if (index < data.length - 1) {
+													if (code) {
+														add('./libs/budget.php?action=addItem', ++index, code);
+													}
+													else {
+														add('./libs/budget.php?action=addItem', ++index, itemCode);
+													}
+												}
+												else {
+													showMsg('添加新项完毕！');
+													me.grid.getStore().load({
+														params: {
+															budgetId: me.budgetId
+														}
+													});
+													me.close();
 												}
 											}
-											else {
-												showMsg('添加新项完毕！');
-												me.grid.getStore().load({
-													params: {
-														budgetId: me.budgetId
-													}
-												});
-												me.close();
-											}
 										}
-									}
-								})
+									})
+								}
+								add('./libs/budget.php?action=addBigItem', 0);
 							}
-							add('./libs/budget.php?action=addBigItem', 0);
-						}
-					});
+						});
+					}
+					else {
+						showMsg('请选择小项！');
+					}
 				}
-				else {
-					showMsg('请选择小项！');
+			}, 
+			{
+				text: '取消',
+				handler: function (){
+					me.close();
 				}
 			}
-		}, {
-			text: '取消',
-			handler: function (){
-				me.close();
-			}
-		}];
+		];
 
 		var biSt = Ext.create('FamilyDecoration.store.BasicItem', {
 			autoLoad: true

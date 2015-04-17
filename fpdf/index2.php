@@ -78,7 +78,7 @@ foreach($budgetItems as $bItem){
 
 
 //输出其他
-$otherInfo = explode('>>><<<',$projectComments);
+$otherInfo = preg_split('/\n|\r\n|\r|\n\r/',$projectComments);
 $arrayCount = count($otherInfo);
 //补齐三行，防止备注不足三行，后面填表格有问题
 while($arrayCount<3){
