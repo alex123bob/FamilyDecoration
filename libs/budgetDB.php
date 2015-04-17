@@ -116,6 +116,30 @@
 		}
 		$mysql->DBUpdate("project",array('budgetId'=>$obj["budgetId"]),"`projectId` = '?' and `isDeleted`='false' ",array($projectId));
 		$mysql->DBInsertAsArray("`budget`",$obj);
+		//N
+		$item = array('itemCode'=>'N','itemName'=>'工程直接费','itemUnit'=>'元','budgetId'=>$obj["budgetId"]);
+		$item['budgetItemId'] = "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
+		$mysql->DBInsertAsArray("`budget_item`",$item);
+		//O
+		$item = array('itemCode'=>'O','itemName'=>'设计费3%','itemUnit'=>'元','itemAmount'=>0.03,'budgetId'=>$obj["budgetId"]);
+		$item['budgetItemId'] = "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
+		$mysql->DBInsertAsArray("`budget_item`",$item);
+		//P
+		$item = array('itemCode'=>'P','itemName'=>'效果图','itemUnit'=>'张','itemAmount'=>0,'budgetId'=>$obj["budgetId"]);
+		$item['budgetItemId'] = "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
+		$mysql->DBInsertAsArray("`budget_item`",$item);
+		//Q
+		$item = array('itemCode'=>'Q','itemName'=>'5%管理费','itemUnit'=>'元','itemAmount'=>0.05,'budgetId'=>$obj["budgetId"]);
+		$item['budgetItemId'] = "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
+		$mysql->DBInsertAsArray("`budget_item`",$item);
+		//R
+		$item = array('itemCode'=>'R','itemName'=>'税金','itemUnit'=>'元','itemAmount'=>0.03,'budgetId'=>$obj["budgetId"]);
+		$item['budgetItemId'] = "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
+		$mysql->DBInsertAsArray("`budget_item`",$item);
+		//S
+		$item = array('itemCode'=>'S','itemName'=>'工程总造价','itemUnit'=>'元','budgetId'=>$obj["budgetId"]);
+		$item['budgetItemId'] = "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
+		$mysql->DBInsertAsArray("`budget_item`",$item);
 		return array('status'=>'successful', 'errMsg' => '', "budgetId" => $obj["budgetId"]);
 	}
 
@@ -164,9 +188,23 @@
 			$mysql->DBUpdate('project',array('budgetId'=>$pro['budgetId']),"`projectId` = '?'",array($pro['projectId']));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
-	
-
-	
+	//获取预算结果QPRST
+	function getBudgetResult($budgetId){
+		$arr = getBudgetItemsByBudgetId($budgetId);
+		$res = array();
+		foreach($arr as $item){
+			if(in_array($item['itemCode'],array('N','O','P','Q','R','S'))){
+				$res[$item['itemCode']]['budgetItemId'] = $item['budgetItemId'];
+				$res[$item['itemCode']]['itemName'] = $item['itemName'];
+				$res[$item['itemCode']]['mainMaterialTotalPrice'] = $item['mainMaterialTotalPrice'];
+				$res[$item['itemCode']]['itemAmount'] = $item['itemAmount'];
+				$res[$item['itemCode']]['itemUnit'] = $item['itemUnit'];
+				$res[$item['itemCode']]['itemCode'] = $item['itemCode'];
+			}
+		}
+		return $res;
+	}
+	//获取预算所有条目
 	function getBudgetItemsByBudgetId ($budgetId , $isGBK = false,$isNOPQRSAmount = true) {
 		global $mysql;
 		$res= array();
@@ -205,6 +243,11 @@
 			$itemUnit = $val['itemUnit'];
 			$itemAmount = $val['itemAmount'];
 			$budgetId = $val['budgetId'];
+			//这几项需要单独计算
+			if(in_array($itemCode,array('N','O','P','Q','R','S'))){
+				$otherItems[$itemCode] = $val;
+				continue;
+			}
 			// itemCode  长度为1时认为是大项
 			if(strlen($itemCode) == 1){
 				if($isFirstSmallCount){
@@ -301,6 +344,10 @@
 		$res[$count++] = array('budgetItemId'=>$budgetItemId,'itemName'=>$isGBK ? str2GBK($itemName):urlencode($itemName),'budgetId'=>$budgetId,'itemCode'=>$itemCode,
 				'itemUnit'=>$isGBK ? str2GBK($itemUnit):urlencode($itemUnit),'itemAmount'=>'','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'','machineryPrice'=>'',
 				'mainMaterialTotalPrice'=>$fee,'auxiliaryMaterialTotalPrice'=>'','manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'','isEditable'=>false);
+		if($fee != $item['mainMaterialPrice']){
+			$item['mainMaterialPrice'] = $fee;
+			$arr = editItem($item);// update
+		}
 		// O 设计费
 		$itemUnit = '元';
 		$itemName = '设计费3%';
@@ -314,6 +361,10 @@
 				'itemUnit'=>$isGBK ? str2GBK($itemUnit):urlencode($itemUnit),'itemAmount'=>$isNOPQRSAmount ? $itemAmount : '','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'','machineryPrice'=>'',
 				'mainMaterialTotalPrice'=>$fee,
 				'auxiliaryMaterialTotalPrice'=>'','manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'','isEditable'=>false);
+		if($fee != $item['mainMaterialPrice']){
+			$item['mainMaterialPrice'] = $fee;
+			$arr = editItem($item);// update
+		}
 		// P 效果图
 		$itemUnit = '张';
 		$itemName = '效果图';
@@ -340,6 +391,10 @@
 				'itemUnit'=>$isGBK ? str2GBK($itemUnit):urlencode($itemUnit),'itemAmount'=>$isNOPQRSAmount ? $itemAmount : '','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'','machineryPrice'=>'',
 				'mainMaterialTotalPrice'=>$fee,
 				'auxiliaryMaterialTotalPrice'=>'','manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'','isEditable'=>false);
+		if($fee != $item['mainMaterialPrice']){
+			$item['mainMaterialPrice'] = $fee;
+			$arr = editItem($item);// update
+		}
 		// R 税金
 		$itemUnit = '元';
 		$itemName = '税金';
@@ -353,6 +408,10 @@
 				'itemUnit'=>$isGBK ? str2GBK($itemUnit):urlencode($itemUnit),'itemAmount'=>$isNOPQRSAmount ? $itemAmount : '','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'','machineryPrice'=>'',
 				'mainMaterialTotalPrice'=>$fee,
 				'auxiliaryMaterialTotalPrice'=>'','manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'','isEditable'=>false);
+		if($fee != $item['mainMaterialPrice']){
+			$item['mainMaterialPrice'] = $fee;
+			$arr = editItem($item);// update
+		}
 		// S 工程总造价
 		$itemUnit = '元';
 		$itemName = '工程总造价';
@@ -365,6 +424,10 @@
 				'itemUnit'=>$isGBK ? str2GBK($itemUnit):urlencode($itemUnit),'itemAmount'=>$isNOPQRSAmount ? $itemAmount : '','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'','machineryPrice'=>'',
 				'mainMaterialTotalPrice'=>$fee,
 				'auxiliaryMaterialTotalPrice'=>'','manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'','isEditable'=>false);
+		if($fee != $item['mainMaterialPrice']){
+			$item['mainMaterialPrice'] = $fee;
+			$arr = editItem($item);// update
+		}
 		return $res;
 	}
 ?>

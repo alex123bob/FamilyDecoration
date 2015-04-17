@@ -7,7 +7,10 @@
 	switch($action){
 		case "list": 	$res = getBudgets();  break;
 		case "listIds": 	$res = getBudgetIds();  $isParseResut = false;break;
+		//获取预算所有条目
 		case "itemlist":$res = getBudgetItemsByBudgetId($_REQUEST["budgetId"]);break;
+		//获取预算结果QPRST
+		case "getBudgetResult":$res = getBudgetResult($_REQUEST["budgetId"]);break;
 		//添加预算
 		case "add":  	$res = addBudget($_REQUEST);  break;
 		//添加小项

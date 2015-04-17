@@ -11,6 +11,9 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 	title: '预算面板',
 	header: false,
 
+	// indicator: tells us if this is for preview or not
+	isForPreview: false,
+
 	// indicator: tells us if there is an budget existed in current panel
 	budgetId: undefined,
 
@@ -76,6 +79,11 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 		st.load({
 			params: {
 				budgetId: panel.budgetId
+			},
+			callback: function (recs, ope, success){
+				if (success) {
+					
+				}
 			}
 		});
 	},
@@ -237,6 +245,11 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			// 特殊项
 			else if ('NOPQRS'.indexOf(rec.get('itemCode')) != -1 && rec.get('itemCode') != '') {
 				switch (colIndex) {
+					case 3:
+					if ('NS'.indexOf(rec.get('itemCode')) != -1) {
+						val = '';
+					}
+					break;
 					// 主单
 					case 4:
 					// 辅单
@@ -258,6 +271,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 					// 主成本
 					case 15:
 					val = '';
+					break;
 				}
 				return val;
 			}
@@ -281,6 +295,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 					// 主成本
 					case 15:
 					val = '';
+					break;
 				}
 				return val;
 			}
@@ -341,6 +356,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				header: false,
 				autoScroll: true,
 				itemId: 'gridpanel-budgetContent',
+				cls: 'gridpanel-budgetContent',
 				width: '100%',
 				flex: 15,
 				plugins: [
@@ -378,6 +394,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 
 			            		var rec = e.record,
 			            			field = e.field;
+
 			            		if (field == 'itemAmount') {
 			            			Ext.Ajax.request({
 				            			url: './libs/budget.php?action=editItem',
@@ -402,10 +419,21 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			            		else if (field == 'remark') {
 			            			// todo
 			            		}
-			            		
-			            		Ext.resumeLayouts();
+
+			            		rec.commit();
 
 			            		me.refresh();
+
+			            		Ext.resumeLayouts();
+			            	},
+			            	validateedit: function (editor, e, opts){
+			            		var rec = e.record;
+			            		if (isNaN(e.value) || !/^\d+(\.\d+)?$/.test(e.value) ){
+			            			return false;
+			            		}
+			            		else if (e.value == e.originalValue) {
+			            			return false;
+			            		}
 			            	}
 			            }
 			        })
@@ -447,7 +475,8 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 	                	align: 'center',
 	                	editor: me.isForPreview ? null : {
 	                		xtype: 'textfield',
-	                		allowBlank: false
+	                		allowBlank: false,
+	                		maskRe: /[\d\.]/
 	                	},
 	                	sortable: false,
 	                	menuDisabled: true,
@@ -638,7 +667,30 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			    	selectionchange: function (cmp, sels, opts){
 			    		var rec = sels[0];
 			    		me.initBtn(rec);
-			    	}
+			    	},
+			    	afterrender: function(grid, opts) {
+						var view = grid.getView();
+						var tip = Ext.create('Ext.tip.ToolTip', {
+							target: view.el,
+							delegate: view.cellSelector,
+							trackMouse: true,
+							renderTo: Ext.getBody(),
+							listeners: {
+								beforeshow: function(tip) {
+									var gridColumns = view.getGridColumns();
+									var column = gridColumns[tip.triggerElement.cellIndex];
+									var val = view.getRecord(tip.triggerElement.parentNode).get(column.dataIndex);
+									if (val) {
+										val.replace && (val = val.replace(/\n/g, '<br />'));
+										tip.update(val);
+									} 
+									else {
+										return false;
+									}
+								}
+							}
+						});
+                    }
 			    }
 			}
 		];
