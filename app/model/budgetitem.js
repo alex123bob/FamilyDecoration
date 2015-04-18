@@ -21,6 +21,8 @@ Ext.define('FamilyDecoration.model.BudgetItem', {
 		// {name: 'cost', type: 'float'}, // 预算中该条基础项目对应的成本
 		{name: 'manpowerCost', type: 'float'},
 		{name: 'mainMaterialCost', type: 'float'},
+		{name: 'manpowerTotalCost', type: 'float'},
+		{name: 'mainMaterialTotalCost', type: 'float'},
 		{name: 'basicItemId', type: 'string'}, // 基础项目中大项的id
 		{name: 'basicSubItemId', type: 'string'},
 		{name: 'isEditable', type: 'boolean'}

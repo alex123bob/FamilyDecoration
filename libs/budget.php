@@ -27,6 +27,8 @@
 		case "delete":	$res = delBudget($_REQUEST["budgetId"]);  break;
 		//根据id获取预算
 		case "view":	$res = getBudgetsByBudgetId($_REQUEST["budgetId"]);  break;
+		//折扣
+		case "discount":$res = makeDiscount($_REQUEST);  break;
 		default: 		throw new Exception("unknown action:".$action);
 	}
 	if($isParseResut){

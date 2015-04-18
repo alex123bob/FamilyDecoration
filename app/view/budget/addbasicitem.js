@@ -15,50 +15,10 @@ Ext.define('FamilyDecoration.view.budget.AddBasicItem', {
 	grid: null, // 预算表格
 	budgetId: undefined, // 预算id
 
-	discount: 1, // 价格折扣，默认为1，不打折
-
 	initComponent: function () {
 		var me = this;
 
 		me.buttons = [
-			{
-				text: '折扣',
-				handler: function (){
-					var win = Ext.create('Ext.window.Window', {
-						width: 300,
-						height: 140,
-						// layout: 'fit',
-						title: '折扣价格',
-						items: [{
-							xtype: 'numberfield',
-					        anchor: '100%',
-					        name: 'numberfield-discount',
-					        itemId: 'numberfield-discount',
-					        fieldLabel: '请输入折扣',
-					        value: me.discount.mul(100),
-					        maxValue: 100,
-					        minValue: 1,
-					        afterSubTpl: '%'
-						}],
-						buttons: [{
-							text: '确定',
-							handler: function (){
-								var discount = win.getComponent('numberfield-discount'),
-									val = discount.getValue();
-								me.discount = val.div(100);
-								showMsg('折扣设置成功，当前折扣为' + val + '%');
-								win.close();
-							}
-						}, {
-							text: '取消',
-							handler: function (){
-								win.close();
-							}
-						}]
-					});
-					win.show();
-				}
-			},
 			{
 				text: '添加',
 				handler: function (){
@@ -92,8 +52,7 @@ Ext.define('FamilyDecoration.view.budget.AddBasicItem', {
 										lossPercent: subRecs[i].get('lossPercent'),
 										remark: subRecs[i].get('remark'),
 										manpowerCost: subRecs[i].get('manpowerCost'),
-										mainMaterialCost: subRecs[i].get('mainMaterialCost'),
-										discount: me.discount
+										mainMaterialCost: subRecs[i].get('mainMaterialCost')
 									});
 								}
 								var index = 0;

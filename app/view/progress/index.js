@@ -590,50 +590,55 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 						budgetId = project.get('budgetId');
 
 					if (budgetId != 'NULL' && budgetId != '') {
-						Ext.Ajax.request({
-							url: './libs/budget.php?action=view',
-							method: 'GET',
-							params: {
-								budgetId: budgetId
-							},
-							callback: function (opts, success, res){
-								if (success) {
-									var obj = Ext.decode(res.responseText);
-									if (obj.length > 0) {
-										var win = Ext.create('Ext.window.Window', {
-											title: '查看预算',
-											items: [{
-												xtype: 'budget-budgetpanel'
-											}],
-											width: 800,
-											height: 600,
-											maximizable: true,
-											modal: true,
-											layout: 'fit',
-											listeners: {
-												beforeshow: function (win) {
-													var panel = win.items.items[0];
-													panel.loadBudget({
-														budgetId: budgetId,
-														custName: obj[0]['custName'],
-														projectName: obj[0]['projectName']
-													});
-												}
-											}
-										});
-										win.show();
-									}
-									else {
-										showMsg('找不到对应预算！');
-									}
-								}
-							}
-						})
-						
+						var win = window.open('./fpdf/index2.php?action=view&budgetId=' + budgetId,'打印','height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
 					}
 					else {
-						showMsg('没有对应预算！');
+						showMsg('没有预算！');
 					}
+					// if (budgetId != 'NULL' && budgetId != '') {
+					// 	Ext.Ajax.request({
+					// 		url: './libs/budget.php?action=view',
+					// 		method: 'GET',
+					// 		params: {
+					// 			budgetId: budgetId
+					// 		},
+					// 		callback: function (opts, success, res){
+					// 			if (success) {
+					// 				var obj = Ext.decode(res.responseText);
+					// 				if (obj.length > 0) {
+					// 					var win = Ext.create('Ext.window.Window', {
+					// 						title: '查看预算',
+					// 						items: [{
+					// 							xtype: 'budget-budgetpanel'
+					// 						}],
+					// 						width: 800,
+					// 						height: 600,
+					// 						maximizable: true,
+					// 						modal: true,
+					// 						layout: 'fit',
+					// 						listeners: {
+					// 							beforeshow: function (win) {
+					// 								var panel = win.items.items[0];
+					// 								panel.loadBudget({
+					// 									budgetId: budgetId,
+					// 									custName: obj[0]['custName'],
+					// 									projectName: obj[0]['projectName']
+					// 								});
+					// 							}
+					// 						}
+					// 					});
+					// 					win.show();
+					// 				}
+					// 				else {
+					// 					showMsg('找不到对应预算！');
+					// 				}
+					// 			}
+					// 		}
+					// 	})
+					// }
+					// else {
+					// 	showMsg('没有对应预算！');
+					// }
 				}
 			}, {
 				hidden: User.isGeneral() ? true : false,

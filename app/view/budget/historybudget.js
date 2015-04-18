@@ -14,7 +14,10 @@ Ext.define('FamilyDecoration.view.budget.HistoryBudget', {
 	budgetPanel: null,
 
 	initComponent: function (){
-		var me = this;
+		var me = this,
+			budgetSt = Ext.create('FamilyDecoration.store.Budget', {
+				autoLoad: true
+			});
 
 		me.buttons = [{
 			text: '加载预算',
@@ -45,6 +48,16 @@ Ext.define('FamilyDecoration.view.budget.HistoryBudget', {
 			header: false,
 			xtype: 'gridpanel',
 			hideHeaders: true,
+			dockedItems: [{
+				dock: 'top',
+				xtype: 'toolbar',
+				items: [{
+					xtype: 'searchfield',
+					flex: 1,
+					store: budgetSt,
+					paramName: 'projectName'
+				}]
+			}],
 			columns: [
 				{
 					text: '工程地址',
@@ -98,9 +111,7 @@ Ext.define('FamilyDecoration.view.budget.HistoryBudget', {
 		            ]
 		        }
 			],
-			store: Ext.create('FamilyDecoration.store.Budget', {
-				autoLoad: true
-			})
+			store: budgetSt
 		}];
 
 		this.callParent();

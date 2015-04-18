@@ -1,4 +1,34 @@
 <?php
+	function makeDiscount($data){
+		if(!isset($data['discount'])){
+			return array('status'=>'successful', 'errMsg' => '');
+		}
+		$discount = (int)$data['discount'];
+		if($discount> 100 || $discount < 1)
+			throw new Exception("discount must be 1 ~ 100 , now :"+$discount);
+		global $mysql;
+		$budgetId = $data['budgetId'];
+		$whereSql = " budgetId='?' and `itemCode` not in ('N','O','P','Q','R','S')";
+		$param = array($budgetId);
+		if(isset($data['budgetItemId'])){
+			$budgetItemId= $data['budgetItemId'];
+			$item = $mysql->DBGetAsMap("select itemCode from `budget_item` where budgetItemId = '?' ",$budgetItemId);
+			if(count($item) == 0)
+				throw new Exception("no item with budgetItemId:".$budgetItemId);
+			$itemCode = $item[0]['itemCode'];
+			//给大项打折
+			if(strlen($itemCode) == 1){
+				$whereSql = $whereSql." and `itemCode` like '%?%'";
+			}else{
+			//给小项打折
+				$whereSql = $whereSql." and `itemCode` = '?' ";
+			}
+			array_push($param,$itemCode);
+		}
+		//给所有项打折
+		$mysql->DBUpdate('budget_item',array('discount'=>$discount),$whereSql,$param);
+		return array('status'=>'successful', 'errMsg' => '');
+	}
 	//获取项目下一个ItemCode编码
 	function _getNextItemCode($budgetId){
 		global $mysql;
@@ -39,18 +69,13 @@
 	//添加小项
 	function addItem($post){
 		$itemCode = _getNextBasicCode($post["budgetId"],$post["itemCode"]);
-		$discount = isset($post['discount'])? $post['discount'] : 1;
 		global $mysql;
-		$fields = array('itemName','budgetId','itemUnit','itemAmount','remark', 'manpowerCost', 'mainMaterialCost', 'basicItemId','basicSubItemId');
+		$fields = array('itemName','budgetId','itemUnit','itemAmount','remark','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','manpowerCost', 'mainMaterialCost', 'basicItemId','basicSubItemId');
 		$obj = array('itemCode'=>$itemCode,'budgetItemId' => "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT));
 		foreach($fields as $field){
-			if(isset($post[$field]))
+			if(isset($post[$field])){
 				$obj[$field] = $post[$field];
-		}
-		//主材，辅材，人工，机械需要算折扣
-		foreach(array('mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice') as $field){
-			if(isset($post[$field]))
-				$obj[$field] = $post[$field] * $discount;
+			}
 		}
 		//损耗=（主材单价+辅料单价）*0.05
 		$obj['lossPercent'] = ($obj['mainMaterialPrice']+$obj['auxiliaryMaterialPrice']) * 0.05;
@@ -213,47 +238,26 @@
 		return $res;
 	}
 	//获取预算所有条目
-	function getBudgetItemsByBudgetId ($budgetId , $isGBK = false,$isNOPQRSAmount = true) {
+	function getBudgetItemsByBudgetId ($budgetId , $isGBK = false) {
 		global $mysql;
 		$res= array();
 		$arr = $mysql->DBGetAsMap(" select * from `budget_item` where `budgetId` = '?' and `isDeleted` = 'false' ORDER BY LEFT( itemCode, 2 ) ASC , ( SUBSTRING( itemCode, 2 ) ) *1 DESC ",$budgetId);
 		$count = 0;
-		$smallCount = array(0,0,0,0);
+		$smallCount = array(0,0,0,0,0,0);
 		$directFee = 0;
 		$isFirstSmallCount = true;
-		$otherItems = array();
-		$otherItems['N'] = array('budgetItemId'=>'NULLN','itemName'=>'','budgetId'=>'',
-								'itemCode'=>'','itemUnit'=>'','itemAmount'=>'','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'',
-								'machineryPrice'=>'','mainMaterialTotalPrice'=>'','auxiliaryMaterialTotalPrice'=>'',
-								'manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'', 'manpowerCost'=>'', 'mainMaterialCost'=>'','isEditable'=>false);
-		$otherItems['O'] = array('budgetItemId'=>'NULLO','itemName'=>'','budgetId'=>'',
-								'itemCode'=>'','itemUnit'=>'','itemAmount'=>'','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'',
-								'machineryPrice'=>'','mainMaterialTotalPrice'=>'','auxiliaryMaterialTotalPrice'=>'',
-								'manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'', 'manpowerCost'=>'', 'mainMaterialCost'=>'','isEditable'=>false);
-		$otherItems['P'] = array('budgetItemId'=>'NULLP','itemName'=>'','budgetId'=>'',
-								'itemCode'=>'','itemUnit'=>'','itemAmount'=>'','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'',
-								'machineryPrice'=>'','mainMaterialTotalPrice'=>'','auxiliaryMaterialTotalPrice'=>'',
-								'manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'', 'manpowerCost'=>'', 'mainMaterialCost'=>'','isEditable'=>false);
-		$otherItems['Q'] = array('budgetItemId'=>'NULLQ','itemName'=>'','budgetId'=>'',
-								'itemCode'=>'','itemUnit'=>'','itemAmount'=>'','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'',
-								'machineryPrice'=>'','mainMaterialTotalPrice'=>'','auxiliaryMaterialTotalPrice'=>'',
-								'manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'', 'manpowerCost'=>'', 'mainMaterialCost'=>'','isEditable'=>false);
-		$otherItems['R'] = array('budgetItemId'=>'NULLR','itemName'=>'','budgetId'=>'',
-								'itemCode'=>'','itemUnit'=>'','itemAmount'=>'','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'',
-								'machineryPrice'=>'','mainMaterialTotalPrice'=>'','auxiliaryMaterialTotalPrice'=>'',
-								'manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'', 'manpowerCost'=>'', 'mainMaterialCost'=>'','isEditable'=>false);
-		$otherItems['S'] = array('budgetItemId'=>'NULLS','itemName'=>'','budgetId'=>'',
-								'itemCode'=>'','itemUnit'=>'','itemAmount'=>'','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'',
-								'machineryPrice'=>'','mainMaterialTotalPrice'=>'','auxiliaryMaterialTotalPrice'=>'',
-								'manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'', 'manpowerCost'=>'', 'mainMaterialCost'=>'','isEditable'=>false);
+		$NOPQRSItems = array();
 		foreach($arr as $val) {
 			$itemCode = $val['itemCode'];
 			$itemUnit = $val['itemUnit'];
-			$itemAmount = $val['itemAmount'];
+			$itemAmount = $val['itemAmount'] == "" || $val['itemAmount'] == null ? 0 : $val['itemAmount'];
+			$discount = $val['discount'];
 			$budgetId = $val['budgetId'];
+			$itemName = $isGBK ? str2GBK($val['itemName']) :  ($val['itemName']);
+			$itemUnit = $isGBK ? str2GBK($val['itemUnit']) :  ($val['itemUnit']);
 			//这几项需要单独计算
 			if(in_array($itemCode,array('N','O','P','Q','R','S'))){
-				$otherItems[$itemCode] = $val;
+				$NOPQRSItems[$itemCode] = $val;
 				continue;
 			}
 			// itemCode  长度为1时认为是大项
@@ -262,50 +266,43 @@
 				//第一个大项出现时不输出小计
 					$isFirstSmallCount = false;
 				}else{
-				//增加一行小计
-				$res[$count++] = array('budgetItemId'=>'NULL'.$count,'itemName'=>$isGBK ? str2GBK('小计') : ('小计'),'budgetId'=>$budgetId,
-								'itemCode'=>'','itemUnit'=>'','itemAmount'=>'','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'',
-								'machineryPrice'=>'','mainMaterialTotalPrice'=>$smallCount[0],'auxiliaryMaterialTotalPrice'=>$smallCount[1],
-								'manpowerTotalPrice'=>$smallCount[2],'machineryTotalPrice'=>$smallCount[3],'lossPercent'=>'','remark'=>'',
-								'manpowerPrice'=>'','machineryPrice'=>'','isEditable'=>false);
-				$directFee+=$smallCount[0];
-				$directFee+=$smallCount[1];
-				$directFee+=$smallCount[2];
-				$directFee+=$smallCount[3];
-				$smallCount = array(0,0,0,0);
+					//增加一行小计
+					$res[$count++] = array('budgetItemId'=>'NULL'.$count,'itemName'=>$isGBK ? str2GBK('小计') : ('小计'),'budgetId'=>$budgetId,
+									'mainMaterialTotalPrice'=>$smallCount[0],'auxiliaryMaterialTotalPrice'=>$smallCount[1],'manpowerTotalPrice'=>$smallCount[2],
+									'machineryTotalPrice'=>$smallCount[3],'manpowerTotalCost'=>$smallCount[4],'mainMaterialTotalCost'=>$smallCount[5]);
+					$directFee+=$smallCount[0];
+					$directFee+=$smallCount[1];
+					$directFee+=$smallCount[2];
+					$directFee+=$smallCount[3];
+					$smallCount = array(0,0,0,0,0,0);
 				}
+				//输出大项
+				$res[$count++] = array('itemName'=>$itemName,'itemCode'=>$val['itemCode'],'budgetId'=>$val['budgetId'],'budgetItemId'=>$val['budgetItemId']);
+				continue;
 			}
 			//正常输出项
-			$res[$count]['budgetItemId'] = $val['budgetItemId'];
-			$res[$count]['itemName'] = $isGBK ? str2GBK($val['itemName']) :  ($val['itemName']);
-			$res[$count]['budgetId'] = $val['budgetId'];
-			$res[$count]['itemCode'] = $val['itemCode'];
-			$res[$count]['itemUnit'] = $isGBK ? str2GBK($val['itemUnit']) :  ($val['itemUnit']);
+			$res[$count] = $val;
+			$res[$count]['itemName'] = $itemName;
 			$res[$count]['itemAmount'] = $itemAmount;
-			$res[$count]['mainMaterialPrice'] = $val['mainMaterialPrice'];
-			$res[$count]['auxiliaryMaterialPrice'] = $val['auxiliaryMaterialPrice'];
-			$res[$count]['manpowerPrice'] = $val['manpowerPrice'];
-			$res[$count]['machineryPrice'] = $val['machineryPrice'];
-			//损耗=（主材单价+辅料单价）*0.05
-			$loss = ($val['mainMaterialPrice']+$val['auxiliaryMaterialPrice']) * 0.05;
+			$res[$count]['itemUnit'] = $itemUnit;
+			$res[$count]['mainMaterialPrice'] = $val['mainMaterialPrice'] * $discount/100;
+			$res[$count]['auxiliaryMaterialPrice'] = $val['auxiliaryMaterialPrice'] * $discount/100;
+			$res[$count]['manpowerPrice'] = $val['manpowerPrice'] * $discount/100;
+			$res[$count]['machineryPrice'] = $val['machineryPrice'] * $discount/100;
+			//损耗=（主材单价+辅料单价）*0.05,按折扣后的价格
+			$loss = ($res[$count]['mainMaterialPrice']+$res[$count]['auxiliaryMaterialPrice']) * 0.05;
 			if($val['lossPercent'] != $loss){
 				$val['lossPercent'] = $loss;
 				editItem($val);
 			}
 			$res[$count]['lossPercent'] = $loss;
-			//主材总价=（主菜单价+损耗）* 数量
-			$mainMaterialTotalPrice = $itemAmount * ($val['mainMaterialPrice'] + $loss);
+			//主材总价=（主菜单价+损耗）* 数量,按折扣后的价格
+			$mainMaterialTotalPrice = $itemAmount * ($res[$count]['mainMaterialPrice'] + $loss);
 			$res[$count]['mainMaterialTotalPrice'] = $mainMaterialTotalPrice;
-			$res[$count]['auxiliaryMaterialTotalPrice'] =  $itemAmount * $val['auxiliaryMaterialPrice'];
-			$res[$count]['manpowerTotalPrice'] = $itemAmount * $val['manpowerPrice'];
-			$res[$count]['machineryTotalPrice'] = $itemAmount * $val['machineryPrice'];
+			$res[$count]['auxiliaryMaterialTotalPrice'] =  $itemAmount * $res[$count]['auxiliaryMaterialPrice'];
+			$res[$count]['manpowerTotalPrice'] = $itemAmount * $res[$count]['manpowerPrice'];
+			$res[$count]['machineryTotalPrice'] = $itemAmount * $res[$count]['machineryPrice'];
 			$res[$count]['remark'] = $val['remark'] == 'NULL' ? '' : ($isGBK ? str2GBK($val['remark']) :  (addslashes(nl2br(str_replace("\n", "<br />", $val['remark'])))));
-			$res[$count]['basicItemId'] = $val['basicItemId'];
-			$res[$count]['basicSubItemId'] = $val['basicSubItemId'];
-			$res[$count]['manpowerPrice'] = $val['manpowerPrice'];
-			$res[$count]['machineryPrice'] = $val['machineryPrice'];
-			$res[$count]['manpowerCost'] = $val['manpowerCost'];
-			$res[$count]['mainMaterialCost'] = $val['mainMaterialCost'];
 			$res[$count]['isEditable'] = true;
 			/**
 			2.辅材总价=辅材单价*数量
@@ -314,24 +311,17 @@
 			6.小计=各类小项总价之和
 			7.合计=所有小巷综合			
 			**/
-			$smallCount[0] +=  $mainMaterialTotalPrice;
-			$smallCount[1] +=  $itemAmount * $val['auxiliaryMaterialPrice'];
-			$smallCount[2] +=  $itemAmount * $val['manpowerPrice'];
-			$smallCount[3] +=  $itemAmount * $val['machineryPrice'];
-			//如果是大项的话，有些字段要清空
-			if(strlen($itemCode) == 1){
-				$res[$count]['itemUnit'] = '';
-				$res[$count]['mainMaterialTotalPrice'] = '';
-				$res[$count]['itemAmount'] = '';
-				$res[$count]['mainMaterialPrice'] = '';
-				$res[$count]['auxiliaryMaterialPrice'] = '';
-				$res[$count]['manpowerPrice'] = '';
-				$res[$count]['machineryPrice'] = '';
-				$res[$count]['auxiliaryMaterialTotalPrice'] = '';
-				$res[$count]['manpowerTotalPrice'] = '';
-				$res[$count]['machineryTotalPrice'] = '';
-				$res[$count]['lossPercent'] = '';
-				$res[$count]['remark'] = '';
+			$smallCount[0] +=  $res[$count]['mainMaterialTotalPrice'];
+			$smallCount[1] +=  $res[$count]['auxiliaryMaterialTotalPrice'];
+			$smallCount[2] +=  $res[$count]['manpowerTotalPrice'];
+			$smallCount[3] +=  $res[$count]['machineryTotalPrice'];
+			$smallCount[4] +=  $res[$count]['manpowerCost'];
+			$smallCount[5] +=  $res[$count]['mainMaterialCost'];
+			foreach($res[$count] as $key => $val){
+				if($val === "" || $val === null){
+					//去除空值，减少网络数据量
+					unset($res[$count][$key]);
+				}
 			}
 			$count++;
 		}
@@ -339,31 +329,27 @@
 		if(!$isFirstSmallCount){
 			//最后一行小计
 			$res[$count++] = array('budgetItemId'=>'NULL'.$count,'itemName'=>$isGBK ? str2GBK('小计') : ('小计'),'budgetId'=>$budgetId,
-							'itemCode'=>'','itemUnit'=>'','itemAmount'=>'','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'',
-							'machineryPrice'=>'','mainMaterialTotalPrice'=>$smallCount[0],'auxiliaryMaterialTotalPrice'=>$smallCount[1],
-							'manpowerTotalPrice'=>$smallCount[2],'machineryTotalPrice'=>$smallCount[3],'lossPercent'=>'','remark'=>'','isEditable'=>false);
+							'mainMaterialTotalPrice'=>$smallCount[0],'auxiliaryMaterialTotalPrice'=>$smallCount[1],'manpowerTotalPrice'=>$smallCount[2],
+							'machineryTotalPrice'=>$smallCount[3],'manpowerTotalCost'=>$smallCount[4],'mainMaterialTotalCost'=>$smallCount[5],'isEditable'=>false);
 			$directFee+=$smallCount[0];
 			$directFee+=$smallCount[1];
 			$directFee+=$smallCount[2];
 			$directFee+=$smallCount[3];
-			$smallCount = array(0,0,0,0);
+			$smallCount = array(0,0,0,0,0,0);
 		}
 		//增加一行空行
-		$res[$count++] = array('budgetItemId'=>'NULL'.$count,'itemName'=>'','budgetId'=>$budgetId,'itemCode'=>'','itemUnit'=>'','itemAmount'=>'',
-					'mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'','machineryPrice'=>'','mainMaterialTotalPrice'=>'',
-					'auxiliaryMaterialTotalPrice'=>'','manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'','isEditable'=>false);
+		$res[$count++] = array('budgetItemId'=>'NULL'.$count,'budgetId'=>$budgetId,'isEditable'=>false);
 		//计算其他项
 		$totalFee = $directFee;
 		//N 工程直接费
 		$itemUnit = '元';
 		$itemName = '工程直接费';
 		$itemCode = 'N';
-		$item = $otherItems[$itemCode];
+		$item = $NOPQRSItems[$itemCode];
 		$budgetItemId = $item['budgetItemId'];
 		$fee = $directFee;
 		$res[$count++] = array('budgetItemId'=>$budgetItemId,'itemName'=>$isGBK ? str2GBK($itemName):($itemName),'budgetId'=>$budgetId,'itemCode'=>$itemCode,
-				'itemUnit'=>$isGBK ? str2GBK($itemUnit):($itemUnit),'itemAmount'=>'','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'','machineryPrice'=>'',
-				'mainMaterialTotalPrice'=>$fee,'auxiliaryMaterialTotalPrice'=>'','manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'','isEditable'=>false);
+				'itemUnit'=>$isGBK ? str2GBK($itemUnit):($itemUnit),'mainMaterialTotalPrice'=>$fee,'isEditable'=>false);
 		if($fee != $item['mainMaterialPrice']){
 			$item['mainMaterialPrice'] = $fee;
 			$arr = editItem($item);// update
@@ -372,15 +358,13 @@
 		$itemUnit = '元';
 		$itemName = '设计费3%';
 		$itemCode = 'O';
-		$item = $otherItems[$itemCode];
+		$item = $NOPQRSItems[$itemCode];
 		$itemAmount = $item['itemAmount'];
 		$budgetItemId = $item['budgetItemId'];
 		$fee = $directFee * $itemAmount; 
 		$totalFee += $fee;
 		$res[$count++] = array('budgetItemId'=>$budgetItemId,'itemName'=>$isGBK ? str2GBK($itemName):($itemName),'budgetId'=>$budgetId,'itemCode'=>$itemCode,
-				'itemUnit'=>$isGBK ? str2GBK($itemUnit):($itemUnit),'itemAmount'=>$isNOPQRSAmount ? $itemAmount : '','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'','machineryPrice'=>'',
-				'mainMaterialTotalPrice'=>$fee,
-				'auxiliaryMaterialTotalPrice'=>'','manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'','isEditable'=>false);
+				'itemUnit'=>$isGBK ? str2GBK($itemUnit):($itemUnit),'itemAmount'=>$itemAmount ,'mainMaterialTotalPrice'=>$fee,'isEditable'=>false);
 		if($fee != $item['mainMaterialPrice']){
 			$item['mainMaterialPrice'] = $fee;
 			$arr = editItem($item);// update
@@ -389,28 +373,24 @@
 		$itemUnit = '张';
 		$itemName = '效果图';
 		$itemCode = 'P';
-		$item = $otherItems[$itemCode];
+		$item = $NOPQRSItems[$itemCode];
 		$itemAmount = $item['itemAmount'];
 		$budgetItemId = $item['budgetItemId'];
 		$fee = 500 * $itemAmount; 
 		$totalFee += $fee;
 		$res[$count++] = array('budgetItemId'=>$budgetItemId,'itemName'=>$isGBK ? str2GBK($itemName):($itemName),'budgetId'=>$budgetId,'itemCode'=>$itemCode,
-				'itemUnit'=>$isGBK ? str2GBK($itemUnit):($itemUnit),'itemAmount'=>$isNOPQRSAmount ? $itemAmount : '','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'','machineryPrice'=>'',
-				'mainMaterialTotalPrice'=>$fee,
-				'auxiliaryMaterialTotalPrice'=>'','manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'','isEditable'=>false);
+				'itemUnit'=>$isGBK ? str2GBK($itemUnit):($itemUnit),'itemAmount'=>$itemAmount ,'mainMaterialTotalPrice'=>$fee,'isEditable'=>false);
 		// Q 5%管理费
 		$itemUnit = '元';
 		$itemName = '5%管理费';
 		$itemCode = 'Q';
-		$item = $otherItems[$itemCode];
+		$item = $NOPQRSItems[$itemCode];
 		$itemAmount = $item['itemAmount'];
 		$budgetItemId = $item['budgetItemId'];
 		$fee = $directFee * $itemAmount; 
 		$totalFee += $fee;
 		$res[$count++] = array('budgetItemId'=>$budgetItemId,'itemName'=>$isGBK ? str2GBK($itemName):($itemName),'budgetId'=>$budgetId,'itemCode'=>$itemCode,
-				'itemUnit'=>$isGBK ? str2GBK($itemUnit):($itemUnit),'itemAmount'=>$isNOPQRSAmount ? $itemAmount : '','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'','machineryPrice'=>'',
-				'mainMaterialTotalPrice'=>$fee,
-				'auxiliaryMaterialTotalPrice'=>'','manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'','isEditable'=>false);
+				'itemUnit'=>$isGBK ? str2GBK($itemUnit):($itemUnit),'itemAmount'=>$itemAmount ,'mainMaterialTotalPrice'=>$fee,'isEditable'=>false);
 		if($fee != $item['mainMaterialPrice']){
 			$item['mainMaterialPrice'] = $fee;
 			$arr = editItem($item);// update
@@ -419,15 +399,13 @@
 		$itemUnit = '元';
 		$itemName = '税金';
 		$itemCode = 'R';
-		$item = $otherItems[$itemCode];
+		$item = $NOPQRSItems[$itemCode];
 		$itemAmount = $item['itemAmount'];
 		$budgetItemId = $item['budgetItemId'];
 		$fee = $directFee * $itemAmount; 
 		$totalFee += $fee;
 		$res[$count++] = array('budgetItemId'=>$budgetItemId,'itemName'=>$isGBK ? str2GBK($itemName):($itemName),'budgetId'=>$budgetId,'itemCode'=>$itemCode,
-				'itemUnit'=>$isGBK ? str2GBK($itemUnit):($itemUnit),'itemAmount'=>$isNOPQRSAmount ? $itemAmount : '','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'','machineryPrice'=>'',
-				'mainMaterialTotalPrice'=>$fee,
-				'auxiliaryMaterialTotalPrice'=>'','manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'','isEditable'=>false);
+				'itemUnit'=>$isGBK ? str2GBK($itemUnit):($itemUnit),'itemAmount'=>$itemAmount ,'mainMaterialTotalPrice'=>$fee,'isEditable'=>false);
 		if($fee != $item['mainMaterialPrice']){
 			$item['mainMaterialPrice'] = $fee;
 			$arr = editItem($item);// update
@@ -436,14 +414,12 @@
 		$itemUnit = '元';
 		$itemName = '工程总造价';
 		$itemCode = 'S';
-		$item = $otherItems[$itemCode];
+		$item = $NOPQRSItems[$itemCode];
 		$budgetItemId = $item['budgetItemId'];
 		$itemAmount = '';
 		$fee = $totalFee;
 		$res[$count++] = array('budgetItemId'=>$budgetItemId,'itemName'=>$isGBK ? str2GBK($itemName):($itemName),'budgetId'=>$budgetId,'itemCode'=>$itemCode,
-				'itemUnit'=>$isGBK ? str2GBK($itemUnit):($itemUnit),'itemAmount'=>$isNOPQRSAmount ? $itemAmount : '','mainMaterialPrice'=>'','auxiliaryMaterialPrice'=>'','manpowerPrice'=>'','machineryPrice'=>'',
-				'mainMaterialTotalPrice'=>$fee,
-				'auxiliaryMaterialTotalPrice'=>'','manpowerTotalPrice'=>'','machineryTotalPrice'=>'','lossPercent'=>'','remark'=>'','isEditable'=>false);
+				'itemUnit'=>$isGBK ? str2GBK($itemUnit):($itemUnit),'itemAmount'=>$itemAmount ,'mainMaterialTotalPrice'=>$fee,'isEditable'=>false);
 		if($fee != $item['mainMaterialPrice']){
 			$item['mainMaterialPrice'] = $fee;
 			$arr = editItem($item);// update

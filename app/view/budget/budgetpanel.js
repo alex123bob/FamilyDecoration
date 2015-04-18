@@ -6,7 +6,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 	layout: 'vbox',
 	requires: ['Ext.form.FieldContainer', 'FamilyDecoration.store.BudgetItem', 'FamilyDecoration.view.budget.EditHeader',
 			   'FamilyDecoration.view.budget.AddBasicItem', 'FamilyDecoration.view.budget.AddExistedItem',
-			   'FamilyDecoration.view.budget.HistoryBudget'],
+			   'FamilyDecoration.view.budget.HistoryBudget', 'Ext.slider.Single'],
 
 	title: '预算面板',
 	header: false,
@@ -17,6 +17,8 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 
 	// indicator: tells us if there is an budget existed in current panel
 	budgetId: undefined,
+
+	discount: 100, // 预算折扣 百分数
 
 	// obj: budgetId, custName, projectName
 	loadBudget: function (obj){
@@ -36,10 +38,14 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 		var panel = this,
 			addNewBtn = panel.down('[name="button-addNewItem"]'),
 			addSmallBtn = panel.down('[name="button-addSmallItemToBigItem"]'),
-			delItemBtn = panel.down('[name="button-deleteItem"]');
+			delItemBtn = panel.down('[name="button-deleteItem"]'),
+			discountBtn = panel.down('[name="button-priceAdjust"]'),
+			calculateBtn = panel.down('[name="button-calculate"]');
 		addNewBtn.isHidden() && addNewBtn.show();
 		addSmallBtn.isHidden() && addSmallBtn.show();
 		delItemBtn.isHidden() && delItemBtn.show();
+		discountBtn.isHidden() && discountBtn.show();
+		calculateBtn.isHidden() && calculateBtn.show();
 		if (rec) {
 			if (rec.get('basicItemId') && !rec.get('basicSubItemId')) {
     			addSmallBtn.enable();
@@ -63,7 +69,9 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			projectNameField = cmp.down('[name="displayfield-projectName"]'),
 			addNewBtn = cmp.down('[name="button-addNewItem"]'),
 			addSmallBtn = cmp.down('[name="button-addSmallItemToBigItem"]'),
-			delItemBtn = cmp.down('[name="button-deleteItem"]');
+			delItemBtn = cmp.down('[name="button-deleteItem"]'),
+			discountBtn = cmp.down('[name="button-priceAdjust"]'),
+			calculateBtn = cmp.down('[name="button-calculate"]');
 		st.removeAll();
 		cmp.budgetId = undefined;
 		custNameField.setValue('');
@@ -71,9 +79,11 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 		addNewBtn.hide();
 		addSmallBtn.hide();
 		delItemBtn.hide();
+		discountBtn.hide();
+		calculateBtn.hide();
 	},
 
-	refresh: function (){
+	refresh: function (func){
 		var panel = this,
 			grid = panel.getComponent('gridpanel-budgetContent'),
 			st = grid.getStore();
@@ -83,7 +93,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			},
 			callback: function (recs, ope, success){
 				if (success) {
-					
+					func && func();
 				}
 			}
 		});
@@ -94,7 +104,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 
 		me.tbar = [
 			{
-				text: '预算头',
+				text: '预算细则',
 				tooltip: '新建或编辑预算头部信息',
 				name: 'button-addBudget',
 				handler: function (){
@@ -126,7 +136,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				}
 			},
 			{
-				text: '新项',
+				text: '添加大项',
 				tooltip: '添加新的基础大项',
 				name: 'button-addNewItem',
 				hidden: true,
@@ -140,7 +150,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				}
 			},
 			{
-				text: '补充',
+				text: '添加小项',
 				tooltip: '为已有大项添加小项',
 				name: 'button-addSmallItemToBigItem',
 				disabled: true,
@@ -207,7 +217,94 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				}
 			},
 			{
-				text: '历史',
+				text: '调价',
+				name: 'button-priceAdjust',
+				hidden: true,
+				handler: function (){
+					if (me.budgetId) {
+						var win = Ext.create('Ext.window.Window', {
+							title: '调整价格',
+							width: 300,
+							height: 140,
+							bodyPadding: 10,
+							modal: true,
+							items: [{
+								xtype: 'slider',
+								autoScroll: true,
+								value: me.discount,
+								increment: 1,
+								minValue: 1,
+								maxValue: 100,
+								width: '100%',
+								height: 20,
+								listeners: {
+									change: function (slider, newVal, thumb, opts){
+										var textField = win.down('textfield');
+										textField.setValue(newVal);
+									}
+								}
+							}, {
+								xtype: 'textfield',
+								fieldLabel: '折扣(%)',
+								readOnly: true,
+								width: '100%',
+								value: me.discount
+							}],
+							buttons: [{
+								text: '确定',
+								handler: function (){
+									var textField = win.down('textfield'),
+										discount = parseInt(textField.getValue(), 10);
+									me.discount = discount;
+									Ext.Ajax.request({
+										url: './libs/budget.php?action=discount',
+										method: 'POST',
+										params: {
+											budgetId: me.budgetId,
+											discount: discount
+										},
+										callback: function (opts, success, res){
+											if (success) {
+												var obj = Ext.decode(res.responseText);
+												if (obj.status == 'successful') {
+													showMsg('调价成功！');
+													me.refresh();
+													win.close();
+												}
+												else {
+													showMsg(obj.errMsg);
+												}
+											}
+										}
+									})
+								}
+							}, {
+								text: '取消',
+								handler: function (){
+									win.close();
+								}
+							}]
+						});
+
+						win.show();
+					}
+					else {
+						showMsg('当前没有预算！');
+					}
+				}
+			},
+			{
+				text: '计算并保存',
+				hidden: true,
+				name: 'button-calculate',
+				handler: function (){
+					me.refresh(function (){
+						showMsg('计算完毕!');
+					});
+				}
+			},
+			{
+				text: '历史预算',
 				tooltip: '查看、加载历史预算',
 				name: 'button-historyBudget',
 				handler: function (){
@@ -326,11 +423,15 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 					case 10:
 					// 损耗
 					case 12:
+					val = '';
+					break;
 					// 人成本
 					case 14:
+					val = rec.get('manpowerTotalCost');
+					break;
 					// 主成本
 					case 15:
-					val = '';
+					val = rec.get('mainMaterialTotalCost');
 					break;
 				}
 				return val;
@@ -395,6 +496,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				cls: 'gridpanel-budgetContent',
 				width: '100%',
 				flex: 15,
+				columnLines: true, // config vertical line of cell
 				plugins: [
 					Ext.create('Ext.grid.plugin.CellEditing', {
 			            clicksToEdit: 1,
@@ -458,7 +560,11 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 
 			            		rec.commit();
 
-			            		me.refresh();
+			            		// 用了批量编辑之后，不用实时刷新
+			            		// me.refresh(function (){
+			            		// 	var grid = me.getComponent('gridpanel-budgetContent');
+			            		// 	grid.view.bufferedRenderer.scrollTo(e.rowIdx, true);
+			            		// });
 
 			            		Ext.resumeLayouts();
 			            	},
@@ -473,6 +579,10 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			            	}
 			            }
 			        })
+					// 用于scrollTo
+					// {
+					// 	ptype: 'bufferedrenderer'
+					// }
 				],
 				store: Ext.create('FamilyDecoration.store.BudgetItem'),
 				columns: [
