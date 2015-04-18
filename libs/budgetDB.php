@@ -137,10 +137,10 @@
 	function addBudget($post){
 		global $mysql;
 		$projectId = $post["projectId"];
-		$projects = $mysql->DBGetAsMap("SELECT projectId FROM `project` where `isDeleted` = 'false' and `projectId` = '?' and CHAR_LENGTH(`budgetId`) > 2 ",$projectId);  //随便选的2，有内容
+		$projects = $mysql->DBGetAsMap("SELECT projectId FROM `project` where `isDeleted` = 'false' and `projectId` = '?' and CHAR_LENGTH(`budgetId`) > 2 ",$projectId);  //长度随便选的2，有内容
 		if(count($projects) > 0) 
 			throw new Exception("项目 : '$projectId' 已经存在预算!");
-		$fields = array("custName","areaSize","totalFee","comments","comments");
+		$fields = array("custName","areaSize","totalFee","comments",'budgetName');
 		$obj = array("isDeleted"=>false,"budgetId" => "budget-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT));
 		foreach($fields as $field){
 			if(isset($post[$field])){
@@ -210,7 +210,7 @@
 	function editBudget (array $pro){
 		global $mysql;
 		$obj = array();
-		$fields = array("custName","areaSize", "totalFee", "comments");
+		$fields = array("custName","areaSize", "totalFee", "comments",'budgetName');
 		foreach($fields as $field) {
 			if (isset($pro[$field])) {
 				$obj[$field] = $pro[$field];
@@ -277,7 +277,7 @@
 					$smallCount = array(0,0,0,0,0,0);
 				}
 				//输出大项
-				$res[$count++] = array('itemName'=>$itemName,'itemCode'=>$val['itemCode'],'budgetId'=>$val['budgetId'],'budgetItemId'=>$val['budgetItemId']);
+				$res[$count++] = array('itemName'=>$itemName,'basicItemId'=>$val['basicItemId'],'itemCode'=>$val['itemCode'],'budgetId'=>$val['budgetId'],'budgetItemId'=>$val['budgetItemId'],'isEditable'=>true);
 				continue;
 			}
 			//正常输出项

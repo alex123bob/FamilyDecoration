@@ -4,7 +4,7 @@ Ext.define('FamilyDecoration.view.budget.EditBudget', {
     requires: ['FamilyDecoration.store.BudgetItem'],
 
     width: 800,
-    height: 400,
+    height: 500,
     autoScroll: true,
     budget: undefined,
     html: '<iframe id="exportFrameInProject"  src="javascript:void(0);" style="display:none"></iframe>',

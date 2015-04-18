@@ -1,5 +1,5 @@
 <?php
-global $CellWidth,$FirstCellWidth,$titleLeft,$GfontSize,$lineHeight,$UserBrowserClient; 
+global $CellWidth,$FirstCellWidth,$titleLeft,$GfontSize,$lineHeight,$UserBrowserClient,$budgetName; 
 if(strpos($_SERVER["HTTP_USER_AGENT"],"Safari") && !strpos($_SERVER["HTTP_USER_AGENT"],"Chrome") ){
 	$UserBrowserClient = 'safari';
 }else if(strpos($_SERVER["HTTP_USER_AGENT"],"Mac") && strpos($_SERVER["HTTP_USER_AGENT"],"Chrome")){
@@ -30,6 +30,7 @@ if(count($budget) == 0){
 }
 $custName =  str2GBK(urldecode($budget[0]["custName"]));
 $projectName = str2GBK(urldecode($budget[0]["projectName"]));
+$budgetName = str2GBK(urldecode($budget[0]["budgetName"]));
 $projectComments = str2GBK(urldecode($budget[0]["comments"]));
 $action = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "download";
 $budgetItems = getBudgetItemsByBudgetId($_REQUEST["budgetId"],true);

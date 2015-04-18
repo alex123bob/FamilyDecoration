@@ -24,9 +24,11 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 	loadBudget: function (obj){
 		var cmp = this,
 			custNameField = cmp.down('[name="displayfield-custName"]'),
-			projectNameField = cmp.down('[name="displayfield-projectName"]');
+			projectNameField = cmp.down('[name="displayfield-projectName"]'),
+			budgetNameField = cmp.down('[name="displayfield-budgetName"]');
 		obj.custName && custNameField.setValue(obj.custName);
 		obj.projectName && projectNameField.setValue(obj.projectName);
+		obj.budgetName && budgetNameField.setValue(obj.budgetName);
 		cmp.initBtn();
 		if (obj.budgetId) {
 			cmp.budgetId = obj.budgetId;
@@ -67,6 +69,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			st = grid.getStore(),
 			custNameField = cmp.down('[name="displayfield-custName"]'),
 			projectNameField = cmp.down('[name="displayfield-projectName"]'),
+			budgetNameField = cmp.down('[name="displayfield-budgetName"]'),
 			addNewBtn = cmp.down('[name="button-addNewItem"]'),
 			addSmallBtn = cmp.down('[name="button-addSmallItemToBigItem"]'),
 			delItemBtn = cmp.down('[name="button-deleteItem"]'),
@@ -76,6 +79,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 		cmp.budgetId = undefined;
 		custNameField.setValue('');
 		projectNameField.setValue('');
+		budgetNameField.setValue('');
 		addNewBtn.hide();
 		addSmallBtn.hide();
 		delItemBtn.hide();
@@ -295,23 +299,18 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			},
 			{
 				text: '计算并保存',
+				icon: './resources/img/button-background.png',
 				hidden: true,
 				name: 'button-calculate',
+				// style: {
+				// 	backgroundImage: 'url(./resources/img/button-background.png)',
+				// 	backgroundRepeat: 'no-repeat',
+				// 	backgroundPosition: 'left center'
+				// },
 				handler: function (){
 					me.refresh(function (){
 						showMsg('计算完毕!');
 					});
-				}
-			},
-			{
-				text: '历史预算',
-				tooltip: '查看、加载历史预算',
-				name: 'button-historyBudget',
-				handler: function (){
-					var win = Ext.create('FamilyDecoration.view.budget.HistoryBudget', {
-						budgetPanel: me
-					});
-					win.show();
 				}
 			}
 		];
@@ -358,6 +357,17 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 					else {
 						showMsg('没有预算！');
 					}
+				}
+			},
+			{
+				text: '历史预算',
+				tooltip: '查看、加载历史预算',
+				name: 'button-historyBudget',
+				handler: function (){
+					var win = Ext.create('FamilyDecoration.view.budget.HistoryBudget', {
+						budgetPanel: me
+					});
+					win.show();
 				}
 			}
 		];
@@ -458,7 +468,8 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 					{
 						xtype: 'displayfield',
 						margin: '0 0 0 20',
-						value: '佳诚装饰室内装修装饰工程&nbsp;预算单',
+						name: 'displayfield-budgetName',
+						value: '',
 						hideLabel: true,
 						fieldStyle: {
 							fontFamily: '黑体',

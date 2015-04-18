@@ -1,7 +1,7 @@
 Ext.define('FamilyDecoration.view.budget.EditHeader', {
 	extend: 'Ext.window.Window',
 	width: 500,
-	height: 300,
+	height: 310,
 
 	requires: ['FamilyDecoration.view.progress.ProjectList', 'Ext.form.field.Hidden'],
 
@@ -24,8 +24,9 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 			fc = me.down('fieldcontainer'),
 			projectName = fc.getComponent('textfield-projectName'),
 			areaSize = me.getComponent('textfield-areaSize'),
-			desciption = me.getComponent('textarea-comments');
-		return custName.isValid() && projectName.isValid() && areaSize.isValid() && desciption.isValid();
+			desciption = me.getComponent('textarea-comments'),
+			budgetName = me.getComponent('textfield-budgetName');
+		return custName.isValid() && projectName.isValid() && areaSize.isValid() && desciption.isValid() && budgetName.isValid();
 	},
 
 	getValue: function (){
@@ -36,6 +37,7 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 			projectId = fc.getComponent('hidden-projectId'),
 			areaSize = me.getComponent('textfield-areaSize'),
 			desciption = me.getComponent('textarea-comments'),
+			budgetName = me.getComponent('textfield-budgetName'),
 			obj = {};
 		Ext.apply(obj, {
 			projectId: projectId.getValue(),
@@ -43,7 +45,8 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 			areaSize: areaSize.getValue(),
 			totalFee: "0",
 			comments: desciption.getValue(),
-			projectName: projectName.getValue()
+			projectName: projectName.getValue(),
+			budgetName: budgetName.getValue()
 		});
 		return obj;
 	},
@@ -147,6 +150,12 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 				height: 100,
 				value: me.budget ? me.budget['comments'] : ''
 			},
+			{
+				fieldLabel: '类型',
+				itemId: 'textfield-budgetName',
+				xtype: 'textfield',
+				value: me.budget ? me.budget['budgetName'] : '佳诚装饰室内装修装饰工程 预算单'
+			}
 		];
 
 		me.buttons = [{
@@ -167,7 +176,8 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 								if (obj.status == 'successful') {
 									var o = {
 										custName: p['custName'],
-										projectName: p['projectName']
+										projectName: p['projectName'],
+										budgetName: p['budgetName']
 									};
 									if (me.budget) {
 										showMsg('编辑头信息成功！');
