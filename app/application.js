@@ -22,7 +22,8 @@ Ext.define('FamilyDecoration.Application', {
         'Business',
         'TaskAssign',
         'User',
-        'MyTask'
+        'MyTask',
+        'CostAnalysis'
     ],
 
     stores: [

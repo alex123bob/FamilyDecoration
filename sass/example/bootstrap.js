@@ -17,6 +17,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.Chart": "../../app/controller/chart.js",
   "FamilyDecoration.controller.Chat": "../../app/controller/chat.js",
   "FamilyDecoration.controller.CheckLog": "../../app/controller/checklog.js",
+  "FamilyDecoration.controller.CostAnalysis": "../../app/controller/costanalysis.js",
   "FamilyDecoration.controller.MainMaterial": "../../app/controller/mainmaterial.js",
   "FamilyDecoration.controller.MyLog": "../../app/controller/mylog.js",
   "FamilyDecoration.controller.MyTask": "../../app/controller/mytask.js",
@@ -81,17 +82,11 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.basicitem.SubItemTable": "../../app/view/basicitem/subitemtable.js",
   "FamilyDecoration.view.budget.AddBasicItem": "../../app/view/budget/addbasicitem.js",
   "FamilyDecoration.view.budget.AddExistedItem": "../../app/view/budget/addexisteditem.js",
-  "FamilyDecoration.view.budget.BudgetContent": "../../app/view/budget/budgetcontent.js",
   "FamilyDecoration.view.budget.BudgetHeader": "../../app/view/budget/budgetheader.js",
   "FamilyDecoration.view.budget.BudgetPanel": "../../app/view/budget/budgetpanel.js",
-  "FamilyDecoration.view.budget.BudgetTable": "../../app/view/budget/budgettable.js",
-  "FamilyDecoration.view.budget.EditBudget": "../../app/view/budget/editbudget.js",
-  "FamilyDecoration.view.budget.EditBudgetHeader": "../../app/view/budget/editbudgetheader.js",
   "FamilyDecoration.view.budget.EditHeader": "../../app/view/budget/editheader.js",
-  "FamilyDecoration.view.budget.History": "../../app/view/budget/history.js",
   "FamilyDecoration.view.budget.HistoryBudget": "../../app/view/budget/historybudget.js",
   "FamilyDecoration.view.budget.Index": "../../app/view/budget/index.js",
-  "FamilyDecoration.view.budget.Preview": "../../app/view/budget/preview.js",
   "FamilyDecoration.view.bulletin.EditBulletin": "../../app/view/bulletin/editbulletin.js",
   "FamilyDecoration.view.bulletin.Index": "../../app/view/bulletin/index.js",
   "FamilyDecoration.view.business.EditClient": "../../app/view/business/editclient.js",
@@ -107,6 +102,8 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.checklog.Index": "../../app/view/checklog/index.js",
   "FamilyDecoration.view.checklog.MemberList": "../../app/view/checklog/memberlist.js",
   "FamilyDecoration.view.checklog.UserLogList": "../../app/view/checklog/userloglist.js",
+  "FamilyDecoration.view.costanalysis.Index": "../../app/view/costanalysis/index.js",
+  "FamilyDecoration.view.costanalysis.TotalCost": "../../app/view/costanalysis/totalcost.js",
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": "../../app/view/mainmaterial/editmainmaterial.js",
   "FamilyDecoration.view.mainmaterial.Index": "../../app/view/mainmaterial/index.js",
   "FamilyDecoration.view.mylog.AskLeave": "../../app/view/mylog/askleave.js",
@@ -987,6 +984,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.Chart": [],
   "FamilyDecoration.controller.Chat": [],
   "FamilyDecoration.controller.CheckLog": [],
+  "FamilyDecoration.controller.CostAnalysis": [],
   "FamilyDecoration.controller.MainMaterial": [],
   "FamilyDecoration.controller.MyLog": [],
   "FamilyDecoration.controller.MyTask": [],
@@ -1051,17 +1049,11 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.basicitem.SubItemTable": [],
   "FamilyDecoration.view.budget.AddBasicItem": [],
   "FamilyDecoration.view.budget.AddExistedItem": [],
-  "FamilyDecoration.view.budget.BudgetContent": [],
   "FamilyDecoration.view.budget.BudgetHeader": [],
   "FamilyDecoration.view.budget.BudgetPanel": [],
-  "FamilyDecoration.view.budget.BudgetTable": [],
-  "FamilyDecoration.view.budget.EditBudget": [],
-  "FamilyDecoration.view.budget.EditBudgetHeader": [],
   "FamilyDecoration.view.budget.EditHeader": [],
-  "FamilyDecoration.view.budget.History": [],
   "FamilyDecoration.view.budget.HistoryBudget": [],
   "FamilyDecoration.view.budget.Index": [],
-  "FamilyDecoration.view.budget.Preview": [],
   "FamilyDecoration.view.bulletin.EditBulletin": [],
   "FamilyDecoration.view.bulletin.Index": [],
   "FamilyDecoration.view.business.EditClient": [],
@@ -1077,6 +1069,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.checklog.Index": [],
   "FamilyDecoration.view.checklog.MemberList": [],
   "FamilyDecoration.view.checklog.UserLogList": [],
+  "FamilyDecoration.view.costanalysis.Index": [],
+  "FamilyDecoration.view.costanalysis.TotalCost": [],
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": [],
   "FamilyDecoration.view.mainmaterial.Index": [],
   "FamilyDecoration.view.mylog.AskLeave": [],
@@ -2124,6 +2118,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.Chart": [],
   "FamilyDecoration.controller.Chat": [],
   "FamilyDecoration.controller.CheckLog": [],
+  "FamilyDecoration.controller.CostAnalysis": [],
   "FamilyDecoration.controller.MainMaterial": [],
   "FamilyDecoration.controller.MyLog": [],
   "FamilyDecoration.controller.MyTask": [],
@@ -2200,34 +2195,18 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.budget.AddExistedItem": [
     "widget.budget-addexisteditem"
   ],
-  "FamilyDecoration.view.budget.BudgetContent": [
-    "widget.budget-budgetcontent"
-  ],
   "FamilyDecoration.view.budget.BudgetHeader": [
     "widget.budget-budgetheader"
   ],
   "FamilyDecoration.view.budget.BudgetPanel": [
     "widget.budget-budgetpanel"
   ],
-  "FamilyDecoration.view.budget.BudgetTable": [
-    "widget.budget-budgettable"
-  ],
-  "FamilyDecoration.view.budget.EditBudget": [
-    "widget.budget-editbudget"
-  ],
-  "FamilyDecoration.view.budget.EditBudgetHeader": [],
   "FamilyDecoration.view.budget.EditHeader": [],
-  "FamilyDecoration.view.budget.History": [
-    "widget.budget-history"
-  ],
   "FamilyDecoration.view.budget.HistoryBudget": [
     "widget.budget-historybudget"
   ],
   "FamilyDecoration.view.budget.Index": [
     "widget.budget-index"
-  ],
-  "FamilyDecoration.view.budget.Preview": [
-    "widget.budget-preview"
   ],
   "FamilyDecoration.view.bulletin.EditBulletin": [],
   "FamilyDecoration.view.bulletin.Index": [
@@ -2271,6 +2250,12 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.checklog.UserLogList": [
     "widget.checklog-userloglist"
+  ],
+  "FamilyDecoration.view.costanalysis.Index": [
+    "widget.costanalysis-index"
+  ],
+  "FamilyDecoration.view.costanalysis.TotalCost": [
+    "widget.costanalysis-totalcost"
   ],
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": [
     "widget.mainmaterial-editmainmaterial"

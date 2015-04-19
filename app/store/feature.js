@@ -67,6 +67,12 @@ Ext.define('FamilyDecoration.store.Feature', {
                         cmp: 'basicitem-index',
                         leaf: true,
                         icon: 'resources/img/menu_item.ico'
+                    },
+                    {
+                        name: "成本分析",
+                        cmp: 'costanalysis-index',
+                        leaf: true,
+                        icon: 'resources/img/menu_item.ico'
                     }
                 ] 
             },
@@ -174,6 +180,9 @@ Ext.define('FamilyDecoration.store.Feature', {
             }
             else if (rec.get('cmp') == 'budget-index') {
                 flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() ? true : false;
+            }
+            else if (rec.get('cmp') == 'costanalysis-index') {
+                flag = User.isAdmin() ? true : false;
             }
             else if (rec.get('cmp') == 'business-index') {
                 flag = User.isGeneral() ? false : true;
