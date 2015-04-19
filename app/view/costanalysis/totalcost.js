@@ -2,10 +2,22 @@ Ext.define('FamilyDecoration.view.costanalysis.TotalCost', {
 	extend: 'Ext.grid.Panel',
 	alias: 'widget.costanalysis-totalcost',
 
+	requires: ['FamilyDecoration.store.TotalCost'],
+
 	title: '总成本',
+
+	refresh: function (){
+		var me = this,
+			st = me.getStore();
+		st.load();
+	},
 
 	initComponent: function (){
 		var me = this;
+
+		me.store = Ext.create('FamilyDecoration.store.TotalCost', {
+			autoLoad: true
+		});
 
 		me.columns = [
 			{
