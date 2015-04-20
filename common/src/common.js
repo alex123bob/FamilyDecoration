@@ -472,4 +472,13 @@ function sendMsg (sender, receiver, content){
     });
 }
 
+window.onresize = function() {
+    var w = Ext.query('.x-window');
+    Ext.each(w, function(item) {        
+        var win = Ext.getCmp(item.id);
+        
+        win.center();
+    })
+}
+
 Ext.define('FamilyDecoration.Common', {});
