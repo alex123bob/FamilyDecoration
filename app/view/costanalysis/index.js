@@ -2,7 +2,8 @@ Ext.define('FamilyDecoration.view.costanalysis.Index', {
     extend: 'Ext.container.Container',
     alias: 'widget.costanalysis-index',
     requires: [
-        'FamilyDecoration.view.progress.ProjectList', 'FamilyDecoration.view.costanalysis.TotalCost'
+        'FamilyDecoration.view.progress.ProjectList', 'FamilyDecoration.view.costanalysis.TotalCost',
+        'FamilyDecoration.view.costanalysis.CostAnalysis'
     ],
     autoScroll: true,
     width: '100%',
@@ -41,7 +42,7 @@ Ext.define('FamilyDecoration.view.costanalysis.Index', {
                 flex: 3,
                 width: '100%'
             }, {
-                xtype: 'panel',
+                xtype: 'costanalysis-costanalysis',
                 title: '成本分析',
                 flex: 2,
                 width: '100%'
