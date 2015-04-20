@@ -37,6 +37,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.model.Chart": "../../app/model/chart.js",
   "FamilyDecoration.model.ChartDetail": "../../app/model/chartdetail.js",
   "FamilyDecoration.model.Community": "../../app/model/community.js",
+  "FamilyDecoration.model.CostAnalysis": "../../app/model/costanalysis.js",
   "FamilyDecoration.model.Feature": "../../app/model/feature.js",
   "FamilyDecoration.model.LogList": "../../app/model/loglist.js",
   "FamilyDecoration.model.MainMaterial": "../../app/model/mainmaterial.js",
@@ -63,6 +64,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.store.Chart": "../../app/store/chart.js",
   "FamilyDecoration.store.ChartDetail": "../../app/store/chartdetail.js",
   "FamilyDecoration.store.Community": "../../app/store/community.js",
+  "FamilyDecoration.store.CostAnalysis": "../../app/store/costanalysis.js",
   "FamilyDecoration.store.Feature": "../../app/store/feature.js",
   "FamilyDecoration.store.LogList": "../../app/store/loglist.js",
   "FamilyDecoration.store.MainMaterial": "../../app/store/mainmaterial.js",
@@ -104,6 +106,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.checklog.Index": "../../app/view/checklog/index.js",
   "FamilyDecoration.view.checklog.MemberList": "../../app/view/checklog/memberlist.js",
   "FamilyDecoration.view.checklog.UserLogList": "../../app/view/checklog/userloglist.js",
+  "FamilyDecoration.view.costanalysis.CostAnalysis": "../../app/view/costanalysis/costanalysis.js",
   "FamilyDecoration.view.costanalysis.Index": "../../app/view/costanalysis/index.js",
   "FamilyDecoration.view.costanalysis.TotalCost": "../../app/view/costanalysis/totalcost.js",
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": "../../app/view/mainmaterial/editmainmaterial.js",
@@ -1006,6 +1009,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.model.Chart": [],
   "FamilyDecoration.model.ChartDetail": [],
   "FamilyDecoration.model.Community": [],
+  "FamilyDecoration.model.CostAnalysis": [],
   "FamilyDecoration.model.Feature": [],
   "FamilyDecoration.model.LogList": [],
   "FamilyDecoration.model.MainMaterial": [],
@@ -1032,6 +1036,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.store.Chart": [],
   "FamilyDecoration.store.ChartDetail": [],
   "FamilyDecoration.store.Community": [],
+  "FamilyDecoration.store.CostAnalysis": [],
   "FamilyDecoration.store.Feature": [],
   "FamilyDecoration.store.LogList": [],
   "FamilyDecoration.store.MainMaterial": [],
@@ -1073,6 +1078,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.checklog.Index": [],
   "FamilyDecoration.view.checklog.MemberList": [],
   "FamilyDecoration.view.checklog.UserLogList": [],
+  "FamilyDecoration.view.costanalysis.CostAnalysis": [],
   "FamilyDecoration.view.costanalysis.Index": [],
   "FamilyDecoration.view.costanalysis.TotalCost": [],
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": [],
@@ -2142,6 +2148,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.model.Chart": [],
   "FamilyDecoration.model.ChartDetail": [],
   "FamilyDecoration.model.Community": [],
+  "FamilyDecoration.model.CostAnalysis": [],
   "FamilyDecoration.model.Feature": [],
   "FamilyDecoration.model.LogList": [],
   "FamilyDecoration.model.MainMaterial": [],
@@ -2168,6 +2175,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.store.Chart": [],
   "FamilyDecoration.store.ChartDetail": [],
   "FamilyDecoration.store.Community": [],
+  "FamilyDecoration.store.CostAnalysis": [],
   "FamilyDecoration.store.Feature": [],
   "FamilyDecoration.store.LogList": [],
   "FamilyDecoration.store.MainMaterial": [],
@@ -2256,6 +2264,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.checklog.UserLogList": [
     "widget.checklog-userloglist"
+  ],
+  "FamilyDecoration.view.costanalysis.CostAnalysis": [
+    "widget.costanalysis-costanalysis"
   ],
   "FamilyDecoration.view.costanalysis.Index": [
     "widget.costanalysis-index"
