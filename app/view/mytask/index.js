@@ -173,6 +173,7 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 						text: '评价',
 						id: 'button-selfassess',
 						name: 'button-selfassess',
+						icon: './resources/img/assess.png',
 						header: false,
 						disabled: true,
 						handler: function (){
@@ -297,6 +298,7 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 					bbar: [{
 						text: '编辑完成进度',
 						id: 'button-editProcess',
+						icon: './resources/img/process.png',
 						name: 'button-editProcess',
 						disabled: true,
 						handler: function (){

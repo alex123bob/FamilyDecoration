@@ -92,9 +92,10 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 					borderRightStyle: 'solid',
 					borderRightWidth: '1px'
 				},
-				bbar: [{
+				tbar: [{
 					text: '添加',
 					id: 'button-addTask',
+					icon: './resources/img/add1.png',
 					name: 'button-addTask',
 					handler: function (){
 						var win = Ext.create('FamilyDecoration.view.taskassign.AssignTaskWin', {
@@ -105,6 +106,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 					text: '修改',
 					id: 'button-editTask',
 					name: 'button-editTask',
+					icon: './resources/img/edit1.png',
 					disabled: true,
 					handler: function (){
 						var tree = Ext.getCmp('treepanel-taskNameByUser'),
@@ -119,10 +121,12 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 							showMsg('请选择任务！');
 						}
 					}
-				}, {
+				}],
+				bbar: [{
 					text: '删除',
 					id: 'button-delTask',
 					name: 'button-delTask',
+					icon: './resources/img/delete1.png',
 					disabled: true,
 					handler: function (){
 						var tree = Ext.getCmp('treepanel-taskNameByUser'),
@@ -344,6 +348,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 					}],
 					bbar: [{
 						text: '批阅',
+						icon: './resources/img/assess.png',
 						handler: function (){
 							var taskTree = Ext.getCmp('treepanel-taskNameByUser'),
 								task = taskTree.getSelectionModel().getSelection()[0],

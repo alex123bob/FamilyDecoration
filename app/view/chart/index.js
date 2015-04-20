@@ -18,7 +18,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 				align: 'center'
 			},
 			margin: '0 1 0 0',
-			width: 200,
+			width: 220,
 			title: '图片分类',
 			items: [{
 				xtype: 'progress-projectlist',
@@ -84,6 +84,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 				bbar: [{
 					hidden: User.isGeneral() ? true : false,
 					text: '添加',
+					icon: './resources/img/add1.png',
 					id: 'button-addCategory',
 					name: 'button-addCategory',
 					handler: function (){
@@ -95,6 +96,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 				}, {
 					hidden: User.isGeneral() ? true : false,
 					text: '修改',
+					icon: './resources/img/edit1.png',
 					id: 'button-editCategory',
 					name: 'button-editCategory',
 					disabled: true,
@@ -135,6 +137,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 				}, {
 					hidden: User.isGeneral() ? true : false,
 					text: '删除',
+					icon: './resources/img/delete1.png',
 					id: 'button-deleteCategory',
 					name: 'button-deleteCategory',
 					disabled: true,
@@ -271,6 +274,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 			tbar: [{
 				hidden: User.isGeneral() ? true : false,
 				text: '项目图库添加',
+				icon: './resources/img/add4.png',
 				id: 'button-addProjectChart',
 				name: 'button-addProjectChart',
 				disabled: true,
@@ -336,6 +340,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 			}, {
 				hidden: User.isGeneral() ? true : false,
 				text: '自定义图库添加',
+				icon: './resources/img/add5.png',
 				id: 'button-addCustomizedChart',
 				name: 'button-addCustomizedChart',
 				disabled: true,
@@ -399,6 +404,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 			}, {
 				hidden: User.isGeneral() ? true : false,
 				text: '删除',
+				icon: './resources/img/delete5.png',
 				id: 'button-deleteChart',
 				name: 'button-deleteChart',
 				disabled: true,
@@ -438,6 +444,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 			}, {
 				hidden: User.isGeneral() ? true : false,
 				text: '批量删除',
+				icon: './resources/img/delete6.png',
 				id: 'button-batchremove',
 				name: 'button-batchremove',
 				disabled: true,
@@ -457,6 +464,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 				}
 			}, {
 				text: '返回工程',
+				icon: './resources/img/return.png',
 				handler: function (){
 					var sel = Ext.getCmp('treepanel-chartCategory').getSelectionModel().getSelection()[0];
 					if (sel) {

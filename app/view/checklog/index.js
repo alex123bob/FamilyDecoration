@@ -150,6 +150,7 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 				tbar: [{
 					text: '批阅',
 					disabled: true,
+					icon: './resources/img/comment.png',
 					id: 'button-censorship',
 					name: 'button-censorship',
 					handler: function (){

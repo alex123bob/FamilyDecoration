@@ -109,6 +109,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 		me.tbar = [
 			{
 				text: '预算细则',
+				icon: './resources/img/detail.png',
 				tooltip: '新建或编辑预算头部信息',
 				name: 'button-addBudget',
 				handler: function (){
@@ -141,6 +142,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			},
 			{
 				text: '添加大项',
+				icon: './resources/img/add2.png',
 				tooltip: '添加新的基础大项',
 				name: 'button-addNewItem',
 				hidden: true,
@@ -156,6 +158,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			{
 				text: '添加小项',
 				tooltip: '为已有大项添加小项',
+				icon: './resources/img/add3.png',
 				name: 'button-addSmallItemToBigItem',
 				disabled: true,
 				hidden: true,
@@ -184,6 +187,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			{
 				text: '删除',
 				tooltip: '删除预算项目',
+				icon: './resources/img/delete3.png',
 				name: 'button-deleteItem',
 				disabled: true,
 				hidden: true,
@@ -222,6 +226,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			},
 			{
 				text: '调价',
+				icon: './resources/img/price.png',
 				name: 'button-priceAdjust',
 				hidden: true,
 				handler: function (){
@@ -318,6 +323,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 		me.bbar = [
 			{
 				text: '初始化',
+				icon: './resources/img/initialize.png',
 				tooltip: '清空当前预算信息，用于已经加载了预算情况后进行新建预算',
 				name: 'button-initialize',
 				handler: function (){
@@ -326,6 +332,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			},
 			{
 				text: '打印预算',
+				icon: './resources/img/print.png',
 				handler: function (){
 					if (me.budgetId) {
 						var win = window.open('./fpdf/index2.php?action=view&budgetId=' + me.budgetId,'打印','height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
@@ -338,6 +345,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			},
 			{
 				text: '导出预算',
+				icon: './resources/img/pdf.png',
 				handler: function (){
 					if (me.budgetId) {
 						var exportFrame = document.getElementById('exportFrame');
@@ -350,6 +358,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			},
 			{
 				text: '预览预算',
+				icon: './resources/img/preview.png',
 				handler: function (){
 					if (me.budgetId) {
 						var win = window.open('./fpdf/index2.php?action=view&budgetId=' + me.budgetId,'打印','height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
@@ -361,6 +370,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			},
 			{
 				text: '历史预算',
+				icon: './resources/img/history.png',
 				tooltip: '查看、加载历史预算',
 				name: 'button-historyBudget',
 				handler: function (){

@@ -57,6 +57,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
             },
             tbar: [{
                 text: '添加公告',
+                icon: './resources/img/add.png',
                 hidden: !User.isAdmin() && !User.isAdministrationManager() && !User.isAdministrationStaff(),
                 handler: function (){
                     var win = Ext.create('FamilyDecoration.view.bulletin.EditBulletin');
@@ -64,6 +65,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 }
             }, {
                 text: '修改公告',
+                icon: './resources/img/edit.png',
                 hidden: !User.isAdmin() && !User.isAdministrationManager() && !User.isAdministrationStaff(),
                 handler: function (){
                     var grid = Ext.getCmp('gridpanel-bulletin'),
@@ -80,6 +82,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 }
             }, {
                 text: '删除公告',
+                icon: './resources/img/delete.png',
                 hidden: !User.isAdmin() && !User.isAdministrationManager() && !User.isAdministrationStaff(),
                 handler: function (){
                     var grid = Ext.getCmp('gridpanel-bulletin'),
@@ -115,6 +118,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 }
             }, {
                 text: '公告置顶',
+                icon: './resources/img/nail.png',
                 hidden: !User.isAdmin() && !User.isAdministrationManager() && !User.isAdministrationStaff(),
                 handler: function (){
                     var grid = Ext.getCmp('gridpanel-bulletin'),
@@ -150,6 +154,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 }
             }, {
                 text: '取消置顶',
+                icon: './resources/img/back.png',
                 hidden: !User.isAdmin() && !User.isAdministrationManager() && !User.isAdministrationStaff(),
                 handler: function (){
                     var grid = Ext.getCmp('gridpanel-bulletin'),
@@ -245,7 +250,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                     xtype: 'actioncolumn',
                     flex: 1,
                     items: [{
-                        icon: './resources/img/document_edit.png',  // Use a URL in the icon config
+                        icon: './resources/img/read.png',  // Use a URL in the icon config
                         tooltip: '置为已读',
                         iconCls: 'pointerCursor',
                         handler: function(grid, rowIndex, colIndex, item, e, rec) {

@@ -79,6 +79,7 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 				text: '添加',
 				id: 'button-addmaterial',
 				name: 'button-addmaterial',
+				icon: './resources/img/add1.png',
 				disabled: true,
 				handler: function (){
 					var treepanel = Ext.getCmp('treepanel-projectNameForMainMaterial'),
@@ -92,6 +93,7 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 				text: '修改',
 				id: 'button-editmaterial',
 				name: 'button-editmaterial',
+				icon: './resources/img/edit1.png',
 				disabled: true,
 				handler: function (){
 					var treepanel = Ext.getCmp('treepanel-projectNameForMainMaterial'),
@@ -113,6 +115,7 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 				text: '删除',
 				id: 'button-deletematerial',
 				name: 'button-deletematerial',
+				icon: './resources/img/delete1.png',
 				disabled: true,
 				handler: function (){
 					var treepanel = Ext.getCmp('treepanel-projectNameForMainMaterial'),

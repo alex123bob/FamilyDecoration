@@ -30,23 +30,24 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 					dataIndex: 'itemName',
 					flex: 1
 				}],
-				dockedItems: [{
-					dock: 'top',
-					xtype: 'toolbar',
-					items: [{
-						xtype: 'searchfield',
-						flex: 1,
-						store: biSt,
-						paramName: 'itemName'
-					}]
-				}],
+				// dockedItems: [{
+				// 	dock: 'top',
+				// 	xtype: 'toolbar',
+				// 	items: [{
+				// 		xtype: 'searchfield',
+				// 		flex: 1,
+				// 		store: biSt,
+				// 		paramName: 'itemName'
+				// 	}]
+				// }],
 				title: '大类项目',
 				hideHeaders: true,
 				margin: '0 1 0 0',
 				store: biSt,
 				allowDeselect: true,
-				bbar: [{
+				tbar: [{
 					text: '添加',
+					icon: './resources/img/add2.png',
 					handler: function (){
 						var win = Ext.create('FamilyDecoration.view.basicitem.AddBasicItem', {
 
@@ -56,6 +57,7 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 				}, {
 					text: '修改',
 					disabled: true,
+					icon: './resources/img/edit2.png',
 					id: 'button-editBasicItem',
 					name: 'button-editBasicItem',
 					handler: function (){
@@ -91,8 +93,10 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 							}
 						}, window, false, item.get('itemName'));
 					}
-				}, {
+				}],
+				bbar: [{
 					text: '删除',
+					icon: './resources/img/delete2.png',
 					disabled: true,
 					id: 'button-deleteBasicItem',
 					name: 'button-deleteBasicItem',
@@ -173,6 +177,7 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 					text: '添加',
 					id: 'button-addbasicSubItem',
 					name: 'button-addbasicSubItem',
+					icon: './resources/img/add3.png',
 					disabled: true,
 					handler: function (){
 						var mainGrid = Ext.getCmp('gridpanel-basicitem'),
@@ -194,6 +199,7 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 					text: '修改',
 					id: 'button-editbasicSubItem',
 					name: 'button-editbasicSubItem',
+					icon: './resources/img/edit3.png',
 					disabled: true,
 					handler: function (){
 						var mainGrid = Ext.getCmp('gridpanel-basicitem'),
@@ -218,6 +224,7 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 					text: '删除',
 					id: 'button-delbasicSubItem',
 					name: 'button-delbasicSubItem',
+					icon: './resources/img/delete3.png',
 					disabled: true,
 					handler: function (){
 						var subGrid = Ext.getCmp('gridpanel-basicSubItem'),
