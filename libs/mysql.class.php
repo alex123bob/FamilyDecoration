@@ -350,7 +350,7 @@
 				}
 				$condition = str_replace_once($condition,"?",$value);
 			}
-			if($condition != "")
+			if($condition != "" && trim($condition) != "")
 				$sql .= " where ".$condition;
 			$this->dbSQL = $sql;
 			$this->DBExecute($this->dbSQL);
