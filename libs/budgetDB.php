@@ -238,6 +238,69 @@
 		}
 		return $res;
 	}
+	//成本分析
+	function costAnalysis($budgetId){
+		global $mysql;
+		$res= array();
+		$arr = $mysql->DBGetAsMap(" select itemCode,basicItemId,basicSubItemId,itemName,budgetItemId,itemAmount,itemUnit,manpowerCost,mainMaterialCost,workCategory from `budget_item` where `budgetId` = '?' and itemCode not in ('N','O','P','Q','R','S') and `isDeleted` = 'false' ORDER BY LEFT( itemCode, 2 ) ASC , ( SUBSTRING( itemCode, 2 ) ) *1 DESC ",$budgetId);
+		$workCategorys = array();
+		$count = 0;
+		$isFirstSmallCount = true;
+		$smallCount = array('manpowerTotalCost'=>0,'mainMaterialTotalCost'=>0);
+		foreach($arr as $val) {
+			$itemCode = $val['itemCode'];
+			$itemAmount = $val['itemAmount'] == "" || $val['itemAmount'] == null ? 0 : $val['itemAmount'];
+			if($val['itemAmount'] !== $itemAmount) $val['itemAmount'] = $itemAmount;
+			$workCategory = $val['workCategory'] == "" || $val['workCategory'] == null ? '其他' : $val['workCategory'];
+			if($val['workCategory'] !== $workCategory) $val['workCategory'] = $workCategory;
+			$manpowerCost = $val['manpowerCost'] == "" || $val['manpowerCost'] == null ? 0 : $val['manpowerCost'];
+			if($val['manpowerCost'] !== $manpowerCost) $val['manpowerCost'] = $manpowerCost;
+			$mainMaterialCost = $val['mainMaterialCost'] == "" || $val['mainMaterialCost'] == null ? 0 : $val['mainMaterialCost'];
+			if($val['mainMaterialCost'] !== $mainMaterialCost) $val['mainMaterialCost'] = $mainMaterialCost;
+			if(strlen($itemCode) == 1){
+				//大项
+				if($isFirstSmallCount){
+					$isFirstSmallCount = false;
+				}else{
+					//输出小计
+					$res[$count] = array('itemName'=>'小计','budgetItemId'=>'budgetItemId'.$count,'manpowerTotalCost'=>$smallCount['manpowerTotalCost'],'mainMaterialTotalCost'=>$smallCount['mainMaterialTotalCost']);
+					$count++;
+					$smallCount = array('manpowerTotalCost'=>0,'mainMaterialTotalCost'=>0);
+				}
+				$res[$count] = array('itemCode'=>$itemCode,'itemName'=>$val['itemName'],'budgetItemId'=>$val['budgetItemId'],'basicItemId'=>$val['basicItemId'],'basicSubItemId'=>$val['basicSubItemId']);
+			}else{
+				$res[$count] = $val;
+				//小项
+				if(!isset($workCategorys[$workCategory])){
+					$workCategorys[$workCategory] = array('manpowerCost'=>0,'mainMaterialCost'=>0,);
+				}
+				$manpowerTotalCost = $manpowerCost * $itemAmount;
+				$mainMaterialTotalCost = $mainMaterialCost * $itemAmount;
+				$res[$count]['manpowerTotalCost'] = $manpowerTotalCost;
+				$res[$count]['mainMaterialTotalCost']  = $mainMaterialTotalCost;
+				$res[$count]['basicItemId']  = $val['basicItemId'];
+				$res[$count]['basicSubItemId']  = $val['basicSubItemId'];
+				$workCategorys[$workCategory]['manpowerCost'] += $manpowerTotalCost;
+				$workCategorys[$workCategory]['mainMaterialCost'] += $mainMaterialTotalCost;
+				$smallCount['manpowerTotalCost'] += $manpowerTotalCost;
+				$smallCount['mainMaterialTotalCost'] += $mainMaterialTotalCost;
+			}
+			$count ++;
+		}
+		if(!$isFirstSmallCount){
+			//输出小计
+			$res[$count] = array('itemName'=>'小计','budgetItemId'=>'budgetItemId'.$count,'manpowerTotalCost'=>$smallCount['manpowerTotalCost'],'mainMaterialTotalCost'=>$smallCount['mainMaterialTotalCost']);
+			$count++;
+		}
+		//调整下workCategorys的格式
+		$cates = array();
+		$count = 0;
+		foreach($workCategorys as $key=>$val){
+			$cates[$count++] = array('name'=>$key,'manpowerCost'=>$val['manpowerCost'],'mainMaterialCost'=>$val['mainMaterialCost']);
+		}
+		return array('cost'=>$res,'total'=>$cates);
+		
+	}
 	//获取预算所有条目
 	function getBudgetItemsByBudgetId ($budgetId , $isGBK = false) {
 		global $mysql;

@@ -29,6 +29,8 @@
 		case "view":	$res = getBudgetsByBudgetId($_REQUEST["budgetId"]);  break;
 		//折扣
 		case "discount":$res = makeDiscount($_REQUEST);  break;
+		//成本分析
+		case "analysis":$res = costAnalysis($_REQUEST['budgetId']);break;
 		default: 		throw new Exception("unknown action:".$action);
 	}
 	if($isParseResut){

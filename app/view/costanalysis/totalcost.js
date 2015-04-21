@@ -15,6 +15,42 @@ Ext.define('FamilyDecoration.view.costanalysis.TotalCost', {
 	initComponent: function (){
 		var me = this;
 
+		function columnRenderer (val, meta, rec, rowIndex, colIndex, st, view){
+			// 小项
+			if (rec.get('basicSubItemId') && !rec.get('basicItemId')) {
+				switch (colIndex) {
+					// 工种
+					case 8:
+					val = FamilyDecoration.store.WorkCategory.renderer(val);
+					break;
+				}
+				return val;
+			}
+			// 大项
+			else if (!rec.get('basicSubItemId') && rec.get('basicItemId')) {
+				return '';
+			}
+			// 小计
+			else if (!rec.get('basicItemId') && !rec.get('basicSubItemId') && rec.get('itemCode') == '') {
+				switch (colIndex) {
+					// 数量
+					case 3:
+					// 人工成本单价
+					case 4:
+					// 材料成本单价
+					case 5:
+					// 工种
+					case 8:
+					val = '';
+					break;
+				}
+				return val;
+			}
+			else {
+				return '';
+			}
+		}
+
 		me.store = Ext.create('FamilyDecoration.store.TotalCost', {
 			autoLoad: false
 		});
@@ -31,7 +67,7 @@ Ext.define('FamilyDecoration.view.costanalysis.TotalCost', {
 			},
 			{
 				text: '名称',
-				dataIndex: 'projectName',
+				dataIndex: 'itemName',
 				menuDisabled: true,
 				align: 'center',
 				draggable: false,
@@ -40,7 +76,7 @@ Ext.define('FamilyDecoration.view.costanalysis.TotalCost', {
 			},
 			{
 				text: '单位',
-				dataIndex: 'projectName',
+				dataIndex: 'itemUnit',
 				menuDisabled: true,
 				align: 'center',
 				draggable: false,
@@ -49,12 +85,13 @@ Ext.define('FamilyDecoration.view.costanalysis.TotalCost', {
 			},
 			{
 				text: '数量',
-				dataIndex: 'projectName',
+				dataIndex: 'itemAmount',
 				menuDisabled: true,
 				align: 'center',
 				draggable: false,
 				flex: 0.5,
-				sortable: false
+				sortable: false,
+				renderer: columnRenderer
 			},
 			{
 				text: '成本',
@@ -67,7 +104,8 @@ Ext.define('FamilyDecoration.view.costanalysis.TotalCost', {
             			draggable: false,
             			align: 'center',
             			sortable: false,
-            			menuDisabled: true
+            			menuDisabled: true,
+						renderer: columnRenderer
 	        		},
 	        		{
 	        			text: '材料',
@@ -76,7 +114,8 @@ Ext.define('FamilyDecoration.view.costanalysis.TotalCost', {
             			align: 'center',
             			sortable: false,
             			menuDisabled: true,
-            			dataIndex: 'mainMaterialCost'
+            			dataIndex: 'mainMaterialCost',
+						renderer: columnRenderer
 	        		}
 	        	],
             	draggable: false,
@@ -93,7 +132,8 @@ Ext.define('FamilyDecoration.view.costanalysis.TotalCost', {
             			draggable: false,
             			align: 'center',
             			sortable: false,
-            			menuDisabled: true
+            			menuDisabled: true,
+						renderer: columnRenderer
 	        		}
 	        	],
             	draggable: false,
@@ -110,7 +150,8 @@ Ext.define('FamilyDecoration.view.costanalysis.TotalCost', {
             			draggable: false,
             			align: 'center',
             			sortable: false,
-            			menuDisabled: true
+            			menuDisabled: true,
+						renderer: columnRenderer
 	        		}
 	        	],
             	draggable: false,
@@ -123,7 +164,8 @@ Ext.define('FamilyDecoration.view.costanalysis.TotalCost', {
 				align: 'center',
 				draggable: false,
 				flex: 0.5,
-				sortable: false
+				sortable: false,
+				renderer: columnRenderer
 			}
 		];
 

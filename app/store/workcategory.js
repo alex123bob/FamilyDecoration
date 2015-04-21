@@ -36,7 +36,7 @@ Ext.define('FamilyDecoration.store.WorkCategory', {
 
 	renderer: function (val){
 		var arr = this.data.items,
-			res = '';
+			res = '其他';
 		for (var i = 0; i < arr.length; i++) {
 			if (arr[i].get('value') == val) {
 				res = arr[i].get('name');

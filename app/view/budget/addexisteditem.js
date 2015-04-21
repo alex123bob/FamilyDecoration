@@ -42,7 +42,8 @@ Ext.define('FamilyDecoration.view.budget.AddExistedItem', {
 							lossPercent: subRecs[i].get('lossPercent'),
 							remark: subRecs[i].get('remark'),
 							manpowerCost: subRecs[i].get('manpowerCost'),
-							mainMaterialCost: subRecs[i].get('mainMaterialCost')
+							mainMaterialCost: subRecs[i].get('mainMaterialCost'),
+							workCategory: subRecs[i].get('workCategory')
 						});
 					}
 					var index = 0;

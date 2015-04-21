@@ -6,7 +6,7 @@ Ext.define('FamilyDecoration.store.CostAnalysis', {
 		url: './libs/budget.php',
 		reader: {
 			type: 'json',
-			root: 'cost'
+			root: 'total'
 		},
 		extraParams: {
 			action: 'analysis'

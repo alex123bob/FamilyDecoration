@@ -6,10 +6,10 @@ Ext.define('FamilyDecoration.store.TotalCost', {
 		url: './libs/budget.php',
 		reader: {
 			type: 'json',
-			root: 'total'
+			root: 'cost'
 		},
 		extraParams: {
-			action: 'view'
+			action: 'analysis'
 		}
 	}
 });

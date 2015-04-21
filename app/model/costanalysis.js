@@ -1,10 +1,9 @@
 Ext.define('FamilyDecoration.model.CostAnalysis', {
 	extend: 'Ext.data.Model',
 	fields: [
-		'id',
-		{name: 'workCategory', type: 'string'},
-		{name: 'manpowerTotalCostForWorkCategory', type: 'float'},
-		{name: 'mainMaterialTotalCostForWorkCategory', type: 'float'}
+		{name: 'name', type: 'string'},
+		{name: 'manpowerCost', type: 'float'},
+		{name: 'mainMaterialCost', type: 'float'}
 	],
-	idProperty: 'id'
+	idProperty: 'name'
 });

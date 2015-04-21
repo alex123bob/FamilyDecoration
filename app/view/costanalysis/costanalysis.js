@@ -22,16 +22,19 @@ Ext.define('FamilyDecoration.view.costanalysis.CostAnalysis', {
 		me.columns = [
 			{
 				text: '工种\\成本',
-				dataIndex: 'workCategory',
+				dataIndex: 'name',
 				menuDisabled: true,
 				align: 'center',
 				draggable: false,
 				flex: 1,
-				sortable: false
+				sortable: false,
+				renderer: function (val){
+					return FamilyDecoration.store.WorkCategory.renderer(val);
+				}
 			},
 			{
 				text: '人工',
-				dataIndex: 'manpowerTotalCostForWorkCategory',
+				dataIndex: 'manpowerCost',
 				menuDisabled: true,
 				align: 'center',
 				draggable: false,
@@ -40,7 +43,7 @@ Ext.define('FamilyDecoration.view.costanalysis.CostAnalysis', {
 			},
 			{
 				text: '主材',
-				dataIndex: 'mainMaterialTotalCostForWorkCategory',
+				dataIndex: 'mainMaterialCost',
 				menuDisabled: true,
 				align: 'center',
 				draggable: false,
