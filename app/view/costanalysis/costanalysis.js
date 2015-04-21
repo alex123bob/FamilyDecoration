@@ -16,12 +16,12 @@ Ext.define('FamilyDecoration.view.costanalysis.CostAnalysis', {
 		var me = this;
 
 		me.store = Ext.create('FamilyDecoration.store.CostAnalysis', {
-			autoLoad: true
+			autoLoad: false
 		});
 
 		me.columns = [
 			{
-				text: '工种/成本',
+				text: '工种\\成本',
 				dataIndex: 'workCategory',
 				menuDisabled: true,
 				align: 'center',

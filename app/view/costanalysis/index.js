@@ -26,7 +26,21 @@ Ext.define('FamilyDecoration.view.costanalysis.Index', {
             },
             listeners: {
                 selectionchange: function (selModel, sels, opts){
-                    showMsg('海洋，帮忙实现下。');
+                    var rec = sels[0],
+                        totalCost = Ext.getCmp('gridpanel-totalCost'),
+                        costAnalysis = Ext.getCmp('gridpanel-costAnalysis');
+                    if (rec && rec.get('projectName')) {
+                        totalCost.getStore().load({
+                            params: {
+                                projectId: rec.getId()
+                            }
+                        });
+                        costAnalysis.getStore().load({
+                            params: {
+                                projectId: rec.getId()
+                            }
+                        });
+                    }
                 }
             }
         }, {
@@ -38,11 +52,15 @@ Ext.define('FamilyDecoration.view.costanalysis.Index', {
             layout: 'vbox',
             items: [{
                 xtype: 'costanalysis-totalcost',
+                id: 'gridpanel-totalCost',
+                name: 'gridpanel-totalCost',
                 title: '总成本',
                 flex: 3,
                 width: '100%'
             }, {
                 xtype: 'costanalysis-costanalysis',
+                id: 'gridpanel-costAnalysis',
+                name: 'gridpanel-costAnalysis',
                 title: '成本分析',
                 flex: 2,
                 width: '100%'

@@ -20,6 +20,8 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 
 	discount: 100, // 预算折扣 百分数
 
+	isSynchronousCalculation: true, // calculate simultaneously or not when editting each line of budget.
+
 	// obj: budgetId, custName, projectName
 	loadBudget: function (obj){
 		var cmp = this,
@@ -47,7 +49,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 		addSmallBtn.isHidden() && addSmallBtn.show();
 		delItemBtn.isHidden() && delItemBtn.show();
 		discountBtn.isHidden() && discountBtn.show();
-		calculateBtn.isHidden() && calculateBtn.show();
+		!panel.isSynchronousCalculation && calculateBtn.isHidden() && calculateBtn.show();
 		if (rec) {
 			if (rec.get('basicItemId') && !rec.get('basicSubItemId')) {
     			addSmallBtn.enable();
@@ -84,7 +86,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 		addSmallBtn.hide();
 		delItemBtn.hide();
 		discountBtn.hide();
-		calculateBtn.hide();
+		!cmp.isSynchronousCalculation && calculateBtn.hide();
 	},
 
 	refresh: function (func){
@@ -307,11 +309,6 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				icon: './resources/img/button-background.png',
 				hidden: true,
 				name: 'button-calculate',
-				// style: {
-				// 	backgroundImage: 'url(./resources/img/button-background.png)',
-				// 	backgroundRepeat: 'no-repeat',
-				// 	backgroundPosition: 'left center'
-				// },
 				handler: function (){
 					me.refresh(function (){
 						showMsg('计算完毕!');
@@ -581,11 +578,18 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 
 			            		rec.commit();
 
-			            		// 用了批量编辑之后，不用实时刷新
-			            		// me.refresh(function (){
-			            		// 	var grid = me.getComponent('gridpanel-budgetContent');
-			            		// 	grid.view.bufferedRenderer.scrollTo(e.rowIdx, true);
-			            		// });
+			            		// synchronize immediately after editting
+			            		if (me.isSynchronousCalculation) {
+			            			me.refresh(function (){
+				            			var grid = me.getComponent('gridpanel-budgetContent'),
+				            				view = grid.getView();
+				            			grid.getSelectionModel().select(rec);
+				            			view.focusRow(rec);
+				            		});
+			            		}
+			            		else {
+			            			// do nothing. wait for multiple updating
+			            		}
 
 			            		Ext.resumeLayouts();
 			            	},

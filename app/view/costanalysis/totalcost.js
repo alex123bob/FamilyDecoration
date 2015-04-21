@@ -16,7 +16,7 @@ Ext.define('FamilyDecoration.view.costanalysis.TotalCost', {
 		var me = this;
 
 		me.store = Ext.create('FamilyDecoration.store.TotalCost', {
-			autoLoad: true
+			autoLoad: false
 		});
 
 		me.columns = [
