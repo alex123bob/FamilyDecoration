@@ -1,136 +1,47 @@
 <?php
 	include_once "conn.php";
 
-	/**
-	 * [addCategory]
-	 * @param array $category [consists of chartId, chartCategory, chartContent]
-	 */
 	function addCategory (array $category){
-		try {
-			global $mysql;
-			$mysql->DBInsert("`chart`", "`chartId`, `chartCategory`",
-			 	"'".$category['chartId']."', '".$category['chartCategory']."'");
-			return json_encode(array('status'=>'successful', 'errMsg' => ''));
-		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		global $mysql;
+		$obj = array('chartId'=>$category['chartId'],'chartCategory'=> $category['chartCategory']);
+		$mysql->DBInsertAsArray('chart',$obj);
+		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 
-	/**
-	 * [getCharts Gets all chart categories]
-	 * @return [type] [description]
-	 */
 	function getCategories (){
-		try {
-			global $mysql;
-			$arr = $mysql->DBGetSomeRows("`chart`", "*", "where `isDeleted` = 'false'");
-
-			if ($arr) {
-				// Url encode Chinese characters and then decode them, in order to avert garbled characters.
-				foreach($arr as $key => $val) {
-					$arr[$key]['chartCategory'] = urlencode($val['chartCategory']);
-				}
-				$arr = urldecode(json_encode($arr));
-			} 
-			else {
-				$arr = json_encode(array());
-			}
-			
-			return $arr;
-		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		global $mysql;
+		$arr = $mysql->DBGetSomeRows("`chart`", "*", "where `isDeleted` = 'false'");
+		return json_encode($arr);
 	}
 
-	/**
-	 * [getCategoryById get specific category by id]
-	 * @param  [string] $chartId [description]
-	 * @return [type]          [description]
-	 */
 	function getCategoryById ($chartId){
-		try {
-			global $mysql;
-			$arr = $mysql->DBGetSomeRows("`chart`", "*", "where `chartId` = '$chartId' ");
-
-			if ($arr) {
-				// Url encode Chinese characters and then decode them, in order to avert garbled characters.
-				foreach($arr as $key => $val) {
-					$arr[$key]['chartCategory'] = urlencode($val['chartCategory']);
-				}
-				$arr = urldecode(json_encode($arr));
-			}
-			else {
-				$arr = json_encode(array());
-			}
-			
-			return $arr;
-		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		global $mysql;
+		$arr = $mysql->DBGetSomeRows("`chart`", "*", "where `chartId` = '$chartId' ");
+		return json_encode($arr);
 	}
 
-	/**
-	 * [editCategory Edits chart by chartId]
-	 * @param  array  $chart [consists of chartId and any segment to be edited]
-	 * @return [type]      [description]
-	 */
 	function editChart (array $chart){
-		try {
-			global $mysql;
-			$setValue = "";
-			foreach ($chart as $key => $val) {
-				if ($key == "chartId" || is_numeric ($key)) {
-					continue;
-				}
-				else {
-					$setValue .= " `".$key."` = '".$val."',";
-				}
-			}
-			$setValue = substr($setValue, 0, -1);
-			$condition = "`chartId` = '".$chart['chartId']."'";
-			$mysql->DBUpdateSomeCols("`chart`", $condition, $setValue);
-			return json_encode(array('status'=>'successful', 'errMsg' => ''));
+		global $mysql;
+		$obj=array();
+		foreach ($chart as $key => $val) {
+			if ($key == "chartId" || is_numeric ($key)) 
+				continue;
+			$obj[$key]=$val;
 		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		$mysql->DBUpdate('chart',$obj,"`chartId` = '?'",array($chart['chartId']));
+		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 
 	function deleteCategory (array $chart) {
-		try {
-			global $mysql;
-			$condition = "`chartId` = '".$chart['chartId']."'";
-			$mysql->DBDelete("`chart`", $condition);
-			return json_encode(array('status'=>'successful', 'errMsg' => ''));
-		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		global $mysql;
+		$condition = "`chartId` = '".$chart['chartId']."'";
+		$mysql->DBDelete("`chart`", $condition);
+		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 
 	function getChart (array $chart){
-		try {
-			global $mysql;
-			$arr = $mysql->DBGetSomeRows("`chart`", "*", "where `chartId` = '".$chart["chartId"]."'");
-
-			if ($arr) {
-				// Url encode Chinese characters and then decode them, in order to avert garbled characters.
-				foreach($arr as $key => $val) {
-					$arr[$key]['chartCategory'] = urlencode($val['chartCategory']);
-				}
-				$arr = urldecode(json_encode($arr));
-			}
-			else {
-				$arr = json_encode(array());
-			}
-			
-			return $arr;
-		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		global $mysql;
+		$arr = $mysql->DBGetSomeRows("`chart`", "*", "where `chartId` = '".$chart["chartId"]."'");
+		return json_encode($arr);
 	}
 ?>

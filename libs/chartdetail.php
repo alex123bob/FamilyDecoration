@@ -12,5 +12,5 @@
 		case "addCharts": $res = addCharts($_POST); break;
 		default: 		throw new Exception("unknown action:".$action);
 	}
-	echo urldecode(json_encode($res));
+	echo (json_encode($res));
 ?>

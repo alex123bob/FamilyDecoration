@@ -106,7 +106,8 @@ Ext.define('FamilyDecoration.view.basicitem.AddBasicSubItem', {
 			isItemEmpty: function (rec) {
 				var flag = Ext.isEmpty(rec.get('subItemName')) || Ext.isEmpty(rec.get('subItemUnit')) || Ext.isEmpty(rec.get('mainMaterialPrice'))
 							|| Ext.isEmpty(rec.get('auxiliaryMaterialPrice')) || Ext.isEmpty(rec.get('manpowerPrice')) || Ext.isEmpty(rec.get('machineryPrice'))
-							|| Ext.isEmpty(rec.get('lossPercent')) || Ext.isEmpty(rec.get('cost'))
+							|| Ext.isEmpty(rec.get('lossPercent')) || Ext.isEmpty(rec.get('manpowerCost')) || Ext.isEmpty(rec.get('mainMaterialCost'))
+							|| Ext.isEmpty(rec.get('workCategory'));
 
 				return flag;
 			}
@@ -128,8 +129,10 @@ Ext.define('FamilyDecoration.view.basicitem.AddBasicSubItem', {
 						manpowerPrice: [],
 						machineryPrice: [],
 						lossPercent: [],
-						cost: [],
-						remark: []
+						manpowerCost: [],
+						mainMaterialCost: [],
+						remark: [],
+						workCategory: []
 					};
 
 				if (items.length <= 0) {
@@ -149,8 +152,10 @@ Ext.define('FamilyDecoration.view.basicitem.AddBasicSubItem', {
 							p.manpowerPrice.push(items[i].get('manpowerPrice'));
 							p.machineryPrice.push(items[i].get('machineryPrice'));
 							p.lossPercent.push(items[i].get('lossPercent'));
-							p.cost.push(items[i].get('cost'));
+							p.manpowerCost.push(items[i].get('manpowerCost'));
+							p.mainMaterialCost.push(items[i].get('mainMaterialCost'));
 							p.remark.push(items[i].get('remark'));
+							p.workCategory.push(items[i].get('workCategory'));
 						}
 					}
 
@@ -162,8 +167,10 @@ Ext.define('FamilyDecoration.view.basicitem.AddBasicSubItem', {
 						p.manpowerPrice = p.manpowerPrice.join('>>><<<');
 						p.machineryPrice = p.machineryPrice.join('>>><<<');
 						p.lossPercent = p.lossPercent.join('>>><<<');
-						p.cost = p.cost.join('>>><<<');
+						p.manpowerCost = p.manpowerCost.join('>>><<<');
+						p.mainMaterialCost = p.mainMaterialCost.join('>>><<<');
 						p.remark = p.remark.join('>>><<<');
+						p.workCategory = p.workCategory.join('>>><<<');
 						p.parentId = me.parentId;
 
 						if (me.subItem) {
@@ -173,7 +180,7 @@ Ext.define('FamilyDecoration.view.basicitem.AddBasicSubItem', {
 						}
 
 						Ext.Ajax.request({
-							url: me.subItem ? './libs/editbasicsubitem.php' : './libs/addbasicsubitem.php',
+							url: me.subItem ? './libs/subitem.php?action=edit' : './libs/subitem.php?action=addsome',
 							method: 'POST',
 							params: p,
 							callback: function (opts, success, res){

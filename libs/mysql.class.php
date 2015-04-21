@@ -38,78 +38,52 @@
 		const UNICODE = "unicode";
 
 		//构造函数，初始化
-		public function __construct($hostValue = 'localhost',$userValue = 'root',$passwordValue, $dbValue='', $encodeValue='')
-		{
+		public function __construct($hostValue = 'localhost',$userValue = 'root',$passwordValue, $dbValue='', $encodeValue=''){
 			$this->dbHost = $hostValue;
 			$this->dbUser = $userValue;
 			$this->dbPassword = $passwordValue;
 			$this->dbSelect = $dbValue;
 			//编码的选择
 			if (strcasecmp($encodeValue,self::GBK) == 0)		//忽略大小写的比较
-			{
 				$this->dbEncode = self::GBK;
-			}
 			if (strcasecmp($encodeValue,self::GB2312) == 0)
-			{
 				$this->dbEncode = self::GB2312;
-			}
 			if (strcasecmp($encodeValue,self::UTF8) == 0)
-			{
 				$this->dbEncode = self::UTF8;
-			}
 			if (strcasecmp($encodeValue,self::UNICODE) == 0)
-			{
 				$this->dbEncode = self::UNICODE;
-			}
 			$this->DBConnect();
 		}
 
 		//连接数据库函数
-		public function DBConnect()
-		{
+		public function DBConnect(){
 			$this->dbConn = mysql_connect($this->dbHost,$this->dbUser,$this->dbPassword);		//打开一个到 MySQL 服务器的连接
-
 			if (!$this->dbConn)		//如果没有数据库连接的标志
-			{
-				echo "数据库连接失败！";
-			}
-
+				throw new Exception("database connect error !");
 			if (!mysql_select_db($this->dbSelect, $this->dbConn))	//选择连接的数据库，如果没有连接的数据库和连接标志
-			{
-				echo "数据库打开失败！";
-			}
-
+				throw new Exception("database open error !");
 			mysql_query("SET NAMES '".$this->dbEncode."'");			//连接数据库的编码方式，mysql_query表示发送一条mysql查询
 		}
 
 		//执行数据库语句的基本方法，具体的操作都要调用该基本操作
-		public function DBExecute($sqlValue)
-		{
+		public function DBExecute($sqlValue){
 			//先判断是否连接，如果没连接先连接
 			if (!$this->dbConn)
-			{
 				$this->DBConnect();
-			}
-
 			//将传递进来的SQL语句进行一个赋值
 			$this->dbSQL = $sqlValue;
-
 			//然后执行SQL语句
 			if (!$this->dbResult = @mysql_query($this->dbSQL,$this->dbConn))
-			{
 				$this->DBOutputErrorInfo();
-			}
 		}
 
 		//获取执行数据库基本操作的dbResult
-		public function DBGetResult()
-		{
+		public function DBGetResult(){
 			return $this->dbResult;
 		}
 
 		//简单的查询功能，不返回任何结果，一般用于方法DBGetTotalNumber获取结果集地总条数
-		public function DBSimpleSelect($tableValue)
-		{
+		public function DBSimpleSelect($tableValue){
 			$partStr = "SELECT * FROM $tableValue";
 			$this->dbSQL = $partStr;
 			$this->DBExecute($this->dbSQL);
@@ -142,25 +116,20 @@
 		}
 
 		//获取所有的数据的方法，返回的是一个二维数组（查询功能）
-		public function DBGetAllRows($tableValue, $fieldsValue = '*', $order = "")
-		{
+		public function DBGetAllRows($tableValue, $fieldsValue = '*', $order = ""){
 			$partStr = "SELECT $fieldsValue FROM $tableValue";
 			if ($order) {
 				$partStr .= $order;
 			}
 			$this->dbSQL = $partStr;
 			$this->DBExecute($this->dbSQL);
-			if (mysql_num_rows($this->dbResult) > 0)
-			{
-				while($partRows = mysql_fetch_array($this->dbResult))
-				{
+			if (mysql_num_rows($this->dbResult) > 0) {
+				while($partRows = mysql_fetch_array($this->dbResult)){
 					$partAllRows[] = $partRows;
 				}
 				return $partAllRows;
-			}
-			else
-			{
-				return false;
+			} else {
+				return array();
 			}
 		}
 
@@ -185,36 +154,100 @@
 			}
 		}
 
-
-
 		//获取某个范围的信息，一般用于limit语句，$conditionValue是要加入条件词语的（如LIMIT或者WHERE），以字符串的形式传入
 		//或者用于WHERE，但返回的是几行的信息。字段可以是全部字段，也可以是某些指定字段，
 		//最后返回的是一个二维数组
-		public function DBGetSomeRows($tableValue, $fieldsValue = '*', $conditionValue = '', $order = "")
-		{
+		public function DBGetSomeRows($tableValue, $fieldsValue = '*', $conditionValue = '', $order = ""){
 			$partStr = "SELECT $fieldsValue FROM $tableValue $conditionValue";
-			if ($order) {
+			if ($order)
 				$partStr .= $order;
-			}
 			$this->dbSQL = $partStr;
 			$this->DBExecute($this->dbSQL);
 
-			if (mysql_num_rows($this->dbResult) > 0)
-			{
+			if (mysql_num_rows($this->dbResult) > 0){
 				while($partRows = mysql_fetch_array($this->dbResult))
-				{
 					$partSomeRows[] = $partRows;
-				}
 				return $partSomeRows;
 			}
-			else
-			{
-				return array();
+			return array();
+		}
+		
+		public function DBGetAsMap($sql){
+			$count = substr_count($sql,"?");
+			$count2 = func_num_args() - 1;
+			if($count != $count2)
+				throw new Exception("sql:$sql need $count values but get $count2 !");
+			$i = 0;
+			$index = 0;
+			for(;$i<$count;$i++){
+				$value = func_get_arg($i+1);
+				$type = gettype($value);
+				switch($type){
+					case "boolean":
+						$value = ($value ? "true" : "false");
+						break;
+					case "integer":
+					case "NULL":
+					case "double":
+						break;
+					case "string":
+						$value = myStrEscape($value);
+						break;
+					default:
+						throw new Exception("unknown type:".$type." of value:".$value);
+						break;
+				}
+				$sql = str_replace_once($sql,"?",$value);
 			}
+			$this->dbSQL = $sql;
+			$this->DBExecute($this->dbSQL);
+			if (mysql_num_rows($this->dbResult) > 0){
+				while($partRows = mysql_fetch_array($this->dbResult,MYSQL_ASSOC))
+					$partSomeRows[] = $partRows;
+				return $partSomeRows;
+			}
+			return array();
+		}
+		
+		public function DBGetAsOneArray($sql){
+			$count = substr_count($sql,"?");
+			$count2 = func_num_args() - 1;
+			if($count != $count2)
+				throw new Exception("sql:$sql need $count values but get $count2 !");
+			$i = 0;
+			$index = 0;
+			for(;$i<$count;$i++){
+				$value = func_get_arg($i+1);
+				$type = gettype($value);
+				switch($type){
+					case "boolean":
+						$value = ($value ? "true" : "false");
+						break;
+					case "integer":
+					case "NULL":
+					case "double":
+						break;
+					case "string":
+						$value = myStrEscape($value);
+						break;
+					default:
+						throw new Exception("unknown type:".$type." of value:".$value);
+						break;
+				}
+				$sql = str_replace_once($sql,"?",$value);
+			}
+			$this->dbSQL = $sql;
+			$this->DBExecute($this->dbSQL);
+			$partSomeRows = array();
+			if (mysql_num_rows($this->dbResult) > 0){
+				while($partRows = mysql_fetch_array($this->dbResult,MYSQL_NUM))
+					$partSomeRows = array_merge($partSomeRows,$partRows);
+				return $partSomeRows;
+			}
+			return array();
 		}
 
-		public function DBInsertAsArray($tableValue, $obj)		//表名，字段数组，内容数组
-		{
+		public function DBInsertAsArray($tableValue, $obj){		//表名，字段数组，内容数组
 			//foreach 实际上是HashTable实现的，按照添加顺序遍历，for才按索引
 			//http://www.nowamagic.net/academy/detail/1204411
 			$sql = "INSERT INTO $tableValue ( ";
@@ -228,13 +261,20 @@
 						$values .= " '".($value?"true":"false")."' ,";
 						break;
 					case "integer":
-						$values .= " ".mysql_real_escape_string($value)." ,";
+						$values .= " ".$value." ,";
+						break;
+					case "double":
+						$values .= $value.",";
 						break;
 					case "NULL":
 						$values .= " null ,";
 						break;
 					case "string":
-						$values .= " '".mysql_real_escape_string($value)."' ,";
+						if(strtolower($value) == "now()"){
+							$values .= " now() ,";
+						}else{
+							$values .= " '".myStrEscape($value)."' ,";
+						}
 						break;
 					default:
 						throw new Exception("unknown type:".$type." of value:".$value." key:".$key);
@@ -247,79 +287,92 @@
 			$this->dbSQL = $sql;
 			$this->DBExecute($this->dbSQL);
 		}
+		
+		//更新操作（参数$setValue是更新操作的值，例如"user = 'abc',name='cde'"等样子，中间要以逗号隔开），不是数字类型的字段，更新后的值要加引号
+		//这个用于更新多个字段数据，即多列
+		public function DBUpdate($tableValue, $obj, $condition , $conditionValues){
+			if(!contains($tableValue,"`"))
+				$tableValue = '`'.$tableValue.'`';
+			$sql = " update $tableValue SET ";
+			foreach($obj as $key => $value){
+				$sql .= " `$key`=";
+				$type = gettype($value);
+				switch($type){
+					case "boolean":
+						$sql .= "'".($value ? "true" : "false")."',";
+						break;
+					case "integer":
+						$sql .= $value.",";
+						break;
+					case "double":
+						$sql .= $value.",";
+						break;
+					case "NULL":
+						$sql .= "null,";
+						break;
+					case "string":
+						if(strtolower($value) == "now()"){
+							$sql .= "now(),";
+						}else{
+							$sql .= "'".myStrEscape($value)."',";
+						}
+						break;
+					default:
+						throw new Exception("unknown type:".$type." of value:".$value." key:".$key);
+						break;
+				}
+			}
+			$sql = substr($sql, 0, -1);
+			$count = substr_count($condition,"?");
+			$count2 = count($conditionValues);
+			if($count != $count2){
+				throw new Exception("sql:$condition need $count values but get $count2 !");
+			}
+			$i = 0;
+			$index = 0;
+			for(;$i<$count;$i++){
+				$value = $conditionValues[$i];
+				$type = gettype($value);
+				switch($type){
+					case "boolean":
+						$value = ($value ? "true" : "false");
+						break;
+					case "integer":
+					case "NULL":
+					case "double":
+						break;
+					case "string":
+						$value = myStrEscape($value);
+						break;
+					default:
+						throw new Exception("unknown type:".$type." of value:".$value);
+						break;
+				}
+				$condition = str_replace_once($condition,"?",$value);
+			}
+			if($condition != "" && trim($condition) != "")
+				$sql .= " where ".$condition;
+			$this->dbSQL = $sql;
+			$this->DBExecute($this->dbSQL);
+		}
+		
 		//创建新的数据库
-		public function DBCreateDatabase($databaseValue)
-		{
+		public function DBCreateDatabase($databaseValue){
 			$partStr = "CREATE DATABASE $databaseValue";
 			$this->dbSQL = $partStr;
 			$this->DBExecute($this->dbSQL);
 		}
 
 		//删除操作
-		public function DBDelete($tableValue, $conditionValue)
-		{
+		public function DBDelete($tableValue, $conditionValue){
 			$partStr = "DELETE FROM $tableValue WHERE $conditionValue";
-			$this->dbSQL = $partStr;
-			$this->DBExecute($this->dbSQL);
-		}
-
-		//更新操作（参数$updateValue是更新后的值）
-		//这个只用于更新一个字段数据，即一列
-		public function DBUpdateOneCol($tableValue, $conditionValue, $fieldsValue, $updateValue)
-		{
-			if ($conditionValue == "")
-			{
-				$partStr = "UPDATE $tableValue SET $fieldsValue = '".$updateValue."' ";
-			}
-			else
-			{
-				$partStr = "UPDATE $tableValue SET $fieldsValue = '".$updateValue."' WHERE $conditionValue";
-			}
-			$this->dbSQL = $partStr;
-			$this->DBExecute($this->dbSQL);
-		}
-
-
-		//更新操作（参数$setValue是更新操作的值，例如"user = 'abc',name='cde'"等样子，中间要以逗号隔开），不是数字类型的字段，更新后的值要加引号
-		//这个用于更新多个字段数据，即多列
-		public function DBUpdateSomeCols($tableValue, $conditionValue, $setValue)
-		{
-			if ($conditionValue == "")
-			{
-				$partStr = "UPDATE $tableValue SET $setValue";
-			}
-			else
-			{
-				$partStr = "UPDATE $tableValue SET $setValue WHERE $conditionValue";
-			}
-			$this->dbSQL = $partStr;
-			$this->DBExecute($this->dbSQL);
-		}
-
-
-
-		//插入操作insert into，其中$fieldsValue（字段）的值用
-		//三个参数均以字符串的形式传入，$fieldsValue以逗号隔开，
-		//$insertValue也用逗号隔开，碰到其中为字符串的值，要再加\"或者是'来表示。
-		public function DBInsert($tableValue, $fieldsValue, $insertValue)		//表名，字段名，内容
-		{
-			$partStr = "INSERT INTO $tableValue";
-			if ($fieldsValue == "")
-			{
-				$partStr .= " VALUES($insertValue)";
-			}
-			else
-			{
-				$partStr .= "($fieldsValue) VALUES($insertValue)";
-			}
 			$this->dbSQL = $partStr;
 			$this->DBExecute($this->dbSQL);
 		}
 
 		//利用系统自带的call方法吸收错误的方法，参数$errorMethodValue错误的方法，参数$errorValue是错误的值
 		//该方法产生的错误的值是以数组的形式呈现出来的，所以打印错误的值的时候利用print_r()函数
-		public function __call($errorMethodValue, $errorValue)
-		{
+		public function __call($errorMethodValue, $errorValue){
 			echo "错误的方法是：".$errorMethodValue;
 			echo "错误的值是：".print_r($errorValue);
 		}
@@ -327,8 +380,7 @@
 		/**
 		 * 用于处理错误的信息进行一个输出
 		 */
-		 public function DBOutputErrorInfo()
-		 {
+		 public function DBOutputErrorInfo() {
 			$pathArray = parse_url($_SERVER['REQUEST_URI']);
 			$fileTemp = substr($pathArray['path'], (strrpos($pathArray['path'], "/")+1));
 			$fileName = "errors-on-".$fileTemp.".txt";
@@ -346,8 +398,7 @@
 		 }
 
 		//关闭操作
-		public function DBClose()
-		{
+		public function DBClose(){
 			mysql_close($this->dbConn);
 		}
 	}

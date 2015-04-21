@@ -1,21 +1,14 @@
 <?php
 	function deleteLogList($logListId){
 		global $mysql;
-		$condition = "`id` = '$logListId' ";
-		$setValue = " `isDeleted` = 'true'";
-		$mysql->DBUpdateSomeCols("`log_list`", $condition, $setValue);
-
-		$condition = "`logListId` = '$logListId' ";
-		$setValue = " `isDeleted` = 'true'";
-		$mysql->DBUpdateSomeCols("`log_detail`", $condition, $setValue);
+		$mysql->DBUpdate("log_list",array('isDeleted'=>true),"`id` = '?' ",array($logListId));
+		$mysql->DBUpdate("log_detail",array('isDeleted'=>true),"`logListId` = '?' ",array($logListId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
 	function deleteLogDetail($logDetailId){
 		global $mysql;
-		$condition = "`id` = '$logDetailId' ";
-		$setValue = " `isDeleted` = 'true'";
-		$mysql->DBUpdateSomeCols("`log_detail`", $condition, $setValue);
+		$mysql->DBUpdate("log_detail",array('isDeleted'=>true),"`id` = '?' ",array($logDetailId));
 		return array('status'=>'successful', 'errMsg' => 'delete LogDetail Ok');
 	}
 	
@@ -187,9 +180,7 @@
 
 	function editLogDetail($data){
 		global $mysql;
-		$condition = "`id` = '".$data["id"]."' ";
-		$setValue = " `content` = '".$data["content"]."'";
-		$mysql->DBUpdateSomeCols("`log_detail`", $condition, $setValue);
+		$mysql->DBUpdate("log_detail",array('content'=>$data["content"]),"`id` = '?' ",array($data["id"]));
 		return array('status'=>'successful', 'errMsg' => 'edit logdetail ok');
 	}
 

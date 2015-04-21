@@ -56,6 +56,7 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 			tbar: [
 				{
 					text: '添加账号',
+					icon: './resources/img/add4.png',
 					handler: function (){
 						var win = Ext.create('FamilyDecoration.view.setting.AddAccount', {
 							grid: me.down('gridpanel')
@@ -66,6 +67,7 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 				}, 
 				{
 					text: '修改账号',
+					icon: './resources/img/edit1.png',
 					hidden: User.isAdmin() || User.isBusinessStaff() ? false : true,
 					name: 'button-editaccount',
 					id: 'button-editaccount',
@@ -86,6 +88,7 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 					hidden: User.isAdmin() ? false : true,
 					id: 'button-resetaccount',
 					name: 'button-resetaccount',
+					icon: './resources/img/reset.png',
 					disabled: true,
 					handler: function (){
 						var grid = me.down('gridpanel'),
@@ -120,6 +123,7 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 				{
 					text: '删除账号',
 					hidden: User.isAdmin() ? false : true,
+					icon: './resources/img/delete3.png',
 					name: 'button-deleteaccount',
 					id: 'button-deleteaccount',
 					disabled: true,

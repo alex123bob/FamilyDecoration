@@ -30,6 +30,7 @@ Ext.define('FamilyDecoration.view.business.Index', {
 					text: '添加',
 					id: 'button-addCommunity',
 					name: 'button-addCommunity',
+					icon: './resources/img/add1.png',
 					handler: function (){
 						var win = Ext.create('FamilyDecoration.view.business.EditCommunity', {
 
@@ -40,6 +41,7 @@ Ext.define('FamilyDecoration.view.business.Index', {
 					text: '修改',
 					id: 'button-editCommunity',
 					name: 'button-editCommunity',
+					icon: './resources/img/edit.png',
 					disabled: true,
 					handler: function (){
 						var grid = Ext.getCmp('gridpanel-community'),
@@ -50,10 +52,12 @@ Ext.define('FamilyDecoration.view.business.Index', {
 						});
 						win.show();
 					}
-				}, {
+				}],
+				bbar: [{
 					text: '删除',
 					id: 'button-delCommunity',
 					name: 'button-delCommunity',
+					icon: './resources/img/delete5.png',
 					disabled: true,
 					handler: function (){
 						Ext.Msg.warning('确定要删除当前小区吗？', function (id){
@@ -232,6 +236,7 @@ Ext.define('FamilyDecoration.view.business.Index', {
 					text: '添加',
 					id: 'button-addClient',
 					name: 'button-addClient',
+					icon: './resources/img/add.png',
 					handler: function (){
 						var communityGrid = Ext.getCmp('gridpanel-community'),
 							rec = communityGrid.getSelectionModel().getSelection()[0];
@@ -249,6 +254,7 @@ Ext.define('FamilyDecoration.view.business.Index', {
 					text: '修改',
 					id: 'button-editClient',
 					name: 'button-editClient',
+					icon: './resources/img/edit2.png',
 					disabled: true,
 					handler: function (){
 						var communityGrid = Ext.getCmp('gridpanel-community'),
@@ -263,10 +269,12 @@ Ext.define('FamilyDecoration.view.business.Index', {
 							win.show();
 						}
 					}
-				}, {
+				}],
+				bbar: [{
 					text: '删除',
 					id: 'button-delClient',
 					name: 'button-delClient',
+					icon: './resources/img/delete.png',
 					disabled: true,
 					handler: function (){
 						Ext.Msg.warning('确定要删除当前客户信息吗？', function (id){
@@ -508,6 +516,7 @@ Ext.define('FamilyDecoration.view.business.Index', {
 					text: '添加',
 					id: 'button-addBusinessInfo',
 					name: 'button-addBusinessInfo',
+					icon: './resources/img/add2.png',
 					handler: function (){
 						var clientGrid = Ext.getCmp('gridpanel-clientInfo'),
 							rec = clientGrid.getSelectionModel().getSelection()[0];
@@ -526,6 +535,7 @@ Ext.define('FamilyDecoration.view.business.Index', {
 					text: '修改',
 					id: 'button-editBusinessInfo',
 					name: 'button-editBusinessInfo',
+					icon: './resources/img/edit3.png',
 					disabled: true,
 					handler: function (){
 						var detailGrid = Ext.getCmp('gridpanel-businessInfo'),
@@ -540,6 +550,7 @@ Ext.define('FamilyDecoration.view.business.Index', {
 					text: '删除',
 					id: 'button-delBusinessInfo',
 					name: 'button-delBusinessInfo',
+					icon: './resources/img/delete2.png',
 					disabled: true,
 					handler: function (){
 						var clientGrid = Ext.getCmp('gridpanel-clientInfo'),
@@ -574,6 +585,7 @@ Ext.define('FamilyDecoration.view.business.Index', {
 					text: '转为工程',
 					id: 'button-transferToProject',
 					name: 'button-transferToProject',
+					icon: './resources/img/transfer.png',
 					disabled: true,
 					handler: function (){
 						var communityGrid = Ext.getCmp('gridpanel-community'),

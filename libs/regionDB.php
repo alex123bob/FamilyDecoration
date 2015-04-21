@@ -17,9 +17,7 @@
 
 	function deleteRegion($id){
 		global $mysql;
-		$condition = "`id` = '$id' ";
-		$setValue = " `isDeleted` = 'true',`updateTime`= now()";
-		$mysql->DBUpdateSomeCols("`region`", $condition, $setValue);
+		$mysql->DBUpdate('region',array('isDeleted'=>true,'updateTime'=>'now()'),"`id`='?'",array($id));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
@@ -62,11 +60,7 @@
 
 	function editRegion($data){
 		global $mysql;
-		$id = $data["id"];
-		$name = $data["name"];
-		$condition = "`id` = '$id' ";
-		$setValue = " `name` = '$name',`updateTime`= now() ";
-		$mysql->DBUpdateSomeCols("`region`", $condition, $setValue);
+		$mysql->DBUpdate('region',array('name'=>$data['name'],'updateTime'=>'now()'),"`id` = '?' ",array($data["id"]));
 		return array('status'=>'successful', 'errMsg' => 'edit business ok');
 	}
 ?>

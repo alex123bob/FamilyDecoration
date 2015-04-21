@@ -7,27 +7,33 @@
 	switch($action){
 		case "list": 	$res = getBudgets();  break;
 		case "listIds": 	$res = getBudgetIds();  $isParseResut = false;break;
+		//获取预算所有条目
 		case "itemlist":$res = getBudgetItemsByBudgetId($_REQUEST["budgetId"]);break;
+		//获取预算结果QPRST
+		case "getBudgetResult":$res = getBudgetResult($_REQUEST["budgetId"]);break;
+		//添加预算
 		case "add":  	$res = addBudget($_REQUEST);  break;
-		case "addItem":	$res = addBugetItem($_REQUEST);  break;;
-		case "deleItem":$res = delBudgetItem($_REQUEST['budgetId'],$_REQUEST["ItemId"],$_REQUEST['itemCode']);  break;;
+		//添加小项
+		case "addItem":	$res = addItem($_REQUEST);  break;
+		//添加大项
+		case "addBigItem":	$res = addBigItem($_REQUEST);  break;
+		//删除项，不区分大项，小项
+		case "delItem":$res = delItem($_REQUEST['budgetItemId']);break;
+		//修改项，不区分大项，小项
+		case "editItem":$res = editItem($_REQUEST);  break;
+		//修改预算
 		case "edit":	$res = editBudget($_REQUEST);  break;
-		case "editItem":$res = editBudgetItem($_REQUEST);  break;
-		case "delBigItem":$res = delBigItem($_REQUEST['ItemId'],$_REQUEST['ItemCode']);break;
-		case "delete":	$res = delBudget($_REQUEST["budgetId"]);  break;;
+		//删除预算
+		case "delete":	$res = delBudget($_REQUEST["budgetId"]);  break;
+		//根据id获取预算
 		case "view":	$res = getBudgetsByBudgetId($_REQUEST["budgetId"]);  break;
-		case "getNextItemCode":	$res = getNextItemCode($_REQUEST["budgetId"]);  break;
-		case "getBudgetsByProjectName":	$res = getBudgetsByProjectName($_REQUEST["projectName"]);  break;
+		//折扣
+		case "discount":$res = makeDiscount($_REQUEST);  break;
+		//成本分析
+		case "analysis":$res = costAnalysis($_REQUEST['budgetId']);break;
 		default: 		throw new Exception("unknown action:".$action);
 	}
-	/*foreach($res as $r){
-		foreach($r as $key => $val){
-			echo $key.":".$val." ";
-		}
-		echo "\n";
-	}*/
-	//print_r($res);
 	if($isParseResut){
-		echo urldecode(json_encode($res));
+		echo (json_encode($res));
 	}	
 ?>

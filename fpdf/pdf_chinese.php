@@ -4,7 +4,7 @@ class PDF extends PDF_Chinese{
 	
 	function Header(){ //设置页眉 
 	
-		global $custName,$projectName,$CellWidth,$FirstCellWidth,$titleLeft,$GfontSize,$lineHeight; 
+		global $custName,$budgetName,$projectName,$CellWidth,$FirstCellWidth,$titleLeft,$GfontSize,$lineHeight; 
 		
 		$this->SetFont('GB','B',20); 
 		$this->SetLeftMargin(15);
@@ -14,7 +14,7 @@ class PDF extends PDF_Chinese{
 		//$this->SetTopMargin(5);
 		//$this->Image('../resources/img/logo.jpg',60,4,30,30); //增加一张图片，文件名为sight.jpg 
 		$this->Image('../resources/img/logo.jpg',60,4,22.5,22.5); //增加一张图片，文件名为sight.jpg 
-		$this->Text(95,20,'佳诚装饰室内装修装饰工程 预算单');
+		$this->Text(95,20,$budgetName);
 		$this->SetFont('GB','',$GfontSize); 
 		$this->Ln(20); //换行 
 		$this->Cell(40,10,"",0,0,'C');

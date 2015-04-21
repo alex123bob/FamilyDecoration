@@ -7,7 +7,6 @@
 Ext.Loader.addClassPathMappings({
   "Ext": "../../ext/src",
   "Ext.Msg": "../../ext/src/window/MessageBox.js",
-  "Ext.theme": "../../packages/ext-theme-crisp",
   "ExtThemeNeptune": "../../ext/packages/ext-theme-neptune/overrides",
   "FamilyDecoration.Application": "../../app/application.js",
   "FamilyDecoration.Common": "../../common/src/common.js",
@@ -18,6 +17,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.Chart": "../../app/controller/chart.js",
   "FamilyDecoration.controller.Chat": "../../app/controller/chat.js",
   "FamilyDecoration.controller.CheckLog": "../../app/controller/checklog.js",
+  "FamilyDecoration.controller.CostAnalysis": "../../app/controller/costanalysis.js",
   "FamilyDecoration.controller.MainMaterial": "../../app/controller/mainmaterial.js",
   "FamilyDecoration.controller.MyLog": "../../app/controller/mylog.js",
   "FamilyDecoration.controller.MyTask": "../../app/controller/mytask.js",
@@ -37,6 +37,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.model.Chart": "../../app/model/chart.js",
   "FamilyDecoration.model.ChartDetail": "../../app/model/chartdetail.js",
   "FamilyDecoration.model.Community": "../../app/model/community.js",
+  "FamilyDecoration.model.CostAnalysis": "../../app/model/costanalysis.js",
   "FamilyDecoration.model.Feature": "../../app/model/feature.js",
   "FamilyDecoration.model.LogList": "../../app/model/loglist.js",
   "FamilyDecoration.model.MainMaterial": "../../app/model/mainmaterial.js",
@@ -50,7 +51,9 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.model.TaskList": "../../app/model/tasklist.js",
   "FamilyDecoration.model.TaskScrutinize": "../../app/model/taskscrutinize.js",
   "FamilyDecoration.model.TaskSelfAssessment": "../../app/model/taskselfassessment.js",
+  "FamilyDecoration.model.TotalCost": "../../app/model/totalcost.js",
   "FamilyDecoration.model.User": "../../app/model/user.js",
+  "FamilyDecoration.model.WorkCategory": "../../app/model/workcategory.js",
   "FamilyDecoration.store.BasicItem": "../../app/store/basicitem.js",
   "FamilyDecoration.store.BasicSubItem": "../../app/store/basicsubitem.js",
   "FamilyDecoration.store.Budget": "../../app/store/budget.js",
@@ -61,6 +64,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.store.Chart": "../../app/store/chart.js",
   "FamilyDecoration.store.ChartDetail": "../../app/store/chartdetail.js",
   "FamilyDecoration.store.Community": "../../app/store/community.js",
+  "FamilyDecoration.store.CostAnalysis": "../../app/store/costanalysis.js",
   "FamilyDecoration.store.Feature": "../../app/store/feature.js",
   "FamilyDecoration.store.LogList": "../../app/store/loglist.js",
   "FamilyDecoration.store.MainMaterial": "../../app/store/mainmaterial.js",
@@ -72,20 +76,21 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.store.ScrutinizeList": "../../app/store/scrutinizelist.js",
   "FamilyDecoration.store.TaskList": "../../app/store/tasklist.js",
   "FamilyDecoration.store.TaskScrutinize": "../../app/store/taskscrutinize.js",
+  "FamilyDecoration.store.TotalCost": "../../app/store/totalcost.js",
   "FamilyDecoration.store.User": "../../app/store/user.js",
+  "FamilyDecoration.store.WorkCategory": "../../app/store/workcategory.js",
   "FamilyDecoration.view.Viewport": "../../app/view/viewport.js",
   "FamilyDecoration.view.basicitem.AddBasicItem": "../../app/view/basicitem/addbasicitem.js",
   "FamilyDecoration.view.basicitem.AddBasicSubItem": "../../app/view/basicitem/addbasicsubitem.js",
   "FamilyDecoration.view.basicitem.Index": "../../app/view/basicitem/index.js",
   "FamilyDecoration.view.basicitem.SubItemTable": "../../app/view/basicitem/subitemtable.js",
   "FamilyDecoration.view.budget.AddBasicItem": "../../app/view/budget/addbasicitem.js",
-  "FamilyDecoration.view.budget.BudgetContent": "../../app/view/budget/budgetcontent.js",
+  "FamilyDecoration.view.budget.AddExistedItem": "../../app/view/budget/addexisteditem.js",
   "FamilyDecoration.view.budget.BudgetHeader": "../../app/view/budget/budgetheader.js",
-  "FamilyDecoration.view.budget.BudgetTable": "../../app/view/budget/budgettable.js",
-  "FamilyDecoration.view.budget.EditBudget": "../../app/view/budget/editbudget.js",
-  "FamilyDecoration.view.budget.History": "../../app/view/budget/history.js",
+  "FamilyDecoration.view.budget.BudgetPanel": "../../app/view/budget/budgetpanel.js",
+  "FamilyDecoration.view.budget.EditHeader": "../../app/view/budget/editheader.js",
+  "FamilyDecoration.view.budget.HistoryBudget": "../../app/view/budget/historybudget.js",
   "FamilyDecoration.view.budget.Index": "../../app/view/budget/index.js",
-  "FamilyDecoration.view.budget.Preview": "../../app/view/budget/preview.js",
   "FamilyDecoration.view.bulletin.EditBulletin": "../../app/view/bulletin/editbulletin.js",
   "FamilyDecoration.view.bulletin.Index": "../../app/view/bulletin/index.js",
   "FamilyDecoration.view.business.EditClient": "../../app/view/business/editclient.js",
@@ -101,6 +106,9 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.checklog.Index": "../../app/view/checklog/index.js",
   "FamilyDecoration.view.checklog.MemberList": "../../app/view/checklog/memberlist.js",
   "FamilyDecoration.view.checklog.UserLogList": "../../app/view/checklog/userloglist.js",
+  "FamilyDecoration.view.costanalysis.CostAnalysis": "../../app/view/costanalysis/costanalysis.js",
+  "FamilyDecoration.view.costanalysis.Index": "../../app/view/costanalysis/index.js",
+  "FamilyDecoration.view.costanalysis.TotalCost": "../../app/view/costanalysis/totalcost.js",
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": "../../app/view/mainmaterial/editmainmaterial.js",
   "FamilyDecoration.view.mainmaterial.Index": "../../app/view/mainmaterial/index.js",
   "FamilyDecoration.view.mylog.AskLeave": "../../app/view/mylog/askleave.js",
@@ -800,8 +808,6 @@ Ext.ClassManager.addNameAlternateMappings({
     "Ext.TabPanel"
   ],
   "Ext.tab.Tab": [],
-  "Ext.theme.crisp.tab.Panel": [],
-  "Ext.theme.crisp.view.Table": [],
   "Ext.tip.QuickTip": [
     "Ext.QuickTip"
   ],
@@ -983,6 +989,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.Chart": [],
   "FamilyDecoration.controller.Chat": [],
   "FamilyDecoration.controller.CheckLog": [],
+  "FamilyDecoration.controller.CostAnalysis": [],
   "FamilyDecoration.controller.MainMaterial": [],
   "FamilyDecoration.controller.MyLog": [],
   "FamilyDecoration.controller.MyTask": [],
@@ -1002,6 +1009,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.model.Chart": [],
   "FamilyDecoration.model.ChartDetail": [],
   "FamilyDecoration.model.Community": [],
+  "FamilyDecoration.model.CostAnalysis": [],
   "FamilyDecoration.model.Feature": [],
   "FamilyDecoration.model.LogList": [],
   "FamilyDecoration.model.MainMaterial": [],
@@ -1015,7 +1023,9 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.model.TaskList": [],
   "FamilyDecoration.model.TaskScrutinize": [],
   "FamilyDecoration.model.TaskSelfAssessment": [],
+  "FamilyDecoration.model.TotalCost": [],
   "FamilyDecoration.model.User": [],
+  "FamilyDecoration.model.WorkCategory": [],
   "FamilyDecoration.store.BasicItem": [],
   "FamilyDecoration.store.BasicSubItem": [],
   "FamilyDecoration.store.Budget": [],
@@ -1026,6 +1036,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.store.Chart": [],
   "FamilyDecoration.store.ChartDetail": [],
   "FamilyDecoration.store.Community": [],
+  "FamilyDecoration.store.CostAnalysis": [],
   "FamilyDecoration.store.Feature": [],
   "FamilyDecoration.store.LogList": [],
   "FamilyDecoration.store.MainMaterial": [],
@@ -1037,20 +1048,21 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.store.ScrutinizeList": [],
   "FamilyDecoration.store.TaskList": [],
   "FamilyDecoration.store.TaskScrutinize": [],
+  "FamilyDecoration.store.TotalCost": [],
   "FamilyDecoration.store.User": [],
+  "FamilyDecoration.store.WorkCategory": [],
   "FamilyDecoration.view.Viewport": [],
   "FamilyDecoration.view.basicitem.AddBasicItem": [],
   "FamilyDecoration.view.basicitem.AddBasicSubItem": [],
   "FamilyDecoration.view.basicitem.Index": [],
   "FamilyDecoration.view.basicitem.SubItemTable": [],
   "FamilyDecoration.view.budget.AddBasicItem": [],
-  "FamilyDecoration.view.budget.BudgetContent": [],
+  "FamilyDecoration.view.budget.AddExistedItem": [],
   "FamilyDecoration.view.budget.BudgetHeader": [],
-  "FamilyDecoration.view.budget.BudgetTable": [],
-  "FamilyDecoration.view.budget.EditBudget": [],
-  "FamilyDecoration.view.budget.History": [],
+  "FamilyDecoration.view.budget.BudgetPanel": [],
+  "FamilyDecoration.view.budget.EditHeader": [],
+  "FamilyDecoration.view.budget.HistoryBudget": [],
   "FamilyDecoration.view.budget.Index": [],
-  "FamilyDecoration.view.budget.Preview": [],
   "FamilyDecoration.view.bulletin.EditBulletin": [],
   "FamilyDecoration.view.bulletin.Index": [],
   "FamilyDecoration.view.business.EditClient": [],
@@ -1066,6 +1078,9 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.checklog.Index": [],
   "FamilyDecoration.view.checklog.MemberList": [],
   "FamilyDecoration.view.checklog.UserLogList": [],
+  "FamilyDecoration.view.costanalysis.CostAnalysis": [],
+  "FamilyDecoration.view.costanalysis.Index": [],
+  "FamilyDecoration.view.costanalysis.TotalCost": [],
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": [],
   "FamilyDecoration.view.mainmaterial.Index": [],
   "FamilyDecoration.view.mylog.AskLeave": [],
@@ -1883,8 +1898,6 @@ Ext.ClassManager.addNameAliasMappings({
   "Ext.tab.Tab": [
     "widget.tab"
   ],
-  "Ext.theme.crisp.tab.Panel": [],
-  "Ext.theme.crisp.view.Table": [],
   "Ext.tip.QuickTip": [
     "widget.quicktip"
   ],
@@ -2115,6 +2128,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.Chart": [],
   "FamilyDecoration.controller.Chat": [],
   "FamilyDecoration.controller.CheckLog": [],
+  "FamilyDecoration.controller.CostAnalysis": [],
   "FamilyDecoration.controller.MainMaterial": [],
   "FamilyDecoration.controller.MyLog": [],
   "FamilyDecoration.controller.MyTask": [],
@@ -2134,6 +2148,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.model.Chart": [],
   "FamilyDecoration.model.ChartDetail": [],
   "FamilyDecoration.model.Community": [],
+  "FamilyDecoration.model.CostAnalysis": [],
   "FamilyDecoration.model.Feature": [],
   "FamilyDecoration.model.LogList": [],
   "FamilyDecoration.model.MainMaterial": [],
@@ -2147,7 +2162,9 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.model.TaskList": [],
   "FamilyDecoration.model.TaskScrutinize": [],
   "FamilyDecoration.model.TaskSelfAssessment": [],
+  "FamilyDecoration.model.TotalCost": [],
   "FamilyDecoration.model.User": [],
+  "FamilyDecoration.model.WorkCategory": [],
   "FamilyDecoration.store.BasicItem": [],
   "FamilyDecoration.store.BasicSubItem": [],
   "FamilyDecoration.store.Budget": [],
@@ -2158,6 +2175,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.store.Chart": [],
   "FamilyDecoration.store.ChartDetail": [],
   "FamilyDecoration.store.Community": [],
+  "FamilyDecoration.store.CostAnalysis": [],
   "FamilyDecoration.store.Feature": [],
   "FamilyDecoration.store.LogList": [],
   "FamilyDecoration.store.MainMaterial": [],
@@ -2169,7 +2187,9 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.store.ScrutinizeList": [],
   "FamilyDecoration.store.TaskList": [],
   "FamilyDecoration.store.TaskScrutinize": [],
+  "FamilyDecoration.store.TotalCost": [],
   "FamilyDecoration.store.User": [],
+  "FamilyDecoration.store.WorkCategory": [],
   "FamilyDecoration.view.Viewport": [],
   "FamilyDecoration.view.basicitem.AddBasicItem": [
     "widget.basicitem-addbasicitem"
@@ -2186,26 +2206,21 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.budget.AddBasicItem": [
     "widget.budget-addbasicitem"
   ],
-  "FamilyDecoration.view.budget.BudgetContent": [
-    "widget.budget-budgetcontent"
+  "FamilyDecoration.view.budget.AddExistedItem": [
+    "widget.budget-addexisteditem"
   ],
   "FamilyDecoration.view.budget.BudgetHeader": [
     "widget.budget-budgetheader"
   ],
-  "FamilyDecoration.view.budget.BudgetTable": [
-    "widget.budget-budgettable"
+  "FamilyDecoration.view.budget.BudgetPanel": [
+    "widget.budget-budgetpanel"
   ],
-  "FamilyDecoration.view.budget.EditBudget": [
-    "widget.budget-editbudget"
-  ],
-  "FamilyDecoration.view.budget.History": [
-    "widget.budget-history"
+  "FamilyDecoration.view.budget.EditHeader": [],
+  "FamilyDecoration.view.budget.HistoryBudget": [
+    "widget.budget-historybudget"
   ],
   "FamilyDecoration.view.budget.Index": [
     "widget.budget-index"
-  ],
-  "FamilyDecoration.view.budget.Preview": [
-    "widget.budget-preview"
   ],
   "FamilyDecoration.view.bulletin.EditBulletin": [],
   "FamilyDecoration.view.bulletin.Index": [
@@ -2249,6 +2264,15 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.checklog.UserLogList": [
     "widget.checklog-userloglist"
+  ],
+  "FamilyDecoration.view.costanalysis.CostAnalysis": [
+    "widget.costanalysis-costanalysis"
+  ],
+  "FamilyDecoration.view.costanalysis.Index": [
+    "widget.costanalysis-index"
+  ],
+  "FamilyDecoration.view.costanalysis.TotalCost": [
+    "widget.costanalysis-totalcost"
   ],
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": [
     "widget.mainmaterial-editmainmaterial"
@@ -2324,7 +2348,6 @@ Ext.ClassManager.addNameAliasMappings({
   ]
 });
 Ext.setVersion("ext-theme-base", "4.2.2");
-Ext.setVersion("ext-theme-crisp", "5.0.0");
 Ext.setVersion("ext-theme-neptune", "4.2.2");
 Ext.setVersion("ext-theme-neutral", "4.2.2");
 Ext.Loader.loadScript("../../ext/packages/ext-theme-neptune/overrides/Component.js");;
@@ -2335,7 +2358,6 @@ Ext.Loader.loadScript("../../ext/packages/ext-theme-neptune/overrides/container/
 Ext.Loader.loadScript("../../ext/packages/ext-theme-neptune/overrides/toolbar/Paging.js");;
 Ext.Loader.loadScript("../../ext/packages/ext-theme-neptune/overrides/picker/Month.js");;
 Ext.Loader.loadScript("../../ext/packages/ext-theme-neptune/overrides/form/field/HtmlEditor.js");;
-Ext.Loader.loadScript("../../packages/ext-theme-crisp/overrides/view/Table.js");;
 Ext.Loader.loadScript("../../ext/packages/ext-theme-neptune/overrides/panel/Table.js");;
 Ext.Loader.loadScript("../../ext/packages/ext-theme-neptune/overrides/grid/RowEditor.js");;
 Ext.Loader.loadScript("../../ext/packages/ext-theme-neptune/overrides/grid/column/RowNumberer.js");;
@@ -2344,4 +2366,3 @@ Ext.Loader.loadScript("../../ext/packages/ext-theme-neptune/overrides/menu/Menu.
 Ext.Loader.loadScript("../../ext/packages/ext-theme-neptune/overrides/menu/Separator.js");;
 Ext.Loader.loadScript("../../ext/packages/ext-theme-neptune/overrides/panel/Tool.js");;
 Ext.Loader.loadScript("../../ext/packages/ext-theme-neptune/overrides/tab/Tab.js");;
-Ext.Loader.loadScript("../../packages/ext-theme-crisp/overrides/tab/Panel.js");;

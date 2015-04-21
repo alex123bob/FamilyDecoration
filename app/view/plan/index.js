@@ -5,7 +5,6 @@ Ext.define('FamilyDecoration.view.plan.Index', {
 		'FamilyDecoration.store.Project', 'FamilyDecoration.view.progress.EditProject', 'Ext.tree.Panel', 'FamilyDecoration.view.progress.ProjectList',
 		'FamilyDecoration.store.PlanCategory', 'FamilyDecoration.view.plan.EditPlan'
 	],
-	autoScroll: true,
 	layout: 'border',
 
 	initComponent: function (){
@@ -201,6 +200,7 @@ Ext.define('FamilyDecoration.view.plan.Index', {
 			},
 			tbar: [{
 				text: '添加',
+				icon: './resources/img/add.png',
 				id: 'button-addplan',
 				name: 'button-addplan',
 				disabled: true,
@@ -216,6 +216,7 @@ Ext.define('FamilyDecoration.view.plan.Index', {
 				text: '修改',
 				id: 'button-editplan',
 				name: 'button-editplan',
+				icon: './resources/img/edit.png',
 				disabled: true,
 				handler: function (){
 					var treepanel = Ext.getCmp('treepanel-projectNameForPlan'),
@@ -229,6 +230,7 @@ Ext.define('FamilyDecoration.view.plan.Index', {
 				}
 			}, {
 				text: '删除',
+				icon: './resources/img/delete.png',
 				id: 'button-deleteplan',
 				name: 'button-deleteplan',
 				disabled: true,

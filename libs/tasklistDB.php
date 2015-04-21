@@ -3,7 +3,7 @@
 		$obj = array(
 			"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
 			"taskName"=>$post["taskName"],
-			"taskContent"=>mysql_real_escape_string($post["taskContent"]),
+			"taskContent"=>myStrEscape($post["taskContent"]),
 			"taskDispatcher"=>"-".$_SESSION["name"]."-",
 			"taskExecutor"=>"-".str_replace(",", "-", $post["taskExecutor"])."-",
 			"taskProcess"=>0
@@ -19,7 +19,7 @@
 			"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
 			"taskListId"=>$post["taskListId"],
 			"taskExecutor"=>"-".$_SESSION["name"]."-",
-			"selfAssessment"=>mysql_real_escape_string($post["selfAssessment"])
+			"selfAssessment"=>myStrEscape($post["selfAssessment"])
 		);
 		$mysql->DBInsertAsArray("`task_self_assessment`", $obj);
 		return array('status'=>'successful', 'errMsg' => '','taskListId'=> $obj["id"]);
@@ -27,22 +27,15 @@
 
 	function editTaskAssessment ($post){
 		global $mysql;
-		$condition = "`id` = '".$post["id"]."' ";
-		$setValue = array();
-		$fields = array("id", "taskListId");
+		$obj = array();
+		$fields = array("id", "taskListId","selfAssessment","");
 		foreach ($fields as $field) {
-			if (isset($post[$field])) {
-				array_push($setValue, " `$field` = '".$post[$field]."'");
-			}
+			if (isset($post[$field]))
+				$obj[$field] = $post[$field];
 		}
-		if (isset($post["selfAssessment"])) {
-			array_push($setValue, " `selfAssessment` = '".mysql_real_escape_string($post["selfAssessment"])."'");
-		}
-		if (isset($post["taskExecutor"])) {
-			array_push($setValue, " `taskExecutor` = '-".str_replace(",", "-", $post["taskExecutor"])."-'");
-		}
-		$setValue = implode(",", $setValue);
-		$mysql->DBUpdateSomeCols("`task_self_assessment`", $condition, $setValue);
+		if (isset($post["taskExecutor"]))
+			$obj['taskExecutor'] = '-'.str_replace(",", "-", $post["taskExecutor"]).'-';
+		$mysql->DBUpdate("task_self_assessment",$obj,"`id` = '?' ",array($post["id"]));
 		return array('status'=>'successful', 'errMsg' => 'edit task assessment ok');
 	}
 
@@ -211,27 +204,16 @@
 
 	function editTaskList($data){
 		global $mysql;
-		$condition = "`id` = '".$data["id"]."' ";
-		$setValue = array();
-		$fields = array("id", "taskName","createTime", "isDeleted", "taskProcess");
-		foreach ($fields as $field) {
-			if (isset($data[$field])) {
-				array_push($setValue, " `$field` = '".$data[$field]."'");
-			}
-		}
-		
-		if (isset($data['taskDispatcher'])) {
-			array_push($setValue, " `taskDispatcher` = '-".$data["taskDispatcher"]."-'");
-		}
-		if (isset($data['taskContent'])) {
-			array_push($setValue, " `taskContent` = '".mysql_real_escape_string($data["taskContent"])."'");
-		}
-		if (isset($data['taskExecutor'])) {
-			array_push($setValue, " `taskExecutor` = '-".str_replace(",", "-", $data["taskExecutor"])."-'");
-		}
-		
-		$setValue = implode(",", $setValue);
-		$mysql->DBUpdateSomeCols("`task_list`", $condition, $setValue);
+		$obj = array();
+		$fields = array("id", "taskName","createTime", "taskContent","isDeleted", "taskProcess");
+		foreach ($fields as $field)
+			if (isset($data[$field]))
+				$obj[$field] = $data[$field];
+		if (isset($data['taskDispatcher']))
+			$obj['taskDispatcher'] = '-'.$data["taskDispatcher"].'-';
+		if (isset($data['taskExecutor']))
+			$obj['taskExecutor'] = '-'.str_replace(',','-', $data["taskExecutor"]).'-';
+		$mysql->DBUpdate('task_list',$obj,"`id` = '?' ",array($data["id"]));
 		return array('status'=>'successful', 'errMsg' => 'edit tasklist ok');
 	}
 ?>

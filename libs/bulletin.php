@@ -20,25 +20,14 @@
 	 * @return [type] [description]
 	 */
 	function publish (){
-		try {
-			global $mysql;
-
-			$content = $_POST["content"];
-
-			if (isset($_POST["id"])) {
-				$id = $_POST["id"];
-				$mysql->DBUpdateSomeCols("`bulletin`", "`id` = $id", "`content` = \"$content\" ");
-			}
-			else {
-				$mysql->DBInsert("`bulletin`", "`content`", "\"$content\"");
-			}
-
-			return json_encode(array('status'=>'successful', 'errMsg' => ''));
-
+		global $mysql;
+		$content = $_POST["content"];
+		if (isset($_POST["id"])) {
+			$mysql->DBUpdate('bulletin',array('content'=>$content), "`id` = ?",array($_POST["id"]));
+		}else {
+			$mysql->DBInsertAsArray('bulletin',array('content'=>$content));
 		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 
 	/**
@@ -88,43 +77,21 @@
 	}
 
 	function deleteBulletin ($id){
-		try {
-			global $mysql;
-			
-			$content = $mysql->DBDelete("`bulletin`", "`id` = $id");
-
-			return json_encode(array('status'=>'successful', 'errMsg' => ''));
-
-		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		global $mysql;
+		$content = $mysql->DBDelete("`bulletin`", "`id` = $id");
+		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 
 	function stickBulletinOnTop ($id){
-		try {
-			global $mysql;
-			
-			$content = $mysql->DBUpdateSomeCols("`bulletin`", "", "`isStickTop` = \"false\" ");
-			$content = $mysql->DBUpdateSomeCols("`bulletin`", "`id` = $id", "`isStickTop` = \"true\" ");
-
-			return json_encode(array('status'=>'successful', 'errMsg' => ''));
-		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		global $mysql;
+		$content = $mysql->DBUpdate('bulletin',array('isStickTop'=>false), " ",array());
+		$content = $mysql->DBUpdate('bulletin',array('isStickTop'=>true), "`id` = ?",array($id));
+		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 
 	function unstickBulletinOnTop ($id){
-		try {
-			global $mysql;
-			
-			$content = $mysql->DBUpdateSomeCols("`bulletin`", "`id` = $id", "`isStickTop` = \"false\" ");
-
-			return json_encode(array('status'=>'successful', 'errMsg' => ''));
-		}
-		catch (Exception $e) {
-			return json_encode(array('status' => 'failing', 'errMsg'=>$e->getMessage()));
-		}
+		global $mysql;
+		$content = $mysql->DBUpdate("bulletin",array('isStickTop'=>"false"),"`id` = ? ",array($id));
+		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 ?>

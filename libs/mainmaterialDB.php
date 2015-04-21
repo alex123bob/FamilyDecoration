@@ -9,7 +9,8 @@
 			"productType" => $post["productType"],
 			"productNumber" => $post["productNumber"],
 			"productMerchant" => $post["productMerchant"],
-			"productContact" => $post["productContact"]
+			"productSchedule" => $post["productSchedule"],
+			"productDeliver" => $post["productDeliver"]
 		);
 		global $mysql;
 		$mysql->DBInsertAsArray("`mainmaterial`",$obj);
@@ -18,17 +19,13 @@
 
 	function deleteMaterial($materialId){
 		global $mysql;
-		$condition = "`id` = '$materialId' ";
-		$setValue = " `isDeleted` = 'true'";
-		$mysql->DBUpdateSomeCols("`mainmaterial`", $condition, $setValue);
+		$mysql->DBUpdate("mainmaterial",array('isDeleted'=>true),"`id` = '?'",array($materialId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
 	function deleteMaterialsByProjectId($projectId){
 		global $mysql;
-		$condition = "`projectId` = '$projectId' ";
-		$setValue = " `isDeleted` = 'true'";
-		$mysql->DBUpdateSomeCols("`mainmaterial`", $condition, $setValue);
+		$mysql->DBUpdate("mainmaterial",array('isDeleted'=>true),"`projectId` = '?' ",array($projectId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
@@ -45,7 +42,8 @@
 			$res[$count]["productType"] = $val["productType"];
 			$res[$count]["productNumber"] = $val["productNumber"];
 			$res[$count]["productMerchant"] = $val["productMerchant"];
-			$res[$count]["productContact"] = $val["productContact"];
+			$res[$count]["productSchedule"] = $val["productSchedule"];
+			$res[$count]["productDeliver"] = $val["productDeliver"];
 			$res[$count]["isDeleted"] = $val["isDeleted"];
 		    $count ++;
         }
@@ -65,7 +63,8 @@
 			$res[$count]["productType"] = $val["productType"];
 			$res[$count]["productNumber"] = $val["productNumber"];
 			$res[$count]["productMerchant"] = $val["productMerchant"];
-			$res[$count]["productContact"] = $val["productContact"];
+			$res[$count]["productSchedule"] = $val["productSchedule"];
+			$res[$count]["productDeliver"] = $val["productDeliver"];
 			$res[$count]["isDeleted"] = $val["isDeleted"];
 		    $count ++;
         }
@@ -74,14 +73,15 @@
 
 	function editMaterial($data){
 		global $mysql;
-		$condition = "`id` = '".$data["id"]."' ";
-		$setValue = " `projectId` = '".$data["projectId"]."'";
-		$setValue = $setValue." , `productName` = '".$data["productName"]."'";
-		$setValue = $setValue." , `productType` = '".$data["productType"]."'";
-		$setValue = $setValue." , `productNumber` = '".$data["productNumber"]."'";
-		$setValue = $setValue." , `productMerchant` = '".$data["productMerchant"]."'";
-		$setValue = $setValue." , `productContact` = '".$data["productContact"]."'";
-		$mysql->DBUpdateSomeCols("`mainmaterial`", $condition, $setValue);
+		$obj= array();
+		$obj['projectId'] = $data['projectId'];
+		$obj['productName'] = $data['productName'];
+		$obj['productType'] = $data['productType'];
+		$obj['productNumber'] = $data['productNumber'];
+		$obj['productDeliver'] = $data['productDeliver'];
+		$obj['productMerchant'] = $data['productMerchant'];
+		$obj['productSchedule'] = $data['productSchedule'];
+		$mysql->DBUpdate("`mainmaterial`",$obj,"`id` = '?' ",array($data["id"]));
 		return array('status'=>'successful', 'errMsg' => 'edit mainmaterial ok');
 	}
 ?>

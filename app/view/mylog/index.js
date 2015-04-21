@@ -27,6 +27,7 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 				isQuarter: true,
 				tbar: [{
 					text: '添加日志',
+					icon: './resources/img/add1.png',
 					handler: function (){
 						var win = Ext.create('Ext.window.Window', {
 							title: '新建日志',
@@ -110,6 +111,7 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 				}, {
 					text: '删除日志',
 					disabled: true,
+					icon: 'resources/img/delete1.png',
 					name: 'button-deleteLog',
 					id: 'button-deleteLog',
 					handler: function (){
@@ -285,6 +287,7 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 					text: '增加',
 					id: 'button-addLogDetail',
 					name: 'button-addLogDetail',
+					icon: './resources/img/add.png',
 					disabled: true,
 					handler: function (){
 						var tree = Ext.getCmp('treepanel-logName'),
@@ -298,6 +301,7 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 					text: '修改',
 					id: 'button-editLogDetail',
 					name: 'button-editLogDetail',
+					icon: './resources/img/edit.png',
 					disabled: true,
 					handler: function (){
 						var tree = Ext.getCmp('treepanel-logName'),
@@ -314,6 +318,7 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 					text: '删除',
 					id: 'button-deleteLogDetail',
 					name: 'button-deleteLogDetail',
+					icon: './resources/img/delete.png',
 					disabled: true,
 					handler: function (){
 						var grid = Ext.getCmp('gridpanel-logDetail'),
@@ -346,7 +351,7 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 					text: '请假申请',
 					id: 'button-askLeave',
 					name: 'button-askLeave',
-					hidden: true,
+					// hidden: true,
 					disabled: true,
 					handler: function (){
 						var tree = Ext.getCmp('treepanel-logName'),

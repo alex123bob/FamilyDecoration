@@ -6,7 +6,6 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 		'FamilyDecoration.view.mylog.AskLeave', 'FamilyDecoration.model.TaskSelfAssessment',
 		'FamilyDecoration.view.mytask.EditProcess'
 	],
-	autoScroll: true,
 	layout: 'border',
 
 	initComponent: function (){
@@ -92,7 +91,7 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 				width: 300,
 				refresh: function (rec){
 					if (rec) {
-						var content = rec.get('taskContent').replace(/\n/ig, '<br />');
+						var content = rec.get('taskContent').replace(/\\n/ig, '<br />');
 						this.body.update(content);
 					}
 					else {
@@ -173,6 +172,7 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 						text: '评价',
 						id: 'button-selfassess',
 						name: 'button-selfassess',
+						icon: './resources/img/assess.png',
 						header: false,
 						disabled: true,
 						handler: function (){
@@ -225,7 +225,7 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 										if (success) {
 											var obj = Ext.decode(res.responseText);
 											if (obj.length > 0) {
-												var content = obj[0]['selfAssessment'].replace(/\n/gi, '<br />');
+												var content = obj[0]['selfAssessment'].replace(/\\n/gi, '<br />');
 												me.body.update(content);
 											}
 											else {
@@ -297,6 +297,7 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 					bbar: [{
 						text: '编辑完成进度',
 						id: 'button-editProcess',
+						icon: './resources/img/process.png',
 						name: 'button-editProcess',
 						disabled: true,
 						handler: function (){

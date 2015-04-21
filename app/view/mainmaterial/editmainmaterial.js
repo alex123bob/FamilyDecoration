@@ -38,15 +38,20 @@ Ext.define('FamilyDecoration.view.mainmaterial.EditMainMaterial', {
 			name: 'textfield-productNumber',
 			value: me.mainmaterial ? me.mainmaterial.get('productNumber') : ''
 		}, {
-			fieldLabel: '商家',
+			fieldLabel: '商家及联系人',
 			id: 'textfield-productMerchant',
 			name: 'textfield-productMerchant',
 			value: me.mainmaterial ? me.mainmaterial.get('productMerchant') : ''
 		}, {
-			fieldLabel: '联系人及联系人号码',
-			id: 'textfield-productContact',
-			name: 'textfield-productContact',
-			value: me.mainmaterial ? me.mainmaterial.get('productContact') : ''
+			fieldLabel: '预定时间及预定人',
+			id: 'textfield-productSchedule',
+			name: 'textfield-productSchedule',
+			value: me.mainmaterial ? me.mainmaterial.get('productSchedule') : ''
+		}, {
+			fieldLabel: '送货时间',
+			id: 'textfield-productDeliver',
+			name: 'textfield-productDeliver',
+			value: me.mainmaterial ? me.mainmaterial.get('productDeliver') : ''
 		}];
 
 		me.buttons = [{
@@ -56,11 +61,12 @@ Ext.define('FamilyDecoration.view.mainmaterial.EditMainMaterial', {
 					type = Ext.getCmp('textfield-productType'),
 					number = Ext.getCmp('textfield-productNumber'),
 					merchant = Ext.getCmp('textfield-productMerchant'),
-					contact = Ext.getCmp('textfield-productContact'),
+					schedule = Ext.getCmp('textfield-productSchedule'),
+					deliver = Ext.getCmp('textfield-productDeliver'),
 					obj = {
 						projectId: me.projectId
 					};
-				if (name.isValid() && type.isValid() && number.isValid() && merchant.isValid() && contact.isValid()) {
+				if (name.isValid() && type.isValid() && number.isValid() && merchant.isValid() && schedule.isValid() && deliver.isValid()) {
 					me.mainmaterial && Ext.apply(obj, {
 						id: me.mainmaterial.getId()
 					});
@@ -69,7 +75,8 @@ Ext.define('FamilyDecoration.view.mainmaterial.EditMainMaterial', {
 						productType: type.getValue(),
 						productNumber: number.getValue(),
 						productMerchant: merchant.getValue(),
-						productContact: contact.getValue()
+						productSchedule: schedule.getValue(),
+						productDeliver: deliver.getValue()
 					});
 					Ext.Ajax.request({
 						url: me.mainmaterial ? './libs/mainmaterial.php?action=editMaterial' : './libs/mainmaterial.php?action=addMaterial',

@@ -4,7 +4,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 	requires: [
 		'FamilyDecoration.store.Project', 'FamilyDecoration.view.progress.EditProject', 'Ext.tree.Panel',
 		'FamilyDecoration.view.progress.EditProgress', 'FamilyDecoration.view.progress.ProjectList',
-		'FamilyDecoration.view.budget.EditBudget', 'Ext.layout.container.Form', 'FamilyDecoration.model.Progress',
+		'FamilyDecoration.view.budget.BudgetPanel', 'Ext.layout.container.Form', 'FamilyDecoration.model.Progress',
 		'FamilyDecoration.store.BusinessDetail'
 	],
 	autoScroll: true,
@@ -19,7 +19,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				type: 'vbox',
 				align: 'center'
 			},
-			width: 200,
+			width: 220,
 			margin: '0 1 0 0',
 			items: [{
 				xtype: 'progress-projectlist',
@@ -84,6 +84,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				bbar: [{
 					hidden: User.isGeneral() ? true : false,
 					text: '添加',
+					icon: './resources/img/add5.png',
 					handler: function (){
 						var win = Ext.create('FamilyDecoration.view.progress.EditProject', {
 
@@ -96,6 +97,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					disabled: true,
 					id: 'button-editProject',
 					name: 'button-editProject',
+					icon: './resources/img/edit2.png',
 					handler: function (){
 						var panel = Ext.getCmp('treepanel-projectName');
 						var pro = panel.getSelectionModel().getSelection()[0];
@@ -108,6 +110,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					hidden: User.isGeneral() ? true : false,
 					text: '删除',
 					disabled: true,
+					icon: './resources/img/delete3.png',
 					id: 'button-deleteProject',
 					name: 'button-deleteProject',
 					handler: function (){
@@ -356,7 +359,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				name: 'textfield-period',
 				id: 'textfield-period',
 				labelWidth: 60,
-				width: 140,
+				width: 220,
 				readOnly: true,
 				fieldLabel: '项目工期'
 			}, {
@@ -487,6 +490,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				text: '添加',
 				id: 'button-addProgress',
 				name: 'button-addProgress',
+				icon: './resources/img/add.png',
 				disabled: true,
 				handler: function (){
 					var proPanel = Ext.getCmp('treepanel-projectName'),
@@ -501,6 +505,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				text: '修改',
 				id: 'button-editProgress',
 				name: 'button-editProgress',
+				icon: './resources/img/edit.png',
 				disabled: true,
 				handler: function (){
 					var proPanel = Ext.getCmp('treepanel-projectName'),
@@ -518,6 +523,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				text: '删除',
 				id: 'button-deleteProgress',
 				name: 'button-deleteProgress',
+				icon: './resources/img/delete.png',
 				disabled: true,
 				handler: function (){
 					var progressPanel = Ext.getCmp('gridpanel-projectProgress'),
@@ -557,6 +563,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				text: '查看图库',
 				id: 'button-showProjectChart',
 				name: 'button-showProjectChart',
+				icon: './resources/img/gallery.png',
 				disabled: true,
 				handler: function (){
 					var proPanel = Ext.getCmp('treepanel-projectName'),
@@ -581,6 +588,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 			}, {
 				hidden: User.isGeneral() ? true : false,
 				text: '查看预算',
+				icon: './resources/img/preview2.png',
 				id: 'button-showBudget',
 				name: 'button-showBudget',
 				disabled: true,
@@ -590,44 +598,62 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 						budgetId = project.get('budgetId');
 
 					if (budgetId != 'NULL' && budgetId != '') {
-						Ext.Ajax.request({
-							url: './libs/budget.php?action=view',
-							method: 'GET',
-							params: {
-								budgetId: budgetId
-							},
-							callback: function (opts, success, res){
-								if (success) {
-									var obj = Ext.decode(res.responseText);
-									if (obj.length > 0) {
-										var win = Ext.create('Ext.window.Window', {
-											items: [{
-												budget: obj[0],
-												xtype: 'budget-editbudget'
-											}],
-											maximizable: true,
-											modal: true,
-											layout: 'fit'
-										});
-										win.show();
-									}
-									else {
-										showMsg('找不到对应预算！');
-									}
-								}
-							}
-						})
-						
+						var win = window.open('./fpdf/index2.php?action=view&budgetId=' + budgetId,'打印','height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
 					}
 					else {
-						showMsg('没有对应预算！');
+						showMsg('没有预算！');
 					}
+					// if (budgetId != 'NULL' && budgetId != '') {
+					// 	Ext.Ajax.request({
+					// 		url: './libs/budget.php?action=view',
+					// 		method: 'GET',
+					// 		params: {
+					// 			budgetId: budgetId
+					// 		},
+					// 		callback: function (opts, success, res){
+					// 			if (success) {
+					// 				var obj = Ext.decode(res.responseText);
+					// 				if (obj.length > 0) {
+					// 					var win = Ext.create('Ext.window.Window', {
+					// 						title: '查看预算',
+					// 						items: [{
+					// 							xtype: 'budget-budgetpanel'
+					// 						}],
+					// 						width: 800,
+					// 						height: 600,
+					// 						maximizable: true,
+					// 						modal: true,
+					// 						layout: 'fit',
+					// 						listeners: {
+					// 							beforeshow: function (win) {
+					// 								var panel = win.items.items[0];
+					// 								panel.loadBudget({
+					// 									budgetId: budgetId,
+					// 									custName: obj[0]['custName'],
+					// 									projectName: obj[0]['projectName']
+					// 								});
+					// 							}
+					// 						}
+					// 					});
+					// 					win.show();
+					// 				}
+					// 				else {
+					// 					showMsg('找不到对应预算！');
+					// 				}
+					// 			}
+					// 		}
+					// 	})
+					// }
+					// else {
+					// 	showMsg('没有对应预算！');
+					// }
 				}
 			}, {
 				hidden: User.isGeneral() ? true : false,
 				text: '查看计划',
 				id: 'button-showProjectPlan',
 				name: 'button-showProjectPlan',
+				icon: './resources/img/plan.png',
 				disabled: true,
 				handler: function (){
 					var proPanel = Ext.getCmp('treepanel-projectName'),
@@ -647,6 +673,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 			}, {
 				hidden: !(User.isAdmin() || User.isProjectManager() || User.isProjectStaff()),
 				text: '编辑置顶信息',
+				icon: './resources/img/edit4.png',
 				disabled: true,
 				id: 'button-editTopInfo',
 				name: 'button-editTopInfo',
@@ -731,6 +758,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					    									treePanel.getSelectionModel().deselectAll()
 					    									treePanel.getSelectionModel().select(newPro);
 					    									win.close();
+					    									showMsg('编辑成功！');
 					    								}
 					    							}
 					    						})

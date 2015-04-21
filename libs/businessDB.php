@@ -84,41 +84,35 @@
 
 	function deleteBusiness($businessId){
 		global $mysql;
-		$condition = "`id` = '$businessId' ";
-		$setValue = " `isDeleted` = 'true',`updateTime` = now() ";
-		$mysql->DBUpdateSomeCols("`business`", $condition, $setValue);
+		$mysql->DBUpdate("`business`",array('isDeleted'=>true,'updateTime'=>'now()'),"`id`='?'",array($businessId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
 	function editBusiness($data){
 		global $mysql;
 		$id = $data["id"];
-		$condition = "`id` = '$id' ";
-		$setValue = " `regionId` = '".$data["regionId"]."'";
-		$setValue = $setValue." , `address` = '".$data["address"]."'";
-		$setValue = $setValue." , `isFrozen` = '".$data["isFrozen"]."'";
-		$setValue = $setValue." , `isTransfered` = '".$data["isTransfered"]."'";
-		$setValue = $setValue." , `updateTime` = now() ";
-		$setValue = $setValue." , `customer` = '".$data["customer"]."'";
-		$setValue = $setValue." , `salesman` = '".$data["salesman"]."'";
-		$setValue = $setValue." , `source` = '".$data["source"]."'";
-		$mysql->DBUpdateSomeCols("`business`", $condition, $setValue);
+		$obj = array();
+		$obj['regionId'] = $data["regionId"];
+		$obj['address'] = $data["address"];
+		$obj['isFrozen'] = $data["isFrozen"];
+		$obj['isTransfered'] = $data["isTransfered"];
+		$obj['updateTime'] = 'now()';
+		$obj['customer'] = $data["customer"];
+		$obj['salesman'] = $data["salesman"];
+		$obj['source'] = $data["source"];
+		$mysql->DBUpdate('business',$obj,"`id`='?'",array($id));
 		return array('status'=>'successful', 'errMsg' => 'edit business ok');
 	}
 	
 	function frozeBusiness($businessId){
 		global $mysql;
-		$condition = "`id` = '$businessId' ";
-		$setValue = " `isFrozen` = 'true',`updateTime` = now() ";
-		$mysql->DBUpdateSomeCols("`business`", $condition, $setValue);
+		$mysql->DBUpdate('business',array('isFrozen'=>'true','updateTime'=>'now()'),"`id`='?'",array($businessId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 	
 	function defrostBusiness($businessId){
 		global $mysql;
-		$condition = "`id` = '$businessId' ";
-		$setValue = " `isFrozen` = 'false',`updateTime` = now() ";
-		$mysql->DBUpdateSomeCols("`business`", $condition, $setValue);
+		$mysql->DBUpdate('business',array('isFrozen'=>'false','updateTime'=>'now()'),"`id`='?'",array($businessId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 	
@@ -134,10 +128,7 @@
 					);
 		include_once "projectDB.php";
 		$pro = addProject($pro);
-		
-		$condition = "`id` = '$businessId' ";
-		$setValue = " `isTransfered` = 'true',`updateTime` = now() ";
-		$mysql->DBUpdateSomeCols("`business`", $condition, $setValue);
+		$mysql->DBUpdate('business',array('isTransfered'=>'true','updateTime'=>'now()'),"`id`='?'",array($businessId));
 		return array('status'=>'successful', 'errMsg' => '','projectId'=>$pro['projectId']);
 	}
 ?>

@@ -1,5 +1,5 @@
 <?php
-global $CellWidth,$FirstCellWidth,$titleLeft,$GfontSize,$lineHeight,$UserBrowserClient; 
+global $CellWidth,$FirstCellWidth,$titleLeft,$GfontSize,$lineHeight,$UserBrowserClient,$budgetName; 
 if(strpos($_SERVER["HTTP_USER_AGENT"],"Safari") && !strpos($_SERVER["HTTP_USER_AGENT"],"Chrome") ){
 	$UserBrowserClient = 'safari';
 }else if(strpos($_SERVER["HTTP_USER_AGENT"],"Mac") && strpos($_SERVER["HTTP_USER_AGENT"],"Chrome")){
@@ -30,9 +30,10 @@ if(count($budget) == 0){
 }
 $custName =  str2GBK(urldecode($budget[0]["custName"]));
 $projectName = str2GBK(urldecode($budget[0]["projectName"]));
+$budgetName = str2GBK(urldecode($budget[0]["budgetName"]));
 $projectComments = str2GBK(urldecode($budget[0]["comments"]));
 $action = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "download";
-$budgetItems = getBudgetItemsByBudgetId($_REQUEST["budgetId"],true,false);
+$budgetItems = getBudgetItemsByBudgetId($_REQUEST["budgetId"],true);
 $pdf=new PDF('L','mm', 'A4'); //创建新的FPDF对象 
 $pdf->AddGBFont(); //设置中文字体 
 $pdf->Open(); //开始创建PDF 
@@ -44,7 +45,6 @@ foreach($budgetItems as $bItem){
 	//保留小数点后两位,不足补0
 	foreach($bItem as $key=> $val){
 		if(is_numeric($val)){
-			//echo $key.':'.$val.':'.round($val,2).'<br />';
 			$tmp = round($val,2)."";
 			$index = strpos($tmp, ".");
 			if(!$index){
@@ -57,12 +57,17 @@ foreach($budgetItems as $bItem){
 			$bItem[$key] = $tmp;
 		}
 	}
-	
-	$itemName = $bItem["itemName"];
+	$fields = array('budgetItemId','itemName','budgetId','mainMaterialTotalPrice','auxiliaryMaterialTotalPrice','manpowerTotalPrice','mainMaterialTotalCost','manpowerTotalCost',
+					'machineryTotalPrice','remark','itemAmount','itemCode','itemUnit','mainMaterialPrice','auxiliaryMaterialPrice','lossPercent','machineryPrice','manpowerPrice');
+	foreach($fields as $field){
+		if(!isset($bItem[$field]))
+			$bItem[$field] = "";
+	}
 	$amount = $bItem["itemAmount"];
 	$itemCode = $bItem["itemCode"];
-	
+	$itemName = $bItem["itemName"];
 	$remark = $bItem["remark"];
+	
 	$data = array($itemCode,$itemName,$bItem["itemUnit"],$amount,
 				$bItem["mainMaterialPrice"],$bItem["mainMaterialTotalPrice"],
 				$bItem["auxiliaryMaterialPrice"],$bItem["auxiliaryMaterialTotalPrice"],$bItem["manpowerPrice"],
@@ -73,12 +78,15 @@ foreach($budgetItems as $bItem){
 							$GfontSize,$GfontSize,$GfontSize,8);
 	$borders = array('LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LBR');
 	$align = array('C','L','C','C','C','C','C','C','C','C','C','C','C','L');
+	if(in_array($bItem['itemCode'],array('O','P','Q','R','S'))){
+		$data[3]= '';
+	}
 	$pdf->writeCellLine($CellWidth,$data,$borders,0,$align,14,$fontSizes);
 }
 
 
 //输出其他
-$otherInfo = explode('>>><<<',$projectComments);
+$otherInfo = preg_split('/\n|\r\n|\r|\n\r/',$projectComments);
 $arrayCount = count($otherInfo);
 //补齐三行，防止备注不足三行，后面填表格有问题
 while($arrayCount<3){

@@ -74,5 +74,5 @@
 		default: 
 			throw new Exception("unknown action:".$action);
 	}
-	echo urldecode(json_encode($res));
+	echo (json_encode($res));
 ?>

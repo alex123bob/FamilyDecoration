@@ -7,16 +7,12 @@
 		$fields = array('id', 'name', 'realname', 'level', 'content');
 
 		$id = date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
-		$keys = "`id`";
-		$values = "$id";
-
+		$obj = array('id'=>$id);
 		foreach($fields as $field){
-			if(isset($content[$field])){
-				$keys = $keys.",`$field`";
-				$values = $values.",'".$content[$field]."'";
-			}
+			if(isset($content[$field]))
+				$obj[$field] = $content[$field];
 		}
-		$mysql->DBInsert("`feedback`", $keys , $values );
+		$mysql->DBInsertAsArray("`feedback`", $obj);
 		return array('status'=>'successful', 'errMsg' => '','feedbackId'=>$id);
 	}
 
@@ -27,14 +23,11 @@
 	}
 
 	function editFeedback ($data) {
-		global $mysql;
-		$id = $data["id"];
-		$condition = "`id` = '$id' ";
-		if(isset($data["result"])){
-			$tmp = $data["result"];
-			$setValue = "`result` = '$tmp' ";
+		if(!isset($data["result"])){
+			return array('status'=>'successful', 'errMsg' => 'edit feedback ok');
 		}
-		$mysql->DBUpdateSomeCols("`feedback`", $condition, $setValue);
+		global $mysql;
+		$mysql->DBUpdate("`feedback`",array('result'=>$data['result']),"`id` = '?' ",array($data["id"]));
 		return array('status'=>'successful', 'errMsg' => 'edit feedback ok');
 	}
 ?>

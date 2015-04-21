@@ -4,7 +4,7 @@ Ext.define('FamilyDecoration.store.BasicSubItem', {
 
 	proxy: {
 		type: 'rest',
-    	url: './libs/getbasicsubitems.php',
+    	url: './libs/subitem.php?action=get',
         reader: {
             type: 'json'
         }

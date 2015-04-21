@@ -92,9 +92,10 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 					borderRightStyle: 'solid',
 					borderRightWidth: '1px'
 				},
-				bbar: [{
+				tbar: [{
 					text: '添加',
 					id: 'button-addTask',
+					icon: './resources/img/add1.png',
 					name: 'button-addTask',
 					handler: function (){
 						var win = Ext.create('FamilyDecoration.view.taskassign.AssignTaskWin', {
@@ -105,6 +106,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 					text: '修改',
 					id: 'button-editTask',
 					name: 'button-editTask',
+					icon: './resources/img/edit1.png',
 					disabled: true,
 					handler: function (){
 						var tree = Ext.getCmp('treepanel-taskNameByUser'),
@@ -119,10 +121,12 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 							showMsg('请选择任务！');
 						}
 					}
-				}, {
+				}],
+				bbar: [{
 					text: '删除',
 					id: 'button-delTask',
 					name: 'button-delTask',
+					icon: './resources/img/delete1.png',
 					disabled: true,
 					handler: function (){
 						var tree = Ext.getCmp('treepanel-taskNameByUser'),
@@ -246,7 +250,8 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 				region: 'west',
 				refresh: function (rec){
 					if (rec) {
-						var content = rec.get('taskContent').replace(/\n/ig, '<br />');
+						// 单个横杠无法转义，原因未知
+						var content = rec.get('taskContent').replace(/\\n/ig, '<br />');
 						this.body.update(content);
 					}
 					else {
@@ -343,6 +348,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 					}],
 					bbar: [{
 						text: '批阅',
+						icon: './resources/img/assess.png',
 						handler: function (){
 							var taskTree = Ext.getCmp('treepanel-taskNameByUser'),
 								task = taskTree.getSelectionModel().getSelection()[0],
@@ -440,7 +446,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 										if (success) {
 											var obj = Ext.decode(res.responseText);
 											if (obj.length > 0) {
-												var content = obj[0]['selfAssessment'].replace(/\n/gi, '<br />');
+												var content = obj[0]['selfAssessment'].replace(/\\n/gi, '<br />');
 												me.body.update(content);
 											}
 											else {

@@ -1,11 +1,10 @@
 Ext.define('FamilyDecoration.view.basicitem.Index', {
 	extend: 'Ext.panel.Panel',
 	alias: 'widget.basicitem-index',
-	autoScroll: true,
 	layout: 'border',
 
 	requires: ['FamilyDecoration.store.BasicItem', 'FamilyDecoration.view.basicitem.AddBasicItem', 'FamilyDecoration.store.BasicSubItem',
-			   'FamilyDecoration.view.basicitem.SubItemTable', 'FamilyDecoration.view.basicitem.AddBasicSubItem'],
+			   'FamilyDecoration.view.basicitem.SubItemTable', 'FamilyDecoration.view.basicitem.AddBasicSubItem', 'Ext.ux.form.SearchField'],
 
 	initComponent: function () {
 		var me = this;
@@ -30,23 +29,24 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 					dataIndex: 'itemName',
 					flex: 1
 				}],
-				dockedItems: [{
-					dock: 'top',
-					xtype: 'toolbar',
-					items: [{
-						xtype: 'searchfield',
-						flex: 1,
-						store: biSt,
-						paramName: 'itemName'
-					}]
-				}],
+				// dockedItems: [{
+				// 	dock: 'top',
+				// 	xtype: 'toolbar',
+				// 	items: [{
+				// 		xtype: 'searchfield',
+				// 		flex: 1,
+				// 		store: biSt,
+				// 		paramName: 'itemName'
+				// 	}]
+				// }],
 				title: '大类项目',
 				hideHeaders: true,
 				margin: '0 1 0 0',
 				store: biSt,
 				allowDeselect: true,
-				bbar: [{
+				tbar: [{
 					text: '添加',
+					icon: './resources/img/add2.png',
 					handler: function (){
 						var win = Ext.create('FamilyDecoration.view.basicitem.AddBasicItem', {
 
@@ -56,6 +56,7 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 				}, {
 					text: '修改',
 					disabled: true,
+					icon: './resources/img/edit2.png',
 					id: 'button-editBasicItem',
 					name: 'button-editBasicItem',
 					handler: function (){
@@ -68,7 +69,7 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 							if (btnId == 'ok') {
 								if (!Ext.isEmpty(newName)) {
 									Ext.Ajax.request({
-										url: './libs/editbasicitem.php',
+										url: './libs/basicitem.php?action=editbasicitem',
 										method: 'POST',
 										params: {
 											itemId: id,
@@ -91,8 +92,10 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 							}
 						}, window, false, item.get('itemName'));
 					}
-				}, {
+				}],
+				bbar: [{
 					text: '删除',
+					icon: './resources/img/delete2.png',
 					disabled: true,
 					id: 'button-deleteBasicItem',
 					name: 'button-deleteBasicItem',
@@ -105,7 +108,7 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 						Ext.Msg.warning('【注意】：删除基础大项会删除其下的所有小项目！<br />确定要删除此项目吗？', function (btnId){
 							if (btnId == 'yes') {
 								Ext.Ajax.request({
-									url: './libs/deletebasicitem.php',
+									url: './libs/basicitem.php?action=deletebasicitem',
 									method: 'POST',
 									params: {
 										itemId: id
@@ -173,6 +176,7 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 					text: '添加',
 					id: 'button-addbasicSubItem',
 					name: 'button-addbasicSubItem',
+					icon: './resources/img/add3.png',
 					disabled: true,
 					handler: function (){
 						var mainGrid = Ext.getCmp('gridpanel-basicitem'),
@@ -194,6 +198,7 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 					text: '修改',
 					id: 'button-editbasicSubItem',
 					name: 'button-editbasicSubItem',
+					icon: './resources/img/edit3.png',
 					disabled: true,
 					handler: function (){
 						var mainGrid = Ext.getCmp('gridpanel-basicitem'),
@@ -218,6 +223,7 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 					text: '删除',
 					id: 'button-delbasicSubItem',
 					name: 'button-delbasicSubItem',
+					icon: './resources/img/delete3.png',
 					disabled: true,
 					handler: function (){
 						var subGrid = Ext.getCmp('gridpanel-basicSubItem'),
@@ -228,7 +234,7 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 							if (btnId == 'yes') {
 								if (rec) {
 									Ext.Ajax.request({
-										url: './libs/deletebasicsubitem.php',
+										url: './libs/subitem.php?action=delete',
 										method: 'POST',
 										params: {
 											subItemId: rec.getId()

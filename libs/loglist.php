@@ -27,5 +27,5 @@
 		case "getMembersByDepartment":$res = getMembersByDepartment($_GET["department"]);break;
 		default: throw new Exception("unknown action:".$action);
 	}
-	echo urldecode(json_encode($res));
+	echo (json_encode($res));
 ?>

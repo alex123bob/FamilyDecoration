@@ -18,9 +18,14 @@ Ext.define('FamilyDecoration.model.BudgetItem', {
 		{name: 'lossPercent', type: 'float'},
 		{name: 'parentId', type: 'string'},  //预算中该条项目对应的大项目id
 		{name: 'remark', type: 'string'},
-		{name: 'cost', type: 'float'}, // 预算中该条基础项目对应的成本
+		// {name: 'cost', type: 'float'}, // 预算中该条基础项目对应的成本
+		{name: 'manpowerCost', type: 'float'},
+		{name: 'mainMaterialCost', type: 'float'},
+		{name: 'manpowerTotalCost', type: 'float'},
+		{name: 'mainMaterialTotalCost', type: 'float'},
 		{name: 'basicItemId', type: 'string'}, // 基础项目中大项的id
-		{name: 'basicSubItemId', type: 'string'}
+		{name: 'basicSubItemId', type: 'string'},
+		{name: 'isEditable', type: 'boolean'}
 	],
 	idProperty: 'budgetItemId'
 });

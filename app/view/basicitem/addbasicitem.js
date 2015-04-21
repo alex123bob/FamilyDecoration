@@ -82,7 +82,7 @@ Ext.define('FamilyDecoration.view.basicitem.AddBasicItem', {
 						itemName: names
 					};
 					Ext.Ajax.request({
-						url: './libs/addbasicitem.php',
+						url: './libs/basicitem.php?action=addbunchbasicitems',
 						method: 'POST',
 						params: p,
 						callback: function (opts, success, res){

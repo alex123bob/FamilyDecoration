@@ -10,22 +10,19 @@
 		if(count($array) > 0 ){
 			throw new Exception("project Named :$projectName already exsit");
 		}
-		$keys = " `projectId`";
 		$projectId = date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
-		$values = " '$projectId'";
+		$obj = array('projectId'=>$projectId);
 		foreach($fields as $field){
-			if(isset($pro[$field])){
-				$keys = $keys.",`$field`";
-				$values = $values.",'".$pro[$field]."'";
-			}
+			if(isset($pro[$field]))
+				$obj[$field] = $pro[$field];
 		}
-		$mysql->DBInsert("`project`", $keys , $values );
+		$mysql->DBInsertAsArray("`project`", $obj);
 		return array('status'=>'successful', 'errMsg' => '','projectId'=>$projectId);
 	}
 
 	function delProject ($projectId){
 		global $mysql;
-		$mysql->DBUpdateSomeCols("`project`","`projectId` = '$projectId'", "`isDeleted` = 'true'");
+		$mysql->DBUpdate("project",array('isDeleted'=>true),"`projectId` = '?'",array($projectId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
@@ -87,16 +84,16 @@
 		$arr = $mysql->DBGetSomeRows("`project`", "*", "where YEAR(`projectTime`) = $year and MONTH(`projectTime`) = $month and `isDeleted` = 'false' ");
 		$res = array();
 		foreach($arr as $key => $val) {
-			$res[$key]['projectName'] = urlencode($val['projectName']);
-			$res[$key]['projectId'] = urlencode($val['projectId']);
+			$res[$key]['projectName'] = ($val['projectName']);
+			$res[$key]['projectId'] = ($val['projectId']);
 			$res[$key]['projectYear'] = date("Y", strtotime($val["projectTime"]));
 			$res[$key]['projectMonth'] = date("m", strtotime($val["projectTime"]));
-			$res[$key]['budgetId'] = urlencode($val['budgetId']);
-			$res[$key]['period'] = urlencode($val['period']);
-			$res[$key]['captain'] = urlencode($val['captain']);
-			$res[$key]['supervisor'] = urlencode($val['supervisor']);
-			$res[$key]['salesman'] = urlencode($val['salesman']);
-			$res[$key]['designer'] = urlencode($val['designer']);
+			$res[$key]['budgetId'] = ($val['budgetId']);
+			$res[$key]['period'] = ($val['period']);
+			$res[$key]['captain'] = ($val['captain']);
+			$res[$key]['supervisor'] = ($val['supervisor']);
+			$res[$key]['salesman'] = ($val['salesman']);
+			$res[$key]['designer'] = ($val['designer']);
 			$res[$key]['projectTime'] = $val['projectTime'];
 			$res[$key]['isFrozen'] = $val['isFrozen'];
 			$res[$key]['businessId'] = $val['businessId'];
@@ -110,15 +107,15 @@
 		$arr = $mysql->DBGetSomeRows("`project`", "*", "where `projectId` = '$projectId' ");
 		if ($arr) {
 			foreach($arr as $key => $val) {
-				$res[$key]['projectName'] = urlencode($val['projectName']);
-				$res[$key]['projectId'] = urlencode($val['projectId']);
-				$res[$key]['budgetId'] = urlencode($val['budgetId']);
-				$res[$key]['period'] = urlencode($val['period']);
+				$res[$key]['projectName'] = ($val['projectName']);
+				$res[$key]['projectId'] = ($val['projectId']);
+				$res[$key]['budgetId'] = ($val['budgetId']);
+				$res[$key]['period'] = ($val['period']);
 				$res[$key]['isFrozen'] = $val['isFrozen'];
-				$res[$key]['captain'] = urlencode($val['captain']);
-				$res[$key]['supervisor'] = urlencode($val['supervisor']);
-				$res[$key]['salesman'] = urlencode($val['salesman']);
-				$res[$key]['designer'] = urlencode($val['designer']);
+				$res[$key]['captain'] = ($val['captain']);
+				$res[$key]['supervisor'] = ($val['supervisor']);
+				$res[$key]['salesman'] = ($val['salesman']);
+				$res[$key]['designer'] = ($val['designer']);
 				$res[$key]['projectTime'] = $val['projectTime'];
 				$res[$key]['businessId'] = $val['businessId'];
 				$res[$key]['hasChart'] = $val['hasChart'];
@@ -129,17 +126,14 @@
 
 	function editProject (array $pro){
 		global $mysql;
-		$projectId = $pro['projectId'];
-		$setValue = " isDeleted = isDeleted ";
 		// fields that could be edit.
+		$obj = array();
 		$keys = array('projectName','period','captain','supervisor', 'salesman', 'designer','projectTime','budgetId','isFrozen', 'hasChart');
 		foreach($keys as $key){
-			if(isset($pro[$key])){
-				$tmp = $pro[$key];
-				$setValue = $setValue.",`$key` = '$tmp' ";
-			}
+			if(isset($pro[$key]))
+				$obj[$key] = $pro[$key];
 		}	
-		$mysql->DBUpdateSomeCols("`project`","`projectId` = '$projectId'", $setValue);
+		$mysql->DBUpdate("project",$obj,"`projectId` = '?'",array($pro['projectId']));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
@@ -149,13 +143,11 @@
 		$setValue = " isDeleted = isDeleted ";
 		// fields that could be edit.
 		$keys = array('projectName','period','captain','supervisor', 'salesman', 'designer','projectTime','budgetId','isFrozen');
-		foreach($keys as $key){
-			if(isset($pro[$key])){
-				$tmp = $pro[$key];
-				$setValue = $setValue.",`$key` = '$tmp' ";
-			}
-		}	
-		$mysql->DBUpdateSomeCols("`project`","`projectName` = '$projectName'", $setValue);
+		$obj = array();
+		foreach($keys as $key)
+			if(isset($pro[$key]))
+				$obj[$key]=$pro[$key];
+		$mysql->DBUpdate("project",$obj,"`projectName` = '?'",array($pro['projectName']));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 ?>

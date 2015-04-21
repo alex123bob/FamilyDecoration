@@ -5,7 +5,6 @@ Ext.define('FamilyDecoration.view.mylog.AskLeave', {
 
 	resizable: false,
 	modal: true,
-	maximizable: true,
 	width: 550,
 	height: 240,
 	autoScroll: true,

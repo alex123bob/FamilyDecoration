@@ -6,7 +6,6 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 		'FamilyDecoration.view.progress.ProjectList', 'FamilyDecoration.store.MainMaterial', 
 		'FamilyDecoration.view.mainmaterial.EditMainMaterial'
 	],
-	autoScroll: true,
 	layout: 'border',
 
 	initComponent: function (){
@@ -67,6 +66,11 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 				st.load({
 					params: {
 						projectId: rec.getId()
+					},
+					callback: function (recs, ope, success){
+						if (success) {
+							grid.getSelectionModel().deselectAll();
+						}
 					}
 				});
 			},
@@ -74,6 +78,7 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 				text: '添加',
 				id: 'button-addmaterial',
 				name: 'button-addmaterial',
+				icon: './resources/img/add1.png',
 				disabled: true,
 				handler: function (){
 					var treepanel = Ext.getCmp('treepanel-projectNameForMainMaterial'),
@@ -87,6 +92,7 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 				text: '修改',
 				id: 'button-editmaterial',
 				name: 'button-editmaterial',
+				icon: './resources/img/edit1.png',
 				disabled: true,
 				handler: function (){
 					var treepanel = Ext.getCmp('treepanel-projectNameForMainMaterial'),
@@ -108,6 +114,7 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 				text: '删除',
 				id: 'button-deletematerial',
 				name: 'button-deletematerial',
+				icon: './resources/img/delete1.png',
 				disabled: true,
 				handler: function (){
 					var treepanel = Ext.getCmp('treepanel-projectNameForMainMaterial'),
@@ -161,13 +168,13 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 		        {
 		        	text: '数量',
 		        	dataIndex: 'productNumber', 
-		        	flex: 1,
+		        	flex: 0.5,
 		        	draggable: false,
 		        	menuDisabled: true,
 		        	sortable: false
 		        },
 		        {
-		        	text: '商家',
+		        	text: '商家及联系人',
 		        	dataIndex: 'productMerchant', 
 		        	flex: 1,
 		        	draggable: false,
@@ -175,8 +182,16 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 		        	sortable: false
 		        },
 		        {
-		        	text: '联系人及联系号码',
-		        	dataIndex: 'productContact', 
+		        	text: '预定时间及预定人',
+		        	dataIndex: 'productSchedule', 
+		        	flex: 1,
+		        	draggable: false,
+		        	menuDisabled: true,
+		        	sortable: false
+		        },
+		        {
+		        	text: '送货时间',
+		        	dataIndex: 'productDeliver', 
 		        	flex: 1,
 		        	draggable: false,
 		        	menuDisabled: true,

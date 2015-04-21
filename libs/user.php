@@ -41,5 +41,6 @@
 		//TODO
 		default: 		throw new Exception("unknown action:".$action);
 	}
+	if(!$res) $res = array('status'=>'successful', 'errMsg' => '');
 	echo json_encode($res);
 ?>

@@ -56,7 +56,8 @@ table.pros td{
 #gridpanel-historyBusinessDetail .x-grid-cell-inner, #gridpanel-scrutinizeForCheckLog .x-grid-cell-inner, 
 #gridpanel-scrutinize .x-grid-cell-inner, #gridpanel-checkFeedback .x-grid-cell-inner, 
 #gridpanel-myTaskScrutinizeContent .x-grid-cell-inner, #gridpanel-scrutinizeForCheckTask .x-grid-cell-inner, 
-#gridpanel-message .x-grid-cell-inner {
+#gridpanel-message .x-grid-cell-inner, #gridpanel-mainMaterialContent .x-grid-cell-inner, 
+.gridpanel-budgetContent .x-grid-cell-inner{
   white-space: normal;
   word-wrap: break-word;
 }
