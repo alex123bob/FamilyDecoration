@@ -3,9 +3,10 @@ Ext.define('FamilyDecoration.store.TotalCost', {
 	model: 'FamilyDecoration.model.TotalCost',
 	proxy: {
 		type: 'rest',
-		url: './libs/costanalysis.php',
+		url: './libs/budget.php',
 		reader: {
-			type: 'json'
+			type: 'json',
+			root: 'total'
 		},
 		extraParams: {
 			action: 'view'

@@ -1,4 +1,5 @@
 <?php
+	//打折
 	function makeDiscount($data){
 		if(!isset($data['discount'])){
 			return array('status'=>'successful', 'errMsg' => '');
@@ -70,7 +71,7 @@
 	function addItem($post){
 		$itemCode = _getNextBasicCode($post["budgetId"],$post["itemCode"]);
 		global $mysql;
-		$fields = array('itemName','budgetId','itemUnit','itemAmount','remark','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','manpowerCost', 'mainMaterialCost', 'basicItemId','basicSubItemId');
+		$fields = array('itemName','budgetId','itemUnit','workCategory','itemAmount','remark','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','manpowerCost', 'mainMaterialCost', 'basicItemId','basicSubItemId');
 		$obj = array('itemCode'=>$itemCode,'budgetItemId' => "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT));
 		foreach($fields as $field){
 			if(isset($post[$field])){

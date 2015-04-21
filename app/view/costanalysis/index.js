@@ -29,17 +29,20 @@ Ext.define('FamilyDecoration.view.costanalysis.Index', {
                     var rec = sels[0],
                         totalCost = Ext.getCmp('gridpanel-totalCost'),
                         costAnalysis = Ext.getCmp('gridpanel-costAnalysis');
-                    if (rec && rec.get('projectName')) {
+                    if (rec && rec.get('projectName') && rec.get('budgetId')) {
                         totalCost.getStore().load({
                             params: {
-                                projectId: rec.getId()
+                                budgetId: rec.get('budgetId')
                             }
                         });
                         costAnalysis.getStore().load({
                             params: {
-                                projectId: rec.getId()
+                                budgetId: rec.get('budgetId')
                             }
                         });
+                    }
+                    else {
+                        showMsg('该工程没有预算！');
                     }
                 }
             }
