@@ -6,7 +6,6 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 		'FamilyDecoration.view.mylog.AskLeave', 'FamilyDecoration.model.TaskSelfAssessment',
 		'FamilyDecoration.view.mytask.EditProcess'
 	],
-	autoScroll: true,
 	layout: 'border',
 
 	initComponent: function (){

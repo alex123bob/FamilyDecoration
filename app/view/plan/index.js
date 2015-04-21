@@ -5,7 +5,6 @@ Ext.define('FamilyDecoration.view.plan.Index', {
 		'FamilyDecoration.store.Project', 'FamilyDecoration.view.progress.EditProject', 'Ext.tree.Panel', 'FamilyDecoration.view.progress.ProjectList',
 		'FamilyDecoration.store.PlanCategory', 'FamilyDecoration.view.plan.EditPlan'
 	],
-	autoScroll: true,
 	layout: 'border',
 
 	initComponent: function (){

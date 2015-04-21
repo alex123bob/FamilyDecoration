@@ -6,7 +6,6 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 		'FamilyDecoration.view.progress.ProjectList', 'FamilyDecoration.store.MainMaterial', 
 		'FamilyDecoration.view.mainmaterial.EditMainMaterial'
 	],
-	autoScroll: true,
 	layout: 'border',
 
 	initComponent: function (){

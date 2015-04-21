@@ -359,7 +359,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				name: 'textfield-period',
 				id: 'textfield-period',
 				labelWidth: 60,
-				width: 140,
+				width: 220,
 				readOnly: true,
 				fieldLabel: '项目工期'
 			}, {

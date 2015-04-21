@@ -12,8 +12,8 @@ Ext.define('FamilyDecoration.view.budget.Index', {
 				xtype: 'budget-budgetpanel',
 				name: 'panel-budgetPanel',
 				id: 'panel-budgetPanel',
-				region: 'center'
-				// isSynchronousCalculation: false
+				region: 'center',
+				isSynchronousCalculation: true
 			}
 		];
 

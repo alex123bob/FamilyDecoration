@@ -1,7 +1,6 @@
 Ext.define('FamilyDecoration.view.basicitem.Index', {
 	extend: 'Ext.panel.Panel',
 	alias: 'widget.basicitem-index',
-	autoScroll: true,
 	layout: 'border',
 
 	requires: ['FamilyDecoration.store.BasicItem', 'FamilyDecoration.view.basicitem.AddBasicItem', 'FamilyDecoration.store.BasicSubItem',
