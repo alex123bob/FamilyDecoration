@@ -44,6 +44,8 @@ $pdf->AliasNbPages("__totalPage__");
 foreach($budgetItems as $bItem){
 	//保留小数点后两位,不足补0
 	foreach($bItem as $key=> $val){
+		if(!in_array($key,array('itemAmount','mainMaterialTotalPrice','auxiliaryMaterialTotalPrice','manpowerTotalPrice','mainMaterialTotalCost','lossPercent','manpowerTotalCost','machineryTotalPrice','mainMaterialPrice','auxiliaryMaterialPrice','machineryPrice','manpowerPrice')))
+			continue;
 		if(is_numeric($val)){
 			$tmp = round($val,2)."";
 			$index = strpos($tmp, ".");
