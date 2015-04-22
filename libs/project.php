@@ -10,10 +10,6 @@
 			$res = addProject($_REQUEST);  
 			break;
 		case "delProject":
-			if(isset($_REQUEST['budgetId'])){
-				delBudget($_REQUEST['budgetId']);
-			}
-			//TODO 删除plan和progress，其实不删也可以
 			$res = delProject($_REQUEST["projectId"]);
 			break;
 		case "editProject":

@@ -23,18 +23,15 @@
 	function delProject ($projectId){
 		global $mysql;
 		$mysql->DBUpdate("project",array('isDeleted'=>true),"`projectId` = '?'",array($projectId));
+		$mysql->DBUpdate("budget",array('isDeleted'=>true),"`projectId` = '?'",array($projectId));
+		//TODO 删除plan和progress,budgetItem，其实不删也可以
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
 	function getProjectNames (){
 		global $mysql;
-		$arr =  $mysql->DBGetAllRows("`project`", "`projectName`", " where `isDeleted` = 'false' ");
-		$res = array();
-		$count = 0;
-		foreach($arr as $item){
-			$res[$count++]['projectName'] = $item['projectName'];
-		}
-		return $res;
+		$sql = "select projectName from project where `isDeleted` = 'false' ORDER BY `projectTime` DESC ";
+		return $mysql->DBGetAsMap($sql);
 	}
 
 	function getVisitorProject($visitorName,$filter){
@@ -49,86 +46,50 @@
 			case "project":
 			default:
 				$select = " p.*,MONTH(p.projectTime) as projectMonth,YEAR(p.projectTime) as projectYear ";
-			break;
+				break;
 		}
-		$where = " left join project p on p.projectId = user.projectId where user.name = '$visitorName' and p.projectId is not null and p.isDeleted = 'false' "; 
-		global $mysql;
-		$arr = $mysql->DBGetSomeRows("`user`", $select , $where,"");
-		return $arr;
+		$sql = "select $select from user left join project p on p.projectId = user.projectId where user.name = '?' and p.projectId is not null and p.isDeleted = 'false' "; 
+		return $mysql->DBGetAsMap($sql,$visitorName);
 	}
 	function getProjectYears (){
 		global $mysql;
-		$arr =  $mysql->DBGetSomeRows("`project`", "distinct YEAR(`projectTime`) as `projectYear` ","where `isDeleted` = 'false' ", " ORDER BY `projectYear` DESC");
-		$res = array();
-		$count = 0;
-		foreach($arr as $item){
-			$res[$count++]['projectYear'] = $item['projectYear'];
-		}
-		return $res;
+		$sql = "select distinct YEAR(`projectTime`) as `projectYear` from project where `isDeleted` = 'false' ORDER BY `projectTime` DESC ";
+		return $mysql->DBGetAsMap($sql);
 	}
 
 	function getProjectMonths ($year){
 		global $mysql;
-		$arr = $mysql->DBGetSomeRows("`project`", "distinct MONTH(`projectTime`) as `projectMonth`", "where YEAR(`projectTime`) = $year and `isDeleted` = 'false' ",
-			" ORDER BY `projectMonth` DESC");
-		$res = array();
-		$count = 0;
-		foreach($arr as $item){
-			$res[$count++]['projectMonth'] = $item['projectMonth'];
-		}
-		return $res;
+		$sql = "select distinct MONTH(`projectTime`) as `projectMonth` from project where YEAR(`projectTime`) = '?' and `isDeleted` = 'false' ORDER BY `projectMonth` DESC ";
+		return $mysql->DBGetAsMap($sql,$year);
 	}
 
 	function getProjects ($year, $month){
 		global $mysql;
-		$arr = $mysql->DBGetSomeRows("`project`", "*", "where YEAR(`projectTime`) = $year and MONTH(`projectTime`) = $month and `isDeleted` = 'false' ");
-		$res = array();
-		foreach($arr as $key => $val) {
-			$res[$key]['projectName'] = ($val['projectName']);
-			$res[$key]['projectId'] = ($val['projectId']);
-			$res[$key]['projectYear'] = date("Y", strtotime($val["projectTime"]));
-			$res[$key]['projectMonth'] = date("m", strtotime($val["projectTime"]));
-			$res[$key]['budgetId'] = ($val['budgetId']);
-			$res[$key]['period'] = ($val['period']);
-			$res[$key]['captain'] = ($val['captain']);
-			$res[$key]['supervisor'] = ($val['supervisor']);
-			$res[$key]['salesman'] = ($val['salesman']);
-			$res[$key]['designer'] = ($val['designer']);
-			$res[$key]['projectTime'] = $val['projectTime'];
-			$res[$key]['isFrozen'] = $val['isFrozen'];
-			$res[$key]['businessId'] = $val['businessId'];
-			$res[$key]['hasChart'] = $val['hasChart'];
+		$sql = "select *, YEAR(`projectTime`) as projectYear , MONTH(`projectTime`) as projectMonth from `project` where YEAR(`projectTime`) = '?' and MONTH(`projectTime`) = '?' and `isDeleted` = 'false' ";
+		$sqlBudget = "select * from budget where projectId = '?' and isDeleted = 'false'";
+		$projects = $mysql->DBGetAsMap($sql,$year,$month);
+		foreach($projects as $key=>$project){
+			$projects[$key]['budgets']=$mysql->DBGetAsMap($sqlBudget,$project['projectId']);
 		}
-		return $res;
+		return $projects;
 	}
 	
 	function getProjectsByProjectId ($projectId){
 		global $mysql;
-		$arr = $mysql->DBGetSomeRows("`project`", "*", "where `projectId` = '$projectId' ");
-		if ($arr) {
-			foreach($arr as $key => $val) {
-				$res[$key]['projectName'] = ($val['projectName']);
-				$res[$key]['projectId'] = ($val['projectId']);
-				$res[$key]['budgetId'] = ($val['budgetId']);
-				$res[$key]['period'] = ($val['period']);
-				$res[$key]['isFrozen'] = $val['isFrozen'];
-				$res[$key]['captain'] = ($val['captain']);
-				$res[$key]['supervisor'] = ($val['supervisor']);
-				$res[$key]['salesman'] = ($val['salesman']);
-				$res[$key]['designer'] = ($val['designer']);
-				$res[$key]['projectTime'] = $val['projectTime'];
-				$res[$key]['businessId'] = $val['businessId'];
-				$res[$key]['hasChart'] = $val['hasChart'];
-			}
+		$sql = "select * from project where projectId = '?'  and `isDeleted` = 'false' ";
+		$sqlBudget = "select * from budget where projectId = '?' and isDeleted = 'false'";
+		$projects = $mysql->DBGetAsMap($sql,$projectId);
+		foreach($projects as $key=>$project){
+			$projects[$key]['budgets']=$mysql->DBGetAsMap($sqlBudget,$project['projectId']);
 		}
-		return $arr;
+		return $projects;
 	}
 
 	function editProject (array $pro){
 		global $mysql;
 		// fields that could be edit.
 		$obj = array();
-		$keys = array('projectName','period','captain','supervisor', 'salesman', 'designer','projectTime','budgetId','isFrozen', 'hasChart');
+		$keys = array('projectName','period','captain','supervisor', 'salesman', 'designer','projectTime','isFrozen', 'hasChart');
 		foreach($keys as $key){
 			if(isset($pro[$key]))
 				$obj[$key] = $pro[$key];
@@ -142,7 +103,7 @@
 		$projectName = $pro['projectName'];
 		$setValue = " isDeleted = isDeleted ";
 		// fields that could be edit.
-		$keys = array('projectName','period','captain','supervisor', 'salesman', 'designer','projectTime','budgetId','isFrozen');
+		$keys = array('projectName','period','captain','supervisor', 'salesman', 'designer','projectTime','isFrozen');
 		$obj = array();
 		foreach($keys as $key)
 			if(isset($pro[$key]))

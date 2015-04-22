@@ -66,6 +66,21 @@
 		if ($pos === false)	return $haystack;
 		return substr_replace($haystack, $replace, $pos, strlen($needle));
 	}
+	function formatNumber($val){
+		$tmp = $val;
+		if(is_numeric($val)){
+			$tmp = round($val,2)."";
+			$index = strpos($tmp, ".");
+			if(!$index){
+				$tmp .= ".00";
+			}else if($index + 2== strlen($tmp)){
+				$tmp .= "0";
+			}else{
+				// do nothing;
+			}
+		}
+		return $tmp;		
+	}
 	function myStrEscape($arg){
 		if(is_array($arg)){
 			foreach($arg as $key => $val){

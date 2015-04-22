@@ -14,7 +14,7 @@ Ext.define('FamilyDecoration.model.Project', {
         {name: 'projectProgress', type: 'string'},
         {name: 'projectProgressComment', type: 'string'},
         {name: 'text', type: 'string', mapping: 'projectName'},
-        {name: 'budgetId', type: 'string'},
+        {name: 'budgets'},
         {name: 'isFrozen', type: 'string'},
         {name: 'businessId', type: 'string'},
         {name: 'hasChart', type: 'string'}

@@ -18,8 +18,6 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 	// indicator: tells us if there is an budget existed in current panel
 	budgetId: undefined,
 
-	discount: 100, // 预算折扣 百分数
-
 	isSynchronousCalculation: true, // calculate simultaneously or not when editting each line of budget.
 
 	// obj: budgetId, custName, projectName
@@ -232,72 +230,79 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				name: 'button-priceAdjust',
 				hidden: true,
 				handler: function (){
+					var grid = me.getComponent('gridpanel-budgetContent'),
+						rec = grid.getSelectionModel().getSelection()[0];
 					if (me.budgetId) {
-						var win = Ext.create('Ext.window.Window', {
-							title: '调整价格',
-							width: 300,
-							height: 140,
-							bodyPadding: 10,
-							modal: true,
-							items: [{
-								xtype: 'slider',
-								autoScroll: true,
-								value: me.discount,
-								increment: 1,
-								minValue: 1,
-								maxValue: 100,
-								width: '100%',
-								height: 20,
-								listeners: {
-									change: function (slider, newVal, thumb, opts){
-										var textField = win.down('textfield');
-										textField.setValue(newVal);
+						if (rec) {
+							var win = Ext.create('Ext.window.Window', {
+								title: '调整价格',
+								width: 300,
+								height: 140,
+								bodyPadding: 10,
+								modal: true,
+								items: [{
+									xtype: 'slider',
+									autoScroll: true,
+									increment: 1,
+									minValue: 1,
+									maxValue: 100,
+									width: '100%',
+									height: 20,
+									value: 100,
+									listeners: {
+										change: function (slider, newVal, thumb, opts){
+											var textField = win.down('textfield');
+											textField.setValue(newVal);
+										}
 									}
-								}
-							}, {
-								xtype: 'textfield',
-								fieldLabel: '折扣(%)',
-								readOnly: true,
-								width: '100%',
-								value: me.discount
-							}],
-							buttons: [{
-								text: '确定',
-								handler: function (){
-									var textField = win.down('textfield'),
-										discount = parseInt(textField.getValue(), 10);
-									me.discount = discount;
-									Ext.Ajax.request({
-										url: './libs/budget.php?action=discount',
-										method: 'POST',
-										params: {
-											budgetId: me.budgetId,
-											discount: discount
-										},
-										callback: function (opts, success, res){
-											if (success) {
-												var obj = Ext.decode(res.responseText);
-												if (obj.status == 'successful') {
-													showMsg('调价成功！');
-													me.refresh();
-													win.close();
-												}
-												else {
-													showMsg(obj.errMsg);
+								}, {
+									xtype: 'textfield',
+									fieldLabel: '折扣(%)',
+									readOnly: true,
+									width: '100%',
+									value: 100
+								}],
+								buttons: [{
+									text: '确定',
+									handler: function (){
+										var textField = win.down('textfield'),
+											discount = parseInt(textField.getValue(), 10);
+										Ext.Ajax.request({
+											url: './libs/budget.php?action=discount',
+											method: 'POST',
+											params: {
+												budgetId: me.budgetId,
+												discount: discount,
+												budgetItemId: rec.getId()
+											},
+											callback: function (opts, success, res){
+												if (success) {
+													var obj = Ext.decode(res.responseText);
+													if (obj.status == 'successful') {
+														showMsg('调价成功！');
+														me.refresh();
+														win.close();
+													}
+													else {
+														showMsg(obj.errMsg);
+													}
 												}
 											}
-										}
-									})
-								}
-							}, {
-								text: '取消',
-								handler: function (){
-									win.close();
-								}
-							}]
-						});
+										});
+									}
+								}, {
+									text: '取消',
+									handler: function (){
+										win.close();
+									}
+								}]
+							});
 
-						win.show();
+							win.show();
+						}
+						else {
+							showMsg('请选择预算条目！');
+						}
 					}
 					else {
 						showMsg('当前没有预算！');
@@ -849,10 +854,32 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 							listeners: {
 								beforeshow: function(tip) {
 									var gridColumns = view.getGridColumns();
-									var column = gridColumns[tip.triggerElement.cellIndex];
-									var val = view.getRecord(tip.triggerElement.parentNode).get(column.dataIndex);
+									var cellIndex = tip.triggerElement.cellIndex;
+									var column = gridColumns[cellIndex];
+									var rec = view.getRecord(tip.triggerElement.parentNode);
+									var val = rec.get(column.dataIndex);
 									if (val) {
-										val.replace && (val = val.replace(/\n/g, '<br />'));
+										switch (cellIndex) {
+											// 主单
+											case 4:
+											val = val + '<br />' + rec.get('orgMainMaterialPrice');
+											break;
+											// 辅单
+											case 6:
+											val = val + '<br />' + rec.get('orgAuxiliaryMaterialPrice');
+											break;
+											// 人单
+											case 8:
+											val = val + '<br />' + rec.get('orgManpowerPrice');
+											break;
+											// 机单
+											case 10:
+											val = val + '<br />' + rec.get('orgMachineryPrice');
+											break;
+											default:
+											val.replace && (val = val.replace(/\n/g, '<br />'));
+											break;
+										}
 										tip.update(val);
 									} 
 									else {

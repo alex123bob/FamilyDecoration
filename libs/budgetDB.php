@@ -138,49 +138,45 @@
 	function addBudget($post){
 		global $mysql;
 		$projectId = $post["projectId"];
-		$projects = $mysql->DBGetAsMap("SELECT projectId FROM `project` where `isDeleted` = 'false' and `projectId` = '?' and CHAR_LENGTH(`budgetId`) > 2 ",$projectId);  //长度随便选的2，有内容
-		if(count($projects) > 0) 
-			throw new Exception("项目 : '$projectId' 已经存在预算!");
+		$budgetId = "budget-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
 		$fields = array("custName","areaSize","totalFee","comments",'budgetName');
-		$obj = array("isDeleted"=>false,"budgetId" => "budget-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT));
+		$budget = array("isDeleted"=>false,'projectId'=>$projectId,"budgetId" =>$budgetId );
 		foreach($fields as $field){
 			if(isset($post[$field])){
-				$obj[$field] = $post[$field];
+				$budget[$field] = $post[$field];
 			}
 		}
-		$mysql->DBUpdate("project",array('budgetId'=>$obj["budgetId"]),"`projectId` = '?' and `isDeleted`='false' ",array($projectId));
-		$mysql->DBInsertAsArray("`budget`",$obj);
+		$mysql->DBInsertAsArray("budget",$budget);
 		//N
-		$item = array('itemCode'=>'N','itemName'=>'工程直接费','itemUnit'=>'元','budgetId'=>$obj["budgetId"]);
+		$item = array('itemCode'=>'N','itemName'=>'工程直接费','itemUnit'=>'元','budgetId'=>$budgetId);
 		$item['budgetItemId'] = "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
 		$mysql->DBInsertAsArray("`budget_item`",$item);
 		//O
-		$item = array('itemCode'=>'O','itemName'=>'设计费3%','itemUnit'=>'元','itemAmount'=>0.03,'budgetId'=>$obj["budgetId"]);
+		$item = array('itemCode'=>'O','itemName'=>'设计费3%','itemUnit'=>'元','itemAmount'=>0.03,'budgetId'=>$budgetId);
 		$item['budgetItemId'] = "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
 		$mysql->DBInsertAsArray("`budget_item`",$item);
 		//P
-		$item = array('itemCode'=>'P','itemName'=>'效果图','itemUnit'=>'张','itemAmount'=>0,'budgetId'=>$obj["budgetId"]);
+		$item = array('itemCode'=>'P','itemName'=>'效果图','itemUnit'=>'张','itemAmount'=>0,'budgetId'=>$budgetId);
 		$item['budgetItemId'] = "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
 		$mysql->DBInsertAsArray("`budget_item`",$item);
 		//Q
-		$item = array('itemCode'=>'Q','itemName'=>'5%管理费','itemUnit'=>'元','itemAmount'=>0.05,'budgetId'=>$obj["budgetId"]);
+		$item = array('itemCode'=>'Q','itemName'=>'5%管理费','itemUnit'=>'元','itemAmount'=>0.05,'budgetId'=>$budgetId);
 		$item['budgetItemId'] = "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
 		$mysql->DBInsertAsArray("`budget_item`",$item);
 		//R
-		$item = array('itemCode'=>'R','itemName'=>'税金','itemUnit'=>'元','itemAmount'=>0.03,'budgetId'=>$obj["budgetId"]);
+		$item = array('itemCode'=>'R','itemName'=>'税金','itemUnit'=>'元','itemAmount'=>0.03,'budgetId'=>$budgetId);
 		$item['budgetItemId'] = "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
 		$mysql->DBInsertAsArray("`budget_item`",$item);
 		//S
-		$item = array('itemCode'=>'S','itemName'=>'工程总造价','itemUnit'=>'元','budgetId'=>$obj["budgetId"]);
+		$item = array('itemCode'=>'S','itemName'=>'工程总造价','itemUnit'=>'元','budgetId'=>$budgetId);
 		$item['budgetItemId'] = "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
 		$mysql->DBInsertAsArray("`budget_item`",$item);
-		return array('status'=>'successful', 'errMsg' => '', "budgetId" => $obj["budgetId"]);
+		return array('status'=>'successful', 'errMsg' => '', "budgetId" => $budgetId);
 	}
 
 	//删除预算
 	function delBudget ($budgetId){
 		global $mysql;
-		$mysql->DBUpdate('project',array('budgetId'=>''),"`budgetId` = '?' ",array($budgetId));
 		$mysql->DBUpdate('budget',array('isDeleted'=>true),"`budgetId` = '?' ",array($budgetId));
 		$mysql->DBUpdate('budget_item',array('isDeleted'=>true),"`budgetId` = '?' ",array($budgetId));
 		return array('status'=>'successful', 'errMsg' => '');
@@ -189,19 +185,19 @@
 	//供本地备份脚本使用
 	function getBudgetIds (){
 		global $mysql;
-		$arr = $mysql->DBGetAsMap("SELECT b.budgetId,p.projectName FROM `budget` b left join `project` p on b.budgetId=p.budgetId where b.`isDeleted` = 'false' ");
+		$arr = $mysql->DBGetAsMap("SELECT b.budgetId,p.projectName FROM `budget` b left join `project` p on b.projectId=p.projectId where b.`isDeleted` = 'false' ");
 		foreach($arr as $key => $val) {
 			echo $val['budgetId'].">".str2GBK($val['projectName'])."\n";
 		}
 	}
 	function getBudgets (){
 		global $mysql;
-		return $mysql->DBGetAsMap("SELECT b.*,p.projectName FROM `budget` b left join `project` p on b.budgetId=p.budgetId where b.`isDeleted` = 'false' ");
+		return $mysql->DBGetAsMap("SELECT b.*,p.projectName FROM `budget` b left join `project` p on b.projectId=p.projectId where b.`isDeleted` = 'false' ");
 	}
 	
 	function getBudgetsByBudgetId ($budgetId){
 		global $mysql;
-		return $mysql->DBGetAsMap("SELECT b.*,p.projectName FROM `budget` b left join `project` p on b.budgetId=p.budgetId where b.`isDeleted` = 'false' and b.`budgetId` = '?' ",$budgetId);
+		return $mysql->DBGetAsMap("SELECT b.*,p.projectName FROM `budget` b left join `project` p on b.projectId=p.projectId where b.`isDeleted` = 'false' and b.`budgetId` = '?' ",$budgetId);
 	}
 	
 	function compareBudgetItem($arg1,$arg2){
@@ -211,32 +207,14 @@
 	function editBudget (array $pro){
 		global $mysql;
 		$obj = array();
-		$fields = array("custName","areaSize", "totalFee", "comments",'budgetName');
+		$fields = array("custName","areaSize","projectId","totalFee", "comments",'budgetName');
 		foreach($fields as $field) {
 			if (isset($pro[$field])) {
 				$obj[$field] = $pro[$field];
 			}
 		}
 		$mysql->DBUpdate('budget',$obj,"`budgetId` = '?'",array($pro['budgetId']));
-		if(isset($pro['projectId']))
-			$mysql->DBUpdate('project',array('budgetId'=>$pro['budgetId']),"`projectId` = '?'",array($pro['projectId']));
 		return array('status'=>'successful', 'errMsg' => '');
-	}
-	//获取预算结果QPRST
-	function getBudgetResult($budgetId){
-		$arr = getBudgetItemsByBudgetId($budgetId);
-		$res = array();
-		foreach($arr as $item){
-			if(in_array($item['itemCode'],array('N','O','P','Q','R','S'))){
-				$res[$item['itemCode']]['budgetItemId'] = $item['budgetItemId'];
-				$res[$item['itemCode']]['itemName'] = $item['itemName'];
-				$res[$item['itemCode']]['mainMaterialTotalPrice'] = $item['mainMaterialTotalPrice'];
-				$res[$item['itemCode']]['itemAmount'] = $item['itemAmount'];
-				$res[$item['itemCode']]['itemUnit'] = $item['itemUnit'];
-				$res[$item['itemCode']]['itemCode'] = $item['itemCode'];
-			}
-		}
-		return $res;
 	}
 	//成本分析
 	function costAnalysis($budgetId){
@@ -353,6 +331,11 @@
 			$res[$count]['auxiliaryMaterialPrice'] = $val['auxiliaryMaterialPrice'] * $discount/100;
 			$res[$count]['manpowerPrice'] = $val['manpowerPrice'] * $discount/100;
 			$res[$count]['machineryPrice'] = $val['machineryPrice'] * $discount/100;
+			$res[$count]['orgMainMaterialPrice'] = "原价:".$val['mainMaterialPrice']." ".( $discount == 100 ? "" : ($discount/10)."折");
+			$res[$count]['orgAuxiliaryMaterialPrice'] = "原价:".$val['auxiliaryMaterialPrice']." ".( $discount == 100 ? "" : ($discount/10)."折");
+			$res[$count]['orgManpowerPrice'] = "原价:".$val['manpowerPrice']." ".( $discount == 100 ? "" : ($discount/10)."折");
+			$res[$count]['orgMachineryPrice'] = "原价:".$val['machineryPrice']." ".( $discount == 100 ? "" : ($discount/10)."折");
+
 			//损耗=（主材单价+辅料单价）*0.05,按折扣后的价格
 			$loss = ($res[$count]['mainMaterialPrice']+$res[$count]['auxiliaryMaterialPrice']) * 0.05;
 			if($val['lossPercent'] != $loss){
@@ -487,6 +470,16 @@
 		if($fee != $item['mainMaterialPrice']){
 			$item['mainMaterialPrice'] = $fee;
 			$arr = editItem($item);// update
+		}
+		
+			
+		foreach($res as $count=>$bItem){
+			//保留小数点后两位,不足补0
+			foreach($bItem as $key=> $val){
+				if(!in_array($key,array('itemAmount','mainMaterialTotalPrice','auxiliaryMaterialTotalPrice','manpowerTotalPrice','mainMaterialTotalCost','lossPercent','manpowerTotalCost','machineryTotalPrice','mainMaterialPrice','auxiliaryMaterialPrice','machineryPrice','manpowerPrice')))
+					continue;
+				$res[$count][$key] = formatNumber($val);
+			}
 		}
 		return $res;
 	}

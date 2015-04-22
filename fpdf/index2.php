@@ -42,23 +42,6 @@ $pdf->SetFont("GB",'',$GfontSize); //设置字体样式
 $pdf->AliasNbPages("__totalPage__");
 //echo $custName.":".$projectName;
 foreach($budgetItems as $bItem){
-	//保留小数点后两位,不足补0
-	foreach($bItem as $key=> $val){
-		if(!in_array($key,array('itemAmount','mainMaterialTotalPrice','auxiliaryMaterialTotalPrice','manpowerTotalPrice','mainMaterialTotalCost','lossPercent','manpowerTotalCost','machineryTotalPrice','mainMaterialPrice','auxiliaryMaterialPrice','machineryPrice','manpowerPrice')))
-			continue;
-		if(is_numeric($val)){
-			$tmp = round($val,2)."";
-			$index = strpos($tmp, ".");
-			if(!$index){
-				$tmp .= ".00";
-			}else if($index + 2== strlen($tmp)){
-				$tmp .= "0";
-			}else{
-				// do nothing;
-			}
-			$bItem[$key] = $tmp;
-		}
-	}
 	$fields = array('budgetItemId','itemName','budgetId','mainMaterialTotalPrice','auxiliaryMaterialTotalPrice','manpowerTotalPrice','mainMaterialTotalCost','manpowerTotalCost',
 					'machineryTotalPrice','remark','itemAmount','itemCode','itemUnit','mainMaterialPrice','auxiliaryMaterialPrice','lossPercent','machineryPrice','manpowerPrice');
 	foreach($fields as $field){
