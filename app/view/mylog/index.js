@@ -351,7 +351,7 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 					text: '请假申请',
 					id: 'button-askLeave',
 					name: 'button-askLeave',
-					// hidden: true,
+					hidden: true,
 					disabled: true,
 					handler: function (){
 						var tree = Ext.getCmp('treepanel-logName'),
