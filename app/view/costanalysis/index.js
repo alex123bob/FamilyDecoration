@@ -3,7 +3,7 @@ Ext.define('FamilyDecoration.view.costanalysis.Index', {
     alias: 'widget.costanalysis-index',
     requires: [
         'FamilyDecoration.view.progress.ProjectList', 'FamilyDecoration.view.costanalysis.TotalCost',
-        'FamilyDecoration.view.costanalysis.CostAnalysis'
+        'FamilyDecoration.view.costanalysis.CostAnalysis', 'FamilyDecoration.store.Budget'
     ],
     autoScroll: true,
     width: '100%',
@@ -25,21 +25,68 @@ Ext.define('FamilyDecoration.view.costanalysis.Index', {
                 borderRightWidth: '1px'
             },
             listeners: {
-                selectionchange: function (selModel, sels, opts){
-                    var rec = sels[0],
+                itemclick: function (view, record, item){
+                    var pro = record,
                         totalCost = Ext.getCmp('gridpanel-totalCost'),
                         costAnalysis = Ext.getCmp('gridpanel-costAnalysis');
-                    if (rec && rec.get('projectName') && rec.get('budgetId')) {
-                        totalCost.getStore().load({
-                            params: {
-                                budgetId: rec.get('budgetId')
-                            }
+                    if (pro && pro.get('projectName') && pro.get('budgets').length > 0) {
+                        var win = Ext.create('Ext.window.Window', {
+                            title: '预算列表',
+                            width: 500,
+                            height: 400,
+                            modal: true,
+                            layout: 'fit',
+                            items: [
+                                {
+                                    xtype: 'gridpanel',
+                                    columns: [
+                                        {
+                                            text: '工程地址',
+                                            dataIndex: 'projectName',
+                                            flex: 1
+                                        },
+                                        {
+                                            text: '预算名称',
+                                            dataIndex: 'budgetName',
+                                            flex: 1
+                                        }
+                                    ],
+                                    store: Ext.create('FamilyDecoration.store.Budget', {
+                                        autoLoad: true,
+                                        filters: [
+                                            function (item){
+                                                return item.get('projectId') == pro.getId();
+                                            }
+                                        ]
+                                    })
+                                }
+                            ],
+                            buttons: [{
+                                text: '加载',
+                                handler: function (){
+                                    var grid = win.down('gridpanel'),
+                                        rec = grid.getSelectionModel().getSelection()[0];
+                                    totalCost.getStore().load({
+                                        params: {
+                                            budgetId: rec.get('budgetId')
+                                        }
+                                    });
+                                    costAnalysis.getStore().load({
+                                        params: {
+                                            budgetId: rec.get('budgetId')
+                                        }
+                                    });
+                                    win.close();
+                                }
+                            }, {
+                                text: '取消',
+                                handler: function (){
+                                    win.close();
+                                }
+                            }]
                         });
-                        costAnalysis.getStore().load({
-                            params: {
-                                budgetId: rec.get('budgetId')
-                            }
-                        });
+
+                        win.show();
                     }
                     else {
                         showMsg('该工程没有预算！');

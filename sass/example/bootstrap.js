@@ -927,6 +927,10 @@ Ext.ClassManager.addNameAlternateMappings({
   "Ext.ux.event.Player": [],
   "Ext.ux.event.Recorder": [],
   "Ext.ux.event.RecorderManager": [],
+  "Ext.ux.form.ButtonAttachedText": [
+    "Ext.form.ButtonAttachedText",
+    "Ext.form.BtnAtText"
+  ],
   "Ext.ux.form.ItemSelector": [
     "Ext.ux.ItemSelector"
   ],
@@ -2042,6 +2046,9 @@ Ext.ClassManager.addNameAliasMappings({
   "Ext.ux.event.Recorder": [],
   "Ext.ux.event.RecorderManager": [
     "widget.eventrecordermanager"
+  ],
+  "Ext.ux.form.ButtonAttachedText": [
+    "widget.buttonattachedtext"
   ],
   "Ext.ux.form.ItemSelector": [
     "widget.itemselector",
