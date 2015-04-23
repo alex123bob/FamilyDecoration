@@ -18,6 +18,8 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.Chat": "../../app/controller/chat.js",
   "FamilyDecoration.controller.CheckLog": "../../app/controller/checklog.js",
   "FamilyDecoration.controller.CostAnalysis": "../../app/controller/costanalysis.js",
+  "FamilyDecoration.controller.Leave": "../../app/controller/leave.js",
+  "FamilyDecoration.controller.LeaveApproval": "../../app/controller/leaveapproval.js",
   "FamilyDecoration.controller.MainMaterial": "../../app/controller/mainmaterial.js",
   "FamilyDecoration.controller.MyLog": "../../app/controller/mylog.js",
   "FamilyDecoration.controller.MyTask": "../../app/controller/mytask.js",
@@ -108,6 +110,8 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.costanalysis.CostAnalysis": "../../app/view/costanalysis/costanalysis.js",
   "FamilyDecoration.view.costanalysis.Index": "../../app/view/costanalysis/index.js",
   "FamilyDecoration.view.costanalysis.TotalCost": "../../app/view/costanalysis/totalcost.js",
+  "FamilyDecoration.view.leave.Index": "../../app/view/leave/index.js",
+  "FamilyDecoration.view.leaveapproval.Index": "../../app/view/leaveapproval/index.js",
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": "../../app/view/mainmaterial/editmainmaterial.js",
   "FamilyDecoration.view.mainmaterial.Index": "../../app/view/mainmaterial/index.js",
   "FamilyDecoration.view.mylog.AskLeave": "../../app/view/mylog/askleave.js",
@@ -989,6 +993,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.Chat": [],
   "FamilyDecoration.controller.CheckLog": [],
   "FamilyDecoration.controller.CostAnalysis": [],
+  "FamilyDecoration.controller.Leave": [],
+  "FamilyDecoration.controller.LeaveApproval": [],
   "FamilyDecoration.controller.MainMaterial": [],
   "FamilyDecoration.controller.MyLog": [],
   "FamilyDecoration.controller.MyTask": [],
@@ -1079,6 +1085,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.costanalysis.CostAnalysis": [],
   "FamilyDecoration.view.costanalysis.Index": [],
   "FamilyDecoration.view.costanalysis.TotalCost": [],
+  "FamilyDecoration.view.leave.Index": [],
+  "FamilyDecoration.view.leaveapproval.Index": [],
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": [],
   "FamilyDecoration.view.mainmaterial.Index": [],
   "FamilyDecoration.view.mylog.AskLeave": [],
@@ -2127,6 +2135,8 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.Chat": [],
   "FamilyDecoration.controller.CheckLog": [],
   "FamilyDecoration.controller.CostAnalysis": [],
+  "FamilyDecoration.controller.Leave": [],
+  "FamilyDecoration.controller.LeaveApproval": [],
   "FamilyDecoration.controller.MainMaterial": [],
   "FamilyDecoration.controller.MyLog": [],
   "FamilyDecoration.controller.MyTask": [],
@@ -2268,6 +2278,12 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.costanalysis.TotalCost": [
     "widget.costanalysis-totalcost"
+  ],
+  "FamilyDecoration.view.leave.Index": [
+    "widget.leave-index"
+  ],
+  "FamilyDecoration.view.leaveapproval.Index": [
+    "widget.leaveapproval-index"
   ],
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": [
     "widget.mainmaterial-editmainmaterial"

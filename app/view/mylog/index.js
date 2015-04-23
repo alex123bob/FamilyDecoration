@@ -5,7 +5,6 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 		'FamilyDecoration.view.mylog.LogList', 'FamilyDecoration.view.mylog.EditLogDetail',
 		'FamilyDecoration.store.ScrutinizeList', 'FamilyDecoration.view.mylog.AskLeave'
 	],
-	autoScroll: true,
 	layout: 'border',
 
 	initComponent: function (){

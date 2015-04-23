@@ -47,6 +47,18 @@ Ext.define('FamilyDecoration.store.Feature', {
                         cmp: 'taskassign-index',
                         leaf: true,
                         icon: 'resources/img/menu_item.ico'
+                    },
+                    {
+                        name: '请假',
+                        cmp: 'leave-index',
+                        leaf: true,
+                        icon: 'resources/img/menu_item.ico'
+                    },
+                    {
+                        name: '请假批示',
+                        cmp: 'leaveapproval-index',
+                        leaf: true,
+                        icon: 'resources/img/menu_item.ico'
                     }
                 ] 
             },
@@ -150,6 +162,22 @@ Ext.define('FamilyDecoration.store.Feature', {
             }
             else if (rec.get('cmp') == 'taskassign-index') {
                 flag = User.isAdmin() || User.isManager() ? true : false;
+            }
+            else if (rec.get('cmp') == 'leave-index') {
+                if (DEBUG) {
+                    flag = User.isAdmin() || User.isManager() || User.isDesignStaff() || User.isProjectStaff() || User.isSupervisor() || User.isBusinessStaff() || User.isAdministrationStaff() || User.isPropagandaManager() || User.isPropagandaStaff() ? true : false;
+                }
+                else {
+                    flag = false;
+                }
+            }
+            else if (rec.get('cmp') == 'leaveapproval-index') {
+                if (DEBUG) {
+                    flag = User.isAdmin() || User.isManager() ? true : false;
+                }
+                else {
+                    flag = false;
+                }
             }
             else if (rec.get('cmp') == 'budget-parent') {
                 flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() ? true : false;

@@ -39,10 +39,11 @@
         $pageurl = curPageURL();
         $isLocal = preg_match("/localhost/i", $pageurl, $arr);
         if ($isLocal) {
-            // echo '<script src="https://d26b395fwzu5fz.cloudfront.net/3.2.3/keen.min.js" type="text/javascript"></script>'.
-            //      '<script type="text/javascript" src="highchart/chart.js"></script>';
         }
     ?>
+    <script type="text/javascript">
+        var DEBUG = <?php echo $isLocal ?> ? true : false;
+    </script>
 </head>
 <body>
     <div id="userInfo" class="x-hide-display">
