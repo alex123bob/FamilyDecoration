@@ -18,6 +18,8 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.Chat": "../../app/controller/chat.js",
   "FamilyDecoration.controller.CheckLog": "../../app/controller/checklog.js",
   "FamilyDecoration.controller.CostAnalysis": "../../app/controller/costanalysis.js",
+  "FamilyDecoration.controller.Leave": "../../app/controller/leave.js",
+  "FamilyDecoration.controller.LeaveApproval": "../../app/controller/leaveapproval.js",
   "FamilyDecoration.controller.MainMaterial": "../../app/controller/mainmaterial.js",
   "FamilyDecoration.controller.MyLog": "../../app/controller/mylog.js",
   "FamilyDecoration.controller.MyTask": "../../app/controller/mytask.js",
@@ -86,7 +88,6 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.basicitem.SubItemTable": "../../app/view/basicitem/subitemtable.js",
   "FamilyDecoration.view.budget.AddBasicItem": "../../app/view/budget/addbasicitem.js",
   "FamilyDecoration.view.budget.AddExistedItem": "../../app/view/budget/addexisteditem.js",
-  "FamilyDecoration.view.budget.BudgetHeader": "../../app/view/budget/budgetheader.js",
   "FamilyDecoration.view.budget.BudgetPanel": "../../app/view/budget/budgetpanel.js",
   "FamilyDecoration.view.budget.EditHeader": "../../app/view/budget/editheader.js",
   "FamilyDecoration.view.budget.HistoryBudget": "../../app/view/budget/historybudget.js",
@@ -109,6 +110,8 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.costanalysis.CostAnalysis": "../../app/view/costanalysis/costanalysis.js",
   "FamilyDecoration.view.costanalysis.Index": "../../app/view/costanalysis/index.js",
   "FamilyDecoration.view.costanalysis.TotalCost": "../../app/view/costanalysis/totalcost.js",
+  "FamilyDecoration.view.leave.Index": "../../app/view/leave/index.js",
+  "FamilyDecoration.view.leaveapproval.Index": "../../app/view/leaveapproval/index.js",
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": "../../app/view/mainmaterial/editmainmaterial.js",
   "FamilyDecoration.view.mainmaterial.Index": "../../app/view/mainmaterial/index.js",
   "FamilyDecoration.view.mylog.AskLeave": "../../app/view/mylog/askleave.js",
@@ -924,6 +927,10 @@ Ext.ClassManager.addNameAlternateMappings({
   "Ext.ux.event.Player": [],
   "Ext.ux.event.Recorder": [],
   "Ext.ux.event.RecorderManager": [],
+  "Ext.ux.form.ButtonAttachedText": [
+    "Ext.form.ButtonAttachedText",
+    "Ext.form.BtnAtText"
+  ],
   "Ext.ux.form.ItemSelector": [
     "Ext.ux.ItemSelector"
   ],
@@ -990,6 +997,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.Chat": [],
   "FamilyDecoration.controller.CheckLog": [],
   "FamilyDecoration.controller.CostAnalysis": [],
+  "FamilyDecoration.controller.Leave": [],
+  "FamilyDecoration.controller.LeaveApproval": [],
   "FamilyDecoration.controller.MainMaterial": [],
   "FamilyDecoration.controller.MyLog": [],
   "FamilyDecoration.controller.MyTask": [],
@@ -1058,7 +1067,6 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.basicitem.SubItemTable": [],
   "FamilyDecoration.view.budget.AddBasicItem": [],
   "FamilyDecoration.view.budget.AddExistedItem": [],
-  "FamilyDecoration.view.budget.BudgetHeader": [],
   "FamilyDecoration.view.budget.BudgetPanel": [],
   "FamilyDecoration.view.budget.EditHeader": [],
   "FamilyDecoration.view.budget.HistoryBudget": [],
@@ -1081,6 +1089,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.costanalysis.CostAnalysis": [],
   "FamilyDecoration.view.costanalysis.Index": [],
   "FamilyDecoration.view.costanalysis.TotalCost": [],
+  "FamilyDecoration.view.leave.Index": [],
+  "FamilyDecoration.view.leaveapproval.Index": [],
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": [],
   "FamilyDecoration.view.mainmaterial.Index": [],
   "FamilyDecoration.view.mylog.AskLeave": [],
@@ -2037,6 +2047,9 @@ Ext.ClassManager.addNameAliasMappings({
   "Ext.ux.event.RecorderManager": [
     "widget.eventrecordermanager"
   ],
+  "Ext.ux.form.ButtonAttachedText": [
+    "widget.buttonattachedtext"
+  ],
   "Ext.ux.form.ItemSelector": [
     "widget.itemselector",
     "widget.itemselectorfield"
@@ -2129,6 +2142,8 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.Chat": [],
   "FamilyDecoration.controller.CheckLog": [],
   "FamilyDecoration.controller.CostAnalysis": [],
+  "FamilyDecoration.controller.Leave": [],
+  "FamilyDecoration.controller.LeaveApproval": [],
   "FamilyDecoration.controller.MainMaterial": [],
   "FamilyDecoration.controller.MyLog": [],
   "FamilyDecoration.controller.MyTask": [],
@@ -2209,9 +2224,6 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.budget.AddExistedItem": [
     "widget.budget-addexisteditem"
   ],
-  "FamilyDecoration.view.budget.BudgetHeader": [
-    "widget.budget-budgetheader"
-  ],
   "FamilyDecoration.view.budget.BudgetPanel": [
     "widget.budget-budgetpanel"
   ],
@@ -2273,6 +2285,12 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.costanalysis.TotalCost": [
     "widget.costanalysis-totalcost"
+  ],
+  "FamilyDecoration.view.leave.Index": [
+    "widget.leave-index"
+  ],
+  "FamilyDecoration.view.leaveapproval.Index": [
+    "widget.leaveapproval-index"
   ],
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": [
     "widget.mainmaterial-editmainmaterial"

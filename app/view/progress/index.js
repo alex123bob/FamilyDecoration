@@ -124,8 +124,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 									url: './libs/project.php?action=delProject',
 									method: 'POST',
 									params: {
-										projectId: pro.get('projectId'),
-										budgetId: pro.get('budgetId')
+										projectId: pro.get('projectId')
 									},
 									callback: function (opts, success, res){
 										if (success) {
@@ -595,58 +594,78 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				handler: function (){
 					var proPanel = Ext.getCmp('treepanel-projectName'),
 						project = proPanel.getSelectionModel().getSelection()[0],
-						budgetId = project.get('budgetId');
+						budgets = project.get('budgets');
 
-					if (budgetId != 'NULL' && budgetId != '') {
-						var win = window.open('./fpdf/index2.php?action=view&budgetId=' + budgetId,'打印','height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+					if (budgets && budgets.length > 0) {
+						Ext.each(budgets, function (budget, index, obj){
+							Ext.apply(budget, {
+								projectName: project.get('projectName')
+							});
+						});
+						var listWin = Ext.create('Ext.window.Window', {
+							title: project.get('projectName') + '-预算列表',
+							width: 600,
+							modal: true,
+							height: 400,
+							layout: 'fit',
+							items: [{
+								xtype: 'gridpanel',
+								autoScroll: true,
+								columns: [
+									{
+										text: '项目名称',
+										dataIndex: 'projectName',
+										flex: 1
+									},
+									{
+										text: '客户名称',
+										dataIndex: 'custName',
+										flex: 1
+									},
+									{
+										text: '预算名称',
+										dataIndex: 'budgetName',
+										flex: 2
+									},
+									{
+										text: '户型大小',
+										dataIndex: 'areaSize',
+										flex: 1
+									}
+								],
+								store: Ext.create('FamilyDecoration.store.Budget', {
+									data: budgets,
+									autoLoad: false
+								})
+							}],
+							buttons: [
+								{
+									text: '查看预算',
+									handler: function (){
+										var grid = listWin.down('gridpanel'),
+											st = grid.getStore(),
+											rec = grid.getSelectionModel().getSelection()[0];
+										if (rec) {
+											var win = window.open('./fpdf/index2.php?action=view&budgetId=' + rec.getId(),'打印','height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+										}
+										else {
+											showMsg('请选择预算！');
+										}
+									}
+								},
+								{
+									text: '取消',
+									handler: function (){
+										listWin.close();
+									}
+								}
+							]
+						});
+						listWin.show();
 					}
 					else {
 						showMsg('没有预算！');
 					}
-					// if (budgetId != 'NULL' && budgetId != '') {
-					// 	Ext.Ajax.request({
-					// 		url: './libs/budget.php?action=view',
-					// 		method: 'GET',
-					// 		params: {
-					// 			budgetId: budgetId
-					// 		},
-					// 		callback: function (opts, success, res){
-					// 			if (success) {
-					// 				var obj = Ext.decode(res.responseText);
-					// 				if (obj.length > 0) {
-					// 					var win = Ext.create('Ext.window.Window', {
-					// 						title: '查看预算',
-					// 						items: [{
-					// 							xtype: 'budget-budgetpanel'
-					// 						}],
-					// 						width: 800,
-					// 						height: 600,
-					// 						maximizable: true,
-					// 						modal: true,
-					// 						layout: 'fit',
-					// 						listeners: {
-					// 							beforeshow: function (win) {
-					// 								var panel = win.items.items[0];
-					// 								panel.loadBudget({
-					// 									budgetId: budgetId,
-					// 									custName: obj[0]['custName'],
-					// 									projectName: obj[0]['projectName']
-					// 								});
-					// 							}
-					// 						}
-					// 					});
-					// 					win.show();
-					// 				}
-					// 				else {
-					// 					showMsg('找不到对应预算！');
-					// 				}
-					// 			}
-					// 		}
-					// 	})
-					// }
-					// else {
-					// 	showMsg('没有对应预算！');
-					// }
 				}
 			}, {
 				hidden: User.isGeneral() ? true : false,

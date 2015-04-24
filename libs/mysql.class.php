@@ -171,7 +171,9 @@
 			}
 			return array();
 		}
-		
+		/**
+		DBGetAsMap("select * from xxx where id = '?' and xxx = '?' and xxx like '%?%' ",arg1,arg2,arg3);
+		**/
 		public function DBGetAsMap($sql){
 			$count = substr_count($sql,"?");
 			$count2 = func_num_args() - 1;

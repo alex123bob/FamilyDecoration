@@ -2,15 +2,15 @@ Ext.define('FamilyDecoration.view.budget.HistoryBudget', {
 	extend: 'Ext.window.Window',
 	alias: 'widget.budget-historybudget',
 
-	resizable: false,
+	// resizable: false,
 	modal: true,
 	layout: 'fit',
 
 	requires: ['FamilyDecoration.store.Budget'],
 
 	title: '历史预算列表',
-	width: 400,
-	height: 300,
+	width: 600,
+	height: 400,
 	budgetPanel: null,
 
 	initComponent: function (){
@@ -47,7 +47,7 @@ Ext.define('FamilyDecoration.view.budget.HistoryBudget', {
 		me.items = [{
 			header: false,
 			xtype: 'gridpanel',
-			hideHeaders: true,
+			// hideHeaders: true,
 			dockedItems: [{
 				dock: 'top',
 				xtype: 'toolbar',
@@ -55,7 +55,8 @@ Ext.define('FamilyDecoration.view.budget.HistoryBudget', {
 					xtype: 'searchfield',
 					flex: 1,
 					store: budgetSt,
-					paramName: 'projectName'
+					paramName: 'projectName',
+					emptyText: '根据工程名称搜索'
 				}]
 			}],
 			columns: [
@@ -65,7 +66,13 @@ Ext.define('FamilyDecoration.view.budget.HistoryBudget', {
 					flex: 1
 				},
 				{
+					text: '预算名称',
+					dataIndex: 'budgetName',
+					flex: 1
+				},
+				{
 		            xtype:'actioncolumn',
+		            text: '删除',
 		            width: 50,
 		            items: [
 			            {

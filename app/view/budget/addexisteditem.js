@@ -46,7 +46,9 @@ Ext.define('FamilyDecoration.view.budget.AddExistedItem', {
 							workCategory: subRecs[i].get('workCategory')
 						});
 					}
-					var index = 0;
+					var index = 0,
+						errList = [],
+						resend = 0;
 					function add (url, index){
 						var p = data[index];
 						Ext.Ajax.request({
@@ -57,22 +59,83 @@ Ext.define('FamilyDecoration.view.budget.AddExistedItem', {
 								if (success) {
 									var obj = Ext.decode(res.responseText);
 									if (obj.status == 'successful') {
-										
 									}
 									else {
+										errList.push(data[index]);
 										showMsg(obj.errMsg);
 									}
 									if (index < data.length - 1) {
 										add('./libs/budget.php?action=addItem', ++index);
 									}
 									else {
-										showMsg('添加新项完毕！');
-										me.grid.getStore().load({
-											params: {
-												budgetId: me.budgetId
+										if (errList.length > 0) {
+											if (resend < 4) {
+												resend++;
+												showMsg('网络原因，有若干项未能添加，补充添加中，请耐心等待。[第' + resend + '次重发。]');
+												console.log(errList);
+												data = errList;
+												errList = [];
+												add('./libs/budget.php?action=addItem', 0);
 											}
-										});
-										me.close();
+											else {
+												showMsg('由于网络原因，已经重发' + resend + '次，还有若干项未能添加，请手动添加。建议切换至网络较好的地方进行操作');
+												console.log(errList);
+												me.grid.getStore().load({
+													params: {
+														budgetId: me.budgetId
+													}
+												});
+												me.close();
+												var errWin = Ext.create('Ext.window.Window', {
+													title: '未能添加项目列表',
+													width: 300,
+													height: 200,
+													layout: 'fit',
+													modal: true,
+													items: [
+														{
+															xtype: 'gridpanel',
+															autoScroll: true,
+															store: Ext.create('FamilyDecoration.store.BudgetItem', {
+																data: errList,
+																autoLoad: false
+															}),
+															columns: [
+																{
+																	text: '名称',
+																	dataIndex: 'itemName',
+																	flex: 1
+																}
+															]
+														}
+													],
+													buttons: [{
+														text: '添加所有',
+														handler: function (){
+															data = errList;
+															errList = [];
+															add('./libs/budget.php?action=addItem', 0);
+															errWin.close();
+														}
+													}, {
+														text: '关闭',
+														handler: function () {
+															errWin.close();
+														}
+													}]
+												});
+												errWin.show();
+											}
+										}
+										else {
+											showMsg('添加新项完毕！');
+											me.grid.getStore().load({
+												params: {
+													budgetId: me.budgetId
+												}
+											});
+											me.close();
+										}
 									}
 								}
 							}
