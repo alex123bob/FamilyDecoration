@@ -381,6 +381,20 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 					});
 					win.show();
 				}
+			},
+			{
+				text: '导出预算',
+				icon: './resources/img/excel.png',
+				tooltip: '导出excel版本的预算，用于需要调整打印格式的预算',
+				handler: function (){
+					if (me.budgetId) {
+						var exportFrame = document.getElementById('exportFrame');
+						exportFrame.src = './phpexcel/index.php?budgetId=' + me.budgetId;
+					}
+					else {
+						showMsg('没有预算！');
+					}
+				}
 			}
 		];
 

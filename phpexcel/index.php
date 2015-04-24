@@ -188,20 +188,20 @@ $objActSheet->setCellValue('N'.$contentIndex, '备注');
 
 for ($i = 0; $i < count($budgetItems); $i++) {
     $num = $i + $contentIndex + 2;
-    $objActSheet->setCellValue("A$num", $budgetItems[$i]["itemCode"]);    
-    $objActSheet->setCellValue("B$num", iconv('gbk', 'utf-8', $budgetItems[$i]["itemName"]));    
-    $objActSheet->setCellValue("C$num", iconv('gbk', 'utf-8', $budgetItems[$i]["itemUnit"]));    
-    $objActSheet->setCellValue("D$num", $budgetItems[$i]["itemAmount"]);    
-    $objActSheet->setCellValue("E$num", $budgetItems[$i]["mainMaterialPrice"]);
-    $objActSheet->setCellValue("F$num", $budgetItems[$i]["mainMaterialTotalPrice"]);      
-    $objActSheet->setCellValue("G$num", $budgetItems[$i]["auxiliaryMaterialPrice"]);    
-    $objActSheet->setCellValue("H$num", $budgetItems[$i]["auxiliaryMaterialTotalPrice"]);    
-    $objActSheet->setCellValue("I$num", $budgetItems[$i]["manpowerPrice"]);    
-    $objActSheet->setCellValue("J$num", $budgetItems[$i]["manpowerTotalPrice"]);     
-    $objActSheet->setCellValue("K$num", $budgetItems[$i]["machineryPrice"]);    
-    $objActSheet->setCellValue("L$num", $budgetItems[$i]["machineryTotalPrice"]);      
-    $objActSheet->setCellValue("M$num", $budgetItems[$i]["lossPercent"]);    
-    $objActSheet->setCellValue("N$num", iconv('gbk', 'utf-8', $budgetItems[$i]["remark"])); 
+    isset($budgetItems[$i]["itemCode"]) && $objActSheet->setCellValue("A$num", $budgetItems[$i]["itemCode"]);    
+    isset($budgetItems[$i]["itemName"]) && $objActSheet->setCellValue("B$num", iconv('gbk', 'utf-8', $budgetItems[$i]["itemName"]));    
+    isset($budgetItems[$i]["itemUnit"]) && $objActSheet->setCellValue("C$num", iconv('gbk', 'utf-8', $budgetItems[$i]["itemUnit"]));    
+    isset($budgetItems[$i]["itemAmount"]) && $objActSheet->setCellValue("D$num", $budgetItems[$i]["itemAmount"]);    
+    isset($budgetItems[$i]["mainMaterialPrice"]) && $objActSheet->setCellValue("E$num", $budgetItems[$i]["mainMaterialPrice"]);
+    isset($budgetItems[$i]["mainMaterialTotalPrice"]) && $objActSheet->setCellValue("F$num", $budgetItems[$i]["mainMaterialTotalPrice"]);      
+    isset($budgetItems[$i]["auxiliaryMaterialPrice"]) && $objActSheet->setCellValue("G$num", $budgetItems[$i]["auxiliaryMaterialPrice"]);    
+    isset($budgetItems[$i]["auxiliaryMaterialTotalPrice"]) && $objActSheet->setCellValue("H$num", $budgetItems[$i]["auxiliaryMaterialTotalPrice"]);    
+    isset($budgetItems[$i]["manpowerPrice"]) && $objActSheet->setCellValue("I$num", $budgetItems[$i]["manpowerPrice"]);    
+    isset($budgetItems[$i]["manpowerTotalPrice"]) && $objActSheet->setCellValue("J$num", $budgetItems[$i]["manpowerTotalPrice"]);     
+    isset($budgetItems[$i]["machineryPrice"]) && $objActSheet->setCellValue("K$num", $budgetItems[$i]["machineryPrice"]);    
+    isset($budgetItems[$i]["machineryTotalPrice"]) && $objActSheet->setCellValue("L$num", $budgetItems[$i]["machineryTotalPrice"]);      
+    isset($budgetItems[$i]["lossPercent"]) && $objActSheet->setCellValue("M$num", $budgetItems[$i]["lossPercent"]);    
+    isset($budgetItems[$i]["remark"]) && $objActSheet->setCellValue("N$num", iconv('gbk', 'utf-8', $budgetItems[$i]["remark"])) &&  $objActSheet->getStyle("N$num")->getAlignment()->setWrapText(true);
 }
 
 // set comments
