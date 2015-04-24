@@ -1722,7 +1722,8 @@ class PHPExcel_Calculation {
 		$setPrecision = (PHP_INT_SIZE == 4) ? 14 : 16;
 		$this->_savedPrecision = ini_get('precision');
 		if ($this->_savedPrecision < $setPrecision) {
-			ini_set('precision',$setPrecision);
+			// annotate this line avoiding errors in sae
+			// ini_set('precision',$setPrecision);
 		}
 
 		if ($workbook !== NULL) {
@@ -1737,7 +1738,8 @@ class PHPExcel_Calculation {
 
 	public function __destruct() {
 		if ($this->_savedPrecision != ini_get('precision')) {
-			ini_set('precision',$this->_savedPrecision);
+			// annotate this line avoiding errors in sae
+			// ini_set('precision',$this->_savedPrecision);
 		}
 	}
 
