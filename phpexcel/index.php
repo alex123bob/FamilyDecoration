@@ -44,24 +44,30 @@ $objActSheet = $objExcel->getActiveSheet();
       
 //设置当前活动sheet的名称       
 $objActSheet->setTitle(urldecode($budget[0]['projectName']));       
-      
+//Set paper size to A4
+$objActSheet->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
+$objActSheet->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+//设置默认边框,此处不能加,加了表头,表尾都有了.
+$styleArray = array('borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN)));
+//$objExcel->getDefaultStyle()->applyFromArray($styleArray);
+
 //*************************************       
 //       
 //设置宽度，这个值和EXCEL里的不同，不知道是什么单位，略小于EXCEL中的宽度   
-$objActSheet->getColumnDimension('A')->setWidth(6);    
-$objActSheet->getColumnDimension('B')->setWidth(20);    
-$objActSheet->getColumnDimension('C')->setWidth(6);    
-$objActSheet->getColumnDimension('D')->setWidth(6);    
-$objActSheet->getColumnDimension('E')->setWidth(8);    
-$objActSheet->getColumnDimension('F')->setWidth(10);    
-$objActSheet->getColumnDimension('G')->setWidth(8);    
-$objActSheet->getColumnDimension('H')->setWidth(10);    
-$objActSheet->getColumnDimension('I')->setWidth(8);    
-$objActSheet->getColumnDimension('J')->setWidth(10);    
-$objActSheet->getColumnDimension('K')->setWidth(8);    
-$objActSheet->getColumnDimension('L')->setWidth(10);    
-$objActSheet->getColumnDimension('M')->setWidth(8);    
-$objActSheet->getColumnDimension('N')->setWidth(50);    
+$objActSheet->getColumnDimension('A')->setWidth(5);    
+$objActSheet->getColumnDimension('B')->setWidth(12);    
+$objActSheet->getColumnDimension('C')->setWidth(5);    
+$objActSheet->getColumnDimension('D')->setWidth(5);    
+$objActSheet->getColumnDimension('E')->setWidth(6);    
+$objActSheet->getColumnDimension('F')->setWidth(8);    
+$objActSheet->getColumnDimension('G')->setWidth(6);    
+$objActSheet->getColumnDimension('H')->setWidth(8);    
+$objActSheet->getColumnDimension('I')->setWidth(6);    
+$objActSheet->getColumnDimension('J')->setWidth(8);    
+$objActSheet->getColumnDimension('K')->setWidth(6);    
+$objActSheet->getColumnDimension('L')->setWidth(8);    
+$objActSheet->getColumnDimension('M')->setWidth(6);    
+$objActSheet->getColumnDimension('N')->setWidth(42);    
   
 $objActSheet->getRowDimension(1)->setRowHeight(30);    
 $objActSheet->getRowDimension(2)->setRowHeight(20);    
@@ -160,13 +166,13 @@ $objActSheet->mergeCells("A$contentIndex:A".($contentIndex + 1));
 $objActSheet->mergeCells("B$contentIndex:B".($contentIndex + 1));  
 $objActSheet->mergeCells("C$contentIndex:C".($contentIndex + 1));  
 $objActSheet->mergeCells("D$contentIndex:D".($contentIndex + 1));  
-$objActSheet->mergeCells("E$contentIndex:F".($contentIndex + 1));  
-$objActSheet->mergeCells("G$contentIndex:H".($contentIndex + 1));  
-$objActSheet->mergeCells("I$contentIndex:J".($contentIndex + 1));  
-$objActSheet->mergeCells("K$contentIndex:L".($contentIndex + 1));
+$objActSheet->mergeCells("E$contentIndex:F".($contentIndex));  
+$objActSheet->mergeCells("G$contentIndex:H".($contentIndex));  
+$objActSheet->mergeCells("I$contentIndex:J".($contentIndex));  
+$objActSheet->mergeCells("K$contentIndex:L".($contentIndex));
 $objActSheet->mergeCells("N$contentIndex:N".($contentIndex + 1));  
 
-$objActSheet->setCellValue("A$contentIndex", '编号');    
+$objActSheet->setCellValue("A$contentIndex", '编号');
 $objActSheet->setCellValue("B$contentIndex", '项目名称');    
 $objActSheet->setCellValue("C$contentIndex", '单位');    
 $objActSheet->setCellValue("D$contentIndex", '数量');    
@@ -184,7 +190,11 @@ $objActSheet->setCellValue('K'.($contentIndex + 1), '单价');
 $objActSheet->setCellValue('L'.($contentIndex + 1), '总价');    
 $objActSheet->setCellValue('M'.$contentIndex, '损耗');    
 $objActSheet->setCellValue('M'.($contentIndex + 1), '单价');    
-$objActSheet->setCellValue('N'.$contentIndex, '备注'); 
+$objActSheet->setCellValue('N'.$contentIndex, '备注');
+foreach(array('A','B','C','D','E','F','G','H','I','J','K','L','M','N') as $cell){
+	$objActSheet->getStyle($cell.$contentIndex)->applyFromArray($styleArray);
+	$objActSheet->getStyle($cell.($contentIndex+1))->applyFromArray($styleArray);
+}
 
 for ($i = 0; $i < count($budgetItems); $i++) {
     $num = $i + $contentIndex + 2;
@@ -202,13 +212,24 @@ for ($i = 0; $i < count($budgetItems); $i++) {
     isset($budgetItems[$i]["machineryTotalPrice"]) && $objActSheet->setCellValue("L$num", $budgetItems[$i]["machineryTotalPrice"]);      
     isset($budgetItems[$i]["lossPercent"]) && $objActSheet->setCellValue("M$num", $budgetItems[$i]["lossPercent"]);    
     isset($budgetItems[$i]["remark"]) && $objActSheet->setCellValue("N$num", iconv('gbk', 'utf-8', $budgetItems[$i]["remark"])) &&  $objActSheet->getStyle("N$num")->getAlignment()->setWrapText(true);
+	foreach(array('A','B','C','D','E','F','G','H','I','J','K','L','M','N') as $cell){
+		$objActSheet->getStyle($cell.$num)->applyFromArray($styleArray);
+	}
 }
 
 // set comments
 $commentIndex = $num + 2;
-$projectComments=urldecode($budget[0]["comments"]);
-$projectComments = explode('>>><<<',$projectComments);
+$comments=urldecode($budget[0]["comments"]);
+$projectComments = preg_split('/\n|\r\n|\r|\n\r/',$comments);
 $commentsLines = count($projectComments);
+//算法1
+$objActSheet->mergeCells("B$commentIndex:I".($commentIndex+$commentsLines-1));
+$objActSheet->setCellValue("B$commentIndex",$comments);
+$objActSheet->getStyle("B$commentIndex")->getAlignment()->setWrapText(true);
+$commentIndex = $commentIndex + $commentsLines + 1;
+$objActSheet->setCellValue("B$commentIndex","注： 1、 本报价单为合同附件， 具有同等法律效力， 业主签字后生效。");
+$objActSheet->mergeCells("B$commentIndex:K$commentIndex");
+/** 算法2
 $i = 0;
 $commentsLines = $commentsLines +2;
 array_push($projectComments,"");
@@ -219,9 +240,12 @@ while($i<$commentsLines){
 	$objActSheet->getStyle('B'.($commentIndex+$i))->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
 	$i++;
 }
+*/
+
+
 // set signature
 $objActSheet->setCellValue('N'.$commentIndex, '客户签名：');
-$objActSheet->setCellValue('N'.($commentIndex + 2), '时间：                   年                   月                   日');
+$objActSheet->setCellValue('N'.($commentIndex + 2), '时间：               年      月      日');
 
 //到文件       
 #$objWriter->save($fileName);       
@@ -233,5 +257,5 @@ header('Content-Disposition:attachment;filename="'.$fileName.'"');
 header("Content-Transfer-Encoding: binary ");
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 $objWriter->save('php://output');
-　　
+
 ?>
