@@ -5,6 +5,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
+    <link href="./favicon.ico" type="image/x-icon" rel="shortcut icon" /> 
     <meta http-equiv="content-type" content="text/html;charset=utf-8">
     <title>FamilyDecoration</title>
     <!-- <x-compile> -->

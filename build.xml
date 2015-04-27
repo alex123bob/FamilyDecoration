@@ -58,6 +58,9 @@
         <copy todir="${build.dir}" overwrite="true">
             <fileset dir="${app.dir}" includes="login.html" />
         </copy>
+        <copy todir="${build.dir}" overwrite="true">
+            <fileset dir="${app.dir}" includes="favicon.ico" />
+        </copy>
         <copy todir="${build.dir}/highchart" overwrite="true">
             <fileset dir="${app.dir}/highchart" />
         </copy>
