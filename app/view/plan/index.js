@@ -36,10 +36,12 @@ Ext.define('FamilyDecoration.view.plan.Index', {
 							addPlanBtn = Ext.getCmp('button-addplan'),
 							editPlanBtn = Ext.getCmp('button-editplan'),
 							delPlanBtn = Ext.getCmp('button-deleteplan'),
+							backBtn =  Ext.getCmp('button-backToProject'),
 							grid = Ext.getCmp('gridpanel-projectPlan'),
 							st = grid.getStore();
 						if (rec && rec.get('projectName')) {
 							addPlanBtn.enable();
+							backBtn.enable();
 							grid.refresh(rec);
 						}
 						else {
@@ -47,6 +49,7 @@ Ext.define('FamilyDecoration.view.plan.Index', {
 							addPlanBtn.disable();
 							editPlanBtn.disable();
 							delPlanBtn.disable();
+							backBtn.disable();
 						}
 						
 					}
@@ -257,7 +260,28 @@ Ext.define('FamilyDecoration.view.plan.Index', {
 								}
 							})
 						}
-					})
+					});
+				}
+			}, {
+				text: '返回工程',
+				icon: './resources/img/back.png',
+				id: 'button-backToProject',
+				name: 'button-backToProject',
+				disabled: true,
+				handler: function() {
+					var sel = Ext.getCmp('treepanel-projectNameForPlan').getSelectionModel().getSelection()[0];
+					if (sel) {
+						window.pro = {
+							year: sel.get('projectYear'),
+							month: sel.get('projectMonth'),
+							pid: sel.getId()
+						};
+
+						changeMainCt('progress-index');
+					}
+					else {
+						showMsg('请选择工程！');
+					}
 				}
 			}],
 			columns: [

@@ -677,17 +677,23 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				handler: function (){
 					var proPanel = Ext.getCmp('treepanel-projectName'),
 						project = proPanel.getSelectionModel().getSelection()[0],
-						year = project.get('projectYear'),
-						month = project.get('projectMonth'),
+						year, month, pid;
+
+					if (project && project.get('projectName')) {
+						year = project.get('projectYear');
+						month = project.get('projectMonth');
 						pid = project.getId();
+						window.pro = {
+							year: year,
+							month: month,
+							pid: pid
+						};
 
-					window.pro = {
-						year: year,
-						month: month,
-						pid: pid
-					};
-
-					changeMainCt('plan-index');
+						changeMainCt('plan-index');
+					}
+					else {
+						showMsg('请选择工程！');
+					}
 				}
 			}, {
 				hidden: !(User.isAdmin() || User.isProjectManager() || User.isProjectStaff()),

@@ -104,7 +104,7 @@
                     // admin
                     flag = false;
                 }
-                else if (/^00[23457]-001$/.test(level)) {
+                else if (/^00[234578]-001$/.test(level)) {
                     // manager
                     flag = true;
                 }
@@ -159,6 +159,14 @@
                 return this.level == '007-002';
             },
 
+            isFinanceManager: function (){
+                return this.level == '008-001';
+            },
+
+            isFinanceStaff: function (){
+                return this.level == '008-002';
+            },
+
             isCurrent: function (name){
                 if (name) {
                     return this.name == name;
@@ -210,6 +218,12 @@
             }, {
                 name: '宣传部员工',
                 value: '007-002'
+            }, {
+                name: '财务部主管',
+                value: '008-001'
+            }, {
+                name: '财务部员工',
+                value: '008-002'
             }],
 
             getStatus: function (){
@@ -252,6 +266,9 @@
                 }
                 else if (/^007-\d{3}$/i.test(level)) {
                     department = '宣传部';
+                }
+                else if (/^008-\d{3}$/i.test(level)) {
+                    department = '财务部';
                 }
                 else {
                     department = '非部门';
@@ -316,6 +333,15 @@
                 }
                 // propaganda department
                 else if (/^007-\d{3}$/i.test(level)) {
+                    if (roleStr == '001') {
+                        role = '主管';
+                    }
+                    else if (roleStr == '002') {
+                        role = '员工';
+                    }
+                }
+                // the ministry of finance
+                else if (/^008-\d{3}$/i.test(level)) {
                     if (roleStr == '001') {
                         role = '主管';
                     }
