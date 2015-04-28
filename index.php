@@ -7,7 +7,7 @@
 <head>
     <link href="./favicon.ico" type="image/x-icon" rel="shortcut icon" /> 
     <meta http-equiv="content-type" content="text/html;charset=utf-8">
-    <title>FamilyDecoration</title>
+    <title>佳诚装饰</title>
     <!-- <x-compile> -->
         <!-- <x-bootstrap> -->
             <link rel="stylesheet" href="bootstrap.css">

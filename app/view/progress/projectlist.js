@@ -93,12 +93,17 @@ Ext.define('FamilyDecoration.view.progress.ProjectList', {
 	            					if (node.get('hasChart') == 1 && node.get('isFrozen') != 1) {
 	            						node.set({
 		            						leaf: true,
-		            						icon: 'resources/img/project.gif'
+		            						icon: 'resources/img/project.png'
 		            					});
 	            					}
 	            					else {
 	            						return false;
 	            					}
+	            				}
+	            				else if (node.get('projectMonth')) {
+	            					node.set({
+	            						icon: 'resources/img/month.png'
+	            					});
 	            				}
 	            				else {
 	            					node.set({
@@ -111,12 +116,17 @@ Ext.define('FamilyDecoration.view.progress.ProjectList', {
 	            					if (node.get('hasChart') == 0 && node.get('isFrozen') != 1) {
 	            						node.set({
 		            						leaf: true,
-		            						icon: 'resources/img/project.gif'
+		            						icon: 'resources/img/project.png'
 		            					});
 	            					}
 	            					else {
 	            						return false;
 	            					}
+	            				}
+	            				else if (node.get('projectMonth')) {
+	            					node.set({
+	            						icon: 'resources/img/month.png'
+	            					});
 	            				}
 	            				else {
 	            					node.set({
@@ -129,12 +139,17 @@ Ext.define('FamilyDecoration.view.progress.ProjectList', {
 	            					if (node.get('isFrozen') == 1) {
 	            						node.set({
 	            							leaf: true,
-	            							icon: 'resources/img/project.gif'
+	            							icon: 'resources/img/project.png'
 	            						});
 	            					}
 	            					else {
 	            						return false;
 	            					}
+	            				}
+	            				else if (node.get('projectMonth')) {
+	            					node.set({
+	            						icon: 'resources/img/month.png'
+	            					});
 	            				}
 	            				else {
 	            					node.set({
@@ -147,12 +162,17 @@ Ext.define('FamilyDecoration.view.progress.ProjectList', {
 	            					if (node.get('isFrozen') != 1) {
 	            						node.set({
 	            							leaf: true,
-	            							icon: 'resources/img/project.gif'
+	            							icon: 'resources/img/project.png'
 	            						});
 	            					}
 	            					else {
 	            						return false;
 	            					}
+	            				}
+	            				else if (node.get('projectMonth')) {
+	            					node.set({
+	            						icon: 'resources/img/month.png'
+	            					});
 	            				}
 	            				else {
 	            					node.set({
