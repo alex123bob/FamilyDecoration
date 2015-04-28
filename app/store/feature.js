@@ -10,81 +10,81 @@ Ext.define('FamilyDecoration.store.Feature', {
                 name: "公告栏信息",
                 cmp: 'bulletin-index',
                 leaf: true,
-                icon: 'resources/img/menu_item.ico'
+                icon: 'resources/img/bulletin.png'
             },
             {
                 name: "业务列表",
                 cmp: 'business-index',
                 leaf: true,
-                icon: 'resources/img/menu_item.ico'
+                icon: 'resources/img/business.png'
             },
             {
                 name: "工作日志", 
                 expanded: true, 
-                icon: 'resources/img/menu.ico',
+                icon: 'resources/img/blog-parent.png',
                 cmp: 'logbook-parent',
                 children: [
                     {
                         name: "我的工作日志",
                         cmp: 'mylog-index',
                         leaf: true,
-                        icon: 'resources/img/menu_item.ico'
+                        icon: 'resources/img/mylog.png'
                     },
                     {
                         name: "工作日志查看",
                         cmp: 'checklog-index',
                         leaf: true,
-                        icon: 'resources/img/menu_item.ico'
+                        icon: 'resources/img/checklog.png'
                     },
                     {
                         name: '我的任务',
                         cmp: 'mytask-index',
                         leaf: true,
-                        icon: 'resources/img/menu_item.ico'
+                        icon: 'resources/img/mytask.png'
                     },
                     {
                         name: '任务分配',
                         cmp: 'taskassign-index',
                         leaf: true,
-                        icon: 'resources/img/menu_item.ico'
+                        icon: 'resources/img/checktask.png'
                     },
                     {
                         name: '请假',
                         cmp: 'leave-index',
                         leaf: true,
-                        icon: 'resources/img/menu_item.ico'
+                        icon: 'resources/img/leave.png'
                     },
                     {
                         name: '请假批示',
                         cmp: 'leaveapproval-index',
                         leaf: true,
-                        icon: 'resources/img/menu_item.ico'
+                        icon: 'resources/img/approve.png'
                     }
                 ] 
             },
             {
                 name: "预算", 
                 expanded: true, 
-                icon: 'resources/img/menu.ico',
+                icon: 'resources/img/budget-parent.png',
                 cmp: 'budget-parent',
                 children: [
                     {
                         name: "添加预算",
                         cmp: 'budget-index',
                         leaf: true,
-                        icon: 'resources/img/menu_item.ico'
+                        icon: 'resources/img/addbudget.png'
                     },
                     {
                         name: "基础项目添加",
                         cmp: 'basicitem-index',
                         leaf: true,
-                        icon: 'resources/img/menu_item.ico'
+                        icon: 'resources/img/basicitem.png'
                     },
                     {
                         name: "成本分析",
                         cmp: 'costanalysis-index',
                         leaf: true,
-                        icon: 'resources/img/menu_item.ico'
+                        icon: 'resources/img/cost.png'
                     }
                 ] 
             },
@@ -92,31 +92,31 @@ Ext.define('FamilyDecoration.store.Feature', {
                 name: "查看图库",
                 cmp: 'chart-index',
                 leaf: true,
-                icon: 'resources/img/menu_item.ico'
+                icon: 'resources/img/chart.png'
             },
             {
                 name: "工程情况", 
                 expanded: true, 
                 cmp: 'project-parent',
-                icon: 'resources/img/menu.ico',
+                icon: 'resources/img/project-parent.png',
                 children: [
                     {
                         name: "各工程进度情况",
                         cmp: 'progress-index',
                         leaf: true,
-                        icon: 'resources/img/menu_item.ico'
+                        icon: 'resources/img/progress.png'
                     },
                     {
                         name: "计划生成",
                         cmp: 'plan-index',
                         leaf: true,
-                        icon: 'resources/img/menu_item.ico'
+                        icon: 'resources/img/plan.png'
                     },
                     {
                         name: '主材订购单',
                         cmp: 'mainmaterial-index',
                         leaf: true,
-                        icon: 'resources/img/menu_item.ico'
+                        icon: 'resources/img/order.png'
                     }
                 ] 
             },
@@ -124,13 +124,13 @@ Ext.define('FamilyDecoration.store.Feature', {
                 name: "应用设置", 
                 expanded: true,
                 cmp: 'setting-parent', 
-                icon: 'resources/img/menu.ico',
+                icon: 'resources/img/setting-parent.png',
                 children: [
                     {
                         name: "账户设置",
                         cmp: 'setting-index',
                         leaf: true,
-                        icon: 'resources/img/menu_item.ico'
+                        icon: 'resources/img/account.png'
                     }
                 ] 
             }
