@@ -72,3 +72,8 @@ table.pros td{
 .pointerCursor {
   cursor: pointer;
 }
+
+#treepanel-generalList .x-tree-node-text {
+  font-size: 13px;
+  font-family: 微软雅黑;
+}

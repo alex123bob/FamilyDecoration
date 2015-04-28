@@ -37,6 +37,8 @@ Ext.define('FamilyDecoration.view.Viewport', {
             minWidth: 200,
             maxWidth: 400,
             store: featureStore,
+            name: 'treepanel-generalList',
+            id: 'treepanel-generalList',
             margin: '8 1 2 8',
             tools: [{
                 type: 'help',

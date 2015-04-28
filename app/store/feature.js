@@ -1,4 +1,4 @@
-Ext.define('FamilyDecoration.store.Feature', {
+﻿Ext.define('FamilyDecoration.store.Feature', {
 	extend: 'Ext.data.TreeStore',
 	model: 'FamilyDecoration.model.Feature',
 
