@@ -35,6 +35,7 @@
 	}
 
 	function getVisitorProject($visitorName,$filter){
+		global $mysql;
 		$select = "";
 		switch($filter){
 			case "onlyYears":

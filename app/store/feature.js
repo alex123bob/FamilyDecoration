@@ -192,7 +192,7 @@
                 flag = true;
             }
             else if (rec.get('cmp') == 'plan-index') {
-                flag = User.isGeneral() ? false : true;
+                flag = true;
             }
             else if (rec.get('cmp') == 'mainmaterial-index') {
                 flag = User.isAdmin() || User.isProjectManager() || User.isProjectStaff() || User.isDesignManager() || User.isDesignStaff() ? true : false;

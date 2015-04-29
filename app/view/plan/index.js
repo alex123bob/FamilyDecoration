@@ -206,6 +206,7 @@ Ext.define('FamilyDecoration.view.plan.Index', {
 				icon: './resources/img/add.png',
 				id: 'button-addplan',
 				name: 'button-addplan',
+				hidden: User.isGeneral() ? true : false,
 				disabled: true,
 				handler: function (){
 					var treepanel = Ext.getCmp('treepanel-projectNameForPlan'),
@@ -220,6 +221,7 @@ Ext.define('FamilyDecoration.view.plan.Index', {
 				id: 'button-editplan',
 				name: 'button-editplan',
 				icon: './resources/img/edit.png',
+				hidden: User.isGeneral() ? true : false,
 				disabled: true,
 				handler: function (){
 					var treepanel = Ext.getCmp('treepanel-projectNameForPlan'),
@@ -236,6 +238,7 @@ Ext.define('FamilyDecoration.view.plan.Index', {
 				icon: './resources/img/delete.png',
 				id: 'button-deleteplan',
 				name: 'button-deleteplan',
+				hidden: User.isGeneral() ? true : false,
 				disabled: true,
 				handler: function (){
 					var treepanel = Ext.getCmp('treepanel-projectNameForPlan'),
