@@ -472,6 +472,89 @@ function sendMsg (sender, receiver, content){
     });
 }
 
+// time: 20151019124530 yyyyMMddHHmmss
+function sendSMS (sender, reciever, recieverPhone, content, time){
+    if (sender && reciever) {
+        Ext.Ajax.request({
+            url: './libs/user.php?action=getrealname',
+            method: 'GET',
+            params: {
+                name: sender
+            },
+            callback: function (opts, success, res){
+                if (success) {
+                    var obj = Ext.decode(res.responseText);
+                    if (obj.status == 'successful') {
+                        sender = obj['realname'];
+                        Ext.Ajax.request({
+                            url: './libs/user.php?action=getrealname',
+                            method: 'GET',
+                            params: {
+                                name: reciever
+                            },
+                            callback: function (opts, success, res){
+                                obj = Ext.decode(res.responseText);
+                                if (obj.status == 'successful') {
+                                    reciever = obj['realname'];
+                                    if (!recieverPhone) {
+                                        setTimeout(function (){
+                                            showMsg('发送用户没有手机号，无法发送！');
+                                        }, 1000);
+                                    }
+                                    else {
+                                        var p = {
+                                            sender: sender,
+                                            reciever: reciever,
+                                            recieverPhone: recieverPhone,
+                                            content: content
+                                        };
+                                        if (time) {
+                                            Ext.apply(p, {
+                                                time: time
+                                            });
+                                        }
+                                        Ext.Ajax.request({
+                                            url: './libs/msg.php?action=sendmsg',
+                                            method: 'POST',
+                                            params: p,
+                                            callback: function (opts, success, res){
+                                                if (success) {
+                                                    var obj = Ext.decode(res.responseText);
+                                                    if (obj.status == 'successful') {
+                                                        setTimeout(function (){
+                                                            showMsg('短信发送成功！');
+                                                        }, 500);
+                                                    }
+                                                    else {
+                                                        setTimeout(function (){
+                                                            showMsg(obj.errMsg);
+                                                        }, 500);
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                                else {
+                                    showMsg(obj.errMsg);
+                                }
+                            }
+                        })
+                    }
+                    else {
+                        showMsg(obj.errMsg);
+                    }
+                }
+            }
+        });
+    }
+    else {
+        setTimeout(function (){
+            showMsg('短信发送没有发送方或接收方!');
+        })
+    }
+}
+
 window.onresize = function() {
     var w = Ext.query('.x-window');
     Ext.each(w, function(item) {        
@@ -480,5 +563,38 @@ window.onresize = function() {
         win.center();
     })
 }
+
+Ext.require('Ext.form.field.VTypes', function (){
+    Ext.apply(Ext.form.field.VTypes, {
+        'phone': function() {
+            var re = /^[\(\)\.\- ]{0,}[0-9]{3}[\(\)\.\- ]{0,}[0-9]{4}[\(\)\.\- ]{0,}[0-9]{4}[\(\)\.\- ]{0,}$/;
+            return function(v) {
+                return re.test(v);
+            };
+        }(),
+        'phoneText': '手机号码错误, 例如: 123-456-7890 (破折号可选) 或者 (123) 456-7890',
+        'fax': function() {
+            var re = /^[\(\)\.\- ]{0,}[0-9]{3}[\(\)\.\- ]{0,}[0-9]{3}[\(\)\.\- ]{0,}[0-9]{4}[\(\)\.\- ]{0,}$/;
+            return function(v) {
+                return re.test(v);
+            };
+        }(),
+        'faxText': 'The fax format is wrong',
+        'zipCode': function() {
+            var re = /^\d{5}(-\d{4})?$/;
+            return function(v) {
+                return re.test(v);
+            };
+        }(),
+        'zipCodeText': 'The zip code format is wrong, e.g., 94105-0011 or 94105',
+        'ssn': function() {
+            var re = /^\d{3}-\d{2}-\d{4}$/;
+            return function(v) {
+                return re.test(v);
+            };
+        }(),
+        'ssnText': 'The SSN format is wrong, e.g., 123-45-6789'
+    });
+});
 
 Ext.define('FamilyDecoration.Common', {});

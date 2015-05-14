@@ -187,6 +187,12 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 					}
 				}
 			}, {
+				fieldLabel: '手机号码',
+				name: 'phone',
+				vtype: 'phone',
+				allowBlank: true,
+				value: account ? account.get('phone') : ''
+			}, {
 				xtype: 'combobox',
 				fieldLabel: '部门',
 				allowBlank: false,
@@ -434,6 +440,11 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 						if (!container.isHidden() && projectTxt.getValue()) {
 							Ext.apply(p, {
 								projectId: Ext.getCmp('hidden-projectId').getValue()
+							});
+						}
+						if (data.phone) {
+							Ext.apply(p, {
+								phone: data.phone
 							});
 						}
 						Ext.Ajax.request({

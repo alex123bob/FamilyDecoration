@@ -39,6 +39,14 @@ Ext.define('FamilyDecoration.view.mytask.EditProcess', {
 			readOnly: true,
 			width: 300,
 			value: process
+		}, {
+			xtype: 'checkboxfield',
+			itemId: 'checkbox-sendSMS',
+			name: 'checkbox-sendSMS',
+			boxLabel: '短信提醒',
+			hideLabel: true,
+			width: '100%',
+			height: 20
 		}];
 
 		me.buttons = [{
@@ -49,7 +57,9 @@ Ext.define('FamilyDecoration.view.mytask.EditProcess', {
 					sliderVal = parseFloat(slider.getValue()).div(100),
 					p = {
 						taskProcess: sliderVal
-					};
+					},
+					sms = me.getComponent('checkbox-sendSMS');
+
 				if (me.task) {
 					Ext.apply(p, {
 						id: me.task.getId()
@@ -62,7 +72,11 @@ Ext.define('FamilyDecoration.view.mytask.EditProcess', {
 							if (success) {
 								var obj = Ext.decode(res.responseText);
 								if (obj.status == 'successful') {
-									sendMsg(User.getName(), me.task.get('taskDispatcher'), User.getRealName() + '为任务"' + me.task.get('taskName') + '"编辑了任务进度，当前任务进度为："' + slider.getValue() + '%"；');
+									var content = User.getRealName() + '为任务"' + me.task.get('taskName')
+										 		  + '"编辑了任务进度，当前任务进度为："' + slider.getValue() + '%"；';
+									sendMsg(User.getName(), me.task.get('taskDispatcher'), content);
+									sms.getValue() && sendSMS(User.getName(), me.task.get('taskDispatcher'),
+										me.task.get('taskDispatcherPhoneNumber'), content);
 									showMsg('任务进度编辑成功！');
 									me.close();
 									Ext.getCmp('treepanel-myTask').refresh();

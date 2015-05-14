@@ -12,6 +12,7 @@
 		case "modify":					$res = modify(); break;
 		case "delete":					$res = delete($_POST['name']); break;
 		case "view":					$res = getList(); break;
+		case "getrealname":				$res = getUserRealName($_REQUEST['name']); break;
 		case "reset":					$res = resetAccount(); break;
 		case "checkUserOnlineUniqueness":$res = checkUserOnlineUniqueness();break;
 		//TODO   user.php?action=getOnlineUsers&page=xxx&limit=xxx&orderBy=xxx&order=desc/asc

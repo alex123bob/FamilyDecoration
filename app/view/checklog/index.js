@@ -159,12 +159,22 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 							modal: true,
 							width: 500,
 							height: 300,
-							layout: 'fit',
+							layout: 'vbox',
 							items: [{
 								xtype: 'textarea',
 								autoScroll: true,
+								flex: 13,
+								width: '100%',
 								id: 'textarea-censorship',
 								name: 'textarea-censorship'
+							}, {
+								xtype: 'checkboxfield',
+								itemId: 'checkbox-sendSMS',
+								name: 'checkbox-sendSMS',
+								boxLabel: '短信提醒',
+								hideLabel: true,
+								flex: 1,
+								width: '100%'
 							}],
 							buttons: [{
 								text: '批阅',
@@ -176,7 +186,8 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 										scrutinizeGrid = Ext.getCmp('gridpanel-scrutinizeForCheckLog'),
 										st = scrutinizeGrid.getStore(),
 										memberTree = Ext.getCmp('treepanel-memberName'),
-										selMember = memberTree.getSelectionModel().getSelection()[0];
+										selMember = memberTree.getSelectionModel().getSelection()[0],
+										sms = win.getComponent('checkbox-sendSMS');
 									if (content) {
 										Ext.Ajax.request({
 											url: './libs/censorship.php?action=mark',
@@ -190,7 +201,12 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 													var obj = Ext.decode(res.responseText);
 													if (obj.status == 'successful') {
 														showMsg('批阅成功！');
-														sendMsg(User.getName(), selMember.get('name'), User.getRealName() + '批阅了您的日志"' + logItem.get('logName') + '"，批阅内容："' + content + '"；');
+														sendMsg(User.getName(), selMember.get('name'), 
+															User.getRealName() + '批阅了您的日志"' + logItem.get('logName')
+															 + '"，批阅内容："' + content + '"；');
+														sms.getValue() && sendSMS(User.getName(), selMember.get('name'), selMember.get('phone'),
+															User.getRealName() + '批阅了您的日志"' + logItem.get('logName')
+															 + '"，批阅内容："' + content + '"；');
 														win.close();
 														st.reload({
 															params: {

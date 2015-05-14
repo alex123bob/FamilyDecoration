@@ -36,6 +36,10 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 					return User.renderRole(val);
 				}
 			}, {
+				text: '手机',
+				flex: 1,
+				dataIndex: 'phone'
+			}, {
 				text: '项目名称',
 				flex: 1,
 				dataIndex: 'projectName'

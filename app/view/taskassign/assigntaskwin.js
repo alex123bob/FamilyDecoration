@@ -41,6 +41,18 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 				emptyText: '任务内容',
 				allowBlank: false,
 				value: me.task ? me.task.get('taskContent') : ''
+			}, {
+				xtype: 'checkboxfield',
+				itemId: 'checkbox-sendSMS',
+				name: 'checkbox-sendSMS',
+				boxLabel: '短信提醒',
+				hideLabel: true,
+				region: 'south',
+				width: '100%',
+				height: 20,
+				style: {
+					background: '#ffffff'
+				}
 			}]
 		}, {
 			xtype: 'checklog-memberlist',
@@ -75,7 +87,8 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 					memberList = Ext.getCmp('treepanel-taskMemberName'),
 					memberSt = memberList.getStore(),
 					taskList = Ext.getCmp('treepanel-taskNameByUser'),
-					taskSt = taskList.getStore();
+					taskSt = taskList.getStore(),
+					sms = Ext.ComponentQuery.query('[name="checkbox-sendSMS"]')[0];
 				if (name.isValid() && content.isValid()) {
 					var assignees = tree.getChecked();
 					if (assignees.length > 0) {
@@ -97,12 +110,18 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 							params: p,
 							callback: function (opts, success, res){
 								if (success) {
+									var sendContent;
 									if (me.task) {
-										sendMsg(User.getName(), executor, User.getRealName() + '编辑了任务，任务名称：' + name.getValue() + '，任务内容：' + content.getValue() + '；');
+										sendContent = User.getRealName() + '编辑了任务，任务名称：' + name.getValue() + '，任务内容：' + content.getValue() + '；';
 									}
 									else {
-										sendMsg(User.getName(), executor, User.getRealName() + '给您分配了任务，任务名称：' + name.getValue() + '，任务内容：' + content.getValue() + '；');
+										sendContent = User.getRealName() + '给您分配了任务，任务名称：' + name.getValue() + '，任务内容：' + content.getValue() + '；';
 									}
+
+									sendMsg(User.getName(), executor, sendContent);
+									sms.getValue() && Ext.each(assignees, function (obj, index) {
+										sendSMS(User.getName(), obj.get('name'), obj.get('phone'), sendContent);
+									});
 
 									var obj = Ext.decode(res.responseText);
 									if (obj.status == 'successful') {

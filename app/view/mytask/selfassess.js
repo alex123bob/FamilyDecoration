@@ -5,7 +5,7 @@ Ext.define('FamilyDecoration.view.mytask.SelfAssess', {
 	width: 500,
 	height: 300,
 	modal: true,
-	layout: 'fit',
+	layout: 'vbox',
 	task: null,
 	assessment: null, // it is used for edit assessment
 
@@ -17,7 +17,17 @@ Ext.define('FamilyDecoration.view.mytask.SelfAssess', {
 			autoScroll: true,
 			hideLabel: true,
 			allowBlank: false,
+			width: '100%',
+			flex: 13,
 			value: me.assessment ? me.assessment.get('selfAssessment') : ''
+		}, {
+			xtype: 'checkboxfield',
+			itemId: 'checkbox-sendSMS',
+			name: 'checkbox-sendSMS',
+			boxLabel: '短信提醒',
+			hideLabel: true,
+			flex: 1,
+			width: '100%'
 		}];
 
 		me.buttons = [{
@@ -27,7 +37,8 @@ Ext.define('FamilyDecoration.view.mytask.SelfAssess', {
 					txtArea = me.down('textarea'),
 					p = {
 						selfAssessment: txtArea.getValue()
-					};
+					},
+					sms = me.getComponent('checkbox-sendSMS');
 				if (me.assessment) {
 					Ext.apply(p, {
 						id: me.assessment.getId()
@@ -47,7 +58,9 @@ Ext.define('FamilyDecoration.view.mytask.SelfAssess', {
 							if (success) {
 								var obj = Ext.decode(res.responseText);
 								if (obj.status == 'successful') {
-									sendMsg(User.getName(), me.task.get('taskDispatcher'), User.getRealName() + '为任务"' + me.task.get('taskName') + '"编写了自我评价，评价内容："' + txtArea.getValue() + '"；');
+									var content = User.getRealName() + '为任务"' + me.task.get('taskName') + '"编写了自我评价，评价内容："' + txtArea.getValue() + '"；';
+									sendMsg(User.getName(), me.task.get('taskDispatcher'), content);
+									sms.getValue() && sendSMS(User.getName(), me.task.get('taskDispatcher'), me.task.get('taskDispatcherPhoneNumber'), content);
 									showMsg('编写成功！');
 									me.close();
 									Ext.getCmp('panel-selfAssessment').refresh(me.task);

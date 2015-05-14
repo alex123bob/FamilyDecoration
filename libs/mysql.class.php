@@ -292,7 +292,7 @@
 		
 		//更新操作（参数$setValue是更新操作的值，例如"user = 'abc',name='cde'"等样子，中间要以逗号隔开），不是数字类型的字段，更新后的值要加引号
 		//这个用于更新多个字段数据，即多列
-		public function DBUpdate($tableValue, $obj, $condition , $conditionValues){
+		public function DBUpdate($tableValue, $obj, $condition , $conditionValues = null){
 			if(!contains($tableValue,"`"))
 				$tableValue = '`'.$tableValue.'`';
 			$sql = " update $tableValue SET ";
