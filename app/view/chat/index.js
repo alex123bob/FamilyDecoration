@@ -39,7 +39,7 @@ Ext.define('FamilyDecoration.view.chat.Index', {
     xtype: 'box',
     autoEl: {
       tag: 'iframe',
-      src: 'http://104.224.167.12/chat',
+      src: 'http://104.224.167.12/chat'
     }
   }]
 });

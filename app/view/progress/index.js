@@ -826,7 +826,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 		        		else {
 		        			return val;
 		        		}
-		        	},
+		        	}
 		        },
 		        {
 		        	text: '监理意见',
