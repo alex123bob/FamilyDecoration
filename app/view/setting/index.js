@@ -5,13 +5,13 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 		'FamilyDecoration.store.User',
 		'FamilyDecoration.view.setting.AddAccount'
 	],
-	autoScroll: true,
 	layout: 'fit',
 
 	initComponent: function (){
 		var me = this;
 
 		me.items = [{
+			autoScroll: true,
 			xtype: 'gridpanel',
 			columns: [{
 				text: '姓名',

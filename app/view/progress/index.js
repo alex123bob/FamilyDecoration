@@ -7,7 +7,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 		'FamilyDecoration.view.budget.BudgetPanel', 'Ext.layout.container.Form', 'FamilyDecoration.model.Progress',
 		'FamilyDecoration.store.BusinessDetail'
 	],
-	autoScroll: true,
+	// autoScroll: true,
 	layout: 'border',
 
 	initComponent: function (){

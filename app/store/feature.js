@@ -131,6 +131,12 @@
                         cmp: 'setting-index',
                         leaf: true,
                         icon: 'resources/img/account.png'
+                    },
+                    {
+                        name: "短信报表",
+                        cmp: 'msg-index',
+                        leaf: true,
+                        icon: 'resources/img/message.png'
                     }
                 ] 
             }
@@ -205,6 +211,9 @@
             }
             else if (rec.get('cmp') == 'setting-index') {
                 flag = User.isAdmin() || User.isBusinessStaff() ? true : false;
+            }
+            else if (rec.get('cmp') == 'msg-index') {
+                flag = User.isAdmin() ? true : false;
             }
             else if (rec.get('cmp') == 'budget-index') {
                 flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() ? true : false;

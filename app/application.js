@@ -25,7 +25,8 @@ Ext.define('FamilyDecoration.Application', {
         'MyTask',
         'CostAnalysis',
         'Leave',
-        'LeaveApproval'
+        'LeaveApproval',
+        'Msg'
     ],
 
     stores: [
