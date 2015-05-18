@@ -15,6 +15,7 @@
 		case "getrealname":				$res = getUserRealName($_REQUEST['name']); break;
 		case "reset":					$res = resetAccount(); break;
 		case "checkUserOnlineUniqueness":$res = checkUserOnlineUniqueness();break;
+		case "modifyPhoneNumber":		$res = modifyPhoneNumber();break;
 		//TODO   user.php?action=getOnlineUsers&page=xxx&limit=xxx&orderBy=xxx&order=desc/asc
 		//user.php?action=getOnlineUsers&beginTime=xxx&endTime=xxx&page=xxx&limit=xxx&orderBy=xxx&order=desc/asc
 

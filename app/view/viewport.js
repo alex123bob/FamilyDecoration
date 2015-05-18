@@ -109,6 +109,63 @@ Ext.define('FamilyDecoration.view.Viewport', {
                 // Heartbeat
                 setInterval(heartBeat, 60000);
             }
+
+            if (User.getPhoneNumber()) {
+                // todo
+            }
+            else {
+                var win = Ext.create('Ext.window.Window', {
+                    title: '设置用户手机号',
+                    width: 350,
+                    height: 140,
+                    resizable: false,
+                    modal: true,
+                    padding: 10,
+                    items: [{
+                        xtype: 'textfield',
+                        vtype: 'phone',
+                        fieldLabel: '手机号码',
+                        allowBlank: false,
+                        id: 'textfield-addUserPhoneNumber',
+                        name: 'textfield-addUserPhoneNumber'
+                    }],
+                    buttons: [{
+                        text: '确定',
+                        handler: function (){
+                            var txt = Ext.getCmp('textfield-addUserPhoneNumber');
+                            if (txt.isValid()) {
+                                Ext.Ajax.request({
+                                    url: './libs/user.php?action=modifyPhoneNumber',
+                                    method: 'POST',
+                                    params: {
+                                        name: User.name,
+                                        phone: txt.getValue()
+                                    },
+                                    callback: function (opts, success, res){
+                                        if (success) {
+                                            var obj = Ext.decode(res.responseText);
+                                            if (obj.status == 'successful') {
+                                                showMsg('手机号码设置成功！');
+                                                win.close();
+                                            }
+                                            else {
+                                                showMsg(obj.errMsg);
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }, {
+                        text: '取消',
+                        handler: function (){
+                            win.close();
+                        }
+                    }]
+                });
+                win.show();
+            }
+
         });
         
         this.callParent();

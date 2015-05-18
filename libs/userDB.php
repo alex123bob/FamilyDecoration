@@ -52,6 +52,7 @@
 			$_SESSION["realname"] = $user["realname"];
 			$_SESSION["password"] = $user["password"];
 			$_SESSION["level"] = $user["level"];
+			$_SESSION["phone"] = $user["phone"];
 			$ip = getIP();
 			$userAgent = $_SERVER['HTTP_USER_AGENT'];
 			//update
@@ -116,9 +117,18 @@
 		$level = $_POST["level"];
 		$realname = $_POST["realname"];
 		$projectId = isset($_POST["projectId"]) ? $_POST["projectId"] : '';
+		$phone = isset($_POST["phone"]) ? $_POST["phone"] : '';
 		global $mysql, $prefix;
 		$password = md5($prefix.$password);
-		$mysql->DBUpdate('user',array('realname'=>$realname,'password'=>$password,'level'=>$level,'projectId'=>$projectId),"`name`='?'",array($name));
+		$mysql->DBUpdate('user',array('realname'=>$realname,'password'=>$password,'level'=>$level,'projectId'=>$projectId, 'phone'=>$phone),"`name`='?'",array($name));
+		return (array('status'=>'successful', 'errMsg' => ''));
+	}
+
+	function modifyPhoneNumber (){
+		$name = $_POST["name"];
+		$phone = $_POST["phone"];
+		global $mysql;
+		$mysql->DBUpdate('user',array('phone'=>$phone),"`name`='?'",array($name));
 		return (array('status'=>'successful', 'errMsg' => ''));
 	}
 

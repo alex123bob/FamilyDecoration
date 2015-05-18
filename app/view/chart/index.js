@@ -480,6 +480,42 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 						showMsg('请选择工程！');
 					}
 				}
+			}, {
+				text: '图片预览',
+				icon: './resources/img/preview2.png',
+				id: 'button-picturepreview',
+				name: 'button-picturepreview',
+				disabled: true,
+				handler: function (){
+					var rec = Ext.getCmp('gridpanel-chartList').getSelectionModel().getSelection()[0];
+					if (rec) {
+						var url = rec.get('content');
+						if (url && !/^http|https/.test(url)) {
+							url = url.slice(3, url.length);
+						}
+						else {
+							// todo
+						}
+
+						var win = Ext.create('Ext.window.Window', {
+							layout: 'fit',
+							title: rec.get('originalName'),
+							width: 400,
+							height: 400,
+							modal: true,
+							autoScroll: true,
+							maximizable: true,
+							items: [{
+								xtype: 'image',
+								src: url
+							}]
+						});
+						win.show();
+					}
+					else {
+						showMsg('没有选择图片！');
+					}
+				}
 			}],
 			hideHeaders: true,
 			columns: [{
@@ -508,12 +544,15 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 			listeners: {
 				selectionchange: function (selModel, sels, opts){
 					var rec = sels[0],
-						delBtn = Ext.getCmp('button-deleteChart');
+						delBtn = Ext.getCmp('button-deleteChart'),
+						prevBtn = Ext.getCmp('button-picturepreview');
 					if (rec) {
 						delBtn.enable();
+						prevBtn.enable();
 					}
 					else {
 						delBtn.disable();
+						prevBtn.disable();
 					}
 				},
 				itemdblclick: function (view, rec, item, index, e, eOpts) {
@@ -527,7 +566,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 
 					var win = Ext.create('Ext.window.Window', {
 						layout: 'fit',
-						title: rec.get('chartDispValue'),
+						title: rec.get('originalName'),
 						width: 400,
 						height: 400,
 						modal: true,

@@ -94,6 +94,8 @@
 
             realname: '<?php echo $_SESSION["realname"]; ?>',
 
+            phone: '<?php echo $_SESSION["phone"]; ?>',
+
             isAdmin: function (){
                 return this.level == '001-001' || this.level == '001-002';
             },
@@ -241,6 +243,15 @@
                 }
                 else {
                     return '未知';
+                }
+            },
+
+            getPhoneNumber: function (){
+                if (this.phone) {
+                    return this.phone;
+                }
+                else {
+                    return false;
                 }
             },
 
