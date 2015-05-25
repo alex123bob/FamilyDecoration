@@ -7,6 +7,7 @@ Ext.define('FamilyDecoration.view.basicitem.SubItemTable', {
 	width: 500,
 	height: 300,
 	autoScroll: true,
+	listView: false,
 
 	initComponent: function (){
 		var me = this;
@@ -17,7 +18,8 @@ Ext.define('FamilyDecoration.view.basicitem.SubItemTable', {
 	        	dataIndex: 'subItemId',
 	        	flex: 0.5,
             	draggable: false,
-            	align: 'center'
+            	align: 'center',
+            	hidden: me.listView ? true : false
 	        },
 	        {
 	        	text: '项目名称',
@@ -47,6 +49,7 @@ Ext.define('FamilyDecoration.view.basicitem.SubItemTable', {
             	draggable: false,
             	align: 'center',
             	disabled: true,
+            	hidden: me.listView ? true : false,
             	renderer: function (){
             		return '';
             	}
@@ -71,6 +74,7 @@ Ext.define('FamilyDecoration.view.basicitem.SubItemTable', {
             			draggable: false,
             			align: 'center',
             			disabled: true,
+            			hidden: me.listView ? true : false,
             			renderer: function (){
             				return '';
             			}
@@ -99,6 +103,7 @@ Ext.define('FamilyDecoration.view.basicitem.SubItemTable', {
             			draggable: false,
             			align: 'center',
             			disabled: true,
+            			hidden: me.listView ? true : false,
             			renderer: function (){
             				return '';
             			}
@@ -127,6 +132,7 @@ Ext.define('FamilyDecoration.view.basicitem.SubItemTable', {
             			draggable: false,
             			align: 'center',
             			disabled: true,
+            			hidden: me.listView ? true : false,
             			renderer: function (){
             				return '';
             			}
@@ -155,6 +161,7 @@ Ext.define('FamilyDecoration.view.basicitem.SubItemTable', {
             			draggable: false,
             			align: 'center',
             			disabled: true,
+            			hidden: me.listView ? true : false,
             			renderer: function (){
             				return '';
             			}

@@ -160,6 +160,7 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 				xtype: 'basicitem-subitemtable',
 				id: 'gridpanel-basicSubItem',
 				name: 'gridpanel-basicSubItem',
+				listView: true,
 				title: '小类项目',
 				store: bsiSt,
 				dockedItems: [{
