@@ -834,9 +834,9 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 		        	flex: 1,
 		        	hidden: User.isGeneral(),
 		        	renderer: function (val, meta, rec){
-		        		if (User.isAdmin() || User.isSupervisor()) {
+		        		// if (User.isAdmin() || User.isSupervisor()) {
 		        			meta.style = 'cursor: pointer;';
-		        		}
+		        		// }
 		        		if (val) {
 		        			return val.replace(/\n/gi, '<br />');
 		        		}
@@ -858,7 +858,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 		    		editBtn.setDisabled(!rec);
 		    	},
 		    	cellclick: function (table, td, cellIndex, rec, tr, rowIndex, e, eOpts) {
-		    		if (User.isAdmin() || User.isSupervisor()) {
+		    		// if (User.isAdmin() || User.isSupervisor()) {
 	    				if (1 == cellIndex) {
 		    				var win = Ext.create('Ext.window.Window', {
 			    				title: '添加监理意见',
@@ -906,7 +906,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 			    			});
 			    			win.show();
 		    			}
-		    		}
+		    		// }
 		    	},
 				afterrender: function(grid, opts) {
 					var view = grid.getView();
