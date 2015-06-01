@@ -18,10 +18,6 @@
     <!-- </x-compile> -->
     <link href="resources/css/global.css" rel="stylesheet" />
     <script type="text/javascript" src="resources/locale/ext-lang-zh_CN.js"></script>
-    <script type="text/javascript" src="tools/jquery-1.11.1.min.js"></script>
-    <script type="text/javascript" src="highchart/js/highcharts.js"></script>
-    <script type="text/javascript" src="highchart/js/highcharts-3d.js"></script>
-    <script type="text/javascript" src="highchart/js/exporting.js"></script>
     <?php
         function curPageURL() {
              $pageURL = 'http';
@@ -587,7 +583,8 @@
                                                 }
                                             }
                                         }
-                                    });
+                                    })
+                                    ;
                                 }
                             }
                         }],
@@ -605,6 +602,10 @@
         }
         
     </script>
+    <script type="text/javascript" src="tools/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="highchart/js/highcharts.js"></script>
+    <script type="text/javascript" src="highchart/js/highcharts-3d.js"></script>
+    <script type="text/javascript" src="highchart/js/exporting.js"></script>
     <script type="text/javascript" src="highchart/index.js"></script>
 </body>
 </html>
