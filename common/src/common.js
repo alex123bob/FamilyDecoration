@@ -555,6 +555,64 @@ function sendSMS (sender, reciever, recieverPhone, content, time){
     }
 }
 
+function sendMail (reciever, recieverMail, subject, content) {
+    if (reciever) {
+        Ext.Ajax.request({
+            url: './libs/user.php?action=getrealname',
+            method: 'GET',
+            params: {
+                name: reciever
+            },
+            callback: function (opts, success, res){
+                obj = Ext.decode(res.responseText);
+                if (obj.status == 'successful') {
+                    reciever = obj['realname'];
+                    if (!recieverMail) {
+                        setTimeout(function (){
+                            showMsg('用户没有邮箱地址，请通知用户尽快完善信息！');
+                        }, 1000);
+                    }
+                    else {
+                        var p = {
+                            recipient: recieverMail,
+                            subject: subject,
+                            body: content
+                        };
+                        Ext.Ajax.request({
+                            url: './libs/mail.php?action=send',
+                            method: 'POST',
+                            params: p,
+                            callback: function (opts, success, res){
+                                if (success) {
+                                    var obj = Ext.decode(res.responseText);
+                                    if (obj.status == 'successful') {
+                                        setTimeout(function (){
+                                            showMsg('邮件发送成功！');
+                                        }, 500);
+                                    }
+                                    else {
+                                        setTimeout(function (){
+                                            showMsg(obj.errMsg);
+                                        }, 500);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+                else {
+                    showMsg(obj.errMsg);
+                }
+            }
+        })
+    }
+    else {
+        setTimeout(function (){
+            showMsg('邮件发送没有接收方!');
+        })
+    }
+}
+
 window.onresize = function() {
     var w = Ext.query('.x-window');
     Ext.each(w, function(item) {        
@@ -593,7 +651,14 @@ Ext.require('Ext.form.field.VTypes', function (){
                 return re.test(v);
             };
         }(),
-        'ssnText': 'The SSN format is wrong, e.g., 123-45-6789'
+        'ssnText': 'The SSN format is wrong, e.g., 123-45-6789',
+        'mail': function () {
+            var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+            return function(v) {
+                return re.test(v);
+            }
+        }(),
+        'mailText': '邮箱格式错误，请重新输入'
     });
 });
 

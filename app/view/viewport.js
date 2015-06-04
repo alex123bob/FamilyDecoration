@@ -114,7 +114,7 @@ Ext.define('FamilyDecoration.view.Viewport', {
                 // todo
             }
             else {
-                var win = Ext.create('Ext.window.Window', {
+                var phoneWin = Ext.create('Ext.window.Window', {
                     title: '设置用户手机号',
                     width: 350,
                     height: 140,
@@ -146,7 +146,7 @@ Ext.define('FamilyDecoration.view.Viewport', {
                                             var obj = Ext.decode(res.responseText);
                                             if (obj.status == 'successful') {
                                                 showMsg('手机号码设置成功！');
-                                                win.close();
+                                                phoneWin.close();
                                             }
                                             else {
                                                 showMsg(obj.errMsg);
@@ -159,11 +159,67 @@ Ext.define('FamilyDecoration.view.Viewport', {
                     }, {
                         text: '取消',
                         handler: function (){
-                            win.close();
+                            phoneWin.close();
                         }
                     }]
                 });
-                win.show();
+                phoneWin.show();
+            }
+
+            if (User.getEmail()) {
+                // todo
+            }
+            else {
+                var mailWin = Ext.create('Ext.window.Window', {
+                    title: '设置用户邮箱',
+                    width: 350,
+                    height: 140,
+                    resizable: false,
+                    modal: true,
+                    padding: 10,
+                    items: [{
+                        xtype: 'textfield',
+                        vtype: 'mail',
+                        fieldLabel: '邮箱地址',
+                        allowBlank: false,
+                        id: 'textfield-addUserMailAddress',
+                        name: 'textfield-addUserMailAddress'
+                    }],
+                    buttons: [{
+                        text: '确定',
+                        handler: function (){
+                            var txt = Ext.getCmp('textfield-addUserMailAddress');
+                            if (txt.isValid()) {
+                                Ext.Ajax.request({
+                                    url: './libs/user.php?action=modifyEmail',
+                                    method: 'POST',
+                                    params: {
+                                        name: User.name,
+                                        mail: txt.getValue()
+                                    },
+                                    callback: function (opts, success, res){
+                                        if (success) {
+                                            var obj = Ext.decode(res.responseText);
+                                            if (obj.status == 'successful') {
+                                                showMsg('邮箱设置成功！');
+                                                mailWin.close();
+                                            }
+                                            else {
+                                                showMsg(obj.errMsg);
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }, {
+                        text: '取消',
+                        handler: function (){
+                            mailWin.close();
+                        }
+                    }]
+                });
+                mailWin.show();
             }
 
         });

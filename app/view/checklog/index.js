@@ -175,6 +175,14 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 								hideLabel: true,
 								flex: 1,
 								width: '100%'
+							}, {
+								xtype: 'checkboxfield',
+								itemId: 'checkbox-sendMail',
+								name: 'checkbox-sendMail',
+								boxLabel: '邮件提醒',
+								hideLabel: true,
+								flex: 1,
+								width: '100%'
 							}],
 							buttons: [{
 								text: '批阅',
@@ -187,7 +195,8 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 										st = scrutinizeGrid.getStore(),
 										memberTree = Ext.getCmp('treepanel-memberName'),
 										selMember = memberTree.getSelectionModel().getSelection()[0],
-										sms = win.getComponent('checkbox-sendSMS');
+										sms = win.getComponent('checkbox-sendSMS'),
+										mail = win.getComponent('checkbox-sendMail');
 									if (content) {
 										Ext.Ajax.request({
 											url: './libs/censorship.php?action=mark',
@@ -201,12 +210,11 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 													var obj = Ext.decode(res.responseText);
 													if (obj.status == 'successful') {
 														showMsg('批阅成功！');
-														sendMsg(User.getName(), selMember.get('name'), 
-															User.getRealName() + '批阅了您的日志"' + logItem.get('logName')
-															 + '"，批阅内容："' + content + '"；');
-														sms.getValue() && sendSMS(User.getName(), selMember.get('name'), selMember.get('phone'),
-															User.getRealName() + '批阅了您的日志"' + logItem.get('logName')
-															 + '"，批阅内容："' + content + '"；');
+														var sendContent = User.getRealName() + '批阅了您的日志"' + logItem.get('logName')
+															 + '"，批阅内容："' + content + '"；';
+														sendMsg(User.getName(), selMember.get('name'), sendContent);
+														sms.getValue() && sendSMS(User.getName(), selMember.get('name'), selMember.get('phone'), sendContent);
+														mail.getValue() && sendMail(selMember.get('name'), selMember.get('mail'), User.getName() + '进行了"日志批阅"', sendContent)
 														win.close();
 														st.reload({
 															params: {

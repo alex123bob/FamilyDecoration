@@ -42,17 +42,38 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 				allowBlank: false,
 				value: me.task ? me.task.get('taskContent') : ''
 			}, {
-				xtype: 'checkboxfield',
-				itemId: 'checkbox-sendSMS',
-				name: 'checkbox-sendSMS',
-				boxLabel: '短信提醒',
+				xtype: 'fieldcontainer',
+				layout: 'hbox',
+				width: '100%',
 				hideLabel: true,
 				region: 'south',
-				width: '100%',
 				height: 20,
 				style: {
 					background: '#ffffff'
-				}
+				},
+				items: [{
+					xtype: 'checkboxfield',
+					itemId: 'checkbox-sendSMS',
+					name: 'checkbox-sendSMS',
+					boxLabel: '短信提醒',
+					hideLabel: true,
+					flex: 1,
+					height: '100%',
+					style: {
+						background: '#ffffff'
+					}
+				}, {
+					xtype: 'checkboxfield',
+					itemId: 'checkbox-sendMail',
+					name: 'checkbox-sendMail',
+					boxLabel: '邮件提醒',
+					hideLabel: true,
+					flex: 1,
+					height: '100%',
+					style: {
+						background: '#ffffff'
+					}
+				}]
 			}]
 		}, {
 			xtype: 'checklog-memberlist',
@@ -88,7 +109,8 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 					memberSt = memberList.getStore(),
 					taskList = Ext.getCmp('treepanel-taskNameByUser'),
 					taskSt = taskList.getStore(),
-					sms = Ext.ComponentQuery.query('[name="checkbox-sendSMS"]')[0];
+					sms = Ext.ComponentQuery.query('[name="checkbox-sendSMS"]')[0],
+					mail = Ext.ComponentQuery.query('[name="checkbox-sendMail"]')[0];
 				if (name.isValid() && content.isValid()) {
 					var assignees = tree.getChecked();
 					if (assignees.length > 0) {
@@ -121,6 +143,9 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 									sendMsg(User.getName(), executor, sendContent);
 									sms.getValue() && Ext.each(assignees, function (obj, index) {
 										sendSMS(User.getName(), obj.get('name'), obj.get('phone'), sendContent);
+									});
+									mail.getValue() && Ext.each(assignees, function (obj, index) {
+										sendMail(obj.get('name'), obj.get('mail'), User.getRealName() + '进行了"任务分配或编辑"', sendContent);
 									});
 
 									var obj = Ext.decode(res.responseText);

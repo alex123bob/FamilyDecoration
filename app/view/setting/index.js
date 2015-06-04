@@ -18,7 +18,7 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 				flex: 1,
 				dataIndex: 'realname'
 			}, {
-				text: '用户名',
+				text: '账号',
 				flex: 1,
 				dataIndex: 'name'
 			}, {
@@ -37,10 +37,14 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 				}
 			}, {
 				text: '手机',
-				flex: 1,
+				flex: 0.7,
 				dataIndex: 'phone'
 			}, {
-				text: '项目名称',
+				text: '邮箱',
+				flex: 1.3,
+				dataIndex: 'mail'
+			}, {
+				text: '项目',
 				flex: 1,
 				dataIndex: 'projectName'
 			}],

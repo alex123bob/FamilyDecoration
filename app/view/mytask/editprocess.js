@@ -47,6 +47,14 @@ Ext.define('FamilyDecoration.view.mytask.EditProcess', {
 			hideLabel: true,
 			width: '100%',
 			height: 20
+		}, {
+			xtype: 'checkboxfield',
+			itemId: 'checkbox-sendMail',
+			name: 'checkbox-sendMail',
+			boxLabel: '邮件提醒',
+			hideLabel: true,
+			width: '100%',
+			height: 20
 		}];
 
 		me.buttons = [{
@@ -58,7 +66,8 @@ Ext.define('FamilyDecoration.view.mytask.EditProcess', {
 					p = {
 						taskProcess: sliderVal
 					},
-					sms = me.getComponent('checkbox-sendSMS');
+					sms = me.getComponent('checkbox-sendSMS'),
+					mail = me.getComponent('checkbox-sendMail');
 
 				if (me.task) {
 					Ext.apply(p, {
@@ -77,6 +86,8 @@ Ext.define('FamilyDecoration.view.mytask.EditProcess', {
 									sendMsg(User.getName(), me.task.get('taskDispatcher'), content);
 									sms.getValue() && sendSMS(User.getName(), me.task.get('taskDispatcher'),
 										me.task.get('taskDispatcherPhoneNumber'), content);
+									mail.getValue() && sendMail(me.task.get('taskDispatcher'), 
+										me.task.get('taskDispatcherMail'), User.getRealName() + '编辑了"任务进度"', content);
 									showMsg('任务进度编辑成功！');
 									me.close();
 									Ext.getCmp('treepanel-myTask').refresh();

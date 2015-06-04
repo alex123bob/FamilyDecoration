@@ -28,6 +28,14 @@ Ext.define('FamilyDecoration.view.mytask.SelfAssess', {
 			hideLabel: true,
 			flex: 1,
 			width: '100%'
+		}, {
+			xtype: 'checkboxfield',
+			itemId: 'checkbox-sendMail',
+			name: 'checkbox-sendMail',
+			boxLabel: '邮件提醒',
+			hideLabel: true,
+			flex: 1,
+			width: '100%'
 		}];
 
 		me.buttons = [{
@@ -38,7 +46,8 @@ Ext.define('FamilyDecoration.view.mytask.SelfAssess', {
 					p = {
 						selfAssessment: txtArea.getValue()
 					},
-					sms = me.getComponent('checkbox-sendSMS');
+					sms = me.getComponent('checkbox-sendSMS'),
+					mail = me.getComponent('checkbox-sendMail');
 				if (me.assessment) {
 					Ext.apply(p, {
 						id: me.assessment.getId()
@@ -61,6 +70,8 @@ Ext.define('FamilyDecoration.view.mytask.SelfAssess', {
 									var content = User.getRealName() + '为任务"' + me.task.get('taskName') + '"编写了自我评价，评价内容："' + txtArea.getValue() + '"；';
 									sendMsg(User.getName(), me.task.get('taskDispatcher'), content);
 									sms.getValue() && sendSMS(User.getName(), me.task.get('taskDispatcher'), me.task.get('taskDispatcherPhoneNumber'), content);
+									mail.getValue() && sendMail(me.task.get('taskDispatcher'), 
+										me.task.get('taskDispatcherMail'), User.getRealName() + '填写了"自我评价"', content);
 									showMsg('编写成功！');
 									me.close();
 									Ext.getCmp('panel-selfAssessment').refresh(me.task);

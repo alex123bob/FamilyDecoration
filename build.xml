@@ -64,6 +64,9 @@
         <copy todir="${build.dir}/highchart" overwrite="true">
             <fileset dir="${app.dir}/highchart" />
         </copy>
+        <copy todir="${build.dir}/phpmailer" overwrite="true">
+            <fileset dir="${app.dir}/phpmailer" />
+        </copy>
         <!-- <copy todir="${build.dir}/config">
             <fileset dir="${app.dir}/config" />
         </copy>

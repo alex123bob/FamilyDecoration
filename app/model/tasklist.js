@@ -7,6 +7,7 @@ Ext.define('FamilyDecoration.model.TaskList', {
         {name: 'createTime', type: 'string'},
         {name: 'taskDispatcher', type: 'string'},
         {name: 'taskDispatcherPhoneNumber', type: 'string'},
+        {name: 'taskDispatcherMail', type: 'string'},
         {name: 'realName', string: 'string'},
         {name: 'taskExecutor', type: 'string'},
         {name: 'isDeleted', type: 'boolean'},

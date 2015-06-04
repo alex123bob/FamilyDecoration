@@ -5,7 +5,8 @@ Ext.define('FamilyDecoration.model.MemberList', {
         {name: 'name', type: 'string'},
         {name: 'level', type: 'string'},
         {name: 'realname', type: 'string'},
-        {name: 'phone', type: 'string'}
+        {name: 'phone', type: 'string'},
+        {name: 'mail', type: 'string'}
     ],
     idProperty: 'id',
     proxy: {

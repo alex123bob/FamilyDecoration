@@ -164,7 +164,7 @@
 		//if($currentUserLevel != "001-001" && $currentUserLevel != "001-002"){
 			$condition = $condition." and taskExecutor like '%-$currentUser-%' ";
 		//}
-		$arr = $mysql->DBGetSomeRows("`task_list` t", " t.*,u.realname,u.phone ",$condition,$orderBy);
+		$arr = $mysql->DBGetSomeRows("`task_list` t", " t.*,u.realname,u.phone,u.mail ",$condition,$orderBy);
 		$count = 0;
 		foreach($arr as $key => $val) {
 		    $res[$count]["id"] = $val["id"];
@@ -176,6 +176,7 @@
 			$res[$count]["taskDispatcher"] = str_replace("-","",$val["taskDispatcher"]);
 			$res[$count]["realName"] = $val["realname"];
 			$res[$count]["taskDispatcherPhoneNumber"] = $val["phone"];
+			$res[$count]["taskDispatcherMail"] = $val["mail"];
 		    $count ++;
         }
 		return $res;

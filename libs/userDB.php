@@ -24,13 +24,14 @@
 			$realname = $_POST["realname"];
 			$projectId = isset($_POST["projectId"]) ? $_POST["projectId"] : '' ;
 			$phone = isset($_POST["phone"]) ? $_POST["phone"] : '' ;
+			$mail = isset($_POST["mail"]) ? $_POST["mail"] : '' ;
 			global $mysql, $prefix;
 			$user = $mysql->DBGetOneRow("`user`", "*", "`name` = '$name'");
 			if($user){
 				throw new Exception('用户已经存在！');
 			}
 			$password = md5($prefix.$password);
-			$obj = array('name'=>$name,'realname'=>$realname,'password'=>$password,'level'=>$level,'projectId'=>$projectId,'phone'=>$phone);
+			$obj = array('name'=>$name,'realname'=>$realname,'password'=>$password,'level'=>$level,'projectId'=>$projectId,'phone'=>$phone, 'mail'=>$mail);
 			$mysql->DBInsertAsArray("`user`",$obj);
 			return (array('status'=>'successful', 'errMsg' => ''));
 	}
@@ -53,6 +54,7 @@
 			$_SESSION["password"] = $user["password"];
 			$_SESSION["level"] = $user["level"];
 			$_SESSION["phone"] = $user["phone"];
+			$_SESSION["mail"] = $user["mail"];
 			$ip = getIP();
 			$userAgent = $_SERVER['HTTP_USER_AGENT'];
 			//update
@@ -97,8 +99,12 @@
 		if ($user["name"] == $name) {
 			if ($user["password"] == $oldpassword) {
 				$obj = array('password'=>$newpassword);
-				if(isset($_POST['phone']))
+				if(isset($_POST['phone'])) {
 					$obj['phone'] = $_POST['phone'];
+				}
+				if (isset($_POST['mail'])) {
+					$obj['mail'] = $_POST['mail'];
+				}
 				$mysql->DBUpdate('user',$obj,"`name`= '?' ",array($user["name"]));
 				return (array('status'=>'successful', 'errMsg'=>''));
 			}
@@ -118,9 +124,10 @@
 		$realname = $_POST["realname"];
 		$projectId = isset($_POST["projectId"]) ? $_POST["projectId"] : '';
 		$phone = isset($_POST["phone"]) ? $_POST["phone"] : '';
+		$mail = isset($_POST["mail"]) ? $_POST["mail"] : '';
 		global $mysql, $prefix;
 		$password = md5($prefix.$password);
-		$mysql->DBUpdate('user',array('realname'=>$realname,'password'=>$password,'level'=>$level,'projectId'=>$projectId, 'phone'=>$phone),"`name`='?'",array($name));
+		$mysql->DBUpdate('user',array('realname'=>$realname,'password'=>$password,'level'=>$level,'projectId'=>$projectId, 'phone'=>$phone, 'mail'=>$mail),"`name`='?'",array($name));
 		return (array('status'=>'successful', 'errMsg' => ''));
 	}
 
@@ -129,6 +136,16 @@
 		$phone = $_POST["phone"];
 		global $mysql;
 		$mysql->DBUpdate('user',array('phone'=>$phone),"`name`='?'",array($name));
+		$_SESSION["phone"] = $phone;
+		return (array('status'=>'successful', 'errMsg' => ''));
+	}
+
+	function modifyEmail (){
+		$name = $_POST["name"];
+		$mail = $_POST["mail"];
+		global $mysql;
+		$mysql->DBUpdate('user',array('mail'=>$mail),"`name`='?'",array($name));
+		$_SESSION["mail"] = $mail;
 		return (array('status'=>'successful', 'errMsg' => ''));
 	}
 

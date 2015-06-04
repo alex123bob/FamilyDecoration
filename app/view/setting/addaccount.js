@@ -193,6 +193,12 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 				allowBlank: true,
 				value: account ? account.get('phone') : ''
 			}, {
+				fieldLabel: '邮箱地址',
+				name: 'mail',
+				vtype: 'mail',
+				allowBlank: true,
+				value: account ? account.get('mail') : ''
+			}, {
 				xtype: 'combobox',
 				fieldLabel: '部门',
 				allowBlank: false,
@@ -445,6 +451,11 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 						if (data.phone) {
 							Ext.apply(p, {
 								phone: data.phone
+							});
+						}
+						if (data.mail) {
+							Ext.apply(p, {
+								mail: data.mail
 							});
 						}
 						Ext.Ajax.request({

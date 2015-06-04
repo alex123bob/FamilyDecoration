@@ -374,6 +374,14 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 										hideLabel: true,
 										flex: 1,
 										width: '100%'
+									}, {
+										xtype: 'checkboxfield',
+										itemId: 'checkbox-sendMail',
+										name: 'checkbox-sendMail',
+										boxLabel: '邮件提醒',
+										hideLabel: true,
+										flex: 1,
+										width: '100%'
 									}],
 									buttons: [{
 										text: '批阅',
@@ -381,7 +389,8 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 											var content = win.down('textarea').getValue(),
 												memberTree = Ext.getCmp('treepanel-taskMemberName'),
 												member = memberTree.getSelectionModel().getSelection()[0],
-												sms = win.getComponent('checkbox-sendSMS');
+												sms = win.getComponent('checkbox-sendSMS'),
+												mail = win.getComponent('checkbox-sendMail');
 
 											if (task) {
 												Ext.Ajax.request({
@@ -398,6 +407,8 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 																var sendContent = User.getRealName() + '批阅了任务"' + task.get('taskName') + '"，批阅内容：' + content + '；';
 																sendMsg(User.getName(), member.get('name'), sendContent);
 																sms.getValue() && sendSMS(User.getName(), member.get('name'), member.get('phone'), sendContent);
+																mail.getValue() && sendMail(member.get('name'), member.get('mail'), 
+																	User.getRealName() + '进行了"批阅任务"', sendContent);
 																showMsg('批阅成功！');
 																win.close();
 																taskCheckGrid.getStore().reload();

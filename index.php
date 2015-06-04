@@ -92,6 +92,8 @@
 
             phone: '<?php echo $_SESSION["phone"]; ?>',
 
+            mail: '<?php echo $_SESSION["mail"]; ?>',
+
             isAdmin: function (){
                 return this.level == '001-001' || this.level == '001-002';
             },
@@ -245,6 +247,15 @@
             getPhoneNumber: function (){
                 if (this.phone) {
                     return this.phone;
+                }
+                else {
+                    return false;
+                }
+            },
+
+            getEmail: function (){
+                if (this.mail) {
+                    return this.mail;
                 }
                 else {
                     return false;
