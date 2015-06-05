@@ -203,7 +203,8 @@ Ext.define('FamilyDecoration.view.Viewport', {
                                             if (obj.status == 'successful') {
                                                 showMsg('邮箱设置成功！');
                                                 sendMail(User.getName(), txt.getValue(), 
-                                                    '邮箱注册成功[佳诚装饰]', '您已经成功注册邮箱。该邮箱仅用户ERP系统的日常消息推送。谢谢您的支持。[佳诚装饰]')
+                                                    '邮箱注册成功[佳诚装饰]', 
+                                                    '您已经成功注册邮箱。该邮箱仅用户ERP系统的日常消息推送。谢谢您的支持。[佳诚装饰]');
                                                 mailWin.close();
                                             }
                                             else {
