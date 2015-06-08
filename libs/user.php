@@ -13,6 +13,7 @@
 		case "delete":					$res = delete($_POST['name']); break;
 		case "view":					$res = getList(); break;
 		case "getrealname":				$res = getUserRealName($_REQUEST['name']); break;
+		case "getuserbylevel":			$res = getUserByLevel($_REQUEST['level']); break;
 		case "reset":					$res = resetAccount(); break;
 		case "checkUserOnlineUniqueness":$res = checkUserOnlineUniqueness();break;
 		case "modifyPhoneNumber":		$res = modifyPhoneNumber();break;

@@ -189,4 +189,10 @@
 		$name = count($names) > 0 ? $names[0] : "";
 		return array('status'=>'successful',"realname"=>$name);
 	}
+
+	function getUserByLevel ($level) {
+		global $mysql;
+		$arr = $mysql->DBGetSomeRows("`user`", "*" ,"where `level` = '".$level."'");
+		return ($arr);
+	}
 ?>

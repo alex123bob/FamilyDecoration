@@ -214,7 +214,7 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 															 + '"，批阅内容："' + content + '"；';
 														sendMsg(User.getName(), selMember.get('name'), sendContent);
 														sms.getValue() && sendSMS(User.getName(), selMember.get('name'), selMember.get('phone'), sendContent);
-														mail.getValue() && sendMail(selMember.get('name'), selMember.get('mail'), User.getName() + '进行了"日志批阅"', sendContent)
+														mail.getValue() && sendMail(selMember.get('name'), selMember.get('mail'), User.getRealName() + '进行了"日志批阅"', sendContent)
 														win.close();
 														st.reload({
 															params: {

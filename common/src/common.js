@@ -569,7 +569,7 @@ function sendMail (reciever, recieverMail, subject, content) {
                     reciever = obj['realname'];
                     if (!recieverMail) {
                         setTimeout(function (){
-                            showMsg('用户没有邮箱地址，请通知用户尽快完善信息！');
+                            showMsg('用户' + reciever + '没有邮箱地址，请通知用户尽快完善信息！');
                         }, 1000);
                     }
                     else {

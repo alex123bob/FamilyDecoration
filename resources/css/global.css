@@ -77,3 +77,12 @@ table.pros td{
   font-size: 13px;
   font-family: 微软雅黑;
 }
+
+html { 
+  -webkit-filter: grayscale(100%); 
+  -moz-filter: grayscale(100%); 
+  -ms-filter: grayscale(100%); 
+  -o-filter: grayscale(100%); 
+  filter:progid:DXImageTransform.Microsoft.BasicImage(grayscale=1); 
+  _filter:none; 
+} 
