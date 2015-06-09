@@ -5,8 +5,8 @@
 			return array('status'=>'successful', 'errMsg' => '');
 		}
 		$discount = (int)$data['discount'];
-		if($discount> 100 || $discount < 1)
-			throw new Exception("discount must be 1 ~ 100 , now :"+$discount);
+		if($discount> 130 || $discount < 85)
+			throw new Exception("discount must be 85 ~ 130 , now :"+$discount);
 		global $mysql;
 		$budgetId = $data['budgetId'];
 		$whereSql = " budgetId='?' and `itemCode` not in ('N','O','P','Q','R','S')";
