@@ -23,7 +23,7 @@
 		case "addOrEditLogDetail":$res = isset($_POST["id"]) ? editLogDetail($_POST) : addLogDetail($_REQUEST);break;
 
 		// check log page
-		case "getLogListDepartments":$res = getLogListDepartments();break;
+		case "getLogListDepartments":$res = getLogListDepartments($_GET["email"]);break;
 		case "getMembersByDepartment":$res = getMembersByDepartment($_GET["department"]);break;
 		default: throw new Exception("unknown action:".$action);
 	}

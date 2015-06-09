@@ -184,7 +184,7 @@
 		return array('status'=>'successful', 'errMsg' => 'edit logdetail ok');
 	}
 
-	function getLogListDepartments(){
+	function getLogListDepartments($forEmail){
 		$currentUser = $_SESSION["name"];
 		$currentUserLevel = $_SESSION["level"];
 		global $mysql;
@@ -217,7 +217,14 @@
 	        }
 		}
 		else {
-			$res[0] = array("level"=>$currentUserLevel);
+			if ($forEmail == "true") {
+				$res[0] = array("level"=>"001-001");
+				$res[1] = array("level"=>"005-001");
+				$res[2] = array("level"=>$currentUserLevel);
+			}
+			else {
+				$res[0] = array("level"=>$currentUserLevel);
+			}
 		}
 		
 		return $res;

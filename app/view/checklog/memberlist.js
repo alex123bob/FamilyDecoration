@@ -4,6 +4,7 @@ Ext.define('FamilyDecoration.view.checklog.MemberList', {
 	alias: 'widget.checklog-memberlist',
 	isCheckMode: false,
 	assignees: undefined,
+	forEmail: false,
 
 	initComponent: function (){
 		var me = this;
@@ -24,7 +25,8 @@ Ext.define('FamilyDecoration.view.checklog.MemberList', {
 						type: 'json'
 					},
 					extraParams: {
-						action: 'getLogListDepartments'
+						action: 'getLogListDepartments',
+						email: me.forEmail
 					}
 				},
 				listeners: {

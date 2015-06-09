@@ -34,6 +34,7 @@ Ext.define('FamilyDecoration.view.mylog.EditLogDetail', {
 				xtype: 'checklog-memberlist',
 				id: 'treepanel-memberlistForMyLog',
 				name: 'treepanel-memberlistForMyLog',
+				forEmail: true,
 				height: '100%',
 				flex: 1,
 				isCheckMode: true
