@@ -6,7 +6,8 @@ Ext.define('FamilyDecoration.model.Business', {
 		{name: 'address', type: 'string'},
 		{name: 'customer', type: 'string'},
 		{name: 'salesman', type: 'string'},
-		{name: 'source', type: 'string'}
+		{name: 'source', type: 'string'},
+		{name: 'level', type: 'string'}
 	],
 	idProperty: 'id'
 });

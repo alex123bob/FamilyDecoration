@@ -17,6 +17,7 @@
 			$res[$count]["customer"] = $val["customer"];
 			$res[$count]["salesman"] = $val["salesman"];
 			$res[$count]["source"] = $val["source"];
+			$res[$count]["level"] = $val["level"];
 		    $count ++;
         }
 		return $res;
@@ -37,6 +38,7 @@
 			$res[$count]["customer"] = $val["customer"];
 			$res[$count]["salesman"] = $val["salesman"];
 			$res[$count]["source"] = $val["source"];
+			$res[$count]["level"] = $val["level"];
 		    $count ++;
         }
 		return $res;
@@ -58,6 +60,7 @@
 			$res[$count]["customer"] = $val["customer"];
 			$res[$count]["salesman"] = $val["salesman"];
 			$res[$count]["source"] = $val["source"];
+			$res[$count]["level"] = $val["level"];
 		    $count ++;
         }
 		return $res;	
@@ -130,5 +133,14 @@
 		$pro = addProject($pro);
 		$mysql->DBUpdate('business',array('isTransfered'=>'true','updateTime'=>'now()'),"`id`='?'",array($businessId));
 		return array('status'=>'successful', 'errMsg' => '','projectId'=>$pro['projectId']);
+	}
+
+	function clientRank($data) {
+		global $mysql;
+		$id = $data["id"];
+		$obj = array();
+		$obj['level'] = $data["level"];
+		$mysql->DBUpdate('business',$obj,"`id`='?'",array($id));
+		return array('status'=>'successful', 'errMsg' => 'rank client successfully!');
 	}
 ?>

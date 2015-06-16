@@ -204,7 +204,29 @@ Ext.define('FamilyDecoration.view.business.Index', {
 				columns: [{
 					text: '门牌号',
 					flex: 1,
-					dataIndex: 'address'
+					dataIndex: 'address',
+					renderer: function (val, meta, rec){
+						var level = rec.get('level');
+						if (level == 'A') {
+							meta.style = 'background: lightpink;';
+						}
+						else if (level == 'B') {
+							meta.style = 'background: lightgreen;';
+						}
+						else if (level == 'C') {
+							meta.style = 'background: cornsilk;';
+						}
+						else if (level == 'D') {
+							meta.style = 'background: sandybrown;';
+						}
+						else {
+
+						}
+						if (level != '') {
+							val = val + '<strong>[' + level + ']</strong>';
+						}
+						return val;
+					}
 				}],
 				store: Ext.create('FamilyDecoration.store.Business', {
 					autoLoad: false
@@ -212,11 +234,13 @@ Ext.define('FamilyDecoration.view.business.Index', {
 				initBtn: function (rec){
 					var editBtn = Ext.getCmp('button-editClient'),
 						delBtn = Ext.getCmp('button-delClient'),
+						rankBtn = Ext.getCmp('button-categorization'),
 						gearBtn = Ext.getCmp('tool-frozeBusiness');
 
 					editBtn.setDisabled(!rec);
 					delBtn.setDisabled(!rec);
 					gearBtn.setDisabled(!rec);
+					rankBtn.setDisabled(!rec);
 				},
 				refresh: function (community){
 					if (community) {
@@ -314,6 +338,82 @@ Ext.define('FamilyDecoration.view.business.Index', {
 								})
 							}
 						});
+					}
+				}, {
+					text: '评级',
+					id: 'button-categorization',
+					name: 'button-categorization',
+					icon: './resources/img/category.png',
+					disabled: true,
+					handler: function (){
+						var	clientGrid = Ext.getCmp('gridpanel-clientInfo'),
+							rec = clientGrid.getSelectionModel().getSelection()[0],
+							communityGrid = Ext.getCmp('gridpanel-community'),
+							community = communityGrid.getSelectionModel().getSelection()[0],
+							fronzenGrid = Ext.getCmp('gridpanel-frozenBusiness');
+						var win = Ext.create('Ext.window.Window', {
+							width: 300,
+							height: 200,
+							padding: 10,
+							modal: true,
+							title: '客户类型评级',
+							items: [{
+								xtype: 'combobox',
+								fieldLabel: '客户评级',
+								editable: false,
+								allowBlank: false,
+								store: Ext.create('Ext.data.Store', {
+									fields: ['name'],
+									data: [
+										{name: 'A'},
+										{name: 'B'},
+										{name: 'C'},
+										{name: 'D'}
+									]
+								}),
+								queryMode: 'local',
+							    displayField: 'name',
+							    valueField: 'name',
+							    value: rec.get('level')
+ 							}],
+							buttons: [{
+								text: '确定',
+								handler: function (){
+									var combo = win.down('combobox');
+									if (combo.isValid()) {
+										Ext.Ajax.request({
+											url: './libs/business.php?action=clientRank',
+											method: 'POST',
+											params: {
+												level: combo.getValue(),
+												id: rec.getId()
+											},
+											callback: function (opts, success, res){
+												if (success) {
+													var obj = Ext.decode(res.responseText);
+													if (obj.status == 'successful') {
+														showMsg('评级成功！');
+														clientGrid.refresh(community);
+														fronzenGrid.refresh(community);
+														win.close();
+													}
+													else {
+														showMsg(obj.errMsg);
+													}
+												}
+											}
+										})
+									}
+								}
+							}, {
+								text: '取消',
+								handler: function (){
+									win.close();
+								}
+							}]
+						});
+
+						win.show();
 					}
 				}],
 				autoScroll: true,

@@ -71,6 +71,9 @@
 		case "transferBusinessToProject":
 			$res = transferBusinessToProject($_REQUEST);
 			break;
+		case "clientRank":
+			$res = clientRank($_REQUEST);
+			break;
 		default: 
 			throw new Exception("unknown action:".$action);
 	}
