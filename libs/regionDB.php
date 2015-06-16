@@ -30,6 +30,9 @@
 			$whereSql .= " and b.regionId = r.id and r.isDeleted = 'false' and isFrozen = '$isFrozen' ";
 		}
 		$arr = $mysql->DBGetSomeRows($selectSql, " r.* ", $whereSql ," order by r.createTime desc");
+		for ($i = 0; $i < count($arr); $i++) {
+			$arr[$i]["business"] = getBusinessByRegion($arr[$i]["id"], 'false', 'false');
+		}
 		$count = 0;
 		$res = array();
 		foreach($arr as $key => $val) {
@@ -37,6 +40,7 @@
 		    $res[$count]["name"] = $val["name"];
 			$res[$count]["createTime"] = $val["createTime"];
 			$res[$count]["updateTime"] = $val["updateTime"];
+			$res[$count]["business"] = $val["business"];
 		    $count ++;
         }
 		return $res;

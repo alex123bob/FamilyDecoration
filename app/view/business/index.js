@@ -94,7 +94,17 @@ Ext.define('FamilyDecoration.view.business.Index', {
 				columns: [{
 					text: '小区名称',
 					flex: 1,
-					dataIndex: 'name'
+					dataIndex: 'name',
+					renderer: function (val, meta, rec){
+						var arr = rec.get('business'),
+							num = arr.length;
+						if (num > 0) {
+							return val + '<font style="color: blue; text-shadow: #8F7 0.1em 0.1em 0.2em;"><strong>[' + num + ']</strong></font>';
+						}
+						else {
+							return val + '<font style="color: white; text-shadow: black 0.1em 0.1em 0.2em;"><strong>[' + num + ']</strong></font>';
+						}
+					}
 				}],
 				store: Ext.create('FamilyDecoration.store.Community', {
 					autoLoad: true
