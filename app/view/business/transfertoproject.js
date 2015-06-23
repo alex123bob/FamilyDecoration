@@ -5,7 +5,7 @@ Ext.define('FamilyDecoration.view.business.TransferToProject', {
 	resizable: false,
 	modal: true,
 	width: 400,
-	height: 210,
+	height: 250,
 	autoScroll: true,
 
 	community: null,
@@ -39,7 +39,7 @@ Ext.define('FamilyDecoration.view.business.TransferToProject', {
 			id: 'datefield-createTime',
 			name: 'datefield-createTime',
 			xtype: 'datefield',
-			fieldLabel: '创建日期',
+			fieldLabel: '工期',
 			editable: false,
 			value: me.community ? me.community.get('createTime') : ''
 		}, {
@@ -120,6 +120,84 @@ Ext.define('FamilyDecoration.view.business.TransferToProject', {
 					win.show();
 				}
 			}]
+		}, {
+			xtype: 'fieldcontainer',
+			layout: 'hbox',
+			items: [{
+				id: 'textfield-projectCaptain',
+				name: 'textfield-projectCaptain',
+				xtype: 'textfield',
+				readOnly: true,
+				fieldLabel: '项目经理'
+			}, {
+				xtype: 'button',
+				text: '选择',
+				handler: function (){
+					var win = Ext.create('Ext.window.Window', {
+						title: '选择项目经理',
+						layout: 'fit',
+						modal: true,
+						width: 500,
+						height: 400,
+						items: [{
+							xtype: 'gridpanel',
+							autoScroll: true,
+							columns: [{
+								text: '姓名',
+								flex: 1,
+								dataIndex: 'realname'
+							}, {
+								text: '用户名',
+								flex: 1,
+								dataIndex: 'name'
+							}, {
+								text: '部门',
+								flex: 1,
+								dataIndex: 'level',
+								renderer: function (val){
+									return User.renderDepartment(val);
+								}
+							}, {
+								text: '等级',
+								flex: 1,
+								dataIndex: 'level',
+								renderer: function (val){
+									return User.renderRole(val);
+								}
+							}, {
+								text: '项目名称',
+								flex: 1,
+								dataIndex: 'projectName'
+							}],
+							store: Ext.create('FamilyDecoration.store.User', {
+								autoLoad: true,
+								filters: [
+									function (item) {
+										return /^003-\d{3}$/i.test(item.get('level'));
+									}
+								]
+							})
+						}],
+						buttons: [{
+							text: '确定',
+							handler: function (){
+								var grid = win.down('grid'),
+									captain = Ext.getCmp('textfield-projectCaptain'),
+									rec = grid.getSelectionModel().getSelection()[0];
+								captain.setValue(rec.get('realname'));
+								win.close();
+							}
+						}, {
+							text: '取消',
+							handler: function (){
+								win.close();
+							}
+						}]
+					});
+
+					win.show();
+				}
+			}]
 		}];
 
 		me.buttons = [{
@@ -128,15 +206,19 @@ Ext.define('FamilyDecoration.view.business.TransferToProject', {
 				var customer = Ext.getCmp('textfield-clientNameForProject'),
 					address = Ext.getCmp('textfield-projectAddress'),
 					createTime = Ext.getCmp('datefield-createTime'),
-					designer = Ext.getCmp('textfield-designStaff');
-				if (customer.isValid() && address.isValid() && createTime.isValid() && designer.isValid()) {
+					designer = Ext.getCmp('textfield-designStaff'),
+					captain = Ext.getCmp('textfield-projectCaptain'),
+					communityGrid = Ext.getCmp('gridpanel-community');
+				if (customer.isValid() && address.isValid() && createTime.isValid() && designer.isValid()
+					&& captain.isValid()) {
 					var p = {
 						businessId: me.client.getId(),
 						customer: customer.getValue(),
 						projectName: address.getValue(),
 						createTime: createTime.getValue(),
 						designer: designer.getValue(),
-						salesman: me.client.get('salesman')
+						salesman: me.client.get('salesman'),
+						captain: captain.getValue()
 					};
 					Ext.Ajax.request({
 						method: 'POST',
@@ -149,7 +231,13 @@ Ext.define('FamilyDecoration.view.business.TransferToProject', {
 								if (obj.status == 'successful') {
 									me.logObj ? showMsg('修改成功！') : showMsg('增加成功！');
 									me.close();
-									clientGrid.refresh(me.community);
+									communityGrid.getStore().reload({
+										callback: function (recs, ope, success){
+											if (success) {
+												clientGrid.refresh(me.community);
+											}
+										}
+									})
 								}
 								else {
 									showMsg(obj.errMsg);

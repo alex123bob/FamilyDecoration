@@ -126,6 +126,7 @@
 						'projectTime'=>$request['createTime'],
 						'projectName'=>$request['projectName'],
 						'designer'=>$request['designer'],
+						'captain'=>$request['captain'],
 						'businessId'=>$businessId,
 						'salesman'=>$request['salesman']
 					);
