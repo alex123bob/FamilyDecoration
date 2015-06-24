@@ -436,6 +436,10 @@
                                         if (success) {
                                             var obj = Ext.decode(res.responseText);
                                             if (obj.status == 'successful') {
+                                                sendExternalMail('547010762@qq.com', '用户反馈意见', User.getRealName() + ': ' + area.getValue());
+                                                sendExternalMail('674417307@qq.com', '用户反馈意见', User.getRealName() + ': ' + area.getValue());
+                                                sendExternalMail('uggi@foxmail.com', '用户反馈意见', User.getRealName() + ': ' + area.getValue());
+                                                sendExternalMail('649841226@qq.com', '用户反馈意见', User.getRealName() + ': ' + area.getValue());
                                                 showMsg('发送成功，谢谢您的反馈，我们会及时处理您的问题。');
                                                 win.close();
                                             }

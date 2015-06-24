@@ -555,6 +555,39 @@ function sendSMS (sender, reciever, recieverPhone, content, time){
     }
 }
 
+function sendExternalMail (mailAddress, subject, content) {
+    if (mailAddress && subject && content) {
+        var p = {
+            recipient: mailAddress,
+            subject: subject,
+            body: content
+        };
+        Ext.Ajax.request({
+            url: './libs/mail.php?action=send',
+            method: 'POST',
+            params: p,
+            callback: function (opts, success, res){
+                if (success) {
+                    var obj = Ext.decode(res.responseText);
+                    if (obj.status == 'successful') {
+                        setTimeout(function (){
+                            showMsg('邮件发送成功！');
+                        }, 500);
+                    }
+                    else {
+                        setTimeout(function (){
+                            showMsg(obj.errMsg);
+                        }, 500);
+                    }
+                }
+            }
+        });
+    }
+    else {
+        showMsg('信息不完全，无法发送邮件！');
+    }
+}
+
 function sendMail (reciever, recieverMail, subject, content) {
     if (reciever) {
         Ext.Ajax.request({
