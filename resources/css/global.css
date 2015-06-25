@@ -78,6 +78,16 @@ table.pros td{
   font-family: 微软雅黑;
 }
 
+/* for action column icon image change */
+.x-action-col-cell img.icon-mail-read {
+    cursor: auto;
+    background-image: url("../img/mail-read.png");
+}
+.x-action-col-cell img.icon-mail-unread {
+  cursor: pointer;
+    background-image: url("../img/mail-unread.png");
+}
+
 /*html { 
   -webkit-filter: grayscale(100%); 
   -moz-filter: grayscale(100%); 

@@ -1,6 +1,7 @@
 <?php
 	include_once "../phpmailer/class.smtp.php";
 	include_once "../phpmailer/class.phpmailer.php";
+	include_once "userDB.php";
 
 	function sendMail($sendTo,$subject,$body = "",$attachement = null){
 		date_default_timezone_set('PRC');
@@ -19,22 +20,87 @@
 		$mail->From = 'dqjczs@sina.com';
 		$mail->FromName = '佳诚装饰';
 		$mail->Timeout = 30;
-		$mail->addAddress($sendTo);     // Add a recipient
+
+		if (isset($_REQUEST['mailSender'])) {
+			$realname = getUserRealName($_REQUEST['mailSender']);
+			$mail->FromName = $realname["realname"];
+		}
+		if(contains($sendTo,",")){
+			$sendToList = explode(',',$sendTo);
+			foreach($sendToList as $st){
+				$mail->addAddress($st);
+			}
+		}else{
+			$mail->addAddress($sendTo);     // Add a recipient
+		}
 		$mail->isHTML(true); // Set email format to HTML
 		if($attachement != null){
 			$mail->addStringAttachment($attachement['content'],$attachement['name']);
 		}
 		$mail->Subject = "=?utf-8?B?".base64_encode($subject)."?=";
-		$mail->Body    =  $body;
+		$mail->Body    =  nl2br($body);
 		$mail->AltBody = "To view the message, please use an HTML compatible email viewer!";
-		$result = array();
+		
 		if(!$mail->send()) {
-			$result = array('status'=>'failing', 'errMsg' => 'Message could not be sent.'.'Mailer Error: ' . $mail->ErrorInfo);
-		} 
-		else {
-			$result = array('status'=>'successful', 'errMsg' => 'Message has been sent');
+			$errorInfo = $mail->ErrorInfo;
+			$mail->smtpClose();
+			throw new Exception('Mail could not be sent.Error: ' . $errorInfo);
 		}
 		$mail->smtpClose();
-		return $result;
+		return array('status'=>'successful', 'errMsg' => 'Message has been sent');;
 	}
+	function insert($mailSender,$senderAddress,$mailReceiver,$receiverAddress,$mailSubject,$mailContent){
+		global $mysql;
+		$mailId = date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
+		$obj = array(
+			'mailId'=>$mailId,
+			'mailSender'=>$mailSender,
+			'senderAddress'=>$senderAddress,
+			'mailReceiver'=>$mailReceiver,
+			'receiverAddress'=>$receiverAddress,
+			'mailSubject'=>$mailSubject,
+			'mailContent'=>$mailContent
+			);
+		$mysql->DBInsertAsArray("`mail`", $obj);
+		return array('status'=>'successful', 'errMsg' => '','mailId'=>$mailId);
+	}
+	function getReceivedMailByUser($user){
+		global $mysql;
+		$sql = "select * from mail where `isDeleted` = 'false' and mailReceiver like '%?%' ORDER BY `mailTime` DESC ";
+		$arr = $mysql->DBGetAsMap($sql,$user);
+		for ($i = 0; $i < count($arr); $i++) {
+			$receiver = $arr[$i]["mailReceiver"];
+			$receiverList = explode(',',$receiver);
+			for ($j = 0; $j < count($receiverList); $j++) {
+				$receiverList[$j] = getUserRealName($receiverList[$j]);
+				$receiverList[$j] = $receiverList[$j]["realname"];
+			}
+			$receiver = implode(",", $receiverList);
+			$arr[$i]["mailReceiver"] = $receiver;
+			$sender = getUserRealName($arr[$i]["mailSender"]);
+			$arr[$i]["mailSender"] = $sender["realname"];
+		}
+		return $arr;
+	}
+	
+	function getSentMailByUser($user){
+		global $mysql;
+		$sql = "select * from mail where `isDeleted` = 'false' and mailSender like '%?%' ORDER BY `mailTime` DESC ";
+		$arr = $mysql->DBGetAsMap($sql,$user);
+		for ($i = 0; $i < count($arr); $i++) {
+			$receiver = $arr[$i]["mailReceiver"];
+			$receiverList = explode(',',$receiver);
+			for ($j = 0; $j < count($receiverList); $j++) {
+				$receiverList[$j] = getUserRealName($receiverList[$j]);
+				$receiverList[$j] = $receiverList[$j]["realname"];
+			}
+			$receiver = implode(",", $receiverList);
+			$arr[$i]["mailReceiver"] = $receiver;
+			$sender = getUserRealName($arr[$i]["mailSender"]);
+			$arr[$i]["mailSender"] = $sender["realname"];
+		}
+		return $arr;
+	}
+	
+	
 ?>

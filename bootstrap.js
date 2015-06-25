@@ -44,6 +44,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.model.CostAnalysis": "app/model/costanalysis.js",
   "FamilyDecoration.model.Feature": "app/model/feature.js",
   "FamilyDecoration.model.LogList": "app/model/loglist.js",
+  "FamilyDecoration.model.Mail": "app/model/mail.js",
   "FamilyDecoration.model.MainMaterial": "app/model/mainmaterial.js",
   "FamilyDecoration.model.MemberList": "app/model/memberlist.js",
   "FamilyDecoration.model.Message": "app/model/message.js",
@@ -72,6 +73,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.store.CostAnalysis": "app/store/costanalysis.js",
   "FamilyDecoration.store.Feature": "app/store/feature.js",
   "FamilyDecoration.store.LogList": "app/store/loglist.js",
+  "FamilyDecoration.store.Mail": "app/store/mail.js",
   "FamilyDecoration.store.MainMaterial": "app/store/mainmaterial.js",
   "FamilyDecoration.store.MemberList": "app/store/memberlist.js",
   "FamilyDecoration.store.Message": "app/store/message.js",
@@ -117,6 +119,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.leave.Index": "app/view/leave/index.js",
   "FamilyDecoration.view.leaveapproval.Index": "app/view/leaveapproval/index.js",
   "FamilyDecoration.view.mail.Index": "app/view/mail/index.js",
+  "FamilyDecoration.view.mail.NewMail": "app/view/mail/newmail.js",
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": "app/view/mainmaterial/editmainmaterial.js",
   "FamilyDecoration.view.mainmaterial.Index": "app/view/mainmaterial/index.js",
   "FamilyDecoration.view.msg.Index": "app/view/msg/index.js",
@@ -1029,6 +1032,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.model.CostAnalysis": [],
   "FamilyDecoration.model.Feature": [],
   "FamilyDecoration.model.LogList": [],
+  "FamilyDecoration.model.Mail": [],
   "FamilyDecoration.model.MainMaterial": [],
   "FamilyDecoration.model.MemberList": [],
   "FamilyDecoration.model.Message": [],
@@ -1057,6 +1061,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.store.CostAnalysis": [],
   "FamilyDecoration.store.Feature": [],
   "FamilyDecoration.store.LogList": [],
+  "FamilyDecoration.store.Mail": [],
   "FamilyDecoration.store.MainMaterial": [],
   "FamilyDecoration.store.MemberList": [],
   "FamilyDecoration.store.Message": [],
@@ -1102,6 +1107,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.leave.Index": [],
   "FamilyDecoration.view.leaveapproval.Index": [],
   "FamilyDecoration.view.mail.Index": [],
+  "FamilyDecoration.view.mail.NewMail": [],
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": [],
   "FamilyDecoration.view.mainmaterial.Index": [],
   "FamilyDecoration.view.msg.Index": [],
@@ -2180,6 +2186,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.model.CostAnalysis": [],
   "FamilyDecoration.model.Feature": [],
   "FamilyDecoration.model.LogList": [],
+  "FamilyDecoration.model.Mail": [],
   "FamilyDecoration.model.MainMaterial": [],
   "FamilyDecoration.model.MemberList": [],
   "FamilyDecoration.model.Message": [],
@@ -2208,6 +2215,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.store.CostAnalysis": [],
   "FamilyDecoration.store.Feature": [],
   "FamilyDecoration.store.LogList": [],
+  "FamilyDecoration.store.Mail": [],
   "FamilyDecoration.store.MainMaterial": [],
   "FamilyDecoration.store.MemberList": [],
   "FamilyDecoration.store.Message": [],
@@ -2310,6 +2318,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.mail.Index": [
     "widget.mail-index"
+  ],
+  "FamilyDecoration.view.mail.NewMail": [
+    "widget.mail-newmail"
   ],
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": [
     "widget.mainmaterial-editmainmaterial"

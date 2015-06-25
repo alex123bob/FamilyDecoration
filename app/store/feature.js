@@ -222,7 +222,7 @@
                 flag = User.isAdmin() ? true : false;
             }
             else if (rec.get('cmp') == 'mail-index') {
-                flag = User.isAdmin() ? true : false;
+                flag = User.isGeneral() ? false : true;
             }
             else if (rec.get('cmp') == 'budget-index') {
                 flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() ? true : false;

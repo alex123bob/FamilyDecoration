@@ -1,0 +1,8 @@
+错误的语句是select * from mail left join `user` on `mail`.`name` = `user`.`name` where `isDeleted` = 'false' and mailReceiver like '%admin%' ORDER BY `mailTime` DESC 
+发生的时间是：2015-06-25 15:27:43
+错误的语句是select * from mail where `isDeleted` = 'false' and mailReceiver like '%admin%' ORDER BY `mailTime` DESC left join `user` on `mail`.`name` = `user`.`name`
+发生的时间是：2015-06-25 15:29:51
+错误的语句是select * from mail left join `user` on `mail`.`name` = `user`.`name` having (`isDeleted` = 'false' and mailReceiver like '%admin%' ORDER BY `mailTime` DESC )
+发生的时间是：2015-06-25 15:33:30
+错误的语句是select * from (select * from mail left join `user` on `mail`.`name` = `user`.`name`) where `isDeleted` = 'false' and mailReceiver like '%admin%' ORDER BY `mailTime` DESC 
+发生的时间是：2015-06-25 15:34:55
