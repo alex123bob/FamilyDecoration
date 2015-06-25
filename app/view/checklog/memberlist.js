@@ -5,6 +5,7 @@ Ext.define('FamilyDecoration.view.checklog.MemberList', {
 	isCheckMode: false,
 	assignees: undefined,
 	forEmail: false,
+	fullList: false,
 
 	initComponent: function (){
 		var me = this;
@@ -26,7 +27,8 @@ Ext.define('FamilyDecoration.view.checklog.MemberList', {
 					},
 					extraParams: {
 						action: 'getLogListDepartments',
-						email: me.forEmail
+						email: me.forEmail,
+						fullList: me.fullList
 					}
 				},
 				listeners: {

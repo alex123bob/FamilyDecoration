@@ -137,14 +137,14 @@
                         cmp: 'msg-index',
                         leaf: true,
                         icon: 'resources/img/message.png'
-                    }, 
-                    {
-                        name: '邮箱平台',
-                        cmp: 'mail-index',
-                        leaf: true,
-                        icon: 'resources/img/email.png'
                     }
                 ] 
+            },
+            {
+                name: '邮箱平台',
+                cmp: 'mail-index',
+                leaf: true,
+                icon: 'resources/img/email.png'
             }
         ]
     },

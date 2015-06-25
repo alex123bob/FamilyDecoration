@@ -64,6 +64,7 @@ Ext.define('FamilyDecoration.view.mail.NewMail', {
 			id: 'memberlist-receiverList',
 			name: 'memberlist-receiverList',
 			xtype: 'checklog-memberlist',
+			fullList: true,
 			isCheckMode: true,
 			listeners: {
 				itemclick: function (view, rec){
