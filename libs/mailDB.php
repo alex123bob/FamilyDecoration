@@ -101,6 +101,12 @@
 		}
 		return $arr;
 	}
+
+	function setMailRead($mailId) {
+		global $mysql;
+		$mysql->DBUpdate("mail",array('isRead'=>true),"`mailId` = '?' ",array($mailId));
+		return array('status'=>'successful', 'errMsg' => '');
+	}
 	
 	
 ?>

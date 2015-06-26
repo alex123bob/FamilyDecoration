@@ -87,6 +87,10 @@ table.pros td{
   cursor: pointer;
     background-image: url("../img/mail-unread.png");
 }
+.x-action-col-cell img.icon-mail-multiple-receiver {
+  cursor: auto;
+    background-image: url("../img/multiple-receiver-mail.png");
+}
 
 /*html { 
   -webkit-filter: grayscale(100%); 

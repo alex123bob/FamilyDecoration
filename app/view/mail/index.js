@@ -90,6 +90,25 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 								previewRec: rec
 							});
 							win.show();
+							// after you open your mail, if it is unread, set read on it.
+							if (rec.get('isRead') == 'false') {
+								Ext.Ajax.request({
+									url: './libs/mail.php?action=setmailread',
+									method: 'POST',
+									params: {
+										mailId: rec.getId()
+									},
+									callback: function (opts, success, res){
+										if (success) {
+											var obj = Ext.decode(res.responseText);
+											if (obj.status == 'successful') {
+												var receiveGrid = Ext.getCmp('gridpanel-receivedBox');
+												receiveGrid.getStore().reload();
+											}
+										}
+									}
+								});
+							}
 						}
 						else {
 							showMsg('没有选中的邮件！');
@@ -102,12 +121,31 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 					dataIndex: 'isRead',
 					items: [{
 						handler: function (view, rowIndex, colIndex, item, e, rec, row){
-							if (rec.get('isRead') == 'false') {
-								showMsg('置为已读！');
+							if (rec.get('isRead') == 'false' && rec.get('mailReceiver').indexOf(',') == -1) {
+								Ext.Ajax.request({
+									url: './libs/mail.php?action=setmailread',
+									method: 'POST',
+									params: {
+										mailId: rec.getId()
+									},
+									callback: function (opts, success, res){
+										if (success) {
+											var obj = Ext.decode(res.responseText);
+											if (obj.status == 'successful') {
+												showMsg('置为已读成功！');
+												var receiveGrid = Ext.getCmp('gridpanel-receivedBox');
+												receiveGrid.getStore().reload();
+											}
+										}
+									}
+								});
 							}
 						},
 						getClass: function (v, meta, rec){
-							if (rec.get('isRead') == 'true') {
+							if (rec.get('mailReceiver').indexOf(',') != -1) {
+								return 'icon-mail-multiple-receiver';
+							}
+							else if (rec.get('isRead') == 'true') {
                     			return 'icon-mail-read';
 							}
 							else {

@@ -141,7 +141,9 @@ Ext.define('FamilyDecoration.view.mail.NewMail', {
 				handler: function (){
 					var form = Ext.getCmp('form-newMail');
 					if (form.isValid()) {
-						var val = form.getValues();
+						var val = form.getValues(),
+							receiveGrid = Ext.getCmp('gridpanel-receivedBox'),
+							sendGrid = Ext.getCmp('gridpanel-sentBox');
 						var p = {
 							mailReceiver: val['receiverAddress'],
 							receiverAddress: val['mailReceiver'],
@@ -159,6 +161,8 @@ Ext.define('FamilyDecoration.view.mail.NewMail', {
 									var obj = Ext.decode(res.responseText);
 									if (obj.status == 'successful') {
 										showMsg('发送成功！');
+										receiveGrid.getStore().reload();
+										sendGrid.getStore().reload();
 										me.close();
 									}
 									else {

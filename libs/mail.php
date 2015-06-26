@@ -23,6 +23,9 @@
 		case "getsentmailbyuser":
 			$res = getSentMailByUser($_REQUEST["mailUser"]);
 			break;
+		case "setmailread":
+			$res = setMailRead($_REQUEST["mailId"]);
+			break;
 		default: 		
 			throw new Exception("unknown action:".$action);
 	}
