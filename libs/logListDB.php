@@ -235,6 +235,10 @@
         $res= array();
         $whereSql = "where level like '".$department."-%' and `isDeleted` = 'false' ";
 
+        if ($_GET["individual"] == 'true') {
+        	$whereSql .= " and `name` = '".$_SESSION["name"]."' ";
+        }
+
         $arr = $mysql->DBGetSomeRows("`user`", "*", $whereSql);
 
         return $arr;

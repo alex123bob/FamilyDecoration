@@ -6,6 +6,7 @@ Ext.define('FamilyDecoration.view.checklog.MemberList', {
 	assignees: undefined,
 	forEmail: false,
 	fullList: false,
+	forIndividual: false,
 
 	initComponent: function (){
 		var me = this;
@@ -43,7 +44,8 @@ Ext.define('FamilyDecoration.view.checklog.MemberList', {
 							st.proxy.url = 'libs/loglist.php';
 	            			st.proxy.extraParams = {
 	            				action: 'getMembersByDepartment',
-	            				department: node.get('level').split('-')[0]
+	            				department: node.get('level').split('-')[0],
+								individual: me.forIndividual
 	            			};
 						}
 	            	},

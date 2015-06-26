@@ -23,6 +23,7 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 				title: '成员列表',
 				id: 'treepanel-memberNameForMail',
 				name: 'treepanel-memberNameForMail',
+				forIndividual: true,
 				forEmail: false,
 				style: {
 					borderRightStyle: 'solid',
