@@ -143,7 +143,9 @@ Ext.define('FamilyDecoration.view.mail.NewMail', {
 					if (form.isValid()) {
 						var val = form.getValues(),
 							receiveGrid = Ext.getCmp('gridpanel-receivedBox'),
-							sendGrid = Ext.getCmp('gridpanel-sentBox');
+							sendGrid = Ext.getCmp('gridpanel-sentBox'),
+							memberGrid = Ext.getCmp('treepanel-memberNameForMail'),
+							rec = memberGrid.getSelectionModel().getSelection()[0];
 						var p = {
 							mailReceiver: val['receiverAddress'],
 							receiverAddress: val['mailReceiver'],
@@ -161,8 +163,10 @@ Ext.define('FamilyDecoration.view.mail.NewMail', {
 									var obj = Ext.decode(res.responseText);
 									if (obj.status == 'successful') {
 										showMsg('发送成功！');
-										receiveGrid.getStore().reload();
-										sendGrid.getStore().reload();
+										if (rec) {
+											receiveGrid.getStore().reload();
+											sendGrid.getStore().reload();
+										}
 										me.close();
 									}
 									else {

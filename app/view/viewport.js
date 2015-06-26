@@ -225,6 +225,79 @@ Ext.define('FamilyDecoration.view.Viewport', {
                 mailWin.show();
             }
 
+            (function (){
+                var func = arguments.callee;
+                setTimeout(function (){
+                    var title = Ext.query('[data-recordid="mail-index"] span'),
+                        oldCount = Ext.query('[data-recordid="mail-index"] span strong'),
+                        mailMemberTree = Ext.getCmp('treepanel-memberNameForMail');
+                    Ext.Ajax.request({
+                        url: './libs/mail.php?action=getReceivedMailByUser',
+                        params: {
+                            mailUser: User.getName()
+                        },
+                        method: 'GET',
+                        callback: function (opts, success, res){
+                            if (success) {
+                                var obj = Ext.decode(res.responseText),
+                                    len = obj.length,
+                                    count = 0;
+                                for (var i = 0; i < obj.length; i++) {
+                                    if (obj[i]['isRead'] == 'false') {
+                                        count++;
+                                    }
+                                }
+                                if (count > 0) {
+                                    title[0].innerHTML = '(<font color="red"><strong>'
+                                     + count + '</strong></font>)邮箱平台';
+                                    if (oldCount.length > 0) {
+                                        oldCount = parseInt(oldCount[0].textContent, 10);
+                                        if (Ext.isNumber(oldCount) && count > oldCount) {
+                                            showMsg('你有新邮件！');
+                                        }
+                                    }
+                                    else {
+                                        showMsg('你有新邮件！');
+                                    }
+                                    if (mailMemberTree) {
+                                        var rec = mailMemberTree.getSelectionModel().getSelection()[0],
+                                            inbox = Ext.getCmp('gridpanel-receivedBox'),
+                                            sentBox = Ext.getCmp('gridpanel-sentBox');
+                                        if (rec && inbox.getStore().getCount() < len) {
+                                            inbox.getStore().reload();
+                                            sentBox.getStore().reload();
+                                        }
+                                    }
+                                }
+                                else {
+                                    title[0].innerHTML = '邮箱平台';
+                                }
+                            }
+                            func();
+                        },
+                        silent: true
+                    });
+                }, 3000);
+            })();
+
+            var timer = setInterval(function (){
+                var unreadMails = Ext.query('[data-recordid="mail-index"] span strong'),
+                    el;
+                if (unreadMails.length > 0) {
+                    el = unreadMails[0];
+                    $(el).fadeToggle({
+                        duration: 400,
+                        easing: 'linear',
+                        complete: function (){
+                            $(this).fadeToggle({
+                                duration: 400,
+                                easing: 'linear'
+                            });
+                        }
+                    });
+                }
+            }, 1000);
+
         });
         
         this.callParent();

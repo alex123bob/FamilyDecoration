@@ -622,5 +622,6 @@
     <script type="text/javascript" src="highchart/js/highcharts-3d.js"></script>
     <script type="text/javascript" src="highchart/js/exporting.js"></script>
     <script type="text/javascript" src="highchart/index.js"></script>
+    <script type="text/javascript" src="tools/title_notifier.js"></script>
 </body>
 </html>
