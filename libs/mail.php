@@ -12,8 +12,9 @@
 			$mailContent = $_REQUEST["body"];
 			sendMail($receiverAddress,$mailSubject, $mailContent, null);
 			global $mysql;
-			$mailReceivers = $mysql->DBGetAsOneArray("select name from user where `name` = '$receiverAddress' and `isDeleted` = 'false' ");
-			$mailReceiver = count($mailReceivers == 0)? $receiverAddress : $mailReceivers[0];
+			$mailReceivers = $mysql->DBGetAsOneArray("select name from user where `mail` = '$receiverAddress' and `isDeleted` = 'false' ");
+			//如果多个用户用同一个邮箱，则此处会出问题，收件人不一定对。
+			$mailReceiver = count($mailReceivers) == 0 ? $receiverAddress : $mailReceivers[0];
 			$res = insert($mailSender,$senderAddress,$mailReceiver,$receiverAddress,$mailSubject,$mailContent);
 			break;
 		case "insert":
