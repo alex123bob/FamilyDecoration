@@ -54,6 +54,7 @@ Ext.define('FamilyDecoration.view.business.TransferToProject', {
 				id: 'textfield-designStaff',
 				name: 'textfield-designStaff',
 				xtype: 'textfield',
+				allowBlank: false,
 				readOnly: true,
 				fieldLabel: '设计师'
 			}, {
@@ -133,7 +134,8 @@ Ext.define('FamilyDecoration.view.business.TransferToProject', {
 				name: 'textfield-projectCaptain',
 				xtype: 'textfield',
 				readOnly: true,
-				fieldLabel: '项目经理'
+				fieldLabel: '项目经理',
+				allowBlank: false
 			}, {
 				xtype: 'button',
 				text: '选择',
@@ -215,8 +217,8 @@ Ext.define('FamilyDecoration.view.business.TransferToProject', {
 					captain = Ext.getCmp('textfield-projectCaptain'),
 					communityGrid = Ext.getCmp('gridpanel-community'),
 					period = Ext.getCmp('textfield-projectPeriod');
-				if (customer.isValid() && address.isValid() && createTime.isValid() && designer.isValid()
-					&& captain.isValid()) {
+				if (customer.isValid() && address.isValid() && createTime.isValid() && period.isValid()
+					&& designer.isValid() && captain.isValid()) {
 					var p = {
 						businessId: me.client.getId(),
 						customer: customer.getValue(),
