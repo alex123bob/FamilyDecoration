@@ -637,7 +637,7 @@ function sendMail (reciever, recieverMail, subject, content) {
                     showMsg(obj.errMsg);
                 }
             }
-        })
+        });
     }
     else {
         setTimeout(function (){

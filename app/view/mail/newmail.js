@@ -19,6 +19,13 @@ Ext.define('FamilyDecoration.view.mail.NewMail', {
 	initComponent: function (){
 		var me = this;
 
+		if (me.forPreview) {
+			me.title = '查看邮件-' + me.previewRec.get('mailSubject');
+		}
+		else {
+			me.title = '写邮件';
+		}
+
 		me.items = [{
 			flex: 3,
 			bodyPadding: 2,
@@ -58,7 +65,7 @@ Ext.define('FamilyDecoration.view.mail.NewMail', {
 				readOnly: me.forPreview ? true : false
 			}]
 		}, {
-			disabled: me.forPreview ? true : false,
+			hidden: me.forPreview ? true : false,
 			flex: 1,
 			height: '100%',
 			id: 'memberlist-receiverList',

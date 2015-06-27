@@ -74,11 +74,13 @@ Ext.define('FamilyDecoration.view.business.EditClient', {
 						callback: function (opts, success, res){
 							if (success) {
 								var obj = Ext.decode(res.responseText),
-									grid = Ext.getCmp('gridpanel-clientInfo');
+									grid = Ext.getCmp('gridpanel-clientInfo'),
+									communityGrid = Ext.getCmp('gridpanel-community');
 								if (obj.status == 'successful') {
 									me.client ? showMsg('修改成功！') : showMsg('增加成功！');
 									me.close();
 									grid.refresh(me.community);
+									communityGrid.refresh();
 								}
 							}
 						}

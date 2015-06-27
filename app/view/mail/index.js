@@ -78,10 +78,12 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 				xtype: 'gridpanel',
 				flex: 2,
 				width: '100%',
+				bodyCls: 'pointerCursor',
 				tbar: [{
 					xtype: 'button',
 					icon: './resources/img/preview2.png',
 					text: '查看',
+					id: 'button-checkReceiveMail',
 					handler: function (){
 						var grid = Ext.getCmp('gridpanel-receivedBox'),
 							rec = grid.getSelectionModel().getSelection()[0];
@@ -170,7 +172,14 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 				autoScroll: true,
 				store: Ext.create('FamilyDecoration.store.Mail', {
 					autoLoad: false
-				})
+				}),
+				listeners: {
+					itemdblclick: function (view, rec, item, index, e, opts){
+						if (rec) {
+							Ext.getCmp('button-checkReceiveMail').handler();
+						}
+					}
+				}
 			}, {
 				title: '发件箱',
 				xtype: 'gridpanel',
@@ -182,6 +191,7 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 					xtype: 'button',
 					icon: './resources/img/preview1.png',
 					text: '查看',
+					id: 'button-checkSentMail',
 					handler: function (){
 						var grid = Ext.getCmp('gridpanel-sentBox'),
 							rec = grid.getSelectionModel().getSelection()[0];
@@ -220,7 +230,14 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 				autoScroll: true,
 				store: Ext.create('FamilyDecoration.store.Mail', {
 					autoLoad: false
-				})
+				}),
+				listeners: {
+					itemdblclick: function (view, rec, item, index, e, opts){
+						if (rec) {
+							Ext.getCmp('button-checkSentMail').handler();
+						}
+					}
+				}
 			}]
 		}];
 

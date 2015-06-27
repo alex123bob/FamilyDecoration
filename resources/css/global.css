@@ -62,6 +62,10 @@ table.pros td{
   word-wrap: break-word;
 }
 
+#gridpanel-receivedBox .x-grid-cell-inner, #gridpanel-sentBox .x-grid-cell-inner {
+  cursor: pointer;
+}
+
 #chartContainer {
   min-width: 310px; 
   height: 400px; 

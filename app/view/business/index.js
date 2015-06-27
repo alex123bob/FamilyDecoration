@@ -329,6 +329,7 @@ Ext.define('FamilyDecoration.view.business.Index', {
 											if (obj.status == 'successful') {
 												showMsg('删除成功！');
 												grid.refresh(community);
+												communityGrid.refresh();
 											}
 											else {
 												showMsg(obj.errMsg);

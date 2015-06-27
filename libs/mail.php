@@ -7,6 +7,10 @@
 		case "send":
 			$res = sendMail($_REQUEST["recipient"], $_REQUEST["subject"], $_REQUEST["body"], null);  
 			break;
+		case "insert":
+			$res = insert($_POST["mailSender"],$_POST["senderAddress"],$_POST["mailReceiver"],
+				$_POST["receiverAddress"],$_POST["mailSubject"],$_POST["mailContent"]);
+			break;
 		case "sendmail":
 			$mailSender = $_REQUEST['mailSender'];
 			$senderAddress = $_REQUEST['senderAddress'];
