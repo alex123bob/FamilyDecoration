@@ -225,12 +225,16 @@ Ext.define('FamilyDecoration.view.Viewport', {
                 mailWin.show();
             }
 
+            // for email
             (function (){
                 var func = arguments.callee;
                 setTimeout(function (){
                     var title = Ext.query('[data-recordid="mail-index"] span'),
+                        bulletinTitle = Ext.query('[data-recordid="bulletin-index"] span'),
                         oldCount = Ext.query('[data-recordid="mail-index"] span strong'),
-                        mailMemberTree = Ext.getCmp('treepanel-memberNameForMail');
+                        oldCountForBulletin = Ext.query('[data-recordid="bulletin-index"] span strong'),
+                        mailMemberTree = Ext.getCmp('treepanel-memberNameForMail'),
+                        dynamicMessageBox = Ext.getCmp('gridpanel-message');
                     Ext.Ajax.request({
                         url: './libs/mail.php?action=getReceivedMailByUser',
                         params: {
@@ -277,12 +281,50 @@ Ext.define('FamilyDecoration.view.Viewport', {
                         },
                         silent: true
                     });
+                    Ext.Ajax.request({
+                        url: './libs/message.php?action=get',
+                        params: {
+                            isDeleted: false,
+                            isRead: false,
+                            receiver: User.getName()
+                        },
+                        method: 'GET',
+                        silent: true,
+                        callback: function (opts, success, res){
+                            if (success) {
+                                var obj = Ext.decode(res.responseText),
+                                    count = obj.length;
+                                if (count > 0) {
+                                    bulletinTitle[0].innerHTML = '(<font color="red"><strong>'
+                                     + count + '</strong></font>)公告栏信息';
+                                    if (oldCountForBulletin.length > 0) {
+                                        oldCountForBulletin = parseInt(oldCountForBulletin[0].textContent, 10);
+                                        if (Ext.isNumber(oldCountForBulletin) && count > oldCountForBulletin) {
+                                            showMsg('你有新消息！');
+                                        }
+                                    }
+                                    else {
+                                        showMsg('你有新消息！');
+                                    }
+                                    if (dynamicMessageBox) {
+                                        if (dynamicMessageBox.getStore().getCount() < count) {
+                                            dynamicMessageBox.refresh();
+                                        }
+                                    }
+                                }
+                                else {
+                                    bulletinTitle[0].innerHTML = '公告栏信息';
+                                }
+                            }
+                        }
+                    })
                 }, 3000);
             })();
 
             var timer = setInterval(function (){
                 var unreadMails = Ext.query('[data-recordid="mail-index"] span strong'),
-                    el;
+                    unreadMsg = Ext.query('[data-recordid="bulletin-index"] span strong'),
+                    el, bulletinEl;
                 if (unreadMails.length > 0) {
                     el = unreadMails[0];
                     $(el).fadeToggle({
@@ -296,7 +338,22 @@ Ext.define('FamilyDecoration.view.Viewport', {
                         }
                     });
                 }
+                if (unreadMsg.length > 0) {
+                    bulletinEl = unreadMsg[0];
+                    $(bulletinEl).fadeToggle({
+                        duration: 400,
+                        easing: 'linear',
+                        complete: function (){
+                            $(this).fadeToggle({
+                                duration: 400,
+                                easing: 'linear'
+                            });
+                        }
+                    });
+
+                }
             }, 1000);
+            // end of email
 
         });
         
