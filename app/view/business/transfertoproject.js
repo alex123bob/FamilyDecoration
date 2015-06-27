@@ -39,9 +39,14 @@ Ext.define('FamilyDecoration.view.business.TransferToProject', {
 			id: 'datefield-createTime',
 			name: 'datefield-createTime',
 			xtype: 'datefield',
-			fieldLabel: '工期',
+			fieldLabel: '工程创建日期',
 			editable: false,
 			value: me.community ? me.community.get('createTime') : ''
+		}, {
+			id: 'textfield-projectPeriod',
+			name: 'textfield-projectPeriod',
+			xtype: 'textfield',
+			fieldLabel: '工期'
 		}, {
 			xtype: 'fieldcontainer',
 			layout: 'hbox',
@@ -208,7 +213,8 @@ Ext.define('FamilyDecoration.view.business.TransferToProject', {
 					createTime = Ext.getCmp('datefield-createTime'),
 					designer = Ext.getCmp('textfield-designStaff'),
 					captain = Ext.getCmp('textfield-projectCaptain'),
-					communityGrid = Ext.getCmp('gridpanel-community');
+					communityGrid = Ext.getCmp('gridpanel-community'),
+					period = Ext.getCmp('textfield-projectPeriod');
 				if (customer.isValid() && address.isValid() && createTime.isValid() && designer.isValid()
 					&& captain.isValid()) {
 					var p = {
@@ -218,7 +224,8 @@ Ext.define('FamilyDecoration.view.business.TransferToProject', {
 						createTime: createTime.getValue(),
 						designer: designer.getValue(),
 						salesman: me.client.get('salesman'),
-						captain: captain.getValue()
+						captain: captain.getValue(),
+						period: period.getValue()
 					};
 					Ext.Ajax.request({
 						method: 'POST',

@@ -128,7 +128,8 @@
 						'designer'=>$request['designer'],
 						'captain'=>$request['captain'],
 						'businessId'=>$businessId,
-						'salesman'=>$request['salesman']
+						'salesman'=>$request['salesman'],
+						'period'=>$request['period']
 					);
 		include_once "projectDB.php";
 		$pro = addProject($pro);
