@@ -91,8 +91,11 @@
 			$receiver = $arr[$i]["mailReceiver"];
 			$receiverList = explode(',',$receiver);
 			for ($j = 0; $j < count($receiverList); $j++) {
-				$receiverList[$j] = getUserRealName($receiverList[$j]);
-				$receiverList[$j] = $receiverList[$j]["realname"];
+				$realName = getUserRealName($receiverList[$j]);
+				$realName = $realName["realname"];
+				if($realName != "" && $realName != null){
+					$receiverList[$j] = $realName;
+				}
 			}
 			$receiver = implode(",", $receiverList);
 			$arr[$i]["mailReceiver"] = $receiver;
