@@ -5,7 +5,16 @@
 	$res = "";
 	switch($action){
 		case "send":
-			$res = sendMail($_REQUEST["recipient"], $_REQUEST["subject"], $_REQUEST["body"], null);  
+			$mailSender = $_SESSION['name'];
+			$senderAddress = $_SESSION['mail'];
+			$receiverAddress = $_REQUEST["recipient"];
+			$mailSubject = $_REQUEST["subject"];
+			$mailContent = $_REQUEST["body"];
+			sendMail($receiverAddress,$mailSubject, $mailContent, null);
+			global $mysql;
+			$mailReceivers = $mysql->DBGetAsOneArray("select name from user where `name` = '$receiverAddress' and `isDeleted` = 'false' ");
+			$mailReceiver = count($mailReceivers == 0)? $receiverAddress : $mailReceivers[0];
+			$res = insert($mailSender,$senderAddress,$mailReceiver,$receiverAddress,$mailSubject,$mailContent);
 			break;
 		case "insert":
 			$res = insert($_POST["mailSender"],$_POST["senderAddress"],$_POST["mailReceiver"],
