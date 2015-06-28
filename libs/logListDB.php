@@ -191,7 +191,8 @@
         $res= array();
 
 		//如果是管理员,管理员默认能看到所有部门的所有人的日志，或者需要在发送邮件时，请求到所有用户列表的时候，用fullList标志位
-		if($currentUserLevel == "001-001" || $currentUserLevel == "001-002" || $_GET["fullList"] == "true"){
+		if($_GET["individual"] == "false" 
+			&& ($currentUserLevel == "001-001" || $currentUserLevel == "001-002" || $_GET["fullList"] == "true")){
 			$whereSql = " where `name` in (select `userName` from `log_list`) ";
 			$orderBy = " ORDER BY `user`.`level` ASC ";
 			$arr = $mysql->DBGetSomeRows("`user`", " DISTINCT `level` ",$whereSql ,$orderBy);

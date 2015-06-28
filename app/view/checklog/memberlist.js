@@ -29,7 +29,8 @@ Ext.define('FamilyDecoration.view.checklog.MemberList', {
 					extraParams: {
 						action: 'getLogListDepartments',
 						email: me.forEmail,
-						fullList: me.fullList
+						fullList: me.fullList,
+						individual: me.forIndividual
 					}
 				},
 				listeners: {
