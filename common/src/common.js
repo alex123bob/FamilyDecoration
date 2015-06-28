@@ -183,7 +183,11 @@ Ext.require('Ext.Ajax', function () {
     Ext.Ajax.on('beforerequest', function (conn, opts, eopts) {
         opts.silent = opts.silent || (opts.operation ? opts.operation.silent : false) ||
             (opts.proxy ? opts.proxy.silent : false);
-        if (opts.silent === true) {
+        if (opts.silent === true && opts.automatic === true) {
+            return;
+        }
+        else if (!opts.ga) {
+            ga(opts.url+"+"+JSON.stringify(opts.params));
             return;
         }
 
@@ -644,6 +648,22 @@ function sendMail (reciever, recieverMail, subject, content) {
             showMsg('邮件发送没有接收方!');
         })
     }
+}
+
+function ga(url){
+    Ext.Ajax.request({
+        ga: true,
+        silent: true,
+        url: './libs/conn.php?action=ga',
+        params: {
+            userName: User.getName(),
+            interfaceName: url
+        },
+        method: 'POST',
+        callback: function (opts, success, res){
+
+        }
+    });
 }
 
 window.onresize = function() {

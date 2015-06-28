@@ -152,7 +152,11 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 									if (obj.status == 'successful') {
 										me.task ? showMsg('任务编辑成功！') : showMsg('任务分配成功！');
 										memberSt.getProxy().url = './libs/loglist.php?action=getLogListDepartments';
-										memberSt.getProxy().extraParams = {};
+										memberSt.getProxy().extraParams = {
+											email: false,
+											fullList: false,
+											individual: false
+										};
 										memberSt.load({
 											node: memberSt.getRootNode(),
 											callback: function (recs, ope, success){

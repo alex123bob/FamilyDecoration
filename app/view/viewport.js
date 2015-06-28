@@ -279,7 +279,8 @@ Ext.define('FamilyDecoration.view.Viewport', {
                             }
                             func();
                         },
-                        silent: true
+                        silent: true,
+                        automatic: true
                     });
                     Ext.Ajax.request({
                         url: './libs/message.php?action=get',
@@ -290,6 +291,7 @@ Ext.define('FamilyDecoration.view.Viewport', {
                         },
                         method: 'GET',
                         silent: true,
+                        automatic: true,
                         callback: function (opts, success, res){
                             if (success) {
                                 var obj = Ext.decode(res.responseText),

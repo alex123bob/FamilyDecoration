@@ -96,4 +96,15 @@
 		}
 		return $arg;
 	}
+	function ga($data){
+		global $mysql;
+		$fields = array("userName", "interfaceName");
+		$obj = array(
+			"userName" => $data["userName"],
+			"interfaceName" => $data["interfaceName"]
+		);
+		$mysql->DBInsertAsArray("`user_behavior`",$obj);
+		$res = array('status'=>'successful', 'errMsg' => $data["interfaceName"]);
+		echo (json_encode($res));
+	}
 ?>

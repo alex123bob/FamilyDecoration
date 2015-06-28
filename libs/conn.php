@@ -17,4 +17,8 @@
 	if(!strpos($_SERVER["REQUEST_URI"],"user.php?action=log")){
 		checkUserOnlineUniqueness();
 	}
+
+	if (isset($_GET["action"]) && $_GET["action"] == "ga") {
+		ga($_POST);
+	}
 ?>
