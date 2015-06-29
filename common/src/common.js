@@ -42,11 +42,11 @@ Ext.require('Ext.window.MessageBox', function (){
                 var text = '<div style="word-wrap:break-word;word-break:break-all;">'+ msg.errMsg + '</div>';
                 if (msg.detail) {
                     text = text + '<p style="margin:10px 0 0;display:"><a id="viewErrorMsgDetail" class="expandable" href="javascript:void(0);" ' +
-                        '><span>+</span>' + _T('VIEW_DETAIL') + '</a></p>' +
+                        '><span>+</span>' + '详细信息' + '</a></p>' +
                         '<div style="display:none;max-height:200px;overflow: auto;border: 1px solid #ccc;width: 350px;">' +  msg.detail + '</div>';
                 }
                 cfg = {
-                    title: _T('COMMON_ERROR'),
+                    title: '错误',
                     msg: text,
                     buttons: this.OK,
                     fn: fn,
