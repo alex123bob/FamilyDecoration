@@ -239,7 +239,7 @@ Ext.require('Ext.Ajax', function () {
                 throw 'Ext.JSON decode text run error';
             }
 
-            if (json.errMsg) {
+            if (json.status == 'failing') {
                 if (!silent && showMgs) {
                     Ext.Msg.error(json);
                 }
