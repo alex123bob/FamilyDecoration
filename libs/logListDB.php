@@ -39,7 +39,7 @@
 		global $mysql;
         $res= array();
         $condition = " where isDeleted = 'false' and logListId = '$logListId' ";
-        $orderBy = " order by createTime ";
+        $orderBy = " order by createTime DESC ";
 		$arr = $mysql->DBGetSomeRows("`log_detail`", " * ",$condition,$orderBy);
 		$count = 0;
 		foreach($arr as $key => $val) {
@@ -59,7 +59,7 @@
 		$currentUserLevel = $_SESSION["level"];
 		global $mysql;
         $res= array();
-        $orderBy = " order by createTime ";
+        $orderBy = " order by createTime DESC";
 		//如果是管理员,管理员默认能看到所有人日志
 		//if($currentUserLevel == "001-001" || $currentUserLevel == "001-002"){
 		//	$whereSql = " where isDeleted = 'false' ";
@@ -78,7 +78,7 @@
 	function getLogListYearsByUser($user){
 		global $mysql;
         $res= array();
-        $orderBy = " order by createTime ";
+        $orderBy = " order by createTime DESC ";
 		$whereSql = " where isDeleted = 'false' and userName = '$user' ";
 		$arr = $mysql->DBGetSomeRows("`log_list`", " DISTINCT year(createTime) ",$whereSql ,$orderBy);
 		$count = 0;
@@ -92,7 +92,7 @@
 	function getLogListMonths($year,$isQuarter){
 		global $mysql;
         $res= array();
-        $orderBy = "order by createTime";
+        $orderBy = "order by createTime DESC";
         $monthOfQuarters = array(
 				1=>"1,2,3",2=>"1,2,3",3=>"1,2,3",
 				4=>"4,5,6",5=>"4,5,6",6=>"4,5,6",
@@ -108,7 +108,7 @@
 		}
 		$currentUser = $_SESSION["name"];
 		$currentUserLevel = $_SESSION["level"];
-        $orderBy = " order by createTime ";
+        $orderBy = " order by createTime DESC";
 		//默认只有管理员能看到所有人日志
 		//if($currentUserLevel != "001-001" && $currentUserLevel != "001-002"){
 			$condition = $condition." and userName = '$currentUser' ";
@@ -126,7 +126,7 @@
 		global $mysql;
         $res= array();
 		$condition = " where userName = '$user' and isDeleted = 'false' and year(createTime) = '$year'";
-        $orderBy = " order by createTime ";
+        $orderBy = " order by createTime DESC ";
 		$arr = $mysql->DBGetSomeRows("`log_list`", " DISTINCT month(createTime)  ",$condition,$orderBy);
 		$count = 0;
 		foreach($arr as $key => $val) {
@@ -139,11 +139,11 @@
 	function getLogListByMonth($year,$month){
 		global $mysql;
         $res= array();
-        $orderBy = "order by createTime";
+        $orderBy = "order by createTime DESC";
         $condition = " where isDeleted = 'false' and year(createTime) = '$year' and month(createTime) = '$month' ";
 		$currentUser = $_SESSION["name"];
 		$currentUserLevel = $_SESSION["level"];
-        $orderBy = " order by createTime ";
+        $orderBy = " order by createTime DESC ";
 		//默认只有管理员能看到所有人日志
 		//if($currentUserLevel != "001-001" && $currentUserLevel != "001-002"){
 			$condition = $condition." and userName = '$currentUser' ";
@@ -164,7 +164,7 @@
 		global $mysql;
         $res= array();
         $condition = " where isDeleted = 'false' and year(createTime) = '$year' and month(createTime) = '$month' ";
-        $orderBy = " order by createTime ";
+        $orderBy = " order by createTime DESC ";
 		$condition = $condition." and userName = '$user' ";
 		$arr = $mysql->DBGetSomeRows("`log_list`", " * ",$condition,$orderBy);
 		$count = 0;

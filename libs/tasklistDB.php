@@ -42,7 +42,7 @@
 	function getTaskAssessmentByTaskListId ($taskListId){
 		global $mysql;
 		$res = array();
-		$orderBy = " order by createTime ";
+		$orderBy = " order by createTime DESC ";
 		$currentUser = "-".$_SESSION["name"]."-";
 		$whereSql = " where `isDeleted` = 'false' and `taskListId` = '$taskListId' and `taskExecutor` = '$currentUser' ";
 		$arr = $mysql->DBGetSomeRows("`task_self_assessment`", "*", $whereSql, $orderBy);
@@ -63,7 +63,7 @@
 	function getTaskAssessmentByTaskListIdByUser ($get){
 		global $mysql;
 		$res = array();
-		$orderBy = " order by createTime ";
+		$orderBy = " order by createTime DESC ";
 		$taskExecutor = $get["taskExecutor"];
 		$taskListId = $get["taskListId"];
 		$whereSql = " where `isDeleted` = 'false' and `taskListId` = '$taskListId' and `taskExecutor` = '-$taskExecutor-' ";
@@ -87,7 +87,7 @@
 		$currentUserLevel = $_SESSION["level"];
 		global $mysql;
         $res= array();
-        $orderBy = " order by createTime ";
+        $orderBy = " order by createTime DESC ";
 		//如果是管理员,管理员默认能看到所有人日志
 		//if($currentUserLevel == "001-001" || $currentUserLevel == "001-002"){
 		//	$whereSql = " where isDeleted = 'false' ";
@@ -107,7 +107,7 @@
 	function getTaskListYearsByUser($user){
 		global $mysql;
         $res= array();
-        $orderBy = " order by createTime ";
+        $orderBy = " order by createTime DESC ";
 		$whereSql = " where isDeleted = 'false' and taskExecutor like '%-$user-%' ";
 		$arr = $mysql->DBGetSomeRows("`task_list`", " DISTINCT year(createTime) ",$whereSql ,$orderBy);
 		$count = 0;
@@ -121,11 +121,11 @@
 	function getTaskListMonths($year){
 		global $mysql;
         $res= array();
-        $orderBy = "order by createTime";
+        $orderBy = "order by createTime DESC";
 		$condition = " where isDeleted = 'false' and year(createTime) = '$year' " ;
 		$currentUser = $_SESSION["name"];
 		$currentUserLevel = $_SESSION["level"];
-        $orderBy = " order by createTime ";
+        $orderBy = " order by createTime DESC ";
 		//默认只有管理员能看到所有人日志
 		//if($currentUserLevel != "001-001" && $currentUserLevel != "001-002"){
 			$condition = $condition." and taskExecutor like '%-$currentUser-%' ";
@@ -143,7 +143,7 @@
 		global $mysql;
         $res= array();
 		$condition = " where taskExecutor like '%-$user-%' and isDeleted = 'false' and year(createTime) = '$year'";
-        $orderBy = " order by createTime ";
+        $orderBy = " order by createTime DESC ";
 		$arr = $mysql->DBGetSomeRows("`task_list`", " DISTINCT month(createTime)  ",$condition,$orderBy);
 		$count = 0;
 		foreach($arr as $key => $val) {
@@ -159,7 +159,7 @@
         $condition = " left join `user` u on u.name = REPLACE(t.taskDispatcher,'-','') where t.isDeleted = 'false' and year(t.createTime) = '$year' and month(t.createTime) = '$month' ";
 		$currentUser = $_SESSION["name"];
 		$currentUserLevel = $_SESSION["level"];
-        $orderBy = " order by createTime ";
+        $orderBy = " order by createTime DESC ";
 		//默认只有管理员能看到所有人日志
 		//if($currentUserLevel != "001-001" && $currentUserLevel != "001-002"){
 			$condition = $condition." and taskExecutor like '%-$currentUser-%' ";
