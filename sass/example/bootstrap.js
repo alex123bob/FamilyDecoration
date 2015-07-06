@@ -13,7 +13,6 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.BasicItem": "../../app/controller/basicitem.js",
   "FamilyDecoration.controller.Budget": "../../app/controller/budget.js",
   "FamilyDecoration.controller.Bulletin": "../../app/controller/bulletin.js",
-  "FamilyDecoration.controller.Business": "../../app/controller/business.js",
   "FamilyDecoration.controller.Chart": "../../app/controller/chart.js",
   "FamilyDecoration.controller.Chat": "../../app/controller/chat.js",
   "FamilyDecoration.controller.CheckLog": "../../app/controller/checklog.js",
@@ -23,6 +22,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.Mail": "../../app/controller/mail.js",
   "FamilyDecoration.controller.MainMaterial": "../../app/controller/mainmaterial.js",
   "FamilyDecoration.controller.Msg": "../../app/controller/msg.js",
+  "FamilyDecoration.controller.MyBusiness": "../../app/controller/mybusiness.js",
   "FamilyDecoration.controller.MyLog": "../../app/controller/mylog.js",
   "FamilyDecoration.controller.MyTask": "../../app/controller/mytask.js",
   "FamilyDecoration.controller.Plan": "../../app/controller/plan.js",
@@ -100,11 +100,6 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.budget.Index": "../../app/view/budget/index.js",
   "FamilyDecoration.view.bulletin.EditBulletin": "../../app/view/bulletin/editbulletin.js",
   "FamilyDecoration.view.bulletin.Index": "../../app/view/bulletin/index.js",
-  "FamilyDecoration.view.business.EditClient": "../../app/view/business/editclient.js",
-  "FamilyDecoration.view.business.EditCommunity": "../../app/view/business/editcommunity.js",
-  "FamilyDecoration.view.business.EditInfo": "../../app/view/business/editinfo.js",
-  "FamilyDecoration.view.business.Index": "../../app/view/business/index.js",
-  "FamilyDecoration.view.business.TransferToProject": "../../app/view/business/transfertoproject.js",
   "FamilyDecoration.view.chart.AddCategory": "../../app/view/chart/addcategory.js",
   "FamilyDecoration.view.chart.BatchRemove": "../../app/view/chart/batchremove.js",
   "FamilyDecoration.view.chart.Index": "../../app/view/chart/index.js",
@@ -123,6 +118,11 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": "../../app/view/mainmaterial/editmainmaterial.js",
   "FamilyDecoration.view.mainmaterial.Index": "../../app/view/mainmaterial/index.js",
   "FamilyDecoration.view.msg.Index": "../../app/view/msg/index.js",
+  "FamilyDecoration.view.mybusiness.EditClient": "../../app/view/mybusiness/editclient.js",
+  "FamilyDecoration.view.mybusiness.EditCommunity": "../../app/view/mybusiness/editcommunity.js",
+  "FamilyDecoration.view.mybusiness.EditInfo": "../../app/view/mybusiness/editinfo.js",
+  "FamilyDecoration.view.mybusiness.Index": "../../app/view/mybusiness/index.js",
+  "FamilyDecoration.view.mybusiness.TransferToProject": "../../app/view/mybusiness/transfertoproject.js",
   "FamilyDecoration.view.mylog.AskLeave": "../../app/view/mylog/askleave.js",
   "FamilyDecoration.view.mylog.EditLogDetail": "../../app/view/mylog/editlogdetail.js",
   "FamilyDecoration.view.mylog.Index": "../../app/view/mylog/index.js",
@@ -1001,7 +1001,6 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.BasicItem": [],
   "FamilyDecoration.controller.Budget": [],
   "FamilyDecoration.controller.Bulletin": [],
-  "FamilyDecoration.controller.Business": [],
   "FamilyDecoration.controller.Chart": [],
   "FamilyDecoration.controller.Chat": [],
   "FamilyDecoration.controller.CheckLog": [],
@@ -1011,6 +1010,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.Mail": [],
   "FamilyDecoration.controller.MainMaterial": [],
   "FamilyDecoration.controller.Msg": [],
+  "FamilyDecoration.controller.MyBusiness": [],
   "FamilyDecoration.controller.MyLog": [],
   "FamilyDecoration.controller.MyTask": [],
   "FamilyDecoration.controller.Plan": [],
@@ -1088,11 +1088,6 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.budget.Index": [],
   "FamilyDecoration.view.bulletin.EditBulletin": [],
   "FamilyDecoration.view.bulletin.Index": [],
-  "FamilyDecoration.view.business.EditClient": [],
-  "FamilyDecoration.view.business.EditCommunity": [],
-  "FamilyDecoration.view.business.EditInfo": [],
-  "FamilyDecoration.view.business.Index": [],
-  "FamilyDecoration.view.business.TransferToProject": [],
   "FamilyDecoration.view.chart.AddCategory": [],
   "FamilyDecoration.view.chart.BatchRemove": [],
   "FamilyDecoration.view.chart.Index": [],
@@ -1111,6 +1106,11 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": [],
   "FamilyDecoration.view.mainmaterial.Index": [],
   "FamilyDecoration.view.msg.Index": [],
+  "FamilyDecoration.view.mybusiness.EditClient": [],
+  "FamilyDecoration.view.mybusiness.EditCommunity": [],
+  "FamilyDecoration.view.mybusiness.EditInfo": [],
+  "FamilyDecoration.view.mybusiness.Index": [],
+  "FamilyDecoration.view.mybusiness.TransferToProject": [],
   "FamilyDecoration.view.mylog.AskLeave": [],
   "FamilyDecoration.view.mylog.EditLogDetail": [],
   "FamilyDecoration.view.mylog.Index": [],
@@ -2155,7 +2155,6 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.BasicItem": [],
   "FamilyDecoration.controller.Budget": [],
   "FamilyDecoration.controller.Bulletin": [],
-  "FamilyDecoration.controller.Business": [],
   "FamilyDecoration.controller.Chart": [],
   "FamilyDecoration.controller.Chat": [],
   "FamilyDecoration.controller.CheckLog": [],
@@ -2165,6 +2164,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.Mail": [],
   "FamilyDecoration.controller.MainMaterial": [],
   "FamilyDecoration.controller.Msg": [],
+  "FamilyDecoration.controller.MyBusiness": [],
   "FamilyDecoration.controller.MyLog": [],
   "FamilyDecoration.controller.MyTask": [],
   "FamilyDecoration.controller.Plan": [],
@@ -2262,21 +2262,6 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.bulletin.Index": [
     "widget.bulletin-index"
   ],
-  "FamilyDecoration.view.business.EditClient": [
-    "widget.business-editclient"
-  ],
-  "FamilyDecoration.view.business.EditCommunity": [
-    "widget.business-editcommunity"
-  ],
-  "FamilyDecoration.view.business.EditInfo": [
-    "widget.business-editinfo"
-  ],
-  "FamilyDecoration.view.business.Index": [
-    "widget.business-index"
-  ],
-  "FamilyDecoration.view.business.TransferToProject": [
-    "widget.business-transfertoproject"
-  ],
   "FamilyDecoration.view.chart.AddCategory": [
     "widget.chart-addcategory"
   ],
@@ -2330,6 +2315,21 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.msg.Index": [
     "widget.msg-index"
+  ],
+  "FamilyDecoration.view.mybusiness.EditClient": [
+    "widget.mybusiness-editclient"
+  ],
+  "FamilyDecoration.view.mybusiness.EditCommunity": [
+    "widget.mybusiness-editcommunity"
+  ],
+  "FamilyDecoration.view.mybusiness.EditInfo": [
+    "widget.mybusiness-editinfo"
+  ],
+  "FamilyDecoration.view.mybusiness.Index": [
+    "widget.mybusiness-index"
+  ],
+  "FamilyDecoration.view.mybusiness.TransferToProject": [
+    "widget.mybusiness-transfertoproject"
   ],
   "FamilyDecoration.view.mylog.AskLeave": [
     "widget.mylog-askleave"

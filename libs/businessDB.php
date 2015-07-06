@@ -1,85 +1,41 @@
 <?php
 	
-	function getBusinessByRegion($reginId,$isFrozen,$isTransfered){
+	function getBusinessByRegion($reginId,$isFrozen,$isTransfered,$salesmanName=null){
 		global $mysql;
-		$where = " where regionId = '$reginId' and `isDeleted` = 'false' and `isFrozen` = '$isFrozen' and `isTransfered` = '$isTransfered' ";
-		$arr = $mysql->DBGetSomeRows("`business`", " * ", $where,"");
-		$count = 0;
-		$res = array();
-		foreach($arr as $key => $val) {
-		    $res[$count]["id"] = $val["id"];
-		    $res[$count]["regionId"] = $val["regionId"];
-		    $res[$count]["address"] = $val["address"];
-			$res[$count]["isFrozen"] = $val["isFrozen"];
-			$res[$count]["isTransfered"] = $val["isTransfered"];
-			$res[$count]["createTime"] = $val["createTime"];
-			$res[$count]["updateTime"] = $val["updateTime"];
-			$res[$count]["customer"] = $val["customer"];
-			$res[$count]["salesman"] = $val["salesman"];
-			$res[$count]["source"] = $val["source"];
-			$res[$count]["level"] = $val["level"];
-		    $count ++;
-        }
-		return $res;
+		$where = "where regionId = '?' and `isDeleted` = 'false' and `isFrozen` = '?' and `isTransfered` = '?' ";
+		if($salesmanName != null)
+			$where = $where." and salesmanName = '?' ";
+		return $mysql->DBGetAsMap("select * from business ".$where,$reginId,$isFrozen,$isTransfered,$salesmanName);
 	}
 	function getBusinessByAddress($address){
 		global $mysql;
-		$arr = $mysql->DBGetSomeRows("`business`", " * "," where address = '$address' and `isDeleted` = 'false' " ,"");
-		$count = 0;
-		$res = array();
-		foreach($arr as $key => $val) {
-		    $res[$count]["id"] = $val["id"];
-		    $res[$count]["regionId"] = $val["regionId"];
-		    $res[$count]["address"] = $val["address"];
-			$res[$count]["isFrozen"] = $val["isFrozen"];
-			$res[$count]["isTransfered"] = $val["isTransfered"];
-			$res[$count]["createTime"] = $val["createTime"];
-			$res[$count]["updateTime"] = $val["updateTime"];
-			$res[$count]["customer"] = $val["customer"];
-			$res[$count]["salesman"] = $val["salesman"];
-			$res[$count]["source"] = $val["source"];
-			$res[$count]["level"] = $val["level"];
-		    $count ++;
-        }
-		return $res;
+		return $mysql->DBGetAsMap("select * from business where address = '?' and `isDeleted` = 'false' ",$address);
 	}
 	
 	function getBusinessById($businessId){
 		global $mysql;
-		$arr = $mysql->DBGetSomeRows("`business`", " * "," where id = '$businessId' and `isDeleted` = 'false' " ,"");
-		$count = 0;
-		$res = array();
-		foreach($arr as $key => $val) {
-		    $res[$count]["id"] = $val["id"];
-		    $res[$count]["regionId"] = $val["regionId"];
-		    $res[$count]["address"] = $val["address"];
-			$res[$count]["isFrozen"] = $val["isFrozen"];
-			$res[$count]["isTransfered"] = $val["isTransfered"];
-			$res[$count]["createTime"] = $val["createTime"];
-			$res[$count]["updateTime"] = $val["updateTime"];
-			$res[$count]["customer"] = $val["customer"];
-			$res[$count]["salesman"] = $val["salesman"];
-			$res[$count]["source"] = $val["source"];
-			$res[$count]["level"] = $val["level"];
-		    $count ++;
-        }
-		return $res;	
+		return $mysql->DBGetAsMap("select * from business where id = '?' and `isDeleted` = 'false' ",$businessId);
 	}
 	function addBusiness($post){
-		$address = $post["address"];
-		$regionId = $post["regionId"];
-		$businesss = getBusinessByAddress($address);
+		$businesss = getBusinessByAddress($post["address"]);
 		if(count($businesss) != 0){
 			throw new Exception("business with address:$address already exist!");
 		}
-		$obj = array(
-			"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
-			"regionId"=>$regionId,
+		//必填字段
+		$obj = array("id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
+			"regionId"=>$post["regionId"],
 			"customer"=>$post["customer"],
-			"address"=>$address,
+			"address"=>$post["address"],
 			"salesman"=>$post["salesman"],
+			"salesmanName"=>$post["salesmanName"],
 			"source"=>$post["source"]
 		);
+		//可选字段
+		$fields = array("isFrozen","isTransfered","updateTime","designer","designerName");
+		foreach($fields as $field){
+			if(isset($data[$field]))
+				$obj[$field] = $data[$field];
+		}
 		global $mysql;
 		$mysql->DBInsertAsArray("`business`",$obj);
 		return array('status'=>'successful', 'errMsg' => '','businessId'=> $obj["id"]);
@@ -94,17 +50,14 @@
 	function editBusiness($data){
 		global $mysql;
 		$id = $data["id"];
+		$fields = array("regionId","address","isFrozen","isTransfered","updateTime","customer","salesman","source","salesmanName","designer","designerName");
 		$obj = array();
-		$obj['regionId'] = $data["regionId"];
-		$obj['address'] = $data["address"];
-		$obj['isFrozen'] = $data["isFrozen"];
-		$obj['isTransfered'] = $data["isTransfered"];
-		$obj['updateTime'] = 'now()';
-		$obj['customer'] = $data["customer"];
-		$obj['salesman'] = $data["salesman"];
-		$obj['source'] = $data["source"];
-		$mysql->DBUpdate('business',$obj,"`id`='?'",array($id));
-		return array('status'=>'successful', 'errMsg' => 'edit business ok');
+		foreach($fields as $field){
+			if(isset($data[$field]))
+				$obj[$field] = $data[$field];
+		}
+		$mysql->DBUpdate("business",$obj,"`id`='?'",array($id));
+		return array('status'=>'successful', 'errMsg' => "business #$id edit business ok");
 	}
 	
 	function frozeBusiness($businessId){

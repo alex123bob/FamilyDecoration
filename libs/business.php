@@ -26,7 +26,8 @@
 		case "getBusinessByRegion":
 			$isFrozen = isset($_REQUEST["isFrozen"])? $_REQUEST["isFrozen"] : 'false';
 			$isTransfered = isset($_REQUEST["isTransfered"])? $_REQUEST["isTransfered"] : 'false';
-			$res = getBusinessByRegion($_REQUEST["regionId"],$isFrozen,$isTransfered);
+			$salesmanName = isset($_REQUEST["salesmanName"])? $_REQUEST["salesmanName"] : null;
+			$res = getBusinessByRegion($_REQUEST["regionId"],$isFrozen,$isTransfered,$salesmanName);
 			break;
 		//新增业务
 		case "addBusiness":

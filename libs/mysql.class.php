@@ -177,7 +177,7 @@
 		public function DBGetAsMap($sql){
 			$count = substr_count($sql,"?");
 			$count2 = func_num_args() - 1;
-			if($count != $count2)
+			if($count > $count2)
 				throw new Exception("sql:$sql need $count values but get $count2 !");
 			$i = 0;
 			$index = 0;
@@ -214,7 +214,7 @@
 		public function DBGetAsOneArray($sql){
 			$count = substr_count($sql,"?");
 			$count2 = func_num_args() - 1;
-			if($count != $count2)
+			if($count > $count2)
 				throw new Exception("sql:$sql need $count values but get $count2 !");
 			$i = 0;
 			$index = 0;
