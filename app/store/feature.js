@@ -14,9 +14,36 @@
             },
             {
                 name: "业务列表",
-                cmp: 'business-index',
-                leaf: true,
-                icon: 'resources/img/business.png'
+                expanded: true,
+                cmp: 'business-parent',
+                leaf: false,
+                icon: 'resources/img/business.png',
+                children: [
+                    {
+                        name: '我的业务',
+                        cmp: 'mybusiness-index',
+                        leaf: true,
+                        icon: 'resources/img/mybusiness.png'
+                    },
+                    {
+                        name: '查看业务',
+                        cmp: 'business-checkbusiness',
+                        leaf: true,
+                        icon: 'resources/img/checkbusiness.png'
+                    },
+                    {
+                        name: '签单业务',
+                        cmp: 'signbusiness-index',
+                        leaf: true,
+                        icon: 'resources/img/sign-business.png'
+                    },
+                    {
+                        name: '查看签单业务',
+                        cmp: 'signbusiness-checksignbusiness',
+                        leaf: true,
+                        icon: 'resources/img/check-sign-business.png'
+                    }
+                ]
             },
             {
                 name: "工作日志", 
@@ -230,8 +257,20 @@
             else if (rec.get('cmp') == 'costanalysis-index') {
                 flag = User.isAdmin() ? true : false;
             }
-            else if (rec.get('cmp') == 'business-index') {
+            else if (rec.get('cmp') == 'business-parent') {
                 flag = User.isGeneral() ? false : true;
+            }
+            else if (rec.get('cmp') == 'mybusiness-index') {
+                flag = User.isGeneral() ? false : true;
+            }
+            else if (rec.get('cmp') == 'business-checkbusiness') {
+                flag = User.isAdmin() || User.isBusinessManager() ? true : false;
+            }
+            else if (rec.get('cmp') == 'signbusiness-index') {
+                flag = User.isDesignStaff() || User.isDesignManager() ? true : false;
+            }
+            else if (rec.get('cmp') == 'signbusiness-checksignbusiness') {
+                flag = User.isAdmin() || User.isDesignManager() || User.isProjectManager() ? true : false;
             }
             else {
                 flag = true;
