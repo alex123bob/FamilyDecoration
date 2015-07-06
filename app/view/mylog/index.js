@@ -296,10 +296,12 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 							afterEvent: function (){
 								var logNamePanel = Ext.getCmp('treepanel-logName'),
 									logDetailGrid = Ext.getCmp('gridpanel-logDetail');
+								logNamePanel.getStore().getProxy().extraParams = {};
 								logNamePanel.getStore().load({
 									node: logNamePanel.getRootNode(),
 									params: {
-										action: 'getLogListYears'
+										action: 'getLogListYears',
+										isQuarter: true
 									},
 									callback: function (recs, ope, success){
 										if (success) {
@@ -332,7 +334,8 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 								logNamePanel.getStore().load({
 									node: logNamePanel.getRootNode(),
 									params: {
-										action: 'getLogListYears'
+										action: 'getLogListYears',
+										isQuarter: true
 									},
 									callback: function (recs, ope, success){
 										if (success) {
