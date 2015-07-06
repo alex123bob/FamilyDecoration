@@ -96,6 +96,42 @@ table.pros td{
     background-image: url("../img/multiple-receiver-mail.png");
 }
 
+@-webkit-keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@-moz-keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@-o-keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 @keyframes blink {
     0% {
         opacity: 1;
@@ -107,9 +143,12 @@ table.pros td{
         opacity: 1;
     }
 }
+
 .blinkNode {
-    animation: blink 1s;
-    animation-iteration-count: infinite;
+    -webkit-animation: blink 1s infinite; /* Safari 4+ */
+    -moz-animation:    blink 1s infinite; /* Fx 5+ */
+    -o-animation:      blink 1s infinite; /* Opera 12+ */
+    animation:         blink 1s infinite; /* IE 10+, Fx 29+ */
 }
 
 /*html { 
