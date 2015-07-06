@@ -11,6 +11,7 @@ Ext.define('FamilyDecoration.view.mylog.EditLogDetail', {
 	height: 340,
 	logObj: null,
 	logListId: undefined,
+	afterEvent: Ext.emptyFn,
 
 	initComponent: function (){
 		var me = this;
@@ -61,6 +62,23 @@ Ext.define('FamilyDecoration.view.mylog.EditLogDetail', {
 				hideLabel: true,
 				flex: 1,
 				height: '100%'
+			}, {
+				xtype: 'checkboxfield',
+				itemId: 'checkbox-askLeave',
+				name: 'checkbox-askLeave',
+				boxLabel: '请假',
+				value: me.logObj ? (me.logObj.get('logType') == 1 ? true : false) : false,
+				hideLabel: true,
+				flex: 1,
+				height: '100%',
+				listeners: {
+					render: function (chk){
+						Ext.QuickTips.register({
+							target: chk.getEl(),
+							text: '勾选此项，该日志即为请假类型'
+						});
+					}
+				}
 			}]
 		}];
 
@@ -68,12 +86,16 @@ Ext.define('FamilyDecoration.view.mylog.EditLogDetail', {
 			text: '确定',
 			handler: function (){
 				var logContent = Ext.getCmp('textarea-logContent'),
+				sendOpt = Ext.getCmp('fieldcontainer-sendMsgOption'),
+				sms = sendOpt.getComponent('checkbox-sendSMS'),
+				mail = sendOpt.getComponent('checkbox-sendMail'),
+				leave = sendOpt.getComponent('checkbox-askLeave'),
 				p = {
 					content: logContent.getValue(),
-					logListId: me.logListId
+					logListId: me.logListId,
+					logType: leave.getValue() ? 1: 0
 				},
-				sms = Ext.getCmp('fieldcontainer-sendMsgOption').getComponent('checkbox-sendSMS'),
-				mail = Ext.getCmp('fieldcontainer-sendMsgOption').getComponent('checkbox-sendMail'),
+
 				memberTree = Ext.getCmp('treepanel-memberlistForMyLog'),
 				selMembers = memberTree.getChecked(),
 				grid = Ext.getCmp('gridpanel-logDetail'),
@@ -127,6 +149,9 @@ Ext.define('FamilyDecoration.view.mylog.EditLogDetail', {
 							showMsg('对已经选择的发送对象要进行何种操作，请选择！');
 						}
 						else {
+							me.logObj && Ext.apply(p, {
+								id: me.logObj.getId()
+							});
 							Ext.Ajax.request({
 								method: 'POST',
 								url: 'libs/loglist.php?action=addOrEditLogDetail',
@@ -152,6 +177,7 @@ Ext.define('FamilyDecoration.view.mylog.EditLogDetail', {
 							});
 						}
 					}
+					me.afterEvent();
 				}
 			}
 		}, {

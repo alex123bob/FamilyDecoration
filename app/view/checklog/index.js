@@ -241,7 +241,7 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 					}
 				}],
 				store: Ext.create('Ext.data.Store', {
-					fields: ['content', 'id', 'createTime'],
+					fields: ['content', 'id', 'createTime', 'logType'],
 					autoLoad: false
 				}),
 				columns: [
@@ -249,14 +249,23 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 			        	text: '日志内容', 
 			        	dataIndex: 'content', 
 			        	flex: 1,
-			        	renderer: function (val){
+			        	renderer: function (val, meta, rec){
+			        		if (rec.get('logType') == 1) {
+			        			meta.style = 'background: lightpink;';
+			        		}
 			        		return val.replace(/\n/g, '<br />');
 			        	}
 			        },
 			        {
 			        	text: '创建时间', 
 			        	dataIndex: 'createTime', 
-			        	flex: 1
+			        	flex: 1,
+			        	renderer: function (val, meta, rec){
+			        		if (rec.get('logType') == 1) {
+			        			meta.style = 'background: lightpink;';
+			        		}
+			        		return val;
+			        	}
 			        }
 			    ],
 			    listeners: {

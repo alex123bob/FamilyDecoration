@@ -62,6 +62,31 @@ Ext.define('FamilyDecoration.view.mylog.LogList', {
 	            					icon: 'resources/img/log.ico',
 	            					leaf: true
 	            				});
+	            				Ext.Ajax.request({
+									url: 'libs/loglist.php?action=getLogDetailsByLogListId',
+									params: {
+										logListId: node.getId()
+									},
+									method: 'GET',
+									callback: function (opts, success, res){
+										if (success) {
+											var obj = Ext.decode(res.responseText),
+												flag = false;
+											for (var i = 0; i < obj.length; i++) {
+												if (obj[i].logType == 1) {
+													flag = true;
+													break;
+												}
+											}
+											if (flag) {
+												node.set({
+													icon: 'resources/img/hint.png',
+													iconCls: 'blinkNode'
+												});
+											}
+										}
+									}
+								});
 	            			}
 	            		}
 	            	},

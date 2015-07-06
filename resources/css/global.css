@@ -96,6 +96,22 @@ table.pros td{
     background-image: url("../img/multiple-receiver-mail.png");
 }
 
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.blinkNode {
+    animation: blink 1s;
+    animation-iteration-count: infinite;
+}
+
 /*html { 
   -webkit-filter: grayscale(100%); 
   -moz-filter: grayscale(100%); 

@@ -28,6 +28,7 @@
 		$obj = array(
 			"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
 			"logListId"=>$post["logListId"],
+			"logType"=>$post["logType"],
 			"content"=>$post["content"]
 		);
 		global $mysql;
@@ -43,7 +44,7 @@
 		$arr = $mysql->DBGetSomeRows("`log_detail`", " * ",$condition,$orderBy);
 		$count = 0;
 		foreach($arr as $key => $val) {
-		    $res[$count] = array("id"=>$val["id"],"createTime"=>$val["createTime"],"content"=>$val["content"]);
+		    $res[$count] = array("id"=>$val["id"],"createTime"=>$val["createTime"],"content"=>$val["content"],"logType"=>$val["logType"]);
 		    $count ++;
         }
 		return $res;
@@ -180,7 +181,7 @@
 
 	function editLogDetail($data){
 		global $mysql;
-		$mysql->DBUpdate("log_detail",array('content'=>$data["content"]),"`id` = '?' ",array($data["id"]));
+		$mysql->DBUpdate("log_detail",array('content'=>$data["content"], 'logType'=>$data["logType"]),"`id` = '?' ",array($data["id"]));
 		return array('status'=>'successful', 'errMsg' => 'edit logdetail ok');
 	}
 

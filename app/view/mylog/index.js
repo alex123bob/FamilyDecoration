@@ -292,7 +292,22 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 						var tree = Ext.getCmp('treepanel-logName'),
 							logItem = tree.getSelectionModel().getSelection()[0];
 						var win = Ext.create('FamilyDecoration.view.mylog.EditLogDetail', {
-							logListId: logItem.getId()
+							logListId: logItem.getId(),
+							afterEvent: function (){
+								var logNamePanel = Ext.getCmp('treepanel-logName'),
+									logDetailGrid = Ext.getCmp('gridpanel-logDetail');
+								logNamePanel.getStore().load({
+									node: logNamePanel.getRootNode(),
+									params: {
+										action: 'getLogListYears'
+									},
+									callback: function (recs, ope, success){
+										if (success) {
+											logDetailGrid.getSelectionModel().deselectAll();
+										}
+									}
+								});
+							}
 						});
 						win.show();
 					}
@@ -309,7 +324,24 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 							logDetailItem = grid.getSelectionModel().getSelection()[0];
 						var win = Ext.create('FamilyDecoration.view.mylog.EditLogDetail', {
 							logListId: logItem.getId(),
-							logObj: logDetailItem
+							logObj: logDetailItem,
+							afterEvent: function (){
+								var logNamePanel = Ext.getCmp('treepanel-logName'),
+									logDetailGrid = Ext.getCmp('gridpanel-logDetail');
+								logNamePanel.getStore().getProxy().extraParams = {};
+								logNamePanel.getStore().load({
+									node: logNamePanel.getRootNode(),
+									params: {
+										action: 'getLogListYears'
+									},
+									callback: function (recs, ope, success){
+										if (success) {
+											logDetailGrid.getSelectionModel().deselectAll();
+										}
+									}
+								});
+
+							}
 						});
 						win.show();
 					}
@@ -362,7 +394,7 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 					}
 				}],
 				store: Ext.create('Ext.data.Store', {
-					fields: ['content', 'id', 'createTime'],
+					fields: ['content', 'id', 'createTime', 'logType'],
 					autoLoad: false
 				}),
 				columns: [
@@ -370,14 +402,23 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 			        	text: '日志内容', 
 			        	dataIndex: 'content', 
 			        	flex: 1,
-			        	renderer: function (val){
+			        	renderer: function (val, meta, rec){
+			        		if (rec.get('logType') == 1) {
+			        			meta.style = 'background: lightpink;';
+			        		}
 			        		return val.replace(/\n/g, '<br />');
 			        	}
 			        },
 			        {
 			        	text: '创建日期', 
 			        	dataIndex: 'createTime', 
-			        	flex: 1
+			        	flex: 1,
+			        	renderer: function (val, meta, rec){
+			        		if (rec.get('logType') == 1) {
+			        			meta.style = 'background: lightpink;';
+			        		}
+			        		return val;
+			        	}
 			        }
 			    ],
 			    listeners: {
