@@ -31,7 +31,7 @@
 			"source"=>$post["source"]
 		);
 		//可选字段
-		$fields = array("isFrozen","isTransfered","updateTime","designer","designerName");
+		$fields = array("isFrozen","isTransfered","updateTime","designer","designerName","applyDesigner");
 		foreach($fields as $field){
 			if(isset($data[$field]))
 				$obj[$field] = $data[$field];
@@ -50,7 +50,7 @@
 	function editBusiness($data){
 		global $mysql;
 		$id = $data["id"];
-		$fields = array("regionId","address","isFrozen","isTransfered","updateTime","customer","salesman","source","salesmanName","designer","designerName");
+		$fields = array("regionId","address","isFrozen","isTransfered","updateTime","customer","salesman","source","salesmanName","designer","designerName","applyDesigner");
 		$obj = array();
 		foreach($fields as $field){
 			if(isset($data[$field]))

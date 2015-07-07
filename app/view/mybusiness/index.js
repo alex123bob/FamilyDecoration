@@ -796,16 +796,16 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 													});
 
 													// announce related staffs via email
-													// var content = User.getRealName() + '为业务[' + community.get('name') 
-													// 			+ '-' + address.get('address') + ']申请设计师，等待您确认处理。',
-													// 	subject = '申请设计师通知';
-													// for (i = 0; i < mailObjects.length; i++) {
-													// 	setTimeout((function (index){
-													// 		return function (){
-													// 			sendMail(mailObjects[index].name, mailObjects[index].mail, subject, content);
-													// 		}
-													// 	})(i), 1000 * (i + 1));
-													// }
+													var content = User.getRealName() + '为业务[' + community.get('name') 
+																+ '-' + address.get('address') + ']申请设计师，等待您确认处理。',
+														subject = '申请设计师通知';
+													for (i = 0; i < mailObjects.length; i++) {
+														setTimeout((function (index){
+															return function (){
+																sendMail(mailObjects[index].name, mailObjects[index].mail, subject, content);
+															}
+														})(i), 1000 * (i + 1));
+													}
 													// end of announcement
 												}
 											});

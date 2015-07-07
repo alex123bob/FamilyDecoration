@@ -312,6 +312,8 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 width: '100%',
                 flex: 1,
                 layout: 'vbox',
+                id: 'panel-thisWeekStar',
+                name: 'panel-thisWeekStar',
                 defaultType: 'displayfield',
                 defaults: {
                     width: '100%',

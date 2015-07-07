@@ -75,6 +75,14 @@
 		case "clientRank":
 			$res = clientRank($_REQUEST);
 			break;
+		//申请设计师
+		case "applyfordesigner":
+			$res = editBusiness(array('id'=>$_REQUEST['businessId'],'applyDesigner'=>1));
+			break;
+		//设计师申请完成
+		case "completedesignerapply":
+			$res = editBusiness(array('id'=>$_REQUEST['businessId'],'applyDesigner'=>2));
+			break;
 		default: 
 			throw new Exception("unknown action:".$action);
 	}
