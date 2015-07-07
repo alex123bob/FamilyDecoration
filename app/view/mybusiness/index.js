@@ -10,6 +10,8 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 		type: 'hbox',
 		align: 'stretch'
 	},
+	checkBusiness: false,
+	renderCommunity: Ext.emptyFn,
 
 	initComponent: function (){
 		var me = this;
@@ -96,7 +98,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					text: '小区名称',
 					flex: 1,
 					dataIndex: 'name',
-					renderer: function (val, meta, rec){
+					renderer: me.checkBusiness ? me.renderCommunity : function (val, meta, rec){
 						var arr = rec.get('business'),
 							num = 0,
 							numStr = '',
@@ -118,7 +120,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					}
 				}],
 				store: Ext.create('FamilyDecoration.store.Community', {
-					autoLoad: true
+					autoLoad: me.checkBusiness ? false : true
 				}),
 				refresh: function (){
 					var grid = this,
@@ -628,8 +630,8 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					xtype: 'textfield',
 					name: 'textfield-clientNameOnTop',
 					id: 'textfield-clientNameOnTop',
-					labelWidth: 70,
-					width: 160,
+					labelWidth: 60,
+					width: 140,
 					readOnly: true,
 					fieldLabel: ' 客户姓名'
 				}, {
@@ -652,8 +654,8 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					xtype: 'textfield',
 					name: 'textfield-businessSourceOnTop',
 					id: 'textfield-businessSourceOnTop',
-					labelWidth: 70,
-					width: 180,
+					labelWidth: 60,
+					width: 150,
 					readOnly: true,
 					fieldLabel: '业务来源'
 				}],

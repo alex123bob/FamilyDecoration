@@ -27,7 +27,7 @@
                     },
                     {
                         name: '查看业务',
-                        cmp: 'business-checkbusiness',
+                        cmp: 'checkbusiness-index',
                         leaf: true,
                         icon: 'resources/img/checkbusiness.png'
                     },
