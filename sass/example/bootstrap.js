@@ -15,6 +15,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.Bulletin": "../../app/controller/bulletin.js",
   "FamilyDecoration.controller.Chart": "../../app/controller/chart.js",
   "FamilyDecoration.controller.Chat": "../../app/controller/chat.js",
+  "FamilyDecoration.controller.CheckBusiness": "../../app/controller/checkbusiness.js",
   "FamilyDecoration.controller.CheckLog": "../../app/controller/checklog.js",
   "FamilyDecoration.controller.CostAnalysis": "../../app/controller/costanalysis.js",
   "FamilyDecoration.controller.Leave": "../../app/controller/leave.js",
@@ -105,6 +106,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.chart.Index": "../../app/view/chart/index.js",
   "FamilyDecoration.view.chart.UploadForm": "../../app/view/chart/uploadform.js",
   "FamilyDecoration.view.chat.Index": "../../app/view/chat/index.js",
+  "FamilyDecoration.view.checkbusiness.Index": "../../app/view/checkbusiness/index.js",
   "FamilyDecoration.view.checklog.Index": "../../app/view/checklog/index.js",
   "FamilyDecoration.view.checklog.MemberList": "../../app/view/checklog/memberlist.js",
   "FamilyDecoration.view.checklog.UserLogList": "../../app/view/checklog/userloglist.js",
@@ -1003,6 +1005,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.Bulletin": [],
   "FamilyDecoration.controller.Chart": [],
   "FamilyDecoration.controller.Chat": [],
+  "FamilyDecoration.controller.CheckBusiness": [],
   "FamilyDecoration.controller.CheckLog": [],
   "FamilyDecoration.controller.CostAnalysis": [],
   "FamilyDecoration.controller.Leave": [],
@@ -1093,6 +1096,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.chart.Index": [],
   "FamilyDecoration.view.chart.UploadForm": [],
   "FamilyDecoration.view.chat.Index": [],
+  "FamilyDecoration.view.checkbusiness.Index": [],
   "FamilyDecoration.view.checklog.Index": [],
   "FamilyDecoration.view.checklog.MemberList": [],
   "FamilyDecoration.view.checklog.UserLogList": [],
@@ -2157,6 +2161,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.Bulletin": [],
   "FamilyDecoration.controller.Chart": [],
   "FamilyDecoration.controller.Chat": [],
+  "FamilyDecoration.controller.CheckBusiness": [],
   "FamilyDecoration.controller.CheckLog": [],
   "FamilyDecoration.controller.CostAnalysis": [],
   "FamilyDecoration.controller.Leave": [],
@@ -2276,6 +2281,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.chat.Index": [
     "widget.chat-index"
+  ],
+  "FamilyDecoration.view.checkbusiness.Index": [
+    "widget.checkbusiness-index"
   ],
   "FamilyDecoration.view.checklog.Index": [
     "widget.checklog-index"

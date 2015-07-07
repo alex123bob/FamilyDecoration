@@ -12,6 +12,11 @@
 		return $mysql->DBGetAsMap("select * from business where address = '?' and `isDeleted` = 'false' ",$address);
 	}
 	
+	function getSalesmanlist(){
+		global $mysql;
+		return $mysql->DBGetAsMap("select distinct salesman,salesmanName, count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' group by salesman;");
+	}
+	
 	function getBusinessById($businessId){
 		global $mysql;
 		return $mysql->DBGetAsMap("select * from business where id = '?' and `isDeleted` = 'false' ",$businessId);

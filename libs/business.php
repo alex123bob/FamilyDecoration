@@ -83,6 +83,10 @@
 		case "completedesignerapply":
 			$res = editBusiness(array('id'=>$_REQUEST['businessId'],'applyDesigner'=>2));
 			break;
+		//
+		case "getSalesmanlist":
+			$res = getSalesmanlist();
+			break;
 		default: 
 			throw new Exception("unknown action:".$action);
 	}

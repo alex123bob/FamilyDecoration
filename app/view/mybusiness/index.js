@@ -3,7 +3,8 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 	alias: 'widget.mybusiness-index',
 	requires: ['FamilyDecoration.view.mybusiness.EditCommunity', 'FamilyDecoration.view.mybusiness.EditClient',
 			   'FamilyDecoration.view.mybusiness.TransferToProject', 'FamilyDecoration.view.mybusiness.EditInfo',
-			   'FamilyDecoration.store.Community', 'FamilyDecoration.store.Business', 'FamilyDecoration.store.BusinessDetail'],
+			   'FamilyDecoration.store.Community', 'FamilyDecoration.store.Business', 'FamilyDecoration.store.BusinessDetail',
+			   'FamilyDecoration.store.User'],
 
 	autoScroll: true,
 	layout: {
@@ -11,7 +12,16 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 		align: 'stretch'
 	},
 	checkBusiness: false,
-	renderCommunity: Ext.emptyFn,
+	businessStaff: null,
+	refreshCommunity: function (){
+		var grid = Ext.getCmp('gridpanel-community');
+		if (this.businessStaff) {
+			grid.refresh();
+		}
+		else {
+			grid.getStore().removeAll();
+		}
+	},
 
 	initComponent: function (){
 		var me = this;
@@ -98,16 +108,17 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					text: '小区名称',
 					flex: 1,
 					dataIndex: 'name',
-					renderer: me.checkBusiness ? me.renderCommunity : function (val, meta, rec){
+					renderer: function (val, meta, rec){
 						var arr = rec.get('business'),
 							num = 0,
 							numStr = '',
-							applyChk = [];
+							applyChk = [],
+							userName = me.checkBusiness ? me.businessStaff.get('salesmanName') : User.getName();
 						for (var i = 0; i < arr.length; i++) {
-							if (arr[i]['salesmanName'] == User.getName()) {
+							if (arr[i]['salesmanName'] == userName) {
 								num++;
 							}
-							if (arr[i]['applyDesigner'] == 1) {
+							if (arr[i]['applyDesigner'] == 1 && arr[i]['salesmanName'] == userName) {
 								applyChk.push(arr[i]);
 							}
 						}
@@ -131,7 +142,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						callback: function (recs, ope, success){
 							if (success) {
 								grid.getSelectionModel().deselectAll();
-								if (rec) {
+								if (rec && !me.checkBusiness) {
 									var index = st.indexOf(rec);
 									grid.getSelectionModel().select(index);
 								}
@@ -273,7 +284,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						st.reload({
 							params: {
 								regionId: community.getId(),
-								salesmanName: User.getName()
+								salesmanName: me.checkBusiness ? me.businessStaff.get('salesmanName') : User.getName()
 							},
 							callback: function (recs, ope, success){
 								if (success) {
@@ -449,10 +460,12 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						var rec = sels[0],
 							grid = Ext.getCmp('gridpanel-clientInfo'),
 							detailGrid = Ext.getCmp('gridpanel-businessInfo'),
-							transferBtn = Ext.getCmp('button-transferToProject');
+							transferBtn = Ext.getCmp('button-transferToProject'),
+							distributeDesignerBtn = Ext.getCmp('button-distributeDesigner');
 						grid.initBtn(rec);
 						detailGrid.refresh(rec);
 						transferBtn.setDisabled(!rec);
+						distributeDesignerBtn.setDisabled(!rec);
 					}
 				}
 			}, {
@@ -520,7 +533,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						st.reload({
 							params: {
 								regionId: community.getId(),
-								salesmanName: User.getName(),
+								salesmanName: me.checkBusiness ? me.businessStaff.get('salesmanName') : User.getName(),
 								isFrozen: true
 							},
 							callback: function (recs, ope, success){
@@ -734,7 +747,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					name: 'button-transferToProject',
 					icon: './resources/img/transfer.png',
 					disabled: true,
-					hidden: true,
+					hidden: me.checkBusiness ? false : true,
 					handler: function (){
 						var communityGrid = Ext.getCmp('gridpanel-community'),
 							clientGrid = Ext.getCmp('gridpanel-clientInfo'),
@@ -751,6 +764,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					id: 'button-applyForDesigner',
 					name: 'button-applyForDesigner',
 					disabled: true,
+					hidden: me.checkBusiness ? true : false,
 					icon: './resources/img/apply-designer.png',
 					handler: function (){
 						Ext.Ajax.request({
@@ -823,7 +837,99 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 							}
 						});
 					}
+				}, {
+					text: '分配设计师',
+					id: 'button-distributeDesigner',
+					name: 'button-distributeDesigner',
+					disabled: true,
+					hidden: me.checkBusiness ? false : true,
+					icon: './resources/img/add4.png',
+					handler: function (){
+						var communityGrid = Ext.getCmp('gridpanel-community'),
+							clientGrid = Ext.getCmp('gridpanel-clientInfo'),
+							infoGrid = Ext.getCmp('gridpanel-businessInfo'),
+							community = communityGrid.getSelectionModel().getSelection()[0],
+							client = clientGrid.getSelectionModel().getSelection()[0];
+						var win = Ext.create('Ext.window.Window', {
+							title: '[' + community.get('name') + ' ' + client.get('address') + ']分配设计师',
+							layout: 'fit',
+							modal: true,
+							width: 300,
+							height: 220,
+							items: [{
+								xtype: 'gridpanel',
+								id: 'gridpanel-designerList',
+								name: 'gridpanel-designerList',
+								columns: [{
+									text: '姓名',
+									dataIndex: 'realname',
+									flex: 1
+								}, {
+									text: '部门',
+									dataIndex: 'level',
+									flex: 1,
+									renderer: function (val) {
+										return User.renderDepartment(val);
+									}
+								}, {
+									text: '职位',
+									dataIndex: 'level',
+									flex: 1,
+									renderer: function (val) {
+										return User.renderRole(val);
+									}
+								}],
+								store: Ext.create('FamilyDecoration.store.User', {
+									autoLoad: true,
+									filters: [
+										function (item){
+											if (/^002-\d{3}$/i.test(item.get('level'))) {
+												return true;
+											}
+										}
+									]
+								}),
+								autoScroll: true
+							}],
+							buttons: [{
+								text: '确定',
+								handler: function (){
+									var grid = Ext.getCmp('gridpanel-designerList'),
+										rec = grid.getSelectionModel().getSelection()[0];
+									if (rec) {
+										Ext.Ajax.request({
+											url: './business.php?action=distributeDesigner',
+											params: {
+												businessId: client.getId(),
+												designerName: rec.get('name')
+											},
+											method: 'POST',
+											callback: function (opts, success, res){
+												if (success) {
+													var obj = Ext.decode(res.responseText);
+													if (obj.status == 'successful') {
+														showMsg('分配成功！');
+														win.close();
+														infoGrid.refresh(client);
+													}
+												}
+											}
+										})
+									}
+									else {
+										showMsg('请选择设计师！');
+									}
+								}
+							}, {
+								text: '取消',
+								handler: function (){
+									win.close();
+								}
+							}]
+						});
 
+						win.show();
+					}
 				}],
 			    listeners: {
 			    	selectionchange: function (view, sels){
