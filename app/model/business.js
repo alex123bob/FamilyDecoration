@@ -10,7 +10,8 @@ Ext.define('FamilyDecoration.model.Business', {
 		{name: 'designer', type: 'string'},  // 设计师真实姓名
 		{name: 'designerName', type: 'string'}, // 设计师账号名
 		{name: 'source', type: 'string'},
-		{name: 'level', type: 'string'}
+		{name: 'level', type: 'string'},
+		{name: 'applyDesigner', type: 'string'} //  0初始化，1申请设计师，2设计师申请到了
 	],
 	idProperty: 'id'
 });

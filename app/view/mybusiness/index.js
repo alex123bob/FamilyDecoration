@@ -99,14 +99,21 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					renderer: function (val, meta, rec){
 						var arr = rec.get('business'),
 							num = 0,
-							numStr = '';
+							numStr = '',
+							applyChk = [];
 						for (var i = 0; i < arr.length; i++) {
 							if (arr[i]['salesmanName'] == User.getName()) {
 								num++;
 							}
+							if (arr[i]['applyDesigner'] == 1) {
+								applyChk.push(arr[i]);
+							}
 						}
 						numStr = '<font style="color: ' + (num > 0 ? 'blue; text-shadow: #8F7 ' : 'white; text-shadow: black ') 
 								+ '0.1em 0.1em 0.2em;"><strong>[' + num + ']</strong></font>';
+						if (applyChk.length > 0) {
+							meta.style = 'background: #ffff00;';
+						}
 						return val + numStr;
 					}
 				}],
@@ -226,6 +233,9 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						else {
 
 						}
+						if (rec.get('applyDesigner') == 1) {
+							meta.style += 'color: #ffff00;';
+						}
 						if (level != '') {
 							val = val + '<strong>[' + level + ']</strong>';
 						}
@@ -239,12 +249,19 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					var editBtn = Ext.getCmp('button-editClient'),
 						delBtn = Ext.getCmp('button-delClient'),
 						rankBtn = Ext.getCmp('button-categorization'),
-						gearBtn = Ext.getCmp('tool-frozeBusiness');
+						gearBtn = Ext.getCmp('tool-frozeBusiness'),
+						applyDesignerBtn = Ext.getCmp('button-applyForDesigner');
 
 					editBtn.setDisabled(!rec);
 					delBtn.setDisabled(!rec);
 					gearBtn.setDisabled(!rec);
 					rankBtn.setDisabled(!rec);
+					if (rec && rec.get('applyDesigner') == 0) {
+						applyDesignerBtn.enable();
+					}
+					else {
+						applyDesignerBtn.disable();
+					}
 				},
 				refresh: function (community){
 					if (community) {
@@ -731,6 +748,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					text: '申请设计师',
 					id: 'button-applyForDesigner',
 					name: 'button-applyForDesigner',
+					disabled: true,
 					icon: './resources/img/apply-designer.png',
 					handler: function (){
 						Ext.Ajax.request({
@@ -742,6 +760,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 										mailObjects = [],
 										communityGrid = Ext.getCmp('gridpanel-community'),
 										addressGrid = Ext.getCmp('gridpanel-clientInfo'),
+										frozenAddressGrid = Ext.getCmp('gridpanel-frozenBusiness'),
 										community = communityGrid.getSelectionModel().getSelection()[0],
 										address = addressGrid.getSelectionModel().getSelection()[0];
 									for (var i = 0; i < userArr.length; i++) {
@@ -767,6 +786,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 																var obj = Ext.decode(res.responseText);
 																if (obj.status == 'successful') {
 																	Ext.Msg.info('申请成功！');
+																	communityGrid.refresh();
 																}
 																else {
 																	showMsg(obj.errMsg);
@@ -776,12 +796,16 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 													});
 
 													// announce related staffs via email
-													var content = User.getRealName() + '为业务[' + community.get('name') 
-																+ '-' + address.get('address') + ']申请设计师，等待您确认处理。',
-														subject = '申请设计师通知';
-													for (i = 0; i < mailObjects.length; i++) {
-														sendMail(mailObjects[i].name, mailObjects[i].mail, subject, content);
-													}
+													// var content = User.getRealName() + '为业务[' + community.get('name') 
+													// 			+ '-' + address.get('address') + ']申请设计师，等待您确认处理。',
+													// 	subject = '申请设计师通知';
+													// for (i = 0; i < mailObjects.length; i++) {
+													// 	setTimeout((function (index){
+													// 		return function (){
+													// 			sendMail(mailObjects[index].name, mailObjects[index].mail, subject, content);
+													// 		}
+													// 	})(i), 1000 * (i + 1));
+													// }
 													// end of announcement
 												}
 											});
