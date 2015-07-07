@@ -727,6 +727,77 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						});
 						win.show();
 					}
+				}, {
+					text: '申请设计师',
+					id: 'button-applyForDesigner',
+					name: 'button-applyForDesigner',
+					icon: './resources/img/apply-designer.png',
+					handler: function (){
+						Ext.Ajax.request({
+							url: './libs/user.php?action=view',
+							method: 'GET',
+							callback: function (opts, success, res){
+								if (success) {
+									var userArr = Ext.decode(res.responseText),
+										mailObjects = [],
+										communityGrid = Ext.getCmp('gridpanel-community'),
+										addressGrid = Ext.getCmp('gridpanel-clientInfo'),
+										community = communityGrid.getSelectionModel().getSelection()[0],
+										address = addressGrid.getSelectionModel().getSelection()[0];
+									for (var i = 0; i < userArr.length; i++) {
+										var level = userArr[i].level;
+										if (/^001-\d{3}$/i.test(level) || '004-001' == level 
+											|| '002-001' == level) {
+											mailObjects.push(userArr[i]);
+										}
+									}
+
+									if (community && address) {
+										if (mailObjects.length > 0) {
+											Ext.Msg.confirm('设计师申请确认', '确定要为此业务申请设计师吗？', function (btnId){
+												if (btnId == 'yes') {
+													Ext.Ajax.request({
+														url: './libs/business.php?action=applyfordesigner',
+														method: 'POST',
+														params: {
+															businessId: address.getId()
+														},
+														callback: function (opts, success, res){
+															if (success) {
+																var obj = Ext.decode(res.responseText);
+																if (obj.status == 'successful') {
+																	Ext.Msg.info('申请成功！');
+																}
+																else {
+																	showMsg(obj.errMsg);
+																}
+															}
+														}
+													});
+
+													// announce related staffs via email
+													var content = User.getRealName() + '为业务[' + community.get('name') 
+																+ '-' + address.get('address') + ']申请设计师，等待您确认处理。',
+														subject = '申请设计师通知';
+													for (i = 0; i < mailObjects.length; i++) {
+														sendMail(mailObjects[i].name, mailObjects[i].mail, subject, content);
+													}
+													// end of announcement
+												}
+											});
+										}
+										else {
+											showMsg('没有通知用户！');
+										}
+									}
+									else {
+										showMsg('请选择需要申请设计师的业务！');
+									}
+								}
+							}
+						});
+					}
+
 				}],
 			    listeners: {
 			    	selectionchange: function (view, sels){

@@ -63,7 +63,8 @@ Ext.define('FamilyDecoration.view.mybusiness.EditClient', {
 						items: [{
 							xtype: 'checklog-memberlist',
 							id: 'memberlist-salesmanList',
-							name: 'memberlist-salesmanList'
+							name: 'memberlist-salesmanList',
+							fullList: true
 						}],
 						buttons: [{
 							text: '确定',
@@ -96,7 +97,7 @@ Ext.define('FamilyDecoration.view.mybusiness.EditClient', {
 				hideLabel: true,
 				name: 'hiddenfield-businessStaffName',
 				id: 'hiddenfield-businessStaffName',
-				value: me.client ? me.client.get('salemanName') : ''
+				value: me.client ? me.client.get('salesmanName') : ''
 			}]
 		}, {
 			id: 'textfield-businessSource',
