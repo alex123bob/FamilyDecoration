@@ -40,6 +40,7 @@
     ?>
     <script type="text/javascript">
         var DEBUG = <?php echo $isLocal ?> ? true : false;
+        var __DEBUG__ = false; // global debug variable, false open debug, true close debug
     </script>
 </head>
 <body>

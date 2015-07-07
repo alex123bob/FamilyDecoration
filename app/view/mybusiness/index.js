@@ -58,6 +58,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					id: 'button-delCommunity',
 					name: 'button-delCommunity',
 					icon: './resources/img/delete5.png',
+					hidden: User.isAdmin() ? false : true,
 					disabled: true,
 					handler: function (){
 						Ext.Msg.warning('确定要删除当前小区吗？', function (id){
@@ -97,13 +98,16 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					dataIndex: 'name',
 					renderer: function (val, meta, rec){
 						var arr = rec.get('business'),
-							num = arr.length;
-						if (num > 0) {
-							return val + '<font style="color: blue; text-shadow: #8F7 0.1em 0.1em 0.2em;"><strong>[' + num + ']</strong></font>';
+							num = 0,
+							numStr = '';
+						for (var i = 0; i < arr.length; i++) {
+							if (arr[i]['salesmanName'] == User.getName()) {
+								num++;
+							}
 						}
-						else {
-							return val + '<font style="color: white; text-shadow: black 0.1em 0.1em 0.2em;"><strong>[' + num + ']</strong></font>';
-						}
+						numStr = '<font style="color: ' + (num > 0 ? 'blue; text-shadow: #8F7 ' : 'white; text-shadow: black ') 
+								+ '0.1em 0.1em 0.2em;"><strong>[' + num + ']</strong></font>';
+						return val + numStr;
 					}
 				}],
 				store: Ext.create('FamilyDecoration.store.Community', {
@@ -249,7 +253,8 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 							rec = grid.getSelectionModel().getSelection()[0];
 						st.reload({
 							params: {
-								regionId: community.getId()
+								regionId: community.getId(),
+								salesmanName: User.getName()
 							},
 							callback: function (recs, ope, success){
 								if (success) {
@@ -496,6 +501,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						st.reload({
 							params: {
 								regionId: community.getId(),
+								salesmanName: User.getName(),
 								isFrozen: true
 							},
 							callback: function (recs, ope, success){
@@ -555,7 +561,8 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 				refresh: function (client){
 					var clientName = Ext.getCmp('textfield-clientNameOnTop'),
 						businessStaff = Ext.getCmp('textfield-businessStaffOnTop'),
-						businessSource = Ext.getCmp('textfield-businessSourceOnTop');
+						businessSource = Ext.getCmp('textfield-businessSourceOnTop'),
+						businessDesigner = Ext.getCmp('textfield-businessDesignerOnTop');
 					if (client) {
 						var grid = this,
 							st = grid.getStore(),
@@ -577,12 +584,14 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						clientName.setValue(client.get('customer'));
 						businessStaff.setValue(client.get('salesman'));
 						businessSource.setValue(client.get('source'));
+						businessDesigner.setValue(client.get('designer'));
 					}
 					else {
 						this.getStore().removeAll();
 						clientName.setValue('');
 						businessStaff.setValue('');
 						businessSource.setValue('');
+						businessDesigner.setValue('');
 					}
 				},
 				columns: [
@@ -614,6 +623,14 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					width: 140,
 					readOnly: true,
 					fieldLabel: '业务员'
+				}, {
+					xtype: 'textfield',
+					name: 'textfield-businessDesignerOnTop',
+					id: 'textfield-businessDesignerOnTop',
+					labelWidth: 60,
+					width: 140,
+					readOnly: true,
+					fieldLabel: '设计师'
 				}, {
 					xtype: 'textfield',
 					name: 'textfield-businessSourceOnTop',
@@ -698,6 +715,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					name: 'button-transferToProject',
 					icon: './resources/img/transfer.png',
 					disabled: true,
+					hidden: true,
 					handler: function (){
 						var communityGrid = Ext.getCmp('gridpanel-community'),
 							clientGrid = Ext.getCmp('gridpanel-clientInfo'),
@@ -709,6 +727,77 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						});
 						win.show();
 					}
+				}, {
+					text: '申请设计师',
+					id: 'button-applyForDesigner',
+					name: 'button-applyForDesigner',
+					icon: './resources/img/apply-designer.png',
+					handler: function (){
+						Ext.Ajax.request({
+							url: './libs/user.php?action=view',
+							method: 'GET',
+							callback: function (opts, success, res){
+								if (success) {
+									var userArr = Ext.decode(res.responseText),
+										mailObjects = [],
+										communityGrid = Ext.getCmp('gridpanel-community'),
+										addressGrid = Ext.getCmp('gridpanel-clientInfo'),
+										community = communityGrid.getSelectionModel().getSelection()[0],
+										address = addressGrid.getSelectionModel().getSelection()[0];
+									for (var i = 0; i < userArr.length; i++) {
+										var level = userArr[i].level;
+										if (/^001-\d{3}$/i.test(level) || '004-001' == level 
+											|| '002-001' == level) {
+											mailObjects.push(userArr[i]);
+										}
+									}
+
+									if (community && address) {
+										if (mailObjects.length > 0) {
+											Ext.Msg.confirm('设计师申请确认', '确定要为此业务申请设计师吗？', function (btnId){
+												if (btnId == 'yes') {
+													Ext.Ajax.request({
+														url: './libs/business.php?action=applyfordesigner',
+														method: 'POST',
+														params: {
+															businessId: address.getId()
+														},
+														callback: function (opts, success, res){
+															if (success) {
+																var obj = Ext.decode(res.responseText);
+																if (obj.status == 'successful') {
+																	Ext.Msg.info('申请成功！');
+																}
+																else {
+																	showMsg(obj.errMsg);
+																}
+															}
+														}
+													});
+
+													// announce related staffs via email
+													var content = User.getRealName() + '为业务[' + community.get('name') 
+																+ '-' + address.get('address') + ']申请设计师，等待您确认处理。',
+														subject = '申请设计师通知';
+													for (i = 0; i < mailObjects.length; i++) {
+														sendMail(mailObjects[i].name, mailObjects[i].mail, subject, content);
+													}
+													// end of announcement
+												}
+											});
+										}
+										else {
+											showMsg('没有通知用户！');
+										}
+									}
+									else {
+										showMsg('请选择需要申请设计师的业务！');
+									}
+								}
+							}
+						});
+					}
+
 				}],
 			    listeners: {
 			    	selectionchange: function (view, sels){

@@ -151,6 +151,10 @@ table.pros td{
     animation:         blink 1s infinite; /* IE 10+, Fx 29+ */
 }
 
+.displayFieldAlignTop {
+  vertical-align: middle;
+}
+
 /*html { 
   -webkit-filter: grayscale(100%); 
   -moz-filter: grayscale(100%); 

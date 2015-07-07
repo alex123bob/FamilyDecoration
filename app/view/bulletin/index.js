@@ -310,11 +310,43 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
             items: [{
                 title: '本周之星',
                 width: '100%',
-                flex: 1
+                flex: 1,
+                layout: 'vbox',
+                defaultType: 'displayfield',
+                defaults: {
+                    width: '100%',
+                    flex: 1
+                },
+                items: [{
+                    fieldLabel: '业务之星',
+                    value: 'test'
+                }, {
+                    fieldLabel: '签单之星',
+                    value: 'test'
+                }, {
+                    fieldLabel: '项目之星',
+                    value: 'test'
+                }]
             }, {
                 title: '本周之坑',
                 width: '100%',
-                flex: 1
+                flex: 1,
+                layout: 'vbox',
+                defaultType: 'displayfield',
+                defaults: {
+                    width: '100%',
+                    flex: 1
+                },
+                items: [{
+                    fieldLabel: '业务之坑',
+                    value: 'test'
+                }, {
+                    fieldLabel: '签单之坑',
+                    value: 'test'
+                }, {
+                    fieldLabel: '项目之坑',
+                    value: 'test'
+                }]
             }]
         }];
 
