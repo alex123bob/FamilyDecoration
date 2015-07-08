@@ -28,7 +28,8 @@ Ext.define('FamilyDecoration.Application', {
         'LeaveApproval',
         'Msg',
         'Mail',
-        'CheckBusiness'
+        'CheckBusiness',
+        'SignBusiness'
     ],
 
     stores: [

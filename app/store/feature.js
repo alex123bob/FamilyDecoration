@@ -263,7 +263,7 @@
             else if (rec.get('cmp') == 'mybusiness-index') {
                 flag = User.isGeneral() ? false : true;
             }
-            else if (rec.get('cmp') == 'business-checkbusiness') {
+            else if (rec.get('cmp') == 'checkbusiness-index') {
                 flag = User.isAdmin() || User.isBusinessManager() ? true : false;
             }
             else if (rec.get('cmp') == 'signbusiness-index') {
