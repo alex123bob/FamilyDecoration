@@ -89,9 +89,25 @@
 		case "completedesignerapply":
 			$res = editBusiness(array('id'=>$_REQUEST['businessId'],'applyDesigner'=>2));
 			break;
-		//
+		//分配设计师
+		case "distributeDesigner":
+			$res = editBusiness(array( 'id'=>$_REQUEST['businessId'],'designer'=>$_REQUEST['designer'],'designerName'=>$_REQUEST['designerName'],'applyDesigner'=>2));
+			break;
+		//获取设计师列表
+		case "getDesignerlist":
+			$res = getDesignerlist();
+			break;
+		//获取业务员列表
 		case "getSalesmanlist":
 			$res = getSalesmanlist();
+			break;
+		//申请将业务转为工程
+		case "applyprojecttransference":
+			$res = editBusiness(array( 'id'=>$_REQUEST['businessId'],'applyProjectTransference'=>1));
+			break;
+		//申请业务预算
+		case "applyforbudget":
+			$res = editBusiness(array( 'id'=>$_REQUEST['businessId'],'applyBudget'=>1));
 			break;
 		default: 
 			throw new Exception("unknown action:".$action);

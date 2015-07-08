@@ -898,10 +898,11 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 										rec = grid.getSelectionModel().getSelection()[0];
 									if (rec) {
 										Ext.Ajax.request({
-											url: './business.php?action=distributeDesigner',
+											url: './libs/business.php?action=distributeDesigner',
 											params: {
 												businessId: client.getId(),
-												designerName: rec.get('name')
+												designerName: rec.get('name'),
+												designer: rec.get('realname')
 											},
 											method: 'POST',
 											callback: function (opts, success, res){
@@ -910,7 +911,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 													if (obj.status == 'successful') {
 														showMsg('分配成功！');
 														win.close();
-														infoGrid.refresh(client);
+														clientGrid.refresh(community);
 													}
 												}
 											}

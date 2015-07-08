@@ -1,7 +1,7 @@
 Ext.define('FamilyDecoration.view.checksignbusiness.Index', {
 	extend: 'Ext.container.Container',
 	alias: 'widget.checksignbusiness-index',
-	requires: ['FamilyDecoration.view.signbusiness.Index'],
+	requires: ['FamilyDecoration.view.signbusiness.Index', 'FamilyDecoration.view.checksignbusiness.TransferToProject'],
 
 	layout: {
 		type: 'hbox',
@@ -17,7 +17,7 @@ Ext.define('FamilyDecoration.view.checksignbusiness.Index', {
 			height: '100%',
 			id: 'gridpanel-designStaff',
 			name: 'gridpanel-designStaff',
-			flex: 1,
+			flex: 2,
 			columns: [{
 				text: '姓名',
 				dataIndex: 'designer',

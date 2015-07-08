@@ -113,6 +113,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.checklog.MemberList": "app/view/checklog/memberlist.js",
   "FamilyDecoration.view.checklog.UserLogList": "app/view/checklog/userloglist.js",
   "FamilyDecoration.view.checksignbusiness.Index": "app/view/checksignbusiness/index.js",
+  "FamilyDecoration.view.checksignbusiness.TransferToProject": "app/view/checksignbusiness/transfertoproject.js",
   "FamilyDecoration.view.costanalysis.CostAnalysis": "app/view/costanalysis/costanalysis.js",
   "FamilyDecoration.view.costanalysis.Index": "app/view/costanalysis/index.js",
   "FamilyDecoration.view.costanalysis.TotalCost": "app/view/costanalysis/totalcost.js",
@@ -1108,6 +1109,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.checklog.MemberList": [],
   "FamilyDecoration.view.checklog.UserLogList": [],
   "FamilyDecoration.view.checksignbusiness.Index": [],
+  "FamilyDecoration.view.checksignbusiness.TransferToProject": [],
   "FamilyDecoration.view.costanalysis.CostAnalysis": [],
   "FamilyDecoration.view.costanalysis.Index": [],
   "FamilyDecoration.view.costanalysis.TotalCost": [],
@@ -2308,6 +2310,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.checksignbusiness.Index": [
     "widget.checksignbusiness-index"
+  ],
+  "FamilyDecoration.view.checksignbusiness.TransferToProject": [
+    "widget.checksignbusiness-transfertoproject"
   ],
   "FamilyDecoration.view.costanalysis.CostAnalysis": [
     "widget.costanalysis-costanalysis"

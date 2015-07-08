@@ -10,7 +10,7 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 	designStaff: null,
 	refreshDetailedAddress: function (){
 		var grid = Ext.getCmp('gridpanel-detailedAddressForSignBusiness');
-		if (this.businessStaff) {
+		if (this.designStaff) {
 			grid.refresh();
 		}
 		else {
@@ -65,14 +65,21 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 			}),
 			refresh: function (){
 				var grid = this;
-				grid.getStore().reload();
+				grid.getStore().reload({
+					params: {
+						action: 'getBusinessByDesigner',
+						designerName: me.checkSignBusiness ? (me.designStaff ? me.designStaff.get('designerName') : '') : User.getName()
+					}
+				});
 			},
 			initBtn: function (address){
-				var transferToProjectBtn = Ext.getCmp('button-applyForTransferenceToProject'),
+				var applyTransferBtn = Ext.getCmp('button-applyForTransferenceToProject'),
+					transferProjectBtn = Ext.getCmp('button-transferToProjectForSignBusiness'),
 					applyBudgetBtn = Ext.getCmp('button-applyForBudget'),
 					checkBudgetBtn = Ext.getCmp('button-checkBudgetForSignBusiness');
 
-				transferToProjectBtn.setDisabled(!address);
+				applyTransferBtn.setDisabled(!address);
+				transferProjectBtn.setDisabled(!address);
 				applyBudgetBtn.setDisabled(!address);
 				checkBudgetBtn.setDisabled(!address);
 			},
@@ -395,7 +402,7 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 												// announce related staffs via email
 												var content = User.getRealName() + '为业务[' + detailedAddress.get('regionName') 
 															+ '-' + detailedAddress.get('address') + ']申请预算，等待您确认处理。',
-													subject = '申请转为工程通知';
+													subject = '申请预算通知';
 												for (i = 0; i < mailObjects.length; i++) {
 													setTimeout((function (index){
 														return function (){
@@ -435,7 +442,20 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 				hidden: me.checkSignBusiness ? false : true,
 				icon: './resources/img/switch1.png',
 				handler: function (){
+					var addressGrid = Ext.getCmp('gridpanel-detailedAddressForSignBusiness'),
+						rec = addressGrid.getSelectionModel().getSelection()[0];
 
+					if (rec) {
+						var win = Ext.create('FamilyDecoration.view.checksignbusiness.TransferToProject', {
+							client: rec,
+							clientGrid: addressGrid
+						});
+
+						win.show();
+					}
+					else {
+						showMsg('请选择具体业务！')
+					}
 				}
 			}],
 		    listeners: {

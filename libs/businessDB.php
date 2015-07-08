@@ -13,9 +13,12 @@
 	}
 	function getBusinessByDesigner($post){
 		global $mysql;
-		return $mysql->DBGetAsMap("select `b`.*, `r`.`name` from `business` `b` left join `region` `r` on `b`.`regionId` = `r`.`id` where  `b`.`designerName` = '?' and `b`.`isDeleted` = 'false' and `b`.`isFrozen` = 'false' ",$post["designerName"]);
+		return $mysql->DBGetAsMap("select `b`.*, `r`.`name` from `business` `b` left join `region` `r` on `b`.`regionId` = `r`.`id` where  `b`.`designerName` = '?' and `b`.`isDeleted` = 'false' and `b`.`isFrozen` = 'false' and `b`.`isTransfered` = 'false' ",$post["designerName"]);
 	}
-	
+	function getDesignerlist(){
+		global $mysql;
+		return $mysql->DBGetAsMap("select distinct designer,designerName, count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and applyDesigner = 2 group by designer;");
+	}
 	function getSalesmanlist(){
 		global $mysql;
 		return $mysql->DBGetAsMap("select distinct salesman,salesmanName, count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' group by salesman;");
@@ -65,7 +68,7 @@
 	function editBusiness($data){
 		global $mysql;
 		$id = $data["id"];
-		$fields = array("regionId","address","isFrozen","isTransfered","updateTime","customer","salesman","source","salesmanName","designer","designerName","applyDesigner");
+		$fields = array("regionId","address","isFrozen","isTransfered","updateTime","customer","salesman","source","salesmanName","designer","designerName","applyDesigner","applyProjectTransference","applyBudget");
 		$obj = array();
 		foreach($fields as $field){
 			if(isset($data[$field]))
@@ -101,7 +104,7 @@
 					);
 		include_once "projectDB.php";
 		$pro = addProject($pro);
-		$mysql->DBUpdate('business',array('isTransfered'=>'true','updateTime'=>'now()'),"`id`='?'",array($businessId));
+		$mysql->DBUpdate('business',array('isTransfered'=>'true','updateTime'=>'now()','applyBudget'=>2),"`id`='?'",array($businessId));
 		return array('status'=>'successful', 'errMsg' => '','projectId'=>$pro['projectId']);
 	}
 
