@@ -11,6 +11,10 @@
 		global $mysql;
 		return $mysql->DBGetAsMap("select * from business where address = '?' and `isDeleted` = 'false' ",$address);
 	}
+	function getBusinessByDesigner($post){
+		global $mysql;
+		return $mysql->DBGetAsMap("select `b`.*, `r`.`name` from `business` `b` left join `region` `r` on `b`.`regionId` = `r`.`id` where  `b`.`designerName` = '?' and `b`.`isDeleted` = 'false' and `b`.`isFrozen` = 'false' ",$post["designerName"]);
+	}
 	
 	function getSalesmanlist(){
 		global $mysql;
@@ -24,7 +28,7 @@
 	function addBusiness($post){
 		$businesss = getBusinessByAddress($post["address"]);
 		if(count($businesss) != 0){
-			throw new Exception("business with address:$address already exist!");
+			throw new Exception("business with address:".$post["address"]." already exist!");
 		}
 		//必填字段
 		$obj = array("id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
@@ -49,6 +53,12 @@
 	function deleteBusiness($businessId){
 		global $mysql;
 		$mysql->DBUpdate("`business`",array('isDeleted'=>true,'updateTime'=>'now()'),"`id`='?'",array($businessId));
+		return array('status'=>'successful', 'errMsg' => '');
+	}
+	
+	function deleteBusinessByRegion($regionId){
+		global $mysql;
+		$mysql->DBUpdate("`business`",array('isDeleted'=>true,'updateTime'=>'now()'),"`regionId`='?'",array($regionId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 

@@ -166,7 +166,7 @@
             },
 
             isFinanceStaff: function (){
-                return this.level == '008-002';
+                return (this.level == '008-002' || this.level == '008-003' || this.level == '008-004' || this.level == '008-005');
             },
 
             isCurrent: function (name){
@@ -224,8 +224,17 @@
                 name: '财务部主管',
                 value: '008-001'
             }, {
-                name: '财务部员工',
+                name: '财务部会计',
                 value: '008-002'
+            }, {
+                name: '财务部出纳',
+                value: '008-003'
+            }, {
+                name: '财务部预算员',
+                value: '008-004'
+            }, {
+                name: '财务部采购',
+                value: '008-005'
             }],
 
             getStatus: function (){
@@ -366,7 +375,16 @@
                         role = '主管';
                     }
                     else if (roleStr == '002') {
-                        role = '员工';
+                        role = '会计';
+                    }
+                    else if (roleStr == '003') {
+                        role = '出纳';
+                    }
+                    else if (roleStr == '004') {
+                        role = '预算员';
+                    }
+                    else if (roleStr == '005') {
+                        role = '采购';
                     }
                 }
                 else {

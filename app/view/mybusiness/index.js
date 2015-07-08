@@ -571,7 +571,6 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 			flex: 4,
 			layout: 'fit',
 			items: [{
-				autoScroll: true,
 				hideHeaders: true,
 				style: {
 					borderRightStyle: 'solid',
@@ -739,7 +738,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 									}
 								})
 							}
-						})
+						});
 					}
 				}, {
 					text: '转为工程',
@@ -747,7 +746,8 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					name: 'button-transferToProject',
 					icon: './resources/img/transfer.png',
 					disabled: true,
-					hidden: me.checkBusiness ? false : true,
+					// hidden: me.checkBusiness ? false : true,
+					hidden: true,
 					handler: function (){
 						var communityGrid = Ext.getCmp('gridpanel-community'),
 							clientGrid = Ext.getCmp('gridpanel-clientInfo'),
@@ -801,7 +801,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 															if (success) {
 																var obj = Ext.decode(res.responseText);
 																if (obj.status == 'successful') {
-																	Ext.Msg.info('申请成功！');
+																	Ext.Msg.info('申请已发送，请耐心等待！');
 																	communityGrid.refresh();
 																}
 																else {

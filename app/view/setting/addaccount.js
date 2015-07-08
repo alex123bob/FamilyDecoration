@@ -91,8 +91,17 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 						name: '主管',
 						value: '001'
 					}, {
-						name: '员工',
+						name: '会计',
 						value: '002'
+					}, {
+						name: '出纳',
+						value: '003'
+					}, {
+						name: '预算员',
+						value: '004'
+					}, {
+						name: '采购',
+						value: '005'
 					});
 				}
 				levelSt = Ext.create('Ext.data.Store', {
@@ -326,8 +335,17 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 								name: '主管',
 								value: '001'
 							}, {
-								name: '员工',
+								name: '会计',
 								value: '002'
+							}, {
+								name: '出纳',
+								value: '003'
+							}, {
+								name: '预算员',
+								value: '004'
+							}, {
+								name: '采购',
+								value: '005'
 							});
 						}
 

@@ -17,6 +17,8 @@
 		//删除小区
 		case "deleteRegion":
 			$res = deleteRegion($_REQUEST["id"]);
+			//删除小区下对应的业务
+			$res = deleteBusinessByRegion($_REQUEST["id"]);
 			break;
 		//修改小区
 		case "editRegion":
@@ -28,6 +30,10 @@
 			$isTransfered = isset($_REQUEST["isTransfered"])? $_REQUEST["isTransfered"] : 'false';
 			$salesmanName = isset($_REQUEST["salesmanName"])? $_REQUEST["salesmanName"] : null;
 			$res = getBusinessByRegion($_REQUEST["regionId"],$isFrozen,$isTransfered,$salesmanName);
+			break;
+			//根据小区获取所有业务
+		case "getBusinessByDesigner":
+			$res = getBusinessByDesigner($_REQUEST);
 			break;
 		//新增业务
 		case "addBusiness":

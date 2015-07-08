@@ -39,7 +39,7 @@
                     },
                     {
                         name: '查看签单业务',
-                        cmp: 'signbusiness-checksignbusiness',
+                        cmp: 'checksignbusiness-index',
                         leaf: true,
                         icon: 'resources/img/check-sign-business.png'
                     }
@@ -188,10 +188,10 @@
                 flag = User.isGeneral() ? false : true;
             }
             else if (rec.get('cmp') == 'logbook-parent') {
-                flag = User.isAdmin() || User.isManager() || User.isDesignStaff() || User.isProjectStaff() || User.isSupervisor() || User.isBusinessStaff() || User.isAdministrationStaff() || User.isPropagandaManager() || User.isPropagandaStaff() || User.isFinanceManager() || User.isFinanceStaff() ? true : false;
+                flag = User.isAdmin() || User.isManager() || User.isDesignStaff() || User.isProjectStaff() || User.isSupervisor() || User.isBusinessStaff() || User.isAdministrationStaff() || User.isPropagandaStaff() || User.isFinanceStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'mylog-index') {
-                flag = User.isAdmin() || User.isManager() || User.isDesignStaff() || User.isProjectStaff() || User.isSupervisor() || User.isBusinessStaff() || User.isAdministrationStaff() || User.isPropagandaManager() || User.isPropagandaStaff() || User.isFinanceManager() || User.isFinanceStaff() ? true : false;
+                flag = User.isAdmin() || User.isManager() || User.isDesignStaff() || User.isProjectStaff() || User.isSupervisor() || User.isBusinessStaff() || User.isAdministrationStaff() || User.isPropagandaStaff() || User.isFinanceStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'checklog-index') {
                 flag = User.isAdmin() || User.isManager() ? true : false;
@@ -204,7 +204,7 @@
             }
             else if (rec.get('cmp') == 'leave-index') {
                 if (DEBUG) {
-                    flag = User.isAdmin() || User.isManager() || User.isDesignStaff() || User.isProjectStaff() || User.isSupervisor() || User.isBusinessStaff() || User.isAdministrationStaff() || User.isPropagandaManager() || User.isPropagandaStaff() ? true : false;
+                    flag = User.isAdmin() || User.isManager() || User.isDesignStaff() || User.isProjectStaff() || User.isSupervisor() || User.isBusinessStaff() || User.isAdministrationStaff() || User.isPropagandaStaff() || User.isFinanceStaff() ? true : false;
                 }
                 else {
                     flag = false;
@@ -269,7 +269,7 @@
             else if (rec.get('cmp') == 'signbusiness-index') {
                 flag = User.isDesignStaff() || User.isDesignManager() ? true : false;
             }
-            else if (rec.get('cmp') == 'signbusiness-checksignbusiness') {
+            else if (rec.get('cmp') == 'checksignbusiness-index') {
                 flag = User.isAdmin() || User.isDesignManager() || User.isProjectManager() ? true : false;
             }
             else {

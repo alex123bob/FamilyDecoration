@@ -17,6 +17,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.Chat": "app/controller/chat.js",
   "FamilyDecoration.controller.CheckBusiness": "app/controller/checkbusiness.js",
   "FamilyDecoration.controller.CheckLog": "app/controller/checklog.js",
+  "FamilyDecoration.controller.CheckSignBusiness": "app/controller/checksignbusiness.js",
   "FamilyDecoration.controller.CostAnalysis": "app/controller/costanalysis.js",
   "FamilyDecoration.controller.Leave": "app/controller/leave.js",
   "FamilyDecoration.controller.LeaveApproval": "app/controller/leaveapproval.js",
@@ -29,6 +30,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.Plan": "app/controller/plan.js",
   "FamilyDecoration.controller.Progress": "app/controller/progress.js",
   "FamilyDecoration.controller.Setting": "app/controller/setting.js",
+  "FamilyDecoration.controller.SignBusiness": "app/controller/signbusiness.js",
   "FamilyDecoration.controller.TaskAssign": "app/controller/taskassign.js",
   "FamilyDecoration.controller.User": "app/controller/user.js",
   "FamilyDecoration.controller.Viewport": "app/controller/viewport.js",
@@ -110,6 +112,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.checklog.Index": "app/view/checklog/index.js",
   "FamilyDecoration.view.checklog.MemberList": "app/view/checklog/memberlist.js",
   "FamilyDecoration.view.checklog.UserLogList": "app/view/checklog/userloglist.js",
+  "FamilyDecoration.view.checksignbusiness.Index": "app/view/checksignbusiness/index.js",
   "FamilyDecoration.view.costanalysis.CostAnalysis": "app/view/costanalysis/costanalysis.js",
   "FamilyDecoration.view.costanalysis.Index": "app/view/costanalysis/index.js",
   "FamilyDecoration.view.costanalysis.TotalCost": "app/view/costanalysis/totalcost.js",
@@ -143,6 +146,8 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.progress.TreeFilter": "app/view/progress/treefilter.js",
   "FamilyDecoration.view.setting.AddAccount": "app/view/setting/addaccount.js",
   "FamilyDecoration.view.setting.Index": "app/view/setting/index.js",
+  "FamilyDecoration.view.signbusiness.EditBusinessInfo": "app/view/signbusiness/editbusinessinfo.js",
+  "FamilyDecoration.view.signbusiness.Index": "app/view/signbusiness/index.js",
   "FamilyDecoration.view.taskassign.AssignTaskWin": "app/view/taskassign/assigntaskwin.js",
   "FamilyDecoration.view.taskassign.Index": "app/view/taskassign/index.js",
   "FamilyDecoration.view.taskassign.UserTaskList": "app/view/taskassign/usertasklist.js",
@@ -1007,6 +1012,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.Chat": [],
   "FamilyDecoration.controller.CheckBusiness": [],
   "FamilyDecoration.controller.CheckLog": [],
+  "FamilyDecoration.controller.CheckSignBusiness": [],
   "FamilyDecoration.controller.CostAnalysis": [],
   "FamilyDecoration.controller.Leave": [],
   "FamilyDecoration.controller.LeaveApproval": [],
@@ -1019,6 +1025,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.Plan": [],
   "FamilyDecoration.controller.Progress": [],
   "FamilyDecoration.controller.Setting": [],
+  "FamilyDecoration.controller.SignBusiness": [],
   "FamilyDecoration.controller.TaskAssign": [],
   "FamilyDecoration.controller.User": [],
   "FamilyDecoration.controller.Viewport": [],
@@ -1100,6 +1107,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.checklog.Index": [],
   "FamilyDecoration.view.checklog.MemberList": [],
   "FamilyDecoration.view.checklog.UserLogList": [],
+  "FamilyDecoration.view.checksignbusiness.Index": [],
   "FamilyDecoration.view.costanalysis.CostAnalysis": [],
   "FamilyDecoration.view.costanalysis.Index": [],
   "FamilyDecoration.view.costanalysis.TotalCost": [],
@@ -1133,6 +1141,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.progress.TreeFilter": [],
   "FamilyDecoration.view.setting.AddAccount": [],
   "FamilyDecoration.view.setting.Index": [],
+  "FamilyDecoration.view.signbusiness.EditBusinessInfo": [],
+  "FamilyDecoration.view.signbusiness.Index": [],
   "FamilyDecoration.view.taskassign.AssignTaskWin": [],
   "FamilyDecoration.view.taskassign.Index": [],
   "FamilyDecoration.view.taskassign.UserTaskList": [],
@@ -2163,6 +2173,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.Chat": [],
   "FamilyDecoration.controller.CheckBusiness": [],
   "FamilyDecoration.controller.CheckLog": [],
+  "FamilyDecoration.controller.CheckSignBusiness": [],
   "FamilyDecoration.controller.CostAnalysis": [],
   "FamilyDecoration.controller.Leave": [],
   "FamilyDecoration.controller.LeaveApproval": [],
@@ -2175,6 +2186,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.Plan": [],
   "FamilyDecoration.controller.Progress": [],
   "FamilyDecoration.controller.Setting": [],
+  "FamilyDecoration.controller.SignBusiness": [],
   "FamilyDecoration.controller.TaskAssign": [],
   "FamilyDecoration.controller.User": [],
   "FamilyDecoration.controller.Viewport": [],
@@ -2294,6 +2306,9 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.checklog.UserLogList": [
     "widget.checklog-userloglist"
   ],
+  "FamilyDecoration.view.checksignbusiness.Index": [
+    "widget.checksignbusiness-index"
+  ],
   "FamilyDecoration.view.costanalysis.CostAnalysis": [
     "widget.costanalysis-costanalysis"
   ],
@@ -2392,6 +2407,12 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.setting.Index": [
     "widget.setting-index"
+  ],
+  "FamilyDecoration.view.signbusiness.EditBusinessInfo": [
+    "widget.signbusiness-editbusinessinfo"
+  ],
+  "FamilyDecoration.view.signbusiness.Index": [
+    "widget.signbusiness-index"
   ],
   "FamilyDecoration.view.taskassign.AssignTaskWin": [
     "widget.taskassign-assigntaskwin"
