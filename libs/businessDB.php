@@ -18,9 +18,12 @@
 	function getDesignerlist(){
 		global $mysql;
 		$res0 = $mysql->DBGetAsMap("select distinct designer,designerName from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and designer is not null ;");
+		//signedBusinesCount
 		$res1 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and applyDesigner = 2 and designer is not null group by designer;");
-		$res2 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and applyDesigner = 1 and designer is not null group by designer;");
-		$res3 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and applyBudget = 1 and designer is not null group by designer;");
+		//applyBudgetCount
+		$res2 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and applyBudget = 1 and designer is not null group by designer;");
+		//applyTransferCount
+		$res3 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and applyProjectTransference  = 1 and designer is not null group by designer;");
 
 		$signedBusinesCount = array();
 		$applyBudgetCount = array();
