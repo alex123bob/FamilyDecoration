@@ -23,13 +23,25 @@ Ext.define('FamilyDecoration.view.checksignbusiness.Index', {
 				dataIndex: 'designer',
 				flex: 1,
 				renderer: function (val, meta, rec){
-					var num = rec.get('number'),
+					var num = rec.get('signedBusinesCount'),
 						numStr = '';
 
 						numStr = '<font style="color: ' + (num > 0 ? 'blue; text-shadow: #8F7 ' : 'white; text-shadow: black ') 
-								+ '0.1em 0.1em 0.2em;"><strong>[' + num + ']</strong></font>';
+								+ '0.1em 0.1em 0.2em;"><strong>[' + num + ']</strong></font>',
 
-					return val + numStr;
+						resultStr = '';
+
+					if (parseInt(rec.get('applyBudgetCount'), 10) > 0) {
+						resultStr += '<img src="./resources/img/scroll1.png" data-qtip="申请预算" />'
+					}
+
+					if (parseInt(rec.get('applyTransferCount'), 10) > 0) {
+						resultStr += '<img src="./resources/img/switch.png" data-qtip="申请转为工程" />';
+					}
+
+					resultStr += val + numStr;
+
+					return resultStr;
 				}
 			}],
 			hideHeaders: true,
@@ -38,7 +50,7 @@ Ext.define('FamilyDecoration.view.checksignbusiness.Index', {
 				borderRightWidth: '1px'
 			},
 			store: Ext.create('Ext.data.Store', {
-				fields: ['designer', 'designerName', 'number'],
+				fields: ['designer', 'designerName', 'signedBusinesCount', 'applyBudgetCount', 'applyTransferCount'],
 				autoLoad: true,
 				proxy: {
 					type: 'rest',

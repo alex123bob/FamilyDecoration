@@ -17,11 +17,48 @@
 	}
 	function getDesignerlist(){
 		global $mysql;
-		return $mysql->DBGetAsMap("select distinct designer,designerName, count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and applyDesigner = 2 group by designer;");
+		$res0 = $mysql->DBGetAsMap("select distinct designer,designerName from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and designer is not null ;");
+		$res1 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and applyDesigner = 2 and designer is not null group by designer;");
+		$res2 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and applyDesigner = 1 and designer is not null group by designer;");
+		$res3 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and applyBudget = 1 and designer is not null group by designer;");
+
+		$signedBusinesCount = array();
+		$applyBudgetCount = array();
+		$applyTransferCount = array();
+
+		foreach($res1 as $item){
+			$signedBusinesCount[$item['designer']] = $item['number'];
+		}
+		foreach($res2 as $item){
+			$applyBudgetCount[$item['designer']] = $item['number'];
+		}
+		foreach($res3 as $item){
+			$applyTransferCount[$item['designer']] = $item['number'];
+		}
+
+		foreach($res0 as $key => $val){
+			$res0[$key]['signedBusinesCount'] = isset($signedBusinesCount[$val['designer']]) ? intval($signedBusinesCount[$val['designer']]) : 0;			
+			$res0[$key]['applyBudgetCount'] = isset($applyBudgetCount[$val['designer']]) ? intval($applyBudgetCount[$val['designer']]) : 0;			
+			$res0[$key]['applyTransferCount'] = isset($applyTransferCount[$val['designer']]) ? intval($applyTransferCount[$val['designer']]) : 0;			
+		}
+		return $res0;
 	}
 	function getSalesmanlist(){
 		global $mysql;
-		return $mysql->DBGetAsMap("select distinct salesman,salesmanName, count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' group by salesman;");
+		// get list and number of business
+		$res1 = $mysql->DBGetAsMap("select distinct salesman,salesmanName, count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' group by salesman;");
+		// get list and number of business which require designer  
+		$res2 = $mysql->DBGetAsMap("select distinct salesman,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and applyDesigner = 1 group by salesman;");
+		// sort from map list to map     [{'salesman':aaa,'number':111},{'salesman':bbb,'number':222}...]  to [aaa:111,bbb:222]
+		$applyDesignerCount = array();
+		foreach($res2 as $item){
+			$applyDesignerCount[$item['salesman']] = $item['number'];
+		}
+		// set $res1 with applyDesignerCount in $applyDesignerCount
+		foreach($res1 as $key => $val){
+			$res1[$key]['apply'] = isset($applyDesignerCount[$val['salesman']]) ? $applyDesignerCount[$val['salesman']] : 0;			
+		}
+		return $res1;
 	}
 	
 	function getBusinessById($businessId){

@@ -29,6 +29,10 @@ Ext.define('FamilyDecoration.view.checkbusiness.Index', {
 						numStr = '<font style="color: ' + (num > 0 ? 'blue; text-shadow: #8F7 ' : 'white; text-shadow: black ') 
 								+ '0.1em 0.1em 0.2em;"><strong>[' + num + ']</strong></font>';
 
+					if (parseInt(rec.get('apply'), 10) > 0) {
+						meta.style = 'background: #ffff00;';
+					}
+
 					return val + numStr;
 				}
 			}],
@@ -38,7 +42,7 @@ Ext.define('FamilyDecoration.view.checkbusiness.Index', {
 				borderRightWidth: '1px'
 			},
 			store: Ext.create('Ext.data.Store', {
-				fields: ['salesman', 'salesmanName', 'number'],
+				fields: ['salesman', 'salesmanName', 'number', 'apply'],
 				autoLoad: true,
 				proxy: {
 					type: 'rest',
