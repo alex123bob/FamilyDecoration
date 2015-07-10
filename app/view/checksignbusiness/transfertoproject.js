@@ -7,7 +7,7 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 	resizable: false,
 	modal: true,
 	width: 600,
-	height: 300,
+	height: 380,
 	autoScroll: true,
 
 	client: null,
@@ -52,31 +52,8 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 					name: 'datefield-createTimeForCheckSign',
 					xtype: 'datefield',
 					fieldLabel: '工程创建日期',
-					editable: false
-				}, {
-					id: 'textfield-projectPeriodForCheckSign',
-					name: 'textfield-projectPeriodForCheckSign',
-					xtype: 'textfield',
-					fieldLabel: '工期'
-				}, {
-					xtype: 'fieldcontainer',
-					width: '100%',
-					layout: 'hbox',
-					items: [{
-						id: 'textfield-designStaffForCheckSign',
-						name: 'textfield-designStaffForCheckSign',
-						xtype: 'textfield',
-						allowBlank: false,
-						readOnly: true,
-						fieldLabel: '设计师',
-						value: me.client.get('designer')
-					}, {
-						xtype: 'hidden',
-						hideLabel: true,
-						id: 'hidden-designStaffNameForCheckSign',
-						name: 'hidden-designStaffNameForCheckSign',
-						value: me.client.get('designerName')
-					}]
+					editable: false,
+					allowBlank: false
 				}, {
 					xtype: 'fieldcontainer',
 					layout: 'hbox',
@@ -142,9 +119,16 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 									handler: function (){
 										var grid = win.down('grid'),
 											captain = Ext.getCmp('textfield-projectCaptain'),
+											hidden = Ext.getCmp('hidden-projectCaptainForCheckSign'),
 											rec = grid.getSelectionModel().getSelection()[0];
-										captain.setValue(rec.get('realname'));
-										win.close();
+										if (rec) {
+											captain.setValue(rec.get('realname'));
+											hidden.setValue(rec.get('name'));
+											win.close();
+										}
+										else {
+											showMsg('清选择成员！');
+										}
 									}
 								}, {
 									text: '取消',
@@ -156,6 +140,103 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 
 							win.show();
 						}
+					}, {
+						xtype: 'hidden',
+						name: 'hidden-projectCaptainForCheckSign',
+						id: 'hidden-projectCaptainForCheckSign',
+						hideLabel: true
+					}]
+				}, {
+					xtype: 'fieldcontainer',
+					layout: 'hbox',
+					width: '100%',
+					items: [{
+						id: 'textfield-projectSupervisorForCheckSign',
+						name: 'textfield-projectSupervisorForCheckSign',
+						xtype: 'textfield',
+						readOnly: true,
+						fieldLabel: '项目监理',
+						allowBlank: false
+					}, {
+						xtype: 'button',
+						text: '选择',
+						handler: function (){
+							var win = Ext.create('Ext.window.Window', {
+								title: '选择项目监理',
+								width: 500,
+								height: 300,
+								layout: 'fit',
+								modal: true,
+								items: [{
+									xtype: 'checklog-memberlist',
+									listeners: {
+										itemclick: function (view, rec){
+											if (!rec.get('name')) {
+												return false;
+											}
+										}
+									}
+								}],
+								buttons: [{
+									text: '确定',
+									handler: function (){
+										var memberlist = win.down('treepanel'),
+											supervisorTxt = Ext.getCmp('textfield-projectSupervisorForCheckSign'),
+											supervisorHidden = Ext.getCmp('hidden-projectSupervisorForCheckSign'),
+											member = memberlist.getSelectionModel().getSelection()[0];
+
+										if (member && member.get('name')) {
+											supervisorTxt.setValue(member.get('realname'));
+											supervisorHidden.setValue(member.get('name'));
+											win.close();
+										}
+										else {
+											showMsg('清选择成员！');
+										}
+									}
+								}, {
+									text: '取消',
+									handler: function (){
+										win.close();
+									}
+								}]
+							});
+
+							win.show();
+						}
+					}, {
+						xtype: 'hidden',
+						name: 'hidden-projectSupervisorForCheckSign',
+						id: 'hidden-projectSupervisorForCheckSign',
+						hideLabel: true
+					}]
+				}, {
+					xtype: 'fieldset',
+					collasible: false,
+					layout: 'anchor',
+					title: '工期',
+					width: '100%',
+					margin: 0,
+					defaults: {
+						anchor: '100%'
+					},
+					items: [{
+						xtype: 'datefield',
+						fieldLabel: '开始',
+						flex: 1,
+						labelWidth: 40,
+						name: 'datefield-projectStartTimeForCheckSign',
+						id: 'datefield-projectStartTimeForCheckSign',
+						allowBlank: false
+					}, {
+						margin: '0 0 0 2px',
+						xtype: 'datefield',
+						fieldLabel: '结束',
+						flex: 1,
+						labelWidth: 40,
+						name: 'datefield-projectEndTimeForCheckSign',
+						id: 'datefield-projectEndTimeForCheckSign',
+						allowBlank: false
 					}]
 				}]
 			}, {
@@ -198,10 +279,12 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 				var customer = Ext.getCmp('textfield-clientNameForCheckSign'),
 					address = Ext.getCmp('textfield-projectAddressForCheckSign'),
 					createTime = Ext.getCmp('datefield-createTimeForCheckSign'),
-					designer = Ext.getCmp('textfield-designStaffForCheckSign'),
-					designerName = Ext.getCmp('hidden-designStaffNameForCheckSign'),
+					startTime = Ext.getCmp('datefield-projectStartTimeForCheckSign'),
+					endTime = Ext.getCmp('datefield-projectEndTimeForCheckSign'),
 					captain = Ext.getCmp('textfield-projectCaptain'),
-					period = Ext.getCmp('textfield-projectPeriodForCheckSign'),
+					captainName = Ext.getCmp('hidden-projectCaptainForCheckSign'),
+					supervisor = Ext.getCmp('textfield-projectSupervisorForCheckSign'),
+					supervisorName = Ext.getCmp('hidden-projectSupervisorForCheckSign'),
 					sms = Ext.getCmp('fieldcontainer-sendMsgForTransference').getComponent('checkbox-sendSMS'),
 					mail = Ext.getCmp('fieldcontainer-sendMsgForTransference').getComponent('checkbox-sendMail'),
 					memberTree = Ext.getCmp('treepanel-memberlistForTransference'),
@@ -210,8 +293,11 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 								  + me.client.get('regionName') + ' ' + me.client.get('address') + '"'
 								  + '转为了工程';
 
-				if (customer.isValid() && address.isValid() && createTime.isValid() && period.isValid()
-					&& designer.isValid() && captain.isValid()) {
+				if (customer.isValid() && address.isValid() && createTime.isValid() && startTime.isValid() 
+					&& endTime.isValid() && captain.isValid() && supervisor.isValid()) {
+
+					
+
 					if (selMembers.length > 0) {
 						if (!sms.getValue() && !mail.getValue()) {
 							showMsg('对已经选择的发送对象要进行何种操作，请选择！');
@@ -230,30 +316,37 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 						businessId: me.client.getId(),
 						customer: customer.getValue(),
 						projectName: address.getValue(),
-						createTime: createTime.getValue(),
-						designer: designer.getValue(),
+						createTime: Ext.Date.format(createTime.getValue(), 'Y-m-d'),
+						startTime: Ext.Date.format(startTime.getValue(), 'Y-m-d'),
+						endTime: Ext.Date.format(endTime.getValue(), 'Y-m-d'),
 						salesman: me.client.get('salesman'),
+						salesmanName: me.client.get('salesmanName'),
 						captain: captain.getValue(),
-						period: period.getValue()
+						captainName: captainName.getValue(),
+						supervisor: supervisor.getValue(),
+						supervisorName: supervisorName.getValue(),
+						designer: me.client.get('designer'),
+						designerName: me.client.get('designerName')
 					};
-					Ext.Ajax.request({
-						method: 'POST',
-						url: 'libs/business.php?action=transferBusinessToProject',
-						params: p,
-						callback: function (opts, success, res){
-							if (success) {
-								var obj = Ext.decode(res.responseText);
-								if (obj.status == 'successful') {
-									showMsg('转换成功！');
-									me.close();
-									me.clientGrid.refresh();
-								}
-								else {
-									showMsg(obj.errMsg);
-								}
-							}
-						}
-					});
+					console.log(p);
+					// Ext.Ajax.request({
+					// 	method: 'POST',
+					// 	url: 'libs/business.php?action=transferBusinessToProject',
+					// 	params: p,
+					// 	callback: function (opts, success, res){
+					// 		if (success) {
+					// 			var obj = Ext.decode(res.responseText);
+					// 			if (obj.status == 'successful') {
+					// 				showMsg('转换成功！');
+					// 				me.close();
+					// 				me.clientGrid.refresh();
+					// 			}
+					// 			else {
+					// 				showMsg(obj.errMsg);
+					// 			}
+					// 		}
+					// 	}
+					// });
 				}
 			}
 		}, {
