@@ -20,14 +20,14 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 
 	isSynchronousCalculation: true, // calculate simultaneously or not when editting each line of budget.
 
-	// obj: budgetId, custName, projectName
+	// obj: budgetId, custName, projectOrBusinessName
 	loadBudget: function (obj){
 		var cmp = this,
 			custNameField = cmp.down('[name="displayfield-custName"]'),
-			projectNameField = cmp.down('[name="displayfield-projectName"]'),
+			projectOrBusinessNameField = cmp.down('[name="displayfield-projectOrBusinessName"]'),
 			budgetNameField = cmp.down('[name="displayfield-budgetName"]');
 		obj.custName && custNameField.setValue(obj.custName);
-		obj.projectName && projectNameField.setValue(obj.projectName);
+		obj.projectOrBusinessName && projectOrBusinessNameField.setValue(obj.projectOrBusinessName);
 		obj.budgetName && budgetNameField.setValue(obj.budgetName);
 		cmp.initBtn();
 		if (obj.budgetId) {
@@ -68,7 +68,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			grid = cmp.getComponent('gridpanel-budgetContent'),
 			st = grid.getStore(),
 			custNameField = cmp.down('[name="displayfield-custName"]'),
-			projectNameField = cmp.down('[name="displayfield-projectName"]'),
+			projectOrBusinessNameField = cmp.down('[name="displayfield-projectOrBusinessName"]'),
 			budgetNameField = cmp.down('[name="displayfield-budgetName"]'),
 			addNewBtn = cmp.down('[name="button-addNewItem"]'),
 			addSmallBtn = cmp.down('[name="button-addSmallItemToBigItem"]'),
@@ -78,7 +78,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 		st.removeAll();
 		cmp.budgetId = undefined;
 		custNameField.setValue('');
-		projectNameField.setValue('');
+		projectOrBusinessNameField.setValue('');
 		budgetNameField.setValue('');
 		addNewBtn.hide();
 		addSmallBtn.hide();
@@ -519,7 +519,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				}, {
 					xtype: 'displayfield',
 					fieldLabel: '工程地址',
-					name: 'displayfield-projectName',
+					name: 'displayfield-projectOrBusinessName',
 					flex: 1
 				}],
 				width: '100%',

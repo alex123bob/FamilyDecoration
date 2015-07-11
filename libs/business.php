@@ -42,6 +42,9 @@
 		case "getBusinessById":
 			$res = getBusinessById($_REQUEST['businessId']);
 			break;
+		case "getBusinessListForBudget":
+			$res = getBusinessListForBudget();
+			break;
 		//修改业务
 		case "editBusiness":
 			$res = editBusiness($_REQUEST);

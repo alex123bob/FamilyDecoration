@@ -100,10 +100,6 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 										renderer: function (val){
 											return User.renderRole(val);
 										}
-									}, {
-										text: '项目名称',
-										flex: 1,
-										dataIndex: 'projectName'
 									}],
 									store: Ext.create('FamilyDecoration.store.User', {
 										autoLoad: true,
@@ -127,7 +123,7 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 											win.close();
 										}
 										else {
-											showMsg('清选择成员！');
+											showMsg('请选择成员！');
 										}
 									}
 								}, {
@@ -191,7 +187,7 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 											win.close();
 										}
 										else {
-											showMsg('清选择成员！');
+											showMsg('请选择成员！');
 										}
 									}
 								}, {
@@ -223,6 +219,7 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 					items: [{
 						xtype: 'datefield',
 						fieldLabel: '开始',
+						editable: false,
 						flex: 1,
 						labelWidth: 40,
 						name: 'datefield-projectStartTimeForCheckSign',
@@ -232,6 +229,7 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 						margin: '0 0 0 2px',
 						xtype: 'datefield',
 						fieldLabel: '结束',
+						editable: false,
 						flex: 1,
 						labelWidth: 40,
 						name: 'datefield-projectEndTimeForCheckSign',
@@ -240,6 +238,7 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 					}]
 				}]
 			}, {
+				title: '消息提醒人',
 				xtype: 'checklog-memberlist',
 				id: 'treepanel-memberlistForTransference',
 				name: 'treepanel-memberlistForTransference',
@@ -296,7 +295,10 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 				if (customer.isValid() && address.isValid() && createTime.isValid() && startTime.isValid() 
 					&& endTime.isValid() && captain.isValid() && supervisor.isValid()) {
 
-					
+					if (startTime.getValue() - endTime.getValue() > 0) {
+						showMsg('开始时间不能大于结束时间');
+						return;
+					}
 
 					if (selMembers.length > 0) {
 						if (!sms.getValue() && !mail.getValue()) {
@@ -310,6 +312,12 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 								sms.getValue() && sendSMS(User.getName(), user.get('name'), user.get('phone'), sendContent);
 								mail.getValue() && sendMail(user.get('name'), user.get('mail'), User.getRealName() + '进行了"业务转工程"', sendContent);
 							}
+						}
+					}
+					else {
+						if (sms.getValue() || mail.getValue()) {
+							showMsg('请选择成员！')
+							return;
 						}
 					}
 					var p = {
@@ -328,25 +336,25 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 						designer: me.client.get('designer'),
 						designerName: me.client.get('designerName')
 					};
-					console.log(p);
-					// Ext.Ajax.request({
-					// 	method: 'POST',
-					// 	url: 'libs/business.php?action=transferBusinessToProject',
-					// 	params: p,
-					// 	callback: function (opts, success, res){
-					// 		if (success) {
-					// 			var obj = Ext.decode(res.responseText);
-					// 			if (obj.status == 'successful') {
-					// 				showMsg('转换成功！');
-					// 				me.close();
-					// 				me.clientGrid.refresh();
-					// 			}
-					// 			else {
-					// 				showMsg(obj.errMsg);
-					// 			}
-					// 		}
-					// 	}
-					// });
+
+					Ext.Ajax.request({
+						method: 'POST',
+						url: 'libs/business.php?action=transferBusinessToProject',
+						params: p,
+						callback: function (opts, success, res){
+							if (success) {
+								var obj = Ext.decode(res.responseText);
+								if (obj.status == 'successful') {
+									showMsg('转换成功！');
+									me.close();
+									me.clientGrid.refresh();
+								}
+								else {
+									showMsg(obj.errMsg);
+								}
+							}
+						}
+					});
 				}
 			}
 		}, {

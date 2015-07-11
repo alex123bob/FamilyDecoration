@@ -137,10 +137,12 @@
 	//添加预算
 	function addBudget($post){
 		global $mysql;
-		$projectId = $post["projectId"];
+		if(!isset($post["projectId"]) && !isset($post["businessId"]) ){
+			throw new Exception("预算必须有关联的项目或者业务！");
+		}
 		$budgetId = "budget-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
-		$fields = array("custName","areaSize","totalFee","comments",'budgetName');
-		$budget = array("isDeleted"=>false,'projectId'=>$projectId,"budgetId" =>$budgetId );
+		$fields = array("projectId","businessId","custName","areaSize","totalFee","comments",'budgetName');
+		$budget = array("isDeleted"=>false,"budgetId" =>$budgetId );
 		foreach($fields as $field){
 			if(isset($post[$field])){
 				$budget[$field] = $post[$field];
@@ -197,7 +199,8 @@
 	
 	function getBudgetsByBudgetId ($budgetId){
 		global $mysql;
-		return $mysql->DBGetAsMap("SELECT b.*,p.projectName FROM `budget` b left join `project` p on b.projectId=p.projectId where b.`isDeleted` = 'false' and b.`budgetId` = '?' ",$budgetId);
+		//return $mysql->DBGetAsMap("SELECT b.*,p.projectName FROM `budget` b left join `project` p on b.projectId=p.projectId where b.`isDeleted` = 'false' and b.`budgetId` = '?' ",$budgetId);
+		return $mysql->DBGetAsMap("SELECT b.*,p.projectName,bz.address as businessName FROM `budget` b left join `project` p on b.projectId=p.projectId left join `business` bz on bz.id = b.businessId where b.`isDeleted` = 'false' and b.`budgetId` = '?' ",$budgetId);
 	}
 	
 	function compareBudgetItem($arg1,$arg2){

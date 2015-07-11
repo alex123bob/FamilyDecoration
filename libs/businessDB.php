@@ -68,6 +68,10 @@
 		global $mysql;
 		return $mysql->DBGetAsMap("select * from business where id = '?' and `isDeleted` = 'false' ",$businessId);
 	}
+	function getBusinessListForBudget (){
+		global $mysql;
+		return $mysql->DBGetAsMap("select `b`.*, `r`.`name` from `business` `b` left join `region` `r` on (`b`.`regionId` = `r`.`id`) where `b`.`isDeleted` = 'false' and `b`.`isTransfered` = 'false' and `b`.`applyBudget` != 0 ");
+	}
 	function addBusiness($post){
 		$businesss = getBusinessByAddress($post["address"]);
 		if(count($businesss) != 0){
@@ -130,22 +134,29 @@
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 	
-	function transferBusinessToProject($request){
+	function transferBusinessToProject($data){
 		global $mysql;
-		$businessId = $request['businessId'];
-		$pro = array(  	'customer'=>$request['customer'],
-						'projectTime'=>$request['createTime'],
-						'projectName'=>$request['projectName'],
-						'designer'=>$request['designer'],
-						'captain'=>$request['captain'],
-						'businessId'=>$businessId,
-						'salesman'=>$request['salesman'],
-						'period'=>$request['period']
-					);
+		//必须字段
+		$businessId = $data['businessId'];
+		$obj = array('customer'=>$data['customer'],"businessId"=>$businessId);
+		//可选字段
+		$fields = array("projectTime","projectName","designer","designerName","captain","captainName","salesman","supervisor","supervisorName","salesmanName");
+		foreach($fields as $field){
+			if(isset($data[$field]))
+				$obj[$field] = $data[$field];
+		}
+		if(isset($data["startTime"])){
+			$obj["period"] = $data["startTime"];
+		}else{
+			$obj["period"] = "";
+		}
+		if(isset($data["endTime"])){
+			$obj["period"] = $obj["period"].":".$data["endTime"];
+		}	
 		include_once "projectDB.php";
-		$pro = addProject($pro);
-		$mysql->DBUpdate('business',array('isTransfered'=>'true','updateTime'=>'now()','applyBudget'=>2),"`id`='?'",array($businessId));
-		return array('status'=>'successful', 'errMsg' => '','projectId'=>$pro['projectId']);
+		$res = addProject($obj);
+		$mysql->DBUpdate('business',array('isTransfered'=>'true','updateTime'=>'now()','applyProjectTransference'=>2),"`id`='?'",array($businessId));
+		return array('status'=>'successful', 'errMsg' => '','projectId'=>$res['projectId']);
 	}
 
 	function clientRank($data) {

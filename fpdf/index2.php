@@ -29,7 +29,7 @@ if(count($budget) == 0){
 	throw new Exception("no budget with id ".$_REQUEST["budgetId"]);
 }
 $custName =  str2GBK(urldecode($budget[0]["custName"]));
-$projectName = str2GBK(urldecode($budget[0]["projectName"]));
+$projectName = str2GBK(urldecode($budget[0]["businessName"]  == "" ? $budget[0]["projectName"] : $budget[0]["businessName"]));
 $budgetName = str2GBK(urldecode($budget[0]["budgetName"]));
 $projectComments = str2GBK(urldecode($budget[0]["comments"]));
 $action = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "download";

@@ -4,7 +4,7 @@
 	function addProject (array $pro){
 		global $mysql;
 		// fields that could be edit.
-		$fields = array('projectId','businessId','projectName','period','captain','supervisor','createTime', 'salesman', 'designer','projectTime','budgetId','isFrozen');
+		$fields = array('projectId','businessId','projectName','period','hasChart','captain','captainName','supervisor','supervisorName','createTime', 'salesman','salesmanName', 'designer','designerName','projectTime','budgetId','isFrozen');
 		$projectName = $pro['projectName'];
 		$array = $mysql->DBGetSomeRows("`project`", "`projectName`", " where `isDeleted` = 'false' and `projectName` = '$projectName'");
 		if(count($array) > 0 ){
@@ -90,7 +90,8 @@
 		global $mysql;
 		// fields that could be edit.
 		$obj = array();
-		$keys = array('projectName','period','captain','supervisor', 'salesman', 'designer','projectTime','isFrozen', 'hasChart');
+		$fields = array('businessId','projectName','period','captain','captainName','supervisor','supervisorName','hasChart','createTime', 'salesman','salesmanName', 'designer','designerName','projectTime','budgetId','isFrozen');
+
 		foreach($keys as $key){
 			if(isset($pro[$key]))
 				$obj[$key] = $pro[$key];
@@ -104,7 +105,7 @@
 		$projectName = $pro['projectName'];
 		$setValue = " isDeleted = isDeleted ";
 		// fields that could be edit.
-		$keys = array('projectName','period','captain','supervisor', 'salesman', 'designer','projectTime','isFrozen');
+		$fields = array('businessId','projectName','period','captain','captainName','supervisor','supervisorName','hasChart','createTime', 'salesman','salesmanName', 'designer','designerName','projectTime','budgetId','isFrozen');
 		$obj = array();
 		foreach($keys as $key)
 			if(isset($pro[$key]))
