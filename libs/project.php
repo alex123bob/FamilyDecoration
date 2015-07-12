@@ -35,6 +35,10 @@
 				$res = getProjectYears();
 			}
 			break;
+		case "getProjectCaptains":
+			$visitorName = $_SESSION["name"];
+			$res = getProjectCaptains();
+			break;
 		case "getProjects":
 			if( $_SESSION["level"] == "006-001"){
 				//游客仅且只能看到一个项目。因此不需要取年，月过滤啦
@@ -55,6 +59,9 @@
 				$year = $_REQUEST['year'];
 				$res = getProjectMonths($year);
 			}
+			break;
+		case "getProjectsByCaptainName":
+			$res = getProjectsByCaptainName($_REQUEST["captainName"]);
 			break;
 		default: 
 			throw new Exception("unknown action:".$action);

@@ -5,7 +5,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 		'FamilyDecoration.store.Project', 'FamilyDecoration.view.progress.EditProject', 'Ext.tree.Panel',
 		'FamilyDecoration.view.progress.EditProgress', 'FamilyDecoration.view.progress.ProjectList',
 		'FamilyDecoration.view.budget.BudgetPanel', 'Ext.layout.container.Form', 'FamilyDecoration.model.Progress',
-		'FamilyDecoration.store.BusinessDetail'
+		'FamilyDecoration.store.BusinessDetail', 'FamilyDecoration.view.progress.ProjectListByCaptain'
 	],
 	// autoScroll: true,
 	layout: 'border',
@@ -22,7 +22,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 			width: 220,
 			margin: '0 1 0 0',
 			items: [{
-				xtype: 'progress-projectlist',
+				xtype: 'progress-projectlistbycaptain',
 				searchFilter: true,
 				title: '工程项目名称',
 				id: 'treepanel-projectName',

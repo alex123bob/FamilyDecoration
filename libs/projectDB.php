@@ -57,7 +57,10 @@
 		$sql = "select distinct YEAR(`projectTime`) as `projectYear` from project where `isDeleted` = 'false' ORDER BY `projectTime` DESC ";
 		return $mysql->DBGetAsMap($sql);
 	}
-
+	function getProjectCaptains (){
+		global $mysql;
+		return $mysql->DBGetAsMap("select distinct `captainName`, `captain` from project where `isDeleted` = 'false' and `captainName` is not NULL");
+	}
 	function getProjectMonths ($year){
 		global $mysql;
 		$sql = "select distinct MONTH(`projectTime`) as `projectMonth` from project where YEAR(`projectTime`) = '?' and `isDeleted` = 'false' ORDER BY `projectMonth` DESC ";
@@ -112,5 +115,10 @@
 				$obj[$key]=$pro[$key];
 		$mysql->DBUpdate("project",$obj,"`projectName` = '?'",array($pro['projectName']));
 		return array('status'=>'successful', 'errMsg' => '');
+	}
+
+	function getProjectsByCaptainName ($captainName){
+		global $mysql;
+		return $mysql->DBGetAsMap("select * from project where `isDeleted` = 'false' and `captainName` = '?' ", $captainName);
 	}
 ?>

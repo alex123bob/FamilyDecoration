@@ -143,6 +143,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.progress.EditProject": "../../app/view/progress/editproject.js",
   "FamilyDecoration.view.progress.Index": "../../app/view/progress/index.js",
   "FamilyDecoration.view.progress.ProjectList": "../../app/view/progress/projectlist.js",
+  "FamilyDecoration.view.progress.ProjectListByCaptain": "../../app/view/progress/projectlistbycaptain.js",
   "FamilyDecoration.view.progress.SearchFieldTree": "../../app/view/progress/searchfieldtree.js",
   "FamilyDecoration.view.progress.TreeFilter": "../../app/view/progress/treefilter.js",
   "FamilyDecoration.view.setting.AddAccount": "../../app/view/setting/addaccount.js",
@@ -1139,6 +1140,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.progress.EditProject": [],
   "FamilyDecoration.view.progress.Index": [],
   "FamilyDecoration.view.progress.ProjectList": [],
+  "FamilyDecoration.view.progress.ProjectListByCaptain": [],
   "FamilyDecoration.view.progress.SearchFieldTree": [],
   "FamilyDecoration.view.progress.TreeFilter": [],
   "FamilyDecoration.view.setting.AddAccount": [],
@@ -2400,6 +2402,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.progress.ProjectList": [
     "widget.progress-projectlist"
+  ],
+  "FamilyDecoration.view.progress.ProjectListByCaptain": [
+    "widget.progress-projectlistbycaptain"
   ],
   "FamilyDecoration.view.progress.SearchFieldTree": [
     "widget.searchfieldtree"
