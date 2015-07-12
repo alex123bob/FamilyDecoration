@@ -61,7 +61,7 @@ Ext.define('FamilyDecoration.view.progress.EditProject', {
 								if (obj.status == 'successful') {
 									pro ? showMsg('编辑成功！') : showMsg('添加成功！');
 									me.close();
-									st.getProxy().url = 'libs/project.php?action=getProjectYears';
+									st.getProxy().url = 'libs/project.php?action=getProjectCaptains';
 									st.getProxy().extraParams = {};
 									treepanel.getStore().load({
 										node: treepanel.getRootNode(),

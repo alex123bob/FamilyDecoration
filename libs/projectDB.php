@@ -95,7 +95,7 @@
 		$obj = array();
 		$fields = array('businessId','projectName','period','captain','captainName','supervisor','supervisorName','hasChart','createTime', 'salesman','salesmanName', 'designer','designerName','projectTime','budgetId','isFrozen');
 
-		foreach($keys as $key){
+		foreach($fields as $key){
 			if(isset($pro[$key]))
 				$obj[$key] = $pro[$key];
 		}	
@@ -110,7 +110,7 @@
 		// fields that could be edit.
 		$fields = array('businessId','projectName','period','captain','captainName','supervisor','supervisorName','hasChart','createTime', 'salesman','salesmanName', 'designer','designerName','projectTime','budgetId','isFrozen');
 		$obj = array();
-		foreach($keys as $key)
+		foreach($fields as $key)
 			if(isset($pro[$key]))
 				$obj[$key]=$pro[$key];
 		$mysql->DBUpdate("project",$obj,"`projectName` = '?'",array($pro['projectName']));
@@ -119,6 +119,6 @@
 
 	function getProjectsByCaptainName ($captainName){
 		global $mysql;
-		return $mysql->DBGetAsMap("select * from project where `isDeleted` = 'false' and `captainName` = '?' ", $captainName);
+		return $mysql->DBGetAsMap("select * from project where `isDeleted` = 'false' and `captainName` = '?' and `isFrozen` = 'false' ", $captainName);
 	}
 ?>

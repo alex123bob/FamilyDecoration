@@ -56,7 +56,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 											if (obj.status == 'successful') {
 												showMsg('封存成功！');
 												treePanel.getStore().load({
-													node: pro.parentNode.parentNode
+													node: pro.parentNode
 												});
 												treePanel.getSelectionModel().deselectAll();
 												st.proxy.url = './libs/project.php';
@@ -257,15 +257,13 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 										if (success) {
 											var obj = Ext.JSON.decode(res.responseText),
 												proPanel = Ext.getCmp('treepanel-projectName'),
-												st = proPanel.getStore();
+												st = proPanel.getStore(),
+												frozenSt = panel.getStore();
 											if (obj.status == 'successful') {
 												showMsg('解封成功！');
-												Ext.getCmp('treepanel-projectName').getStore().load({
-													node: pro.parentNode.parentNode
-												});
 												st.proxy.url = './libs/project.php';
 												st.proxy.extraParams = {
-													action: 'getProjectYears'
+													action: 'getProjectCaptains'
 												};
 												st.load({
 													node: proPanel.getRootNode(),
@@ -275,6 +273,16 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 														progressGrid.initBtn();
 														progressGrid.refresh();
 														Ext.getCmp('tool-unfreezeProject').disable();
+													}
+												});
+												frozenSt.proxy.url = './libs/project.php';
+												frozenSt.proxy.extraParams = {
+													action: 'getProjectYears'
+												};
+												frozenSt.load({
+													node: pro.parentNode.parentNode,
+													callback: function (){
+														
 													}
 												});
 											}
@@ -765,9 +773,8 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					    					if (obj.status == 'successful') {
 					    						st.proxy.url = './libs/project.php';
 					    						st.proxy.extraParams = {
-					    							action: 'getProjects',
-					    							year: pro.get('projectYear'),
-					    							month: pro.get('projectMonth')
+					    							action: 'getProjectsByCaptainName',
+					    							captainName: pro.get('captainName')
 					    						};
 					    						st.load({
 					    							node: pro.parentNode,
