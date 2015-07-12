@@ -125,7 +125,8 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 									var obj = Ext.decode(res.responseText);
 									var win = Ext.create('FamilyDecoration.view.budget.EditHeader', {
 										budgetPanel: me,
-										budget: obj[0]
+										budget: obj[0],
+										addressType: obj[0]['businessId'] ? 'business' : (obj[0]['projectId'] ? 'project' : '')
 									});
 									win.show();
 								}

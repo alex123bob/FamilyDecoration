@@ -79,7 +79,7 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 						itemId: 'textfield-projectOrBusinessName',
 						readOnly: true,
 						allowBlank: false,
-						value: me.budget ? me.budget['projectOrBusinessName'] : ''
+						value: me.budget ? (me.budget['projectName'] || (me.budget['businessRegion'] + ' ' + me.budget['businessAddress'])) : ''
 					},
 					{
 						xtype: 'button',
@@ -208,7 +208,7 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 					{
 						xtype: 'hidden',
 						itemId: 'hidden-projectOrBusinessId',
-						value: me.budget ? (me.budget['projectId'] || me.budget('businessId')) : ''
+						value: me.budget ? (me.budget['projectId'] || me.budget['businessId']) : ''
 					}
 				]
 			},
@@ -237,9 +237,26 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 			handler: function (){
 				if (me.isValid()) {
 					var p = me.getValue();
-					Ext.apply(p, {
-						addressType: me.addressType
-					});
+					if (me.addressType) {
+						if (me.addressType == 'business') {
+							Ext.apply(p, {
+								businessId: p.projectOrBusinessId,
+								businessName: p.projectOrBusinessName
+							});
+						}
+						else if (me.addressType == 'project') {
+							Ext.apply(p, {
+								projectId: p.projectOrBusinessId,
+								projectName: p.projectOrBusinessName
+							});
+						}
+						delete p.projectOrBusinessId;
+						delete p.projectOrBusinessName;
+					}
+					else {
+						showMsg('没有对应的预算地址类型！');
+						return;
+					}
 					me.budget && Ext.apply(p, {
 						budgetId: me.budget['budgetId']
 					});
@@ -253,7 +270,7 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 								if (obj.status == 'successful') {
 									var o = {
 										custName: p['custName'],
-										projectOrBusinessName: p['projectOrBusinessName'],
+										projectOrBusinessName: p['projectName'] || p['businessName'],
 										budgetName: p['budgetName']
 									};
 									if (me.budget) {

@@ -29,6 +29,12 @@ Ext.define('FamilyDecoration.view.budget.HistoryBudget', {
 						showMsg('该预算已经被加载！');
 					}
 					else {
+						if (rec.get('businessId')) {
+							rec.set('projectOrBusinessName', rec.get('businessRegion') + ' ' + rec.get('businessAddress'));
+						}
+						else if (rec.get('projectId')) {
+							rec.set('projectOrBusinessName', rec.get('projectName'));
+						}
 						me.budgetPanel.loadBudget(rec.data);
 						me.close();
 					}
@@ -64,6 +70,19 @@ Ext.define('FamilyDecoration.view.budget.HistoryBudget', {
 					text: '工程地址',
 					dataIndex: 'projectName',
 					flex: 1
+				},
+				{
+					text: '业务地址',
+					dataIndex: 'businessAddress',
+					flex: 1,
+					renderer: function (val, meta, rec){
+						if (rec.get('businessId')) {
+							return rec.get('businessRegion') + ' ' + val;
+						}
+						else {
+							return '';
+						}
+					}
 				},
 				{
 					text: '预算名称',

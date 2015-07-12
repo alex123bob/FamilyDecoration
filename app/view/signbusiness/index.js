@@ -432,7 +432,95 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 				disabled: true,
 				icon: './resources/img/scroll.png',
 				handler: function (){
+					var grid = Ext.getCmp('gridpanel-detailedAddressForSignBusiness'),
+						rec = grid.getSelectionModel().getSelection()[0];
 
+					if (rec) {
+						if (rec.get('applyBudget') == 2) {
+							Ext.Ajax.request({
+								url: './libs/budget.php?action=getBudgetsByBusinessId',
+								params: {
+									businessId: rec.getId()
+								},
+								callback: function (opts, success, res){
+									if (success) {
+										var obj = Ext.decode(res.responseText);
+										if (obj.length > 0) {
+											var listWin = Ext.create('Ext.window.Window', {
+												title: rec.get('regionName') + ' ' + rec.get('address') + '-预算列表',
+												width: 600,
+												modal: true,
+												height: 400,
+												layout: 'fit',
+												items: [{
+													xtype: 'gridpanel',
+													autoScroll: true,
+													columns: [
+														{
+															text: '项目名称',
+															dataIndex: 'businessAddress',
+															flex: 1,
+															renderer: function (val, meta, rec){
+																return rec.get('businessRegion') + ' ' + val;
+															}
+														},
+														{
+															text: '客户名称',
+															dataIndex: 'custName',
+															flex: 1
+														},
+														{
+															text: '预算名称',
+															dataIndex: 'budgetName',
+															flex: 2
+														},
+														{
+															text: '户型大小',
+															dataIndex: 'areaSize',
+															flex: 1
+														}
+													],
+													store: Ext.create('FamilyDecoration.store.Budget', {
+														data: obj,
+														autoLoad: false
+													})
+												}],
+												buttons: [
+													{
+														text: '查看预算',
+														handler: function (){
+															var grid = listWin.down('gridpanel'),
+																st = grid.getStore(),
+																budgetRec = grid.getSelectionModel().getSelection()[0];
+															if (budgetRec) {
+																var win = window.open('./fpdf/index2.php?action=view&budgetId=' + budgetRec.getId(),'打印','height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+															}
+															else {
+																showMsg('请选择预算！');
+															}
+														}
+													},
+													{
+														text: '取消',
+														handler: function (){
+															listWin.close();
+														}
+													}
+												]
+											});
+											listWin.show();
+										}
+									}
+								}
+							});
+						}
+						else {
+							showMsg('当前签单业务没有预算！');
+						}
+					}
+					else {
+						showMsg('没有选择地址！');
+					}
 				}
 			}, {
 				text: '转为工程',

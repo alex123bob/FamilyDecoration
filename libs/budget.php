@@ -1,6 +1,7 @@
 <?php
 	include_once "conn.php";
 	include_once "budgetDB.php";
+	include_once "businessDB.php";
 	$action = $_REQUEST["action"];
 	$res = "";
 	$isParseResut = true;
@@ -25,6 +26,8 @@
 		case "delete":	$res = delBudget($_REQUEST["budgetId"]);  break;
 		//根据id获取预算
 		case "view":	$res = getBudgetsByBudgetId($_REQUEST["budgetId"]);  break;
+		// 根据业务id获取预算
+		case "getBudgetsByBusinessId": $res = getBudgetsByBusinessId($_REQUEST["businessId"]); break;
 		//折扣
 		case "discount":$res = makeDiscount($_REQUEST);  break;
 		//成本分析

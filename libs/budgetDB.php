@@ -140,6 +140,10 @@
 		if(!isset($post["projectId"]) && !isset($post["businessId"]) ){
 			throw new Exception("预算必须有关联的项目或者业务！");
 		}
+		// 将applyBudget置为2表示当前业务可以进行预算查看了
+		if (isset($post["businessId"])) {
+			editBusiness(array("id"=>$post["businessId"], "applyBudget"=>2));
+		}
 		$budgetId = "budget-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
 		$fields = array("projectId","businessId","custName","areaSize","totalFee","comments",'budgetName');
 		$budget = array("isDeleted"=>false,"budgetId" =>$budgetId );
@@ -194,13 +198,19 @@
 	}
 	function getBudgets (){
 		global $mysql;
-		return $mysql->DBGetAsMap("SELECT b.*,p.projectName FROM `budget` b left join `project` p on b.projectId=p.projectId where b.`isDeleted` = 'false' ");
+		return $mysql->DBGetAsMap("SELECT b.*,p.projectName,bz.address as businessAddress,`r`.`name` as businessRegion FROM `budget` b left join `project` p on b.projectId=p.projectId left join `business` `bz` on `bz`.`id` = `b`.`businessId` left join `region` `r` on `r`.`id` = `bz`.`regionId` where b.`isDeleted` = 'false' ");
 	}
 	
 	function getBudgetsByBudgetId ($budgetId){
 		global $mysql;
 		//return $mysql->DBGetAsMap("SELECT b.*,p.projectName FROM `budget` b left join `project` p on b.projectId=p.projectId where b.`isDeleted` = 'false' and b.`budgetId` = '?' ",$budgetId);
-		return $mysql->DBGetAsMap("SELECT b.*,p.projectName,bz.address as businessName FROM `budget` b left join `project` p on b.projectId=p.projectId left join `business` bz on bz.id = b.businessId where b.`isDeleted` = 'false' and b.`budgetId` = '?' ",$budgetId);
+		return $mysql->DBGetAsMap("SELECT b.*,p.projectName,bz.address as businessAddress,`r`.`name` as businessRegion FROM `budget` b left join `project` p on b.projectId=p.projectId left join `business` bz on bz.id = b.businessId left join `region` `r` on `bz`.`regionId` = `r`.id where b.`isDeleted` = 'false' and b.`budgetId` = '?' ",$budgetId);
+	}
+
+	function getBudgetsByBusinessId ($businessId){
+		global $mysql;
+
+		return $mysql->DBGetAsMap("SELECT b.*,bz.address as businessAddress,`r`.`name` as businessRegion FROM `budget` b left join `business` bz on bz.id = b.businessId left join `region` `r` on `bz`.`regionId` = `r`.id where b.`isDeleted` = 'false' and b.`businessId` = '?' ",$businessId);
 	}
 	
 	function compareBudgetItem($arg1,$arg2){
@@ -210,7 +220,7 @@
 	function editBudget (array $pro){
 		global $mysql;
 		$obj = array();
-		$fields = array("custName","areaSize","projectId","totalFee", "comments",'budgetName');
+		$fields = array("custName","areaSize","projectId", "businessId", "totalFee", "comments",'budgetName');
 		foreach($fields as $field) {
 			if (isset($pro[$field])) {
 				$obj[$field] = $pro[$field];
