@@ -111,7 +111,7 @@ Ext.define('FamilyDecoration.view.mainmaterial.EditMainMaterial', {
 
 												if (!me.mainmaterial) {
 													// announce related staffs via email
-													var content = User.getRealName() + '为工程"' + me.project['projectName'] + '"添加主材订购。',
+													var content = User.getRealName() + '为工程"' + me.project.get('projectName') + '"添加主材订购。',
 														subject = '主材订购创建通知';
 													for (i = 0; i < mailObjects.length; i++) {
 														setTimeout((function (index){

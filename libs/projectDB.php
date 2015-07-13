@@ -119,6 +119,11 @@
 
 	function getProjectsByCaptainName ($captainName){
 		global $mysql;
-		return $mysql->DBGetAsMap("select * from project where `isDeleted` = 'false' and `captainName` = '?' and `isFrozen` = 'false' ", $captainName);
+		$projects = $mysql->DBGetAsMap("select * from project where `isDeleted` = 'false' and `captainName` = '?' and `isFrozen` = 'false' ", $captainName);
+		$sqlBudget = "select * from budget where projectId = '?' and isDeleted = 'false'";
+		foreach($projects as $key=>$project) {
+			$projects[$key]["budgets"] = $mysql->DBGetAsMap($sqlBudget,$project['projectId']);
+		}
+		return $projects;
 	}
 ?>

@@ -221,7 +221,7 @@ Ext.define('FamilyDecoration.view.plan.EditPlan', {
 
 												if (!me.plan) {
 													// announce related staffs via email
-													var content = User.getRealName() + '为工程"' + me.project['projectName'] + '"创建了计划。',
+													var content = User.getRealName() + '为工程"' + me.project.get('projectName') + '"创建了计划。',
 														subject = '工程计划创建通知';
 													for (i = 0; i < mailObjects.length; i++) {
 														setTimeout((function (index){

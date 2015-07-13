@@ -16,7 +16,7 @@ Ext.define('FamilyDecoration.view.plan.Index', {
 			width: 200,
 			margin: '0 1 0 0',
 			items: [{
-				xtype: 'progress-projectlist',
+				xtype: 'progress-projectlistbycaptain',
 				searchFilter: true,
 				title: '工程项目名称',
 				id: 'treepanel-projectNameForPlan',
@@ -277,8 +277,9 @@ Ext.define('FamilyDecoration.view.plan.Index', {
 					var sel = Ext.getCmp('treepanel-projectNameForPlan').getSelectionModel().getSelection()[0];
 					if (sel) {
 						window.pro = {
-							year: sel.get('projectYear'),
-							month: sel.get('projectMonth'),
+							// year: sel.get('projectYear'),
+							// month: sel.get('projectMonth'),
+							captainName: sel.get('captainName'),
 							pid: sel.getId()
 						};
 

@@ -40,7 +40,7 @@ Ext.define('FamilyDecoration.view.chart.AddCategory', {
 			hideLabel: true,
 			name: 'radiofield-category'
 		}, {
-			xtype: 'progress-projectlist',
+			xtype: 'progress-projectlistbycaptain',
 			isForAddCategory: true,
 			header: false,
 			id: 'projectlist-projectName',
@@ -111,7 +111,7 @@ Ext.define('FamilyDecoration.view.chart.AddCategory', {
 									if (obj.status == 'successful') {
 										showMsg('图库类别添加成功！');
 										me.close();
-										st.getProxy().url = 'libs/project.php?action=getProjectYears';
+										st.getProxy().url = 'libs/project.php?action=getProjectCaptains';
 										st.getProxy().extraParams = {};
 										st.load({
 											node: projectCategory.getRootNode()

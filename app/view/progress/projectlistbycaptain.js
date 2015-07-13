@@ -79,9 +79,60 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 	            					icon: './resources/img/user.ico'
 	            				});
 	            			}
+
+	            			if (me.isForChart) {
+	            				if (node.get('projectName')) {
+	            					// 图库面板，即使工程没有图库也出现工程名
+	            					// if (node.get('isFrozen') != 1) {
+
+	            					// 图库面板，工程没有图库就不出现工程名
+	            					if (node.get('hasChart') == 1 && node.get('isFrozen') != 1) {
+	            						node.set({
+		            						leaf: true,
+		            						icon: 'resources/img/project.png'
+		            					});
+	            					}
+	            					else {
+	            						return false;
+	            					}
+	            				}
+	            			}
+	            			else if (me.isForAddCategory) {
+	            				if (node.get('projectName')) {
+	            					if (node.get('hasChart') == 0 && node.get('isFrozen') != 1) {
+	            						node.set({
+		            						leaf: true,
+		            						icon: 'resources/img/project.png'
+		            					});
+	            					}
+	            					else {
+	            						return false;
+	            					}
+	            				}
+	            			}
 	            		}
 	            	},
 	            	load: function (st, node, recs){
+	            		if (window.pro && node.isRoot() && recs != null) {
+	            			var captainName = pro.captainName,
+	            				pid = pro.pid;
+	            			for (var i  = 0; i < recs.length; i++) {
+	            				if (recs[i].get('captainName') == captainName) {
+	            					recs[i].expand(false, function (ps){
+										Ext.defer(function (){
+											for (i = 0; i < ps.length; i++) {
+												if (ps[i].getId() == pid) {
+													me.getSelectionModel().select(ps[i]);
+												}
+											}
+										}, 300);
+	            					});
+	            					break;
+	            				}
+	            			}
+	            			delete window.pro;
+	            		}
+
 	            		if (me.loadAll) {
 	            			me.expandAll();
 	            		}

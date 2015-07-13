@@ -21,7 +21,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 			width: 220,
 			title: '图片分类',
 			items: [{
-				xtype: 'progress-projectlist',
+				xtype: 'progress-projectlistbycaptain',
 				id: 'treepanel-chartCategory',
 				name: 'treepanel-chartCategory',
 				searchFilter: true,
@@ -469,8 +469,9 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 					var sel = Ext.getCmp('treepanel-chartCategory').getSelectionModel().getSelection()[0];
 					if (sel) {
 						window.pro = {
-							year: sel.get('projectYear'),
-							month: sel.get('projectMonth'),
+							// year: sel.get('projectYear'),
+							// month: sel.get('projectMonth'),
+							captainName: sel.get('captainName'),
 							pid: sel.getId()
 						};
 

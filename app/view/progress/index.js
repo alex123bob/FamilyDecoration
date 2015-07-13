@@ -576,14 +576,16 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				handler: function (){
 					var proPanel = Ext.getCmp('treepanel-projectName'),
 						project = proPanel.getSelectionModel().getSelection()[0],
-						year = project.get('projectYear'),
-						month = project.get('projectMonth'),
+						// year = project.get('projectYear'),
+						// month = project.get('projectMonth'),
+						captainName = project.get('captainName'),
 						pid = project.getId();
 
 					if (project.get('hasChart') == '1') {
 						window.pro = {
-							year: year,
-							month: month,
+							// year: year,
+							// month: month,
+							captainName: captainName,
 							pid: pid
 						};
 
@@ -686,15 +688,17 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				handler: function (){
 					var proPanel = Ext.getCmp('treepanel-projectName'),
 						project = proPanel.getSelectionModel().getSelection()[0],
-						year, month, pid;
+						year, month, pid, captainName;
 
 					if (project && project.get('projectName')) {
-						year = project.get('projectYear');
-						month = project.get('projectMonth');
+						// year = project.get('projectYear');
+						// month = project.get('projectMonth');
+						captainName = project.get('captainName');
 						pid = project.getId();
 						window.pro = {
-							year: year,
-							month: month,
+							// year: year,
+							// month: month,
+							captainName: captainName,
 							pid: pid
 						};
 
