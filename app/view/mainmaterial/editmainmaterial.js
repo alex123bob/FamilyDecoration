@@ -9,6 +9,7 @@ Ext.define('FamilyDecoration.view.mainmaterial.EditMainMaterial', {
 
 	mainmaterial: null,
 	projectId: undefined,
+	project: null,
 
 	defaults: {
 		xtype: 'textfield',
@@ -78,24 +79,56 @@ Ext.define('FamilyDecoration.view.mainmaterial.EditMainMaterial', {
 						productSchedule: schedule.getValue(),
 						productDeliver: deliver.getValue()
 					});
+
 					Ext.Ajax.request({
-						url: me.mainmaterial ? './libs/mainmaterial.php?action=editMaterial' : './libs/mainmaterial.php?action=addMaterial',
-						method: 'POST',
-						params: obj,
+						url: './libs/user.php?action=view',
+						method: 'GET',
 						callback: function (opts, success, res){
 							if (success) {
-								var obj = Ext.decode(res.responseText),
-									treepanel = Ext.getCmp('treepanel-projectNameForMainMaterial'),
-									rec = treepanel.getSelectionModel().getSelection()[0],
-									gridpanel = Ext.getCmp('gridpanel-mainMaterialContent');
-								if (obj.status == 'successful') {
-									me.mainmaterial ? showMsg('编辑成功！') : showMsg('添加成功！');
-									me.close();
-									gridpanel.refresh(rec);
+								var userArr = Ext.decode(res.responseText),
+									mailObjects = [];
+								for (var i = 0; i < userArr.length; i++) {
+									var level = userArr[i].level;
+									if (me.project.get('captainName') == userArr[i].name) {
+										mailObjects.push(userArr[i]);
+									}
 								}
-								else {
-									Ext.Msg.error(obj.errMsg);
-								}
+
+								Ext.Ajax.request({
+									url: me.mainmaterial ? './libs/mainmaterial.php?action=editMaterial' : './libs/mainmaterial.php?action=addMaterial',
+									method: 'POST',
+									params: obj,
+									callback: function (opts, success, res){
+										if (success) {
+											var obj = Ext.decode(res.responseText),
+												treepanel = Ext.getCmp('treepanel-projectNameForMainMaterial'),
+												rec = treepanel.getSelectionModel().getSelection()[0],
+												gridpanel = Ext.getCmp('gridpanel-mainMaterialContent');
+											if (obj.status == 'successful') {
+												me.mainmaterial ? showMsg('编辑成功！') : showMsg('添加成功！');
+												me.close();
+												gridpanel.refresh(rec);
+
+												if (!me.mainmaterial) {
+													// announce related staffs via email
+													var content = User.getRealName() + '为工程"' + me.project['projectName'] + '"添加主材订购。',
+														subject = '主材订购创建通知';
+													for (i = 0; i < mailObjects.length; i++) {
+														setTimeout((function (index){
+															return function (){
+																sendMail(mailObjects[index].name, mailObjects[index].mail, subject, content);
+															}
+														})(i), 1000 * (i + 1));
+													}
+													// end of announcement
+												}
+											}
+											else {
+												Ext.Msg.error(obj.errMsg);
+											}
+										}
+									}
+								});
 							}
 						}
 					});

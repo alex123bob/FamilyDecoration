@@ -84,7 +84,8 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 					var treepanel = Ext.getCmp('treepanel-projectNameForMainMaterial'),
 						rec = treepanel.getSelectionModel().getSelection()[0];
 					var win = Ext.create('FamilyDecoration.view.mainmaterial.EditMainMaterial', {
-						projectId: rec.getId()
+						projectId: rec.getId(),
+						project: rec
 					});
 					win.show();
 				}
@@ -102,7 +103,8 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 					if (material) {
 						var win = Ext.create('FamilyDecoration.view.mainmaterial.EditMainMaterial', {
 							projectId: rec.getId(),
-							mainmaterial: material
+							mainmaterial: material,
+							project: rec
 						});
 						win.show();
 					}

@@ -212,6 +212,7 @@ Ext.define('FamilyDecoration.view.plan.Index', {
 					var treepanel = Ext.getCmp('treepanel-projectNameForPlan'),
 						rec = treepanel.getSelectionModel().getSelection()[0];
 					var win = Ext.create('FamilyDecoration.view.plan.EditPlan', {
+						project: rec,
 						projectId: rec.getId()
 					});
 					win.show();
@@ -228,6 +229,7 @@ Ext.define('FamilyDecoration.view.plan.Index', {
 						rec = treepanel.getSelectionModel().getSelection()[0],
 						grid = Ext.getCmp('gridpanel-projectPlan');
 					var win = Ext.create('FamilyDecoration.view.plan.EditPlan', {
+						project: rec,
 						projectId: rec.getId(),
 						plan: grid.plan
 					});

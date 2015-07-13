@@ -10,6 +10,7 @@ Ext.define('FamilyDecoration.view.plan.EditPlan', {
 
 	plan: null,
 	projectId: undefined,
+	project: null,
 
 	initComponent: function (){
 		var me = this,
@@ -188,22 +189,60 @@ Ext.define('FamilyDecoration.view.plan.EditPlan', {
 					id: me.plan.id
 				});
 				Ext.Ajax.request({
-					url: me.plan ? './libs/plan.php?action=editPlan' : './libs/plan.php?action=addPlan',
-					method: 'POST',
-					params: obj,
+					url: './libs/user.php?action=view',
+					method: 'GET',
 					callback: function (opts, success, res){
 						if (success) {
-							var obj = Ext.decode(res.responseText),
-								treepanel = Ext.getCmp('treepanel-projectNameForPlan'),
-								rec = treepanel.getSelectionModel().getSelection()[0],
-								gridpanel = Ext.getCmp('gridpanel-projectPlan');
-							if (obj.status == 'successful') {
-								me.plan ? showMsg('编辑计划成功！') : showMsg('添加计划成功！');
-								me.close();
-								gridpanel.refresh(rec);
+							var userArr = Ext.decode(res.responseText),
+								mailObjects = [];
+							for (var i = 0; i < userArr.length; i++) {
+								var level = userArr[i].level;
+								if (/^001-\d{3}$/i.test(level) || '003-001' == level
+									|| me.project.get('designerName') == userArr[i].name) {
+									mailObjects.push(userArr[i]);
+								}
+							}
+
+							if (mailObjects.length > 0) {
+								Ext.Ajax.request({
+									url: me.plan ? './libs/plan.php?action=editPlan' : './libs/plan.php?action=addPlan',
+									method: 'POST',
+									params: obj,
+									callback: function (opts, success, res){
+										if (success) {
+											var obj = Ext.decode(res.responseText),
+												treepanel = Ext.getCmp('treepanel-projectNameForPlan'),
+												rec = treepanel.getSelectionModel().getSelection()[0],
+												gridpanel = Ext.getCmp('gridpanel-projectPlan');
+											if (obj.status == 'successful') {
+												me.plan ? showMsg('编辑计划成功！') : showMsg('添加计划成功！');
+												me.close();
+												gridpanel.refresh(rec);
+
+												if (!me.plan) {
+													// announce related staffs via email
+													var content = User.getRealName() + '为工程"' + me.project['projectName'] + '"创建了计划。',
+														subject = '工程计划创建通知';
+													for (i = 0; i < mailObjects.length; i++) {
+														setTimeout((function (index){
+															return function (){
+																sendMail(mailObjects[index].name, mailObjects[index].mail, subject, content);
+															}
+														})(i), 1000 * (i + 1));
+													}
+													// end of announcement
+												}
+
+											}
+											else {
+												Ext.Msg.error(obj.errMsg);
+											}
+										}
+									}
+								});
 							}
 							else {
-								Ext.Msg.error(obj.errMsg);
+								showMsg('没有通知用户！');
 							}
 						}
 					}

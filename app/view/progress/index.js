@@ -377,7 +377,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				labelWidth: 70,
 				width: 140,
 				readOnly: true,
-				fieldLabel: '项目负责人'
+				fieldLabel: '项目经理'
 			}, {
 				xtype: 'textfield',
 				name: 'textfield-supervisor',
@@ -751,7 +751,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 								value: pro ? pro.get('period').split(':')[1] : 0
 							}]
 						},{
-					        fieldLabel: '项目负责人',
+					        fieldLabel: '项目经理',
 					        name: 'projectCaptain',
 					        allowBlank: false,
 					        value: pro ? pro.get('captain') : ''
