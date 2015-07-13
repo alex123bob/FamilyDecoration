@@ -22,7 +22,7 @@ imagettftext($img, $labelFontSize, 0, 190, 290, $black, $font, "项目之坑");
 
 imagettftext($img, $labelFontSize, 0, 390, 170, $black, $font, "张泽南");
 imagettftext($img, $labelFontSize, 0, 390, 230, $black, $font, "张泽南");
-imagettftext($img, $labelFontSize, 0, 390, 290, $black, $font, "张泽南");
+// imagettftext($img, $labelFontSize, 0, 390, 290, $black, $font, "张泽南");
 
 
 imagepng($img);  
