@@ -5,7 +5,8 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 		'FamilyDecoration.store.Project', 'FamilyDecoration.view.progress.EditProject', 'Ext.tree.Panel',
 		'FamilyDecoration.view.progress.EditProgress', 'FamilyDecoration.view.progress.ProjectList',
 		'FamilyDecoration.view.budget.BudgetPanel', 'Ext.layout.container.Form', 'FamilyDecoration.model.Progress',
-		'FamilyDecoration.store.BusinessDetail', 'FamilyDecoration.view.progress.ProjectListByCaptain'
+		'FamilyDecoration.store.BusinessDetail', 'FamilyDecoration.view.progress.ProjectListByCaptain',
+		'Ext.form.FieldSet'
 	],
 	// autoScroll: true,
 	layout: 'border',
@@ -722,11 +723,34 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 						modal: true,
 						defaultType: 'textfield',
 					    items: [{
-					       	fieldLabel: '工期',
-					        name: 'projectPeriod',
-					        allowBlank:false,
-					        value: pro ? pro.get('period') : ''
-					    },{
+							xtype: 'fieldset',
+							collasible: false,
+							layout: 'anchor',
+							title: '工期',
+							defaults: {
+								anchor: '100%'
+							},
+							items: [{
+								xtype: 'datefield',
+								fieldLabel: '开始',
+								editable: false,
+								flex: 1,
+								labelWidth: 40,
+								name: 'projectStartTime',
+								allowBlank: false,
+								value: pro ? pro.get('period').split(':')[0] : ''
+							}, {
+								margin: '0 0 0 2px',
+								xtype: 'datefield',
+								fieldLabel: '结束',
+								editable: false,
+								flex: 1,
+								labelWidth: 40,
+								name: 'projectEndTime',
+								allowBlank: false,
+								value: pro ? pro.get('period').split(':')[1] : 0
+							}]
+						},{
 					        fieldLabel: '项目负责人',
 					        name: 'projectCaptain',
 					        allowBlank: false,
@@ -750,7 +774,8 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					    buttons: [{
 					    	text: '确定',
 					    	handler: function (){
-					    		var period = win.down('[name="projectPeriod"]'),
+					    		var start = win.down('[name="projectStartTime"]'),
+					    			end = win.down('[name="projectEndTime"]'),
 					    			captain = win.down('[name="projectCaptain"]'),
 					    			supervisor = win.down('[name="projectSupervisor"]'),
 					    			salesman = win.down('[name="projectSalesman"]'),
@@ -761,7 +786,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					    			method: 'POST',
 					    			params: {
 					    				projectId: pro.getId(),
-					    				period: period.getValue(),
+					    				period: Ext.Date.format(start.getValue(), 'Y-m-d') + ':' + Ext.Date.format(end.getValue(), 'Y-m-d'),
 					    				captain: captain.getValue(),
 					    				supervisor: supervisor.getValue(),
 					    				salesman: salesman.getValue(),

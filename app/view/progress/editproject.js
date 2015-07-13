@@ -37,6 +37,154 @@ Ext.define('FamilyDecoration.view.progress.EditProject', {
 				name: 'projectTime',
 				allowBlank: false,
 				value: pro ? pro.get('projectTime').replace(/-/gi, '/') : ''
+			}, {
+				xtype: 'fieldcontainer',
+				layout: 'hbox',
+				width: '100%',
+				items: [{
+					name: 'projectCaptain',
+					xtype: 'textfield',
+					readOnly: true,
+					fieldLabel: '项目经理',
+					allowBlank: false
+				}, {
+					xtype: 'button',
+					text: '选择',
+					handler: function (){
+						var win = Ext.create('Ext.window.Window', {
+							title: '选择项目经理',
+							layout: 'fit',
+							modal: true,
+							width: 500,
+							height: 400,
+							items: [{
+								xtype: 'gridpanel',
+								autoScroll: true,
+								columns: [{
+									text: '姓名',
+									flex: 1,
+									dataIndex: 'realname'
+								}, {
+									text: '用户名',
+									flex: 1,
+									dataIndex: 'name'
+								}, {
+									text: '部门',
+									flex: 1,
+									dataIndex: 'level',
+									renderer: function (val){
+										return User.renderDepartment(val);
+									}
+								}, {
+									text: '等级',
+									flex: 1,
+									dataIndex: 'level',
+									renderer: function (val){
+										return User.renderRole(val);
+									}
+								}],
+								store: Ext.create('FamilyDecoration.store.User', {
+									autoLoad: true,
+									filters: [
+										function (item) {
+											return /^003-\d{3}$/i.test(item.get('level'));
+										}
+									]
+								})
+							}],
+							buttons: [{
+								text: '确定',
+								handler: function (){
+									var grid = win.down('grid'),
+										captain = Ext.getCmp('textfield-projectCaptain'),
+										hidden = Ext.getCmp('hidden-projectCaptainForCheckSign'),
+										rec = grid.getSelectionModel().getSelection()[0];
+									if (rec) {
+										captain.setValue(rec.get('realname'));
+										hidden.setValue(rec.get('name'));
+										win.close();
+									}
+									else {
+										showMsg('请选择成员！');
+									}
+								}
+							}, {
+								text: '取消',
+								handler: function (){
+									win.close();
+								}
+							}]
+						});
+
+						win.show();
+					}
+				}, {
+					xtype: 'hidden',
+					name: 'hidden-projectCaptain',
+					hideLabel: true
+				}]
+			}, {
+				xtype: 'fieldcontainer',
+				layout: 'hbox',
+				width: '100%',
+				items: [{
+					name: 'projectSupervisor',
+					xtype: 'textfield',
+					readOnly: true,
+					fieldLabel: '项目监理',
+					allowBlank: false
+				}, {
+					xtype: 'button',
+					text: '选择',
+					handler: function (){
+						var win = Ext.create('Ext.window.Window', {
+							title: '选择项目监理',
+							width: 500,
+							height: 300,
+							layout: 'fit',
+							modal: true,
+							items: [{
+								xtype: 'checklog-memberlist',
+								listeners: {
+									itemclick: function (view, rec){
+										if (!rec.get('name')) {
+											return false;
+										}
+									}
+								}
+							}],
+							buttons: [{
+								text: '确定',
+								handler: function (){
+									var memberlist = win.down('treepanel'),
+										supervisorTxt = Ext.getCmp('textfield-projectSupervisorForCheckSign'),
+										supervisorHidden = Ext.getCmp('hidden-projectSupervisorForCheckSign'),
+										member = memberlist.getSelectionModel().getSelection()[0];
+
+									if (member && member.get('name')) {
+										supervisorTxt.setValue(member.get('realname'));
+										supervisorHidden.setValue(member.get('name'));
+										win.close();
+									}
+									else {
+										showMsg('请选择成员！');
+									}
+								}
+							}, {
+								text: '取消',
+								handler: function (){
+									win.close();
+								}
+							}]
+						});
+
+						win.show();
+					}
+				}, {
+					xtype: 'hidden',
+					name: 'hidden-projectSupervisor',
+					hideLabel: true
+				}]
 			}]
 		}];
 
