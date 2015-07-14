@@ -3,7 +3,8 @@ Ext.define('FamilyDecoration.view.costanalysis.Index', {
     alias: 'widget.costanalysis-index',
     requires: [
         'FamilyDecoration.view.progress.ProjectList', 'FamilyDecoration.view.costanalysis.TotalCost',
-        'FamilyDecoration.view.costanalysis.CostAnalysis', 'FamilyDecoration.store.Budget'
+        'FamilyDecoration.view.costanalysis.CostAnalysis', 'FamilyDecoration.store.Budget',
+        'FamilyDecoration.view.progress.ProjectListByCaptain'
     ],
     autoScroll: true,
     width: '100%',
@@ -15,7 +16,7 @@ Ext.define('FamilyDecoration.view.costanalysis.Index', {
         var me = this;
 
         me.items = [{
-            xtype: 'progress-projectlist',
+            xtype: 'progress-projectlistbycaptain',
             flex: 2,
             height: '100%',
             title: '工程项目名称',

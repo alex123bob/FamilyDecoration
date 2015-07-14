@@ -315,18 +315,104 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 id: 'panel-thisWeekStar',
                 name: 'panel-thisWeekStar',
                 items: [{
-                    xtype: 'image',
-                    src: './jz/2.php'
-                }]
+                    xtype: 'image'
+                }],
+                listeners: {
+                    beforerender: function (cmp, opts){
+                        Ext.Ajax.request({
+                            url: './libs/business.php?action=businessStar',
+                            method: 'POST',
+                            params: {
+                                desc: true,
+                                number: 1
+                            },
+                            callback: function (opts, success, res){
+                                if (success) {
+                                    var obj = Ext.decode(res.responseText);
+                                    if (obj.length > 0) {
+                                        var businessStar = obj[0].salesman;
+                                        Ext.Ajax.request({
+                                            url: './libs/business.php?action=signStar',
+                                            method: 'POST',
+                                            params: {
+                                                desc: true,
+                                                number: 1
+                                            },
+                                            callback: function (opts, success, res){
+                                                if (success) {
+                                                    var obj = Ext.decode(res.responseText);
+                                                    if (obj.length > 0) {
+                                                        var signStar = obj[0].designer;
+                                                        var img = Ext.getCmp('panel-thisWeekStar').down('image');
+                                                        img.setSrc('./jz/2.php?businessStar='+businessStar+'&signStar='+signStar);
+                                                    }
+                                                    else {
+                                                        showMsg('没有本周签单之星！');
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+                                    else {
+                                        showMsg('没有本周业务之星！');
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
             }, {
                 title: '本周之坑',
                 width: '100%',
                 flex: 1,
                 layout: 'fit',
                 items: [{
-                    xtype: 'image',
-                    src: './jz/3.php'
-                }]
+                    xtype: 'image'
+                }],
+                listeners: {
+                    beforerender: function (cmp, opts){
+                        Ext.Ajax.request({
+                            url: './libs/business.php?action=businessStar',
+                            method: 'POST',
+                            params: {
+                                desc: false,
+                                number: 1
+                            },
+                            callback: function (opts, success, res){
+                                if (success) {
+                                    var obj = Ext.decode(res.responseText);
+                                    if (obj.length > 0) {
+                                        var businessStar = obj[0].salesman;
+                                        Ext.Ajax.request({
+                                            url: './libs/business.php?action=signStar',
+                                            method: 'POST',
+                                            params: {
+                                                desc: false,
+                                                number: 1
+                                            },
+                                            callback: function (opts, success, res){
+                                                if (success) {
+                                                    var obj = Ext.decode(res.responseText);
+                                                    if (obj.length > 0) {
+                                                        var signStar = obj[0].designer;
+                                                        var img = Ext.getCmp('panel-thisWeekStar').down('image');
+                                                        img.setSrc('./jz/2.php?businessLast='+businessStar+'&signLast='+signStar);
+                                                    }
+                                                    else {
+                                                        showMsg('没有本周签单之星！');
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+                                    else {
+                                        showMsg('没有本周业务之星！');
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
             }]
         }];
 

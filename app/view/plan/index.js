@@ -3,7 +3,7 @@ Ext.define('FamilyDecoration.view.plan.Index', {
 	alias: 'widget.plan-index',
 	requires: [
 		'FamilyDecoration.store.Project', 'FamilyDecoration.view.progress.EditProject', 'Ext.tree.Panel', 'FamilyDecoration.view.progress.ProjectList',
-		'FamilyDecoration.store.PlanCategory', 'FamilyDecoration.view.plan.EditPlan'
+		'FamilyDecoration.store.PlanCategory', 'FamilyDecoration.view.plan.EditPlan', 'FamilyDecoration.view.progress.ProjectListByCaptain'
 	],
 	layout: 'border',
 

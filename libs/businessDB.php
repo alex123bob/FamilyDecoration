@@ -1,5 +1,13 @@
 <?php
-	
+	function getBusinessStar($desc,$number,$startTime,$endTime){
+		global $mysql;
+		return $mysql->DBGetAsMap("SELECT salesman,salesmanName, COUNT( * ) AS number FROM business where createTime >= '$startTime' and createTime <= '$endTime' GROUP BY salesman ORDER BY number DESC LIMIT ".$number);
+	}
+	function getSignStar($desc,$number,$startTime,$endTime){
+		global $mysql;
+		return $mysql->DBGetAsMap("SELECT designer,designerName, COUNT( * ) AS number FROM business where signTime >= '$startTime' and signTime <= '$endTime' GROUP BY designer ORDER BY number DESC LIMIT ".$number);
+	}
+
 	function getBusinessByRegion($reginId,$isFrozen,$isTransfered,$salesmanName=null){
 		global $mysql;
 		$where = "where regionId = '?' and `isDeleted` = 'false' and `isFrozen` = '?' and `isTransfered` = '?' ";

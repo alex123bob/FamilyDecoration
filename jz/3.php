@@ -1,6 +1,10 @@
 <?php  
 header("Content-type: image/png");  
 $img = imagecreatefromjpeg("negative_jiangzhuang.jpg");  
+date_default_timezone_set('PRC');
+
+$businessLast = $_GET["businessLast"];
+$signLast = $_GET["signLast"];
 
 //设置字体颜色  
 $textcolor = imagecolorallocate($img,0,0,0);  
@@ -20,8 +24,8 @@ imagettftext($img, $labelFontSize, 0, 190, 170, $black, $font, "业务之坑");
 imagettftext($img, $labelFontSize, 0, 190, 230, $black, $font, "签单之坑");
 imagettftext($img, $labelFontSize, 0, 190, 290, $black, $font, "项目之坑");
 
-imagettftext($img, $labelFontSize, 0, 390, 170, $black, $font, "张泽南");
-imagettftext($img, $labelFontSize, 0, 390, 230, $black, $font, "张泽南");
+imagettftext($img, $labelFontSize, 0, 390, 170, $black, $font, $businessLast);
+imagettftext($img, $labelFontSize, 0, 390, 230, $black, $font, $signLast);
 // imagettftext($img, $labelFontSize, 0, 390, 290, $black, $font, "张泽南");
 
 

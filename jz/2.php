@@ -1,6 +1,10 @@
 <?php  
 header("Content-type: image/png");  
 $img = imagecreatefromjpeg("jiangzhuang.jpg");  
+date_default_timezone_set('PRC');
+
+$businessStar = $_GET["businessStar"];
+$signStar = $_GET["signStar"];
 
 //设置字体颜色  
 $textcolor = imagecolorallocate($img,0,0,0);  
@@ -20,8 +24,8 @@ imagettftext($img, $labelFontSize, 0, 300, 320, $black, $font, "业务之星");
 imagettftext($img, $labelFontSize, 0, 300, 420, $black, $font, "签单之星");
 imagettftext($img, $labelFontSize, 0, 300, 520, $black, $font, "项目之星");
 
-imagettftext($img, $labelFontSize, 0, 600, 320, $black, $font, "张泽南");
-imagettftext($img, $labelFontSize, 0, 600, 420, $black, $font, "张泽南");
+imagettftext($img, $labelFontSize, 0, 600, 320, $black, $font, $businessStar);
+imagettftext($img, $labelFontSize, 0, 600, 420, $black, $font, $signStar);
 // imagettftext($img, $labelFontSize, 0, 600, 520, $black, $font, "张泽南");
 
 

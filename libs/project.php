@@ -63,6 +63,10 @@
 		case "getProjectsByCaptainName":
 			$res = getProjectsByCaptainName($_REQUEST["captainName"]);
 			break;
+		//获取工期并邮件通知
+		case "checkProjectPeriod":
+			$res = checkProjectPeriod();
+			break;
 		default: 
 			throw new Exception("unknown action:".$action);
 	}

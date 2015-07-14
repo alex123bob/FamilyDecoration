@@ -4,7 +4,7 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 	requires: [
 		'FamilyDecoration.store.Project', 'FamilyDecoration.view.progress.EditProject', 'Ext.tree.Panel', 
 		'FamilyDecoration.view.progress.ProjectList', 'FamilyDecoration.store.MainMaterial', 
-		'FamilyDecoration.view.mainmaterial.EditMainMaterial'
+		'FamilyDecoration.view.mainmaterial.EditMainMaterial', 'FamilyDecoration.view.progress.ProjectListByCaptain'
 	],
 	layout: 'border',
 
@@ -17,7 +17,7 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 			width: 200,
 			margin: '0 1 0 0',
 			items: [{
-				xtype: 'progress-projectlist',
+				xtype: 'progress-projectlistbycaptain',
 				searchFilter: true,
 				title: '工程项目名称',
 				id: 'treepanel-projectNameForMainMaterial',
