@@ -120,7 +120,7 @@
 	function editBusiness($data){
 		global $mysql;
 		$id = $data["id"];
-		$fields = array("regionId","address","isFrozen","isTransfered","updateTime","customer","salesman","source","salesmanName","designer","designerName","applyDesigner","applyProjectTransference","applyBudget");
+		$fields = array("regionId","address","isFrozen","isTransfered","updateTime","signTime","customer","salesman","source","salesmanName","designer","designerName","applyDesigner","applyProjectTransference","applyBudget");
 		$obj = array();
 		foreach($fields as $field){
 			if(isset($data[$field]))
