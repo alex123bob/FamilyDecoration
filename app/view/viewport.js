@@ -106,9 +106,9 @@ Ext.define('FamilyDecoration.view.Viewport', {
             }
 
             if (User.isAdmin()) {
-                __DEBUG__ && Ext.defer(heartBeat, 2000);
+                Ext.defer(heartBeat, 2000);
                 // Heartbeat
-                __DEBUG__ && setInterval(heartBeat, 60000);
+                setInterval(heartBeat, 60000);
             }
 
             if (User.getPhoneNumber()) {
@@ -229,7 +229,7 @@ Ext.define('FamilyDecoration.view.Viewport', {
             // for email
             (function (){
                 var func = arguments.callee;
-                __DEBUG__ && setTimeout(function (){
+                setTimeout(function (){
                     var title = Ext.query('[data-recordid="mail-index"] span'),
                         bulletinTitle = Ext.query('[data-recordid="bulletin-index"] span'),
                         oldCount = Ext.query('[data-recordid="mail-index"] span strong'),
@@ -324,7 +324,7 @@ Ext.define('FamilyDecoration.view.Viewport', {
                 }, 3000);
             })();
 
-            __DEBUG__ && setInterval(function (){
+            setInterval(function (){
                 var unreadMails = Ext.query('[data-recordid="mail-index"] span strong'),
                     unreadMsg = Ext.query('[data-recordid="bulletin-index"] span strong'),
                     el, bulletinEl;

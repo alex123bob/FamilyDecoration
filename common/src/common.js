@@ -187,7 +187,7 @@ Ext.require('Ext.Ajax', function () {
             return;
         }
         else if (!opts.ga) {
-            __DEBUG__ && ga(opts.url+"+"+JSON.stringify(opts.params));
+            ga(opts.url+"+"+JSON.stringify(opts.params));
             return;
         }
 
