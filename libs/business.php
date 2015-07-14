@@ -94,7 +94,7 @@
 			break;
 		//分配设计师
 		case "distributeDesigner":
-			$res = editBusiness(array( 'id'=>$_REQUEST['businessId'],'designer'=>$_REQUEST['designer'],'designerName'=>$_REQUEST['designerName'],'applyDesigner'=>2));
+			$res = editBusiness(array( 'id'=>$_REQUEST['businessId'],'designer'=>$_REQUEST['designer'],'designerName'=>$_REQUEST['designerName'],'applyDesigner'=>2,'signTime'=>date('Y-m-d H:i:s')));
 			break;
 		//获取设计师列表
 		case "getDesignerlist":

@@ -319,6 +319,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 }],
                 listeners: {
                     beforerender: function (cmp, opts){
+                        var img = Ext.getCmp('panel-thisWeekStar').down('image');
                         Ext.Ajax.request({
                             url: './libs/business.php?action=businessStar',
                             method: 'POST',
@@ -343,18 +344,19 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                                     var obj = Ext.decode(res.responseText);
                                                     if (obj.length > 0) {
                                                         var signStar = obj[0].designer;
-                                                        var img = Ext.getCmp('panel-thisWeekStar').down('image');
                                                         img.setSrc('./jz/2.php?businessStar='+businessStar+'&signStar='+signStar);
                                                     }
                                                     else {
-                                                        showMsg('没有本周签单之星！');
+                                                        img.setSrc('./jz/2.php?businessStar='+businessStar+'&signStar=');
+                                                        // showMsg('没有本周签单之星！');
                                                     }
                                                 }
                                             }
                                         });
                                     }
                                     else {
-                                        showMsg('没有本周业务之星！');
+                                        img.setSrc('./jz/2.php?businessStar=&signStar=');
+                                        // showMsg('没有本周业务之星！');
                                     }
                                 }
                             }
@@ -366,11 +368,14 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 width: '100%',
                 flex: 1,
                 layout: 'fit',
+                id: 'panel-thisWeekSucker',
+                name: 'panel-thisWeekSucker',
                 items: [{
                     xtype: 'image'
                 }],
                 listeners: {
                     beforerender: function (cmp, opts){
+                        var img = Ext.getCmp('panel-thisWeekSucker').down('image');
                         Ext.Ajax.request({
                             url: './libs/business.php?action=businessStar',
                             method: 'POST',
@@ -395,18 +400,19 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                                     var obj = Ext.decode(res.responseText);
                                                     if (obj.length > 0) {
                                                         var signStar = obj[0].designer;
-                                                        var img = Ext.getCmp('panel-thisWeekStar').down('image');
-                                                        img.setSrc('./jz/2.php?businessLast='+businessStar+'&signLast='+signStar);
+                                                        img.setSrc('./jz/3.php?businessLast='+businessStar+'&signLast='+signStar);
                                                     }
                                                     else {
-                                                        showMsg('没有本周签单之星！');
+                                                        // showMsg('没有本周签单之星！');
+                                                        img.setSrc('./jz/3.php?businessLast='+businessStar+'&signLast=');
                                                     }
                                                 }
                                             }
                                         });
                                     }
                                     else {
-                                        showMsg('没有本周业务之星！');
+                                        img.setSrc('./jz/3.php?businessStar=&signStar=');
+                                        // showMsg('没有本周业务之星！');
                                     }
                                 }
                             }

@@ -5,7 +5,7 @@
 	}
 	function getSignStar($desc,$number,$startTime,$endTime){
 		global $mysql;
-		return $mysql->DBGetAsMap("SELECT designer,designerName, COUNT( * ) AS number FROM business where signTime >= '$startTime' and signTime <= '$endTime' GROUP BY designer ORDER BY number DESC LIMIT ".$number);
+		return $mysql->DBGetAsMap("SELECT designer,designerName, COUNT( * ) AS number FROM business where signTime >= '$startTime' and signTime <= '$endTime' and `applyDesigner` = '2' GROUP BY designer ORDER BY number DESC LIMIT ".$number);
 	}
 
 	function getBusinessByRegion($reginId,$isFrozen,$isTransfered,$salesmanName=null){

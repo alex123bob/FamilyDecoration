@@ -36,6 +36,7 @@ Ext.define('FamilyDecoration.view.progress.EditProject', {
 				format: 'Y/m/d', // if the time needed, change format into the upper type
 				name: 'projectTime',
 				allowBlank: false,
+				editable: false,
 				value: pro ? pro.get('projectTime').replace(/-/gi, '/') : ''
 			}, {
 				xtype: 'fieldcontainer',
