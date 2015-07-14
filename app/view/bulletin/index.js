@@ -355,8 +355,27 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                         });
                                     }
                                     else {
-                                        img.setSrc('./jz/2.php?businessStar=&signStar=');
-                                        // showMsg('没有本周业务之星！');
+                                        Ext.Ajax.request({
+                                            url: './libs/business.php?action=signStar',
+                                            method: 'POST',
+                                            params: {
+                                                desc: true,
+                                                number: 1
+                                            },
+                                            callback: function (opts, success, res){
+                                                if (success) {
+                                                    var obj = Ext.decode(res.responseText);
+                                                    if (obj.length > 0) {
+                                                        var signStar = obj[0].designer;
+                                                        img.setSrc('./jz/2.php?businessStar=&signStar='+signStar);
+                                                    }
+                                                    else {
+                                                        img.setSrc('./jz/2.php?businessStar=&signStar=');
+                                                        // showMsg('没有本周签单之星！');
+                                                    }
+                                                }
+                                            }
+                                        });
                                     }
                                 }
                             }
@@ -411,9 +430,27 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                         });
                                     }
                                     else {
-                                        img.setSrc('./jz/3.php?businessStar=&signStar=');
-                                        // showMsg('没有本周业务之星！');
-                                    }
+                                        Ext.Ajax.request({
+                                            url: './libs/business.php?action=signStar',
+                                            method: 'POST',
+                                            params: {
+                                                desc: false,
+                                                number: 1
+                                            },
+                                            callback: function (opts, success, res){
+                                                if (success) {
+                                                    var obj = Ext.decode(res.responseText);
+                                                    if (obj.length > 0) {
+                                                        var signStar = obj[0].designer;
+                                                        img.setSrc('./jz/3.php?businessLast=&signLast='+signStar);
+                                                    }
+                                                    else {
+                                                        // showMsg('没有本周签单之星！');
+                                                        img.setSrc('./jz/3.php?businessLast=&signLast=');
+                                                    }
+                                                }
+                                            }
+                                        });                                    }
                                 }
                             }
                         });
