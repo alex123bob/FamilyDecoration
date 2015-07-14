@@ -5,6 +5,7 @@
 	if (!session_id()) session_start();
 	// error_reporting(E_ALL ^ E_DEPRECATED);
 	date_default_timezone_set('Asia/Shanghai'); 
+	
 	include_once "mysql.class.php";
 	include_once "common.php";
 
@@ -13,8 +14,7 @@
 	} else {
 		$mysql = new mysql('localhost', 'root', '', 'familydecoration', 'utf8');
 	}
-	
-	if(!strpos($_SERVER["REQUEST_URI"],"user.php?action=log")){
+	if(!strpos($_SERVER["REQUEST_URI"],"user.php?action=log") && !strpos($_SERVER["REQUEST_URI"],"cron_sendmail.php")){
 		checkUserOnlineUniqueness();
 	}
 
