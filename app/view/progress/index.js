@@ -340,10 +340,10 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					salesman.setValue(rec.get('salesman'));
 					designer.setValue(rec.get('designer'));
 					if (endTime && (new Date(endTime.replace(/-/g, '/')) < new Date())) {
-						period.getEl().addCls('redBackground');
+						period.markInvalid('项目到期');
 					}
 					else {
-						period.getEl().removeCls('redBackground');
+						period.clearInvalid();
 					}
 				}
 				else {
@@ -353,7 +353,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					supervisor.setValue('');
 					salesman.setValue('');
 					designer.setValue('');
-					period.getEl().removeCls('redBackground');
+					period.clearInvalid();
 				}
 			},
 			initBtn: function (){
