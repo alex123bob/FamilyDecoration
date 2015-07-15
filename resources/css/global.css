@@ -77,6 +77,10 @@ table.pros td{
   cursor: pointer;
 }
 
+.redBackground {
+  background-color: #ff0000;
+}
+
 #treepanel-generalList .x-tree-node-text {
   font-size: 13px;
   font-family: 微软雅黑;

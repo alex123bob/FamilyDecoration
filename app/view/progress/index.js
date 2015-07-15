@@ -324,8 +324,10 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					captain = Ext.getCmp('textfield-captain'),
 					supervisor = Ext.getCmp('textfield-supervisor'),
 					salesman = Ext.getCmp('textfield-salesman'),
-					designer = Ext.getCmp('textfield-designer');
+					designer = Ext.getCmp('textfield-designer'),
+					endTime;
 				if (rec) {
+					endTime = rec.get('period').split(':')[1]
 					st.load({
 						params: {
 							action: 'getProgressByProjectId',
@@ -337,6 +339,12 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					supervisor.setValue(rec.get('supervisor'));
 					salesman.setValue(rec.get('salesman'));
 					designer.setValue(rec.get('designer'));
+					if (endTime && (new Date(endTime.replace(/-/g, '/')) < new Date())) {
+						period.getEl().addCls('redBackground');
+					}
+					else {
+						period.getEl().removeCls('redBackground');
+					}
 				}
 				else {
 					grid.getStore().loadData([]);
@@ -345,6 +353,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					supervisor.setValue('');
 					salesman.setValue('');
 					designer.setValue('');
+					period.getEl().removeCls('redBackground');
 				}
 			},
 			initBtn: function (){
@@ -362,47 +371,50 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				budgetBtn.disable();
 				headInfoBtn.disable();
 			},
-			tbar: [{
-				xtype: 'textfield',
-				name: 'textfield-period',
-				id: 'textfield-period',
-				labelWidth: 60,
-				width: 220,
-				readOnly: true,
-				fieldLabel: '项目工期'
-			}, {
-				xtype: 'textfield',
-				name: 'textfield-captain',
-				id: 'textfield-captain',
-				labelWidth: 70,
-				width: 140,
-				readOnly: true,
-				fieldLabel: '项目经理'
-			}, {
-				xtype: 'textfield',
-				name: 'textfield-supervisor',
-				id: 'textfield-supervisor',
-				labelWidth: 60,
-				width: 140,
-				readOnly: true,
-				fieldLabel: '项目监理'
-			}, {
-				xtype: 'textfield',
-				name: 'textfield-salesman',
-				id: 'textfield-salesman',
-				labelWidth: 44,
-				width: 120,
-				readOnly: true,
-				fieldLabel: '业务员'
-			}, {
-				xtype: 'textfield',
-				name: 'textfield-designer',
-				id: 'textfield-designer',
-				labelWidth: 44,
-				width: 120,
-				readOnly: true,
-				fieldLabel: '设计师'
-			}],
+			tbar: Ext.create('Ext.toolbar.Toolbar', {
+				enableOverflow: true,
+				items: [{
+					xtype: 'textfield',
+					name: 'textfield-captain',
+					id: 'textfield-captain',
+					labelWidth: 70,
+					width: 140,
+					readOnly: true,
+					fieldLabel: '项目经理'
+				}, {
+					xtype: 'textfield',
+					name: 'textfield-supervisor',
+					id: 'textfield-supervisor',
+					labelWidth: 60,
+					width: 140,
+					readOnly: true,
+					fieldLabel: '项目监理'
+				}, {
+					xtype: 'textfield',
+					name: 'textfield-salesman',
+					id: 'textfield-salesman',
+					labelWidth: 44,
+					width: 120,
+					readOnly: true,
+					fieldLabel: '业务员'
+				}, {
+					xtype: 'textfield',
+					name: 'textfield-designer',
+					id: 'textfield-designer',
+					labelWidth: 44,
+					width: 120,
+					readOnly: true,
+					fieldLabel: '设计师'
+				}, {
+					xtype: 'textfield',
+					name: 'textfield-period',
+					id: 'textfield-period',
+					labelWidth: 60,
+					width: 220,
+					readOnly: true,
+					fieldLabel: '项目工期'
+				}]
+			}),
 			tools: [{
 				id: 'tool-originalBusiness',
 				name: 'tool-originalBusiness',

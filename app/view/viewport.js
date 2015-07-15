@@ -101,7 +101,7 @@ Ext.define('FamilyDecoration.view.Viewport', {
                 Ext.Ajax.request({
                     url: './libs/user.php?action=checkUserOnlineUniqueness',
                     method: 'GET',
-                    ga: true
+                    ga: false
                 });
             }
 
@@ -321,7 +321,7 @@ Ext.define('FamilyDecoration.view.Viewport', {
                             }
                         }
                     })
-                }, 3000);
+                }, 5000);
             })();
 
             setInterval(function (){

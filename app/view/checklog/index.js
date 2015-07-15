@@ -32,21 +32,40 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 					itemclick: function (view, rec){
 						if (rec.get('level') && rec.get('name')) {
 							var userLogPanel = Ext.getCmp('treepanel-logNameByUser'),
+								frozenUserLogPanel = Ext.getCmp('treepanel-frozenLogNameByUser'),
 								st = Ext.getCmp('treepanel-logNameByUser').getStore(),
+								frozenSt = frozenUserLogPanel.getStore(),
 								gridLogContent = Ext.getCmp('gridpanel-logDetailByUser'),
 								btnCensor = Ext.getCmp('button-censorship');
 
 							userLogPanel.getSelectionModel().deselectAll();
+							frozenUserLogPanel.getSelectionModel().deselectAll();
 							gridLogContent.getStore().removeAll();
 							btnCensor.disable();
 							userLogPanel.userName = rec.get('name');
+							frozenUserLogPanel.userName = rec.get('name');
 							st.proxy.url = './libs/loglist.php';
+							frozenSt.proxy.url = './libs/loglist.php';
 							st.proxy.extraParams = {
 								action: 'getLogListYearsByUser',
-								user: rec.get('name')
+								user: rec.get('name'),
+								isQuarter: true
+							};
+							frozenSt.proxy.extraParams = {
+								action: 'getLogListYearsByUser',
+								user: rec.get('name'),
+								isQuarter: false
 							};
 							st.load({
 								node: st.getRootNode(),
+								callback: function (recs, ope, success){
+									if (success) {
+										ope.node.expand();
+									}
+								}
+							});
+							frozenSt.load({
+								node: frozenSt.getRootNode(),
 								callback: function (recs, ope, success){
 									if (success) {
 										ope.node.expand();
@@ -64,15 +83,15 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 		}, {
 			xtype: 'container',
 			flex: 1,
-			layout: 'fit',
+			layout: 'vbox',
 			margin: '0 1 0 0',
 			items: [{
 				xtype: 'checklog-userloglist',
-				title: '用户日志',
+				title: '本季度日志',
 				id: 'treepanel-logNameByUser',
 				name: 'treepanel-logNameByUser',
 				isQuarter: true,
-				flex: 4,
+				flex: 2,
 				style: {
 					borderRightStyle: 'solid',
 					borderRightWidth: '1px'
@@ -85,6 +104,7 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 					selectionchange: function (selModel, sels, opts){
 						var rec = sels[0],
 							btnCensor = Ext.getCmp('button-censorship'),
+							frozenLogPanel = Ext.getCmp('treepanel-frozenLogNameByUser'),
 							gridLogContent = Ext.getCmp('gridpanel-logDetailByUser'),
 							scrutinizeGrid = Ext.getCmp('gridpanel-scrutinizeForCheckLog'),
 							st = scrutinizeGrid.getStore();
@@ -101,6 +121,7 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 							else {
 								st.removeAll();
 							}
+							frozenLogPanel.getSelectionModel().deselectAll();
 						}
 						else {
 							st.removeAll();
@@ -111,6 +132,46 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 					load: function (){
 						var treepanel = Ext.getCmp('treepanel-logNameByUser');
 						treepanel.expandAll();
+					}
+				}
+			}, {
+				xtype: 'checklog-userloglist',
+				title: '封存日志',
+				id: 'treepanel-frozenLogNameByUser',
+				name: 'treepanel-frozenLogNameByUser',
+				isQuarter: false,
+				flex: 1,
+				style: {
+					borderRightWidth: '1px',
+					borderRightStyle: 'solid'
+				},
+				width: '100%',
+				autoScroll: true,
+				listeners: {
+					itemclick: function (view, rec){
+					},
+					selectionchange: function (selModel, sels, opts){
+						var rec = sels[0],
+							btnCensor = Ext.getCmp('button-censorship'),
+							logPanel = Ext.getCmp('treepanel-logNameByUser'),
+							gridLogContent = Ext.getCmp('gridpanel-logDetailByUser'),
+							scrutinizeGrid = Ext.getCmp('gridpanel-scrutinizeForCheckLog'),
+							st = scrutinizeGrid.getStore();
+						gridLogContent.refresh(rec);
+						if (rec) {
+							btnCensor.setDisabled(!rec.get('logName'));
+							if (rec.get('logName')) {
+								st.reload({
+									params: {
+										logListId: rec.getId()
+									}
+								});
+							}
+							else {
+								st.removeAll();
+							}
+							logPanel.getSelectionModel().deselectAll();
+						}
 					}
 				}
 			}]

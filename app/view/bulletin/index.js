@@ -405,7 +405,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                             callback: function (opts, success, res){
                                 if (success) {
                                     var obj = Ext.decode(res.responseText);
-                                    if (obj.length > 0) {
+                                    if (obj.length > 1) {
                                         var businessStar = obj[0].salesman;
                                         Ext.Ajax.request({
                                             url: './libs/business.php?action=signStar',
@@ -417,7 +417,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                             callback: function (opts, success, res){
                                                 if (success) {
                                                     var obj = Ext.decode(res.responseText);
-                                                    if (obj.length > 0) {
+                                                    if (obj.length > 1) {
                                                         var signStar = obj[0].designer;
                                                         img.setSrc('./jz/3.php?businessLast='+businessStar+'&signLast='+signStar);
                                                     }
@@ -440,7 +440,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                             callback: function (opts, success, res){
                                                 if (success) {
                                                     var obj = Ext.decode(res.responseText);
-                                                    if (obj.length > 0) {
+                                                    if (obj.length > 1) {
                                                         var signStar = obj[0].designer;
                                                         img.setSrc('./jz/3.php?businessLast=&signLast='+signStar);
                                                     }
@@ -450,7 +450,8 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                                     }
                                                 }
                                             }
-                                        });                                    }
+                                        });                                    
+                                    }
                                 }
                             }
                         });

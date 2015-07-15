@@ -14,8 +14,8 @@
 		case "getLogListMonths":$res = getLogListMonths($_GET["year"],$isQuarter);break;
 		case "getLogListByMonth":$res = getLogListByMonth($_GET["year"],$_GET["month"]);break;
 		//供 查看别人的日志使用
-		case "getLogListYearsByUser":$res = getLogListYearsByUser($_GET['user']);break;
-		case "getLogListMonthsByUser":$res = getLogListMonthsByUser($_GET["year"],$_GET['user']);break;
+		case "getLogListYearsByUser":$res = getLogListYearsByUser($_GET['user'],$_GET["isQuarter"]);break;
+		case "getLogListMonthsByUser":$res = getLogListMonthsByUser($_GET["year"],$_GET['user'],$_GET["isQuarter"]);break;
 		case "getLogListByMonthByUser":$res = getLogListByMonthByUser($_GET["year"],$_GET["month"],$_GET['user']);break;
 		case "getAllLogLists": $res = getAllLogLists(); break;
 		

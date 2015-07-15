@@ -3,6 +3,7 @@ Ext.define('FamilyDecoration.view.checklog.UserLogList', {
 	requires: ['Ext.tree.Panel', 'FamilyDecoration.store.LogList'],
 	alias: 'widget.checklog-userloglist',
 	userName: undefined,
+	isQuarter: false,
 
 	initComponent: function (){
 		var me = this;
@@ -23,7 +24,8 @@ Ext.define('FamilyDecoration.view.checklog.UserLogList', {
 						type: 'json'
 					},
 					extraParams: {
-						action: 'getLogListYearsByUser'
+						action: 'getLogListYearsByUser',
+						isQuarter: me.isQuarter
 					}
 				},
 				listeners: {
@@ -34,7 +36,8 @@ Ext.define('FamilyDecoration.view.checklog.UserLogList', {
 							st.proxy.extraParams = {
 								action: 'getLogListMonthsByUser',
 								year: node.get('year'),
-								user: me.userName
+								user: me.userName,
+								isQuarter: me.isQuarter
 							};
 						}
 						else if (node.get('month')) {
@@ -43,7 +46,8 @@ Ext.define('FamilyDecoration.view.checklog.UserLogList', {
 								action: 'getLogListByMonthByUser',
 								year: node.parentNode.get('year'),
 								month: node.get('month'),
-								user: me.userName
+								user: me.userName,
+								isQuarter: me.isQuarter
 							};
 						}
 	            	},

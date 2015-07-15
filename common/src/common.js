@@ -186,10 +186,10 @@ Ext.require('Ext.Ajax', function () {
         if (opts.silent === true && opts.automatic === true) {
             return;
         }
-        else if (!opts.ga) {
-            ga(opts.url+"+"+JSON.stringify(opts.params));
-            return;
-        }
+        // else if (!opts.ga) {
+        //     ga(opts.url+"+"+JSON.stringify(opts.params));
+        //     return;
+        // }
 
         if (opts.mask) {
             Ext.get(opts.mask).mask('', 'x-mask-wait');

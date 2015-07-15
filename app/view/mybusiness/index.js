@@ -818,6 +818,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 													for (i = 0; i < mailObjects.length; i++) {
 														setTimeout((function (index){
 															return function (){
+																sendMsg(User.getName(), mailObjects[index].name, content);
 																sendMail(mailObjects[index].name, mailObjects[index].mail, subject, content);
 															}
 														})(i), 1000 * (i + 1));
@@ -907,11 +908,17 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 											method: 'POST',
 											callback: function (opts, success, res){
 												if (success) {
-													var obj = Ext.decode(res.responseText);
+													var obj = Ext.decode(res.responseText),
+														subject = '分配设计师',
+														content = User.getRealName() + '为业务"' 
+															+ community.get('name') + ' ' + client.get('address') + '"'
+															+ '分配了设计师，设计师为"' + rec.get('realname') + '"';
 													if (obj.status == 'successful') {
 														showMsg('分配成功！');
 														win.close();
 														clientGrid.refresh(community);
+														sendMail(rec.get('name'), rec.get('mail'), subject, content);
+														sendMsg(User.getName(), rec.get('name'), content);
 													}
 												}
 											}

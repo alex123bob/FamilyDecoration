@@ -76,7 +76,12 @@
 		return $res;
 	}
 	
-	function getLogListYearsByUser($user){
+	function getLogListYearsByUser($user, $isQuarter){
+		if($isQuarter == "true"){
+			$res = array();
+			$res[0] = array("year"=>date('Y',time()));
+			return $res;
+		}
 		global $mysql;
         $res= array();
         $orderBy = " order by createTime DESC ";
@@ -123,11 +128,23 @@
 		return $res;
 	}
 	
-	function getLogListMonthsByUser($year,$user){
+	function getLogListMonthsByUser($year,$user,$isQuarter){
 		global $mysql;
         $res= array();
-		$condition = " where userName = '$user' and isDeleted = 'false' and year(createTime) = '$year'";
+		$condition = " where userName = '$user' and isDeleted = 'false' and year(createTime) = '$year' ";
         $orderBy = " order by createTime DESC ";
+        $monthOfQuarters = array(
+				1=>"1,2,3",2=>"1,2,3",3=>"1,2,3",
+				4=>"4,5,6",5=>"4,5,6",6=>"4,5,6",
+				7=>"7,8,9",8=>"7,8,9",9=>"7,8,9",
+				10=>"10,11,12",11=>"10,11,12",12=>"10,11,12");
+        if($isQuarter == "true"){    
+			$condition = $condition." and month(createTime) in (".$monthOfQuarters[date('n',time())].") ";
+		}else{
+			if($year == date('Y',time())){
+	        	$condition = $condition." and date_format(createTime,'%c') not in (".$monthOfQuarters[date('n',time())].") ";
+			}
+		}
 		$arr = $mysql->DBGetSomeRows("`log_list`", " DISTINCT month(createTime)  ",$condition,$orderBy);
 		$count = 0;
 		foreach($arr as $key => $val) {
