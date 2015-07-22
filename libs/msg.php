@@ -5,7 +5,7 @@
 	$action = $_REQUEST["action"];
 	$action = strtolower($action);
 	global $userAndPswd,$corpName,$apiUrl;
-	$userAndPswd = "cdkey=0SDK-EMY-6688-KHZPK&password=453653";
+	$userAndPswd = "cdkey=6SDK-EMY-6688-JBXTK&password=128150";
 	//$userAndPswd = "cdkey=0SDK-EMY-6688-KHssZPK&password=453653";
 	$corpName = "【佳诚装饰】";
 	$apiUrl = "http://sdk4report.eucp.b2m.cn:8080/sdkproxy/";

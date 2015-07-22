@@ -2,13 +2,15 @@
 
 	function addRegion($data){
 		$name = $data['name'];
+		$remark = $data['nameRemark'];
 		$regions = getRegionByName($name);
 		if(count($regions) != 0){
 			throw new Exception("region with name:$name already exist!");
 		}
 		$obj = array(
 			"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
-			"name"=>$name
+			"name"=>$name,
+			"nameRemark"=>$remark
 		);
 		global $mysql;
 		$mysql->DBInsertAsArray("`region`",$obj);
@@ -38,6 +40,7 @@
 		foreach($arr as $key => $val) {
 		    $res[$count]["id"] = $val["id"];
 		    $res[$count]["name"] = $val["name"];
+		    $res[$count]["nameRemark"] = $val["nameRemark"];
 			$res[$count]["createTime"] = $val["createTime"];
 			$res[$count]["updateTime"] = $val["updateTime"];
 			$res[$count]["business"] = $val["business"];
@@ -55,6 +58,7 @@
 		foreach($arr as $key => $val) {
 		    $res[$count]["id"] = $val["id"];
 		    $res[$count]["name"] = $val["name"];
+		    $res[$count]["nameRemark"] = $val["nameRemark"];
 			$res[$count]["createTime"] = $val["createTime"];
 			$res[$count]["updateTime"] = $val["updateTime"];
 		    $count ++;
@@ -64,7 +68,7 @@
 
 	function editRegion($data){
 		global $mysql;
-		$mysql->DBUpdate('region',array('name'=>$data['name'],'updateTime'=>'now()'),"`id` = '?' ",array($data["id"]));
+		$mysql->DBUpdate('region',array('name'=>$data['name'],'nameRemark'=>$data['nameRemark'],'updateTime'=>'now()'),"`id` = '?' ",array($data["id"]));
 		return array('status'=>'successful', 'errMsg' => 'edit business ok');
 	}
 ?>

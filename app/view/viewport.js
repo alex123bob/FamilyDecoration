@@ -252,30 +252,35 @@ Ext.define('FamilyDecoration.view.Viewport', {
                                         count++;
                                     }
                                 }
-                                if (count > 0) {
-                                    title[0].innerHTML = '(<font color="red"><strong>'
-                                     + count + '</strong></font>)邮箱平台';
-                                    if (oldCount.length > 0) {
-                                        oldCount = parseInt(oldCount[0].textContent, 10);
-                                        if (Ext.isNumber(oldCount) && count > oldCount) {
+                                if (title.length > 0) {
+                                    if (count > 0) {
+                                        title[0].innerHTML = '(<font color="red"><strong>'
+                                         + count + '</strong></font>)邮箱平台';
+                                        if (oldCount.length > 0) {
+                                            oldCount = parseInt(oldCount[0].textContent, 10);
+                                            if (Ext.isNumber(oldCount) && count > oldCount) {
+                                                showMsg('你有新邮件！');
+                                            }
+                                        }
+                                        else {
                                             showMsg('你有新邮件！');
+                                        }
+                                        if (mailMemberTree) {
+                                            var rec = mailMemberTree.getSelectionModel().getSelection()[0],
+                                                inbox = Ext.getCmp('gridpanel-receivedBox'),
+                                                sentBox = Ext.getCmp('gridpanel-sentBox');
+                                            if (rec && inbox.getStore().getCount() < len) {
+                                                inbox.getStore().reload();
+                                                sentBox.getStore().reload();
+                                            }
                                         }
                                     }
                                     else {
-                                        showMsg('你有新邮件！');
-                                    }
-                                    if (mailMemberTree) {
-                                        var rec = mailMemberTree.getSelectionModel().getSelection()[0],
-                                            inbox = Ext.getCmp('gridpanel-receivedBox'),
-                                            sentBox = Ext.getCmp('gridpanel-sentBox');
-                                        if (rec && inbox.getStore().getCount() < len) {
-                                            inbox.getStore().reload();
-                                            sentBox.getStore().reload();
-                                        }
+                                        title[0].innerHTML = '邮箱平台';
                                     }
                                 }
                                 else {
-                                    title[0].innerHTML = '邮箱平台';
+                                    // otherwise do nothing. this is the visitor mode. no bulletin, no emailbox
                                 }
                             }
                             func();
@@ -297,26 +302,31 @@ Ext.define('FamilyDecoration.view.Viewport', {
                             if (success) {
                                 var obj = Ext.decode(res.responseText),
                                     count = obj.length;
-                                if (count > 0) {
-                                    bulletinTitle[0].innerHTML = '(<font color="red"><strong>'
-                                     + count + '</strong></font>)公告栏信息';
-                                    if (oldCountForBulletin.length > 0) {
-                                        oldCountForBulletin = parseInt(oldCountForBulletin[0].textContent, 10);
-                                        if (Ext.isNumber(oldCountForBulletin) && count > oldCountForBulletin) {
+                                if (bulletinTitle.length > 0) {
+                                    if (count > 0) {
+                                        bulletinTitle[0].innerHTML = '(<font color="red"><strong>'
+                                         + count + '</strong></font>)公告栏信息';
+                                        if (oldCountForBulletin.length > 0) {
+                                            oldCountForBulletin = parseInt(oldCountForBulletin[0].textContent, 10);
+                                            if (Ext.isNumber(oldCountForBulletin) && count > oldCountForBulletin) {
+                                                showMsg('你有新消息！');
+                                            }
+                                        }
+                                        else {
                                             showMsg('你有新消息！');
+                                        }
+                                        if (dynamicMessageBox) {
+                                            if (dynamicMessageBox.getStore().getCount() < count) {
+                                                dynamicMessageBox.refresh();
+                                            }
                                         }
                                     }
                                     else {
-                                        showMsg('你有新消息！');
-                                    }
-                                    if (dynamicMessageBox) {
-                                        if (dynamicMessageBox.getStore().getCount() < count) {
-                                            dynamicMessageBox.refresh();
-                                        }
+                                        bulletinTitle[0].innerHTML = '公告栏信息';
                                     }
                                 }
                                 else {
-                                    bulletinTitle[0].innerHTML = '公告栏信息';
+                                    // otherwise do nothing, because this is the visitor mode
                                 }
                             }
                         }

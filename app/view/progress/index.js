@@ -34,7 +34,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					hidden: User.isGeneral() ? true : false,
 					id: 'tool-frozeProject',
 					name: 'tool-frozeProject',
-					tooltip: '封存当前项目',
+					tooltip: '工程完工',
 					callback: function (){
 						var panel = Ext.getCmp('treepanel-projectName');
 						var pro = panel.getSelectionModel().getSelection()[0];

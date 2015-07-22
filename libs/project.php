@@ -37,7 +37,12 @@
 			break;
 		case "getProjectCaptains":
 			$visitorName = $_SESSION["name"];
-			$res = getProjectCaptains();
+			if ($_SESSION["level"] == "006-001") {
+				$res = getVisitorProjectCaptain($visitorName);
+			}
+			else {
+				$res = getProjectCaptains();
+			}
 			break;
 		case "getProjects":
 			if( $_SESSION["level"] == "006-001"){
@@ -61,7 +66,13 @@
 			}
 			break;
 		case "getProjectsByCaptainName":
-			$res = getProjectsByCaptainName($_REQUEST["captainName"]);
+			if ($_SESSION["level"] == "006-001") {
+				$visitorName = $_SESSION["name"];
+				$res = getVisitorProjectsByCaptain($visitorName, $_REQUEST["captainName"]);
+			}
+			else {
+				$res = getProjectsByCaptainName($_REQUEST["captainName"]);
+			}
 			break;
 		default: 
 			throw new Exception("unknown action:".$action);

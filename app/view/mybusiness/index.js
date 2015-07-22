@@ -29,7 +29,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 		me.items = [{
 			xtype: 'container',
 			margin: '0 1 0 0',
-			flex: 1,
+			flex: 1.2,
 			layout: 'fit',
 			items: [{
 				autoScroll: true,
@@ -38,75 +38,81 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					borderRightStyle: 'solid',
 					borderRightWidth: '1px'
 				},
-				tbar: [{
-					text: '添加',
-					id: 'button-addCommunity',
-					name: 'button-addCommunity',
-					icon: './resources/img/add1.png',
-					handler: function (){
-						var win = Ext.create('FamilyDecoration.view.mybusiness.EditCommunity', {
+				tbar: Ext.create('Ext.toolbar.Toolbar', {
+					enableOverflow: true,
+					items: [{
+						text: '添加',
+						id: 'button-addCommunity',
+						name: 'button-addCommunity',
+						icon: './resources/img/add1.png',
+						handler: function (){
+							var win = Ext.create('FamilyDecoration.view.mybusiness.EditCommunity', {
 
-						});
-						win.show();
-					}
-				}, {
-					text: '修改',
-					id: 'button-editCommunity',
-					name: 'button-editCommunity',
-					icon: './resources/img/edit.png',
-					disabled: true,
-					handler: function (){
-						var grid = Ext.getCmp('gridpanel-community'),
-							rec = grid.getSelectionModel().getSelection()[0];
-
-						var win = Ext.create('FamilyDecoration.view.mybusiness.EditCommunity', {
-							community: rec
-						});
-						win.show();
-					}
-				}],
-				bbar: [{
-					text: '删除',
-					id: 'button-delCommunity',
-					name: 'button-delCommunity',
-					icon: './resources/img/delete5.png',
-					hidden: User.isAdmin() ? false : true,
-					disabled: true,
-					handler: function (){
-						Ext.Msg.warning('确定要删除当前小区吗？', function (id){
+							});
+							win.show();
+						}
+					}, {
+						text: '修改',
+						id: 'button-editCommunity',
+						name: 'button-editCommunity',
+						icon: './resources/img/edit.png',
+						disabled: true,
+						handler: function (){
 							var grid = Ext.getCmp('gridpanel-community'),
 								rec = grid.getSelectionModel().getSelection()[0];
-							if (id == 'yes') {
-								Ext.Ajax.request({
-									url: './libs/business.php?action=deleteRegion',
-									method: 'POST',
-									params: {
-										id: rec.getId()
-									},
-									callback: function (opts, success, res){
-										if (success) {
-											var obj = Ext.decode(res.responseText);
-											if (obj.status == 'successful') {
-												showMsg('删除成功！');
-												grid.refresh();
-											}
-											else {
-												showMsg(obj.errMsg);
+
+							var win = Ext.create('FamilyDecoration.view.mybusiness.EditCommunity', {
+								community: rec
+							});
+							win.show();
+						}
+					}]
+				}),
+				bbar: Ext.create('Ext.toolbar.Toolbar', {
+					enableOverflow: true,
+					items: [{
+						text: '删除',
+						id: 'button-delCommunity',
+						name: 'button-delCommunity',
+						icon: './resources/img/delete5.png',
+						hidden: User.isAdmin() ? false : true,
+						disabled: true,
+						handler: function (){
+							Ext.Msg.warning('确定要删除当前小区吗？', function (id){
+								var grid = Ext.getCmp('gridpanel-community'),
+									rec = grid.getSelectionModel().getSelection()[0];
+								if (id == 'yes') {
+									Ext.Ajax.request({
+										url: './libs/business.php?action=deleteRegion',
+										method: 'POST',
+										params: {
+											id: rec.getId()
+										},
+										callback: function (opts, success, res){
+											if (success) {
+												var obj = Ext.decode(res.responseText);
+												if (obj.status == 'successful') {
+													showMsg('删除成功！');
+													grid.refresh();
+												}
+												else {
+													showMsg(obj.errMsg);
+												}
 											}
 										}
-									}
-								})
-							}
-						});
-					}
-				}],
+									})
+								}
+							});
+						}
+					}]
+				}),
 				xtype: 'gridpanel',
 				title: '小区',
 				id: 'gridpanel-community',
 				name: 'gridpanel-community',
 				columns: [{
 					text: '小区名称',
-					flex: 1,
+					flex: 2,
 					dataIndex: 'name',
 					renderer: function (val, meta, rec){
 						var arr = rec.get('business'),
@@ -129,6 +135,10 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						}
 						return val + numStr;
 					}
+				}, {
+					text: '备注',
+					flex: 1,
+					dataIndex: 'nameRemark'
 				}],
 				store: Ext.create('FamilyDecoration.store.Community', {
 					autoLoad: me.checkBusiness ? false : true
@@ -168,12 +178,35 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						grid.initBtn(rec);
 						clientGrid.refresh(rec);
 						frozenBusinessGrid.refresh(rec);
+					},
+					afterrender: function (grid, opts){
+						var view = grid.getView();
+						var tip = Ext.create('Ext.tip.ToolTip', {
+						    target: view.el,
+						    delegate: view.cellSelector,
+						    trackMouse: true,
+						    renderTo: Ext.getBody(),
+						    listeners: {
+						          beforeshow: function(tip) {
+						                var gridColumns = view.getGridColumns();
+						                var column = gridColumns[tip.triggerElement.cellIndex];
+						                var val = view.getRecord(tip.triggerElement.parentNode).get(column.dataIndex);
+						               	if (val) {
+						               		val.replace && (val = val.replace(/\n/g, '<br />'));
+						                	tip.update(val);
+						               	}
+						               	else {
+						               		return false;
+						               	}
+						          }
+						    }
+						});
 					}
 				}
 			}]
 		}, {
 			xtype: 'container',
-			flex: 1,
+			flex: 0.8,
 			layout: 'border',
 			margin: '0 1 0 0',
 			items: [{
@@ -301,157 +334,163 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						this.getStore().removeAll();
 					}
 				},
-				tbar: [{
-					text: '添加',
-					id: 'button-addClient',
-					name: 'button-addClient',
-					icon: './resources/img/add.png',
-					handler: function (){
-						var communityGrid = Ext.getCmp('gridpanel-community'),
-							rec = communityGrid.getSelectionModel().getSelection()[0];
-						if (rec) {
-							var win = Ext.create('FamilyDecoration.view.mybusiness.EditClient', {
-								community: rec
-							});
-							win.show();
-						}
-						else {
-							showMsg('请先选择小区！');
-						}
-					}
-				}, {
-					text: '修改',
-					id: 'button-editClient',
-					name: 'button-editClient',
-					icon: './resources/img/edit2.png',
-					disabled: true,
-					handler: function (){
-						var communityGrid = Ext.getCmp('gridpanel-community'),
-							rec = communityGrid.getSelectionModel().getSelection()[0],
-							clientGrid = Ext.getCmp('gridpanel-clientInfo'),
-							client = clientGrid.getSelectionModel().getSelection()[0];
-						if (rec) {
-							var win = Ext.create('FamilyDecoration.view.mybusiness.EditClient', {
-								community: rec,
-								client: client
-							});
-							win.show();
-						}
-					}
-				}],
-				bbar: [{
-					text: '删除',
-					id: 'button-delClient',
-					name: 'button-delClient',
-					icon: './resources/img/delete.png',
-					disabled: true,
-					handler: function (){
-						Ext.Msg.warning('确定要删除当前客户信息吗？', function (id){
-							var grid = Ext.getCmp('gridpanel-clientInfo'),
-								communityGrid = Ext.getCmp('gridpanel-community'),
-								community = communityGrid.getSelectionModel().getSelection()[0],
-								rec = grid.getSelectionModel().getSelection()[0];
-							if (id == 'yes') {
-								Ext.Ajax.request({
-									url: './libs/business.php?action=deleteBusiness',
-									method: 'POST',
-									params: {
-										id: rec.getId()
-									},
-									callback: function (opts, success, res){
-										if (success) {
-											var obj = Ext.decode(res.responseText);
-											if (obj.status == 'successful') {
-												showMsg('删除成功！');
-												grid.refresh(community);
-												communityGrid.refresh();
-											}
-											else {
-												showMsg(obj.errMsg);
-											}
-										}
-									}
-								})
+				tbar: Ext.create('Ext.toolbar.Toolbar', {
+					enableOverflow: true,
+					items: [{
+						text: '添加',
+						id: 'button-addClient',
+						name: 'button-addClient',
+						icon: './resources/img/add.png',
+						handler: function (){
+							var communityGrid = Ext.getCmp('gridpanel-community'),
+								rec = communityGrid.getSelectionModel().getSelection()[0];
+							if (rec) {
+								var win = Ext.create('FamilyDecoration.view.mybusiness.EditClient', {
+									community: rec
+								});
+								win.show();
 							}
-						});
-					}
-				}, {
-					text: '评级',
-					id: 'button-categorization',
-					name: 'button-categorization',
-					icon: './resources/img/category.png',
-					disabled: true,
-					handler: function (){
-						var	clientGrid = Ext.getCmp('gridpanel-clientInfo'),
-							rec = clientGrid.getSelectionModel().getSelection()[0],
-							communityGrid = Ext.getCmp('gridpanel-community'),
-							community = communityGrid.getSelectionModel().getSelection()[0],
-							fronzenGrid = Ext.getCmp('gridpanel-frozenBusiness');
-						var win = Ext.create('Ext.window.Window', {
-							width: 300,
-							height: 200,
-							padding: 10,
-							modal: true,
-							title: '客户类型评级',
-							items: [{
-								xtype: 'combobox',
-								fieldLabel: '客户评级',
-								editable: false,
-								allowBlank: false,
-								store: Ext.create('Ext.data.Store', {
-									fields: ['name'],
-									data: [
-										{name: 'A'},
-										{name: 'B'},
-										{name: 'C'},
-										{name: 'D'}
-									]
-								}),
-								queryMode: 'local',
-							    displayField: 'name',
-							    valueField: 'name',
-							    value: rec.get('level')
- 							}],
-							buttons: [{
-								text: '确定',
-								handler: function (){
-									var combo = win.down('combobox');
-									if (combo.isValid()) {
-										Ext.Ajax.request({
-											url: './libs/business.php?action=clientRank',
-											method: 'POST',
-											params: {
-												level: combo.getValue(),
-												id: rec.getId()
-											},
-											callback: function (opts, success, res){
-												if (success) {
-													var obj = Ext.decode(res.responseText);
-													if (obj.status == 'successful') {
-														showMsg('评级成功！');
-														clientGrid.refresh(community);
-														fronzenGrid.refresh(community);
-														win.close();
-													}
-													else {
-														showMsg(obj.errMsg);
-													}
+							else {
+								showMsg('请先选择小区！');
+							}
+						}
+					}, {
+						text: '修改',
+						id: 'button-editClient',
+						name: 'button-editClient',
+						icon: './resources/img/edit2.png',
+						disabled: true,
+						handler: function (){
+							var communityGrid = Ext.getCmp('gridpanel-community'),
+								rec = communityGrid.getSelectionModel().getSelection()[0],
+								clientGrid = Ext.getCmp('gridpanel-clientInfo'),
+								client = clientGrid.getSelectionModel().getSelection()[0];
+							if (rec) {
+								var win = Ext.create('FamilyDecoration.view.mybusiness.EditClient', {
+									community: rec,
+									client: client
+								});
+								win.show();
+							}
+						}
+					}]
+				}),
+				bbar: Ext.create('Ext.toolbar.Toolbar', {
+					enableOverflow: true,
+					items: [{
+						text: '删除',
+						id: 'button-delClient',
+						name: 'button-delClient',
+						icon: './resources/img/delete.png',
+						disabled: true,
+						handler: function (){
+							Ext.Msg.warning('确定要删除当前客户信息吗？', function (id){
+								var grid = Ext.getCmp('gridpanel-clientInfo'),
+									communityGrid = Ext.getCmp('gridpanel-community'),
+									community = communityGrid.getSelectionModel().getSelection()[0],
+									rec = grid.getSelectionModel().getSelection()[0];
+								if (id == 'yes') {
+									Ext.Ajax.request({
+										url: './libs/business.php?action=deleteBusiness',
+										method: 'POST',
+										params: {
+											id: rec.getId()
+										},
+										callback: function (opts, success, res){
+											if (success) {
+												var obj = Ext.decode(res.responseText);
+												if (obj.status == 'successful') {
+													showMsg('删除成功！');
+													grid.refresh(community);
+													communityGrid.refresh();
+												}
+												else {
+													showMsg(obj.errMsg);
 												}
 											}
-										})
+										}
+									})
+								}
+							});
+						}
+					}, {
+						text: '评级',
+						id: 'button-categorization',
+						name: 'button-categorization',
+						icon: './resources/img/category.png',
+						disabled: true,
+						handler: function (){
+							var	clientGrid = Ext.getCmp('gridpanel-clientInfo'),
+								rec = clientGrid.getSelectionModel().getSelection()[0],
+								communityGrid = Ext.getCmp('gridpanel-community'),
+								community = communityGrid.getSelectionModel().getSelection()[0],
+								fronzenGrid = Ext.getCmp('gridpanel-frozenBusiness');
+							var win = Ext.create('Ext.window.Window', {
+								width: 300,
+								height: 200,
+								padding: 10,
+								modal: true,
+								title: '客户类型评级',
+								items: [{
+									xtype: 'combobox',
+									fieldLabel: '客户评级',
+									editable: false,
+									allowBlank: false,
+									store: Ext.create('Ext.data.Store', {
+										fields: ['name'],
+										data: [
+											{name: 'A'},
+											{name: 'B'},
+											{name: 'C'},
+											{name: 'D'}
+										]
+									}),
+									queryMode: 'local',
+								    displayField: 'name',
+								    valueField: 'name',
+								    value: rec.get('level')
+	 							}],
+								buttons: [{
+									text: '确定',
+									handler: function (){
+										var combo = win.down('combobox');
+										if (combo.isValid()) {
+											Ext.Ajax.request({
+												url: './libs/business.php?action=clientRank',
+												method: 'POST',
+												params: {
+													level: combo.getValue(),
+													id: rec.getId()
+												},
+												callback: function (opts, success, res){
+													if (success) {
+														var obj = Ext.decode(res.responseText);
+														if (obj.status == 'successful') {
+															showMsg('评级成功！');
+															clientGrid.refresh(community);
+															fronzenGrid.refresh(community);
+															win.close();
+														}
+														else {
+															showMsg(obj.errMsg);
+														}
+													}
+												}
+											})
+										}
 									}
-								}
-							}, {
-								text: '取消',
-								handler: function (){
-									win.close();
-								}
-							}]
-						});
+								}, {
+									text: '取消',
+									handler: function (){
+										win.close();
+									}
+								}]
+							});
 
-						win.show();
-					}
-				}],
+							win.show();
+						}
+					}]
+				}),
 				autoScroll: true,
 				listeners: {
 					itemclick: function (view, rec){
@@ -638,39 +677,42 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 			    store: Ext.create('FamilyDecoration.store.BusinessDetail', {
 			    	autoLoad: false
 			    }),
-			    tbar: [{
-					xtype: 'textfield',
-					name: 'textfield-clientNameOnTop',
-					id: 'textfield-clientNameOnTop',
-					labelWidth: 60,
-					width: 140,
-					readOnly: true,
-					fieldLabel: ' 客户姓名'
-				}, {
-					xtype: 'textfield',
-					name: 'textfield-businessStaffOnTop',
-					id: 'textfield-businessStaffOnTop',
-					labelWidth: 60,
-					width: 140,
-					readOnly: true,
-					fieldLabel: '业务员'
-				}, {
-					xtype: 'textfield',
-					name: 'textfield-businessDesignerOnTop',
-					id: 'textfield-businessDesignerOnTop',
-					labelWidth: 60,
-					width: 140,
-					readOnly: true,
-					fieldLabel: '设计师'
-				}, {
-					xtype: 'textfield',
-					name: 'textfield-businessSourceOnTop',
-					id: 'textfield-businessSourceOnTop',
-					labelWidth: 60,
-					width: 150,
-					readOnly: true,
-					fieldLabel: '业务来源'
-				}],
+			    tbar: Ext.create('Ext.toolbar.Toolbar', {
+					enableOverflow: true,
+					items: [{
+						xtype: 'textfield',
+						name: 'textfield-clientNameOnTop',
+						id: 'textfield-clientNameOnTop',
+						labelWidth: 60,
+						width: 140,
+						readOnly: true,
+						fieldLabel: ' 客户姓名'
+					}, {
+						xtype: 'textfield',
+						name: 'textfield-businessStaffOnTop',
+						id: 'textfield-businessStaffOnTop',
+						labelWidth: 60,
+						width: 140,
+						readOnly: true,
+						fieldLabel: '业务员'
+					}, {
+						xtype: 'textfield',
+						name: 'textfield-businessDesignerOnTop',
+						id: 'textfield-businessDesignerOnTop',
+						labelWidth: 60,
+						width: 140,
+						readOnly: true,
+						fieldLabel: '设计师'
+					}, {
+						xtype: 'textfield',
+						name: 'textfield-businessSourceOnTop',
+						id: 'textfield-businessSourceOnTop',
+						labelWidth: 60,
+						width: 150,
+						readOnly: true,
+						fieldLabel: '业务来源'
+					}]
+				}),
 			    bbar: [{
 					text: '添加',
 					id: 'button-addBusinessInfo',

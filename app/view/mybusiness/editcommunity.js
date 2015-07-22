@@ -5,7 +5,7 @@ Ext.define('FamilyDecoration.view.mybusiness.EditCommunity', {
 	resizable: false,
 	modal: true,
 	width: 351,
-	height: 140,
+	height: 180,
 	autoScroll: true,
 	community: null,
 	bodyPadding: 10,
@@ -22,15 +22,24 @@ Ext.define('FamilyDecoration.view.mybusiness.EditCommunity', {
 			xtype: 'textfield',
 			fieldLabel: '小区名称',
 			value: me.community ? me.community.get('name') : ''
+		}, {
+			id: 'textfield-communityNameRemark',
+			name: 'textfield-communityNameRemark',
+			allowBlank: true,
+			xtype: 'textfield',
+			fieldLabel: '小区备注',
+			value: me.community ? me.community.get('nameRemark') : ''
 		}];
 
 		me.buttons = [{
 			text: '确定',
 			handler: function (){
-				var txt = Ext.getCmp('textfield-communityName');
+				var txt = Ext.getCmp('textfield-communityName'),
+					remark = Ext.getCmp('textfield-communityNameRemark');
 				if (txt.isValid()) {
 					var p = {
-						name: txt.getValue()
+						name: txt.getValue(),
+						nameRemark: remark.getValue()
 					};
 					me.community && Ext.apply(p, {
 						id: me.community.getId()

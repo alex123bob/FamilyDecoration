@@ -52,6 +52,13 @@
 		$sql = "select $select from user left join project p on p.projectId = user.projectId where user.name = '?' and p.projectId is not null and p.isDeleted = 'false' "; 
 		return $mysql->DBGetAsMap($sql,$visitorName);
 	}
+
+	function getVisitorProjectCaptain($visitorName) {
+		global $mysql;
+		$sql = "select DISTINCT `captainName`, `captain` from user left join project p on p.projectId = user.projectId where user.name = '?' and p.projectId is not null and p.isDeleted = 'false' and p.isFrozen = 'false' "; 
+		return $mysql->DBGetAsMap($sql, $visitorName);
+	}
+
 	function getProjectYears (){
 		global $mysql;
 		$sql = "select distinct YEAR(`projectTime`) as `projectYear` from project where `isDeleted` = 'false' ORDER BY `projectTime` DESC ";
@@ -61,6 +68,13 @@
 		global $mysql;
 		return $mysql->DBGetAsMap("select distinct `captainName`, `captain` from project where `isDeleted` = 'false' and `captainName` is not NULL");
 	}
+
+	function getVisitorProjectsByCaptain($visitorName, $captainName){
+		global $mysql;
+		$sql = "select * from user left join project p on p.projectId = user.projectId where user.name = '?' and p.captainName = '?' and p.projectId is not null and p.isDeleted = 'false' ";
+		return $mysql->DBGetAsMap($sql,$visitorName,$captainName);
+	}
+
 	function getProjectMonths ($year){
 		global $mysql;
 		$sql = "select distinct MONTH(`projectTime`) as `projectMonth` from project where YEAR(`projectTime`) = '?' and `isDeleted` = 'false' ORDER BY `projectMonth` DESC ";
@@ -119,7 +133,7 @@
 
 	function getProjectsByCaptainName ($captainName){
 		global $mysql;
-		$projects = $mysql->DBGetAsMap("select * from project where `isDeleted` = 'false' and `captainName` = '?' and `isFrozen` = 'false' ", $captainName);
+		$projects = $mysql->DBGetAsMap("select * from project where `isDeleted` = 'false' and `captainName` = '?' and `isFrozen` = 'false' ORDER BY `projectTime` ASC ", $captainName);
 		$sqlBudget = "select * from budget where projectId = '?' and isDeleted = 'false'";
 		foreach($projects as $key=>$project) {
 			$projects[$key]["budgets"] = $mysql->DBGetAsMap($sqlBudget,$project['projectId']);

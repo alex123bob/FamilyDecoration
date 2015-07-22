@@ -1,6 +1,6 @@
 Ext.define('FamilyDecoration.view.setting.AddAccount', {
 	extend: 'Ext.window.Window',
-	requires: ['Ext.form.field.ComboBox', 'FamilyDecoration.view.progress.ProjectList'],
+	requires: ['Ext.form.field.ComboBox', 'FamilyDecoration.view.progress.ProjectListByCaptain'],
 	alias: 'widget.setting-addaccount',
 	
 	autoScroll: true,
@@ -401,7 +401,7 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 							title: '选择项目',
 							layout: 'fit',
 							items: [{
-								xtype: 'progress-projectlist',
+								xtype: 'progress-projectlistbycaptain',
 								searchFilter: true,
 								listeners: {
 									itemclick: function (view, rec){
@@ -485,7 +485,13 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 									var obj = Ext.decode(res.responseText);
 									if (obj.status == 'successful') {
 										account ? showMsg('编辑用户成功！') : showMsg('用户创建成功！');
-										me.grid.getStore().reload();
+										me.grid.getStore().reload({
+											callback: function (recs, ope, success){
+												if (success) {
+													me.grid.getSelectionModel().deselectAll();
+												}
+											}
+										});
 										me.close();
 										if (account && User.isCurrent(data.name)) {
 											Ext.Msg.info('修改的用户为当前所在用户，需要重新登录！点击【确定】后请重新登录！', function (){
