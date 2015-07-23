@@ -47,42 +47,51 @@ Ext.define('FamilyDecoration.view.mytask.SelfAssess', {
 						selfAssessment: txtArea.getValue()
 					},
 					sms = me.getComponent('checkbox-sendSMS'),
-					mail = me.getComponent('checkbox-sendMail');
-				if (me.assessment) {
-					Ext.apply(p, {
-						id: me.assessment.getId()
-					});
-				}
-				else {
-					Ext.apply(p, {
-						taskListId: taskListId
-					});
-				}
-				if (txtArea.isValid()) {
-					Ext.Ajax.request({
-						url: me.assessment ? './libs/tasklist.php?action=editTaskAssessment' : './libs/tasklist.php?action=addTaskAssessment',
-						params: p,
-						method: 'POST',
-						callback: function (opts, success, res){
-							if (success) {
-								var obj = Ext.decode(res.responseText);
-								if (obj.status == 'successful') {
-									var content = User.getRealName() + '为任务"' + me.task.get('taskName') + '"编写了自我评价，评价内容："' + txtArea.getValue() + '"；';
-									sendMsg(User.getName(), me.task.get('taskDispatcher'), content);
-									sms.getValue() && sendSMS(User.getName(), me.task.get('taskDispatcher'), me.task.get('taskDispatcherPhoneNumber'), content);
-									mail.getValue() && sendMail(me.task.get('taskDispatcher'), 
-										me.task.get('taskDispatcherMail'), User.getRealName() + '填写了"自我评价"', content);
-									showMsg('编写成功！');
-									me.close();
-									Ext.getCmp('panel-selfAssessment').refresh(me.task);
-								}
-								else {
-									showMsg(obj.errMsg);
-								}
-							}
+					mail = me.getComponent('checkbox-sendMail'),
+					content = User.getRealName() + '为任务"' + me.task.get('taskName') + '"编写了自我评价，评价内容："' + txtArea.getValue() + '"；';
+
+				checkMsg({
+					content: content,
+					success: function (){
+						if (me.assessment) {
+							Ext.apply(p, {
+								id: me.assessment.getId()
+							});
 						}
-					});
-				}
+						else {
+							Ext.apply(p, {
+								taskListId: taskListId
+							});
+						}
+						if (txtArea.isValid()) {
+							Ext.Ajax.request({
+								url: me.assessment ? './libs/tasklist.php?action=editTaskAssessment' : './libs/tasklist.php?action=addTaskAssessment',
+								params: p,
+								method: 'POST',
+								callback: function (opts, success, res){
+									if (success) {
+										var obj = Ext.decode(res.responseText);
+										if (obj.status == 'successful') {
+											sendMsg(User.getName(), me.task.get('taskDispatcher'), content);
+											sms.getValue() && sendSMS(User.getName(), me.task.get('taskDispatcher'), me.task.get('taskDispatcherPhoneNumber'), content);
+											mail.getValue() && sendMail(me.task.get('taskDispatcher'), 
+												me.task.get('taskDispatcherMail'), User.getRealName() + '填写了"自我评价"', content);
+											showMsg('编写成功！');
+											me.close();
+											Ext.getCmp('panel-selfAssessment').refresh(me.task);
+										}
+										else {
+											showMsg(obj.errMsg);
+										}
+									}
+								}
+							});
+						}
+					},
+					failure: function (){
+
+					}
+				});
 			}
 		}, {
 			text: '取消',

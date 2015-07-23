@@ -279,12 +279,19 @@ Ext.define('FamilyDecoration.view.mybusiness.TransferToProject', {
 							return;
 						}
 						else {
-							for (var i = 0; i < selMembers.length; i++) {
-								var user = selMembers[i];
-								sendMsg(User.getName(), user.get('name'), sendContent);
-								sms.getValue() && sendSMS(User.getName(), user.get('name'), user.get('phone'), sendContent);
-								mail.getValue() && sendMail(user.get('name'), user.get('mail'), User.getRealName() + '进行了"业务转工程"', sendContent);
-							}
+							checkMsg({
+								content: sendContent,
+								success: function (){
+									for (var i = 0; i < selMembers.length; i++) {
+										var user = selMembers[i];
+										sendMsg(User.getName(), user.get('name'), sendContent);
+										sms.getValue() && sendSMS(User.getName(), user.get('name'), user.get('phone'), sendContent);
+										mail.getValue() && sendMail(user.get('name'), user.get('mail'), User.getRealName() + '进行了"业务转工程"', sendContent);
+									}
+								},
+								failure: function (){
+								}
+							})
 						}
 					}
 					var p = {

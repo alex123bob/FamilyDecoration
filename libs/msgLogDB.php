@@ -10,11 +10,20 @@
 		$value = substr($str,$begin+$keyLen,$end - $begin - $keyLen);
 		return $value;
 	}
+	
+	function checkMsg($content){
+		global $BlackListWords;
+		foreach($BlackListWords as $blackWord){
+			if(contains($content,$blackWord))
+				throw new Exception("含有非法内容：".$blackWord);
+		}
+		return array('status'=>'successful', 'checked' => 'true');
+	}
 	function sendMsg($sender,$reciever,$recieverPhone,$content,$sendtime){
 		global $mysql,$userAndPswd,$corpName,$apiUrl,$MsgErrorCode,$BlackListWords;
 		foreach($BlackListWords as $blackWord){
 			if(contains($content,$blackWord))
-				throw new Exception("含有非法内容：".$blackWord);
+				return array('status'=>'successful', 'errMsg' => "含有非法内容：".$blackWord);
 		}
 		$content = $corpName.$content;
 		$action = $sendtime == null ? "sendsms.action?" : "sendtimesms.action";

@@ -259,33 +259,42 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 										sms = win.getComponent('checkbox-sendSMS'),
 										mail = win.getComponent('checkbox-sendMail');
 									if (content) {
-										Ext.Ajax.request({
-											url: './libs/censorship.php?action=mark',
-											method: 'POST',
-											params: {
-												content: content,
-												logListId: logItem.getId()
-											},
-											callback: function (opts, success, res){
-												if (success) {
-													var obj = Ext.decode(res.responseText);
-													if (obj.status == 'successful') {
-														showMsg('批阅成功！');
-														var sendContent = User.getRealName() + '批阅了您的日志"' + logItem.get('logName')
-															 + '"，批阅内容："' + content + '"；';
-														sendMsg(User.getName(), selMember.get('name'), sendContent);
-														sms.getValue() && sendSMS(User.getName(), selMember.get('name'), selMember.get('phone'), sendContent);
-														mail.getValue() && sendMail(selMember.get('name'), selMember.get('mail'), User.getRealName() + '进行了"日志批阅"', sendContent)
-														win.close();
-														st.reload({
-															params: {
-																logListId: logItem.getId()
+										checkMsg({
+											content: content,
+											success: function (infoObj){
+												Ext.Ajax.request({
+													url: './libs/censorship.php?action=mark',
+													method: 'POST',
+													params: {
+														content: content,
+														logListId: logItem.getId()
+													},
+													callback: function (opts, success, res){
+														if (success) {
+															var obj = Ext.decode(res.responseText);
+															if (obj.status == 'successful') {
+																showMsg('批阅成功！');
+																var sendContent = User.getRealName() + '批阅了您的日志"' + logItem.get('logName')
+																	 + '"，批阅内容："' + content + '"；';
+																sendMsg(User.getName(), selMember.get('name'), sendContent);
+																sms.getValue() && sendSMS(User.getName(), selMember.get('name'), selMember.get('phone'), sendContent);
+																mail.getValue() && sendMail(selMember.get('name'), selMember.get('mail'), User.getRealName() + '进行了"日志批阅"', sendContent)
+																win.close();
+																st.reload({
+																	params: {
+																		logListId: logItem.getId()
+																	}
+																});
 															}
-														});
+														}
 													}
-												}
+												});
+											},
+											failure: function (){
+												
 											}
 										});
+										
 									}
 									else {
 										showMsg('请填写内容！');

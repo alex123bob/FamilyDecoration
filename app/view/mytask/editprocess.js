@@ -67,35 +67,44 @@ Ext.define('FamilyDecoration.view.mytask.EditProcess', {
 						taskProcess: sliderVal
 					},
 					sms = me.getComponent('checkbox-sendSMS'),
-					mail = me.getComponent('checkbox-sendMail');
+					mail = me.getComponent('checkbox-sendMail'),
+					content;
 
 				if (me.task) {
-					Ext.apply(p, {
-						id: me.task.getId()
-					});
-					Ext.Ajax.request({
-						url: './libs/tasklist.php?action=editTaskList',
-						params: p,
-						method: 'POST',
-						callback: function (opts, success, res){
-							if (success) {
-								var obj = Ext.decode(res.responseText);
-								if (obj.status == 'successful') {
-									var content = User.getRealName() + '为任务"' + me.task.get('taskName')
-										 		  + '"编辑了任务进度，当前任务进度为："' + slider.getValue() + '%"；';
-									sendMsg(User.getName(), me.task.get('taskDispatcher'), content);
-									sms.getValue() && sendSMS(User.getName(), me.task.get('taskDispatcher'),
-										me.task.get('taskDispatcherPhoneNumber'), content);
-									mail.getValue() && sendMail(me.task.get('taskDispatcher'), 
-										me.task.get('taskDispatcherMail'), User.getRealName() + '编辑了"任务进度"', content);
-									showMsg('任务进度编辑成功！');
-									me.close();
-									Ext.getCmp('treepanel-myTask').refresh();
+					content = User.getRealName() + '为任务"' + me.task.get('taskName')
+							+ '"编辑了任务进度，当前任务进度为："' + slider.getValue() + '%"；';
+					checkMsg({
+						content: content,
+						success: function (){
+							Ext.apply(p, {
+								id: me.task.getId()
+							});
+							Ext.Ajax.request({
+								url: './libs/tasklist.php?action=editTaskList',
+								params: p,
+								method: 'POST',
+								callback: function (opts, success, res){
+									if (success) {
+										var obj = Ext.decode(res.responseText);
+										if (obj.status == 'successful') {
+											sendMsg(User.getName(), me.task.get('taskDispatcher'), content);
+											sms.getValue() && sendSMS(User.getName(), me.task.get('taskDispatcher'),
+												me.task.get('taskDispatcherPhoneNumber'), content);
+											mail.getValue() && sendMail(me.task.get('taskDispatcher'), 
+												me.task.get('taskDispatcherMail'), User.getRealName() + '编辑了"任务进度"', content);
+											showMsg('任务进度编辑成功！');
+											me.close();
+											Ext.getCmp('treepanel-myTask').refresh();
+										}
+										else {
+											showMsg(obj.errMsg);
+										}
+									}
 								}
-								else {
-									showMsg(obj.errMsg);
-								}
-							}
+							});
+						},
+						failure: function (){
+
 						}
 					});
 				}

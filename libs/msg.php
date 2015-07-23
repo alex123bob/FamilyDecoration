@@ -35,6 +35,10 @@
 			$size = isset($_REQUEST['size']) ? $_REQUEST['size'] : 30;
 			$res = getrecvmsgs($sender,$senderPhone,$endTime,$page,$size);
 			break;
+		//检查短信有没有敏感词
+		case "checkmsg":
+			$res = checkMsg($_REQUEST['content']);
+			break;
 		//发送短信
 		case "sendmsg":
 			$sender = $_REQUEST['sender'];  //发送人姓名

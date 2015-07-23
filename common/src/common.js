@@ -476,6 +476,24 @@ function sendMsg (sender, receiver, content){
     });
 }
 
+function checkMsg (obj) {
+    Ext.Ajax.request({
+        url: './libs/msg.php?action=checkmsg',
+        method: 'POST',
+        params: {
+            content: obj.content
+        },
+        callback: function (opts, success, res){
+            if (success) {
+                obj.success(res);
+            }
+            else {
+                obj.failure(res);
+            }
+        }
+    })
+}
+
 // time: 20151019124530 yyyyMMddHHmmss
 function sendSMS (sender, reciever, recieverPhone, content, time){
     if (sender && reciever) {

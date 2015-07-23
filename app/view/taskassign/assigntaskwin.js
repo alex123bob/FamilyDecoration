@@ -110,7 +110,8 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 					taskList = Ext.getCmp('treepanel-taskNameByUser'),
 					taskSt = taskList.getStore(),
 					sms = Ext.ComponentQuery.query('[name="checkbox-sendSMS"]')[0],
-					mail = Ext.ComponentQuery.query('[name="checkbox-sendMail"]')[0];
+					mail = Ext.ComponentQuery.query('[name="checkbox-sendMail"]')[0],
+					sendContent;
 				if (name.isValid() && content.isValid()) {
 					var assignees = tree.getChecked();
 					if (assignees.length > 0) {
@@ -125,61 +126,65 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 							Ext.apply(p, {
 								id: me.task.getId()
 							});
-						};
-						Ext.Ajax.request({
-							url: me.task ? './libs/tasklist.php?action=editTaskList' : './libs/tasklist.php?action=addTaskList',
-							method: 'POST',
-							params: p,
-							callback: function (opts, success, res){
-								if (success) {
-									var sendContent;
-									if (me.task) {
-										sendContent = User.getRealName() + '编辑了任务，任务名称：' + name.getValue() + '，任务内容：' + content.getValue() + '；';
-									}
-									else {
-										sendContent = User.getRealName() + '给您分配了任务，任务名称：' + name.getValue() + '，任务内容：' + content.getValue() + '；';
-									}
+							sendContent = User.getRealName() + '编辑了任务，任务名称：' + name.getValue() + '，任务内容：' + content.getValue() + '；';
+						}
+						else {
+							sendContent = User.getRealName() + '给您分配了任务，任务名称：' + name.getValue() + '，任务内容：' + content.getValue() + '；';
+						}
+						checkMsg({
+							content: sendContent,
+							success: function (){
+								Ext.Ajax.request({
+									url: me.task ? './libs/tasklist.php?action=editTaskList' : './libs/tasklist.php?action=addTaskList',
+									method: 'POST',
+									params: p,
+									callback: function (opts, success, res){
+										if (success) {
+											sendMsg(User.getName(), executor, sendContent);
+											sms.getValue() && Ext.each(assignees, function (obj, index) {
+												sendSMS(User.getName(), obj.get('name'), obj.get('phone'), sendContent);
+											});
+											mail.getValue() && Ext.each(assignees, function (obj, index) {
+												sendMail(obj.get('name'), obj.get('mail'), User.getRealName() + '进行了"任务分配或编辑"', sendContent);
+											});
 
-									sendMsg(User.getName(), executor, sendContent);
-									sms.getValue() && Ext.each(assignees, function (obj, index) {
-										sendSMS(User.getName(), obj.get('name'), obj.get('phone'), sendContent);
-									});
-									mail.getValue() && Ext.each(assignees, function (obj, index) {
-										sendMail(obj.get('name'), obj.get('mail'), User.getRealName() + '进行了"任务分配或编辑"', sendContent);
-									});
-
-									var obj = Ext.decode(res.responseText);
-									if (obj.status == 'successful') {
-										me.task ? showMsg('任务编辑成功！') : showMsg('任务分配成功！');
-										memberSt.getProxy().url = './libs/loglist.php?action=getLogListDepartments';
-										memberSt.getProxy().extraParams = {
-											email: false,
-											fullList: false,
-											individual: false
-										};
-										memberSt.load({
-											node: memberSt.getRootNode(),
-											callback: function (recs, ope, success){
-												if (success) {
-													taskSt.getProxy().extraParams = {
-														user: memberList.getSelectionModel().getSelection()[0].get('name')
-													};
-													taskSt.getProxy().url = './libs/tasklist.php?action=getTaskListYearsByUser';
-													taskSt.load({
-														node: taskSt.getRootNode(),
-														callback: function (){
-															taskList.getSelectionModel().deselectAll();
+											var obj = Ext.decode(res.responseText);
+											if (obj.status == 'successful') {
+												me.task ? showMsg('任务编辑成功！') : showMsg('任务分配成功！');
+												memberSt.getProxy().url = './libs/loglist.php?action=getLogListDepartments';
+												memberSt.getProxy().extraParams = {
+													email: false,
+													fullList: false,
+													individual: false
+												};
+												memberSt.load({
+													node: memberSt.getRootNode(),
+													callback: function (recs, ope, success){
+														if (success) {
+															taskSt.getProxy().extraParams = {
+																user: memberList.getSelectionModel().getSelection()[0].get('name')
+															};
+															taskSt.getProxy().url = './libs/tasklist.php?action=getTaskListYearsByUser';
+															taskSt.load({
+																node: taskSt.getRootNode(),
+																callback: function (){
+																	taskList.getSelectionModel().deselectAll();
+																}
+															});												
 														}
-													});												
-												}
+													}
+												});
+												me.close();
 											}
-										});
-										me.close();
+											else {
+												showMsg(obj.errMsg);
+											}
+										}
 									}
-									else {
-										showMsg(obj.errMsg);
-									}
-								}
+								});
+							},
+							failure: function (){
+
 							}
 						})
 					}

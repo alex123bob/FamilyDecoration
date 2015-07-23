@@ -390,35 +390,44 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 												memberTree = Ext.getCmp('treepanel-taskMemberName'),
 												member = memberTree.getSelectionModel().getSelection()[0],
 												sms = win.getComponent('checkbox-sendSMS'),
-												mail = win.getComponent('checkbox-sendMail');
+												mail = win.getComponent('checkbox-sendMail'),
+												sendContent;
 
 											if (task) {
-												Ext.Ajax.request({
-													url: './libs/taskscrutinize.php?action=mark',
-													method: 'POST',
-													params: {
-														taskListId: task.getId(),
-														content: content
+												sendContent = User.getRealName() + '批阅了任务"' + task.get('taskName') + '"，批阅内容：' + content + '；';
+												checkMsg({
+													content: sendContent,
+													success: function (){
+														Ext.Ajax.request({
+															url: './libs/taskscrutinize.php?action=mark',
+															method: 'POST',
+															params: {
+																taskListId: task.getId(),
+																content: content
+															},
+															callback: function (opts, success, res){
+																if (success) {
+																	var obj = Ext.decode(res.responseText);
+																	if (obj.status == 'successful') {
+																		sendMsg(User.getName(), member.get('name'), sendContent);
+																		sms.getValue() && sendSMS(User.getName(), member.get('name'), member.get('phone'), sendContent);
+																		mail.getValue() && sendMail(member.get('name'), member.get('mail'), 
+																			User.getRealName() + '进行了"批阅任务"', sendContent);
+																		showMsg('批阅成功！');
+																		win.close();
+																		taskCheckGrid.getStore().reload();
+																	}
+																	else {
+																		showMsg(obj.errMsg);
+																	}
+																}
+															}
+														});
 													},
-													callback: function (opts, success, res){
-														if (success) {
-															var obj = Ext.decode(res.responseText);
-															if (obj.status == 'successful') {
-																var sendContent = User.getRealName() + '批阅了任务"' + task.get('taskName') + '"，批阅内容：' + content + '；';
-																sendMsg(User.getName(), member.get('name'), sendContent);
-																sms.getValue() && sendSMS(User.getName(), member.get('name'), member.get('phone'), sendContent);
-																mail.getValue() && sendMail(member.get('name'), member.get('mail'), 
-																	User.getRealName() + '进行了"批阅任务"', sendContent);
-																showMsg('批阅成功！');
-																win.close();
-																taskCheckGrid.getStore().reload();
-															}
-															else {
-																showMsg(obj.errMsg);
-															}
-														}
+													failure: function (){
+														
 													}
-												});
+												})
 											}
 											else {
 												showMsg('请选择要批阅的任务！');

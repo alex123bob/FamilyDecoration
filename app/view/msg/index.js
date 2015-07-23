@@ -47,6 +47,10 @@ Ext.define('FamilyDecoration.view.msg.Index', {
 				renderer: function (val){
 					return val.replace(/\n/ig, '<br />');
 				}
+			}, {
+				text: '发送时间',
+				flex: 1,
+				dataIndex: 'createTime'
 			}],
 			store: Ext.create('FamilyDecoration.store.Msg', {
 				autoLoad: true
@@ -79,7 +83,7 @@ Ext.define('FamilyDecoration.view.msg.Index', {
 					if (success) {
 						var obj = Ext.decode(res.responseText);
 						if (obj.status == 'successful') {
-							balance.setValue(obj['balance']);
+							balance.setValue(obj['balance']*10);
 						}
 					}
 				}

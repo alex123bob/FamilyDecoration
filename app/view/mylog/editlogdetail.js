@@ -104,45 +104,53 @@ Ext.define('FamilyDecoration.view.mylog.EditLogDetail', {
 
 				if (logContent.isValid()) {
 					if (sms.getValue() || mail.getValue()) {
-						if (selMembers.length > 0) {
-							me.logObj && Ext.apply(p, {
-								id: me.logObj.getId()
-							});
-							Ext.Ajax.request({
-								method: 'POST',
-								url: 'libs/loglist.php?action=addOrEditLogDetail',
-								params: p,
-								callback: function (opts, success, res){
-									if (success) {
-										var obj = Ext.decode(res.responseText),
-											sendContent = '';
-										if (obj.status == 'successful') {
-											if (me.logObj) {
-												showMsg('修改成功！');
-												sendContent += User.getRealName() + '修改了日志[' + rec.get('logName') + '],'
-															+ '日志内容: ' + Ext.getCmp('textarea-logContent').getValue();
+						checkMsg({
+							content: logContent.getValue(),
+							success: function (infoObj){
+								if (selMembers.length > 0) {
+									me.logObj && Ext.apply(p, {
+										id: me.logObj.getId()
+									});
+									Ext.Ajax.request({
+										method: 'POST',
+										url: 'libs/loglist.php?action=addOrEditLogDetail',
+										params: p,
+										callback: function (opts, success, res){
+											if (success) {
+												var obj = Ext.decode(res.responseText),
+													sendContent = '';
+												if (obj.status == 'successful') {
+													if (me.logObj) {
+														showMsg('修改成功！');
+														sendContent += User.getRealName() + '修改了日志[' + rec.get('logName') + '],'
+																	+ '日志内容: ' + Ext.getCmp('textarea-logContent').getValue();
+													}
+													else {
+														showMsg('增加成功！');
+														sendContent += User.getRealName() + '添加了日志[' + rec.get('logName') + '],'
+																	+ '日志内容: ' + Ext.getCmp('textarea-logContent').getValue();
+													}
+													for (var i = 0; i < selMembers.length; i++) {
+														var user = selMembers[i];
+														sendMsg(User.getName(), user.get('name'), sendContent);
+														sms.getValue() && sendSMS(User.getName(), user.get('name'), user.get('phone'), sendContent);
+														mail.getValue() && sendMail(user.get('name'), user.get('mail'), User.getRealName() + '进行了"我的日志编辑"', sendContent);
+													}
+													me.close();
+													grid.refresh(rec);
+												}
 											}
-											else {
-												showMsg('增加成功！');
-												sendContent += User.getRealName() + '添加了日志[' + rec.get('logName') + '],'
-															+ '日志内容: ' + Ext.getCmp('textarea-logContent').getValue();
-											}
-											for (var i = 0; i < selMembers.length; i++) {
-												var user = selMembers[i];
-												sendMsg(User.getName(), user.get('name'), sendContent);
-												sms.getValue() && sendSMS(User.getName(), user.get('name'), user.get('phone'), sendContent);
-												mail.getValue() && sendMail(user.get('name'), user.get('mail'), User.getRealName() + '进行了"我的日志编辑"', sendContent);
-											}
-											me.close();
-											grid.refresh(rec);
 										}
-									}
+									});
 								}
-							});
-						}
-						else {
-							showMsg('请选择要发送的对象！');
-						}
+								else {
+									showMsg('请选择要发送的对象！');
+								}
+							},
+							failure: function (infoObj){
+								// do nothing
+							}
+						})
 					}
 					else {
 						if (selMembers.length > 0) {
