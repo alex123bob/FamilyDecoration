@@ -11,7 +11,11 @@
 		return $value;
 	}
 	function sendMsg($sender,$reciever,$recieverPhone,$content,$sendtime){
-		global $mysql,$userAndPswd,$corpName,$apiUrl,$MsgErrorCode;
+		global $mysql,$userAndPswd,$corpName,$apiUrl,$MsgErrorCode,$BlackListWords;
+		foreach($BlackListWords as $blackWord){
+			if(contains($content,$blackWord))
+				throw new Exception("含有非法内容：".$blackWord);
+		}
 		$content = $corpName.$content;
 		$action = $sendtime == null ? "sendsms.action?" : "sendtimesms.action";
 		$url = $apiUrl.$action.$userAndPswd."&phone=$recieverPhone&message=".urlencode($content)."&sendtime=$sendtime";
