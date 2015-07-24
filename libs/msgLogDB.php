@@ -134,8 +134,10 @@
 		if($recieverPhone != null)$where .= " and recieverPhone = '$recieverPhone' ";
 	
 		$limit = " limit $size offset ".($size*($page-1));
+
+		$order = " ORDER BY `createTime` DESC ";
 		
-		$data = $mysql->DBGetAsMap($sql.$where.$limit);
+		$data = $mysql->DBGetAsMap($sql.$where.$order.$limit);
 		$count = $mysql->DBGetAsOneArray($sqlCount.$where);
 		return array('status'=>'successful',"data"=>$data,"total"=>$count[0]);
 	}
