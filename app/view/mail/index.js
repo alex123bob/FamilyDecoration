@@ -117,6 +117,42 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 							showMsg('没有选中的邮件！');
 						}
 					}
+				}, {
+					xtype: 'button',
+					icon: './resources/img/isread.png',
+					text: '置为已读',
+					tooltip: '将收件箱所有邮件置为已读',
+					id: 'button-setReadByReceiver',
+					handler: function (){
+						var grid = Ext.getCmp('gridpanel-receivedBox'),
+							tree = Ext.getCmp('treepanel-memberNameForMail'),
+							rec = tree.getSelectionModel().getSelection()[0];
+						if (rec) {
+							Ext.Msg.warning('确定将所有收件箱邮件置为已读吗？', function (btnId){
+								if (btnId == 'yes') {
+									Ext.Ajax.request({
+										url: './libs/mail.php?action=setmailreadbyreceiver',
+										method: 'POST',
+										params: {
+											mailReceiver: User.getName()
+										},
+										callback: function (opts, success, res){
+											if (success) {
+												var obj = Ext.decode(res.responseText);
+												if (obj.status == 'successful') {
+													showMsg('置为已读成功！');
+													grid.getStore().reload();
+												}
+											}
+										}
+									})
+								}
+							});
+						}
+						else {
+							showMsg('请选择用户成员！');
+						}
+					}
 				}],
 				columns: [{
 					xtype:'actioncolumn',

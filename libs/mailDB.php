@@ -110,6 +110,12 @@
 		$mysql->DBUpdate("mail",array('isRead'=>true),"`mailId` = '?' ",array($mailId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
+
+	function setMailReadByReceiver ($receiverName) {
+		global $mysql;
+		$mysql->DBUpdate("mail",array("isRead"=>true),"`mailReceiver` like '%?%'",array($receiverName));
+		return array('status'=>'successful', 'errMsg' => '');
+	}
 	
 	
 ?>

@@ -40,6 +40,9 @@
 		case "setmailread":
 			$res = setMailRead($_REQUEST["mailId"]);
 			break;
+		case "setmailreadbyreceiver":
+			$res = setMailReadByReceiver($_REQUEST["mailReceiver"]);
+			break;
 		default: 		
 			throw new Exception("unknown action:".$action);
 	}
