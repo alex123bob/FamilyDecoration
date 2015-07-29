@@ -3,7 +3,8 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
     alias: 'widget.bulletin-index',
     requires: [
         'FamilyDecoration.store.Bulletin', 'FamilyDecoration.view.bulletin.EditBulletin',
-        'FamilyDecoration.store.Message', 'Ext.grid.column.Action'
+        'FamilyDecoration.store.Message', 'Ext.grid.column.Action', 'Ext.chart.Chart',
+        'Ext.chart.series.Column', 'Ext.chart.axis.*'
     ],
     autoScroll: true,
     layout: 'hbox',
@@ -15,6 +16,50 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 autoLoad: true,
                 pageSize: itemsPerPage // items per page
             });
+
+        var businessSt = Ext.create('Ext.data.Store', {
+            autoLoad: true,
+            fields: [{
+                name: 'name',
+                mapping: 'salesman'
+            }, {
+                name: 'data',
+                mapping: 'number'
+            }],
+            proxy: {
+                type: 'rest',
+                url: './libs/business.php?action=businessStar',
+                extraParams: {
+                    desc: true,
+                    number: 50
+                },
+                reader: {
+                    type: 'json'
+                }
+            }
+        });
+
+        var signBusinessSt = Ext.create('Ext.data.Store', {
+            autoLoad: true,
+            fields: [{
+                name: 'name',
+                mapping: 'designer'
+            }, {
+                name: 'data',
+                mapping: 'number'
+            }],
+            proxy: {
+                type: 'rest',
+                url: './libs/business.php?action=signStar',
+                extraParams: {
+                    desc: true,
+                    number: 50
+                },
+                reader: {
+                    type: 'json'
+                }
+            }
+        });
 
         me.items = [{
             xtype: 'fieldcontainer',
@@ -308,155 +353,117 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
             height: '100%',
             flex: 1,
             items: [{
-                title: '本周之星',
+                title: '本周业务',
                 width: '100%',
                 flex: 1,
                 layout: 'fit',
-                id: 'panel-thisWeekStar',
-                name: 'panel-thisWeekStar',
+                id: 'panel-thisWeekBusiness',
+                name: 'panel-thisWeekBusiness',
                 items: [{
-                    xtype: 'image'
-                }],
-                listeners: {
-                    beforerender: function (cmp, opts){
-                        var img = Ext.getCmp('panel-thisWeekStar').down('image');
-                        Ext.Ajax.request({
-                            url: './libs/business.php?action=businessStar',
-                            method: 'POST',
-                            params: {
-                                desc: true,
-                                number: 1
+                    xtype: 'chart',
+                    width: 500,
+                    height: 300,
+                    animate: true,
+                    store: businessSt,
+                    axes: [
+                        {
+                            type: 'Numeric',
+                            position: 'left',
+                            fields: ['data'],
+                            label: {
+                                renderer: Ext.util.Format.numberRenderer('0,0')
                             },
-                            callback: function (opts, success, res){
-                                if (success) {
-                                    var obj = Ext.decode(res.responseText);
-                                    if (obj.length > 0) {
-                                        var businessStar = obj[0].salesman;
-                                        Ext.Ajax.request({
-                                            url: './libs/business.php?action=signStar',
-                                            method: 'POST',
-                                            params: {
-                                                desc: true,
-                                                number: 1
-                                            },
-                                            callback: function (opts, success, res){
-                                                if (success) {
-                                                    var obj = Ext.decode(res.responseText);
-                                                    if (obj.length > 0) {
-                                                        var signStar = obj[0].designer;
-                                                        img.setSrc('./jz/2.php?businessStar='+businessStar+'&signStar='+signStar);
-                                                    }
-                                                    else {
-                                                        img.setSrc('./jz/2.php?businessStar='+businessStar+'&signStar=');
-                                                        // showMsg('没有本周签单之星！');
-                                                    }
-                                                }
-                                            }
-                                        });
-                                    }
-                                    else {
-                                        Ext.Ajax.request({
-                                            url: './libs/business.php?action=signStar',
-                                            method: 'POST',
-                                            params: {
-                                                desc: true,
-                                                number: 1
-                                            },
-                                            callback: function (opts, success, res){
-                                                if (success) {
-                                                    var obj = Ext.decode(res.responseText);
-                                                    if (obj.length > 0) {
-                                                        var signStar = obj[0].designer;
-                                                        img.setSrc('./jz/2.php?businessStar=&signStar='+signStar);
-                                                    }
-                                                    else {
-                                                        img.setSrc('./jz/2.php?businessStar=&signStar=');
-                                                        // showMsg('没有本周签单之星！');
-                                                    }
-                                                }
-                                            }
-                                        });
-                                    }
-                                }
-                            }
-                        });
-                    }
-                }
+                            grid: true,
+                            minimum: 0
+                        },
+                        {
+                            type: 'Category',
+                            position: 'bottom',
+                            fields: ['name'],
+                        }
+                    ],
+                    series: [
+                        {
+                            type: 'column',
+                            axis: 'left',
+                            highlight: true,
+                            tips: {
+                              trackMouse: true,
+                              width: 140,
+                              height: 28,
+                              renderer: function(storeItem, item) {
+                                this.setTitle(storeItem.get('name') + ': ' + storeItem.get('data'));
+                              }
+                            },
+                            label: {
+                              display: 'insideEnd',
+                              'text-anchor': 'middle',
+                                field: 'data',
+                                renderer: Ext.util.Format.numberRenderer('0'),
+                                orientation: 'vertical',
+                                color: '#333'
+                            },
+                            xField: 'name',
+                            yField: 'data'
+                        }
+                    ]
+                }]
             }, {
-                title: '本周之坑',
+                title: '本周签单',
                 width: '100%',
                 flex: 1,
                 layout: 'fit',
-                id: 'panel-thisWeekSucker',
-                name: 'panel-thisWeekSucker',
+                id: 'panel-thisWeekSignBusiness',
+                name: 'panel-thisWeekSignBusiness',
                 items: [{
-                    xtype: 'image'
-                }],
-                listeners: {
-                    beforerender: function (cmp, opts){
-                        var img = Ext.getCmp('panel-thisWeekSucker').down('image');
-                        Ext.Ajax.request({
-                            url: './libs/business.php?action=businessStar',
-                            method: 'POST',
-                            params: {
-                                desc: false,
-                                number: 1
+                    xtype: 'chart',
+                    width: 500,
+                    height: 300,
+                    animate: true,
+                    store: signBusinessSt,
+                    axes: [
+                        {
+                            type: 'Numeric',
+                            position: 'left',
+                            fields: ['data'],
+                            label: {
+                                renderer: Ext.util.Format.numberRenderer('0,0')
                             },
-                            callback: function (opts, success, res){
-                                if (success) {
-                                    var obj = Ext.decode(res.responseText);
-                                    if (obj.length > 1) {
-                                        var businessStar = obj[0].salesman;
-                                        Ext.Ajax.request({
-                                            url: './libs/business.php?action=signStar',
-                                            method: 'POST',
-                                            params: {
-                                                desc: false,
-                                                number: 1
-                                            },
-                                            callback: function (opts, success, res){
-                                                if (success) {
-                                                    var obj = Ext.decode(res.responseText);
-                                                    if (obj.length > 1) {
-                                                        var signStar = obj[0].designer;
-                                                        img.setSrc('./jz/3.php?businessLast='+businessStar+'&signLast='+signStar);
-                                                    }
-                                                    else {
-                                                        // showMsg('没有本周签单之星！');
-                                                        img.setSrc('./jz/3.php?businessLast='+businessStar+'&signLast=');
-                                                    }
-                                                }
-                                            }
-                                        });
-                                    }
-                                    else {
-                                        Ext.Ajax.request({
-                                            url: './libs/business.php?action=signStar',
-                                            method: 'POST',
-                                            params: {
-                                                desc: false,
-                                                number: 1
-                                            },
-                                            callback: function (opts, success, res){
-                                                if (success) {
-                                                    var obj = Ext.decode(res.responseText);
-                                                    if (obj.length > 1) {
-                                                        var signStar = obj[0].designer;
-                                                        img.setSrc('./jz/3.php?businessLast=&signLast='+signStar);
-                                                    }
-                                                    else {
-                                                        // showMsg('没有本周签单之星！');
-                                                        img.setSrc('./jz/3.php?businessLast=&signLast=');
-                                                    }
-                                                }
-                                            }
-                                        });                                    
-                                    }
-                                }
-                            }
-                        });
-                    }
-                }
+                            grid: true,
+                            minimum: 0
+                        },
+                        {
+                            type: 'Category',
+                            position: 'bottom',
+                            fields: ['name'],
+                        }
+                    ],
+                    series: [
+                        {
+                            type: 'column',
+                            axis: 'left',
+                            highlight: true,
+                            tips: {
+                              trackMouse: true,
+                              width: 140,
+                              height: 28,
+                              renderer: function(storeItem, item) {
+                                this.setTitle(storeItem.get('name') + ': ' + storeItem.get('data'));
+                              }
+                            },
+                            label: {
+                              display: 'insideEnd',
+                              'text-anchor': 'middle',
+                                field: 'data',
+                                renderer: Ext.util.Format.numberRenderer('0'),
+                                orientation: 'vertical',
+                                color: '#333'
+                            },
+                            xField: 'name',
+                            yField: 'data'
+                        }
+                    ]
+                }]
             }]
         }];
 

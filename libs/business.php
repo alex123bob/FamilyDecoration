@@ -114,7 +114,7 @@
 			break;
 		//业务之星,上个星期谁新建的业务最多,或者最少
 		case "businessStar":
-			$desc = isset($_REQUEST['desc']) ? $_REQUEST['desc'] == "true" : true;
+			$desc = isset($_REQUEST['desc']) ? $_REQUEST['desc'] == "true" : false;
 			$number = isset($_REQUEST['number']) ? intval($_REQUEST['number']) : 5;
 			$number = $number < 1 ? 5 : $number;
 			$startTime = date("Y-m-d H:i:s",mktime(0, 0 , 0,date("m"),date("d")-date("w")+1-7,date("Y"))); 
@@ -123,7 +123,7 @@
 			break;
 		//签单之星,上个星期谁签单的业务最多,或者最少
 		case "signStar":
-			$desc = isset($_REQUEST['desc']) ? $_REQUEST['desc'] == "true" : true;
+			$desc = isset($_REQUEST['desc']) ? $_REQUEST['desc'] == "true" : false;
 			$number = isset($_REQUEST['number']) ? intval($_REQUEST['number']) : 5;
 			$number = $number < 1 ? 5 : $number;
 			$startTime = date("Y-m-d H:i:s",mktime(0, 0 , 0,date("m"),date("d")-date("w")+1-7,date("Y"))); 

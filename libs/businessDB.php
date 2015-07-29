@@ -1,11 +1,21 @@
 <?php
 	function getBusinessStar($desc,$number,$startTime,$endTime){
 		global $mysql;
-		return $mysql->DBGetAsMap("SELECT salesman,salesmanName, COUNT( * ) AS number FROM business where createTime >= '$startTime' and createTime <= '$endTime' GROUP BY salesman ORDER BY number DESC LIMIT ".$number);
+		$order = $desc == true ? "DESC" : "ASC";
+		$sql = 	"SELECT name AS salesmanName, realName AS salesman, IFNULL(number,0) as number FROM user LEFT JOIN ("
+					." SELECT salesman, salesmanName, COUNT( * ) AS number FROM business"
+					." WHERE createTime >=  '?' AND createTime <= '?' and isDeleted = 'false' GROUP BY salesman ORDER BY number ? LIMIT ?"
+				.") a ON a.salesmanName = user.name where user.isDeleted = 'false' ORDER BY number ? LIMIT ? ";
+		return $mysql->DBGetAsMap($sql,$startTime,$endTime,$order,$number,$order,$number);
 	}
 	function getSignStar($desc,$number,$startTime,$endTime){
 		global $mysql;
-		return $mysql->DBGetAsMap("SELECT designer,designerName, COUNT( * ) AS number FROM business where signTime >= '$startTime' and signTime <= '$endTime' and `applyDesigner` = '2' GROUP BY designer ORDER BY number DESC LIMIT ".$number);
+		$order = $desc == true ? "DESC" : "ASC";
+		$sql = 	"SELECT name AS designerName, realName AS designer, IFNULL(number,0) as number  FROM user LEFT JOIN ("
+					." SELECT designer, designerName, COUNT( * ) AS number FROM business"
+					." WHERE `applyDesigner` = '2' and createTime >=  '?' AND createTime <= '?' and isDeleted = 'false' GROUP BY designer ORDER BY number ? LIMIT ?"
+				.") a ON a.designerName = user.name where user.isDeleted = 'false' ORDER BY number ? LIMIT ? ";
+		return $mysql->DBGetAsMap($sql,$startTime,$endTime,$order,$number,$order,$number);
 	}
 
 	function getBusinessByRegion($reginId,$isFrozen,$isTransfered,$salesmanName=null){
