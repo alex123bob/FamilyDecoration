@@ -395,6 +395,9 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                 this.setTitle(storeItem.get('name') + ': ' + storeItem.get('data'));
                               }
                             },
+                            style: {
+                                width: 30
+                            },
                             label: {
                               display: 'insideEnd',
                               'text-anchor': 'middle',
@@ -450,6 +453,9 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                               renderer: function(storeItem, item) {
                                 this.setTitle(storeItem.get('name') + ': ' + storeItem.get('data'));
                               }
+                            },
+                            style: {
+                                width: 30
                             },
                             label: {
                               display: 'insideEnd',
