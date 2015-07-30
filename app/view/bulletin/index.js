@@ -353,7 +353,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
             height: '100%',
             flex: 1,
             items: [{
-                title: '本周业务',
+                title: '上周业务',
                 width: '100%',
                 flex: 1,
                 layout: 'fit',
@@ -409,7 +409,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                     ]
                 }]
             }, {
-                title: '本周签单',
+                title: '上周签单',
                 width: '100%',
                 flex: 1,
                 layout: 'fit',

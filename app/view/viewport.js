@@ -331,7 +331,7 @@ Ext.define('FamilyDecoration.view.Viewport', {
                             }
                         }
                     })
-                }, 5000);
+                }, 7000);
             })();
 
             setInterval(function (){
