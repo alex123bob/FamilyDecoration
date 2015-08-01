@@ -161,15 +161,20 @@ Ext.define('FamilyDecoration.view.mail.NewMail', {
 							mailSender: User.getName(),
 							senderAddress: User.getEmail()
 						};
+
 						Ext.Ajax.request({
 							url: './libs/mail.php?action=sendMail',
 							params: p,
 							method: 'POST',
 							callback: function (opts, success, res){
 								if (success) {
-									var obj = Ext.decode(res.responseText);
+									var obj = Ext.decode(res.responseText),
+										receiverArr = val['receiverAddress'].split(',');
 									if (obj.status == 'successful') {
 										showMsg('发送成功！');
+										for (var i = 0; i < receiverArr.length; i++) {
+											requestChannel(receiverArr[i], val['mailContent']);
+										}
 										if (rec) {
 											receiveGrid.getStore().reload();
 											sendGrid.getStore().reload();

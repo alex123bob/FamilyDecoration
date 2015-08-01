@@ -140,6 +140,7 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 											if (success) {
 												var obj = Ext.decode(res.responseText);
 												if (obj.status == 'successful') {
+													refreshEmailAndMsg();
 													showMsg('置为已读成功！');
 													grid.getStore().reload();
 												}
@@ -172,6 +173,7 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 											var obj = Ext.decode(res.responseText);
 											if (obj.status == 'successful') {
 												showMsg('置为已读成功！');
+												refreshEmailAndMsg();
 												var receiveGrid = Ext.getCmp('gridpanel-receivedBox');
 												receiveGrid.getStore().reload();
 											}

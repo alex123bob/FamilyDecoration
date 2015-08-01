@@ -226,9 +226,10 @@ Ext.define('FamilyDecoration.view.Viewport', {
                 mailWin.show();
             }
 
-            // for email
-            (function (){
-                var func = arguments.callee;
+            function refreshEmailAndMsg (period) {
+                if (!period) {
+                    period = 0;
+                }
                 setTimeout(function (){
                     var title = Ext.query('[data-recordid="mail-index"] span'),
                         bulletinTitle = Ext.query('[data-recordid="bulletin-index"] span'),
@@ -283,7 +284,6 @@ Ext.define('FamilyDecoration.view.Viewport', {
                                     // otherwise do nothing. this is the visitor mode. no bulletin, no emailbox
                                 }
                             }
-                            func();
                         },
                         silent: true,
                         automatic: true
@@ -331,9 +331,34 @@ Ext.define('FamilyDecoration.view.Viewport', {
                             }
                         }
                     })
-                }, 7000);
-            })();
+                }, period); 
+            }
 
+            window.refreshEmailAndMsg = refreshEmailAndMsg;
+            refreshEmailAndMsg(3000);
+
+            // use sina channel to push message which is more like the long connection websocket
+            if (sae.Channel && privateChannel) {
+                privateChannel = new sae.Channel(privateChannel);
+                privateChannel.onopen = function(){
+                    console.log('privateChannel' + " opened");
+                };
+
+                privateChannel.onclose  = function(){
+                    console.log('privateChannel' + " closed");
+                };
+
+                privateChannel.onerror   = function(){
+                    console.log('privateChannel' + " error");
+                };
+
+                privateChannel.onmessage = function(obj){
+                    console.log(obj);
+                    refreshEmailAndMsg(0);
+                };
+            }
+
+            // for email and message hint blink
             setInterval(function (){
                 var unreadMails = Ext.query('[data-recordid="mail-index"] span strong'),
                     unreadMsg = Ext.query('[data-recordid="bulletin-index"] span strong'),
@@ -366,7 +391,7 @@ Ext.define('FamilyDecoration.view.Viewport', {
 
                 }
             }, 1000);
-            // end of email
+            // end of blink
 
         });
         

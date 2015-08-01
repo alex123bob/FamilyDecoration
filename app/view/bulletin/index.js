@@ -314,6 +314,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                         if (obj.status == 'successful') {
                                             showMsg('已置为已读');
                                             msgGrid.refresh();
+                                            refreshEmailAndMsg();
                                         }
                                         else {
                                             showMsg(obj.errMsg);

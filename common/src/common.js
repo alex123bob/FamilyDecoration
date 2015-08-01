@@ -181,7 +181,6 @@ Ext.require('Ext.Ajax', function () {
      * Fires before a network request is made to retrieve a data object.
      */
     Ext.Ajax.on('beforerequest', function (conn, opts, eopts) {
-        opts.url += '&_u_=' + User.getName();
         opts.silent = opts.silent || (opts.operation ? opts.operation.silent : false) ||
             (opts.proxy ? opts.proxy.silent : false);
         if (opts.silent === true && opts.automatic === true) {
@@ -453,6 +452,21 @@ Number.prototype.div = function (arg) {
     return accDiv(this, arg);
 };
 
+function requestChannel (receiver, content){
+    if (privateChannel) {
+        Ext.Ajax.request({
+            url: './channel/message.php',
+            method: 'POST',
+            params: {
+                message: content,
+                to: 'sae_channel_' + receiver
+            },
+            callback: function (opts, success, res){
+            }
+        });
+    }
+}
+
 // send message to make a record.
 function sendMsg (sender, receiver, content){
     Ext.Ajax.request({
@@ -468,6 +482,7 @@ function sendMsg (sender, receiver, content){
             if (success) {
                 var obj = Ext.decode(res.responseText);
                 if (obj.status == 'successful') {
+                    requestChannel(receiver, content);
                 }
                 else {
                     showMsg(obj.errMsg);
@@ -613,6 +628,7 @@ function sendExternalMail (mailAddress, subject, content) {
 
 function sendMail (reciever, recieverMail, subject, content) {
     if (reciever) {
+        var originalReceiverName = reciever;
         Ext.Ajax.request({
             url: './libs/user.php?action=getrealname',
             method: 'GET',
@@ -645,6 +661,7 @@ function sendMail (reciever, recieverMail, subject, content) {
                                         setTimeout(function (){
                                             showMsg('邮件发送成功！');
                                         }, 500);
+                                        requestChannel(originalReceiverName, content);
                                     }
                                     else {
                                         setTimeout(function (){

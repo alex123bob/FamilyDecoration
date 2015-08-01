@@ -18,6 +18,7 @@
     <!-- </x-compile> -->
     <link href="resources/css/global.css" rel="stylesheet" />
     <script type="text/javascript" src="resources/locale/ext-lang-zh_CN.js"></script>
+    <script src="http://channel.sinaapp.com/api.js" type="text/javascript"></script>
     <?php
         function curPageURL() {
              $pageURL = 'http';
@@ -80,7 +81,19 @@
         
     </div>
 
+    <?php
+        if (class_exists("SaeChannel")) {
+            $channel = new SaeChannel();
+            $privateChannel = $channel->createChannel("sae_channel_".$_SESSION["name"], 60);
+        }
+        else {
+            $privateChannel = null;
+        }
+    ?>
+
     <script type="text/javascript">
+        var privateChannel = '<?php echo $privateChannel; ?>';
+
         Ext.define('User', {
             singleton: true,
 

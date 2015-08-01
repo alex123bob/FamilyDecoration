@@ -70,6 +70,9 @@
         <copy todir="${build.dir}/jz" overwrite="true">
             <fileset dir="${app.dir}/jz" />
         </copy>
+        <copy todir="${build.dir}/channel" overwrite="true">
+            <fileset dir="${app.dir}/channel" />
+        </copy>
         <copy todir="${build.dir}/login" overwrite="true">
             <fileset dir="${app.dir}/login" />
         </copy>
