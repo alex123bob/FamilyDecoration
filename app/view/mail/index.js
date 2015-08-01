@@ -105,6 +105,7 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 										if (success) {
 											var obj = Ext.decode(res.responseText);
 											if (obj.status == 'successful') {
+												refreshEmailAndMsg();
 												var receiveGrid = Ext.getCmp('gridpanel-receivedBox');
 												receiveGrid.getStore().reload();
 											}
