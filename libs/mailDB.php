@@ -1,54 +1,7 @@
 <?php
-	include_once "../phpmailer/class.smtp.php";
-	include_once "../phpmailer/class.phpmailer.php";
+	include_once "common_mail.php";
 	include_once "userDB.php";
-
-	function sendMail($sendTo,$subject,$body = "",$attachement = null){
-		date_default_timezone_set('PRC');
-		$mail = new PHPMailer();
-		$mail->IsSMTP();
-		$mail->SMTPDebug = 0;
-		$mail->Host = "smtp.sina.com";
-		$mail->Port = "465";  
-		$mail->SMTPSecure = "ssl";
-		$mail->SMTPAuth = true;
-		$mail->Username = "dqjczs@sina.com";
-		$mail->Password = "86676688";
-		$mail->Priority = 1;
-		$mail->Charset = 'utf-8';
-		$mail->Encoding = 'base64';
-		$mail->From = 'dqjczs@sina.com';
-		$mail->FromName = '佳诚装饰';
-		$mail->Timeout = 30;
-
-		if (isset($_REQUEST['mailSender'])) {
-			$realname = getUserRealName($_REQUEST['mailSender']);
-			$mail->FromName = $realname["realname"];
-		}
-		if(contains($sendTo,",")){
-			$sendToList = explode(',',$sendTo);
-			foreach($sendToList as $st){
-				$mail->addAddress($st);
-			}
-		}else{
-			$mail->addAddress($sendTo);     // Add a recipient
-		}
-		$mail->isHTML(true); // Set email format to HTML
-		if($attachement != null){
-			$mail->addStringAttachment($attachement['content'],$attachement['name']);
-		}
-		$mail->Subject = "=?utf-8?B?".base64_encode($subject)."?=";
-		$mail->Body    =  nl2br($body);
-		$mail->AltBody = "To view the message, please use an HTML compatible email viewer!";
-		
-		if(!$mail->send()) {
-			$errorInfo = $mail->ErrorInfo;
-			$mail->smtpClose();
-			throw new Exception('Mail could not be sent.Error: ' . $errorInfo);
-		}
-		$mail->smtpClose();
-		return array('status'=>'successful', 'errMsg' => 'Message has been sent');;
-	}
+	
 	function insert($mailSender,$senderAddress,$mailReceiver,$receiverAddress,$mailSubject,$mailContent){
 		global $mysql;
 		$mailId = date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);

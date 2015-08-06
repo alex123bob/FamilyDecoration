@@ -107,4 +107,7 @@
 		$res = array('status'=>'successful', 'errMsg' => $data["interfaceName"]);
 		echo (json_encode($res));
 	}
+	$APPBASE = $_SERVER['DOCUMENT_ROOT'];
+	if(startWith($_SERVER['PHP_SELF'],'/fd/'))
+		$APPBASE = $APPBASE.'/fd';
 ?>

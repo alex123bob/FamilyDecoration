@@ -102,6 +102,7 @@
 			"address"=>$post["address"],
 			"salesman"=>$post["salesman"],
 			"salesmanName"=>$post["salesmanName"],
+			"updateTime"=>'now()',
 			"source"=>$post["source"]
 		);
 		//可选字段

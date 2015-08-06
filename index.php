@@ -84,7 +84,7 @@
     <?php
         if (class_exists("SaeChannel")) {
             $channel = new SaeChannel();
-            $privateChannel = $channel->createChannel("sae_channel_".$_SESSION["name"], 60);
+            $privateChannel = $channel->createChannel("sae_channel_".$_SESSION["name"], 60*60*24);
         }
         else {
             $privateChannel = null;

@@ -13,13 +13,15 @@
 	}
 
 	function addBusinessDetail($post){
+		$businessId = $post["businessId"];
 		$obj = array(
 			"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
-			"businessId"=>$post["businessId"],
+			"businessId"=>$businessId,
 			"content"=>$post["content"]
 		);
 		global $mysql;
 		$mysql->DBInsertAsArray("`business_detail`",$obj);
+		$mysql->DBUpdate('business',array('updateTime'=>'now()'),"id='?'",array($businessId));
 		return array('status'=>'successful', 'errMsg' => '','businessDetailId'=> $obj["id"],'content'=>$post["content"]);
 	}
 

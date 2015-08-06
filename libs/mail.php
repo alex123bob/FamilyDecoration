@@ -1,16 +1,22 @@
 <?php
 	include_once "conn.php";
 	include_once "mailDB.php";
+	
 	$action = strtolower($_REQUEST["action"]);
 	$res = "";
 	switch($action){
 		case "send":
 			$mailSender = $_SESSION['name'];
+			if (isset($_REQUEST['mailSender'])) {
+				$realname = getUserRealName($_REQUEST['mailSender']);
+				$mailSender = $realname["realname"];
+			}
 			$senderAddress = $_SESSION['mail'];
 			$receiverAddress = $_REQUEST["recipient"];
 			$mailSubject = $_REQUEST["subject"];
 			$mailContent = $_REQUEST["body"];
-			sendMail($receiverAddress,$mailSubject, $mailContent, null);
+			
+			sendEmail($receiverAddress,null,$mailSender,$mailSubject, $mailContent, null);
 			global $mysql;
 			$mailReceivers = $mysql->DBGetAsOneArray("select name from user where `mail` = '$receiverAddress' and `isDeleted` = 'false' ");
 			//如果多个用户用同一个邮箱，则此处会出问题，收件人不一定对。
