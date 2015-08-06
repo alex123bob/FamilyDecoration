@@ -1,7 +1,11 @@
 <?php
 $APPBASE = $_SERVER['DOCUMENT_ROOT'];
-if(strpos($_SERVER['PHP_SELF'],'/fd/') === 0)
+if(strpos($_SERVER['PHP_SELF'],'/fd/') === 0) {
 	$APPBASE = $APPBASE.'/fd';
+}
+else if (strpos($_SERVER['PHP_SELF'],'/FamilyDecoration/') === 0) {
+	$APPBASE = $APPBASE.'/FamilyDecoration';
+}
 include_once "$APPBASE/libs/common.php";
 include_once "$APPBASE/phpmailer/class.smtp.php";
 include_once "$APPBASE/phpmailer/class.phpmailer.php";
