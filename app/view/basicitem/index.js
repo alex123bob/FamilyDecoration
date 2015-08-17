@@ -163,6 +163,10 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 				listView: true,
 				title: '小类项目',
 				store: bsiSt,
+				selModel: {
+					mode: 'SIMPLE'
+				},
+				selType: 'checkboxmodel',
 				dockedItems: [{
 					dock: 'top',
 					xtype: 'toolbar',
@@ -229,16 +233,20 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 					handler: function (){
 						var subGrid = Ext.getCmp('gridpanel-basicSubItem'),
 							mainGrid = Ext.getCmp('gridpanel-basicitem'),
-							rec = subGrid.getSelectionModel().getSelection()[0];
+							recs = subGrid.getSelectionModel().getSelection();
 
-						Ext.Msg.warning('确定要此条吗？', function (btnId){
+						Ext.Msg.warning('确定要删除选中项吗？', function (btnId){
 							if (btnId == 'yes') {
-								if (rec) {
+								if (recs) {
+									Ext.each(recs ,function (rec, i, arr){
+										arr[i] = rec.getId();
+									});
+									recs = recs.join('>>><<<');
 									Ext.Ajax.request({
 										url: './libs/subitem.php?action=delete',
 										method: 'POST',
 										params: {
-											subItemId: rec.getId()
+											subItemId: recs
 										},
 										callback: function (opts, success, res){
 											if (success) {

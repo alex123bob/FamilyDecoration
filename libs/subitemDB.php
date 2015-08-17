@@ -67,8 +67,11 @@
 
 	function deleteBasicSubItem ($itemId){
 		global $mysql;
-		$condition = "`subItemId` = '".$itemId."'";
-		$mysql->DBDelete("`basic_sub_item`", $condition);
+		$arr = explode(">>><<<", $itemId);
+		for ($i = 0; $i < count($arr); $i++) {
+			$condition = "`subItemId` = '".$arr[$i]."'";
+			$mysql->DBDelete("`basic_sub_item`", $condition);
+		}
 	}
 
 	function deleteBasicSubItemByParentId ($parentId){
