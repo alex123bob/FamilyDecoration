@@ -296,12 +296,14 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						delBtn = Ext.getCmp('button-delClient'),
 						rankBtn = Ext.getCmp('button-categorization'),
 						gearBtn = Ext.getCmp('tool-frozeBusiness'),
-						applyDesignerBtn = Ext.getCmp('button-applyForDesigner');
+						applyDesignerBtn = Ext.getCmp('button-applyForDesigner'),
+						reminder = Ext.getCmp('button-checkBusinessRemind');
 
 					editBtn.setDisabled(!rec);
 					delBtn.setDisabled(!rec);
 					gearBtn.setDisabled(!rec);
 					rankBtn.setDisabled(!rec);
+					reminder.setDisabled(!rec);
 					if (rec && rec.get('applyDesigner') == 0) {
 						applyDesignerBtn.enable();
 					}
@@ -968,6 +970,82 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 									}
 									else {
 										showMsg('请选择设计师！');
+									}
+								}
+							}, {
+								text: '取消',
+								handler: function (){
+									win.close();
+								}
+							}]
+						});
+
+						win.show();
+					}
+				}, {
+					text: '提醒',
+					id: 'button-checkBusinessRemind',
+					name: 'button-checkBusinessRemind',
+					icon: './resources/img/alarm.png',
+					disabled: true,
+					hidden: me.checkBusiness ? false : true,
+					handler: function (){
+						var win = Ext.create('Ext.window.Window', {
+							title: '业务员提醒',
+							modal: true,
+							width: 500,
+							height: 300,
+							layout: 'vbox',
+							items: [{
+								flex: 7,
+								width: '100%',
+								xtype: 'textarea',
+								autoScroll: true,
+								allowBlank: false
+							}, {
+								xtype: 'checkbox',
+								width: '100%',
+								flex: 1,
+								boxLabel: '短信提醒'
+							}],
+							buttons: [{
+								text: '确定',
+								handler: function (){
+									var txtArea = win.down('textarea'),
+										chk = win.down('checkbox'),
+										clientGrid = Ext.getCmp('gridpanel-clientInfo'),
+										rec = clientGrid.getSelectionModel().getSelection()[0],
+										content = '', subject = '';
+									if (txtArea.isValid()) {
+										if (rec) {
+											subject = '业务提醒';
+											content = User.getRealName() + '发送业务提醒，提醒内容为：' + txtArea.getValue();
+											sendMsg(User.getName(), rec.get('salesmanName'), content);
+											Ext.Ajax.request({
+												url: './libs/user.php?action=view',
+												method: 'GET',
+												callback: function (opts, success, res){
+													if (success) {
+														var arr = Ext.decode(res.responseText),
+															mail = '', phone = '';
+														for (var i = 0; i < arr.length; i++) {
+															if (arr[i]['name'] == rec.get('salesmanName')) {
+																mail = arr[i]['mail'];
+																phone = arr[i]['phone'];
+																break;
+															}
+														}
+														sendMail(rec.get('salesmanName'), mail, subject, content);
+														chk.getValue() && sendSMS(User.getName(), rec.get('salesmanName'), phone, content);
+														showMsg('提醒成功！');
+														win.close();
+													}
+												}
+											});
+										}
+										else {
+											showMsg('当前业务没有业务员！');
+										}
 									}
 								}
 							}, {

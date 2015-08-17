@@ -65,6 +65,7 @@ Ext.define('FamilyDecoration.view.bulletin.EditBulletin', {
 								var userArr = Ext.decode(res.responseText);
 								var content = User.getRealName() + '发布了公告，公告内容为：\n' + textarea.getValue(),
 									subject = '公告通知';
+
 								for (i = 0; i < userArr.length; i++) {
 									setTimeout((function (index){
 										return function (){
