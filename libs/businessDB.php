@@ -91,7 +91,7 @@
 		global $mysql;
 		$fields = array('regionId','address','isFrozen','isTransfered','customer','salesman','salesmanName','designer','designerName','applyDesigner','level');
 		$params = array();
-		$sql = "select * from business where `isDeleted` = 'false' ";
+		$sql = "select `b`.*, `r`.name from `business` `b` left join `region` `r` on `b`.regionId = `r`.id where `b`.`isDeleted` = 'false'";
 		foreach($fields as $field){
 			if(isset($data[$field])){
 				array_push($params,$data[$field]);

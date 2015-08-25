@@ -19,7 +19,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 
 		me.items = [{
 			xtype: 'container',
-			flex: 1,
+			flex: 2,
 			layout: 'border',
 			margin: '0 1 0 0',
 			items: [{
@@ -48,7 +48,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 							community = communityGrid.getSelectionModel().getSelection()[0],
 							fronzenGrid = Ext.getCmp('gridpanel-frozenBusiness');
 
-						Ext.Msg.warning('确定要将	"' + rec.get('address') + '"转为死单吗？', function (id) {
+						Ext.Msg.warning('确定要将"' + rec.get('address') + '"转为死单吗？', function (id) {
 							if (id == 'yes') {
 								Ext.Ajax.request({
 									url: './libs/business.php?action=frozeBusiness&businessId=' + rec.getId(),
@@ -72,6 +72,13 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					}
 				}],
 				columns: [{
+					text: '小区名称',
+					flex: 1,
+					dataIndex: 'regionName',
+					renderer: function (val, meta, rec){
+						return val;
+					}
+				}, {
 					text: '门牌号',
 					flex: 1,
 					dataIndex: 'address',
@@ -102,7 +109,19 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					}
 				}],
 				store: Ext.create('FamilyDecoration.store.Business', {
-					autoLoad: false
+					autoLoad: true,
+					proxy: {
+						type: 'rest',
+						url: './libs/business.php',
+				        reader: {
+				            type: 'json'
+				        },
+				        extraParams: {
+				        	action: 'getBusiness',
+				        	salesmanName: User.getName(),
+				        	isFrozen: false
+				        }
+					}
 				}),
 				initBtn: function (rec){
 					var editBtn = Ext.getCmp('button-editClient'),
@@ -157,17 +176,9 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						name: 'button-addClient',
 						icon: './resources/img/add.png',
 						handler: function (){
-							var communityGrid = Ext.getCmp('gridpanel-community'),
-								rec = communityGrid.getSelectionModel().getSelection()[0];
-							if (rec) {
-								var win = Ext.create('FamilyDecoration.view.mybusiness.EditClient', {
-									community: rec
-								});
-								win.show();
-							}
-							else {
-								showMsg('请先选择小区！');
-							}
+							var win = Ext.create('FamilyDecoration.view.mybusiness.EditClient', {
+							});
+							win.show();
 						}
 					}, {
 						text: '修改',
@@ -336,12 +347,34 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 				id: 'gridpanel-frozenBusiness',
 				name: 'gridpanel-frozenBusiness',
 				columns: [{
-					text: '死单名称',
+					text: '小区名称',
 					flex: 1,
-					dataIndex: 'address'
+					dataIndex: 'regionName',
+					renderer: function (val, meta, rec){
+						return val;
+					}
+				}, {
+					text: '门牌号',
+					flex: 1,
+					dataIndex: 'address',
+					renderer: function (val, meta, rec){
+						return val;
+					}
 				}],
 				store: Ext.create('FamilyDecoration.store.Business', {
-					autoLoad: false
+					autoLoad: true,
+					proxy: {
+						type: 'rest',
+						url: './libs/business.php',
+				        reader: {
+				            type: 'json'
+				        },
+				        extraParams: {
+				        	action: 'getBusiness',
+				        	isFrozen: true,
+				        	salesmanName: User.getName()
+				        }
+					}
 				}),
 				tools: [{
 					type: 'gear',
@@ -422,7 +455,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 			}]
 		}, {
 			xtype: 'container',
-			flex: 2,
+			flex: 5,
 			layout: 'fit',
 			items: [{
 				hideHeaders: true,

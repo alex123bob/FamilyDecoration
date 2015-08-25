@@ -2,15 +2,13 @@ Ext.define('FamilyDecoration.view.mybusiness.EditClient', {
 	extend: 'Ext.window.Window',
 	alias: 'widget.mybusiness-editclient',
 
-	requires: ['FamilyDecoration.view.checklog.MemberList'],
+	requires: ['FamilyDecoration.view.checklog.MemberList', 'FamilyDecoration.view.mybusiness.RegionList'],
 
 	resizable: false,
 	modal: true,
 	width: 400,
-	height: 210,
+	height: 240,
 	autoScroll: true,
-
-	community: null,
 	client: null,
 	
 	bodyPadding: 4,
@@ -31,6 +29,69 @@ Ext.define('FamilyDecoration.view.mybusiness.EditClient', {
 			fieldLabel: '客户姓名',
 			value: me.client ? me.client.get('customer') : ''
 		}, {
+			xtype: 'fieldcontainer',
+			layout: 'hbox',
+			width: '100%',
+			items: [{
+				id: 'textfield-regionList',
+				name: 'textfield-regionList',
+				xtype: 'textfield',
+				allowBlank: false,
+				fieldLabel: '所属小区',
+				readOnly: true,
+				width: 255,
+				height: '100%',
+				value: me.client ? me.client.get('regionName') : ''
+			}, {
+				xtype: 'button',
+				text: '选择',
+				width: 50,
+				handler: function (){
+					var win = Ext.create('Ext.window.Window', {
+						width: 500,
+						height: 300,
+						layout: 'fit',
+						title: '选择小区',
+						modal: true,
+						items: [{
+							xtype: 'mybusiness-regionlist',
+							id: 'treepanel-regionList',
+							name: 'treepanel-regionList'
+						}],
+						buttons: [{
+							text: '确定',
+							handler: function (){
+								var tree = Ext.getCmp('treepanel-regionList'),
+									txt = Ext.getCmp('textfield-regionList'),
+									hidden = Ext.getCmp('hiddenfield-regionId'),
+									rec = tree.getSelectionModel().getSelection()[0];
+
+								if (rec && rec.get('parentID') != -1) {
+									txt.setValue(rec.get('name'));
+									hidden.setValue(rec.getId());
+									win.close();
+								}
+								else {
+									showMsg('请选择小区！');
+								}
+							}
+						}, {
+							text: '取消',
+							handler: function (){
+								win.close();
+							}
+						}]
+					});
+					win.show();
+				}
+			}, {
+				xtype: 'hiddenfield',
+				hideLabel: true,
+				name: 'hiddenfield-regionId',
+				id: 'hiddenfield-regionId',
+				value: me.client ? me.client.get('regionId') : ''
+			}]
+		}, {
 			id: 'textfield-detailedAddress',
 			name: 'textfield-detailedAddress',
 			xtype: 'textfield',
@@ -45,6 +106,7 @@ Ext.define('FamilyDecoration.view.mybusiness.EditClient', {
 				name: 'textfield-businessStaff',
 				xtype: 'textfield',
 				fieldLabel: '业务员',
+				allowBlank: false,
 				readOnly: true,
 				width: 255,
 				height: '100%',
@@ -74,7 +136,7 @@ Ext.define('FamilyDecoration.view.mybusiness.EditClient', {
 									salesmanShowField = Ext.getCmp('textfield-businessStaff'),
 									salesmanValueField = Ext.getCmp('hiddenfield-businessStaffName');
 
-								if (rec.get('name')) {
+								if (rec && rec.get('name')) {
 									salesmanShowField.setValue(rec.get('realname'));
 									salesmanValueField.setValue(rec.get('name'));
 									win.close();
@@ -111,15 +173,17 @@ Ext.define('FamilyDecoration.view.mybusiness.EditClient', {
 			text: '确定',
 			handler: function (){
 				var client = Ext.getCmp('textfield-clientName'),
+					region = Ext.getCmp('textfield-regionList'),
+					regionHidden = Ext.getCmp('hiddenfield-regionId'),
 					address = Ext.getCmp('textfield-detailedAddress'),
 					salesman = Ext.getCmp('textfield-businessStaff'),
 					salesmanName = Ext.getCmp('hiddenfield-businessStaffName'),
 					source = Ext.getCmp('textfield-businessSource');
-				if (client.isValid() && address.isValid() && salesman.isValid() && source.isValid()) {
+				if (client.isValid() && region.isValid() && address.isValid() && salesman.isValid() && source.isValid()) {
 					var p = {
 						customer: client.getValue(),
 						address: address.getValue(),
-						regionId: me.community.getId(),
+						regionId: regionHidden.getValue(),
 						salesman: salesman.getValue(),
 						salesmanName: salesmanName.getValue(),
 						source: source.getValue()
@@ -136,13 +200,11 @@ Ext.define('FamilyDecoration.view.mybusiness.EditClient', {
 						callback: function (opts, success, res){
 							if (success) {
 								var obj = Ext.decode(res.responseText),
-									grid = Ext.getCmp('gridpanel-clientInfo'),
-									communityGrid = Ext.getCmp('gridpanel-community');
+									grid = Ext.getCmp('gridpanel-clientInfo');
 								if (obj.status == 'successful') {
 									me.client ? showMsg('修改成功！') : showMsg('增加成功！');
 									me.close();
-									grid.refresh(me.community);
-									communityGrid.refresh();
+									// grid.refresh(regionHidden.getId());
 								}
 							}
 						}

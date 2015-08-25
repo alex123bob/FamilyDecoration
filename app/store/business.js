@@ -9,7 +9,7 @@ Ext.define('FamilyDecoration.store.Business', {
             type: 'json'
         },
         extraParams: {
-        	action: 'getBusinessByRegion'
+        	action: 'getBusiness'
         }
 	}
 });
