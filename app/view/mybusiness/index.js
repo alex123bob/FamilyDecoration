@@ -1013,13 +1013,17 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								handler: function (){
 									var txtArea = win.down('textarea'),
 										chk = win.down('checkbox'),
+										communityGrid = Ext.getCmp('gridpanel-community'),
+										cRec = communityGrid.getSelectionModel().getSelection()[0],
 										clientGrid = Ext.getCmp('gridpanel-clientInfo'),
 										rec = clientGrid.getSelectionModel().getSelection()[0],
-										content = '', subject = '';
+										content = '', subject = '',
+										business = cRec.get('name') + '-' + rec.get('address');
 									if (txtArea.isValid()) {
 										if (rec) {
-											subject = '业务提醒';
-											content = User.getRealName() + '发送业务提醒，提醒内容为：' + txtArea.getValue();
+											subject = '业务提醒[' + business + ']';
+											content = User.getRealName() + '对[' + business 
+													  + ']发送业务提醒，提醒内容为：' + txtArea.getValue();
 											sendMsg(User.getName(), rec.get('salesmanName'), content);
 											Ext.Ajax.request({
 												url: './libs/user.php?action=view',
