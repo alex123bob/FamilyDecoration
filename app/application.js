@@ -30,7 +30,8 @@ Ext.define('FamilyDecoration.Application', {
         'Mail',
         'CheckBusiness',
         'SignBusiness',
-        'CheckSignBusiness'
+        'CheckSignBusiness',
+        'RegionMgm'
     ],
 
     stores: [

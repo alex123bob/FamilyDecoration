@@ -77,12 +77,12 @@
 				$this->DBOutputErrorInfo();
 		}
 
-		//获取执行数据库基本操作的dbResult
+		//不建议使用
 		public function DBGetResult(){
 			return $this->dbResult;
 		}
 
-		//简单的查询功能，不返回任何结果，一般用于方法DBGetTotalNumber获取结果集地总条数
+		//不建议使用
 		public function DBSimpleSelect($tableValue){
 			$partStr = "SELECT * FROM $tableValue";
 			$this->dbSQL = $partStr;
@@ -90,7 +90,7 @@
 		}
 
 
-		//获取数据库某个结果集的总条数
+		//不建议使用
 		public function DBGetTotalNumber()
 		{
 			$this->dbRows = mysql_num_rows($this->dbResult);   		//获取结果中行的数目
@@ -98,7 +98,7 @@
 		}
 
 
-		//获得第一条数据的方法，返回的是一个数组（查询功能）
+		//不建议使用
 		public function DBGetFirstRow($tableValue)
 		{
 			$partStr = "SELECT * FROM $tableValue";
@@ -115,7 +115,7 @@
 			}
 		}
 
-		//获取所有的数据的方法，返回的是一个二维数组（查询功能）
+		//不建议使用
 		public function DBGetAllRows($tableValue, $fieldsValue = '*', $order = ""){
 			$partStr = "SELECT $fieldsValue FROM $tableValue";
 			if ($order) {
@@ -133,8 +133,7 @@
 			}
 		}
 
-		//获取某一个指定的一行（也可以是某一行的某个字段），默认的是指定行的所有信息
-		//一般用于指定的一行的信息，如WHERE id = 1;
+		//不建议使用
 		public function DBGetOneRow($tableValue, $fieldsValue = '*', $conditionValue = '')
 		{
 			$partStr = "SELECT $fieldsValue FROM $tableValue";
@@ -154,9 +153,7 @@
 			}
 		}
 
-		//获取某个范围的信息，一般用于limit语句，$conditionValue是要加入条件词语的（如LIMIT或者WHERE），以字符串的形式传入
-		//或者用于WHERE，但返回的是几行的信息。字段可以是全部字段，也可以是某些指定字段，
-		//最后返回的是一个二维数组
+		//不建议使用
 		public function DBGetSomeRows($tableValue, $fieldsValue = '*', $conditionValue = '', $order = ""){
 			$partStr = "SELECT $fieldsValue FROM $tableValue $conditionValue";
 			if ($order)
@@ -173,16 +170,25 @@
 		}
 		/**
 		DBGetAsMap("select * from xxx where id = '?' and xxx = '?' and xxx like '%?%' ",arg1,arg2,arg3);
+		or DBGetAsMap("select * from xxx where id = '?' and xxx = '?' and xxx like '%?%' ",array(arg1,arg2,arg3);
 		**/
 		public function DBGetAsMap($sql){
 			$count = substr_count($sql,"?");
 			$count2 = func_num_args() - 1;
-			if($count > $count2)
+			$paramArray = null;
+			if($count2 == 1 && is_array(func_get_arg(1))){
+				// param passed as array
+				$paramArray = func_get_arg(1);
+				$count2 = count($paramArray);
+				if($count > $count2)
+					throw new Exception("sql:$sql need $count values but get $count2 !");
+			}else if($count > $count2){
 				throw new Exception("sql:$sql need $count values but get $count2 !");
+			}
 			$i = 0;
 			$index = 0;
 			for(;$i<$count;$i++){
-				$value = func_get_arg($i+1);
+				$value = $paramArray === null ? func_get_arg($i+1) : $paramArray[$i];
 				$type = gettype($value);
 				switch($type){
 					case "boolean":
@@ -210,16 +216,27 @@
 			}
 			return array();
 		}
-		
+		/**
+		DBGetAsOneArray("select name from xxx where id = '?' and xxx = '?' and xxx like '%?%' ",arg1,arg2,arg3);
+		or DBGetAsOneArray("select name from xxx where id = '?' and xxx = '?' and xxx like '%?%' ",array(arg1,arg2,arg3);
+		**/
 		public function DBGetAsOneArray($sql){
 			$count = substr_count($sql,"?");
 			$count2 = func_num_args() - 1;
-			if($count > $count2)
+			$paramArray = null;
+			if($count2 == 1 && is_array(func_get_arg(1))){
+				// param passed as array
+				$paramArray = func_get_arg(1);
+				$count2 = count($paramArray);
+				if($count > $count2)
+					throw new Exception("sql:$sql need $count values but get $count2 !");
+			}else if($count > $count2){
 				throw new Exception("sql:$sql need $count values but get $count2 !");
+			}
 			$i = 0;
 			$index = 0;
 			for(;$i<$count;$i++){
-				$value = func_get_arg($i+1);
+				$value = $paramArray === null ? func_get_arg($i+1) : $paramArray[$i];
 				$type = gettype($value);
 				switch($type){
 					case "boolean":
@@ -383,19 +400,27 @@
 		 * 用于处理错误的信息进行一个输出
 		 */
 		 public function DBOutputErrorInfo() {
+			$errorMsg = mysql_error();
+			if(contains($errorMsg,'Duplicate entry')){
+				$ems = str_replace('Duplicate entry','已经存在',$errorMsg);
+				$ems = substr($ems,0,stripos($ems,' for key'));
+				throw new Exception($ems);
+			}
+			
 			$pathArray = parse_url($_SERVER['REQUEST_URI']);
 			$fileTemp = substr($pathArray['path'], (strrpos($pathArray['path'], "/")+1));
 			$fileName = "errors-on-".$fileTemp.".txt";
-			$inputStr = "错误的语句是".$this->dbSQL."\r\n";
-			$inputStr .= "发生的时间是：".date("Y-m-d H:i:s")."\r\n";
+			$inputStr = "【Error】 ".$this->dbSQL."\r\n";
+			$inputStr.= "【Time】  ".date("Y-m-d H:i:s")."\r\n";
+			$inputStr.= "【Meg】   $errorMsg\r\n\r\n";
 			if (defined("SAE_MYSQL_HOST_M")) {
 				$mysql = new mysql(SAE_MYSQL_HOST_M.':'.SAE_MYSQL_PORT, SAE_MYSQL_USER, SAE_MYSQL_PASS, SAE_MYSQL_DB, 'utf8');
-				throw new Exception($inputStr);
 			} else {
 				$fp = fopen($fileName, "ab");
 				fwrite($fp, $inputStr);
 				fclose($fp);
-			}		 	
+			}		
+			throw new Exception($errorMsg);			
 			exit();
 		 }
 

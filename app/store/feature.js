@@ -42,6 +42,12 @@
                         cmp: 'checksignbusiness-index',
                         leaf: true,
                         icon: 'resources/img/check-sign-business.png'
+                    },
+                    {
+                        name: '小区内容',
+                        cmp: 'regionmgm-index',
+                        leaf: true,
+                        icon: 'resources/img/leave.png'
                     }
                 ]
             },
@@ -271,6 +277,9 @@
             }
             else if (rec.get('cmp') == 'checksignbusiness-index') {
                 flag = User.isAdmin() || User.isDesignManager() || User.isProjectManager() ? true : false;
+            }
+            else if (rec.get('cmp') == 'regionmgm-index') {
+                flag = User.isAdmin() ? true : false;
             }
             else {
                 flag = true;

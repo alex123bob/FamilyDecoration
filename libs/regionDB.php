@@ -12,6 +12,8 @@
 			"name"=>$name,
 			"nameRemark"=>$remark
 		);
+		if(isset($data['parentID']))
+			$obj['parentID'] = $data['parentID'];
 		global $mysql;
 		$mysql->DBInsertAsArray("`region`",$obj);
 		return array('status'=>'successful', 'errMsg' => '','regionId'=> $obj["id"]);
@@ -23,52 +25,46 @@
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
-	function getRegionList($isFrozen){
+	function getRegionList($data){
+		$params = array();
+		if(isset($data['isFrozen'])){
+			array_push($params,$data['isFrozen'] == true || $data['isFrozen'] == 'true');
+			$sql = "select r.* from `region` r , `business` b where r.isDeleted = 'false' and b.isDeleted = 'false' and b.regionId = r.id and r.isDeleted = 'false' and isFrozen = '?' ";
+		}else{
+			$sql = "select r.* from `region` r where isDeleted = 'false' ";
+		}
+		if(isset($data['parentID'])){
+			$sql = $sql." and r.parentID = '?' ";
+			array_push($params,$data['parentID']);
+		}else{
+			$sql = $sql." and r.parentID = -1 ";
+		}
 		global $mysql;
-		$selectSql = "`region` r ";
-		$whereSql = " where r.isDeleted = 'false' ";
-		if(isset($isFrozen)){
-			$selectSql.= ", `business` b";
-			$whereSql .= " and b.regionId = r.id and r.isDeleted = 'false' and isFrozen = '$isFrozen' ";
-		}
-		$arr = $mysql->DBGetSomeRows($selectSql, " r.* ", $whereSql ," order by r.createTime desc");
-		for ($i = 0; $i < count($arr); $i++) {
-			$arr[$i]["business"] = getBusinessByRegion($arr[$i]["id"], 'false', 'false');
-		}
-		$count = 0;
-		$res = array();
-		foreach($arr as $key => $val) {
-		    $res[$count]["id"] = $val["id"];
-		    $res[$count]["name"] = $val["name"];
-		    $res[$count]["nameRemark"] = $val["nameRemark"];
-			$res[$count]["createTime"] = $val["createTime"];
-			$res[$count]["updateTime"] = $val["updateTime"];
-			$res[$count]["business"] = $val["business"];
-		    $count ++;
-        }
-		return $res;
+		$arr = $mysql->DBGetAsMap($sql.' order by createTime desc ',$params);
+		// 获取小区的业务
+		/*if(isset($data['parentID']) && $data['parentID'] != '-1' && $data['parentID'] != -1){
+			for ($i = 0; $i < count($arr); $i++) {
+				$arr[$i]["business"] = getBusinessByRegion($arr[$i]["id"], 'false', 'false');
+			}			
+		}*/			
+		return $arr;
 	}
 	
 	function getRegionByName($name){
 		global $mysql;
-		$whereSql = " where isDeleted = 'false' and name = '$name'";
-		$arr = $mysql->DBGetSomeRows("`region`", " * ", $whereSql ," order by createTime desc");
-		$count = 0;
-		$res = array();
-		foreach($arr as $key => $val) {
-		    $res[$count]["id"] = $val["id"];
-		    $res[$count]["name"] = $val["name"];
-		    $res[$count]["nameRemark"] = $val["nameRemark"];
-			$res[$count]["createTime"] = $val["createTime"];
-			$res[$count]["updateTime"] = $val["updateTime"];
-		    $count ++;
-        }
-		return $res;
+		return $mysql->DBGetAsMap("select * from region where isDeleted = 'false' and name = '?' order by createTime desc ",$name);
 	}
 
 	function editRegion($data){
 		global $mysql;
-		$mysql->DBUpdate('region',array('name'=>$data['name'],'nameRemark'=>$data['nameRemark'],'updateTime'=>'now()'),"`id` = '?' ",array($data["id"]));
+		$obj = array('updateTime'=>'now()');
+		if(isset($data['parentID']))
+			$obj['parentID'] = $data['parentID'];
+		if(isset($data['nameRemark']))
+			$obj['nameRemark'] = $data['nameRemark'];
+		if(isset($data['name']))
+			$obj['name'] = $data['name'];
+		$mysql->DBUpdate('region',$obj,"`id` = '?' ",array($data["id"]));
 		return array('status'=>'successful', 'errMsg' => 'edit business ok');
 	}
 ?>

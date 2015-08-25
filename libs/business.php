@@ -3,12 +3,14 @@
 	include_once "businessDB.php";
 	include_once "businessDetailDB.php";
 	include_once "regionDB.php";
+	include_once "potentialBusinessDB.php";
+	
 	$action = $_REQUEST["action"];
 	$res = "";
 	switch($action){
 		//获取小区列表
 		case "getRegionList":
-			$res = getRegionList(isset($_REQUEST['isFrozen']) ? $_REQUEST['isFrozen'] : null);
+			$res = getRegionList($_REQUEST);
 			break;
 		//增加小区
 		case "addRegion":
@@ -41,6 +43,9 @@
 			break;
 		case "getBusinessById":
 			$res = getBusinessById($_REQUEST['businessId']);
+			break;
+		case "getBusiness":
+			$res = getBusiness($_REQUEST);
 			break;
 		case "getBusinessListForBudget":
 			$res = getBusinessListForBudget();
@@ -129,6 +134,24 @@
 			$startTime = date("Y-m-d H:i:s",mktime(0, 0 , 0,date("m"),date("d")-date("w")+1-7,date("Y"))); 
 			$endTime = date("Y-m-d H:i:s",mktime(23,59,59,date("m"),date("d")-date("w")+7-7,date("Y"))); 
 			$res = getSignStar($desc,$number,$startTime,$endTime);
+			break;
+		//获取所有潜在业务，扫楼名单
+		case "getAllPotentialBusiness":
+			//'address','proprietor','phone' 模糊查询
+			// 'regionID','status','salesman','salesmanName' 精确查询
+			$res = getAllPotentialBusiness($_REQUEST);
+			break;
+		//增加潜在业务，扫楼名单	
+		case "addPotentialBusiness":
+			$res = addPotentialBusiness($_REQUEST);
+			break;
+		//修改潜在业务，扫楼名单
+		case "editPotentialBusiness":
+			$res = editPotentialBusiness($_REQUEST);
+			break;
+		//删除潜在业务，扫楼名单
+		case "deletePotentialBusiness":
+			$res = deletePotentialBusiness($_REQUEST['id']);
 			break;
 		default: 
 			throw new Exception("unknown action:".$action);

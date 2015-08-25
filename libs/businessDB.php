@@ -86,6 +86,22 @@
 		global $mysql;
 		return $mysql->DBGetAsMap("select * from business where id = '?' and `isDeleted` = 'false' ",$businessId);
 	}
+	
+	function getBusiness($data){
+		global $mysql;
+		$fields = array('regionId','address','isFrozen','isTransfered','customer','salesman','salesmanName','designer','designerName','applyDesigner','level');
+		$params = array();
+		$sql = "select * from business where `isDeleted` = 'false' ";
+		foreach($fields as $field){
+			if(isset($data[$field])){
+				array_push($params,$data[$field]);
+				$sql .= " and $field = '?' ";
+			}				
+		}
+		return $mysql->DBGetAsMap($sql,$params);
+	}
+	
+	
 	function getBusinessListForBudget (){
 		global $mysql;
 		return $mysql->DBGetAsMap("select `b`.*, `r`.`name` from `business` `b` left join `region` `r` on (`b`.`regionId` = `r`.`id`) where `b`.`isDeleted` = 'false' and `b`.`isTransfered` = 'false' and `b`.`applyBudget` != 0 ");

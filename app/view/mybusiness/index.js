@@ -13,200 +13,13 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 	},
 	checkBusiness: false,
 	businessStaff: null,
-	refreshCommunity: function (){
-		var grid = Ext.getCmp('gridpanel-community');
-		if (this.businessStaff) {
-			grid.refresh();
-		}
-		else {
-			grid.getStore().removeAll();
-		}
-	},
 
 	initComponent: function (){
 		var me = this;
 
 		me.items = [{
 			xtype: 'container',
-			margin: '0 1 0 0',
-			flex: 1.2,
-			layout: 'fit',
-			items: [{
-				autoScroll: true,
-				hideHeaders: true,
-				style: {
-					borderRightStyle: 'solid',
-					borderRightWidth: '1px'
-				},
-				tbar: Ext.create('Ext.toolbar.Toolbar', {
-					enableOverflow: true,
-					items: [{
-						text: '添加',
-						id: 'button-addCommunity',
-						name: 'button-addCommunity',
-						icon: './resources/img/add1.png',
-						handler: function (){
-							var win = Ext.create('FamilyDecoration.view.mybusiness.EditCommunity', {
-
-							});
-							win.show();
-						}
-					}, {
-						text: '修改',
-						id: 'button-editCommunity',
-						name: 'button-editCommunity',
-						icon: './resources/img/edit.png',
-						disabled: true,
-						handler: function (){
-							var grid = Ext.getCmp('gridpanel-community'),
-								rec = grid.getSelectionModel().getSelection()[0];
-
-							var win = Ext.create('FamilyDecoration.view.mybusiness.EditCommunity', {
-								community: rec
-							});
-							win.show();
-						}
-					}]
-				}),
-				bbar: Ext.create('Ext.toolbar.Toolbar', {
-					enableOverflow: true,
-					items: [{
-						text: '删除',
-						id: 'button-delCommunity',
-						name: 'button-delCommunity',
-						icon: './resources/img/delete5.png',
-						hidden: User.isAdmin() ? false : true,
-						disabled: true,
-						handler: function (){
-							Ext.Msg.warning('确定要删除当前小区吗？', function (id){
-								var grid = Ext.getCmp('gridpanel-community'),
-									rec = grid.getSelectionModel().getSelection()[0];
-								if (id == 'yes') {
-									Ext.Ajax.request({
-										url: './libs/business.php?action=deleteRegion',
-										method: 'POST',
-										params: {
-											id: rec.getId()
-										},
-										callback: function (opts, success, res){
-											if (success) {
-												var obj = Ext.decode(res.responseText);
-												if (obj.status == 'successful') {
-													showMsg('删除成功！');
-													grid.refresh();
-												}
-												else {
-													showMsg(obj.errMsg);
-												}
-											}
-										}
-									})
-								}
-							});
-						}
-					}]
-				}),
-				xtype: 'gridpanel',
-				title: '小区',
-				id: 'gridpanel-community',
-				name: 'gridpanel-community',
-				columns: [{
-					text: '小区名称',
-					flex: 2,
-					dataIndex: 'name',
-					renderer: function (val, meta, rec){
-						var arr = rec.get('business'),
-							num = 0,
-							numStr = '',
-							applyChk = [],
-							userName = me.checkBusiness ? me.businessStaff.get('salesmanName') : User.getName();
-						for (var i = 0; i < arr.length; i++) {
-							if (arr[i]['salesmanName'] == userName) {
-								num++;
-							}
-							if (arr[i]['applyDesigner'] == 1 && arr[i]['salesmanName'] == userName) {
-								applyChk.push(arr[i]);
-							}
-						}
-						numStr = '<font style="color: ' + (num > 0 ? 'blue; text-shadow: #8F7 ' : 'white; text-shadow: black ') 
-								+ '0.1em 0.1em 0.2em;"><strong>[' + num + ']</strong></font>';
-						if (applyChk.length > 0) {
-							meta.style = 'background: #ffff00;';
-						}
-						return val + numStr;
-					}
-				}, {
-					text: '备注',
-					flex: 1,
-					dataIndex: 'nameRemark'
-				}],
-				store: Ext.create('FamilyDecoration.store.Community', {
-					autoLoad: me.checkBusiness ? false : true
-				}),
-				refresh: function (){
-					var grid = this,
-						st = this.getStore(),
-						rec = grid.getSelectionModel().getSelection()[0];
-					
-					st.reload({
-						callback: function (recs, ope, success){
-							if (success) {
-								grid.getSelectionModel().deselectAll();
-								if (rec && !me.checkBusiness) {
-									var index = st.indexOf(rec);
-									grid.getSelectionModel().select(index);
-								}
-							}
-						}
-					});
-				},
-				initBtn: function (rec){
-					var editBtn = Ext.getCmp('button-editCommunity'),
-						delBtn = Ext.getCmp('button-delCommunity');
-
-					editBtn.setDisabled(!rec);
-					delBtn.setDisabled(!rec);
-				},
-				listeners: {
-					itemclick: function (view, rec){
-					},
-					selectionchange: function (selModel, sels, opts){
-						var rec = sels[0],
-							grid = Ext.getCmp('gridpanel-community'),
-							clientGrid = Ext.getCmp('gridpanel-clientInfo'),
-							frozenBusinessGrid = Ext.getCmp('gridpanel-frozenBusiness');
-						grid.initBtn(rec);
-						clientGrid.refresh(rec);
-						frozenBusinessGrid.refresh(rec);
-					},
-					afterrender: function (grid, opts){
-						var view = grid.getView();
-						var tip = Ext.create('Ext.tip.ToolTip', {
-						    target: view.el,
-						    delegate: view.cellSelector,
-						    trackMouse: true,
-						    renderTo: Ext.getBody(),
-						    listeners: {
-						          beforeshow: function(tip) {
-						                var gridColumns = view.getGridColumns();
-						                var column = gridColumns[tip.triggerElement.cellIndex];
-						                var val = view.getRecord(tip.triggerElement.parentNode).get(column.dataIndex);
-						               	if (val) {
-						               		val.replace && (val = val.replace(/\n/g, '<br />'));
-						                	tip.update(val);
-						               	}
-						               	else {
-						               		return false;
-						               	}
-						          }
-						    }
-						});
-					}
-				}
-			}]
-		}, {
-			xtype: 'container',
-			flex: 0.8,
+			flex: 1,
 			layout: 'border',
 			margin: '0 1 0 0',
 			items: [{
@@ -218,7 +31,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					borderRightWidth: '1px'
 				},
 				xtype: 'gridpanel',
-				title: '地址',
+				title: '业务名称',
 				id: 'gridpanel-clientInfo',
 				name: 'gridpanel-clientInfo',
 				width: '100%',
@@ -609,7 +422,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 			}]
 		}, {
 			xtype: 'container',
-			flex: 4,
+			flex: 2,
 			layout: 'fit',
 			items: [{
 				hideHeaders: true,
