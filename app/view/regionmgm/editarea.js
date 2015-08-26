@@ -9,6 +9,7 @@ Ext.define('FamilyDecoration.view.regionmgm.EditArea', {
 	autoScroll: true,
 	area: null,
 	bodyPadding: 10,
+	grid: null,
 
 	initComponent: function (){
 		var me = this;
@@ -30,14 +31,15 @@ Ext.define('FamilyDecoration.view.regionmgm.EditArea', {
 				var txt = Ext.getCmp('textfield-areaName');
 				if (txt.isValid()) {
 					var p = {
-						name: txt.getValue()
+						name: txt.getValue(),
+						nameRemark: ''
 					};
 					me.area && Ext.apply(p, {
 						id: me.area.getId()
 					})
 					Ext.Ajax.request({
 						method: 'POST',
-						url: me.area ? 'libs/business.php?action=editArea' : 'libs/business.php?action=addArea',
+						url: me.area ? 'libs/business.php?action=editRegion' : 'libs/business.php?action=addRegion',
 						params: p,
 						callback: function (opts, success, res){
 							if (success) {
@@ -45,6 +47,7 @@ Ext.define('FamilyDecoration.view.regionmgm.EditArea', {
 								if (obj.status == 'successful') {
 									me.area ? showMsg('修改成功！') : showMsg('增加成功！');
 									me.close();
+									me.grid.refresh();
 								}
 							}
 						}

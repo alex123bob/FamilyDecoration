@@ -3,7 +3,7 @@
 	function addRegion($data){
 		$name = $data['name'];
 		$remark = $data['nameRemark'];
-		$regions = getRegionByName($name);
+		$regions = getRegionByName($name, isset($data["parentID"]));
 		if(count($regions) != 0){
 			throw new Exception("region with name:$name already exist!");
 		}
@@ -50,9 +50,14 @@
 		return $arr;
 	}
 	
-	function getRegionByName($name){
+	function getRegionByName($name,$isArea){
 		global $mysql;
-		return $mysql->DBGetAsMap("select * from region where isDeleted = 'false' and name = '?' order by createTime desc ",$name);
+		if ($isArea) {
+			return $mysql->DBGetAsMap("select * from region where isDeleted = 'false' and name = '?' and parentID != -1 order by createTime desc ",$name);
+		}
+		else {
+			return $mysql->DBGetAsMap("select * from region where isDeleted = 'false' and name = '?' and parentID = -1 order by createTime desc ",$name);
+		}
 	}
 
 	function editRegion($data){

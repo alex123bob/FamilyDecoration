@@ -36,8 +36,9 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 				text: '添加',
 				icon: './resources/img/add.png',
 				handler: function (){
+					var areaGrid = Ext.getCmp('gridpanel-areaMgm');
 					var win = Ext.create('FamilyDecoration.view.regionmgm.EditArea', {
-
+						grid: areaGrid
 					});
 					win.show();
 				}
@@ -48,10 +49,11 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 				name: 'button-editArea',
 				icon: './resources/img/edit.png',
 				handler: function (){
-					var grid = Ext.getCmp('gridpanel-areaMgm'),
-						rec = grid.getSelectionModel().getSelection()[0];
+					var areaGrid = Ext.getCmp('gridpanel-areaMgm'),
+						rec = areaGrid.getSelectionModel().getSelection()[0];
 					var win = Ext.create('FamilyDecoration.view.regionmgm.EditArea', {
-						area: rec
+						area: rec,
+						grid: areaGrid
 					});
 					win.show();
 				}
@@ -72,7 +74,9 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 				autoLoad: true
 			}),
 			refresh: function (){
-
+				var areaGrid = Ext.getCmp('gridpanel-areaMgm'),
+					st = areaGrid.getStore();
+				st.reload();
 			},
 			initBtn: function (rec){
 				var editBtn = Ext.getCmp('button-editArea');
@@ -104,10 +108,19 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 				text: '添加',
 				icon: './resources/img/add1.png',
 				handler: function (){
-					var win = Ext.create('FamilyDecoration.view.regionmgm.EditRegion', {
-
-					});
-					win.show();
+					var regionGrid = Ext.getCmp('gridpanel-regionMgm'),
+						areaGrid = Ext.getCmp('gridpanel-areaMgm'),
+						area = areaGrid.getSelectionModel().getSelection()[0];
+					if (area) {
+						var win = Ext.create('FamilyDecoration.view.regionmgm.EditRegion', {
+							grid: regionGrid,
+							area: area
+						});
+						win.show();
+					}
+					else {
+						showMsg('请选择区域！');
+					}
 				}
 			}, {
 				text: '修改',
@@ -116,7 +129,16 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 				id: 'button-editRegion',
 				name: 'button-editRegion',
 				handler: function (){
-					
+					var regionGrid = Ext.getCmp('gridpanel-regionMgm'),
+						rec = regionGrid.getSelectionModel().getSelection()[0],
+						areaGrid = Ext.getCmp('gridpanel-areaMgm'),
+						area = areaGrid.getSelectionModel().getSelection()[0];
+					var win = Ext.create('FamilyDecoration.view.regionmgm.EditRegion', {
+						grid: regionGrid,
+						community: rec,
+						area: area
+					});
+					win.show();
 				}
 			}],
 			initBtn: function (rec){
@@ -125,7 +147,9 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 			},
 			refresh: function (area){
 				var grid = this,
-					st = grid.getStore();
+					st = grid.getStore(),
+					areaGrid = Ext.getCmp('gridpanel-areaMgm'),
+					area = areaGrid.getSelectionModel().getSelection()[0] || area;
 				if (area) {
 					st.reload({
 						params: {
@@ -189,7 +213,14 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 					text: '添加',
 					icon: './resources/img/add2.png',
 					handler: function (){
+						var regionGrid = Ext.getCmp('gridpanel-regionMgm'),
+							region = regionGrid.getSelectionModel().getSelection()[0];
+						if (region) {
 
+						}
+						else {
+							showMsg('请选择小区！');
+						}
 					}
 				}, {
 					text: '修改',

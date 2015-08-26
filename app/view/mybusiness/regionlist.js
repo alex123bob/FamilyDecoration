@@ -6,6 +6,7 @@ Ext.define('FamilyDecoration.view.mybusiness.RegionList', {
 	alias: 'widget.mybusiness-regionlist',
 	modal: true,
 	loadAll: true,
+	onlyArea: false,
 
 	initComponent: function (){
 		var me = this;
@@ -46,7 +47,7 @@ Ext.define('FamilyDecoration.view.mybusiness.RegionList', {
 	            		else {
 	            			node.set({
 	            				text: node.get('name'),
-	            				leaf: node.get('parentID') != -1,
+	            				leaf: me.onlyArea ? true : node.get('parentID') != -1,
 	            				icon: node.get('parentID') == -1 ? './resources/img/map.png' : './resources/img/region.png'
 	            			});
 	            		}
