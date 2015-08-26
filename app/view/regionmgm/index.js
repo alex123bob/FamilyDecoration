@@ -1,7 +1,9 @@
 Ext.define('FamilyDecoration.view.regionmgm.Index', {
 	extend: 'Ext.container.Container',
 	alias: 'widget.regionmgm-index',
-	requires: ['FamilyDecoration.view.regionmgm.EditArea', 'FamilyDecoration.view.regionmgm.EditRegion'],
+	requires: [
+		'FamilyDecoration.view.regionmgm.EditArea', 'FamilyDecoration.view.regionmgm.EditRegion',
+		'FamilyDecoration.model.RegionList'],
 	layout: {
 		type: 'hbox',
 		align: 'stretch'
@@ -41,24 +43,48 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 				}
 			}, {
 				text: '修改',
+				disabled: true,
+				id: 'button-editArea',
+				name: 'button-editArea',
 				icon: './resources/img/edit.png',
 				handler: function (){
-					var rec;
+					var grid = Ext.getCmp('gridpanel-areaMgm'),
+						rec = grid.getSelectionModel().getSelection()[0];
 					var win = Ext.create('FamilyDecoration.view.regionmgm.EditArea', {
 						area: rec
 					});
 					win.show();
 				}
 			}],
+			store: Ext.create('Ext.data.Store', {
+				model: 'FamilyDecoration.model.RegionList',
+				proxy: {
+					type: 'rest',
+					url: 'libs/business.php',
+					reader: {
+						type: 'json'
+					},
+					extraParams: {
+						action: 'getRegionList',
+						parentID: -1
+					}
+				},
+				autoLoad: true
+			}),
 			refresh: function (){
 
 			},
-			initBtn: function (address){
-
+			initBtn: function (rec){
+				var editBtn = Ext.getCmp('button-editArea');
+				editBtn.setDisabled(!rec);
 			},
 			listeners: {
 				selectionchange: function (view, sels){
-
+					var rec = sels[0],
+						regionGrid = Ext.getCmp('gridpanel-regionMgm'),
+						areaGrid = Ext.getCmp('gridpanel-areaMgm');
+					areaGrid.initBtn(rec);
+					regionGrid.refresh(rec);
 				}
 			}
 		}, {
@@ -85,16 +111,32 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 				}
 			}, {
 				text: '修改',
+				disabled: true,
 				icon: './resources/img/edit1.png',
+				id: 'button-editRegion',
+				name: 'button-editRegion',
 				handler: function (){
 					
 				}
 			}],
 			initBtn: function (rec){
-
+				var editBtn = Ext.getCmp('button-editRegion');
+				editBtn.setDisabled(!rec);
 			},
-			refresh: function (client){
-
+			refresh: function (area){
+				var grid = this,
+					st = grid.getStore();
+				if (area) {
+					st.reload({
+						params: {
+							action: 'getRegionList',
+							parentID: area.getId()
+						}
+					});
+				}
+				else {
+					st.removeAll();
+				}
 			},
 			columns: [
 		        {
@@ -108,9 +150,27 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 		    ],
 		    listeners: {
 		    	selectionchange: function (view, sels){
-
+		    		var rec = sels[0],
+		    			introGrid = Ext.getCmp('panel-regionIntroduction'),
+		    			regionGrid = Ext.getCmp('gridpanel-regionMgm');
+		    		regionGrid.initBtn(rec);
+		    		introGrid.refresh(rec);
 		    	}
-		    }
+		    },
+		    store: Ext.create('Ext.data.Store', {
+				model: 'FamilyDecoration.model.RegionList',
+				proxy: {
+					type: 'rest',
+					url: 'libs/business.php',
+					reader: {
+						type: 'json'
+					},
+					extraParams: {
+						action: 'getRegionList'
+					}
+				},
+				autoLoad: false
+			}),
 		}, {
 			xtype: 'container',
 			height: '100%',
@@ -133,16 +193,22 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 					}
 				}, {
 					text: '修改',
+					disabled: true,
 					icon: './resources/img/edit2.png',
+					id: 'button-editBuilding',
+					name: 'button-editBuilding',
 					handler: function (){
 						
 					}
 				}],
 				initBtn: function (rec){
-
+					var editBtn = Ext.getCmp('button-editBuilding');
+					editBtn.setDisabled(!rec);
 				},
-				refresh: function (client){
-
+				refresh: function (region){
+					var grid = this,
+						st = grid.getStore();
+					st.reload();
 				},
 				columns: [
 			        {
@@ -156,7 +222,9 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 			    ],
 			    listeners: {
 			    	selectionchange: function (view, sels){
-
+			    		var rec = sels[0];
+			    			buildingGrid = Ext.getCmp('gridpanel-buildingMgm');
+			    		buildingGrid.initBtn(rec);
 			    	}
 			    }
 			}, {
@@ -164,7 +232,18 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 				title: '小区简介',
 				width: '100%',
 				flex: 2,
-				autoScroll: true
+				autoScroll: true,
+				id: 'panel-regionIntroduction',
+				name: 'panel-regionIntroduction',
+				refresh: function (region){
+					var panel = this;
+					if (region) {
+						panel.update(region.get('nameRemark'));
+					}
+					else {
+						panel.update('');
+					}
+				}
 			}]
 		}];
 

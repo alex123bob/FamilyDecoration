@@ -74,7 +74,7 @@ Ext.define('FamilyDecoration.view.checkbusiness.Index', {
 					else {
 						mybusinessCt.businessStaff = null;
 					}
-					mybusinessCt.refreshCommunity();
+					mybusinessCt.refresh();
 				}
 			}
 		}, {

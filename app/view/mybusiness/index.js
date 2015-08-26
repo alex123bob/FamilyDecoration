@@ -14,6 +14,13 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 	checkBusiness: false,
 	businessStaff: null,
 
+	refresh: function (){
+		var businessGrid = Ext.getCmp('gridpanel-clientInfo'),
+			deadGrid = Ext.getCmp('gridpanel-frozenBusiness');
+		businessGrid.refresh();
+		deadGrid.refresh();
+	},
+
 	initComponent: function (){
 		var me = this;
 
@@ -44,8 +51,6 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					callback: function (){
 						var clientGrid = Ext.getCmp('gridpanel-clientInfo'),
 							rec = clientGrid.getSelectionModel().getSelection()[0],
-							communityGrid = Ext.getCmp('gridpanel-community'),
-							community = communityGrid.getSelectionModel().getSelection()[0],
 							fronzenGrid = Ext.getCmp('gridpanel-frozenBusiness');
 
 						Ext.Msg.warning('确定要将"' + rec.get('address') + '"转为死单吗？', function (id) {
@@ -58,8 +63,8 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 											var obj = Ext.JSON.decode(res.responseText);
 											if (obj.status == 'successful') {
 												showMsg('转换成功！');
-												clientGrid.refresh(community);
-												fronzenGrid.refresh(community);
+												clientGrid.refresh();
+												fronzenGrid.refresh();
 											}
 											else {
 												showMsg(obj.errMsg);
@@ -109,7 +114,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					}
 				}],
 				store: Ext.create('FamilyDecoration.store.Business', {
-					autoLoad: true,
+					autoLoad: me.checkBusiness ? false : true,
 					proxy: {
 						type: 'rest',
 						url: './libs/business.php',
@@ -118,7 +123,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 				        },
 				        extraParams: {
 				        	action: 'getBusiness',
-				        	salesmanName: User.getName(),
+				        	salesmanName: me.businessStaff ? me.businessStaff.get('salesmanName') : User.getName(),
 				        	isFrozen: false
 				        }
 					}
@@ -143,30 +148,26 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						applyDesignerBtn.disable();
 					}
 				},
-				refresh: function (community){
-					if (community) {
-						var grid = this,
-							st = grid.getStore(),
-							rec = grid.getSelectionModel().getSelection()[0];
-						st.reload({
-							params: {
-								regionId: community.getId(),
-								salesmanName: me.checkBusiness ? me.businessStaff.get('salesmanName') : User.getName()
-							},
-							callback: function (recs, ope, success){
-								if (success) {
-									grid.getSelectionModel().deselectAll();
-									if (rec) {
-										var index = st.indexOf(rec);
-										grid.getSelectionModel().select(index);
-									}
+				refresh: function (){
+					var grid = this,
+						st = grid.getStore(),
+						rec = grid.getSelectionModel().getSelection()[0];
+					st.reload({
+						params: {
+							action: 'getBusiness',
+				        	salesmanName: me.businessStaff ? me.businessStaff.get('salesmanName') : User.getName(),
+				        	isFrozen: false
+						},
+						callback: function (recs, ope, success){
+							if (success) {
+								grid.getSelectionModel().deselectAll();
+								if (rec) {
+									var index = st.indexOf(rec);
+									grid.getSelectionModel().select(index);
 								}
 							}
-						});
-					}
-					else {
-						this.getStore().removeAll();
-					}
+						}
+					});
 				},
 				tbar: Ext.create('Ext.toolbar.Toolbar', {
 					enableOverflow: true,
@@ -187,16 +188,16 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						icon: './resources/img/edit2.png',
 						disabled: true,
 						handler: function (){
-							var communityGrid = Ext.getCmp('gridpanel-community'),
-								rec = communityGrid.getSelectionModel().getSelection()[0],
-								clientGrid = Ext.getCmp('gridpanel-clientInfo'),
+							var clientGrid = Ext.getCmp('gridpanel-clientInfo'),
 								client = clientGrid.getSelectionModel().getSelection()[0];
-							if (rec) {
+							if (client) {
 								var win = Ext.create('FamilyDecoration.view.mybusiness.EditClient', {
-									community: rec,
 									client: client
 								});
 								win.show();
+							}
+							else {
+								showMsg('请选择业务！');
 							}
 						}
 					}]
@@ -205,6 +206,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					enableOverflow: true,
 					items: [{
 						text: '删除',
+						hidden: !(User.isAdmin() || User.isManager()),
 						id: 'button-delClient',
 						name: 'button-delClient',
 						icon: './resources/img/delete.png',
@@ -212,8 +214,6 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						handler: function (){
 							Ext.Msg.warning('确定要删除当前客户信息吗？', function (id){
 								var grid = Ext.getCmp('gridpanel-clientInfo'),
-									communityGrid = Ext.getCmp('gridpanel-community'),
-									community = communityGrid.getSelectionModel().getSelection()[0],
 									rec = grid.getSelectionModel().getSelection()[0];
 								if (id == 'yes') {
 									Ext.Ajax.request({
@@ -227,8 +227,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 												var obj = Ext.decode(res.responseText);
 												if (obj.status == 'successful') {
 													showMsg('删除成功！');
-													grid.refresh(community);
-													communityGrid.refresh();
+													grid.refresh();
 												}
 												else {
 													showMsg(obj.errMsg);
@@ -248,8 +247,6 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						handler: function (){
 							var	clientGrid = Ext.getCmp('gridpanel-clientInfo'),
 								rec = clientGrid.getSelectionModel().getSelection()[0],
-								communityGrid = Ext.getCmp('gridpanel-community'),
-								community = communityGrid.getSelectionModel().getSelection()[0],
 								fronzenGrid = Ext.getCmp('gridpanel-frozenBusiness');
 							var win = Ext.create('Ext.window.Window', {
 								width: 300,
@@ -293,8 +290,8 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 														var obj = Ext.decode(res.responseText);
 														if (obj.status == 'successful') {
 															showMsg('评级成功！');
-															clientGrid.refresh(community);
-															fronzenGrid.refresh(community);
+															clientGrid.refresh();
+															fronzenGrid.refresh();
 															win.close();
 														}
 														else {
@@ -362,7 +359,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					}
 				}],
 				store: Ext.create('FamilyDecoration.store.Business', {
-					autoLoad: true,
+					autoLoad:  me.checkBusiness ? false : true,
 					proxy: {
 						type: 'rest',
 						url: './libs/business.php',
@@ -372,7 +369,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 				        extraParams: {
 				        	action: 'getBusiness',
 				        	isFrozen: true,
-				        	salesmanName: User.getName()
+				        	salesmanName: me.businessStaff ? me.businessStaff.get('salesmanName') : User.getName()
 				        }
 					}
 				}),
@@ -384,8 +381,6 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					tooltip: '恢复死单',
 					callback: function (){
 						var clientGrid = Ext.getCmp('gridpanel-clientInfo'),
-							communityGrid = Ext.getCmp('gridpanel-community'),
-							community = communityGrid.getSelectionModel().getSelection()[0],
 							fronzenGrid = Ext.getCmp('gridpanel-frozenBusiness'),
 							rec = fronzenGrid.getSelectionModel().getSelection()[0];
 
@@ -399,8 +394,8 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 											var obj = Ext.JSON.decode(res.responseText);
 											if (obj.status == 'successful') {
 												showMsg('恢复成功！');
-												clientGrid.refresh(community);
-												fronzenGrid.refresh(community);
+												clientGrid.refresh();
+												fronzenGrid.refresh();
 											}
 											else {
 												showMsg(obj.errMsg);
@@ -412,31 +407,26 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						});
 					}
 				}],
-				refresh: function (community){
-					if (community) {
-						var grid = this,
-							st = grid.getStore(),
-							rec = grid.getSelectionModel().getSelection()[0];
-						st.reload({
-							params: {
-								regionId: community.getId(),
-								salesmanName: me.checkBusiness ? me.businessStaff.get('salesmanName') : User.getName(),
-								isFrozen: true
-							},
-							callback: function (recs, ope, success){
-								if (success) {
-									grid.getSelectionModel().deselectAll();
-									if (rec) {
-										var index = st.indexOf(rec);
-										grid.getSelectionModel().select(index);
-									}
+				refresh: function (){
+					var grid = this,
+						st = grid.getStore(),
+						rec = grid.getSelectionModel().getSelection()[0];
+					st.reload({
+						params: {
+							action: 'getBusiness',
+				        	isFrozen: true,
+				        	salesmanName: me.businessStaff ? me.businessStaff.get('salesmanName') : User.getName()
+						},
+						callback: function (recs, ope, success){
+							if (success) {
+								grid.getSelectionModel().deselectAll();
+								if (rec) {
+									var index = st.indexOf(rec);
+									grid.getSelectionModel().select(index);
 								}
 							}
-						});
-					}
-					else {
-						this.getStore().removeAll();
-					}
+						}
+					});
 				},
 				initBtn: function (rec){
 					var gearBtn = Ext.getCmp('tool-restoreBusiness');
@@ -664,10 +654,8 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								if (success) {
 									var userArr = Ext.decode(res.responseText),
 										mailObjects = [],
-										communityGrid = Ext.getCmp('gridpanel-community'),
 										addressGrid = Ext.getCmp('gridpanel-clientInfo'),
 										frozenAddressGrid = Ext.getCmp('gridpanel-frozenBusiness'),
-										community = communityGrid.getSelectionModel().getSelection()[0],
 										address = addressGrid.getSelectionModel().getSelection()[0];
 									for (var i = 0; i < userArr.length; i++) {
 										var level = userArr[i].level;
@@ -677,7 +665,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 										}
 									}
 
-									if (community && address) {
+									if (address) {
 										if (mailObjects.length > 0) {
 											Ext.Msg.confirm('设计师申请确认', '确定要为此业务申请设计师吗？', function (btnId){
 												if (btnId == 'yes') {
@@ -692,7 +680,6 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 																var obj = Ext.decode(res.responseText);
 																if (obj.status == 'successful') {
 																	Ext.Msg.info('申请已发送，请耐心等待！');
-																	communityGrid.refresh();
 																}
 																else {
 																	showMsg(obj.errMsg);
@@ -702,9 +689,9 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 													});
 
 													// announce related staffs via email
-													var content = User.getRealName() + '为业务[' + community.get('name') 
-																+ '-' + address.get('address') + ']申请设计师，等待您确认处理。',
+													var content = User.getRealName() + '为业务[' + address.get('regionName') + ' ' + address.get('address') + ']申请设计师，等待您确认处理。',
 														subject = '申请设计师通知';
+													console.log(content, subject, mailObjects);
 													for (i = 0; i < mailObjects.length; i++) {
 														setTimeout((function (index){
 															return function (){
@@ -736,13 +723,11 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					hidden: me.checkBusiness ? false : true,
 					icon: './resources/img/add4.png',
 					handler: function (){
-						var communityGrid = Ext.getCmp('gridpanel-community'),
-							clientGrid = Ext.getCmp('gridpanel-clientInfo'),
+						var clientGrid = Ext.getCmp('gridpanel-clientInfo'),
 							infoGrid = Ext.getCmp('gridpanel-businessInfo'),
-							community = communityGrid.getSelectionModel().getSelection()[0],
 							client = clientGrid.getSelectionModel().getSelection()[0];
 						var win = Ext.create('Ext.window.Window', {
-							title: '[' + community.get('name') + ' ' + client.get('address') + ']分配设计师',
+							title: '[' + client.get('regionName') + ' ' + client.get('address') + ']分配设计师',
 							layout: 'fit',
 							modal: true,
 							width: 300,
@@ -801,12 +786,12 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 													var obj = Ext.decode(res.responseText),
 														subject = '分配设计师',
 														content = User.getRealName() + '为业务"' 
-															+ community.get('name') + ' ' + client.get('address') + '"'
+															+ client.get('regionName') + ' ' + client.get('address') + '"'
 															+ '分配了设计师，设计师为"' + rec.get('realname') + '"';
 													if (obj.status == 'successful') {
 														showMsg('分配成功！');
 														win.close();
-														clientGrid.refresh(community);
+														clientGrid.refresh();
 														sendMail(rec.get('name'), rec.get('mail'), subject, content);
 														sendMsg(User.getName(), rec.get('name'), content);
 													}
@@ -859,12 +844,10 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								handler: function (){
 									var txtArea = win.down('textarea'),
 										chk = win.down('checkbox'),
-										communityGrid = Ext.getCmp('gridpanel-community'),
-										cRec = communityGrid.getSelectionModel().getSelection()[0],
 										clientGrid = Ext.getCmp('gridpanel-clientInfo'),
 										rec = clientGrid.getSelectionModel().getSelection()[0],
 										content = '', subject = '',
-										business = cRec.get('name') + '-' + rec.get('address');
+										business = rec.get('regionName') + ' ' + rec.get('address');
 									if (txtArea.isValid()) {
 										if (rec) {
 											subject = '业务提醒[' + business + ']';

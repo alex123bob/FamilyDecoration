@@ -204,7 +204,7 @@ Ext.define('FamilyDecoration.view.mybusiness.EditClient', {
 								if (obj.status == 'successful') {
 									me.client ? showMsg('修改成功！') : showMsg('增加成功！');
 									me.close();
-									// grid.refresh(regionHidden.getId());
+									grid.refresh(regionHidden.getId());
 								}
 							}
 						}
