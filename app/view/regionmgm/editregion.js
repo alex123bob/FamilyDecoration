@@ -49,6 +49,7 @@ Ext.define('FamilyDecoration.view.regionmgm.EditRegion', {
 				fieldLabel: '所在区域',
 				allowBlank: false,
 				id: 'textfield-areaBelongto',
+				readOnly: true,
 				name: 'textfield-areaBelongto',
 				value: me.community ? me.area.get('name') : ''
 			}, {

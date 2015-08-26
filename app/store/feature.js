@@ -279,7 +279,7 @@
                 flag = User.isAdmin() || User.isDesignManager() || User.isProjectManager() ? true : false;
             }
             else if (rec.get('cmp') == 'regionmgm-index') {
-                flag = User.isAdmin() ? true : false;
+                flag = User.isGeneral() ? false : true;
             }
             else {
                 flag = true;

@@ -29,6 +29,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.MyTask": "../../app/controller/mytask.js",
   "FamilyDecoration.controller.Plan": "../../app/controller/plan.js",
   "FamilyDecoration.controller.Progress": "../../app/controller/progress.js",
+  "FamilyDecoration.controller.RegionMgm": "../../app/controller/regionmgm.js",
   "FamilyDecoration.controller.Setting": "../../app/controller/setting.js",
   "FamilyDecoration.controller.SignBusiness": "../../app/controller/signbusiness.js",
   "FamilyDecoration.controller.TaskAssign": "../../app/controller/taskassign.js",
@@ -54,8 +55,10 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.model.Msg": "../../app/model/msg.js",
   "FamilyDecoration.model.OnlineUser": "../../app/model/onlineuser.js",
   "FamilyDecoration.model.Plan": "../../app/model/plan.js",
+  "FamilyDecoration.model.PotentialBusiness": "../../app/model/potentialbusiness.js",
   "FamilyDecoration.model.Progress": "../../app/model/progress.js",
   "FamilyDecoration.model.Project": "../../app/model/project.js",
+  "FamilyDecoration.model.RegionList": "../../app/model/regionlist.js",
   "FamilyDecoration.model.ScrutinizeList": "../../app/model/scrutinizelist.js",
   "FamilyDecoration.model.TaskList": "../../app/model/tasklist.js",
   "FamilyDecoration.model.TaskScrutinize": "../../app/model/taskscrutinize.js",
@@ -83,7 +86,9 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.store.Msg": "../../app/store/msg.js",
   "FamilyDecoration.store.OnlineUser": "../../app/store/onlineuser.js",
   "FamilyDecoration.store.PlanCategory": "../../app/store/plancategory.js",
+  "FamilyDecoration.store.PotentialBusiness": "../../app/store/potentialbusiness.js",
   "FamilyDecoration.store.Project": "../../app/store/project.js",
+  "FamilyDecoration.store.RegionList": "../../app/store/regionlist.js",
   "FamilyDecoration.store.ScrutinizeList": "../../app/store/scrutinizelist.js",
   "FamilyDecoration.store.TaskList": "../../app/store/tasklist.js",
   "FamilyDecoration.store.TaskScrutinize": "../../app/store/taskscrutinize.js",
@@ -128,6 +133,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.mybusiness.EditCommunity": "../../app/view/mybusiness/editcommunity.js",
   "FamilyDecoration.view.mybusiness.EditInfo": "../../app/view/mybusiness/editinfo.js",
   "FamilyDecoration.view.mybusiness.Index": "../../app/view/mybusiness/index.js",
+  "FamilyDecoration.view.mybusiness.RegionList": "../../app/view/mybusiness/regionlist.js",
   "FamilyDecoration.view.mybusiness.TransferToProject": "../../app/view/mybusiness/transfertoproject.js",
   "FamilyDecoration.view.mylog.AskLeave": "../../app/view/mylog/askleave.js",
   "FamilyDecoration.view.mylog.EditLogDetail": "../../app/view/mylog/editlogdetail.js",
@@ -146,6 +152,11 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.progress.ProjectListByCaptain": "../../app/view/progress/projectlistbycaptain.js",
   "FamilyDecoration.view.progress.SearchFieldTree": "../../app/view/progress/searchfieldtree.js",
   "FamilyDecoration.view.progress.TreeFilter": "../../app/view/progress/treefilter.js",
+  "FamilyDecoration.view.regionmgm.EditArea": "../../app/view/regionmgm/editarea.js",
+  "FamilyDecoration.view.regionmgm.EditClient": "../../app/view/regionmgm/editclient.js",
+  "FamilyDecoration.view.regionmgm.EditPotentialBusiness": "../../app/view/regionmgm/editpotentialbusiness.js",
+  "FamilyDecoration.view.regionmgm.EditRegion": "../../app/view/regionmgm/editregion.js",
+  "FamilyDecoration.view.regionmgm.Index": "../../app/view/regionmgm/index.js",
   "FamilyDecoration.view.setting.AddAccount": "../../app/view/setting/addaccount.js",
   "FamilyDecoration.view.setting.Index": "../../app/view/setting/index.js",
   "FamilyDecoration.view.signbusiness.EditBusinessInfo": "../../app/view/signbusiness/editbusinessinfo.js",
@@ -1026,6 +1037,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.MyTask": [],
   "FamilyDecoration.controller.Plan": [],
   "FamilyDecoration.controller.Progress": [],
+  "FamilyDecoration.controller.RegionMgm": [],
   "FamilyDecoration.controller.Setting": [],
   "FamilyDecoration.controller.SignBusiness": [],
   "FamilyDecoration.controller.TaskAssign": [],
@@ -1051,8 +1063,10 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.model.Msg": [],
   "FamilyDecoration.model.OnlineUser": [],
   "FamilyDecoration.model.Plan": [],
+  "FamilyDecoration.model.PotentialBusiness": [],
   "FamilyDecoration.model.Progress": [],
   "FamilyDecoration.model.Project": [],
+  "FamilyDecoration.model.RegionList": [],
   "FamilyDecoration.model.ScrutinizeList": [],
   "FamilyDecoration.model.TaskList": [],
   "FamilyDecoration.model.TaskScrutinize": [],
@@ -1080,7 +1094,9 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.store.Msg": [],
   "FamilyDecoration.store.OnlineUser": [],
   "FamilyDecoration.store.PlanCategory": [],
+  "FamilyDecoration.store.PotentialBusiness": [],
   "FamilyDecoration.store.Project": [],
+  "FamilyDecoration.store.RegionList": [],
   "FamilyDecoration.store.ScrutinizeList": [],
   "FamilyDecoration.store.TaskList": [],
   "FamilyDecoration.store.TaskScrutinize": [],
@@ -1125,6 +1141,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.mybusiness.EditCommunity": [],
   "FamilyDecoration.view.mybusiness.EditInfo": [],
   "FamilyDecoration.view.mybusiness.Index": [],
+  "FamilyDecoration.view.mybusiness.RegionList": [],
   "FamilyDecoration.view.mybusiness.TransferToProject": [],
   "FamilyDecoration.view.mylog.AskLeave": [],
   "FamilyDecoration.view.mylog.EditLogDetail": [],
@@ -1143,6 +1160,11 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.progress.ProjectListByCaptain": [],
   "FamilyDecoration.view.progress.SearchFieldTree": [],
   "FamilyDecoration.view.progress.TreeFilter": [],
+  "FamilyDecoration.view.regionmgm.EditArea": [],
+  "FamilyDecoration.view.regionmgm.EditClient": [],
+  "FamilyDecoration.view.regionmgm.EditPotentialBusiness": [],
+  "FamilyDecoration.view.regionmgm.EditRegion": [],
+  "FamilyDecoration.view.regionmgm.Index": [],
   "FamilyDecoration.view.setting.AddAccount": [],
   "FamilyDecoration.view.setting.Index": [],
   "FamilyDecoration.view.signbusiness.EditBusinessInfo": [],
@@ -2189,6 +2211,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.MyTask": [],
   "FamilyDecoration.controller.Plan": [],
   "FamilyDecoration.controller.Progress": [],
+  "FamilyDecoration.controller.RegionMgm": [],
   "FamilyDecoration.controller.Setting": [],
   "FamilyDecoration.controller.SignBusiness": [],
   "FamilyDecoration.controller.TaskAssign": [],
@@ -2214,8 +2237,10 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.model.Msg": [],
   "FamilyDecoration.model.OnlineUser": [],
   "FamilyDecoration.model.Plan": [],
+  "FamilyDecoration.model.PotentialBusiness": [],
   "FamilyDecoration.model.Progress": [],
   "FamilyDecoration.model.Project": [],
+  "FamilyDecoration.model.RegionList": [],
   "FamilyDecoration.model.ScrutinizeList": [],
   "FamilyDecoration.model.TaskList": [],
   "FamilyDecoration.model.TaskScrutinize": [],
@@ -2243,7 +2268,9 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.store.Msg": [],
   "FamilyDecoration.store.OnlineUser": [],
   "FamilyDecoration.store.PlanCategory": [],
+  "FamilyDecoration.store.PotentialBusiness": [],
   "FamilyDecoration.store.Project": [],
+  "FamilyDecoration.store.RegionList": [],
   "FamilyDecoration.store.ScrutinizeList": [],
   "FamilyDecoration.store.TaskList": [],
   "FamilyDecoration.store.TaskScrutinize": [],
@@ -2358,6 +2385,9 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.mybusiness.Index": [
     "widget.mybusiness-index"
   ],
+  "FamilyDecoration.view.mybusiness.RegionList": [
+    "widget.mybusiness-regionlist"
+  ],
   "FamilyDecoration.view.mybusiness.TransferToProject": [
     "widget.mybusiness-transfertoproject"
   ],
@@ -2411,6 +2441,21 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.progress.TreeFilter": [
     "plugin.treefilter"
+  ],
+  "FamilyDecoration.view.regionmgm.EditArea": [
+    "widget.regionmgm-editarea"
+  ],
+  "FamilyDecoration.view.regionmgm.EditClient": [
+    "widget.regionmgm-EditClient"
+  ],
+  "FamilyDecoration.view.regionmgm.EditPotentialBusiness": [
+    "widget.regionmgm-editpotentialbusiness"
+  ],
+  "FamilyDecoration.view.regionmgm.EditRegion": [
+    "widget.regionmgm-editregion"
+  ],
+  "FamilyDecoration.view.regionmgm.Index": [
+    "widget.regionmgm-index"
   ],
   "FamilyDecoration.view.setting.AddAccount": [
     "widget.setting-addaccount"

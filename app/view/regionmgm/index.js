@@ -3,7 +3,9 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 	alias: 'widget.regionmgm-index',
 	requires: [
 		'FamilyDecoration.view.regionmgm.EditArea', 'FamilyDecoration.view.regionmgm.EditRegion',
-		'FamilyDecoration.model.RegionList'],
+		'FamilyDecoration.model.RegionList', 'FamilyDecoration.store.PotentialBusiness',
+		'FamilyDecoration.view.regionmgm.EditPotentialBusiness'
+	],
 	layout: {
 		type: 'hbox',
 		align: 'stretch'
@@ -75,8 +77,19 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 			}),
 			refresh: function (){
 				var areaGrid = Ext.getCmp('gridpanel-areaMgm'),
-					st = areaGrid.getStore();
-				st.reload();
+					st = areaGrid.getStore(),
+					rec = areaGrid.getSelectionModel().getSelection()[0];
+				st.reload({
+					callback: function (recs, ope, success){
+						if (success) {
+							areaGrid.getSelectionModel().deselectAll();
+							if (rec) {
+								var index = st.indexOf(rec);
+								areaGrid.getSelectionModel().select(index);
+							}
+						}
+					}
+				});
 			},
 			initBtn: function (rec){
 				var editBtn = Ext.getCmp('button-editArea');
@@ -149,12 +162,22 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 				var grid = this,
 					st = grid.getStore(),
 					areaGrid = Ext.getCmp('gridpanel-areaMgm'),
+					region = grid.getSelectionModel().getSelection()[0],
 					area = areaGrid.getSelectionModel().getSelection()[0] || area;
 				if (area) {
 					st.reload({
 						params: {
 							action: 'getRegionList',
 							parentID: area.getId()
+						},
+						callback: function (recs, ope, success){
+							if (success) {
+								grid.getSelectionModel().deselectAll();
+								if (region) {
+									var index = st.indexOf(region);
+									grid.getSelectionModel().select(index);
+								}
+							}
 						}
 					});
 				}
@@ -176,9 +199,11 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 		    	selectionchange: function (view, sels){
 		    		var rec = sels[0],
 		    			introGrid = Ext.getCmp('panel-regionIntroduction'),
-		    			regionGrid = Ext.getCmp('gridpanel-regionMgm');
+		    			regionGrid = Ext.getCmp('gridpanel-regionMgm'),
+		    			potentialGrid = Ext.getCmp('gridpanel-buildingMgm');
 		    		regionGrid.initBtn(rec);
 		    		introGrid.refresh(rec);
+		    		potentialGrid.refresh(rec);
 		    	}
 		    },
 		    store: Ext.create('Ext.data.Store', {
@@ -198,10 +223,10 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 		}, {
 			xtype: 'container',
 			height: '100%',
-			flex: 3,
+			flex: 3.3,
 			layout: 'vbox',
 			items: [{
-				hideHeaders: true,
+				hideHeaders: false,
 				xtype: 'gridpanel',
 				id: 'gridpanel-buildingMgm',
 				name: 'gridpanel-buildingMgm',
@@ -214,9 +239,14 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 					icon: './resources/img/add2.png',
 					handler: function (){
 						var regionGrid = Ext.getCmp('gridpanel-regionMgm'),
-							region = regionGrid.getSelectionModel().getSelection()[0];
+							region = regionGrid.getSelectionModel().getSelection()[0],
+							grid = Ext.getCmp('gridpanel-buildingMgm');
 						if (region) {
-
+							var win = Ext.create('FamilyDecoration.view.regionmgm.EditPotentialBusiness', {
+								region: region,
+								grid: grid
+							});
+							win.show();
 						}
 						else {
 							showMsg('请选择小区！');
@@ -229,26 +259,84 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 					id: 'button-editBuilding',
 					name: 'button-editBuilding',
 					handler: function (){
-						
+						var regionGrid = Ext.getCmp('gridpanel-regionMgm'),
+							region = regionGrid.getSelectionModel().getSelection()[0],
+							grid = Ext.getCmp('gridpanel-buildingMgm'),
+							rec = grid.getSelectionModel().getSelection()[0];
+						if (region) {
+							if (rec) {
+								var win = Ext.create('FamilyDecoration.view.regionmgm.EditPotentialBusiness', {
+									region: region,
+									grid: grid,
+									potentialBusiness: rec
+								});
+							}
+							else {
+								showMsg('请选择编辑项目！');
+							}
+							win.show();
+						}
+						else {
+							showMsg('请选择小区！');
+						}
 					}
 				}],
+				store: Ext.create('FamilyDecoration.store.PotentialBusiness', {
+					autoLoad: false
+				}),
 				initBtn: function (rec){
 					var editBtn = Ext.getCmp('button-editBuilding');
 					editBtn.setDisabled(!rec);
 				},
 				refresh: function (region){
 					var grid = this,
-						st = grid.getStore();
-					st.reload();
+						st = grid.getStore(),
+						rec = grid.getSelectionModel().getSelection()[0];
+					if (region) {
+						st.reload({
+							params: {
+								regionID: region.getId()
+							},
+							callback: function (recs, ope, success){
+								if (success) {
+									grid.getSelectionModel().deselectAll();
+									if (rec) {
+										var index = st.indexOf(rec);
+										grid.getSelectionModel().select(index);
+									}
+								}
+							}
+						});
+					}
+					else {
+						st.removeAll();
+					}
 				},
 				columns: [
 			        {
-			        	text: '楼道名称',
+			        	text: '序号',
+						flex: 2,
+						dataIndex: 'id'
+			        },
+			        {
+			        	text: '地址',
+						flex: 2,
+						dataIndex: 'address'
+			        },
+			        {
+			        	text: '业主姓名',
 						flex: 1,
-						dataIndex: 'address',
-						renderer: function (val, meta, rec){
-							return val;
-						}
+						dataIndex: 'proprietor'
+			        },
+			        {
+			        	text: '联系方式',
+						flex: 1,
+						dataIndex: 'phone'
+			        },
+			        {
+			        	text: '状态',
+						flex: 1,
+						dataIndex: 'status'
 			        }
 			    ],
 			    listeners: {
