@@ -294,7 +294,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                     }
                 }, {
                     xtype: 'actioncolumn',
-                    flex: 1,
+                    flex: 1.2,
                     items: [{
                         icon: './resources/img/read.png',  // Use a URL in the icon config
                         tooltip: '置为已读',
@@ -322,6 +322,24 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                     }
                                 }
                             });
+                        }
+                    }, {
+                        icon: './resources/img/quick-response.png',
+                        tooltip: '快捷操作',
+                        iconCls: 'pointerCursor',
+                        handler: function (grid, rowIndex, colIndex, item, e, rec){
+                            var win = Ext.create('Ext.window.Window', {
+                                width: 500,
+                                height: 400,
+                                layout: 'fit',
+                                title: '快捷回复',
+                                modal: true,
+                                maximizable: true,
+                                items: [{
+                                    xtype: 'mybusiness-index'
+                                }]
+                            });
+                            win.show();
                         }
                     }]
                 }],
