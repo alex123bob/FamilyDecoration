@@ -328,18 +328,23 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                         tooltip: '快捷操作',
                         iconCls: 'pointerCursor',
                         handler: function (grid, rowIndex, colIndex, item, e, rec){
-                            var win = Ext.create('Ext.window.Window', {
-                                width: 500,
-                                height: 400,
-                                layout: 'fit',
-                                title: '快捷回复',
-                                modal: true,
-                                maximizable: true,
-                                items: [{
-                                    xtype: 'mybusiness-index'
-                                }]
-                            });
-                            win.show();
+                            if (User.isAdmin()) {
+                                var win = Ext.create('Ext.window.Window', {
+                                    width: 500,
+                                    height: 400,
+                                    layout: 'fit',
+                                    title: '快捷回复(该功能现在不可使用，此为例子，进行演示)',
+                                    modal: true,
+                                    maximizable: true,
+                                    items: [{
+                                        xtype: 'mybusiness-index'
+                                    }]
+                                });
+                                win.show();
+                            }
+                            else {
+                                showMsg('功能开发中！');
+                            }
                         }
                     }]
                 }],

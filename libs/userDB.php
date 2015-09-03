@@ -195,4 +195,34 @@
 		$arr = $mysql->DBGetSomeRows("`user`", "*" ,"where `level` = '".$level."'");
 		return ($arr);
 	}
+
+	function getUserDepartments (){
+		global $mysql;
+		$level = $_SESSION["level"];
+		if (startWith($level,'004-')) {
+			$res[0] = array("department"=>"006-001");
+		}
+		else {
+			$groups = $mysql->DBGetAsOneArray("select DISTINCT `level` from `user` where `isDeleted` = 'false'");
+			for ($i = 0; $i < count ($groups); $i++) {
+				$tmp = explode("-", $groups[$i]);
+				$groups[$i] = $tmp[0];
+			}
+			$groups = array_merge(array_unique($groups));
+			$res = array();
+			for($i = 0; $i < count($groups); $i++) {
+				$res[$i] = array("department"=>$groups[$i].'-001');
+			}
+		}
+		return $res;
+	}
+
+	function getUserListByDepartment ($department){
+		global $mysql;
+		$userList = $mysql->DBGetSomeRows("`user`", " user.*,p.projectName ", " left join project p on p.projectId = user.projectId where user.`level` like '%$department-%' and user.`isDeleted` = 'false' ");
+		for($i = 0; $i < count($userList); $i++) {
+			$userList[$i]["department"] = $userList[$i]["level"];
+		}
+		return $userList;
+	}
 ?>

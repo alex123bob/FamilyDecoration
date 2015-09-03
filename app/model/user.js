@@ -8,6 +8,7 @@ Ext.define('FamilyDecoration.model.User', {
 		{name: 'projectId', type: 'string'},
 		{name: 'projectName', type: 'string'},
 		{name: 'phone', type: 'string'},
-		{name: 'mail', type: 'string'}
+		{name: 'mail', type: 'string'},
+		{name: 'department', type: 'string'}
 	]
 });
