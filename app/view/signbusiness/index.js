@@ -329,7 +329,7 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 												for (i = 0; i < mailObjects.length; i++) {
 													setTimeout((function (index){
 														return function (){
-															sendMsg(User.getName(), mailObjects[index].name, content);
+															sendMsg(User.getName(), mailObjects[index].name, content, 'applyProjectTransference');
 															sendMail(mailObjects[index].name, mailObjects[index].mail, subject, content);
 														}
 													})(i), 1000 * (i + 1));

@@ -695,7 +695,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 													for (i = 0; i < mailObjects.length; i++) {
 														setTimeout((function (index){
 															return function (){
-																sendMsg(User.getName(), mailObjects[index].name, content);
+																sendMsg(User.getName(), mailObjects[index].name, content, 'applyDesigner');
 																sendMail(mailObjects[index].name, mailObjects[index].mail, subject, content);
 															}
 														})(i), 1000 * (i + 1));
@@ -793,7 +793,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 														win.close();
 														clientGrid.refresh();
 														sendMail(rec.get('name'), rec.get('mail'), subject, content);
-														sendMsg(User.getName(), rec.get('name'), content);
+														sendMsg(User.getName(), rec.get('name'), content, 'assignDesigner');
 													}
 												}
 											}
@@ -853,7 +853,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 											subject = '业务提醒[' + business + ']';
 											content = User.getRealName() + '对[' + business 
 													  + ']发送业务提醒，提醒内容为：' + txtArea.getValue();
-											sendMsg(User.getName(), rec.get('salesmanName'), content);
+											sendMsg(User.getName(), rec.get('salesmanName'), content, 'businessAlert');
 											Ext.Ajax.request({
 												url: './libs/user.php?action=view',
 												method: 'GET',

@@ -4,7 +4,12 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
     requires: [
         'FamilyDecoration.store.Bulletin', 'FamilyDecoration.view.bulletin.EditBulletin',
         'FamilyDecoration.store.Message', 'Ext.grid.column.Action', 'Ext.chart.Chart',
-        'Ext.chart.series.Column', 'Ext.chart.axis.*'
+        'Ext.chart.series.Column', 'Ext.chart.axis.*', 'FamilyDecoration.view.mylog.Index',
+        'FamilyDecoration.view.progress.Index', 'FamilyDecoration.view.checkbusiness.Index',
+        'FamilyDecoration.view.signbusiness.Index', 'FamilyDecoration.view.mybusiness.Index',
+        'FamilyDecoration.view.checklog.Index', 'FamilyDecoration.view.taskassign.Index',
+        'FamilyDecoration.view.checksignbusiness.Index', 'FamilyDecoration.view.mytask.Index',
+        'FamilyDecoration.view.msg.Index'
     ],
     autoScroll: true,
     layout: 'hbox',
@@ -328,23 +333,119 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                         tooltip: '快捷操作',
                         iconCls: 'pointerCursor',
                         handler: function (grid, rowIndex, colIndex, item, e, rec){
-                            if (User.isAdmin()) {
-                                var win = Ext.create('Ext.window.Window', {
+                            function setRead (rec){
+                                Ext.Ajax.request({
+                                    url: './libs/message.php',
+                                    method: 'POST',
+                                    params: {
+                                        action: 'read',
+                                        id: rec.getId()
+                                    },
+                                    callback: function (otps, success, res){
+                                        if (success) {
+                                            var obj = Ext.decode(res.responseText),
+                                                msgGrid = Ext.getCmp('gridpanel-message');
+                                            if (obj.status == 'successful') {
+                                                showMsg('已置为已读');
+                                                msgGrid.refresh();
+                                                refreshEmailAndMsg();
+                                            }
+                                            else {
+                                                showMsg(obj.errMsg);
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+
+                            /**
+                             all message actions:
+                             checkLog, transferBusinessToProject,applyDesigner,assignDesigner,businessAlert,
+                             editLogContent, editTaskProgress, taskSelfAssess, applyProjectTransference,
+                             assignTask, checkTask, respondToFeedback, sendSMS
+                             */
+                            var type = rec.get('type'),
+                                win = Ext.create('Ext.window.Window', {
+                                    title: '快捷回复',
+                                    maximizable: true,
                                     width: 500,
                                     height: 400,
-                                    layout: 'fit',
-                                    title: '快捷回复(该功能现在不可使用，此为例子，进行演示)',
                                     modal: true,
-                                    maximizable: true,
-                                    items: [{
-                                        xtype: 'mybusiness-index'
-                                    }]
+                                    layout: 'fit',
+                                    items: []
                                 });
-                                win.show();
+
+                            if ('checkLog' == type) {
+                                win.add({
+                                    xtype: 'mylog-index'
+                                });
+                            }
+                            else if ('transferBusinessToProject' == type) {
+                                win.add({
+                                    xtype: 'progress-index'
+                                });
+                            }
+                            else if ('applyDesigner' == type) {
+                                win.add({
+                                    xtype: 'checkbusiness-index'
+                                });
+                            }
+                            else if ('assignDesigner' == type) {
+                                win.add({
+                                    xtype: 'signbusiness-index'
+                                });
+                            }
+                            else if ('businessAlert' == type) {
+                                win.add({
+                                    xtype: 'mybusiness-index'
+                                });
+                            }
+                            else if ('editLogContent' == type) {
+                                win.add({
+                                    xtype: 'checklog-index'
+                                });
+                            }
+                            else if ('editTaskProgress' == type) {
+                                win.add({
+                                    xtype: 'taskassign-index'
+                                });
+                            }
+                            else if ('taskSelfAssess' == type) {
+                                win.add({
+                                    xtype: 'taskassign-index'
+                                });
+                            }
+                            else if ('applyProjectTransference' == type) {
+                                win.add({
+                                    xtype: 'checksignbusiness-index'
+                                });
+                            }
+                            else if ('assignTask' == type) {
+                                win.add({
+                                    xtype: 'mytask-index'
+                                });
+                            }
+                            else if ('checkTask' == type) {
+                                win.add({
+                                    xtype: 'mytask-index'
+                                });
+                            }
+                            else if ('respondToFeedback' == type) {
+                                document.getElementById('checkFeedback').click();
+                                setRead(rec);
+                                return;
+                            }
+                            else if ('sendSMS' == type) {
+                                win.add({
+                                    xtype: 'msg-index'
+                                });
                             }
                             else {
-                                showMsg('功能开发中！');
+                                showMsg('该消息为老版本信息，缺少消息类型，不支持快捷回复，敬请见谅！');
+                                return;
                             }
+                            setRead(rec);
+                            win.show();
                         }
                     }]
                 }],

@@ -19,7 +19,7 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 			account = me.account,
 			levelSt;
 
-		if (User.isAdmin()) {
+		if (User.isAdmin() || User.isAdministrationManager()) {
 			if (account) {
 				var data = [],
 					depa = account.get('level').split('-')[0];
@@ -215,7 +215,7 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 				name: 'department',
 				displayField: 'name',
 				valueField: 'value',
-				value: User.isAdmin() ? (account ? account.get('level').split('-')[0] : '002') : (User.isBusinessStaff() ? (account ? account.get('level').split('-')[0] : '006') : '006'),
+				value: User.isAdmin() || User.isAdministrationManager() ? (account ? account.get('level').split('-')[0] : '002') : (User.isBusinessStaff() ? (account ? account.get('level').split('-')[0] : '006') : '006'),
 				store: Ext.create('Ext.data.Store', {
 					fields: [
 						{

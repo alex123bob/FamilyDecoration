@@ -243,13 +243,13 @@
                 flag = User.isAdmin() || User.isProjectManager() || User.isProjectStaff() || User.isDesignManager() || User.isDesignStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'setting-parent') {
-                flag = User.isAdmin() || User.isBusinessStaff() ? true : false;
+                flag = User.isAdmin() || User.isBusinessStaff() || User.isAdministrationManager() ? true : false;
             }
             else if (rec.get('cmp') == 'basicitem-index') {
                 flag =  User.isAdmin() ? true : false;
             }
             else if (rec.get('cmp') == 'setting-index') {
-                flag = User.isAdmin() || User.isBusinessStaff() ? true : false;
+                flag = User.isAdmin() || User.isBusinessStaff() || User.isAdministrationManager() ? true : false;
             }
             else if (rec.get('cmp') == 'msg-index') {
                 flag = User.isAdmin() ? true : false;

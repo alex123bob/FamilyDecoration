@@ -276,7 +276,7 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 																showMsg('批阅成功！');
 																var sendContent = User.getRealName() + '批阅了您的日志"' + logItem.get('logName')
 																	 + '"，批阅内容："' + content + '"；';
-																sendMsg(User.getName(), selMember.get('name'), sendContent);
+																sendMsg(User.getName(), selMember.get('name'), sendContent, 'checkLog');
 																sms.getValue() && sendSMS(User.getName(), selMember.get('name'), selMember.get('phone'), sendContent);
 																mail.getValue() && sendMail(selMember.get('name'), selMember.get('mail'), User.getRealName() + '进行了"日志批阅"', sendContent)
 																win.close();

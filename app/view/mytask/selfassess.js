@@ -72,7 +72,7 @@ Ext.define('FamilyDecoration.view.mytask.SelfAssess', {
 									if (success) {
 										var obj = Ext.decode(res.responseText);
 										if (obj.status == 'successful') {
-											sendMsg(User.getName(), me.task.get('taskDispatcher'), content);
+											sendMsg(User.getName(), me.task.get('taskDispatcher'), content, 'taskSelfAssess');
 											sms.getValue() && sendSMS(User.getName(), me.task.get('taskDispatcher'), me.task.get('taskDispatcherPhoneNumber'), content);
 											mail.getValue() && sendMail(me.task.get('taskDispatcher'), 
 												me.task.get('taskDispatcherMail'), User.getRealName() + '填写了"自我评价"', content);

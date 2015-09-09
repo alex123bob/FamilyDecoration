@@ -468,16 +468,22 @@ function requestChannel (receiver, content){
 }
 
 // send message to make a record.
-function sendMsg (sender, receiver, content){
+function sendMsg (sender, receiver, content, type){
+    var p = {
+        action: 'add',
+        sender: sender,
+        content: content,
+        receiver: receiver
+    };
+    if (type) {
+        Ext.apply(p, {
+            type: type
+        });
+    }
     Ext.Ajax.request({
         url: './libs/message.php',
         method: 'POST',
-        params: {
-            action: 'add',
-            sender: sender,
-            content: content,
-            receiver: receiver
-        },
+        params: p,
         callback: function (opts, success, res){
             if (success) {
                 var obj = Ext.decode(res.responseText);

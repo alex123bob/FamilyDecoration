@@ -2,13 +2,15 @@
 	function addMessage($data){
 		$receiver = $data["receiver"];
 		$receivers = explode(',',$receiver); 
+		$type = isset($data["type"]) ? $data["type"] : NULL;
 		global $mysql;
 		foreach($receivers as $re){
 			$obj = array(
 				"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
 				"content"=>$data["content"],
 				"sender"=>$data["sender"],
-				"receiver"=>$re
+				"receiver"=>$re,
+				"type"=>$type
 			);
 			$mysql->DBInsertAsArray('message',$obj);
 		}
@@ -43,12 +45,12 @@
 	}
 	
 	function get($data){
-		$fields = array('id','content','createTime','sender','receiver','isDeleted','isRead','readTme');
+		$fields = array('id','content','createTime','sender','receiver','type','isDeleted','isRead','readTme');
 		$tableName = '`message`';
 		global $mysql;
 		$where = " where 1 = 1 ";
 		
-		$filters = array('sender','receiver','isRead','isDeleted','id');
+		$filters = array('sender','receiver','type','isRead','isDeleted','id');
 		foreach($filters as $filter){
 			if(isset($data[$filter])){
 				$where .= " and `$filter` = '".$data[$filter]."'";

@@ -140,7 +140,7 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 									params: p,
 									callback: function (opts, success, res){
 										if (success) {
-											sendMsg(User.getName(), executor, sendContent);
+											sendMsg(User.getName(), executor, sendContent, 'assignTask');
 											sms.getValue() && Ext.each(assignees, function (obj, index) {
 												sendSMS(User.getName(), obj.get('name'), obj.get('phone'), sendContent);
 											});

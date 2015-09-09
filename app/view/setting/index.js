@@ -139,7 +139,7 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 				{
 					text: '修改账号',
 					icon: './resources/img/edit1.png',
-					hidden: User.isAdmin() || User.isBusinessStaff() ? false : true,
+					hidden: User.isAdmin() || User.isBusinessStaff() || User.isAdministrationManager() ? false : true,
 					name: 'button-editaccount',
 					id: 'button-editaccount',
 					disabled: true,
@@ -156,7 +156,7 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 				}, 
 				{
 					text: '重置密码',
-					hidden: User.isAdmin() ? false : true,
+					hidden: User.isAdmin() || User.isAdministrationManager() ? false : true,
 					id: 'button-resetaccount',
 					name: 'button-resetaccount',
 					icon: './resources/img/reset.png',

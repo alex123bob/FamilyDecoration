@@ -87,7 +87,7 @@ Ext.define('FamilyDecoration.view.mytask.EditProcess', {
 									if (success) {
 										var obj = Ext.decode(res.responseText);
 										if (obj.status == 'successful') {
-											sendMsg(User.getName(), me.task.get('taskDispatcher'), content);
+											sendMsg(User.getName(), me.task.get('taskDispatcher'), content, 'editTaskProgress');
 											sms.getValue() && sendSMS(User.getName(), me.task.get('taskDispatcher'),
 												me.task.get('taskDispatcherPhoneNumber'), content);
 											mail.getValue() && sendMail(me.task.get('taskDispatcher'), 

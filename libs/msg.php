@@ -46,7 +46,7 @@
 			$recieverPhone = $_REQUEST['recieverPhone'];//接收人手机号
 			$content = $_REQUEST['content']; //content
 			$time = isset($_REQUEST['time']) ? $_REQUEST['time'] : null;  // 定时短信，时间格式20090101101010
-			$res = sendMsg($sender,$reciever,$recieverPhone,$content,$time);
+			$res = sendMsg($sender,$reciever,$recieverPhone,$content,$time,'sendSMS');
 			break;
 		//查询余额
 		case "getbalance":
