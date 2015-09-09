@@ -67,11 +67,13 @@ Ext.define('FamilyDecoration.view.bulletin.EditBulletin', {
 									subject = '公告通知';
 
 								for (i = 0; i < userArr.length; i++) {
-									setTimeout((function (index){
-										return function (){
-											sendMail(userArr[index].name, userArr[index].mail, subject, content);
-										}
-									})(i), 1000 * (i + 1));
+									if (userArr[i].level != '006-001') {
+										setTimeout((function (index){
+											return function (){
+												sendMail(userArr[index].name, userArr[index].mail, subject, content);
+											}
+										})(i), 1000 * (i + 1));
+									}
 								}
 							}
 						}
