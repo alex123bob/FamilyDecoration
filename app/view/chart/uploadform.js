@@ -10,6 +10,7 @@ Ext.define('FamilyDecoration.view.chart.UploadForm', {
 
 	url: undefined,
 	typeId: undefined,
+	beforeUpload: Ext.emptyFn,
 	afterUpload: Ext.emptyFn,
 
 	initComponent: function (){
@@ -125,6 +126,7 @@ Ext.define('FamilyDecoration.view.chart.UploadForm', {
 						});
 
 						if (frm.isValid()) {
+							me.beforeUpload();
 							frm.submit({
 								clientValidation: true,
 								url: me.url,
