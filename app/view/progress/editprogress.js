@@ -1,7 +1,7 @@
 Ext.define('FamilyDecoration.view.progress.EditProgress', {
 	extend: 'Ext.window.Window',
 	alias: 'widget.progress-editprogress',
-	requires: ['Ext.grid.plugin.CellEditing', 'FamilyDecoration.model.Progress'],
+	requires: ['Ext.grid.plugin.CellEditing', 'FamilyDecoration.model.Progress', 'FamilyDecoration.view.chart.UploadForm'],
 
 	// resizable: false,
 	modal: true,
@@ -11,7 +11,7 @@ Ext.define('FamilyDecoration.view.progress.EditProgress', {
 	height: 240,
 	project: null,
 	progress: null,
-	layout: 'fit',
+	layout: 'vbox',
 
 	initComponent: function (){
 		var me = this;
@@ -22,10 +22,16 @@ Ext.define('FamilyDecoration.view.progress.EditProgress', {
 			name: 'textarea-progress',
 			id: 'textarea-progress',
 			xtype: 'textarea',
+			width: '100%',
+			flex: 4,
 			autoScroll: true,
 			allowBlank: false,
 			fieldLabel: '工程进度',
 			value: me.progress ? me.progress.get('progress') : ''
+		}, {
+			xtype: 'panel',
+			width: '100%',
+			flex: 1
 		}];
 
 		me.buttons = [{
@@ -70,6 +76,18 @@ Ext.define('FamilyDecoration.view.progress.EditProgress', {
 			text: '取消',
 			handler: function (){
 				me.close();
+			}
+		}, {
+			text: '添加图片',
+			handler: function (){
+				var win = Ext.create('FamilyDecoration.view.chart.UploadForm', {
+					url: './libs/upload_progress_pic.php',
+					afterUpload: function(fp, o) {
+						debugger
+					}
+				});
+
+				win.show();
 			}
 		}]
 
