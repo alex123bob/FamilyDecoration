@@ -132,7 +132,7 @@ Ext.define('FamilyDecoration.view.mylog.EditLogDetail', {
 													}
 													for (var i = 0; i < selMembers.length; i++) {
 														var user = selMembers[i];
-														sendMsg(User.getName(), user.get('name'), sendContent, 'editLogContent');
+														sendMsg(User.getName(), user.get('name'), sendContent, 'editLogContent', me.logObj ? me.logObj.getId() : obj['id']);
 														sms.getValue() && sendSMS(User.getName(), user.get('name'), user.get('phone'), sendContent);
 														mail.getValue() && sendMail(user.get('name'), user.get('mail'), User.getRealName() + '进行了"我的日志编辑"', sendContent);
 													}

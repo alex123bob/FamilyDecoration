@@ -7,6 +7,7 @@ Ext.define('FamilyDecoration.view.checklog.MemberList', {
 	forEmail: false,
 	fullList: false,
 	forIndividual: false,
+	userName: undefined,
 
 	initComponent: function (){
 		var me = this;
@@ -60,23 +61,28 @@ Ext.define('FamilyDecoration.view.checklog.MemberList', {
 	            				});
 	            			}
 	            			else {
-	            				var checkStat = me.isCheckMode ? false : null,
-	            					result;
-	            				if (me.assignees) {
-	            					result = Ext.Array.indexOf(me.assignees, node.get('name'));
-	            					if (result != -1) {
-	            						checkStat = true;
-	            					}
-	            					else if (result == -1) {
-	            						checkStat = false;
-	            					}
+	            				if ((me.userName && me.userName == node.get('name')) || !me.userName) {
+	            					var checkStat = me.isCheckMode ? false : null,
+		            					result;
+		            				if (me.assignees) {
+		            					result = Ext.Array.indexOf(me.assignees, node.get('name'));
+		            					if (result != -1) {
+		            						checkStat = true;
+		            					}
+		            					else if (result == -1) {
+		            						checkStat = false;
+		            					}
+		            				}
+		            				node.set({
+		            					text: node.get('realname'),
+		            					leaf: true,
+		            					icon: 'resources/img/user.ico',
+		            					checked: checkStat
+		            				});
 	            				}
-	            				node.set({
-	            					text: node.get('realname'),
-	            					leaf: true,
-	            					icon: 'resources/img/user.ico',
-	            					checked: checkStat
-	            				})
+	            				else {
+	            					return false;
+	            				}
 	            			}
 	            		}
 	            	},

@@ -468,7 +468,7 @@ function requestChannel (receiver, content){
 }
 
 // send message to make a record.
-function sendMsg (sender, receiver, content, type){
+function sendMsg (sender, receiver, content, type, extraId){
     var p = {
         action: 'add',
         sender: sender,
@@ -478,6 +478,11 @@ function sendMsg (sender, receiver, content, type){
     if (type) {
         Ext.apply(p, {
             type: type
+        });
+    }
+    if (extraId) {
+        Ext.apply(p, {
+            extraId: extraId
         });
     }
     Ext.Ajax.request({

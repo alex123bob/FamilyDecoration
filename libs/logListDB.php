@@ -33,7 +33,7 @@
 		);
 		global $mysql;
 		$mysql->DBInsertAsArray("`log_detail`",$obj);
-		return array('status'=>'successful', 'errMsg' => 'add logDetail OK');
+		return array('status'=>'successful', 'errMsg' => 'add logDetail OK', 'id' => $obj["id"]);
 	}
 
 	function getLogDetailsByLogListId($logListId){
@@ -272,5 +272,12 @@
         $arr = $mysql->DBGetSomeRows("`log_list`", "`log_list`.`id`, `logName`, `log_list`.`createTime`, `userName`, `realName`", $condition);
 
         return $arr;
+	}
+
+	function getUserNameAndLogListIdByLogDetailId ($logDetailId){
+		global $mysql;
+		$condition = "left join `log_list` on `log_list`.`id` = `log_detail`.`logListId` where `log_detail`.`isDeleted` = 'false' && `log_detail`.`id` = '$logDetailId' ";
+		$arr = $mysql->DBGetSomeRows("`log_detail`", "`log_detail`.*, `log_list`.`userName`", $condition);
+		return $arr;
 	}
 ?>

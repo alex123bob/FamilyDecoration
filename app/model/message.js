@@ -7,6 +7,7 @@ Ext.define('FamilyDecoration.model.Message', {
 		{name: 'receiver', type: 'string'},
 		{name: 'content', type: 'string'},
 		{name: 'type', type: 'string'},
+		{name: 'extraId', type: 'string'},
 		{name: 'isDeleted', type: 'string'},
 		{name: 'isRead', type: 'string'},
 		{name: 'readTime', type: 'string'}

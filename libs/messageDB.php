@@ -3,6 +3,7 @@
 		$receiver = $data["receiver"];
 		$receivers = explode(',',$receiver); 
 		$type = isset($data["type"]) ? $data["type"] : NULL;
+		$extraId = isset($data["extraId"]) ? $data["extraId"] : NULL;
 		global $mysql;
 		foreach($receivers as $re){
 			$obj = array(
@@ -10,7 +11,8 @@
 				"content"=>$data["content"],
 				"sender"=>$data["sender"],
 				"receiver"=>$re,
-				"type"=>$type
+				"type"=>$type,
+				"extraId"=>$extraId
 			);
 			$mysql->DBInsertAsArray('message',$obj);
 		}
@@ -45,12 +47,12 @@
 	}
 	
 	function get($data){
-		$fields = array('id','content','createTime','sender','receiver','type','isDeleted','isRead','readTme');
+		$fields = array('id','content','createTime','sender','receiver','type','extraId','isDeleted','isRead','readTme');
 		$tableName = '`message`';
 		global $mysql;
 		$where = " where 1 = 1 ";
 		
-		$filters = array('sender','receiver','type','isRead','isDeleted','id');
+		$filters = array('sender','receiver','type','extraId','isRead','isDeleted','id');
 		foreach($filters as $filter){
 			if(isset($data[$filter])){
 				$where .= " and `$filter` = '".$data[$filter]."'";

@@ -25,6 +25,9 @@
 		// check log page
 		case "getLogListDepartments":$res = getLogListDepartments($_GET["email"]);break;
 		case "getMembersByDepartment":$res = getMembersByDepartment($_GET["department"]);break;
+
+		// for prompt response
+		case "getUserNameAndLogListIdByLogDetailId":$res = getUserNameAndLogListIdByLogDetailId($_GET["logDetailId"]);break;
 		default: throw new Exception("unknown action:".$action);
 	}
 	echo (json_encode($res));

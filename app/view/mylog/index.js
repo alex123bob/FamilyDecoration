@@ -6,6 +6,7 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 		'FamilyDecoration.store.ScrutinizeList', 'FamilyDecoration.view.mylog.AskLeave'
 	],
 	layout: 'border',
+	logListId: undefined,
 
 	initComponent: function (){
 		var me = this;
@@ -23,6 +24,7 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 				title: '本季度日志',
 				id: 'treepanel-logName',
 				name: 'treepanel-logName',
+				logListId: me.logListId,
 				isQuarter: true,
 				tbar: [{
 					text: '添加日志',
@@ -213,6 +215,7 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 					}
 				}
 			}, {
+				hidden: me.logListId ? true : false,
 				xtype: 'mylog-loglist',
 				id: 'treepanel-frozenLogName',
 				name: 'treepanel-frozenLogName',

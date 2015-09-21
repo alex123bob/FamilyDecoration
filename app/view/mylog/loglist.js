@@ -3,6 +3,7 @@ Ext.define('FamilyDecoration.view.mylog.LogList', {
 	requires: ['Ext.tree.Panel', 'FamilyDecoration.store.LogList'],
 	alias: 'widget.mylog-loglist',
 	isQuarter: false, // tag indicating whether it is current quarter or not.
+	logListId: undefined,
 
 	initComponent: function (){
 		var me = this;
@@ -58,35 +59,40 @@ Ext.define('FamilyDecoration.view.mylog.LogList', {
 	            				});
 	            			}
 	            			else if (node.get('logName')) {
-	            				node.set({
-	            					icon: 'resources/img/log.ico',
-	            					leaf: true
-	            				});
-	            				Ext.Ajax.request({
-									url: 'libs/loglist.php?action=getLogDetailsByLogListId',
-									params: {
-										logListId: node.getId()
-									},
-									method: 'GET',
-									callback: function (opts, success, res){
-										if (success) {
-											var obj = Ext.decode(res.responseText),
-												flag = false;
-											for (var i = 0; i < obj.length; i++) {
-												if (obj[i].logType == 1) {
-													flag = true;
-													break;
+	            				if ((me.logListId && node.getId() == me.logListId) || !me.logListId) {
+	            					node.set({
+		            					icon: 'resources/img/log.ico',
+		            					leaf: true
+		            				});
+		            				Ext.Ajax.request({
+										url: 'libs/loglist.php?action=getLogDetailsByLogListId',
+										params: {
+											logListId: node.getId()
+										},
+										method: 'GET',
+										callback: function (opts, success, res){
+											if (success) {
+												var obj = Ext.decode(res.responseText),
+													flag = false;
+												for (var i = 0; i < obj.length; i++) {
+													if (obj[i].logType == 1) {
+														flag = true;
+														break;
+													}
+												}
+												if (flag) {
+													node.set({
+														icon: 'resources/img/hint.png',
+														iconCls: 'blinkNode'
+													});
 												}
 											}
-											if (flag) {
-												node.set({
-													icon: 'resources/img/hint.png',
-													iconCls: 'blinkNode'
-												});
-											}
 										}
-									}
-								});
+									});
+	            				}
+	            				else {
+	            					return false;
+	            				}
 	            			}
 	            		}
 	            	},

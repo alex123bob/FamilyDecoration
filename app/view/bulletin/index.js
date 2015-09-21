@@ -377,7 +377,8 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
 
                             if ('checkLog' == type) {
                                 win.add({
-                                    xtype: 'mylog-index'
+                                    xtype: 'mylog-index',
+                                    logListId: rec.get('extraId')
                                 });
                             }
                             else if ('transferBusinessToProject' == type) {
@@ -401,8 +402,22 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                 });
                             }
                             else if ('editLogContent' == type) {
-                                win.add({
-                                    xtype: 'checklog-index'
+                                Ext.Ajax.request({
+                                    url: './libs/loglist.php?action=getUserNameAndLogListIdByLogDetailId',
+                                    method: 'GET',
+                                    params: {
+                                        logDetailId: rec.get('extraId')
+                                    },
+                                    callback: function (opts, success, res){
+                                        if (success) {
+                                            var obj = Ext.decode(res.responseText);
+                                            win.add({
+                                                xtype: 'checklog-index',
+                                                logListId: obj[0]['logListId'],
+                                                userName: obj[0]['userName']
+                                            });
+                                        }
+                                    }
                                 });
                             }
                             else if ('editTaskProgress' == type) {
