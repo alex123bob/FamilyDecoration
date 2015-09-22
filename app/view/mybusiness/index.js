@@ -43,6 +43,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 				name: 'gridpanel-clientInfo',
 				width: '100%',
 				tools: [{
+					hidden: me.businessId || me.salesmanName ? true : false,
 					type: 'gear',
 					disabled: true,
 					id: 'tool-frozeBusiness',
@@ -115,6 +116,16 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 				}],
 				store: Ext.create('FamilyDecoration.store.Business', {
 					autoLoad: me.checkBusiness ? false : true,
+					filters: [
+						function (item){
+							if (me.businessId || me.salesmanName) {
+								return me.businessId == item.getId();
+							}
+							else {
+								return true;
+							}
+						}
+					],
 					proxy: {
 						type: 'rest',
 						url: './libs/business.php',
@@ -335,6 +346,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 				hideHeaders: true,
 				height: 200,
 				region: 'south',
+				hidden: me.businessId || me.salesmanName ? true : false,
 				style: {
 					borderRightStyle: 'solid',
 					borderRightWidth: '1px'
@@ -691,11 +703,10 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 													// announce related staffs via email
 													var content = User.getRealName() + '为业务[' + address.get('regionName') + ' ' + address.get('address') + ']申请设计师，等待您确认处理。',
 														subject = '申请设计师通知';
-													console.log(content, subject, mailObjects);
 													for (i = 0; i < mailObjects.length; i++) {
 														setTimeout((function (index){
 															return function (){
-																sendMsg(User.getName(), mailObjects[index].name, content, 'applyDesigner');
+																sendMsg(User.getName(), mailObjects[index].name, content, 'applyDesigner', address.getId());
 																sendMail(mailObjects[index].name, mailObjects[index].mail, subject, content);
 															}
 														})(i), 1000 * (i + 1));

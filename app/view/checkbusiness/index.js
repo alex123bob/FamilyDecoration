@@ -8,6 +8,9 @@ Ext.define('FamilyDecoration.view.checkbusiness.Index', {
 		align: 'stretch'
 	},
 
+	salesmanName: undefined,
+	businessId: undefined,
+
 	initComponent: function (){
 		var me = this;
 
@@ -44,6 +47,14 @@ Ext.define('FamilyDecoration.view.checkbusiness.Index', {
 			store: Ext.create('Ext.data.Store', {
 				fields: ['salesman', 'salesmanName', 'number', 'apply'],
 				autoLoad: true,
+				filters: [function (item){
+					if (me.businessId || me.salesmanName) {
+						return item.get('salesmanName') == me.salesmanName;
+					}
+					else {
+						return true;
+					}
+				}],
 				proxy: {
 					type: 'rest',
 					url: './libs/business.php',
@@ -56,6 +67,7 @@ Ext.define('FamilyDecoration.view.checkbusiness.Index', {
 				}
 			}),
 			tools: [{
+				hidden: me.businessId || me.salesmanName ? true : false,
 				type:'refresh',
 			    tooltip: '刷新人员列表',
 			    handler: function(event, toolEl, panelHeader) {
@@ -84,7 +96,9 @@ Ext.define('FamilyDecoration.view.checkbusiness.Index', {
 			checkBusiness: true,
 			businessStaff: null,
 			id: 'gridpanel-mybusinessModule',
-			name: 'gridpanel-mybusinessModule'
+			name: 'gridpanel-mybusinessModule',
+			salesmanName: me.salesmaneName,
+			businessId: me.businessId
 		}];
 
 		this.callParent();

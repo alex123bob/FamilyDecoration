@@ -387,9 +387,27 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                 });
                             }
                             else if ('applyDesigner' == type) {
-                                win.add({
-                                    xtype: 'checkbusiness-index'
+                                Ext.Ajax.request({
+                                    url: './libs/business.php?action=getBusinessById',
+                                    method: 'GET',
+                                    params: {
+                                        businessId: rec.get('extraId')
+                                    },
+                                    callback: function (opts, success, res){
+                                        if (success) {
+                                            var obj = Ext.decode(res.responseText);
+                                            var salesmanName = obj[0]['salesmanName'],
+                                                businessId = rec.get('extraId'),
+                                                regionId = obj[0]['regionId'];
+                                            win.add({
+                                                xtype: 'checkbusiness-index',
+                                                salesmanName: salesmanName,
+                                                businessId: businessId
+                                            });
+                                        }
+                                    }
                                 });
+                                
                             }
                             else if ('assignDesigner' == type) {
                                 win.add({
