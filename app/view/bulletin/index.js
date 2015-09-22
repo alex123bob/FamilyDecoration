@@ -416,7 +416,8 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                             }
                             else if ('businessAlert' == type) {
                                 win.add({
-                                    xtype: 'mybusiness-index'
+                                    xtype: 'mybusiness-index',
+                                    businessId: rec.get('extraId')
                                 });
                             }
                             else if ('editLogContent' == type) {

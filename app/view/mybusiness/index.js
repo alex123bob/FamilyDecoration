@@ -14,6 +14,9 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 	checkBusiness: false,
 	businessStaff: null,
 
+	salesmanName: undefined,
+	businessId: undefined,
+
 	refresh: function (){
 		var businessGrid = Ext.getCmp('gridpanel-clientInfo'),
 			deadGrid = Ext.getCmp('gridpanel-frozenBusiness');
@@ -864,7 +867,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 											subject = '业务提醒[' + business + ']';
 											content = User.getRealName() + '对[' + business 
 													  + ']发送业务提醒，提醒内容为：' + txtArea.getValue();
-											sendMsg(User.getName(), rec.get('salesmanName'), content, 'businessAlert');
+											sendMsg(User.getName(), rec.get('salesmanName'), content, 'businessAlert', rec.getId());
 											Ext.Ajax.request({
 												url: './libs/user.php?action=view',
 												method: 'GET',
