@@ -383,7 +383,8 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                             }
                             else if ('transferBusinessToProject' == type) {
                                 win.add({
-                                    xtype: 'progress-index'
+                                    xtype: 'progress-index',
+                                    projectId: rec.get('extraId')
                                 });
                             }
                             else if ('applyDesigner' == type) {
@@ -411,7 +412,8 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                             }
                             else if ('assignDesigner' == type) {
                                 win.add({
-                                    xtype: 'signbusiness-index'
+                                    xtype: 'signbusiness-index',
+                                    businessId: rec.get('extraId')
                                 });
                             }
                             else if ('businessAlert' == type) {

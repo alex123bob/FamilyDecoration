@@ -306,20 +306,55 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 							return;
 						}
 						else {
-							checkMsg({
-								content: sendContent,
-								success: function (){
-									for (var i = 0; i < selMembers.length; i++) {
-										var user = selMembers[i];
-										sendMsg(User.getName(), user.get('name'), sendContent, 'transferBusinessToProject');
-										sms.getValue() && sendSMS(User.getName(), user.get('name'), user.get('phone'), sendContent);
-										mail.getValue() && sendMail(user.get('name'), user.get('mail'), User.getRealName() + '进行了"业务转工程"', sendContent);
+							var p = {
+								businessId: me.client.getId(),
+								customer: customer.getValue(),
+								projectName: address.getValue(),
+								createTime: Ext.Date.format(createTime.getValue(), 'Y-m-d'),
+								startTime: Ext.Date.format(startTime.getValue(), 'Y-m-d'),
+								endTime: Ext.Date.format(endTime.getValue(), 'Y-m-d'),
+								salesman: me.client.get('salesman'),
+								salesmanName: me.client.get('salesmanName'),
+								captain: captain.getValue(),
+								captainName: captainName.getValue(),
+								supervisor: supervisor.getValue(),
+								supervisorName: supervisorName.getValue(),
+								designer: me.client.get('designer'),
+								designerName: me.client.get('designerName')
+							};
+
+							Ext.Ajax.request({
+								method: 'POST',
+								url: 'libs/business.php?action=transferBusinessToProject',
+								params: p,
+								callback: function (opts, success, res){
+									if (success) {
+										var obj = Ext.decode(res.responseText);
+										if (obj.status == 'successful') {
+											showMsg('转换成功！');
+											me.close();
+											me.clientGrid.refresh();
+											checkMsg({
+												content: sendContent,
+												success: function (){
+													for (var i = 0; i < selMembers.length; i++) {
+														var user = selMembers[i];
+														sendMsg(User.getName(), user.get('name'), sendContent, 'transferBusinessToProject', obj['projectId']);
+														sms.getValue() && sendSMS(User.getName(), user.get('name'), user.get('phone'), sendContent);
+														mail.getValue() && sendMail(user.get('name'), user.get('mail'), User.getRealName() + '进行了"业务转工程"', sendContent);
+													}
+												},
+												failure: function (){
+													
+												}
+											});
+										}
+										else {
+											showMsg(obj.errMsg);
+										}
 									}
-								},
-								failure: function (){
-									
 								}
-							})
+							});
 						}
 					}
 					else {
@@ -328,41 +363,6 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 							return;
 						}
 					}
-					var p = {
-						businessId: me.client.getId(),
-						customer: customer.getValue(),
-						projectName: address.getValue(),
-						createTime: Ext.Date.format(createTime.getValue(), 'Y-m-d'),
-						startTime: Ext.Date.format(startTime.getValue(), 'Y-m-d'),
-						endTime: Ext.Date.format(endTime.getValue(), 'Y-m-d'),
-						salesman: me.client.get('salesman'),
-						salesmanName: me.client.get('salesmanName'),
-						captain: captain.getValue(),
-						captainName: captainName.getValue(),
-						supervisor: supervisor.getValue(),
-						supervisorName: supervisorName.getValue(),
-						designer: me.client.get('designer'),
-						designerName: me.client.get('designerName')
-					};
-
-					Ext.Ajax.request({
-						method: 'POST',
-						url: 'libs/business.php?action=transferBusinessToProject',
-						params: p,
-						callback: function (opts, success, res){
-							if (success) {
-								var obj = Ext.decode(res.responseText);
-								if (obj.status == 'successful') {
-									showMsg('转换成功！');
-									me.close();
-									me.clientGrid.refresh();
-								}
-								else {
-									showMsg(obj.errMsg);
-								}
-							}
-						}
-					});
 				}
 			}
 		}, {

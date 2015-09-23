@@ -8,11 +8,12 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 
 	loadAll: true,
 	searchFilter: false,
+	projectId: undefined,
 
 	initComponent: function (){
 		var me = this;
 
-		if (me.searchFilter) {
+		if (me.searchFilter && !me.projectId) {
 			me.plugins = [{
 				ptype: 'treefilter',
 				allowParentFolders: true,
@@ -67,11 +68,16 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 	            		}
 	            		else {
 	            			if (node.get('projectName')) {
-	            				node.set({
-	            					text: node.get('projectName') + '(' + node.get('projectTime').split(' ')[0] + ')',
-	            					leaf: true,
-	            					icon: './resources/img/project.png'
-	            				});
+	            				if ((me.projectId && me.projectId == node.getId()) || !me.projectId) {
+	            					node.set({
+		            					text: node.get('projectName') + '(' + node.get('projectTime').split(' ')[0] + ')',
+		            					leaf: true,
+		            					icon: './resources/img/project.png'
+		            				});
+	            				}
+	            				else {
+	            					return false;
+	            				}
 	            			}
 	            			else {
 	            				node.set({

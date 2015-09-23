@@ -10,6 +10,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 	],
 	// autoScroll: true,
 	layout: 'border',
+	projectId: undefined,
 
 	initComponent: function (){
 		var me = this;
@@ -24,6 +25,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 			margin: '0 1 0 0',
 			items: [{
 				xtype: 'progress-projectlistbycaptain',
+				projectId: me.projectId,
 				searchFilter: true,
 				title: '工程项目名称',
 				id: 'treepanel-projectName',
@@ -31,7 +33,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				tools: [{
 					type: 'gear',
 					disabled: true,
-					hidden: User.isGeneral() ? true : false,
+					hidden: User.isGeneral() || me.projectId ? true : false,
 					id: 'tool-frozeProject',
 					name: 'tool-frozeProject',
 					tooltip: '工程完工',
@@ -83,7 +85,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					}
 				}],
 				bbar: [{
-					hidden: User.isGeneral() ? true : false,
+					hidden: User.isGeneral() || me.projectId ? true : false,
 					text: '添加',
 					icon: './resources/img/add5.png',
 					handler: function (){
@@ -235,6 +237,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				id: 'treepanel-frozenProject',
 				name: 'treepanel-frozenProject',
 				loadAll: false,
+				hidden: me.projectId ? true : false,
 				tools: [{
 					type: 'gear',
 					disabled: true,
@@ -584,6 +587,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				id: 'button-showProjectChart',
 				name: 'button-showProjectChart',
 				icon: './resources/img/gallery.png',
+				hidden: me.projectId ? true : false,
 				disabled: true,
 				handler: function (){
 					var proPanel = Ext.getCmp('treepanel-projectName'),
@@ -691,7 +695,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					}
 				}
 			}, {
-				hidden: User.isGeneral() ? true : false,
+				hidden: User.isGeneral() || me.projectId ? true : false,
 				text: '查看计划',
 				id: 'button-showProjectPlan',
 				name: 'button-showProjectPlan',

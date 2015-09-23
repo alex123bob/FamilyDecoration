@@ -807,7 +807,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 														win.close();
 														clientGrid.refresh();
 														sendMail(rec.get('name'), rec.get('mail'), subject, content);
-														sendMsg(User.getName(), rec.get('name'), content, 'assignDesigner');
+														sendMsg(User.getName(), rec.get('name'), content, 'assignDesigner', client.getId());
 													}
 												}
 											}
