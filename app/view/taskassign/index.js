@@ -12,6 +12,8 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 		type: 'hbox',
 		align: 'stretch'
 	},
+	taskId: undefined,
+	taskExecutor: undefined,
 
 	initComponent: function (){
 		var me = this;
@@ -29,6 +31,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 				title: '成员列表',
 				id: 'treepanel-taskMemberName',
 				name: 'treepanel-taskMemberName',
+				userName: me.taskExecutor,
 				style: {
 					borderRightStyle: 'solid',
 					borderRightWidth: '1px'
@@ -87,6 +90,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 				id: 'treepanel-taskNameByUser',
 				name: 'treepanel-taskNameByUser',
 				isQuarter: true,
+				taskId: me.taskId,
 				flex: 4,
 				style: {
 					borderRightStyle: 'solid',

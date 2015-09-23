@@ -181,6 +181,25 @@
         }
 		return $res;
 	}
+
+	function getTaskInfoByTaskId($taskId) {
+		global $mysql;
+		$res= array();
+        $condition = "where `isDeleted` = 'false' and `id` = '$taskId'";
+		$arr = $mysql->DBGetSomeRows("`task_list`", "*", $condition, "");
+		$count = 0;
+		foreach($arr as $key => $val) {
+		    $res[$count]["id"] = $val["id"];
+		    $res[$count]["taskName"] = $val["taskName"];
+		    $res[$count]["createTime"] = $val["createTime"];
+		    $res[$count]["taskExecutor"] = str_replace("-",",",$val["taskExecutor"]);
+		    $res[$count]["taskContent"] = $val["taskContent"];
+		    $res[$count]["taskProcess"] = $val["taskProcess"];
+			$res[$count]["taskDispatcher"] = str_replace("-","",$val["taskDispatcher"]);
+		    $count ++;
+        }
+		return $res;
+	}
 	
 	function getTaskListByMonthByUser($year,$month,$user){
 		global $mysql;

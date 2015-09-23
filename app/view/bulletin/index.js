@@ -443,12 +443,16 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                             }
                             else if ('editTaskProgress' == type) {
                                 win.add({
-                                    xtype: 'taskassign-index'
+                                    xtype: 'taskassign-index',
+                                    taskId: rec.get('extraId'),
+                                    taskExecutor: rec.get('sender')
                                 });
                             }
                             else if ('taskSelfAssess' == type) {
                                 win.add({
-                                    xtype: 'taskassign-index'
+                                    xtype: 'taskassign-index',
+                                    taskId: rec.get('extraId'),
+                                    taskExecutor: rec.get('sender')
                                 });
                             }
                             else if ('applyProjectTransference' == type) {
