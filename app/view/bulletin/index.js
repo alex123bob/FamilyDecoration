@@ -457,17 +457,21 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                             }
                             else if ('applyProjectTransference' == type) {
                                 win.add({
-                                    xtype: 'checksignbusiness-index'
+                                    xtype: 'checksignbusiness-index',
+                                    businessId: rec.get('extraId'),
+                                    designer: rec.get('sender')
                                 });
                             }
                             else if ('assignTask' == type) {
                                 win.add({
-                                    xtype: 'mytask-index'
+                                    xtype: 'mytask-index',
+                                    taskId: rec.get('extraId')
                                 });
                             }
                             else if ('checkTask' == type) {
                                 win.add({
-                                    xtype: 'mytask-index'
+                                    xtype: 'mytask-index',
+                                    taskId: rec.get('extraId')
                                 });
                             }
                             else if ('respondToFeedback' == type) {

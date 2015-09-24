@@ -2,6 +2,7 @@ Ext.define('FamilyDecoration.view.mytask.TaskList', {
 	extend: 'Ext.tree.Panel',
 	requires: ['Ext.tree.Panel', 'FamilyDecoration.store.TaskList'],
 	alias: 'widget.mytask-tasklist',
+	taskId: undefined,
 
 	initComponent: function (){
 		var me = this;
@@ -55,11 +56,16 @@ Ext.define('FamilyDecoration.view.mytask.TaskList', {
 	            				});
 	            			}
 	            			else if (node.get('taskName')) {
-	            				node.set({
-	            					icon: 'resources/img/log.ico',
-	            					leaf: true,
-	            					qtip: '任务名称：' + node.get('taskName') + '<br />' + '分配人：' + node.get('realName')
-	            				});
+	            				if ((me.taskId && me.taskId == node.getId()) || !me.taskId) {
+	            					node.set({
+		            					icon: 'resources/img/log.ico',
+		            					leaf: true,
+		            					qtip: '任务名称：' + node.get('taskName') + '<br />' + '分配人：' + node.get('realName')
+		            				});
+	            				}
+	            				else {
+	            					return false;
+	            				}
 	            			}
 	            		}
 	            	},

@@ -140,7 +140,8 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 									params: p,
 									callback: function (opts, success, res){
 										if (success) {
-											sendMsg(User.getName(), executor, sendContent, 'assignTask');
+											var obj = Ext.decode(res.responseText);
+											sendMsg(User.getName(), executor, sendContent, 'assignTask', (me.task ? me.task.getId() : obj['taskListId']));
 											sms.getValue() && Ext.each(assignees, function (obj, index) {
 												sendSMS(User.getName(), obj.get('name'), obj.get('phone'), sendContent);
 											});
@@ -148,7 +149,6 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 												sendMail(obj.get('name'), obj.get('mail'), User.getRealName() + '进行了"任务分配或编辑"', sendContent);
 											});
 
-											var obj = Ext.decode(res.responseText);
 											if (obj.status == 'successful') {
 												me.task ? showMsg('任务编辑成功！') : showMsg('任务分配成功！');
 												memberSt.getProxy().url = './libs/loglist.php?action=getLogListDepartments';

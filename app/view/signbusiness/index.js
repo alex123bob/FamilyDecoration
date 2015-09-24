@@ -17,6 +17,8 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 			grid.getStore().removeAll();
 		}
 	},
+	designer: undefined,
+	businessId: undefined,
 
 	initComponent: function (){
 		var me = this;
@@ -61,7 +63,17 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 			        	action: 'getBusinessByDesigner',
 			        	designerName: me.checkSignBusiness ? (me.designStaff ? me.designStaff.get('designerName') : '') : User.getName()
 			        }
-				}
+				},
+				filters: [
+					function (item) {
+						if (me.businessId || me.designer) {
+							return me.businessId == item.getId();
+						}
+						else {
+							return true;
+						}
+					}
+				]
 			}),
 			refresh: function (){
 				var grid = this;
@@ -329,7 +341,7 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 												for (i = 0; i < mailObjects.length; i++) {
 													setTimeout((function (index){
 														return function (){
-															sendMsg(User.getName(), mailObjects[index].name, content, 'applyProjectTransference');
+															sendMsg(User.getName(), mailObjects[index].name, content, 'applyProjectTransference', detailedAddress.getId());
 															sendMail(mailObjects[index].name, mailObjects[index].mail, subject, content);
 														}
 													})(i), 1000 * (i + 1));

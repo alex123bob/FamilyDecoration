@@ -413,7 +413,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 																if (success) {
 																	var obj = Ext.decode(res.responseText);
 																	if (obj.status == 'successful') {
-																		sendMsg(User.getName(), member.get('name'), sendContent, 'checkTask');
+																		sendMsg(User.getName(), member.get('name'), sendContent, 'checkTask', task.getId());
 																		sms.getValue() && sendSMS(User.getName(), member.get('name'), member.get('phone'), sendContent);
 																		mail.getValue() && sendMail(member.get('name'), member.get('mail'), 
 																			User.getRealName() + '进行了"批阅任务"', sendContent);

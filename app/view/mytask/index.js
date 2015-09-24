@@ -7,6 +7,7 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 		'FamilyDecoration.view.mytask.EditProcess'
 	],
 	layout: 'border',
+	taskId: undefined,
 
 	initComponent: function (){
 		if (!$('#mytaskCompleteProcess').length) {
@@ -21,6 +22,7 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 			margin: '0 1 0 0',
 			items: [{
 				xtype: 'mytask-tasklist',
+				taskId: me.taskId,
 				title: '任务查看',
 				id: 'treepanel-myTask',
 				name: 'treepanel-myTask',

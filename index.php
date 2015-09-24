@@ -288,7 +288,7 @@
             renderDepartment: function (level){
                 var department = '';
                 if (/^001-\d{3}$/i.test(level)) {
-                    department = '最高管理层';
+                    department = '总经理办';
                 }
                 else if (/^002-\d{3}$/i.test(level)) {
                     department = '设计部';

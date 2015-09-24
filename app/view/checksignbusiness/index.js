@@ -8,6 +8,9 @@ Ext.define('FamilyDecoration.view.checksignbusiness.Index', {
 		align: 'stretch'
 	},
 
+	designer: undefined,
+	businessId: undefined,
+
 	initComponent: function (){
 		var me = this;
 
@@ -61,7 +64,17 @@ Ext.define('FamilyDecoration.view.checksignbusiness.Index', {
 					extraParams: {
 						action: 'getDesignerlist'
 					}
-				}
+				},
+				filters: [
+					function (item){
+						if (me.businessId || me.designer) {
+							return me.designer == item.get('designerName');
+						}
+						else {
+							return true;
+						}
+					}
+				]
 			}),
 			tools: [{
 				type:'refresh',
@@ -92,7 +105,9 @@ Ext.define('FamilyDecoration.view.checksignbusiness.Index', {
 			checkSignBusiness: true,
 			designStaff: null,
 			id: 'gridpanel-signbusinessCt',
-			name: 'gridpanel-signbusinessCt'
+			name: 'gridpanel-signbusinessCt',
+			designer: me.designer,
+			businessId: me.businessId
 		}];
 
 		this.callParent();
