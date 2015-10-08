@@ -58,7 +58,7 @@
 				$where .= " and `$filter` = '".$data[$filter]."'";
 			}
 		}
-		$arr = $mysql->DBGetSomeRows($tableName, " * ", $where ,"");
+		$arr = $mysql->DBGetSomeRows($tableName, " * ", $where ,"order by `createTime` DESC");
 		$count = 0;
 		$res = array();
 		foreach($arr as $key => $val){
