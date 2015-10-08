@@ -6,7 +6,12 @@
 	// error_reporting(E_ALL ^ E_DEPRECATED);
 	date_default_timezone_set('Asia/Shanghai'); 
 	
-	include_once "mysql.class.php";
+	if (defined("SAE_MYSQL_HOST_M")) {
+		include_once "mysql.class.php";
+	}
+	else {
+		include_once "mysqli.class.php";	
+	}
 	include_once "common.php";
 
 	if (defined("SAE_MYSQL_HOST_M")) {
