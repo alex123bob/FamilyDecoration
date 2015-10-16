@@ -53,7 +53,8 @@ Ext.define('FamilyDecoration.view.mylog.EditLogDetail', {
 				boxLabel: '短信提醒',
 				hideLabel: true,
 				flex: 1,
-				height: '100%'
+				height: '100%',
+				hidden: me.logObj ? (me.logObj.get('logType') == 1 ? true : false) : false,
 			}, {
 				xtype: 'checkboxfield',
 				itemId: 'checkbox-sendMail',
@@ -77,6 +78,14 @@ Ext.define('FamilyDecoration.view.mylog.EditLogDetail', {
 							target: chk.getEl(),
 							text: '勾选此项，该日志即为请假类型'
 						});
+					},
+					change: function (chk, newVal, oldVal){
+						var ct = Ext.getCmp('fieldcontainer-sendMsgOption'),
+							smsChk = ct.getComponent('checkbox-sendSMS');
+						smsChk.setValue(false).setVisible(!newVal);
+						if (newVal) {
+							showMsg('请假会按照默认规则进行短信发送！');
+						}
 					}
 				}
 			}]
@@ -100,7 +109,60 @@ Ext.define('FamilyDecoration.view.mylog.EditLogDetail', {
 				selMembers = memberTree.getChecked(),
 				grid = Ext.getCmp('gridpanel-logDetail'),
 				tree = Ext.getCmp('treepanel-logName'),
-				rec = tree.getSelectionModel().getSelection()[0];
+				rec = tree.getSelectionModel().getSelection()[0],
+				supervisorList = [];
+
+				function sendSMSToSupervisor (content){
+					if (!User.isGeneral()) {
+						// common staff
+						if (!User.isManager() && !User.isAdmin()) {
+							Ext.Ajax.request({
+								url: 'libs/user.php?action=getuserbylevel',
+								method: 'GET',
+								params: {
+									level: User.level.split('-')[0] + '-001'
+								},
+								callback: function (opts, success, res){
+									if (success) {
+										var userArr = Ext.decode(res.responseText),
+											user;
+										if (userArr.length > 0) {
+											for (var i = 0; i < userArr.length; i++) {
+												user = userArr[i];
+												user['phone'] && sendSMS(User.getName(), user['name'], user['phone'], content);
+											}
+										}
+									}
+								}
+							});
+						}
+						// manager of one department
+						else if (User.isManager()) {
+
+						}
+						// administrator
+						else {
+
+						}
+						// send to all administrative members
+						Ext.Ajax.request({
+							url: 'libs/user.php?action=getAdminMembers',
+							method: 'GET',
+							callback: function (opts, success, res){
+								if (success) {
+									var userArr = Ext.decode(res.responseText),
+										user;
+									if (userArr.length > 0) {
+										for (var i = 0; i < userArr.length; i++) {
+											user = userArr[i];
+											user['phone'] && sendSMS(User.getName(), user['name'], user['phone'], content);
+										}
+									}
+								}
+							}
+						})
+					}
+				}
 
 				if (logContent.isValid()) {
 					if (sms.getValue() || mail.getValue()) {
@@ -136,6 +198,7 @@ Ext.define('FamilyDecoration.view.mylog.EditLogDetail', {
 														sms.getValue() && sendSMS(User.getName(), user.get('name'), user.get('phone'), sendContent);
 														mail.getValue() && sendMail(user.get('name'), user.get('mail'), User.getRealName() + '进行了"我的日志编辑"', sendContent);
 													}
+													leave.getValue() && sendSMSToSupervisor(sendContent);
 													me.close();
 													grid.refresh(rec);
 												}
@@ -166,14 +229,20 @@ Ext.define('FamilyDecoration.view.mylog.EditLogDetail', {
 								params: p,
 								callback: function (opts, success, res){
 									if (success) {
-										var obj = Ext.decode(res.responseText);
+										var obj = Ext.decode(res.responseText),
+											sendContent = '';
 										if (obj.status == 'successful') {
 											if (me.logObj) {
 												showMsg('修改成功！');
+												sendContent += User.getRealName() + '修改了日志[' + rec.get('logName') + '],'
+															+ '日志内容: ' + Ext.getCmp('textarea-logContent').getValue();
 											}
 											else {
 												showMsg('增加成功！');
+												sendContent += User.getRealName() + '添加了日志[' + rec.get('logName') + '],'
+															+ '日志内容: ' + Ext.getCmp('textarea-logContent').getValue();
 											}
+											leave.getValue() && sendSMSToSupervisor(sendContent);
 											me.close();
 											grid.refresh(rec);
 										}

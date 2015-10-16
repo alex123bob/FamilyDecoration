@@ -270,7 +270,7 @@
                 flag = User.isGeneral() ? false : true;
             }
             else if (rec.get('cmp') == 'checkbusiness-index') {
-                flag = User.isAdmin() || User.isBusinessManager() ? true : false;
+                flag = User.isAdmin() || User.isBusinessManager() || User.isAdministrationManager() ? true : false;
             }
             else if (rec.get('cmp') == 'signbusiness-index') {
                 flag = User.isDesignStaff() || User.isDesignManager() ? true : false;

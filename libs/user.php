@@ -45,6 +45,7 @@
 		//TODO
 		case "getUserDepartments":			$res = getUserDepartments();break;
 		case "getUserListByDepartment":		$res = getUserListByDepartment($_REQUEST["department"]);break;
+		case "getAdminMembers":				$res = getAdminMembers();break;
 		default: 		throw new Exception("unknown action:".$action);
 	}
 	if(!$res) $res = array('status'=>'successful', 'errMsg' => '');

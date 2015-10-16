@@ -192,7 +192,7 @@
 
 	function getUserByLevel ($level) {
 		global $mysql;
-		$arr = $mysql->DBGetSomeRows("`user`", "*" ,"where `level` = '".$level."'");
+		$arr = $mysql->DBGetSomeRows("`user`", "*" ,"where `level` = '".$level."' and `isDeleted` = 'false' ");
 		return ($arr);
 	}
 
@@ -224,5 +224,11 @@
 			$userList[$i]["department"] = $userList[$i]["level"];
 		}
 		return $userList;
+	}
+
+	function getAdminMembers (){
+		global $mysql;
+		$arr = $mysql->DBGetSomeRows("`user`", "*" ,"where `level` like '001-%' and `isDeleted` = 'false' ");
+		return ($arr);
 	}
 ?>

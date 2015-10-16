@@ -19,7 +19,12 @@
 	} else {
 		$mysql = new mysql('localhost', 'root', '', 'familydecoration', 'utf8');
 	}
-	if(!strpos($_SERVER["REQUEST_URI"],"user.php?action=log") && !strpos($_SERVER["REQUEST_URI"],"cron_sendmail.php")){
+	if(!strpos($_SERVER["REQUEST_URI"],"user.php?action=log") 
+		&& 
+		!strpos($_SERVER["REQUEST_URI"],"cron_sendmail.php")
+		&&
+		!strpos($_SERVER["REQUEST_URI"], "mode=application_request_url")
+	){
 		checkUserOnlineUniqueness();
 	}
 
