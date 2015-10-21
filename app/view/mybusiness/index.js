@@ -46,7 +46,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 				name: 'gridpanel-clientInfo',
 				width: '100%',
 				tools: [{
-					hidden: me.businessId || me.salesmanName ? true : false,
+					hidden: me.businessId || me.salesmanName ? true : (me.checkBusiness && User.isAdministrationManager() ? true : false),
 					type: 'gear',
 					disabled: true,
 					id: 'tool-frozeBusiness',
@@ -189,7 +189,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						text: '添加',
 						id: 'button-addClient',
 						name: 'button-addClient',
-						hidden: User.isAdministrationManager() ? true : false,
+						hidden: me.businessId || me.salesmanName ? false : (User.isAdministrationManager() && me.checkBusiness ? true : false),
 						icon: './resources/img/add.png',
 						handler: function (){
 							var win = Ext.create('FamilyDecoration.view.mybusiness.EditClient', {
@@ -200,7 +200,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						text: '修改',
 						id: 'button-editClient',
 						name: 'button-editClient',
-						hidden: User.isAdministrationManager() ? true : false,
+						hidden: me.businessId || me.salesmanName ? false : (User.isAdministrationManager() && me.checkBusiness ? true : false),
 						icon: './resources/img/edit2.png',
 						disabled: true,
 						handler: function (){
@@ -222,7 +222,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					enableOverflow: true,
 					items: [{
 						text: '删除',
-						hidden: !(User.isAdmin() || User.isManager() && !User.isAdministrationManager()),
+						hidden: !(User.isAdmin() || (User.isManager() && !User.isAdministrationManager()) || (!me.checkBusiness && User.isAdministrationManager()) ),
 						id: 'button-delClient',
 						name: 'button-delClient',
 						icon: './resources/img/delete.png',
@@ -259,7 +259,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						id: 'button-categorization',
 						name: 'button-categorization',
 						icon: './resources/img/category.png',
-						hidden: User.isAdministrationManager() ? true : false,
+						hidden: me.checkBusiness && User.isAdministrationManager() ? true : false,
 						disabled: true,
 						handler: function (){
 							var	clientGrid = Ext.getCmp('gridpanel-clientInfo'),
@@ -394,7 +394,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 				tools: [{
 					type: 'gear',
 					disabled: true,
-					hidden: User.isAdministrationManager() ? true : false,
+					hidden: me.checkBusiness && User.isAdministrationManager() ? true : false,
 					id: 'tool-restoreBusiness',
 					name: 'tool-restoreBusiness',
 					tooltip: '恢复死单',
@@ -575,7 +575,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					id: 'button-addBusinessInfo',
 					name: 'button-addBusinessInfo',
 					icon: './resources/img/add2.png',
-					hidden: User.isAdministrationManager() ? true : false,
+					hidden: me.checkBusiness && User.isAdministrationManager() ? true : false,
 					handler: function (){
 						var clientGrid = Ext.getCmp('gridpanel-clientInfo'),
 							rec = clientGrid.getSelectionModel().getSelection()[0];
@@ -595,7 +595,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					id: 'button-editBusinessInfo',
 					name: 'button-editBusinessInfo',
 					icon: './resources/img/edit3.png',
-					hidden: User.isAdministrationManager() ? true : false,
+					hidden: me.checkBusiness && User.isAdministrationManager() ? true : false,
 					disabled: true,
 					handler: function (){
 						var detailGrid = Ext.getCmp('gridpanel-businessInfo'),
@@ -611,7 +611,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					id: 'button-delBusinessInfo',
 					name: 'button-delBusinessInfo',
 					icon: './resources/img/delete2.png',
-					hidden: User.isAdministrationManager() ? true : false,
+					hidden: me.checkBusiness && User.isAdministrationManager() ? true : false,
 					disabled: true,
 					handler: function (){
 						var clientGrid = Ext.getCmp('gridpanel-clientInfo'),
@@ -666,7 +666,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					id: 'button-applyForDesigner',
 					name: 'button-applyForDesigner',
 					disabled: true,
-					hidden: me.checkBusiness || User.isAdministrationManager() ? true : false,
+					hidden: me.checkBusiness ? true : false,
 					icon: './resources/img/apply-designer.png',
 					handler: function (){
 						Ext.Ajax.request({

@@ -17,7 +17,7 @@
 	if (defined("SAE_MYSQL_HOST_M")) {
 		$mysql = new mysql(SAE_MYSQL_HOST_M.':'.SAE_MYSQL_PORT, SAE_MYSQL_USER, SAE_MYSQL_PASS, SAE_MYSQL_DB, 'utf8');
 	} else {
-		$mysql = new mysql('localhost', 'root', '', 'familydecoration', 'utf8');
+		$mysql = new mysql('127.0.0.1', 'root', '', 'familydecoration', 'utf8');
 	}
 	if(!strpos($_SERVER["REQUEST_URI"],"user.php?action=log") 
 		&& 
