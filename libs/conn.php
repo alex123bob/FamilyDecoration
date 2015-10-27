@@ -23,6 +23,8 @@
 		&& 
 		!strpos($_SERVER["REQUEST_URI"],"cron_sendmail.php")
 		&&
+		!strpos($_SERVER["REQUEST_URI"], "cron_busialert.php")
+		&&
 		!strpos($_SERVER["REQUEST_URI"], "mode=application_request_url")
 	){
 		checkUserOnlineUniqueness();
