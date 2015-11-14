@@ -48,6 +48,12 @@ Ext.define('FamilyDecoration.view.Viewport', {
                     var win = Ext.create('FamilyDecoration.view.user.Index');
                     win.show();
                 }
+            }, {
+                type: 'refresh',
+                tooltip: '刷新当前应用',
+                callback: function (){
+                    location.reload();
+                }
             }],
             listeners: {
                 itemclick: function (view, rec){
@@ -81,16 +87,19 @@ Ext.define('FamilyDecoration.view.Viewport', {
         this.on('afterrender', function (){
             var tree = this.down('treepanel'),
                 root = tree.getStore().getRootNode(),
+                lastXtype = Ext.util.Cookies.get('lastXtype'),
                 bulletin = root.findChild('cmp', 'bulletin-index', true),
+                lastPanel = root.findChild('cmp', lastXtype, true) || bulletin,
                 chartPanel;
 
-            Ext.util.Cookies.clear('lastXtype');
+            // Ext.util.Cookies.clear('lastXtype');
             if (User.isGeneral()) {
                 chartPanel = root.findChild('cmp', 'chart-index', true);
                 tree.getSelectionModel().select(chartPanel);
             }
             else {
-                tree.getSelectionModel().select(bulletin);
+                // tree.getSelectionModel().select(bulletin);
+                tree.getSelectionModel().select(lastPanel);
             }
 
             Ext.select('[name="realname"]').elements[0].innerHTML = User.getRealName();
@@ -421,21 +430,11 @@ function changeMainCt (xtype){
     }
 
     if (cur) {
-        if (cur == xtype) {
-            newCt = center.items.items[0];
-        }
-        else {
-            center.removeAll(true);
-            newCt = center.insert(0, {
-                xtype: xtype
-            });
-        }
+        center.removeAll(true);
     }
-    else {
-        newCt = center.insert(0, {
-            xtype: xtype
-        });
-    }
+    newCt = center.insert(0, {
+        xtype: xtype
+    });
 
     var cmp = option.getStore().getRootNode().findChild('cmp', xtype, true);
     option.getSelectionModel().select(cmp);
