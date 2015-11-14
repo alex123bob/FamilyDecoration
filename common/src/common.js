@@ -301,7 +301,7 @@ function logout (){
                 var obj = Ext.decode(res.responseText);
                 if (obj.status == 'successful') {
                     Ext.util.Cookies.clear('lastXtype');
-                    location.href = './login.html';
+                    location.href = 'login/index.html';
                 }
             }
         }

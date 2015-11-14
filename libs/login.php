@@ -4,6 +4,6 @@
 
 	}
 	else {
-		echo "<script type='text/javascript'>alert('请先登录！'); location.href='./login.html';</script>";
+		echo "<script type='text/javascript'>location.href='login/index.html';</script>";
 	}
 ?>

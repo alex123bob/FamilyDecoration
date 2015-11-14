@@ -8,54 +8,78 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <html>
 	
 <head>
-	<title>The Login-Animated Website Template | Home :: w3layouts</title>
+	<title>佳诚装饰</title>
+		<link href="./favicon.ico" type="image/x-icon" rel="shortcut icon" /> 
 		<meta charset="utf-8">
 		<link href="css/style.css" rel='stylesheet' type='text/css' />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 		<!--webfonts-->
-		<link href='http://fonts.googleapis.com/css?family=Open+Sans:600italic,400,300,600,700' rel='stylesheet' type='text/css'>
+		<link href='css/googlecss.css' rel='stylesheet' type='text/css'>
 		<!--//webfonts-->
+		<script type="text/javascript" src="../tools/jquery-1.11.1.min.js"></script>
 </head>
 <body>
 	
 				 <!-----start-main---->
 				<div class="login-form">
-						<h1>Sign In</h1>
-						<h2><a href="#">Create Account</a></h2>
+					<div class="head">
+						<img src="images/jczslogo.jpg" alt=""/>
+						
+					</div>
 				<form>
 					<li>
-						<input type="text" class="text" value="User Name" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'User Name';}" ><a href="#" class=" icon user"></a>
+						<input name="userName" type="text" class="text" value="用户名" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '用户名';}" onkeypress="if(event.keyCode==13) {userLogin.click();return false;}" /><a href="#" class=" icon user"></a>
 					</li>
 					<li>
-						<input type="password" value="Password" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Password';}"><a href="#" class=" icon lock"></a>
+						<input name="userPassword" type="password" value="Password" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Password';}"  onkeypress="if(event.keyCode==13) {userLogin.click();return false;}" /><a href="#" class=" icon lock"></a>
 					</li>
-					
-					 <div class ="forgot">
-						<h3><a href="#">Forgot Password?</a></h3>
-						<input type="submit" onclick="myFunction()" value="Sign In" > <a href="#" class=" icon arrow"></a>                                                                                                                                                                                                                                 </h4>
+					<div class="p-container">
+								<label class="checkbox"><input type="checkbox" name="checkbox" checked><i></i>记住我</label>
+								<input type="button" name="userLogin" value="登录" >
+							<div class="clear"> </div>
 					</div>
 				</form>
 			</div>
 			<!--//End-login-form-->
-					<div class="ad728x90" style="text-align:center">
-				<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-				<!-- w3layouts_demo_728x90 -->
-				<ins class="adsbygoogle"
-				     style="display:inline-block;width:728px;height:90px"
-				     data-ad-client="ca-pub-9153409599391170"
-				     data-ad-slot="8639520288"></ins>
-				<script>
-				(adsbygoogle = window.adsbygoogle || []).push({});
-				</script>
-		   </div>
-
-
 		  <!-----start-copyright---->
    					<div class="copy-right">
-						<p>Template by <a href="http://w3layouts.com">w3layouts</a></p> 
+						<p style="visibility:hidden;">Template by</p> 
 					</div>
 				<!-----//end-copyright---->
-		 		
+	<script type="text/javascript">
+		$(function (){
+			// function hideURLbar () {
+			// 	window.scrollTo(0,1);
+			// }
+
+			// setTimeout(hideURLbar, 0);
+
+			$('[name="userLogin"]').on('click', function (){
+				var name = $('[name="userName"]').val(),
+					password = $('[name="userPassword"]').val();
+				$.ajax({
+					type: 'POST',
+					url: '../libs/user.php?action=login',
+					dataType: 'json',
+					data: {
+						name: name,
+						password: password
+					}
+				})
+				.done(function (res, status){
+					if (res.status == 'successful') {
+						location.href = '../index.php';
+					}
+					else {
+						alert(res.errMsg);
+					}
+				})
+				.fail(function (){
+					alert('connection error');
+				});
+			});
+		});
+	</script>
 </body>
 </html>
