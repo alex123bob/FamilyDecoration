@@ -160,6 +160,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.setting.AddAccount": "app/view/setting/addaccount.js",
   "FamilyDecoration.view.setting.Index": "app/view/setting/index.js",
   "FamilyDecoration.view.signbusiness.EditBusinessInfo": "app/view/signbusiness/editbusinessinfo.js",
+  "FamilyDecoration.view.signbusiness.GradeSignBusiness": "app/view/signbusiness/gradesignbusiness.js",
   "FamilyDecoration.view.signbusiness.Index": "app/view/signbusiness/index.js",
   "FamilyDecoration.view.taskassign.AssignTaskWin": "app/view/taskassign/assigntaskwin.js",
   "FamilyDecoration.view.taskassign.Index": "app/view/taskassign/index.js",
@@ -1168,6 +1169,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.setting.AddAccount": [],
   "FamilyDecoration.view.setting.Index": [],
   "FamilyDecoration.view.signbusiness.EditBusinessInfo": [],
+  "FamilyDecoration.view.signbusiness.GradeSignBusiness": [],
   "FamilyDecoration.view.signbusiness.Index": [],
   "FamilyDecoration.view.taskassign.AssignTaskWin": [],
   "FamilyDecoration.view.taskassign.Index": [],
@@ -2465,6 +2467,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.signbusiness.EditBusinessInfo": [
     "widget.signbusiness-editbusinessinfo"
+  ],
+  "FamilyDecoration.view.signbusiness.GradeSignBusiness": [
+    "widget.signbusiness-gradesignbusiness"
   ],
   "FamilyDecoration.view.signbusiness.Index": [
     "widget.signbusiness-index"
