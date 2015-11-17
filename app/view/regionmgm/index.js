@@ -4,7 +4,7 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 	requires: [
 		'FamilyDecoration.view.regionmgm.EditArea', 'FamilyDecoration.view.regionmgm.EditRegion',
 		'FamilyDecoration.model.RegionList', 'FamilyDecoration.store.PotentialBusiness',
-		'FamilyDecoration.view.regionmgm.EditPotentialBusiness'
+		'FamilyDecoration.view.regionmgm.EditPotentialBusiness', 'Ext.grid.column.RowNumberer'
 	],
 	layout: {
 		type: 'hbox',
@@ -230,7 +230,21 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 					flex: 1,
 					dataIndex: 'name',
 					renderer: function (val, meta, rec){
-						return val;
+						var businessList = rec.raw.businessListInfo,
+							count = 0, total = 0, str;
+						Ext.each(businessList, function (el, i) {
+							total++;
+							if (el.salesmanName == User.getName()) {
+								count++;
+							}
+						});
+						if (User.isAdmin()) {
+							str = '[<strong><font color="blue">' + total + '</font></strong>]';
+						}
+						else {
+							str = '[<strong><font color="blue">' + count + '</font></strong>]';
+						}
+						return val + str;
 					}
 		        }
 		    ],
@@ -262,7 +276,7 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 		}, {
 			xtype: 'container',
 			height: '100%',
-			flex: 3.3,
+			flex: 7.5,
 			layout: 'vbox',
 			items: [{
 				hideHeaders: false,
@@ -273,6 +287,52 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 				width: '100%',
 				flex: 5,
 				autoScroll: true,
+				bbar: [{
+					text: '删除',
+					disabled: true,
+					icon: 'resources/img/delete3.png',
+					name: 'button-deleteBuilding',
+					id: 'button-deleteBuilding',
+					handler: function (){
+						var regionGrid = Ext.getCmp('gridpanel-regionMgm'),
+							region = regionGrid.getSelectionModel().getSelection()[0],
+							grid = Ext.getCmp('gridpanel-buildingMgm'),
+							rec = grid.getSelectionModel().getSelection()[0];
+						if (region) {
+							if (rec) {
+								Ext.Msg.warning('确定要删除当前选中项吗？', function (btnId){
+									if ('yes' == btnId) {
+										Ext.Ajax.request({
+											url: './libs/business.php?action=deletePotentialBusiness',
+											method: 'POST',
+											params: {
+												id: rec.getId()
+											},
+											callback: function (opts, success, res){
+												if (success){
+													var obj = Ext.decode(res.responseText);
+													if (obj.status == 'successful') {
+														showMsg('删除成功！');
+														grid.refresh(region);
+													}
+													else {
+														showMsg(obj.errMsg);
+													}
+												}
+											}
+										})
+									}
+								});
+							}
+							else {
+								showMsg('请选择要删除的项目！');
+							}
+						}
+						else {
+							showMsg('请选择小区！');
+						}
+					}
+				}],
 				tbar: [{
 					text: '添加',
 					icon: './resources/img/add2.png',
@@ -319,13 +379,56 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 							showMsg('请选择小区！');
 						}
 					}
+				}, {
+					text: '修改状态',
+					disabled: true,
+					id: 'button-editStatus',
+					name: 'button-editStatus',
+					icon: './resources/img/edit1.png',
+					handler: function (){
+						var regionGrid = Ext.getCmp('gridpanel-regionMgm'),
+							region = regionGrid.getSelectionModel().getSelection()[0],
+							grid = Ext.getCmp('gridpanel-buildingMgm'),
+							rec = grid.getSelectionModel().getSelection()[0];
+						if (region) {
+							if (rec) {
+								var win = Ext.create('FamilyDecoration.view.regionmgm.EditPotentialBusiness', {
+									region: region,
+									grid: grid,
+									potentialBusiness: rec,
+									onlyStatusEdit: true
+								});
+							}
+							else {
+								showMsg('请选择编辑项目！');
+							}
+							win.show();
+						}
+						else {
+							showMsg('请选择小区！');
+						}
+					}
 				}],
 				store: Ext.create('FamilyDecoration.store.PotentialBusiness', {
-					autoLoad: false
+					autoLoad: false,
+					filters: [
+						function (item){
+							if (User.isAdmin()) {
+								return true;
+							}
+							else {
+								return item.get('salesmanName') == User.getName();
+							}
+						}
+					]
 				}),
 				initBtn: function (rec){
-					var editBtn = Ext.getCmp('button-editBuilding');
+					var editBtn = Ext.getCmp('button-editBuilding'),
+						editStatus = Ext.getCmp('button-editStatus'),
+						delBuilding = Ext.getCmp('button-deleteBuilding');
 					editBtn.setDisabled(!rec);
+					editStatus.setDisabled(!rec);
+					delBuilding.setDisabled(!rec);
 				},
 				refresh: function (region){
 					var grid = this,
@@ -352,30 +455,58 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 					}
 				},
 				columns: [
-			        {
-			        	text: '序号',
-						flex: 2,
-						dataIndex: 'id'
-			        },
+					{
+						xtype: 'rownumberer'
+					},
+			   //      {
+			   //      	text: '序号',
+						// flex: 0.3,
+						// dataIndex: 'id'
+			   //      },
 			        {
 			        	text: '地址',
-						flex: 2,
+						flex: 0.6,
 						dataIndex: 'address'
 			        },
 			        {
-			        	text: '业主姓名',
-						flex: 1,
+			        	text: '业主',
+						flex: 0.6,
 						dataIndex: 'proprietor'
 			        },
 			        {
-			        	text: '联系方式',
-						flex: 1,
+			        	text: '电话',
+						flex: 0.8,
 						dataIndex: 'phone'
 			        },
 			        {
-			        	text: '状态',
-						flex: 1,
-						dataIndex: 'status'
+			        	text: '状态1',
+						flex: 1.3,
+						dataIndex: 'status',
+						renderer: function (val, meta, rec){
+							return val.replace(/\n|\r/gi, '<br />');
+						}
+			        },
+			        {
+			        	text: '状态2',
+						flex: 1.3,
+						dataIndex: 'status_second',
+						renderer: function (val, meta, rec){
+							return val.replace(/\n|\r/gi, '<br />');
+						}
+			        },
+			        {
+			        	text: '状态3',
+						flex: 1.3,
+						dataIndex: 'status_third',
+						renderer: function (val, meta, rec){
+							return val.replace(/\n|\r/gi, '<br />');
+						}
+			        },
+			        {
+			        	text: '员工',
+			        	flex: 0.5,
+			        	hidden: !User.isAdmin(),
+			        	dataIndex: 'salesman'
 			        }
 			    ],
 			    listeners: {

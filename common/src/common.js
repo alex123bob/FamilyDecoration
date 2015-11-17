@@ -67,6 +67,11 @@ Ext.require('Ext.window.MessageBox', function (){
 //     });
 // });
 
+// override enableOverflow property to make sure tha tall toolbar will automatically overflow.
+Ext.require('Ext.toolbar.Toolbar', function (){
+    Ext.toolbar.Toolbar.prototype.enableOverflow = true;
+});
+
 // index为对应要生成的编号，从1开始
 function getId(index) {
     if (index) {

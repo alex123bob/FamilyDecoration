@@ -112,7 +112,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 							meta.style += 'color: #ffff00;';
 						}
 						if (level != '') {
-							val = val + '<strong>[' + level + ']</strong>';
+							val = val + '[<strong><font color="blue">' + level + '</font></strong>]';
 						}
 						return val;
 					}

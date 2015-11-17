@@ -1,9 +1,9 @@
 <?php
 	include_once "conn.php";
 	include_once "businessDB.php";
+	include_once "potentialBusinessDB.php";
 	include_once "businessDetailDB.php";
 	include_once "regionDB.php";
-	include_once "potentialBusinessDB.php";
 	
 	$action = $_REQUEST["action"];
 	$res = "";
@@ -86,8 +86,13 @@
 		case "transferBusinessToProject":
 			$res = transferBusinessToProject($_REQUEST);
 			break;
+		// 我的业务评级
 		case "clientRank":
 			$res = clientRank($_REQUEST);
+			break;
+		// 签单业务评级
+		case "gradeBusiness":
+			$res = gradeBusiness($_REQUEST);
 			break;
 		//申请设计师
 		case "applyfordesigner":

@@ -1,5 +1,4 @@
 <?php
-
 	function addRegion($data){
 		$name = $data['name'];
 		$remark = $data['nameRemark'];
@@ -46,7 +45,25 @@
 			for ($i = 0; $i < count($arr); $i++) {
 				$arr[$i]["business"] = getBusinessByRegion($arr[$i]["id"], 'false', 'false');
 			}			
-		}*/			
+		}*/
+		for ($i = 0; $i < count($arr); $i++) {
+			if (-1 == $arr[$i]["parentID"]) {
+				$arr[$i]["regionListInfo"] = getRegionList(array("parentID"=>$arr[$i]["id"]));
+			}
+			else {
+				$arr[$i]["businessListInfo"] = getAllPotentialBusiness(array("regionID"=>$arr[$i]["id"]));
+			}
+		}
+		usort($arr, function ($a, $b) {
+			$result = false;
+			if (isset($a["regionListInfo"])) {
+				$result = count($a["regionListInfo"]) <= count($b["regionListInfo"]);
+			}
+			else if (isset($a["businessListInfo"])) {
+				$result = count($a["businessListInfo"]) <= count($b["businessListInfo"]);
+			}
+			return $result;
+		});
 		return $arr;
 	}
 	

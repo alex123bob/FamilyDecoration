@@ -1,7 +1,12 @@
 Ext.define('FamilyDecoration.view.signbusiness.Index', {
 	extend: 'Ext.container.Container',
 	alias: 'widget.signbusiness-index',
-	requires: ['FamilyDecoration.store.Business', 'FamilyDecoration.store.BusinessDetail', 'FamilyDecoration.view.signbusiness.EditBusinessInfo'],
+	requires: [
+		'FamilyDecoration.store.Business', 
+		'FamilyDecoration.store.BusinessDetail', 
+		'FamilyDecoration.view.signbusiness.EditBusinessInfo',
+		'FamilyDecoration.view.signbusiness.GradeSignBusiness'
+	],
 	layout: {
 		type: 'hbox',
 		align: 'stretch'
@@ -35,12 +40,49 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 				borderRightStyle: 'solid',
 				borderRightWidth: '1px'
 			},
+			bbar: [{
+				text: '评级',
+				id: 'button-gradeSignBusiness',
+				name: 'button-gradeSignBusiness',
+				icon: './resources/img/business.png',
+				handler: function (){
+					var grid = Ext.getCmp('gridpanel-detailedAddressForSignBusiness'),
+						signbusiness = grid.getSelectionModel().getSelection()[0];
+					if (signbusiness) {
+						var win = Ext.create('FamilyDecoration.view.signbusiness.GradeSignBusiness', {
+							signbusiness: signbusiness,
+							grid: grid
+						});
+						win.show();
+					}
+					else {
+						showMsg('请选择签单业务！');
+					}
+				}
+			}],
 			columns: [{
 				text: '详细地址',
 				dataIndex: 'address',
 				flex: 1,
 				renderer: function (val, meta, rec){
-					var str = '';
+					var str = '',
+						signBusinessLevel = rec.get('signBusinessLevel');
+					switch(signBusinessLevel) {
+						case "A":
+						meta.style = 'background: lightpink;';
+						break;
+						case "B":
+						meta.style = 'background: lightgreen;';
+						break;
+						case "C":
+						meta.style = 'background: cornsilk;';
+						break;
+						case "D":
+						meta.style = 'background: sandybrown;';
+						break;
+						default:
+						break;
+					}
 					if (rec.get('applyProjectTransference') == 1) {
 						str += '<img src="./resources/img/switch.png" data-qtip="申请转为工程" />';
 					}
@@ -48,6 +90,9 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 						str += '<img src="./resources/img/scroll1.png" data-qtip="申请预算" />';
 					}
 					str += rec.get('regionName') + ' ' + val;
+					if (signBusinessLevel != '') {
+						str += '[<strong><font color="blue">' + signBusinessLevel + '</font></strong>]';
+					}
 					return str;
 				}
 			}],

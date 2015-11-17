@@ -202,4 +202,13 @@
 		$mysql->DBUpdate('business',$obj,"`id`='?'",array($id));
 		return array('status'=>'successful', 'errMsg' => 'rank client successfully!');
 	}
+
+	function gradeBusiness ($data) {
+		global $mysql;
+		$id = $data["id"];
+		$obj = array();
+		$obj["signBusinessLevel"] = $data["signBusinessLevel"];
+		$mysql->DBUpdate("business",$obj,"`id`='?'",array($id));
+		return array('status'=>'successful', 'errMsg'=> 'rank signed business successfully!');
+	}
 ?>

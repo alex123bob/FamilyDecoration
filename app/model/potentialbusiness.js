@@ -7,6 +7,8 @@ Ext.define('FamilyDecoration.model.PotentialBusiness', {
 		{name: 'proprietor', type: 'string'},
 		{name: 'phone', type: 'string'},
 		{name: 'status', type: 'string'},
+		{name: 'status_second', type: 'string'},
+		{name: 'status_third', type: 'string'},
 		{name: 'salesman', type: 'string'},
 		{name: 'salesmanName', type: 'string'},
 		{name: 'createTime', type: 'string'},
