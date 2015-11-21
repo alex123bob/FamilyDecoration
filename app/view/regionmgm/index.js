@@ -60,6 +60,41 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 					win.show();
 				}
 			}],
+			bbar: [{
+				text: '删除',
+				disabled: true,
+				id: 'button-deleteArea',
+				name: 'button-deleteArea',
+				icon: './resources/img/delete.png',
+				hidden: !User.isAdmin(),
+				handler: function (){
+					var areaGrid = Ext.getCmp('gridpanel-areaMgm'),
+						rec = areaGrid.getSelectionModel().getSelection()[0];
+					Ext.Msg.warning('确定要删除当前选中区域吗？', function (btnId){
+						if (btnId == 'yes') {
+							Ext.Ajax.request({
+								url: './libs/business.php?action=deleteRegion',
+								method: 'POST',
+								params: {
+									id: rec.getId()
+								},
+								callback: function (opts, success, res){
+									if (success) {
+										var obj = Ext.decode(res.responseText);
+										if (obj.status == 'successful') {
+											showMsg('删除成功！');
+											areaGrid.refresh(rec);
+										}
+										else {
+											showMsg(obj.errMsg);
+										}
+									}
+								}
+							});
+						}
+					})				
+				}
+			}],
 			store: Ext.create('Ext.data.Store', {
 				model: 'FamilyDecoration.model.RegionList',
 				proxy: {
@@ -92,8 +127,10 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 				});
 			},
 			initBtn: function (rec){
-				var editBtn = Ext.getCmp('button-editArea');
+				var editBtn = Ext.getCmp('button-editArea'),
+					deleteBtn = Ext.getCmp('button-deleteArea');
 				editBtn.setDisabled(!rec);
+				deleteBtn.setDisabled(!rec);
 			},
 			listeners: {
 				selectionchange: function (view, sels){
@@ -111,7 +148,7 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 			name: 'gridpanel-regionMgm',
 			title: '小区',
 			height: '100%',
-			flex: 1,
+			flex: 1.2,
 			autoScroll: true,
 			style: {
 				borderRightStyle: 'solid',

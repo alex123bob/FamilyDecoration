@@ -57,8 +57,8 @@ function sendEmail ($recipient,$aliasNames='',$from = '佳诚装饰' ,$subject, 
 		}
 	}
 
-	$mail->addAddress('674417307@qq.com','IT_Diego');
-	$mail->addAddress('547010762@qq.com','IT_Alex');
+	// $mail->addAddress('674417307@qq.com','IT_Diego');
+	// $mail->addAddress('547010762@qq.com','IT_Alex');
 	$mail->isHTML(true); // Set email format to HTML
 	if($attachement != null){
 		$mail->addStringAttachment($attachement['content'],$attachement['name']);
