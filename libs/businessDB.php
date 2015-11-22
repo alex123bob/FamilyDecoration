@@ -31,7 +31,8 @@
 	}
 	function getBusinessByDesigner($post){
 		global $mysql;
-		return $mysql->DBGetAsMap("select `b`.*, `r`.`name` from `business` `b` left join `region` `r` on `b`.`regionId` = `r`.`id` where  `b`.`designerName` = '?' and `b`.`isDeleted` = 'false' and `b`.`isFrozen` = 'false' and `b`.`isTransfered` = 'false' order by `b`.`signBusinessLevel` DESC ",$post["designerName"]);
+		// force NULL value rank the last
+		return $mysql->DBGetAsMap("select `b`.*, `r`.`name` from `business` `b` left join `region` `r` on `b`.`regionId` = `r`.`id` where  `b`.`designerName` = '?' and `b`.`isDeleted` = 'false' and `b`.`isFrozen` = 'false' and `b`.`isTransfered` = 'false' order by IF( ISNULL(`b`.`signBusinessLevel`), 1, 0), `b`.`signBusinessLevel` DESC ",$post["designerName"]);
 	}
 	function getDesignerlist(){
 		global $mysql;
@@ -99,7 +100,8 @@
 			}				
 		}
 		// put result in order according to level. from A to D.
-		$sql .= " order by `level`";
+		// force NULL value rank the last
+		$sql .= " order by IF(ISNULL(`level`), 1, 0), `level`";
 		return $mysql->DBGetAsMap($sql,$params);
 	}
 	
