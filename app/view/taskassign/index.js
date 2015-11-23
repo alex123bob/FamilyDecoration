@@ -32,6 +32,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 				id: 'treepanel-taskMemberName',
 				name: 'treepanel-taskMemberName',
 				userName: me.taskExecutor,
+				fullList: true,
 				style: {
 					borderRightStyle: 'solid',
 					borderRightWidth: '1px'

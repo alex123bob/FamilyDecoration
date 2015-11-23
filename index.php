@@ -60,7 +60,7 @@
     </div>
 
     <div id="tipBox" style="position:absolute;height:0px;top:10px;width:100%;text-align: right;line-height: 24px;display: none;">
-        <span class="text" style="position:absolute;right: 20px;display:inline-block;background-color:#99bce8;color:#000;border-radius:3px;padding:0 10px;margin-top: 4px;border: 1px solid #99bce8;z-index: 9999999;"></span>
+        <span class="text" style="position:absolute;right: 20px;display:inline-block;background-color:#cccccc;color:#000;border-radius:3px;padding:0 10px;margin-top: 4px;border: 1px solid #99bce8;z-index: 9999999;"></span>
     </div>
 
     <div id="topMask" style="display:none;position: absolute;width: 100%;height:100%;z-index: 999999999;cursor:wait;"></div>

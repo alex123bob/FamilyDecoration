@@ -314,7 +314,7 @@ function logout (){
 }
 
 function logoutWithoutCleanningSession (){
-    location.href = './login.html';
+    location.href = 'login/index.html';
 }
 
 /**

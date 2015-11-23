@@ -1,4 +1,4 @@
-$image-search-path: 'E:/jQuery/familydecoration/packages/FD-theme-neptune/build/resources' !default;
+$image-search-path: '/Library/WebServer/Documents/FamilyDecoration/packages/FD-theme-neptune/build/resources' !default;
 $theme-name:  'FD-theme-neptune' !default;
 $include-ext-abstractcomponent: true;
 $include-ext-abstractmanager: true;
@@ -518,6 +518,7 @@ $include-ext-ux-event-maker: true;
 $include-ext-ux-event-player: true;
 $include-ext-ux-event-recorder: true;
 $include-ext-ux-event-recordermanager: true;
+$include-ext-ux-form-buttonattachedtext: true;
 $include-ext-ux-form-itemselector: true;
 $include-ext-ux-form-multiselect: true;
 $include-ext-ux-form-searchfield: true;
@@ -570,6 +571,9 @@ $include-extthemeneptune-toolbar-toolbar: true;
 @import '../../../ext/packages/ext-theme-neptune/sass/etc/all';
 /* including package FD-theme-neptune */
 @import '../sass/etc/all';
+/* including package FD-theme-neptune */
+@import '../sass/var/Component';
+@import '../sass/var/layout/container/Border';
 /* including package ext-theme-neptune */
 @import '../../../ext/packages/ext-theme-neptune/sass/var/Component';
 @import '../../../ext/packages/ext-theme-neptune/sass/var/LoadMask';

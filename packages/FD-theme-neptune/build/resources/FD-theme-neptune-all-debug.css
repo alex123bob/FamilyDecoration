@@ -63,6 +63,7 @@
 /* including package ext-theme-neutral */
 /* including package ext-theme-neptune */
 /* including package FD-theme-neptune */
+/* including package FD-theme-neptune */
 /* including package ext-theme-neptune */
 /** @class Global_CSS */
 /** @class Ext.LoadMask */
@@ -17421,7 +17422,7 @@ a.x-color-picker-item:hover {
 
 /* line 1, ../../../../ext/packages/ext-theme-neutral/sass/src/layout/container/Border.scss */
 .x-border-layout-ct {
-  background-color: #3892d3;
+  background-color: #97d1d2;
 }
 
 /* line 15, ../../../../ext/packages/ext-theme-neutral/sass/src/menu/Menu.scss */

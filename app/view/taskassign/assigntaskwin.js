@@ -82,6 +82,7 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 			name: 'treepanel-taskassignee',
 			isCheckMode: true,
 			flex: 1,
+			fullList: true,
 			assignees: me.task ? me.task.get('taskExecutor').split(',') : undefined,
 			listeners: {
 				load: function (){
@@ -154,7 +155,7 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 												memberSt.getProxy().url = './libs/loglist.php?action=getLogListDepartments';
 												memberSt.getProxy().extraParams = {
 													email: false,
-													fullList: false,
+													fullList: true,
 													individual: false
 												};
 												memberSt.load({
