@@ -100,35 +100,43 @@ function getIndex (c){
     return str.indexOf(c) + 1;
 }
 
-(function () {
-    var showing = false,
-        tid;
-    window.showMsg = function (title, format) {
-        Ext.select('#tipBox .text').setHTML(title);
-        Ext.select('#tipBox').slideIn('t', {
-            //  easing: 'easeOut',
-            duration: 500
-        });
-        if (tid) {
-            clearTimeout(tid);
-        }
-        tid = setTimeout(hideMsg, 4000);
-        showing = true;
-    };
+// (function () {
+//     var showing = false,
+//         tid;
+//     window.showMsg = function (title, format) {
+//         Ext.select('#tipBox .text').setHTML(title);
+//         Ext.select('#tipBox').slideIn('t', {
+//             //  easing: 'easeOut',
+//             duration: 500
+//         });
+//         if (tid) {
+//             clearTimeout(tid);
+//         }
+//         tid = setTimeout(hideMsg, 4000);
+//         showing = true;
+//     };
 
-    window.hideMsg = function () {
-        if (showing) {
-            var el = Ext.select('#tipBox').first();
-            if (el.isVisible()) {
-                el.slideOut('t', {
-                    //  easing: 'easeOut',
-                    duration: 500
-                });
-            }
-        }
-        showing = false;
-    };
-})();
+//     window.hideMsg = function () {
+//         if (showing) {
+//             var el = Ext.select('#tipBox').first();
+//             if (el.isVisible()) {
+//                 el.slideOut('t', {
+//                     //  easing: 'easeOut',
+//                     duration: 500
+//                 });
+//             }
+//         }
+//         showing = false;
+//     };
+// })();
+
+// this functionality is used to replace the old showMsg pop up dialogue.
+// use DHTMLX library.
+function showMsg(msg) {
+    dhtmlx.message({
+        text: '<img src="resources/img/message-hint.png" width="22" height="22" /> ' + msg
+    });
+}
 
 //Ext.Ajax.disableCachingParam = true;
 Ext.require('Ext.Ajax', function () {

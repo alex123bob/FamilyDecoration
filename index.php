@@ -17,6 +17,7 @@
         <script src="app.js"></script>
     <!-- </x-compile> -->
     <link href="resources/css/global.css" rel="stylesheet" />
+    <link rel="stylesheet" href="tools/dhtmlx/codebase/themes/message_solid.css" />
     <script type="text/javascript" src="resources/locale/ext-lang-zh_CN.js"></script>
     <script src="http://channel.sinaapp.com/api.js" type="text/javascript"></script>
     <?php
@@ -654,5 +655,6 @@
     <script type="text/javascript" src="highchart/js/exporting.js"></script>
     <script type="text/javascript" src="highchart/index.js"></script>
     <script type="text/javascript" src="tools/title_notifier.js"></script>
+    <script type="text/javascript" src="tools/dhtmlx/codebase/message.js"></script>
 </body>
 </html>
