@@ -5,7 +5,8 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 		'FamilyDecoration.store.Business', 
 		'FamilyDecoration.store.BusinessDetail', 
 		'FamilyDecoration.view.signbusiness.EditBusinessInfo',
-		'FamilyDecoration.view.signbusiness.GradeSignBusiness'
+		'FamilyDecoration.view.signbusiness.GradeSignBusiness',
+		'FamilyDecoration.store.User',
 	],
 	layout: {
 		type: 'hbox',
@@ -53,6 +54,81 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 							signbusiness: signbusiness,
 							grid: grid
 						});
+						win.show();
+					}
+					else {
+						showMsg('请选择签单业务！');
+					}
+				}
+			}, {
+				text: '调整设计师',
+				id: 'button-changeDesigner',
+				name: 'button-changeDesigner',
+				icon: './resources/img/modify.png',
+				handler: function (){
+					var grid = Ext.getCmp('gridpanel-detailedAddressForSignBusiness'),
+						signbusiness = grid.getSelectionModel().getSelection()[0];
+					if (signbusiness) {
+						var win = Ext.create('Ext.window.Window', {
+							title: '调整设计师',
+							resizable: false,
+							width: 184,
+							height: 120,
+							bodyPadding: 10,
+							modal: true,
+							items: [{
+								xtype: 'combo',
+								store: Ext.create('FamilyDecoration.store.User', {
+									autoLoad: true,
+									filters: [
+										function (item){
+											return item.get('level') == '002-002';
+										}
+									]
+								}),
+								value: signbusiness.get('designerName'),
+								editable: false,
+								displayField: 'realname',
+								valueField: 'name',
+								queryMode: 'local'
+							}],
+							buttons: [{
+								text: '确定',
+								handler: function (){
+									var combo = win.down('combo'),
+										designerName = combo.getValue(),
+										designerRealName = combo.getDisplayValue();
+									Ext.Ajax.request({
+										url: './libs/business.php?action=editBusiness',
+										method: 'POST',
+										params: {
+											id: signbusiness.getId(),
+											designerName: designerName,
+											designer: designerRealName
+										},
+										callback: function (opts, success, res){
+											if (success) {
+												var obj = Ext.decode(res.responseText);
+												if (obj.status == 'successful') {
+													showMsg('设计师更改成功！');
+													grid.refresh();
+													win.close();
+												}
+												else {
+													showMsg(obj.errMsg);
+												}
+											}
+										}
+									});
+								}
+							}, {
+								text: '取消',
+								handler: function (){
+									win.close();
+								}
+							}]
+						});
+
 						win.show();
 					}
 					else {
