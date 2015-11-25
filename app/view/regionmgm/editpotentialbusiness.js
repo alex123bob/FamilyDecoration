@@ -5,7 +5,7 @@ Ext.define('FamilyDecoration.view.regionmgm.EditPotentialBusiness', {
 	resizable: false,
 	modal: true,
 	width: 500,
-	height: 420,
+	height: 440,
 	autoScroll: true,
 	bodyPadding: 10,
 
