@@ -19,8 +19,8 @@
 	}
 	function getReceivedMailByUser($user){
 		global $mysql;
-		$sql = "select * from mail where `isDeleted` = 'false' and mailReceiver like '%?%' ORDER BY `mailTime` DESC ";
-		$arr = $mysql->DBGetAsMap($sql,$user);
+		$sql = "select * from mail where `isDeleted` = 'false' and mailReceiver = '?' or mailReceiver like '%?,%' or mailReceiver like '%,?%' ORDER BY `mailTime` DESC ";
+		$arr = $mysql->DBGetAsMap($sql,$user, $user, $user);
 		for ($i = 0; $i < count($arr); $i++) {
 			$receiver = $arr[$i]["mailReceiver"];
 			$receiverList = explode(',',$receiver);
@@ -38,7 +38,7 @@
 	
 	function getSentMailByUser($user){
 		global $mysql;
-		$sql = "select * from mail where `isDeleted` = 'false' and mailSender like '%?%' ORDER BY `mailTime` DESC ";
+		$sql = "select * from mail where `isDeleted` = 'false' and mailSender = '?' ORDER BY `mailTime` DESC ";
 		$arr = $mysql->DBGetAsMap($sql,$user);
 		for ($i = 0; $i < count($arr); $i++) {
 			$receiver = $arr[$i]["mailReceiver"];
@@ -66,7 +66,7 @@
 
 	function setMailReadByReceiver ($receiverName) {
 		global $mysql;
-		$mysql->DBUpdate("mail",array("isRead"=>true),"`mailReceiver` like '%?%'",array($receiverName));
+		$mysql->DBUpdate("mail",array("isRead"=>true),"`mailReceiver` = '?' or `mailReceiver` like '%?,%' or `mailReceiver` like '%,?%'",array($receiverName));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 	
