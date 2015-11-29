@@ -31,6 +31,7 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 					borderRightStyle: 'solid',
 					borderRightWidth: '1px'
 				},
+				fullList: true,
 				listeners: {
 					itemclick: function (view, rec){
 						if (rec.get('level') && rec.get('name')) {
