@@ -51,6 +51,9 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 					}, {
 						name: '项目监理',
 						value: '003'
+					}, {
+						name: '预决算主管',
+						value: '004'
 					});
 				}
 				else if (depa == '004') {
@@ -295,6 +298,9 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 							}, {
 								name: '项目监理',
 								value: '003'
+							}, {
+								name: '预决算主管',
+								value: '004'
 							});
 						}
 						else if (newVal == '004') {

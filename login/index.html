@@ -16,8 +16,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 		<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 		<!--webfonts-->
 		<link href='css/googlecss.css' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="../tools/sweetalert/dist/sweetalert.css" />
 		<!--//webfonts-->
 		<script type="text/javascript" src="../tools/jquery-1.11.1.min.js"></script>
+		<script type="text/javascript" src="../tools/sweetalert/dist/sweetalert.min.js"></script>
 </head>
 <body>
 	
@@ -55,6 +57,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 			// setTimeout(hideURLbar, 0);
 
+			swal.setDefaults({
+			    confirmButtonColor: '#317040'
+			});
+
 			$('[name="userLogin"]').on('click', function (){
 				var name = $('[name="userName"]').val(),
 					password = $('[name="userPassword"]').val();
@@ -72,11 +78,23 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 						location.href = '../index.php';
 					}
 					else {
-						alert(res.errMsg);
+						swal({
+			                title: '错误',
+			                text: res.errMsg,
+			                type: 'error',
+			                confirmButtonText: '确定',
+			                closeOnConfirm: true
+			            });
 					}
 				})
 				.fail(function (){
-					alert('connection error');
+					swal({
+		                title: '错误',
+		                text: '连接失败',
+		                type: 'error',
+		                confirmButtonText: '确定',
+		                closeOnConfirm: true
+		            });
 				});
 			});
 		});

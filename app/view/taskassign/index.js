@@ -155,7 +155,11 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 												if (obj.status == 'successful') {
 													showMsg('删除任务成功！');
 													memberSt.getProxy().url = './libs/loglist.php?action=getLogListDepartments';
-													memberSt.getProxy().extraParams = {};
+													memberSt.getProxy().extraParams = {
+														email: false,
+														fullList: true,
+														individual: false
+													};
 													memberSt.load({
 														node: memberSt.getRootNode(),
 														callback: function (recs, ope, success){

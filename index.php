@@ -18,6 +18,7 @@
     <!-- </x-compile> -->
     <link href="resources/css/global.css" rel="stylesheet" />
     <link rel="stylesheet" href="tools/dhtmlx/codebase/themes/message_solid.css" />
+    <link rel="stylesheet" href="tools/sweetalert/dist/sweetalert.css" />
     <script type="text/javascript" src="resources/locale/ext-lang-zh_CN.js"></script>
     <script src="http://channel.sinaapp.com/api.js" type="text/javascript"></script>
     <?php
@@ -134,6 +135,10 @@
                 return this.level == '003-001';
             },
 
+            isProjectBudgetManager: function (){
+                return this.level == '003-004';
+            },
+
             isBusinessManager: function (){
                 return this.level == '004-001';
             },
@@ -213,6 +218,9 @@
                 name: '项目监理',
                 value: '003-003'
             }, {
+                name: '预决算主管',
+                value: '003-004'
+            },{
                 name: '业务部主管',
                 value: '004-001'
             }, {
@@ -349,6 +357,9 @@
                     }
                     else if (roleStr == '003') {
                         role = '项目监理';
+                    }
+                    else if (roleStr == '004') {
+                        role = '预决算主管';
                     }
                 }
                 // business department
@@ -656,5 +667,6 @@
     <script type="text/javascript" src="highchart/index.js"></script>
     <script type="text/javascript" src="tools/title_notifier.js"></script>
     <script type="text/javascript" src="tools/dhtmlx/codebase/message.js"></script>
+    <script type="text/javascript" src="tools/sweetalert/dist/sweetalert.min.js"></script>
 </body>
 </html>

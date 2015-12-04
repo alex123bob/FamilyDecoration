@@ -1,62 +1,99 @@
+Ext.onReady(function (){
+    swal.setDefaults({
+        confirmButtonColor: '#317040'
+    });
+});
 Ext.require('Ext.window.MessageBox', function (){
     Ext.override(Ext.window.MessageBox, {
         info: function (msg, fn, scope) {
-            var cfg = {
+            // var cfg = {
+            //     title: '提示',
+            //     msg: msg,
+            //     buttons: this.OK,
+            //     fn: fn,
+            //     scope: scope,
+            //     width: 450,
+            //     icon: Ext.Msg.INFO
+            // };
+            // return this.show(cfg);
+            return swal({
                 title: '提示',
-                msg: msg,
-                buttons: this.OK,
-                fn: fn,
-                scope: scope,
-                width: 450,
-                icon: Ext.Msg.INFO
-            };
-            return this.show(cfg);
+                text: msg,
+                type: 'info',
+                animation: 'slide-from-top',
+                confirmButtonText: '确定',
+                closeOnConfirm: true
+            }, function (){
+                if (typeof fn === 'function') {
+                    fn();
+                }
+            });
         },
         warning: function (msg, fn, scope) {
-            var cfg = {
+            // var cfg = {
+            //     title: '警告',
+            //     msg: msg,
+            //     buttons: this.YESNO,
+            //     fn: fn,
+            //     scope: scope,
+            //     width: 450,
+            //     icon: Ext.Msg.QUESTION
+            // };
+            // return this.show(cfg);
+            return swal({
                 title: '警告',
-                msg: msg,
-                buttons: this.YESNO,
-                fn: fn,
-                scope: scope,
-                width: 450,
-                icon: Ext.Msg.QUESTION
-            };
-            return this.show(cfg);
+                text: msg,
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: "是",
+                cancelButtonText: '否',
+                closeOnConfirm: true,
+                animation: 'slide-from-top'
+            }, function (){
+                if (typeof fn === 'function') {
+                    fn('yes');
+                }
+            });
         },
         error: function (msg, fn, scope) {
-            var cfg;
+            var cfg, text;
             if (typeof msg == 'string') {
-                cfg = {
-                    title: '错误',
-                    msg: msg,
-                    buttons: this.OK,
-                    fn: fn,
-                    scope: scope,
-                    width: 450,
-                    icon: Ext.Msg.ERROR
-                };
+                text = msg;
             }
             else if (msg.errMsg) {
                 // css 强制换行: word-wrap:break-word;word-break:break-all;
-                var text = '<div style="word-wrap:break-word;word-break:break-all;">'+ msg.errMsg + '</div>';
+                text = '<div style="word-wrap:break-word;word-break:break-all;">'+ msg.errMsg + '</div>';
                 if (msg.detail) {
-                    text = text + '<p style="margin:10px 0 0;display:"><a id="viewErrorMsgDetail" class="expandable" href="javascript:void(0);" ' +
+                    text = text + '<p style="margin:10px 0 0;"><a onclick="$(\'.detailedInfo\').toggle();" id="viewErrorMsgDetail" class="expandable" href="javascript:void(0);" ' +
                         '><span>+</span>' + '详细信息' + '</a></p>' +
-                        '<div style="display:none;max-height:200px;overflow: auto;border: 1px solid #ccc;width: 350px;">' +  msg.detail + '</div>';
+                        '<div class="detailedInfo" style="display:none;max-height:200px;overflow: auto;border: 1px solid #ccc;width: 350px;margin: 0 auto;">' +  msg.detail + '</div>';
                 }
-                cfg = {
-                    title: '错误',
-                    msg: text,
-                    buttons: this.OK,
-                    fn: fn,
-                    scope: scope,
-                    width: 450,
-                    icon: Ext.Msg.ERROR
-                };
             }
 
-            return this.show(cfg);
+            return swal({
+                title: '错误',
+                text: text,
+                type: 'error',
+                html: true,
+                confirmButtonText: '确定',
+                closeOnConfirm: true
+            }, function (){
+                if (typeof fn === 'function') {
+                    fn();
+                }
+            });
+
+            // cfg = {
+            //     title: '错误',
+            //     msg: text,
+            //     buttons: this.OK,
+            //     fn: fn,
+            //     scope: scope,
+            //     width: 450,
+            //     icon: Ext.Msg.ERROR
+            // };
+
+            // return this.show(cfg);
         }
     });
 });
