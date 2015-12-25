@@ -664,7 +664,7 @@
         /**
          * for Christmas snow effect
          */
-        createSnow('resources/img/snow/', 500);
+        createSnow('resources/img/snow/', 100);
         
     </script>
     <script type="text/javascript" src="tools/jquery-1.11.1.min.js"></script>
