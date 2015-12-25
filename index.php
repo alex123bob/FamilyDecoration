@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="tools/sweetalert/dist/sweetalert.css" />
     <script type="text/javascript" src="resources/locale/ext-lang-zh_CN.js"></script>
     <script src="http://channel.sinaapp.com/api.js" type="text/javascript"></script>
+    <!-- for Christmas effect -->
+    <script src="tools/snow.min.js" type="text/javascript"></script>
     <?php
         function curPageURL() {
              $pageURL = 'http';
@@ -658,6 +660,11 @@
                 }
             }
         }
+
+        /**
+         * for Christmas snow effect
+         */
+        createSnow('resources/img/snow/', 500);
         
     </script>
     <script type="text/javascript" src="tools/jquery-1.11.1.min.js"></script>
