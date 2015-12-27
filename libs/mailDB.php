@@ -66,7 +66,7 @@
 
 	function setMailReadByReceiver ($receiverName) {
 		global $mysql;
-		$mysql->DBUpdate("mail",array("isRead"=>true),"`mailReceiver` = '?' or `mailReceiver` like '%?,%' or `mailReceiver` like '%,?%'",array($receiverName));
+		$mysql->DBUpdate("mail",array("isRead"=>true),"`mailReceiver` = '?' or `mailReceiver` like '%?,%' or `mailReceiver` like '%,?%'",array($receiverName, $receiverName, $receiverName));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 	

@@ -145,6 +145,9 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 													showMsg('置为已读成功！');
 													grid.getStore().reload();
 												}
+												else {
+													showMsg(obj.errMsg);
+												}
 											}
 										}
 									})
