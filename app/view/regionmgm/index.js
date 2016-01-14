@@ -275,7 +275,7 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 								count++;
 							}
 						});
-						if (User.isAdmin()) {
+						if (User.isAdmin() || User.isBusinessManager()) {
 							str = '[<strong><font color="blue">' + total + '</font></strong>]';
 						}
 						else {
@@ -450,7 +450,7 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 					autoLoad: false,
 					filters: [
 						function (item){
-							if (User.isAdmin()) {
+							if (User.isAdmin() || User.isBusinessManager()) {
 								return true;
 							}
 							else {
