@@ -7,6 +7,7 @@
 		foreach($arr as $key => $val) {
 		    $res[$count]["id"] = $val["id"];
 		    $res[$count]["content"] = $val["content"];
+		    $res[$count]["createTime"] = $val["createTime"];
 		    $count ++;
         }
 		return $res;

@@ -529,6 +529,14 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						renderer: function (val, meta, rec){
 							return val.replace(/\n/ig, '<br />');
 						}
+			        },
+			        {
+			        	text: '创建时间',
+			        	flex: 1,
+			        	dataIndex: 'createTime',
+			        	renderer: function (val, meta, rec) {
+			        		return val;
+			        	}
 			        }
 			    ],
 			    store: Ext.create('FamilyDecoration.store.BusinessDetail', {
