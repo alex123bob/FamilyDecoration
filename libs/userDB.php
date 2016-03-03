@@ -25,6 +25,7 @@
 			$projectId = isset($_POST["projectId"]) ? $_POST["projectId"] : '' ;
 			$phone = isset($_POST["phone"]) ? $_POST["phone"] : '' ;
 			$mail = isset($_POST["mail"]) ? $_POST["mail"] : '' ;
+			$profileImage = isset($_POST["profileImage"]) ? $_POST["profileImage"] : '' ;
 			global $mysql, $prefix;
 			$user = $mysql->DBGetOneRow("`user`", "*", "`name` = '$name'");
 			if($user){
@@ -55,6 +56,7 @@
 			$_SESSION["level"] = $user["level"];
 			$_SESSION["phone"] = $user["phone"];
 			$_SESSION["mail"] = $user["mail"];
+			$_SESSION["profileImage"] = $user["profileImage"];
 			$ip = getIP();
 			$userAgent = $_SERVER['HTTP_USER_AGENT'];
 			//update
@@ -105,6 +107,9 @@
 				if (isset($_POST['mail'])) {
 					$obj['mail'] = $_POST['mail'];
 				}
+				if (isset($_POST['profileImage'])) {
+					$obj['profileImage'] = $_POST['profileImage'];
+				}
 				$mysql->DBUpdate('user',$obj,"`name`= '?' ",array($user["name"]));
 				return (array('status'=>'successful', 'errMsg'=>''));
 			}
@@ -125,9 +130,10 @@
 		$projectId = isset($_POST["projectId"]) ? $_POST["projectId"] : '';
 		$phone = isset($_POST["phone"]) ? $_POST["phone"] : '';
 		$mail = isset($_POST["mail"]) ? $_POST["mail"] : '';
+		$profileImage = isset($_POST["profileImage"]) ? $_POST["profileImage"] : '';
 		global $mysql, $prefix;
 		$password = md5($prefix.$password);
-		$mysql->DBUpdate('user',array('realname'=>$realname,'password'=>$password,'level'=>$level,'projectId'=>$projectId, 'phone'=>$phone, 'mail'=>$mail),"`name`='?'",array($name));
+		$mysql->DBUpdate('user',array('realname'=>$realname,'password'=>$password,'level'=>$level,'projectId'=>$projectId, 'phone'=>$phone, 'mail'=>$mail, 'profileImage'=>$profileImage),"`name`='?'",array($name));
 		return (array('status'=>'successful', 'errMsg' => ''));
 	}
 
@@ -146,6 +152,15 @@
 		global $mysql;
 		$mysql->DBUpdate('user',array('mail'=>$mail),"`name`='?'",array($name));
 		$_SESSION["mail"] = $mail;
+		return (array('status'=>'successful', 'errMsg' => ''));
+	}
+
+	function modifyProfileImage (){
+		$name = $_POST["name"];
+		$profileImage = $_POST["profileImage"];
+		global $mysql;
+		$mysql->DBUpdate('user',array('profileImage'=>$profileImage),"`name`='?'",array($name));
+		$_SESSION["profileImage"] = $profileImage;
 		return (array('status'=>'successful', 'errMsg' => ''));
 	}
 

@@ -111,6 +111,8 @@
 
             mail: '<?php echo $_SESSION["mail"]; ?>',
 
+            profileImage: '<?php echo $_SESSION["profileImage"]; ?>',
+
             isAdmin: function (){
                 return this.level == '001-001' || this.level == '001-002';
             },
@@ -294,6 +296,15 @@
                     return false;
                 }
             },
+
+            getProfileImage: function (){
+                if (this.profileImage) {
+                    return this.profileImage;
+                }
+                else {
+                    return false;
+                }
+            },            
 
             // get department according to user level value
             renderDepartment: function (level){

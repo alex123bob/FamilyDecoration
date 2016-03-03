@@ -6,7 +6,8 @@ Ext.define('FamilyDecoration.view.Viewport', {
         'Ext.layout.container.Border',
         'FamilyDecoration.store.Feature',
         'FamilyDecoration.view.chat.Index',
-        'FamilyDecoration.view.user.Index'
+        'FamilyDecoration.view.user.Index',
+        'FamilyDecoration.view.chart.UploadForm'
     ],
 
     layout: {
@@ -118,6 +119,52 @@ Ext.define('FamilyDecoration.view.Viewport', {
                 Ext.defer(heartBeat, 2000);
                 // Heartbeat
                 setInterval(heartBeat, 60000);
+            }
+
+            if (User.getProfileImage()) {
+                // todo
+            }
+            else {
+                var profileImageWin = Ext.create('FamilyDecoration.view.chart.UploadForm', {
+                    title: '用户名片图片上传',
+                    url: './libs/uploadUserProfileImage.php',
+                    supportMult: false,
+                    afterUpload: function(fp, o) {
+                        var p = {},
+                            content = '',
+                            originalName = '',
+                            details = o.result.details;
+
+                        if (details[0]['success']) {
+                            content = details[0]['file'];
+                            originalName = details[0]['original_file_name'];
+                            Ext.apply(p, {
+                                profileImage: content,
+                                name: User.getName()
+                            });
+
+                            Ext.Ajax.request({
+                                url: './libs/user.php?action=modifyProfileImage',
+                                method: 'POST',
+                                params: p,
+                                callback: function(opts, success, res) {
+                                    if (success) {
+                                        var obj = Ext.decode(res.responseText),
+                                            index;
+                                        if (obj.status == 'successful') {
+                                            showMsg('用户名片图片上传成功！');
+                                            profileImageWin.close();
+                                        }
+                                        else {
+                                            showMsg(obj.errMsg);
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+                profileImageWin.show();
             }
 
             if (User.getPhoneNumber()) {

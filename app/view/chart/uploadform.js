@@ -12,6 +12,7 @@ Ext.define('FamilyDecoration.view.chart.UploadForm', {
 	typeId: undefined,
 	beforeUpload: Ext.emptyFn,
 	afterUpload: Ext.emptyFn,
+	supportMult: true, // whether this component supports multiple picture upload or not.
 
 	initComponent: function (){
 		var me = this;
@@ -67,7 +68,7 @@ Ext.define('FamilyDecoration.view.chart.UploadForm', {
 				    },
 					listeners: {
 						afterrender: function(cmp) {
-							cmp.supportMultFn();
+							me.supportMult && cmp.supportMultFn();
 						},
 						change: function (field, val, opts){
 							var files = val.split(', '),
@@ -83,7 +84,7 @@ Ext.define('FamilyDecoration.view.chart.UploadForm', {
 								});
 							}
 							st.loadData(data);
-							field.supportMultFn();
+							me.supportMult && field.supportMultFn();
 						}
 					}
 				}, {
@@ -146,7 +147,7 @@ Ext.define('FamilyDecoration.view.chart.UploadForm', {
 									}
 									st.loadData(res);
 									me.afterUpload(fp, o);
-									files.supportMultFn();
+									me.supportMult && files.supportMultFn();
 								},
 								failure: function(form, action) {
 									switch (action.failureType) {
