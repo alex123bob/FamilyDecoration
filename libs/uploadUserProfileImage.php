@@ -66,7 +66,7 @@ function handleFiles($tmpNames,$names){
 				array_push($result["details"], array(
 					"success" => true,
 					"msg" => "图片'$oName'上传成功！重命名为'$file_new_name'。",
-					"file" => $directory.$file_new_name,
+					"file" => "./resources/user/".$file_new_name,
 					"original_file_name" => $oName
 				));
 			}else {

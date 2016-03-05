@@ -72,6 +72,18 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 				text: '项目',
 				flex: 1,
 				dataIndex: 'projectName'
+			}, {
+				text: '照片',
+				flex: 0.6,
+				dataIndex: 'profileImage',
+				renderer: function (val){
+					if (val) {
+						return '<img src="' + val + '" width="30" height="30" />';
+					}
+					else {
+						return '未上传';
+					}
+				}
 			}],
 			rootVisible: false,
 			store: Ext.create('Ext.data.TreeStore', {
@@ -225,6 +237,59 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 							}
 						});
 					}
+				},
+				{
+					text: '上传照片',
+					hidden: User.isAdmin() ? false : true,
+					icon: './resources/img/upload.png',
+					name: 'button-uploadProfileImage',
+					id: 'button-uploadProfileImage',
+					disabled: true,
+					handler: function (){
+						var treepanel = me.down('treepanel'),
+							rec = treepanel.getSelectionModel().getSelection()[0];
+						var profileImageWin = Ext.create('FamilyDecoration.view.chart.UploadForm', {
+		                    title: '用户名片图片上传',
+		                    url: './libs/uploadUserProfileImage.php',
+		                    supportMult: false,
+		                    afterUpload: function(fp, o) {
+		                        var p = {},
+		                            content = '',
+		                            originalName = '',
+		                            details = o.result.details;
+
+		                        if (details[0]['success']) {
+		                            content = details[0]['file'];
+		                            originalName = details[0]['original_file_name'];
+		                            Ext.apply(p, {
+		                                profileImage: content,
+		                                name: rec.get('name')
+		                            });
+
+		                            Ext.Ajax.request({
+		                                url: './libs/user.php?action=modifyProfileImage',
+		                                method: 'POST',
+		                                params: p,
+		                                callback: function(opts, success, res) {
+		                                    if (success) {
+		                                        var obj = Ext.decode(res.responseText),
+		                                            index;
+		                                        if (obj.status == 'successful') {
+		                                            showMsg('用户名片图片上传成功！');
+		                                            profileImageWin.close();
+		                                            me.down('treepanel').refresh();
+		                                        }
+		                                        else {
+		                                            showMsg(obj.errMsg);
+		                                        }
+		                                    }
+		                                }
+		                            });
+		                        }
+		                    }
+		                });
+		                profileImageWin.show();
+					}
 				}
 			],
 			listeners: {
@@ -232,17 +297,20 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 					var rec = sels[0],
 						edit = Ext.getCmp('button-editaccount'),
 						reset = Ext.getCmp('button-resetaccount'),
-						del = Ext.getCmp('button-deleteaccount');
+						del = Ext.getCmp('button-deleteaccount'),
+						upload = Ext.getCmp('button-uploadProfileImage');
 
 					if (rec && rec.get('name')) {
 						edit.enable();
 						reset.enable();
+						upload.enable();
 						del.setDisabled(rec.get('level') == 1);
 					}
 					else {
 						edit.disable();
 						reset.disable();
 						del.disable();
+						upload.disable();
 					}
 				}
 			}
