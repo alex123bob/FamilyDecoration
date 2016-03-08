@@ -3,7 +3,8 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 	alias: 'widget.setting-index',
 	requires: [
 		'FamilyDecoration.model.User',
-		'FamilyDecoration.view.setting.AddAccount'
+		'FamilyDecoration.view.setting.AddAccount',
+		'FamilyDecoration.view.setting.UserList'
 	],
 	layout: 'fit',
 
@@ -289,6 +290,17 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 		                    }
 		                });
 		                profileImageWin.show();
+					}
+				},
+				{
+					text: '优先级配置',
+					hidden: User.isAdmin() ? false : true,
+					icon: './resources/img/priority.png',
+					name: 'button-priorityConfiguration',
+					id: 'button-priorityConfiguration',
+					handler: function (){
+						var win = Ext.create('FamilyDecoration.view.setting.UserList');
+						win.show();
 					}
 				}
 			],

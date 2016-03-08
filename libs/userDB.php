@@ -131,9 +131,11 @@
 		$phone = isset($_POST["phone"]) ? $_POST["phone"] : '';
 		$mail = isset($_POST["mail"]) ? $_POST["mail"] : '';
 		$profileImage = isset($_POST["profileImage"]) ? $_POST["profileImage"] : '';
+		$priority = isset($_POST["priority"]) ? $_POST["priority"] : '';
+		$priorityTitle = isset($_POST["priorityTitle"]) ? $_POST["priorityTitle"] : '';
 		global $mysql, $prefix;
 		$password = md5($prefix.$password);
-		$mysql->DBUpdate('user',array('realname'=>$realname,'password'=>$password,'level'=>$level,'projectId'=>$projectId, 'phone'=>$phone, 'mail'=>$mail, 'profileImage'=>$profileImage),"`name`='?'",array($name));
+		$mysql->DBUpdate('user',array('realname'=>$realname,'password'=>$password,'level'=>$level,'projectId'=>$projectId, 'phone'=>$phone, 'mail'=>$mail, 'profileImage'=>$profileImage, 'priority'=>$priority, 'priorityTitle'=>$priorityTitle),"`name`='?'",array($name));
 		return (array('status'=>'successful', 'errMsg' => ''));
 	}
 
@@ -163,6 +165,17 @@
 		$_SESSION["profileImage"] = $profileImage;
 		return (array('status'=>'successful', 'errMsg' => ''));
 	}
+
+	// modify priority for designer configuration in home website
+	function modifyPriority (){
+		$name = $_POST["name"];
+		$priority = isset($_POST["priority"]) ? $_POST["priority"] : 99;
+		$priorityTitle = isset($_POST["priorityTitle"]) ? $_POST["priorityTitle"] : '';
+		global $mysql;
+		$mysql->DBUpdate('user',array('priority'=>$priority, 'priorityTitle'=>$priorityTitle),"`name`='?'",array($name));
+		return (array('status'=>'successful', 'errMsg' => ''));
+	}
+	// end of modification of priority for designer configuration in home website
 
 	/**
 	 * [reset account's password]

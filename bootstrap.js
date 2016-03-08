@@ -159,6 +159,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.regionmgm.Index": "app/view/regionmgm/index.js",
   "FamilyDecoration.view.setting.AddAccount": "app/view/setting/addaccount.js",
   "FamilyDecoration.view.setting.Index": "app/view/setting/index.js",
+  "FamilyDecoration.view.setting.UserList": "app/view/setting/userlist.js",
   "FamilyDecoration.view.signbusiness.EditBusinessInfo": "app/view/signbusiness/editbusinessinfo.js",
   "FamilyDecoration.view.signbusiness.GradeSignBusiness": "app/view/signbusiness/gradesignbusiness.js",
   "FamilyDecoration.view.signbusiness.Index": "app/view/signbusiness/index.js",
@@ -1168,6 +1169,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.regionmgm.Index": [],
   "FamilyDecoration.view.setting.AddAccount": [],
   "FamilyDecoration.view.setting.Index": [],
+  "FamilyDecoration.view.setting.UserList": [],
   "FamilyDecoration.view.signbusiness.EditBusinessInfo": [],
   "FamilyDecoration.view.signbusiness.GradeSignBusiness": [],
   "FamilyDecoration.view.signbusiness.Index": [],
@@ -2464,6 +2466,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.setting.Index": [
     "widget.setting-index"
+  ],
+  "FamilyDecoration.view.setting.UserList": [
+    "widget.setting-userlist"
   ],
   "FamilyDecoration.view.signbusiness.EditBusinessInfo": [
     "widget.signbusiness-editbusinessinfo"

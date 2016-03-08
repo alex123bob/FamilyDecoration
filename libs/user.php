@@ -19,6 +19,7 @@
 		case "modifyPhoneNumber":		$res = modifyPhoneNumber();break;
 		case "modifyEmail":				$res = modifyEmail();break;
 		case "modifyProfileImage":		$res = modifyProfileImage();break;
+		case "modifyPriority":			$res = modifyPriority();break;
 		//TODO   user.php?action=getOnlineUsers&page=xxx&limit=xxx&orderBy=xxx&order=desc/asc
 		//user.php?action=getOnlineUsers&beginTime=xxx&endTime=xxx&page=xxx&limit=xxx&orderBy=xxx&order=desc/asc
 
