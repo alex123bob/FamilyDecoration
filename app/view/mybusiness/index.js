@@ -27,6 +27,32 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 	initComponent: function (){
 		var me = this;
 
+		var businessSt = Ext.create('FamilyDecoration.store.Business', {
+			autoLoad: me.checkBusiness ? false : true,
+			filters: [
+				function (item){
+					if (me.businessId || me.salesmanName) {
+						return me.businessId == item.getId();
+					}
+					else {
+						return true;
+					}
+				}
+			],
+			proxy: {
+				type: 'rest',
+				url: './libs/business.php',
+		        reader: {
+		            type: 'json'
+		        },
+		        extraParams: {
+		        	action: 'getBusiness',
+		        	salesmanName: me.businessStaff ? me.businessStaff.get('salesmanName') : User.getName(),
+		        	isFrozen: false
+		        }
+			}
+		});
+
 		me.items = [{
 			xtype: 'container',
 			flex: 2,
@@ -117,31 +143,17 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						return val;
 					}
 				}],
-				store: Ext.create('FamilyDecoration.store.Business', {
-					autoLoad: me.checkBusiness ? false : true,
-					filters: [
-						function (item){
-							if (me.businessId || me.salesmanName) {
-								return me.businessId == item.getId();
-							}
-							else {
-								return true;
-							}
-						}
-					],
-					proxy: {
-						type: 'rest',
-						url: './libs/business.php',
-				        reader: {
-				            type: 'json'
-				        },
-				        extraParams: {
-				        	action: 'getBusiness',
-				        	salesmanName: me.businessStaff ? me.businessStaff.get('salesmanName') : User.getName(),
-				        	isFrozen: false
-				        }
-					}
-				}),
+				store: businessSt,
+				dockedItems: [{
+					dock: 'top',
+					xtype: 'toolbar',
+					items: [{
+						xtype: 'searchfield',
+						flex: 1,
+						store: businessSt,
+						paramName: 'address'
+					}]
+				}],
 				initBtn: function (rec){
 					var editBtn = Ext.getCmp('button-editClient'),
 						delBtn = Ext.getCmp('button-delClient'),
