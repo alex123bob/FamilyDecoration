@@ -270,13 +270,13 @@
                 flag = User.isGeneral() ? false : true;
             }
             else if (rec.get('cmp') == 'checkbusiness-index') {
-                flag = User.isAdmin() || User.isBusinessManager() || User.isAdministrationManager() || User.isDesignManager() ? true : false;
+                flag = User.isAdmin() || User.isBusinessManager() || User.isAdministrationManager() || User.isDesignManager() || User.isFinanceManager() ? true : false;
             }
             else if (rec.get('cmp') == 'signbusiness-index') {
                 flag = User.isDesignStaff() || User.isDesignManager() ? true : false;
             }
             else if (rec.get('cmp') == 'checksignbusiness-index') {
-                flag = User.isAdmin() || User.isDesignManager() || User.isProjectManager() ? true : false;
+                flag = User.isAdmin() || User.isDesignManager() || User.isProjectManager() || User.isFinanceManager() ? true : false;
             }
             else if (rec.get('cmp') == 'regionmgm-index') {
                 flag = User.isGeneral() ? false : true;
