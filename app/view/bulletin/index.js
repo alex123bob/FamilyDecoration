@@ -76,7 +76,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 id: 'gridpanel-bulletin',
                 name: 'gridpanel-bulletin',
                 title: '查看公告',
-                flex: 1,
+                flex: 3,
                 width: '100%',
                 autoScroll: true,
                 hideHeaders: true,
@@ -278,7 +278,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 name: 'gridpanel-message',
                 title: '动态消息',
                 width: '100%',
-                flex: 1,
+                flex: 2,
                 hideHeaders: true,
                 autoScroll: true,
                 style: {

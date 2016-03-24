@@ -396,6 +396,38 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 						showMsg('没有预算！');
 					}
 				}
+			},
+			{
+				text: '置为模板',
+				icon: './resources/img/convert.png',
+				tooltip: '将当前预算置为模板',
+				handler: function (){
+					if (me.budgetId) {
+						Ext.Msg.warning('确定要将当前预算置为模板吗？', function (){
+							Ext.Ajax.request({
+								url: './libs/budget.php?action=createBudgetTemplateFromBudget',
+								params: {
+									budgetId: me.budgetId
+								},
+								method: 'POST',
+								callback: function (opts, success, res){
+									if (success) {
+										var obj = Ext.decode(res.responseText);
+										if (obj.status == 'successful') {
+											showMsg('置为模板成功！');
+										}
+										else {
+											showMsg(obj.errMsg);
+										}
+									}
+								}
+							});
+						});
+					}
+					else {
+						showMsg('没有预算！');
+					}
+				}
 			}
 		];
 

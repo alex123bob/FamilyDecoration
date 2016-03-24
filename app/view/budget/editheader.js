@@ -1,9 +1,12 @@
 Ext.define('FamilyDecoration.view.budget.EditHeader', {
 	extend: 'Ext.window.Window',
 	width: 500,
-	height: 310,
+	height: 350,
 
-	requires: ['FamilyDecoration.view.progress.ProjectList', 'Ext.form.field.Hidden'],
+	requires: [
+		'FamilyDecoration.view.progress.ProjectList', 'Ext.form.field.Hidden',
+		'FamilyDecoration.store.BudgetTemplate'
+	],
 
 	budgetPanel: null,
 	budget: null,
@@ -229,6 +232,60 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 				itemId: 'textfield-budgetName',
 				xtype: 'textfield',
 				value: me.budget ? me.budget['budgetName'] : '佳诚装饰室内装修装饰工程 预算单'
+			},
+			{
+				xtype: 'fieldcontainer',
+				layout: 'hbox',
+				hideLabel: true,
+				items: [
+					{
+						fieldLabel: '使用模板',
+						labelWidth: 100,
+						width: 348,
+						xtype: 'textfield',
+						itemId: 'textfield-createBudgetFromTemplate',
+						readOnly: true,
+						allowBlank: false
+					},
+					{
+						xtype: 'button',
+						width: 50,
+						text: '选择',
+						handler: function (){
+							var win = Ext.create('Ext.window.Window', {
+								layout: 'fit',
+								width: 500,
+								height: 300,
+								modal: true,
+								title: '引用模板列表',
+								items: [{
+									xtype: 'grid',
+									columns: [{
+										text: '名称',
+										flex: 1,
+										align: 'center'
+									}],
+									autoScroll: true,
+									store: Ext.create('FamilyDecoration.store.BudgetTemplate', {
+										autoLoad: true
+									})
+								}],
+								buttons: [{
+									text: '确定',
+									handler: function (){
+
+									}
+								}, {
+									text: '取消',
+									handler: function (){
+										win.close();
+									}
+								}]
+							});
+							win.show();
+						}
+					}
+				]
 			}
 		];
 
