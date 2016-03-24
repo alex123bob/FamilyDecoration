@@ -26,7 +26,7 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 	isValid: function (){
 		var me = this,
 			custName = me.getComponent('textfield-custName'),
-			fc = me.down('fieldcontainer'),
+			fc = me.getComponent('fieldcontainer-projectOrBusinessNameCt'),
 			projectOrBusinessName = fc.getComponent('textfield-projectOrBusinessName'),
 			areaSize = me.getComponent('textfield-areaSize'),
 			desciption = me.getComponent('textarea-comments'),
@@ -37,7 +37,7 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 	getValue: function (){
 		var me = this,
 			custName = me.getComponent('textfield-custName'),
-			fc = me.down('fieldcontainer'),
+			fc = me.getComponent('fieldcontainer-projectOrBusinessNameCt'),
 			projectOrBusinessName = fc.getComponent('textfield-projectOrBusinessName'),
 			projectOrBusinessId = fc.getComponent('hidden-projectOrBusinessId'),
 			areaSize = me.getComponent('textfield-areaSize'),
@@ -71,6 +71,7 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 			},
 			{
 				xtype: 'fieldcontainer',
+				itemId: 'fieldcontainer-projectOrBusinessNameCt',
 				layout: 'hbox',
 				hideLabel: true,
 				items: [
@@ -235,8 +236,10 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 			},
 			{
 				xtype: 'fieldcontainer',
+				itemId: 'fieldcontainer-budgetTemplateCt',
 				layout: 'hbox',
 				hideLabel: true,
+				hidden: me.budget ? true : false,
 				items: [
 					{
 						fieldLabel: '使用模板',
@@ -263,8 +266,51 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 									columns: [{
 										text: '名称',
 										flex: 1,
-										align: 'center'
-									}],
+										align: 'center',
+										dataIndex: 'budgetTemplateName'
+									}, {
+										hidden: !User.isAdmin(),
+							            xtype:'actioncolumn',
+							            text: '删除',
+							            width: 50,
+							            items: [
+								            {
+								                icon: './resources/img/trash_can_delete.ico',  // Use a URL in the icon config
+								                tooltip: '删除选中模板',
+								                handler: function(grid, rowIndex, colIndex) {
+								                	var rec = grid.getStore().getAt(rowIndex);
+								                    if (rec) {
+								                    	Ext.Msg.warning('确定要删除当前选中模板吗？', function (btnId){
+								                    		if (btnId == 'yes') {
+										                    	Ext.Ajax.request({
+										                    		url: './libs/budget.php?action=deleteBudgetTemplate',
+										                    		method: 'POST',
+										                    		params: {
+										                    			budgetTemplateId: rec.getId()
+										                    		},
+										                    		callback: function (opts, success, res){
+										                    			if (success) {
+										                    				var obj = Ext.decode(res.responseText);
+										                    				if (obj.status == 'successful') {
+										                    					showMsg('删除成功！');
+										                    					grid.getStore().load();
+										                    				}
+										                    				else {
+										                    					showMsg(obj.errMsg);
+										                    				}
+										                    			}
+										                    		}
+											                    });
+								                    		}
+								                    	});
+								                    }
+								                    else {
+								                    	showMsg('请选择要删除模板！');
+								                    }
+								                }
+								            }
+								        ]
+								    }],
 									autoScroll: true,
 									store: Ext.create('FamilyDecoration.store.BudgetTemplate', {
 										autoLoad: true
@@ -273,7 +319,19 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 								buttons: [{
 									text: '确定',
 									handler: function (){
-
+										var grid = win.down('gridpanel'),
+											rec = grid.getSelectionModel().getSelection()[0],
+											fc = me.getComponent('fieldcontainer-budgetTemplateCt'),
+											hiddenField = fc.getComponent('hidden-budgetTemplateId'),
+											textField = fc.getComponent('textfield-createBudgetFromTemplate');
+										if (rec) {
+											hiddenField.setValue(rec.getId());
+											textField.setValue(rec.get('budgetTemplateName'));
+											win.close();
+										}
+										else {
+											showMsg('没有选中模板！');
+										}
 									}
 								}, {
 									text: '取消',
@@ -284,6 +342,11 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 							});
 							win.show();
 						}
+					},
+					{
+						xtype: 'hidden',
+						itemId: 'hidden-budgetTemplateId',
+						value: ''
 					}
 				]
 			}
@@ -293,7 +356,9 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 			text: '确定',
 			handler: function (){
 				if (me.isValid()) {
-					var p = me.getValue();
+					var p = me.getValue(),
+						budgetTemplateCt = me.getComponent('fieldcontainer-budgetTemplateCt'),
+						budgetTemplateId = budgetTemplateCt.getComponent('hidden-budgetTemplateId').getValue();
 					if (me.addressType) {
 						if (me.addressType == 'business') {
 							Ext.apply(p, {
@@ -317,8 +382,13 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 					me.budget && Ext.apply(p, {
 						budgetId: me.budget['budgetId']
 					});
+					if (budgetTemplateId != '' && !me.budget) {
+						Ext.apply(p, {
+							budgetTemplateId: budgetTemplateId
+						});
+					}
 					Ext.Ajax.request({
-						url: me.budget ? './libs/budget.php?action=edit' : './libs/budget.php?action=add',
+						url: me.budget ? './libs/budget.php?action=edit' : (budgetTemplateId == '' ? './libs/budget.php?action=add' : './libs/budget.php?action=createBudgetFromTemplate'),
 						params: p,
 						method: 'POST',
 						callback: function (opts, success, res){

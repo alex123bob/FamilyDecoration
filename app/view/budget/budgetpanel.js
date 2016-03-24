@@ -403,25 +403,28 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				tooltip: '将当前预算置为模板',
 				handler: function (){
 					if (me.budgetId) {
-						Ext.Msg.warning('确定要将当前预算置为模板吗？', function (){
-							Ext.Ajax.request({
-								url: './libs/budget.php?action=createBudgetTemplateFromBudget',
-								params: {
-									budgetId: me.budgetId
-								},
-								method: 'POST',
-								callback: function (opts, success, res){
-									if (success) {
-										var obj = Ext.decode(res.responseText);
-										if (obj.status == 'successful') {
-											showMsg('置为模板成功！');
-										}
-										else {
-											showMsg(obj.errMsg);
+						Ext.Msg.prompt('设置模板名称', '请输入模板名称', function (btnId, text){
+							if (btnId == 'ok') {
+								Ext.Ajax.request({
+									url: './libs/budget.php?action=createBudgetTemplateFromBudget',
+									params: {
+										budgetId: me.budgetId,
+										budgetTemplateName: text
+									},
+									method: 'POST',
+									callback: function (opts, success, res){
+										if (success) {
+											var obj = Ext.decode(res.responseText);
+											if (obj.status == 'successful') {
+												showMsg('置为模板成功！');
+											}
+											else {
+												showMsg(obj.errMsg);
+											}
 										}
 									}
-								}
-							});
+								});
+							}
 						});
 					}
 					else {
