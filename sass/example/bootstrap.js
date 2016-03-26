@@ -19,6 +19,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.CheckLog": "../../app/controller/checklog.js",
   "FamilyDecoration.controller.CheckSignBusiness": "../../app/controller/checksignbusiness.js",
   "FamilyDecoration.controller.CostAnalysis": "../../app/controller/costanalysis.js",
+  "FamilyDecoration.controller.DeadBusiness": "../../app/controller/deadbusiness.js",
   "FamilyDecoration.controller.Leave": "../../app/controller/leave.js",
   "FamilyDecoration.controller.LeaveApproval": "../../app/controller/leaveapproval.js",
   "FamilyDecoration.controller.Mail": "../../app/controller/mail.js",
@@ -124,6 +125,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.costanalysis.CostAnalysis": "../../app/view/costanalysis/costanalysis.js",
   "FamilyDecoration.view.costanalysis.Index": "../../app/view/costanalysis/index.js",
   "FamilyDecoration.view.costanalysis.TotalCost": "../../app/view/costanalysis/totalcost.js",
+  "FamilyDecoration.view.deadbusiness.Index": "../../app/view/deadbusiness/index.js",
   "FamilyDecoration.view.leave.Index": "../../app/view/leave/index.js",
   "FamilyDecoration.view.leaveapproval.Index": "../../app/view/leaveapproval/index.js",
   "FamilyDecoration.view.mail.Index": "../../app/view/mail/index.js",
@@ -1031,6 +1033,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.CheckLog": [],
   "FamilyDecoration.controller.CheckSignBusiness": [],
   "FamilyDecoration.controller.CostAnalysis": [],
+  "FamilyDecoration.controller.DeadBusiness": [],
   "FamilyDecoration.controller.Leave": [],
   "FamilyDecoration.controller.LeaveApproval": [],
   "FamilyDecoration.controller.Mail": [],
@@ -1136,6 +1139,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.costanalysis.CostAnalysis": [],
   "FamilyDecoration.view.costanalysis.Index": [],
   "FamilyDecoration.view.costanalysis.TotalCost": [],
+  "FamilyDecoration.view.deadbusiness.Index": [],
   "FamilyDecoration.view.leave.Index": [],
   "FamilyDecoration.view.leaveapproval.Index": [],
   "FamilyDecoration.view.mail.Index": [],
@@ -2209,6 +2213,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.CheckLog": [],
   "FamilyDecoration.controller.CheckSignBusiness": [],
   "FamilyDecoration.controller.CostAnalysis": [],
+  "FamilyDecoration.controller.DeadBusiness": [],
   "FamilyDecoration.controller.Leave": [],
   "FamilyDecoration.controller.LeaveApproval": [],
   "FamilyDecoration.controller.Mail": [],
@@ -2361,6 +2366,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.costanalysis.TotalCost": [
     "widget.costanalysis-totalcost"
+  ],
+  "FamilyDecoration.view.deadbusiness.Index": [
+    "widget.deadbusiness-index"
   ],
   "FamilyDecoration.view.leave.Index": [
     "widget.leave-index"

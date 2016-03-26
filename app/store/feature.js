@@ -48,6 +48,12 @@
                         cmp: 'regionmgm-index',
                         leaf: true,
                         icon: 'resources/img/leave.png'
+                    },
+                    {
+                        name: '废单业务',
+                        cmp: 'deadbusiness-index',
+                        leaf: true,
+                        icon: 'resources/img/trashbin1.png'
                     }
                 ]
             },

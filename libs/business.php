@@ -47,6 +47,9 @@
 		case "getBusiness":
 			$res = getBusiness($_REQUEST);
 			break;
+		case "getDeadBusinessOrRequestDeadBusiness":
+			$res = getDeadBusinessOrRequestDeadBusiness($_REQUEST["salesmanName"]);
+			break;
 		case "getBusinessListForBudget":
 			$res = getBusinessListForBudget();
 			break;
@@ -114,6 +117,10 @@
 		case "getSalesmanlist":
 			$res = getSalesmanlist();
 			break;
+		// 获取业务员列表，需要附带业务员对应申请废单和已经是废单数量
+		case "getSalesmanlistWithDeadBusinessNumber":
+			$res = getSalesmanlistWithDeadBusinessNumber();
+			break;
 		//申请将业务转为工程
 		case "applyprojecttransference":
 			$res = editBusiness(array( 'id'=>$_REQUEST['businessId'],'applyProjectTransference'=>1));
@@ -157,6 +164,10 @@
 		//删除潜在业务，扫楼名单
 		case "deletePotentialBusiness":
 			$res = deletePotentialBusiness($_REQUEST['id']);
+			break;
+		// request dead business
+		case "requestDeadBusiness":
+			$res = requestDeadBusiness($_REQUEST["businessId"], $_REQUEST["requestDeadBusinessReason"]);
 			break;
 		default: 
 			throw new Exception("unknown action:".$action);

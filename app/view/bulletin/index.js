@@ -484,6 +484,13 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                     xtype: 'msg-index'
                                 });
                             }
+                            else if ('requestDeadBusiness' == type) {
+                                win.add({
+                                    xtype: 'deadbusiness-index',
+                                    businessId: rec.get('extraId'),
+                                    businessStaff: rec.get('sender')
+                                });
+                            }
                             else {
                                 showMsg('该消息为老版本信息，缺少消息类型，不支持快捷回复，敬请见谅！');
                                 return;

@@ -58,7 +58,8 @@ table.pros td{
 #gridpanel-myTaskScrutinizeContent .x-grid-cell-inner, #gridpanel-scrutinizeForCheckTask .x-grid-cell-inner, 
 #gridpanel-message .x-grid-cell-inner, #gridpanel-mainMaterialContent .x-grid-cell-inner, 
 .gridpanel-budgetContent .x-grid-cell-inner, #gridpanel-msgreport .x-grid-cell-inner,
-#gridpanel-businessInfoForSignBusiness .x-grid-cell-inner, #gridpanel-buildingMgm .x-grid-cell-inner {
+#gridpanel-businessInfoForSignBusiness .x-grid-cell-inner, #gridpanel-buildingMgm .x-grid-cell-inner,
+#gridpanel-clientInfo .x-grid-cell-inner {
   white-space: normal;
   word-wrap: break-word;
 }

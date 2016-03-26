@@ -32,17 +32,17 @@
 	function getBusinessByDesigner($post){
 		global $mysql;
 		// force NULL value rank the last
-		return $mysql->DBGetAsMap("select `b`.*, `r`.`name` from `business` `b` left join `region` `r` on `b`.`regionId` = `r`.`id` where  `b`.`designerName` = '?' and `b`.`isDeleted` = 'false' and `b`.`isFrozen` = 'false' and `b`.`isTransfered` = 'false' order by IF( ISNULL(`b`.`signBusinessLevel`), 1, 0), `b`.`signBusinessLevel` DESC ",$post["designerName"]);
+		return $mysql->DBGetAsMap("select `b`.*, `r`.`name` from `business` `b` left join `region` `r` on `b`.`regionId` = `r`.`id` where  `b`.`designerName` = '?' and `b`.`isDeleted` = 'false' and `b`.`isFrozen` = 'false' and `b`.`isTransfered` = 'false' and `b`.`isDead` = 'false' order by IF( ISNULL(`b`.`signBusinessLevel`), 1, 0), `b`.`signBusinessLevel` DESC ",$post["designerName"]);
 	}
 	function getDesignerlist(){
 		global $mysql;
-		$res0 = $mysql->DBGetAsMap("select distinct designer,designerName from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and designer is not null ;");
+		$res0 = $mysql->DBGetAsMap("select distinct designer,designerName from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and designer is not null ;");
 		//signedBusinesCount
-		$res1 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and applyDesigner = 2 and designer is not null group by designer;");
+		$res1 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and applyDesigner = 2 and designer is not null group by designer;");
 		//applyBudgetCount
-		$res2 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and applyBudget = 1 and designer is not null group by designer;");
+		$res2 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and applyBudget = 1 and designer is not null group by designer;");
 		//applyTransferCount
-		$res3 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and applyProjectTransference  = 1 and designer is not null group by designer;");
+		$res3 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and applyProjectTransference  = 1 and designer is not null group by designer;");
 
 		$signedBusinesCount = array();
 		$applyBudgetCount = array();
@@ -68,9 +68,9 @@
 	function getSalesmanlist(){
 		global $mysql;
 		// get list and number of business
-		$res1 = $mysql->DBGetAsMap("select distinct salesman,salesmanName, count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' group by salesman;");
+		$res1 = $mysql->DBGetAsMap("select distinct salesman,salesmanName, count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' group by salesman;");
 		// get list and number of business which require designer  
-		$res2 = $mysql->DBGetAsMap("select distinct salesman,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and applyDesigner = 1 group by salesman;");
+		$res2 = $mysql->DBGetAsMap("select distinct salesman,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and applyDesigner = 1 group by salesman;");
 		// sort from map list to map     [{'salesman':aaa,'number':111},{'salesman':bbb,'number':222}...]  to [aaa:111,bbb:222]
 		$applyDesignerCount = array();
 		foreach($res2 as $item){
@@ -82,7 +82,40 @@
 		}
 		return $res1;
 	}
-	
+	function getSalesmanlistWithDeadBusinessNumber (){
+		global $mysql;
+		$requestDeadRes = $mysql->DBGetAsMap("select distinct salesman,salesmanName, count(*) as requestDeadNumber from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and requestDead = 1 group by salesman ");
+		$alreadyDeadRes = $mysql->DBGetAsMap("select distinct salesman,salesmanName, count(*) as alreadyDeadNumber from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'true'  group by salesman ");
+		for ($i=0; $i < count($requestDeadRes); $i++) { 
+			$outerItem = $requestDeadRes[$i];
+			for ($j=0; $j < count($alreadyDeadRes); $j++) { 
+				$innerItem = $alreadyDeadRes[$j];
+				if ($innerItem["salesmanName"] == $outerItem["salesmanName"]
+					&& $innerItem["salesman"] == $outerItem["salesman"]) {
+					$outerItem["alreadyDeadNumber"] = $innerItem["alreadyDeadNumber"];
+					array_splice($alreadyDeadRes, $j, 1);
+					break;
+				}
+				else {
+					$outerItem["alreadyDeadNumber"] = 0;
+				}
+			}
+			$requestDeadRes[$i] = $outerItem;
+		}
+		for ($k=0; $k < count($alreadyDeadRes); $k++) {
+			$remainingItem = $alreadyDeadRes[$k];
+			$remainingItem["requestDeadNumber"] = 0;
+			array_push($requestDeadRes, $remainingItem);
+		}
+		return $requestDeadRes;
+	}
+	function getDeadBusinessOrRequestDeadBusiness ($salesmanName){
+		global $mysql;
+		$requestDeadArr = getBusiness(array("salesmanName"=>$salesmanName, "requestDead"=>"1"));
+		$deadBusinessArr = getBusiness(array("salesmanName"=>$salesmanName, "isDead"=>"true"));
+		$res = array_merge($requestDeadArr, $deadBusinessArr);
+		return $res;
+	}
 	function getBusinessById($businessId){
 		global $mysql;
 		return $mysql->DBGetAsMap("select * from business where id = '?' and `isDeleted` = 'false' ",$businessId);
@@ -90,7 +123,7 @@
 	
 	function getBusiness($data){
 		global $mysql;
-		$fields = array('regionId','address','isFrozen','customer','salesman','salesmanName','designer','designerName','applyDesigner','level');
+		$fields = array('regionId','address','isFrozen','requestDead','isDead','requestDeadBusinessReason','customer','salesman','salesmanName','designer','designerName','applyDesigner','level');
 		$params = array();
 		$sql = "select `b`.*, `r`.name from `business` `b` left join `region` `r` on `b`.regionId = `r`.id where `b`.`isDeleted` = 'false' and b.isTransfered = 'false' ";
 		foreach($fields as $field){
@@ -151,7 +184,7 @@
 	function editBusiness($data){
 		global $mysql;
 		$id = $data["id"];
-		$fields = array("regionId","address","isFrozen","isTransfered","updateTime","signTime","customer","salesman","source","salesmanName","designer","designerName","applyDesigner","applyProjectTransference","applyBudget");
+		$fields = array("regionId","address","isFrozen",'requestDead','isDead','requestDeadBusinessReason',"isTransfered","updateTime","signTime","customer","salesman","source","salesmanName","designer","designerName","applyDesigner","applyProjectTransference","applyBudget");
 		$obj = array();
 		foreach($fields as $field){
 			if(isset($data[$field]))
@@ -214,5 +247,11 @@
 		$obj["signBusinessLevel"] = $data["signBusinessLevel"];
 		$mysql->DBUpdate("business",$obj,"`id`='?'",array($id));
 		return array('status'=>'successful', 'errMsg'=> 'rank signed business successfully!');
+	}
+
+	function requestDeadBusiness ($businessId, $reason){
+		global $mysql;
+		$mysql->DBUpdate('business',array('requestDead'=>'1','requestDeadBusinessReason'=>$reason,'updateTime'=>'now()'),"`id`='?'",array($businessId));
+		return array('status'=>'successful', 'errMsg'=> 'dead business has been requested!');
 	}
 ?>

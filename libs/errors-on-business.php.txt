@@ -1,0 +1,4 @@
+【Error】 select distinct salesman,salesmanName, count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and idDead = 'false' group by salesman;
+【Time】  2016-03-26 23:02:49
+【Meg】   
+
