@@ -70,7 +70,8 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 	            			if (node.get('projectName')) {
 	            				if ((me.projectId && me.projectId == node.getId()) || !me.projectId) {
 	            					node.set({
-		            					text: node.get('projectName') + '(' + node.get('projectTime').split(' ')[0] + ')',
+		            					// text: node.get('projectName') + '(' + node.get('projectTime').split(' ')[0] + ')',
+		            					text: node.get('projectName'),
 		            					leaf: true,
 		            					icon: './resources/img/project.png'
 		            				});

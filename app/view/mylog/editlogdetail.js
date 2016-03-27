@@ -38,7 +38,32 @@ Ext.define('FamilyDecoration.view.mylog.EditLogDetail', {
 				forEmail: true,
 				height: '100%',
 				flex: 1,
-				isCheckMode: true
+				isCheckMode: true,
+				listeners: {
+					load: function (){
+						var treepanel = Ext.getCmp('treepanel-memberlistForMyLog');
+						treepanel.expandAll();
+					},
+					checkchange: function (node, checked, opts){
+						node.cascadeBy(function(n) {
+							n.set('checked', checked);
+						});
+						node.bubble(function (n){
+							if (!n.isRoot() && !n.get('name')) {
+								var childNodes = n.childNodes;
+								var isAllCheck = true;
+								for (var i = childNodes.length - 1; i >= 0; i--) {
+									var el = childNodes[i];
+									if (el.get('checked') == false) {
+										isAllCheck = false;
+										break;
+									}
+								}
+								n.set('checked', isAllCheck);
+							}
+						});
+					}
+				}
 			}]
 		}, {
 			xtype: 'fieldcontainer',
@@ -95,22 +120,22 @@ Ext.define('FamilyDecoration.view.mylog.EditLogDetail', {
 			text: '确定',
 			handler: function (){
 				var logContent = Ext.getCmp('textarea-logContent'),
-				sendOpt = Ext.getCmp('fieldcontainer-sendMsgOption'),
-				sms = sendOpt.getComponent('checkbox-sendSMS'),
-				mail = sendOpt.getComponent('checkbox-sendMail'),
-				leave = sendOpt.getComponent('checkbox-askLeave'),
-				p = {
-					content: logContent.getValue(),
-					logListId: me.logListId,
-					logType: leave.getValue() ? 1: 0
-				},
+					sendOpt = Ext.getCmp('fieldcontainer-sendMsgOption'),
+					sms = sendOpt.getComponent('checkbox-sendSMS'),
+					mail = sendOpt.getComponent('checkbox-sendMail'),
+					leave = sendOpt.getComponent('checkbox-askLeave'),
+					p = {
+						content: logContent.getValue(),
+						logListId: me.logListId,
+						logType: leave.getValue() ? 1: 0
+					},
 
-				memberTree = Ext.getCmp('treepanel-memberlistForMyLog'),
-				selMembers = memberTree.getChecked(),
-				grid = Ext.getCmp('gridpanel-logDetail'),
-				tree = Ext.getCmp('treepanel-logName'),
-				rec = tree.getSelectionModel().getSelection()[0],
-				supervisorList = [];
+					memberTree = Ext.getCmp('treepanel-memberlistForMyLog'),
+					selMembers = memberTree.getChecked(),
+					grid = Ext.getCmp('gridpanel-logDetail'),
+					tree = Ext.getCmp('treepanel-logName'),
+					rec = tree.getSelectionModel().getSelection()[0],
+					supervisorList = [];
 
 				function sendSMSToSupervisor (content){
 					if (!User.isGeneral()) {
@@ -194,9 +219,11 @@ Ext.define('FamilyDecoration.view.mylog.EditLogDetail', {
 													}
 													for (var i = 0; i < selMembers.length; i++) {
 														var user = selMembers[i];
-														sendMsg(User.getName(), user.get('name'), sendContent, 'editLogContent', me.logObj ? me.logObj.getId() : obj['id']);
-														sms.getValue() && sendSMS(User.getName(), user.get('name'), user.get('phone'), sendContent);
-														mail.getValue() && sendMail(user.get('name'), user.get('mail'), User.getRealName() + '进行了"我的日志编辑"', sendContent);
+														if (user.isLeaf()) {
+															sendMsg(User.getName(), user.get('name'), sendContent, 'editLogContent', me.logObj ? me.logObj.getId() : obj['id']);
+															sms.getValue() && sendSMS(User.getName(), user.get('name'), user.get('phone'), sendContent);
+															mail.getValue() && sendMail(user.get('name'), user.get('mail'), User.getRealName() + '进行了"我的日志编辑"', sendContent);
+														}
 													}
 													leave.getValue() && sendSMSToSupervisor(sendContent);
 													me.close();

@@ -90,7 +90,23 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 					treepanel.expandAll();
 				},
 				checkchange: function (node, checked, opts){
-
+					node.cascadeBy(function(n) {
+						n.set('checked', checked);
+					});
+					node.bubble(function (n){
+						if (!n.isRoot() && !n.get('name')) {
+							var childNodes = n.childNodes;
+							var isAllCheck = true;
+							for (var i = childNodes.length - 1; i >= 0; i--) {
+								var el = childNodes[i];
+								if (el.get('checked') == false) {
+									isAllCheck = false;
+									break;
+								}
+							}
+							n.set('checked', isAllCheck);
+						}
+					});
 				}
 			}
 		}];
@@ -117,7 +133,9 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 					var assignees = tree.getChecked();
 					if (assignees.length > 0) {
 						for (var i = 0; i < assignees.length; i++) {
-							executor.push(assignees[i].get('name'));
+							if (assignees[i].isLeaf()) {
+								executor.push(assignees[i].get('name'));
+							}
 						}
 						executor = executor.join(',');
 						Ext.apply(p, {
@@ -162,16 +180,18 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 													node: memberSt.getRootNode(),
 													callback: function (recs, ope, success){
 														if (success) {
-															taskSt.getProxy().extraParams = {
-																user: memberList.getSelectionModel().getSelection()[0].get('name')
-															};
-															taskSt.getProxy().url = './libs/tasklist.php?action=getTaskListYearsByUser';
-															taskSt.load({
-																node: taskSt.getRootNode(),
-																callback: function (){
-																	taskList.getSelectionModel().deselectAll();
-																}
-															});												
+															if (memberList.getSelectionModel().getSelection()[0]) {
+																taskSt.getProxy().extraParams = {
+																	user: memberList.getSelectionModel().getSelection()[0].get('name')
+																};
+																taskSt.getProxy().url = './libs/tasklist.php?action=getTaskListYearsByUser';
+																taskSt.load({
+																	node: taskSt.getRootNode(),
+																	callback: function (){
+																		taskList.getSelectionModel().deselectAll();
+																	}
+																});
+															}
 														}
 													}
 												});

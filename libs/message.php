@@ -1,6 +1,6 @@
 <?php
-	include_once "conn.php";
-	include_once "messageDB.php";
+include_once "conn.php";
+include_once "messageDB.php";
 	$action = $_REQUEST["action"];
 	$action = strtolower($action);
 	$res;
@@ -21,6 +21,9 @@
 			$res = editMessage($_REQUEST);
 		case "read":
 			$res = read($_REQUEST['id']);
+			break;
+		case "setallread":
+			$res = setallread($_REQUEST["receiverName"]);
 			break;
 		default: 		
 			throw new Exception("unknown action:".$action);

@@ -70,4 +70,10 @@
         }
 		return $res;
 	}
+
+	function setallread($receiverName){
+		global $mysql;
+		$mysql->DBUpdate('message',array('isRead'=>true,'readTime'=>'now()'),"`receiver` = '?'",array($receiverName));
+		return array('status'=>'successful', 'errMsg' => '');
+	}
 ?>

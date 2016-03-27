@@ -2,6 +2,7 @@
 	include_once "conn.php";
 	include_once "budgetDB.php";
 	include_once "businessDB.php";
+	include_once "budgettemplateDB.php";
 	$action = $_REQUEST["action"];
 	$res = "";
 	$isParseResut = true;
@@ -12,6 +13,8 @@
 		case "itemlist":$res = getBudgetItemsByBudgetId($_REQUEST["budgetId"]);break;
 		//添加预算
 		case "add":  	$res = addBudget($_REQUEST);  break;
+		//从模板添加预算
+		case "createBudgetFromTemplate" : $res = createBudgetFromTemplate($_REQUEST);break;
 		//添加小项
 		case "addItem":	$res = addItem($_REQUEST);  break;
 		//添加大项
@@ -26,13 +29,21 @@
 		case "delete":	$res = delBudget($_REQUEST["budgetId"]);  break;
 		//根据id获取预算
 		case "view":	$res = getBudgetsByBudgetId($_REQUEST["budgetId"]);  break;
-		// 根据业务id获取预算
+		//根据业务id获取预算
 		case "getBudgetsByBusinessId": $res = getBudgetsByBusinessId($_REQUEST["businessId"]); break;
 		//折扣
 		case "discount":$res = makeDiscount($_REQUEST);  break;
 		//成本分析
 		case "analysis":$res = costAnalysis($_REQUEST['budgetId']);break;
-		default: 		throw new Exception("unknown action:".$action);
+		//从预算创建模板
+		case "createBudgetTemplateFromBudget":$res = createTemplateFromBudget($_REQUEST['budgetId'],$_REQUEST['budgetTemplateName']);break;
+		//获取预算模板列表
+		case "getBudgetTemplate":$res = getBudgetTemplate();break;
+		//根据预算模板id获取预算模板项目
+		case "getBudgetTemplateItem":$res = getBudgetTemplateItem($_REQUEST['budgetTemplateId']);break;
+		//删除预算模板
+		case "deleteBudgetTemplate":$res = deleteBudgetTemplate($_REQUEST['budgetTemplateId']);break;
+		default: throw new Exception("unknown action:".$action);
 	}
 	if($isParseResut){
 		echo (json_encode($res));

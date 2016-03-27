@@ -500,6 +500,40 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                         }
                     }]
                 }],
+                tools: [{
+                    id: 'tool-setAllMessageRead',
+                    name: 'tool-setAllMessageRead',
+                    type: 'down',
+                    tooltip: '置所有消息为已读',
+                    callback: function() {
+                        Ext.Msg.warning('确定要将所有动态消息置为已读吗？', function (btnId){
+                            if (btnId == 'yes') {
+                                Ext.Ajax.request({
+                                    url: './libs/message.php',
+                                    method: 'POST',
+                                    params: {
+                                        action: 'setallread',
+                                        receiverName: User.getName()
+                                    },
+                                    callback: function (otps, success, res){
+                                        if (success) {
+                                            var obj = Ext.decode(res.responseText),
+                                                msgGrid = Ext.getCmp('gridpanel-message');
+                                            if (obj.status == 'successful') {
+                                                showMsg('全部置为已读！');
+                                                msgGrid.refresh();
+                                                refreshEmailAndMsg();
+                                            }
+                                            else {
+                                                showMsg(obj.errMsg);
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }],
                 store: Ext.create('FamilyDecoration.store.Message', {
                     autoLoad: false
                 }),

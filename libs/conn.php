@@ -1,10 +1,9 @@
 <?php
-	
-	header("Content-type: text/html; charset=utf-8"); 
-	header("message-queue: 1"); 
+	header("Content-type: text/html; charset=utf-8");
+	header("message-queue: 1");
 	if (!session_id()) session_start();
 	// error_reporting(E_ALL ^ E_DEPRECATED);
-	date_default_timezone_set('Asia/Shanghai'); 
+	date_default_timezone_set('Asia/Shanghai');
 	
 	if (defined("SAE_MYSQL_HOST_M")) {
 		include_once "mysql.class.php";

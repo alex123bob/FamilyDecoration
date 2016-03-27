@@ -27,7 +27,7 @@
 			array_push($param,$itemCode);
 		}
 		//给所有项打折
-		$mysql->DBUpdate('budget_item',array('discount'=>$discount),$whereSql,$param);
+		$mysql->DBUpdate('budget_item',array('discount'=>$discount,'lastUpdateTime'=>'now()'),$whereSql,$param);
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 	//获取项目下一个ItemCode编码
@@ -93,6 +93,7 @@
 				$obj[$field] = $post[$field];
 		}
 		if(isset($post['budgetItemId'])) {
+			$obj['lastUpdateTime']='now()';
 			$mysql->DBUpdate("`budget_item`",$obj,"`budgetItemId`='?'",array($post['budgetItemId']));
 		}
 		return array('status'=>'successful', 'errMsg' => '');
@@ -110,7 +111,7 @@
 			if(in_array($itemCode,array('N','O','P','Q','R','S')))
 				throw new Exception("you cant delete ".$itemCode);
 			//删除大项		
-			$mysql->DBUpdate("budget_item",array('isDeleted'=>true,'itemCode'=>'XXX'),"`budgetId` = '?' and `itemCode` like '%?%' ",array($budgetId,$itemCode));
+			$mysql->DBUpdate("budget_item",array('isDeleted'=>true,'itemCode'=>'XXX','lastUpdateTime'=>'now()'),"`budgetId` = '?' and `itemCode` like '%?%' ",array($budgetId,$itemCode));
 			//重排序大项
 			$list = $mysql->DBGetAsOneArray("SELECT  distinct LEFT( itemCode, 1 ) as code FROM `budget_item` where `isDeleted` = 'false' and `budgetId` = '?'  and `itemCode` not in ('N','O','P','Q','R','S') and LEFT( itemCode, 1 ) > '?'",$budgetId,$itemCode);
 			foreach($list as $itemCode){
@@ -120,7 +121,7 @@
 			}
 		}else{
 			//删除小项
-			$mysql->DBUpdate('budget_item',array('isDeleted'=>true,'itemCode'=>'XXX'),"`budgetItemId` = '?' ",array($budgetItemId));
+			$mysql->DBUpdate('budget_item',array('isDeleted'=>true,'itemCode'=>'XXX','lastUpdateTime'=>'now()'),"`budgetItemId` = '?' ",array($budgetItemId));
 			$code = substr($itemCode,0,1);
 			$index = intval(substr($itemCode,2));
 			//重排序小项
@@ -128,7 +129,7 @@
 			$list = $mysql->DBGetAsMap($sql,$budgetId,$code,$index);
 			foreach($list as $item){
 				$newidx = intval($item['idx']) - 1;
-				$mysql->DBUpdate('budget_item',array('itemCode'=>"$code-$newidx"),"`budgetItemId` = '?' ",array($item['budgetItemId']));
+				$mysql->DBUpdate('budget_item',array('itemCode'=>"$code-$newidx",'lastUpdateTime'=>'now()'),"`budgetItemId` = '?' ",array($item['budgetItemId']));
 			}
 		}
 		return array('status'=>'successful', 'errMsg' => '');
@@ -183,8 +184,8 @@
 	//删除预算
 	function delBudget ($budgetId){
 		global $mysql;
-		$mysql->DBUpdate('budget',array('isDeleted'=>true),"`budgetId` = '?' ",array($budgetId));
-		$mysql->DBUpdate('budget_item',array('isDeleted'=>true),"`budgetId` = '?' ",array($budgetId));
+		$mysql->DBUpdate('budget',array('isDeleted'=>true,'lastUpdateTime'=>'now()'),"`budgetId` = '?' ",array($budgetId));
+		$mysql->DBUpdate('budget_item',array('isDeleted'=>true,'lastUpdateTime'=>'now()'),"`budgetId` = '?' ",array($budgetId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
@@ -226,6 +227,7 @@
 				$obj[$field] = $pro[$field];
 			}
 		}
+		$obj['lastUpdateTime']='now()';
 		$mysql->DBUpdate('budget',$obj,"`budgetId` = '?'",array($pro['budgetId']));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
@@ -293,10 +295,14 @@
 		
 	}
 	//获取预算所有条目
-	function getBudgetItemsByBudgetId ($budgetId , $isGBK = false) {
+	function getBudgetItemsByBudgetId ($budgetId , $isGBK = false , $isAppendNOPQRSItems = true) {
 		global $mysql;
 		$res= array();
 		$arr = $mysql->DBGetAsMap(" select * from `budget_item` where `budgetId` = '?' and `isDeleted` = 'false' ORDER BY LEFT( itemCode, 2 ) ASC , ( SUBSTRING( itemCode, 2 ) ) *1 DESC ",$budgetId);
+		//供转成模板时使用
+		if(!$isAppendNOPQRSItems){
+			return $arr;
+		}
 		$count = 0;
 		$smallCount = array(0,0,0,0,0,0);
 		$directFee = 0;

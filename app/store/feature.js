@@ -166,18 +166,32 @@
                 icon: 'resources/img/setting-parent.png',
                 children: [
                     {
-                        name: "账户设置",
-                        cmp: 'setting-index',
-                        leaf: true,
-                        icon: 'resources/img/account.png'
-                    },
-                    {
                         name: "短信报表",
                         cmp: 'msg-index',
                         leaf: true,
                         icon: 'resources/img/message.png'
                     }
                 ] 
+            },
+            {
+                name: '人事管理',
+                expanded: true,
+                cmp: 'personnel-parent',
+                icon: 'resources/img/personnel.png',
+                children: [
+                    {
+                        name: "账户设置",
+                        cmp: 'setting-index',
+                        leaf: true,
+                        icon: 'resources/img/account.png'
+                    },
+                    {
+                        name: '人事统计',
+                        cmp: 'statistics-index',
+                        leaf: true,
+                        icon: 'resources/img/statistics.png'
+                    }
+                ]
             },
             {
                 name: '邮箱平台',
@@ -253,6 +267,9 @@
             }
             else if (rec.get('cmp') == 'basicitem-index') {
                 flag =  User.isAdmin() || User.isProjectBudgetManager() ? true : false;
+            }
+            else if (rec.get('cmp') == 'personnel-parent') {
+                flag = User.isAdmin() || User.isBusinessStaff() || User.isAdministrationManager() ? true : false;
             }
             else if (rec.get('cmp') == 'setting-index') {
                 flag = User.isAdmin() || User.isBusinessStaff() || User.isAdministrationManager() ? true : false;

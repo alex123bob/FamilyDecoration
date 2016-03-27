@@ -57,7 +57,8 @@ Ext.define('FamilyDecoration.view.checklog.MemberList', {
 	            				var level = node.get('level');
 	            				node.set({
 	            					text: User.renderDepartment(level),
-	            					icon: 'resources/img/house.ico'
+	            					icon: 'resources/img/house.ico',
+	            					checked: me.isCheckMode ? false : null
 	            				});
 	            			}
 	            			else {
