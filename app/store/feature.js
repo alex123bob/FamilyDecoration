@@ -187,7 +187,7 @@
                     },
                     {
                         name: '人事统计',
-                        cmp: 'statistics-index',
+                        cmp: 'personnel-index',
                         leaf: true,
                         icon: 'resources/img/statistics.png'
                     }
