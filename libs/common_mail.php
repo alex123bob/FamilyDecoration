@@ -14,7 +14,8 @@ function sendEmail ($recipient,$aliasNames='',$from = '佳诚装饰' ,$subject, 
 	date_default_timezone_set('PRC');
 	$mail = new PHPMailer();
 	$mail->IsSMTP();
-	$mail->SMTPDebug = 2;
+	// $mail->SMTPDebug = 2; // this is debug mode, if you need, open it and see detailed error info
+	$mail->SMTPDebug = 0; // non-debug mode
 	$mail->Debugoutput  = 'html';
 	$mail->Host = "smtp.sina.com";
 	$mail->Port = "465";  
@@ -51,7 +52,7 @@ function sendEmail ($recipient,$aliasNames='',$from = '佳诚装饰' ,$subject, 
 			$address = $recipient[$i];
 			$name = isset($aliasNames[$i]) ? $aliasNames[$i] : '';
 			if(is_string($address) && contains($address,'@')){
-				echo "send mail to $address as $name <br />\n";
+				// echo "send mail to $address as $name <br />\n";
 				$mail->addAddress($address,$name);
 			}
 		}
@@ -70,7 +71,7 @@ function sendEmail ($recipient,$aliasNames='',$from = '佳诚装饰' ,$subject, 
 		echo "Message could not be sent.<br />\n";
 		echo "Mailer Error: " . $mail->ErrorInfo."<br />\n";
 	} else {
-		echo "Message has been sent<br />\n";
+		// echo "Message has been sent<br />\n";
 	}
 	$mail->smtpClose();
 }

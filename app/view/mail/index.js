@@ -7,15 +7,69 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 		'FamilyDecoration.view.mail.NewMail',
 	],
 	layout: {
-		type: 'fit'
+		type: 'hbox',
+		align: 'stretch'
 	},
 
-	initComponent: function (){
+	initComponent: function() {
 		var me = this;
 		me.items = [
 			{
-				xtype: 'fieldcontainer',
+				xtype: 'container',
+				margin: '0 1 0 0',
 				flex: 1,
+				layout: 'fit',
+				hidden: true,
+				items: [{
+					xtype: 'checklog-memberlist',
+					title: '成员列表',
+					id: 'treepanel-memberNameForMail',
+					name: 'treepanel-memberNameForMail',
+					forIndividual: true,
+					forEmail: false,
+					style: {
+						borderRightStyle: 'solid',
+						borderRightWidth: '1px'
+					},
+					tbar: [{
+						text: '写信',
+						icon: './resources/img/mail-new.png',
+						handler: function() {
+							var win = Ext.create('FamilyDecoration.view.mail.NewMail', {});
+							win.show();
+						}
+					}],
+					listeners: {
+						itemclick: function(view, rec) {
+							if (rec.get('level') && rec.get('name')) {
+								var received = Ext.getCmp('gridpanel-receivedBox'),
+									sent = Ext.getCmp('gridpanel-sentBox');
+								received.getStore().load({
+									params: {
+										mailUser: rec.get('name'),
+										action: 'getReceivedMailByUser'
+									},
+									callback: function(recs, ope, success) {}
+								});
+								sent.getStore().load({
+									params: {
+										mailUser: rec.get('name'),
+										action: 'getSentMailByUser'
+									},
+									callback: function(recs, ope, success) {}
+								});
+							}
+						},
+						load: function() {
+							var treepanel = Ext.getCmp('treepanel-memberNameForMail');
+							treepanel.expandAll();
+						}
+					}
+				}]
+			}, 
+			{
+				xtype: 'fieldcontainer',
+				flex: 4,
 				layout: 'vbox',
 				items: [{
 					title: '收件箱',
@@ -27,10 +81,18 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 					bodyCls: 'pointerCursor',
 					tbar: [{
 						xtype: 'button',
+						text: '写信',
+						icon: './resources/img/mail-new.png',
+						handler: function() {
+							var win = Ext.create('FamilyDecoration.view.mail.NewMail', {});
+							win.show();
+						}
+					}, {
+						xtype: 'button',
 						icon: './resources/img/preview2.png',
 						text: '查看',
 						id: 'button-checkReceiveMail',
-						handler: function (){
+						handler: function() {
 							var grid = Ext.getCmp('gridpanel-receivedBox'),
 								rec = grid.getSelectionModel().getSelection()[0];
 							if (rec) {
@@ -47,7 +109,7 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 										params: {
 											mailId: rec.getId()
 										},
-										callback: function (opts, success, res){
+										callback: function(opts, success, res) {
 											if (success) {
 												var obj = Ext.decode(res.responseText);
 												if (obj.status == 'successful') {
@@ -59,8 +121,7 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 										}
 									});
 								}
-							}
-							else {
+							} else {
 								showMsg('没有选中的邮件！');
 							}
 						}
@@ -70,9 +131,11 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 						text: '置为已读',
 						tooltip: '将收件箱所有邮件置为已读',
 						id: 'button-setReadByReceiver',
-						handler: function (){
-							var grid = Ext.getCmp('gridpanel-receivedBox');
-							Ext.Msg.warning('确定将所有收件箱邮件置为已读吗？', function (btnId){
+						handler: function() {
+							var grid = Ext.getCmp('gridpanel-receivedBox'),
+								tree = Ext.getCmp('treepanel-memberNameForMail'),
+								rec = tree.getSelectionModel().getSelection()[0];
+							Ext.Msg.warning('确定将所有收件箱邮件置为已读吗？', function(btnId) {
 								if (btnId == 'yes') {
 									Ext.Ajax.request({
 										url: './libs/mail.php?action=setmailreadbyreceiver',
@@ -80,15 +143,14 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 										params: {
 											mailReceiver: User.getName()
 										},
-										callback: function (opts, success, res){
+										callback: function(opts, success, res) {
 											if (success) {
 												var obj = Ext.decode(res.responseText);
 												if (obj.status == 'successful') {
 													refreshEmailAndMsg();
 													showMsg('置为已读成功！');
 													grid.getStore().reload();
-												}
-												else {
+												} else {
 													showMsg(obj.errMsg);
 												}
 											}
@@ -99,11 +161,11 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 						}
 					}],
 					columns: [{
-						xtype:'actioncolumn',
+						xtype: 'actioncolumn',
 						flex: 0.2,
 						dataIndex: 'isRead',
 						items: [{
-							handler: function (view, rowIndex, colIndex, item, e, rec, row){
+							handler: function(view, rowIndex, colIndex, item, e, rec, row) {
 								if (rec.get('isRead') == 'false' && rec.get('mailReceiver').indexOf(',') == -1) {
 									Ext.Ajax.request({
 										url: './libs/mail.php?action=setmailread',
@@ -111,7 +173,7 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 										params: {
 											mailId: rec.getId()
 										},
-										callback: function (opts, success, res){
+										callback: function(opts, success, res) {
 											if (success) {
 												var obj = Ext.decode(res.responseText);
 												if (obj.status == 'successful') {
@@ -125,15 +187,13 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 									});
 								}
 							},
-							getClass: function (v, meta, rec){
+							getClass: function(v, meta, rec) {
 								if (rec.get('mailReceiver').indexOf(',') != -1) {
 									return 'icon-mail-multiple-receiver';
-								}
-								else if (rec.get('isRead') == 'true') {
-	                    			return 'icon-mail-read';
-								}
-								else {
-	                    			return 'icon-mail-unread';
+								} else if (rec.get('isRead') == 'true') {
+									return 'icon-mail-read';
+								} else {
+									return 'icon-mail-unread';
 								}
 							}
 						}]
@@ -155,23 +215,45 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 						autoLoad: true,
 						proxy: {
 							type: 'rest',
-							extraParams: {
-								mailUser: User.getName(),
-								action: 'getReceivedMailByUser'
-							},
-							url: './libs/mail.php',
+					    	url: './libs/mail.php',
 					        reader: {
 					            type: 'json'
+					        },
+					        extraParams: {
+					        	mailUser: User.getName(),
+								action: 'getReceivedMailByUser'
 					        }
 						}
 					}),
 					listeners: {
-						itemdblclick: function (view, rec, item, index, e, opts){
+						itemdblclick: function(view, rec, item, index, e, opts) {
 							if (rec) {
 								Ext.getCmp('button-checkReceiveMail').handler();
 							}
 						}
-					}
+					},
+					tools: [{
+						type: 'refresh',
+		                tooltip: '刷新收件箱发件箱',
+		                callback: function (){
+		                    var received = Ext.getCmp('gridpanel-receivedBox'),
+								sent = Ext.getCmp('gridpanel-sentBox');
+							received.getStore().load({
+								params: {
+									mailUser: User.getName(),
+									action: 'getReceivedMailByUser'
+								},
+								callback: function(recs, ope, success) {}
+							});
+							sent.getStore().load({
+								params: {
+									mailUser: User.getName(),
+									action: 'getSentMailByUser'
+								},
+								callback: function(recs, ope, success) {}
+							});
+		                }
+					}]
 				}, {
 					title: '发件箱',
 					xtype: 'gridpanel',
@@ -184,7 +266,7 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 						icon: './resources/img/preview1.png',
 						text: '查看',
 						id: 'button-checkSentMail',
-						handler: function (){
+						handler: function() {
 							var grid = Ext.getCmp('gridpanel-sentBox'),
 								rec = grid.getSelectionModel().getSelection()[0];
 							if (rec) {
@@ -193,8 +275,7 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 									previewRec: rec
 								});
 								win.show();
-							}
-							else {
+							} else {
 								showMsg('没有选中的邮件！');
 							}
 						}
@@ -203,7 +284,7 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 						flex: 0.2,
 						dataIndex: 'isRead',
 						text: '',
-						renderer: function (){
+						renderer: function() {
 							return '<img src="./resources/img/mail-read.png" />';
 						}
 					}, {
@@ -223,19 +304,19 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 					store: Ext.create('FamilyDecoration.store.Mail', {
 						autoLoad: true,
 						proxy: {
-							url: './libs/mail.php',
 							type: 'rest',
-							extraParams: {
-								mailUser: User.getName(),
-								action: 'getSentMailByUser'
-							},
-							reader: {
+					    	url: './libs/mail.php',
+					        reader: {
 					            type: 'json'
+					        },
+					        extraParams: {
+					        	mailUser: User.getName(),
+								action: 'getSentMailByUser'
 					        }
 						}
 					}),
 					listeners: {
-						itemdblclick: function (view, rec, item, index, e, opts){
+						itemdblclick: function(view, rec, item, index, e, opts) {
 							if (rec) {
 								Ext.getCmp('button-checkSentMail').handler();
 							}

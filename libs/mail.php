@@ -34,7 +34,7 @@
 			$receiverAddress = $_REQUEST['receiverAddress'];
 			$mailSubject =  $_REQUEST['mailSubject'];
 			$mailContent =  $_REQUEST['mailContent'];
-			sendMail($receiverAddress, $mailSubject, $mailContent, null);
+			sendEMail($receiverAddress, null, $mailSender, $mailSubject, $mailContent, null);
 			$res = insert($mailSender,$senderAddress,$mailReceiver,$receiverAddress,$mailSubject,$mailContent);
 			break;
 		case "getreceivedmailbyuser":

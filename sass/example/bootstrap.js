@@ -28,6 +28,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.MyBusiness": "../../app/controller/mybusiness.js",
   "FamilyDecoration.controller.MyLog": "../../app/controller/mylog.js",
   "FamilyDecoration.controller.MyTask": "../../app/controller/mytask.js",
+  "FamilyDecoration.controller.Personnel": "../../app/controller/personnel.js",
   "FamilyDecoration.controller.Plan": "../../app/controller/plan.js",
   "FamilyDecoration.controller.Progress": "../../app/controller/progress.js",
   "FamilyDecoration.controller.RegionMgm": "../../app/controller/regionmgm.js",
@@ -62,6 +63,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.model.Project": "../../app/model/project.js",
   "FamilyDecoration.model.RegionList": "../../app/model/regionlist.js",
   "FamilyDecoration.model.ScrutinizeList": "../../app/model/scrutinizelist.js",
+  "FamilyDecoration.model.StatisticTree": "../../app/model/statistictree.js",
   "FamilyDecoration.model.TaskList": "../../app/model/tasklist.js",
   "FamilyDecoration.model.TaskScrutinize": "../../app/model/taskscrutinize.js",
   "FamilyDecoration.model.TaskSelfAssessment": "../../app/model/taskselfassessment.js",
@@ -93,6 +95,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.store.Project": "../../app/store/project.js",
   "FamilyDecoration.store.RegionList": "../../app/store/regionlist.js",
   "FamilyDecoration.store.ScrutinizeList": "../../app/store/scrutinizelist.js",
+  "FamilyDecoration.store.StatisticTree": "../../app/store/statistictree.js",
   "FamilyDecoration.store.TaskList": "../../app/store/tasklist.js",
   "FamilyDecoration.store.TaskScrutinize": "../../app/store/taskscrutinize.js",
   "FamilyDecoration.store.TotalCost": "../../app/store/totalcost.js",
@@ -147,6 +150,8 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.mytask.Index": "../../app/view/mytask/index.js",
   "FamilyDecoration.view.mytask.SelfAssess": "../../app/view/mytask/selfassess.js",
   "FamilyDecoration.view.mytask.TaskList": "../../app/view/mytask/tasklist.js",
+  "FamilyDecoration.view.personnel.Index": "../../app/view/personnel/index.js",
+  "FamilyDecoration.view.personnel.StatisticTree": "../../app/view/personnel/statistictree.js",
   "FamilyDecoration.view.plan.EditPlan": "../../app/view/plan/editplan.js",
   "FamilyDecoration.view.plan.Index": "../../app/view/plan/index.js",
   "FamilyDecoration.view.progress.EditProgress": "../../app/view/progress/editprogress.js",
@@ -1042,6 +1047,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.MyBusiness": [],
   "FamilyDecoration.controller.MyLog": [],
   "FamilyDecoration.controller.MyTask": [],
+  "FamilyDecoration.controller.Personnel": [],
   "FamilyDecoration.controller.Plan": [],
   "FamilyDecoration.controller.Progress": [],
   "FamilyDecoration.controller.RegionMgm": [],
@@ -1076,6 +1082,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.model.Project": [],
   "FamilyDecoration.model.RegionList": [],
   "FamilyDecoration.model.ScrutinizeList": [],
+  "FamilyDecoration.model.StatisticTree": [],
   "FamilyDecoration.model.TaskList": [],
   "FamilyDecoration.model.TaskScrutinize": [],
   "FamilyDecoration.model.TaskSelfAssessment": [],
@@ -1107,6 +1114,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.store.Project": [],
   "FamilyDecoration.store.RegionList": [],
   "FamilyDecoration.store.ScrutinizeList": [],
+  "FamilyDecoration.store.StatisticTree": [],
   "FamilyDecoration.store.TaskList": [],
   "FamilyDecoration.store.TaskScrutinize": [],
   "FamilyDecoration.store.TotalCost": [],
@@ -1161,6 +1169,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.mytask.Index": [],
   "FamilyDecoration.view.mytask.SelfAssess": [],
   "FamilyDecoration.view.mytask.TaskList": [],
+  "FamilyDecoration.view.personnel.Index": [],
+  "FamilyDecoration.view.personnel.StatisticTree": [],
   "FamilyDecoration.view.plan.EditPlan": [],
   "FamilyDecoration.view.plan.Index": [],
   "FamilyDecoration.view.progress.EditProgress": [],
@@ -2222,6 +2232,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.MyBusiness": [],
   "FamilyDecoration.controller.MyLog": [],
   "FamilyDecoration.controller.MyTask": [],
+  "FamilyDecoration.controller.Personnel": [],
   "FamilyDecoration.controller.Plan": [],
   "FamilyDecoration.controller.Progress": [],
   "FamilyDecoration.controller.RegionMgm": [],
@@ -2256,6 +2267,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.model.Project": [],
   "FamilyDecoration.model.RegionList": [],
   "FamilyDecoration.model.ScrutinizeList": [],
+  "FamilyDecoration.model.StatisticTree": [],
   "FamilyDecoration.model.TaskList": [],
   "FamilyDecoration.model.TaskScrutinize": [],
   "FamilyDecoration.model.TaskSelfAssessment": [],
@@ -2287,6 +2299,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.store.Project": [],
   "FamilyDecoration.store.RegionList": [],
   "FamilyDecoration.store.ScrutinizeList": [],
+  "FamilyDecoration.store.StatisticTree": [],
   "FamilyDecoration.store.TaskList": [],
   "FamilyDecoration.store.TaskScrutinize": [],
   "FamilyDecoration.store.TotalCost": [],
@@ -2432,6 +2445,12 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.mytask.TaskList": [
     "widget.mytask-tasklist"
+  ],
+  "FamilyDecoration.view.personnel.Index": [
+    "widget.personnel-index"
+  ],
+  "FamilyDecoration.view.personnel.StatisticTree": [
+    "widget.personnel-statistictree"
   ],
   "FamilyDecoration.view.plan.EditPlan": [
     "widget.plan-editplan"

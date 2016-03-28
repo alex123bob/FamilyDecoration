@@ -278,7 +278,8 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 name: 'gridpanel-message',
                 title: '动态消息',
                 width: '100%',
-                flex: 2,
+                collapsible: true,
+                flex: 1,
                 hideHeaders: true,
                 autoScroll: true,
                 style: {
@@ -503,7 +504,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 tools: [{
                     id: 'tool-setAllMessageRead',
                     name: 'tool-setAllMessageRead',
-                    type: 'down',
+                    type: 'help',
                     tooltip: '置所有消息为已读',
                     callback: function() {
                         Ext.Msg.warning('确定要将所有动态消息置为已读吗？', function (btnId){
