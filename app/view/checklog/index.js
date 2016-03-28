@@ -21,6 +21,7 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 			margin: '0 1 0 0',
 			flex: 1,
 			layout: 'fit',
+			hidden: me.userName ? true : false,
 			items: [{
 				xtype: 'checklog-memberlist',
 				userName: me.userName,
@@ -89,6 +90,7 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 			flex: 1,
 			layout: 'vbox',
 			margin: '0 1 0 0',
+			hidden: me.logListId ? true : false,
 			items: [{
 				xtype: 'checklog-userloglist',
 				title: '本季度日志',

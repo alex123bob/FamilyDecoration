@@ -21,6 +21,7 @@ Ext.define('FamilyDecoration.view.checkbusiness.Index', {
 			id: 'gridpanel-businessStaff',
 			name: 'gridpanel-businessStaff',
 			flex: 1,
+			hidden: me.salesmanName ? true : false,
 			columns: [{
 				text: '姓名',
 				dataIndex: 'salesman',
@@ -63,6 +64,16 @@ Ext.define('FamilyDecoration.view.checkbusiness.Index', {
 					},
 					extraParams: {
 						action: 'getSalesmanlist'
+					}
+				},
+				listeners: {
+					load: function (){
+						var grid = Ext.getCmp('gridpanel-businessStaff');
+						if (me.salesmanName) {
+							var st = grid.getStore(),
+								rec = st.findRecord('salesmanName', me.salesmanName);
+							rec && grid.getSelectionModel().select(rec);
+						}
 					}
 				}
 			}),

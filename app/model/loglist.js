@@ -2,6 +2,7 @@ Ext.define('FamilyDecoration.model.LogList', {
 	extend: 'Ext.data.Model',
 	fields: [
         'id',
+        {name: 'logListId', type: 'string'},
         {name: 'logName', type: 'string'},
         {name: 'createTime', type: 'string'},
         {name: 'isDeleted', type: 'boolean'},

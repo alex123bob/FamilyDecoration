@@ -15,6 +15,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 	initComponent: function (){
 		var me = this;
 		me.items = [{
+			hidden: me.projectId ? true : false,
 			xtype: 'container',
 			region: 'west',
 			layout: {

@@ -21,6 +21,7 @@ Ext.define('FamilyDecoration.view.checksignbusiness.Index', {
 			id: 'gridpanel-designStaff',
 			name: 'gridpanel-designStaff',
 			flex: 2,
+			hidden: me.designer ? true : false,
 			columns: [{
 				text: '姓名',
 				dataIndex: 'designer',
@@ -74,7 +75,17 @@ Ext.define('FamilyDecoration.view.checksignbusiness.Index', {
 							return true;
 						}
 					}
-				]
+				],
+				listeners: {
+					load: function (){
+						var grid = Ext.getCmp('gridpanel-designStaff');
+						if (me.designer) {
+							var st = grid.getStore(),
+								rec = st.findRecord('designerName', me.designer);
+							rec && grid.getSelectionModel().select(rec);
+						}
+					}
+				}
 			}),
 			tools: [{
 				type:'refresh',

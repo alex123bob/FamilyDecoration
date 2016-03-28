@@ -70,7 +70,14 @@ Ext.define('FamilyDecoration.view.mytask.TaskList', {
 	            		}
 	            	},
 	            	load: function (st, node, recs){
-	            		
+	            		if (me.taskId) {
+	            			for (var i = recs.length - 1; i >= 0; i--) {
+	            				var rec = recs[i];
+	            				if (me.taskId == rec.getId()) {
+	            					me.getSelectionModel().select(rec);
+	            				}
+	            			};
+	            		}
 	            	}
 				}
 			})

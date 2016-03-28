@@ -88,7 +88,15 @@ Ext.define('FamilyDecoration.view.checklog.MemberList', {
 	            		}
 	            	},
 	            	load: function (st, node, recs){
-	            		
+	            		if (me.userName) {
+	            			for (var i = recs.length - 1; i >= 0; i--) {
+	            				var rec = recs[i];
+	            				if (me.userName == rec.get('name')) {
+	            					me.getSelectionModel().select(rec);
+	            					me.fireEvent('itemclick', me.getView(), rec);
+	            				}
+	            			};
+	            		}
 	            	}
 				}
 			})

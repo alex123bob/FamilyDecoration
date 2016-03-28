@@ -20,6 +20,7 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 			layout: 'fit',
 			width: 200,
 			margin: '0 1 0 0',
+			hidden: me.taskId ? true : false,
 			items: [{
 				xtype: 'mytask-tasklist',
 				taskId: me.taskId,

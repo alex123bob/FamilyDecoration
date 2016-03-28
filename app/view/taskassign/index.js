@@ -26,6 +26,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 			margin: '0 1 0 0',
 			flex: 1,
 			layout: 'fit',
+			hidden: me.taskExecutor ? true : false,
 			items: [{
 				xtype: 'checklog-memberlist',
 				title: '成员列表',

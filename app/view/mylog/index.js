@@ -13,6 +13,7 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 		me.items = [{
 			xtype: 'container',
 			region: 'west',
+			hidden: me.logListId ? true : false,
 			layout: {
 				type: 'vbox',
 				align: 'center'
@@ -211,7 +212,12 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 					},
 					load: function (){
 						var treePanel = Ext.getCmp('treepanel-logName');
-						treePanel.expandAll();
+						treePanel.expandAll(function (arr){
+							var rec = treePanel.getRootNode().findChild('logListId', me.logListId, true);
+							if (rec) {
+								treePanel.getSelectionModel().select(rec);
+							}
+						});
 					}
 				}
 			}, {

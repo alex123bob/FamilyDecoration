@@ -170,6 +170,7 @@
 		$count = 0;
 		foreach($arr as $key => $val) {
 		    $res[$count]["id"] = $val["id"];
+		    $res[$count]["logListId"] = $val["id"];
 		    $res[$count]["logName"] = $val["logName"];
 		    $res[$count]["createTime"] = $val["createTime"];
 		    $res[$count]["userName"] = $val["userName"];
@@ -188,6 +189,7 @@
 		$count = 0;
 		foreach($arr as $key => $val) {
 		    $res[$count]["id"] = $val["id"];
+		    $res[$count]["logListId"] = $val["id"];
 		    $res[$count]["logName"] = $val["logName"];
 		    $res[$count]["createTime"] = $val["createTime"];
 		    $res[$count]["userName"] = $val["userName"];   

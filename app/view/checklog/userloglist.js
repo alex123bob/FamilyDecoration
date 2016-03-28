@@ -101,7 +101,14 @@ Ext.define('FamilyDecoration.view.checklog.UserLogList', {
 	            		}
 	            	},
 	            	load: function (st, node, recs){
-	            		
+	            		if (me.logListId) {
+	            			for (var i = recs.length - 1; i >= 0; i--) {
+	            				var rec = recs[i];
+	            				if (me.logListId == rec.get('logListId')) {
+	            					me.getSelectionModel().select(rec);
+	            				}
+	            			};
+	            		}
 	            	}
 				}
 			})
