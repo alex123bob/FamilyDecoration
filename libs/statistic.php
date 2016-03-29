@@ -7,6 +7,8 @@
 		// check log page
 		case "getStatisticDepartments":$res = getStatisticDepartments();break;
 		case "getMembersByDepartment":$res = getMembersByDepartment($_GET["department"]);break;
+
+		case "getIndividualStatisticsByYearByMonthByUser":$res = getIndividualStatisticsByYearByMonthByUser($_GET["year"],$_GET["month"],$_GET["user"]);break;
 		default: throw new Exception("unknown action:".$action);
 	}
 	echo (json_encode($res));
