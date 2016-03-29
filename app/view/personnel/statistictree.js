@@ -16,16 +16,13 @@ Ext.define('FamilyDecoration.view.personnel.StatisticTree', {
 				autoLoad: false,
 				proxy: {
 					type: 'rest',
-					url: 'libs/loglist.php',
+					url: 'libs/statistic.php',
 					appendId: false,
 					reader: {
 						type: 'json'
 					},
 					extraParams: {
-						action: 'getLogListDepartments',
-						email: false,
-						individual: false,
-						fullList: true
+						action: 'getStatisticDepartments'
 					}
 				},
 				listeners: {
@@ -37,11 +34,10 @@ Ext.define('FamilyDecoration.view.personnel.StatisticTree', {
 						}
 						// department node
 						else if (node.get('level') && !node.get('name')) {
-							st.proxy.url = 'libs/loglist.php';
+							st.proxy.url = 'libs/statistic.php';
 	            			st.proxy.extraParams = {
 	            				action: 'getMembersByDepartment',
-	            				department: node.get('level').split('-')[0],
-	            				individual: false
+	            				department: node.get('level').split('-')[0]
 	            			};
 						}
 	            	},
