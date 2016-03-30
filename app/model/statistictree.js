@@ -6,12 +6,15 @@ Ext.define('FamilyDecoration.model.StatisticTree', {
         {name: 'level', type: 'string'},
         {name: 'realname', type: 'string'},
         {name: 'phone', type: 'string'},
-        {name: 'mail', type: 'string'}
+        {name: 'mail', type: 'string'},
+
+        {name: 'year', type: 'string'},
+        {name: 'month', type: 'string'},
     ],
     idProperty: 'id',
     proxy: {
     	type: 'rest',
-    	url: './libs/loglist.php',
+    	url: './libs/statistic.php',
         reader: {
             type: 'json'
         }
