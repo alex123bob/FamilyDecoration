@@ -1,4 +1,4 @@
-Ext.define('FamilyDecoration.model.Personnel', {
+Ext.define('FamilyDecoration.model.PersonnelIndividual', {
 	extend: 'Ext.data.Model',
 	fields: [
         {name: 'day', type: 'string'},

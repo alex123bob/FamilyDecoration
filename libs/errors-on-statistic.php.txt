@@ -1,0 +1,8 @@
+【Error】 select * from `business` where isDeleted = 'false' and isFrozen = 'false' and isTransfered = 'false' and isDead = 'false' and salesmanName = Designer3 
+【Time】  2016-03-30 10:53:41
+【Meg】   
+
+【Error】 select * from `business` where isDeleted = 'false' and isFrozen = 'false' and isTransfered = 'false' and isDead = 'false' and salesmanName = Designer3 
+【Time】  2016-03-30 10:54:08
+【Meg】   
+

@@ -3,7 +3,7 @@ Ext.define('FamilyDecoration.view.personnel.Index', {
 	alias: 'widget.personnel-index',
 	requires: [
 		'FamilyDecoration.view.personnel.StatisticTree',
-		'FamilyDecoration.store.Personnel'
+		'FamilyDecoration.store.PersonnelIndividual'
 	],
 	layout: {
 		type: 'hbox',
@@ -72,24 +72,36 @@ Ext.define('FamilyDecoration.view.personnel.Index', {
 					},
 					selectionchange: function (selModel, sels, opts){
 						var rec = sels[0];
-						var grid = Ext.getCmp('gridpanel-individualInformation'),
-							st = grid.getStore(),
+						var individualGrid = Ext.getCmp('gridpanel-individualInformation'),
+							individualSt = individualGrid.getStore(),
+							projectGrid = Ext.getCmp('gridpanel-projectUpdateStatistics'),
+							projectSt = projectGrid.getStore(),
 							curTime = new Date();
 						if (rec && rec.get('name')) {
-							st.reload({
+							individualSt.reload({
 								params: {
 									user: rec.get('name'),
 									year: curTime.getFullYear(),
 									month: curTime.getMonth() + 1
 								}
 							});
+							projectSt.reload({
+								params: {
+									user: rec.get('name')
+								}
+							});
 						}
 						else if (rec && rec.get('month') != '') {
-							st.reload({
+							individualSt.reload({
 								params: {
 									user: rec.parentNode.parentNode.get('name'),
 									year: rec.parentNode.get('year'),
 									month: rec.get('month')
+								}
+							});
+							projectSt.reload({
+								params: {
+									user: rec.parentNode.parentNode.get('name')
 								}
 							});
 						}
@@ -110,7 +122,7 @@ Ext.define('FamilyDecoration.view.personnel.Index', {
 				name: 'gridpanel-individualInformation',
 				flex: 1,
 				autoScroll: true,
-				store: Ext.create('FamilyDecoration.store.Personnel', {
+				store: Ext.create('FamilyDecoration.store.PersonnelIndividual', {
 					autoLoad: false,
 					proxy: {
 						type: 'rest',
@@ -276,8 +288,92 @@ Ext.define('FamilyDecoration.view.personnel.Index', {
 				xtype: 'panel',
 				width: '100%',
 				flex: 1,
+				xtype: 'gridpanel',
+				title: '项目情况',
+				width: '100%',
+				id: 'gridpanel-projectUpdateStatistics',
+				name: 'gridpanel-projectUpdateStatistics',
 				autoScroll: true,
-				title: '项目情况'
+				store: Ext.create('FamilyDecoration.store.PersonnelProject', {
+					autoLoad: false,
+					proxy: {
+						type: 'rest',
+						url: 'libs/statistic.php',
+						reader: {
+							type: 'json'
+						},
+						extraParams: {
+							action: 'getProjectUpdateStatisticsByUser'
+						}
+					}
+				}),
+				refresh: function (rec){
+					
+				},
+				columns: [
+			        {
+			        	text: '业务名称',
+			        	dataIndex: 'businessName',
+			        	flex: 1,
+	                	draggable: false,
+	                	align: 'center',
+	                	sortable: false,
+	                	menuDisabled: true,
+	                	renderer: function (val, meta, rec){
+	                		if (val == "") {
+	                			return rec.get('projectName');
+	                		}
+	                		else {
+	                			return val;
+	                		}
+	                	}
+			        },
+			        {
+			        	text: '业务跟进',
+			        	dataIndex: 'businessTimeDistance',
+			        	flex: 1,
+	                	draggable: false,
+	                	align: 'center',
+	                	sortable: false,
+	                	menuDisabled: true
+			        },
+			        {
+			        	text: '进度跟进',
+			        	dataIndex: 'projectTimeDistance',
+			        	flex: 1,
+	                	draggable: false,
+	                	align: 'center',
+	                	sortable: false,
+	                	menuDisabled: true
+			        },
+			        {
+			        	text: '图库内容',
+			        	dataIndex: 'hasProjectGraph',
+			        	flex: 1,
+	                	draggable: false,
+	                	align: 'center',
+	                	sortable: false,
+	                	menuDisabled: true
+			        },
+			        {
+			        	text: '计划生成',
+			        	dataIndex: 'hasProjectPlan',
+			        	flex: 1,
+	                	draggable: false,
+	                	align: 'center',
+	                	sortable: false,
+	                	menuDisabled: true
+			        },
+			        {
+			        	text: '主材订购单',
+			        	dataIndex: 'mainMaterialNumber',
+			        	flex: 1,
+	                	draggable: false,
+	                	align: 'center',
+	                	sortable: false,
+	                	menuDisabled: true
+			        }
+			    ]
 			}]
 		}];
 
