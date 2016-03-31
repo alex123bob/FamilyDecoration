@@ -65,38 +65,57 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 							item = grid.getSelectionModel().getSelection()[0],
 							id = item.getId();
 
-						Ext.Msg.prompt('修改名称', '输入新项目名称', function (btnId, newName){
-							if (btnId == 'ok') {
-								if (!Ext.isEmpty(newName)) {
-									Ext.Ajax.request({
-										url: './libs/basicitem.php?action=editbasicitem',
-										method: 'POST',
-										params: {
-											itemId: id,
-											itemName: newName
-										},
-										callback: function (opts, success, res){
-											if (success) {
-												var obj = Ext.decode(res.responseText);
-												if (obj.status == 'successful') {
-													showMsg('修改成功！');
-													st.reload();
+						function editBasicItemName (){
+							Ext.Msg.prompt('修改名称', '输入新项目名称', function (btnId, newName){
+								if (btnId == 'ok') {
+									if (!Ext.isEmpty(newName)) {
+										Ext.Ajax.request({
+											url: './libs/basicitem.php?action=editbasicitem',
+											method: 'POST',
+											params: {
+												itemId: id,
+												itemName: newName
+											},
+											callback: function (opts, success, res){
+												if (success) {
+													var obj = Ext.decode(res.responseText);
+													if (obj.status == 'successful') {
+														showMsg('修改成功！');
+														st.reload();
+													}
 												}
 											}
-										}
-									});
+										});
+									}
+									else {
+										Ext.Msg.info('名称不能为空！');
+									}
 								}
-								else {
-									Ext.Msg.info('名称不能为空！');
+							}, window, false, item.get('itemName'));
+						}
+						
+						if (User.isBudgetStaff()){
+							Ext.Msg.prompt('提示', '请输入主管密码', function (btnId, pwd){
+								if (btnId == 'ok') {
+									if (pwd == 'woshizzn963963') {
+										editBasicItemName();
+									}
+									else {
+										showMsg('密码不正确！请联系管理员取得密码后再进行编辑。');
+									}
 								}
-							}
-						}, window, false, item.get('itemName'));
+							});
+						}
+						else {
+							editBasicItemName();
+						}
 					}
 				}],
 				bbar: [{
 					text: '删除',
 					icon: './resources/img/delete2.png',
 					disabled: true,
+					hidden: User.isBudgetStaff() ? true : false,
 					id: 'button-deleteBasicItem',
 					name: 'button-deleteBasicItem',
 					handler: function (){
@@ -218,7 +237,21 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 								parentId: sel.getId(),
 								subItem: rec
 							});
-							win.show();
+							if (User.isBudgetStaff()) {
+								Ext.Msg.prompt('提示', '请输入主管密码', function (btnId, pwd){
+									if (btnId == 'ok') {
+										if (pwd == 'woshizzn963963') {
+											win.show();
+										}
+										else {
+											showMsg('密码不正确！请联系主管取得密码后进行更改。');
+										}
+									}
+								});
+							}
+							else {
+								win.show();
+							}
 						}
 						else {
 							Ext.Msg.info('请选择大项！');
@@ -229,6 +262,7 @@ Ext.define('FamilyDecoration.view.basicitem.Index', {
 					id: 'button-delbasicSubItem',
 					name: 'button-delbasicSubItem',
 					icon: './resources/img/delete3.png',
+					hidden: User.isBudgetStaff() ? true : false,
 					disabled: true,
 					handler: function (){
 						var subGrid = Ext.getCmp('gridpanel-basicSubItem'),

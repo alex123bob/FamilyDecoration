@@ -51,9 +51,6 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 					}, {
 						name: '项目监理',
 						value: '003'
-					}, {
-						name: '预决算主管',
-						value: '004'
 					});
 				}
 				else if (depa == '004') {
@@ -105,6 +102,15 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 					}, {
 						name: '采购',
 						value: '005'
+					});
+				}
+				else if (depa == '009') {
+					data.push({
+						name: '主管',
+						value: '001'
+					}, {
+						name: '员工',
+						value: '002'
 					});
 				}
 				levelSt = Ext.create('Ext.data.Store', {
@@ -298,9 +304,6 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 							}, {
 								name: '项目监理',
 								value: '003'
-							}, {
-								name: '预决算主管',
-								value: '004'
 							});
 						}
 						else if (newVal == '004') {
@@ -352,6 +355,15 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 							}, {
 								name: '采购',
 								value: '005'
+							});
+						}
+						else if (newVal == '009') {
+							data.push({
+								name: '主管',
+								value: '001'
+							}, {
+								name: '员工',
+								value: '002'
 							});
 						}
 

@@ -193,6 +193,7 @@ Ext.define('FamilyDecoration.view.basicitem.SubItemTable', {
 	        },
 	        {
 	        	text: '成本',
+	        	hidden: User.isBudgetStaff() ? true : false,
 	        	columns: [
 	        		{
 	        			text: '人工',

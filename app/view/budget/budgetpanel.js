@@ -861,7 +861,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			        },
 			        {
 			        	text: '成本',
-			        	hidden: User.isAdmin() ? false : true,
+			        	hidden: User.isAdmin() || User.isBudgetManager() ? false : true,
 			        	draggable: false,
 			        	align: 'center',
 			        	menuDisabled: true,

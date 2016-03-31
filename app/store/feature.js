@@ -214,10 +214,10 @@
                 flag = User.isGeneral() ? false : true;
             }
             else if (rec.get('cmp') == 'logbook-parent') {
-                flag = User.isAdmin() || User.isManager() || User.isDesignStaff() || User.isProjectStaff() || User.isSupervisor() || User.isBusinessStaff() || User.isAdministrationStaff() || User.isPropagandaStaff() || User.isFinanceStaff() || User.isProjectBudgetManager() ? true : false;
+                flag = User.isAdmin() || User.isManager() || User.isDesignStaff() || User.isProjectStaff() || User.isSupervisor() || User.isBusinessStaff() || User.isAdministrationStaff() || User.isPropagandaStaff() || User.isFinanceStaff() || User.isBudgetManager() || User.isBudgetStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'mylog-index') {
-                flag = User.isAdmin() || User.isManager() || User.isDesignStaff() || User.isProjectStaff() || User.isSupervisor() || User.isBusinessStaff() || User.isAdministrationStaff() || User.isPropagandaStaff() || User.isFinanceStaff() || User.isProjectBudgetManager() ? true : false;
+                flag = User.isAdmin() || User.isManager() || User.isDesignStaff() || User.isProjectStaff() || User.isSupervisor() || User.isBusinessStaff() || User.isAdministrationStaff() || User.isPropagandaStaff() || User.isFinanceStaff() || User.isBudgetManager() || User.isBudgetStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'checklog-index') {
                 flag = User.isAdmin() || User.isManager() ? true : false;
@@ -245,7 +245,7 @@
                 }
             }
             else if (rec.get('cmp') == 'budget-parent') {
-                flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() || User.isProjectBudgetManager() ? true : false;
+                flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() || User.isBudgetManager() || User.isBudgetStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'chart-index') {
                 flag = true;
@@ -266,7 +266,7 @@
                 flag = User.isAdmin() || User.isBusinessStaff() || User.isAdministrationManager() ? true : false;
             }
             else if (rec.get('cmp') == 'basicitem-index') {
-                flag =  User.isAdmin() || User.isProjectBudgetManager() ? true : false;
+                flag =  User.isAdmin() || User.isBudgetManager() || User.isBudgetStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'personnel-parent') {
                 flag = User.isAdmin() || User.isBusinessStaff() || User.isAdministrationManager() ? true : false;
@@ -284,10 +284,10 @@
                 flag = User.isGeneral() ? false : true;
             }
             else if (rec.get('cmp') == 'budget-index') {
-                flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() || User.isProjectBudgetManager() ? true : false;
+                flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() || User.isBudgetManager() || User.isBudgetStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'costanalysis-index') {
-                flag = User.isAdmin() || User.isProjectBudgetManager() ? true : false;
+                flag = User.isAdmin() || User.isBudgetManager() ? true : false;
             }
             else if (rec.get('cmp') == 'business-parent') {
                 flag = User.isGeneral() ? false : true;
@@ -302,7 +302,7 @@
                 flag = User.isDesignStaff() || User.isDesignManager() ? true : false;
             }
             else if (rec.get('cmp') == 'checksignbusiness-index') {
-                flag = User.isAdmin() || User.isDesignManager() || User.isProjectManager() || User.isFinanceManager() ? true : false;
+                flag = User.isAdmin() || User.isDesignManager() || User.isProjectManager() || User.isBudgetManager() || User.isBudgetStaff() || User.isFinanceManager() ? true : false;
             }
             else if (rec.get('cmp') == 'regionmgm-index') {
                 flag = User.isGeneral() ? false : true;

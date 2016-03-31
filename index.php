@@ -124,7 +124,7 @@
                     // admin
                     flag = false;
                 }
-                else if (/^00[234578]-001$/.test(level)) {
+                else if (/^00[2345789]-001$/.test(level)) {
                     // manager
                     flag = true;
                 }
@@ -137,10 +137,6 @@
 
             isProjectManager: function (){
                 return this.level == '003-001';
-            },
-
-            isProjectBudgetManager: function (){
-                return this.level == '003-004';
             },
 
             isBusinessManager: function (){
@@ -191,6 +187,14 @@
                 return (this.level == '008-002' || this.level == '008-003' || this.level == '008-004' || this.level == '008-005');
             },
 
+            isBudgetManager: function (){
+                return this.level == '009-001';
+            },
+
+            isBudgetStaff: function (){
+                return this.level == '009-002';
+            },
+
             isCurrent: function (name){
                 if (name) {
                     return this.name == name;
@@ -222,9 +226,6 @@
                 name: '项目监理',
                 value: '003-003'
             }, {
-                name: '预决算主管',
-                value: '003-004'
-            },{
                 name: '业务部主管',
                 value: '004-001'
             }, {
@@ -260,6 +261,12 @@
             }, {
                 name: '财务部采购',
                 value: '008-005'
+            }, {
+                name: '预决算主管',
+                value: '009-001'
+            }, {
+                name: '预决算员工',
+                value: '009-002'
             }],
 
             getStatus: function (){
@@ -333,6 +340,9 @@
                 else if (/^008-\d{3}$/i.test(level)) {
                     department = '财务部';
                 }
+                else if (/^009-\d{3}$/i.test(level)) {
+                    department = '预决算部';
+                }
                 else {
                     department = '非部门';
                 }
@@ -370,9 +380,6 @@
                     }
                     else if (roleStr == '003') {
                         role = '项目监理';
-                    }
-                    else if (roleStr == '004') {
-                        role = '预决算主管';
                     }
                 }
                 // business department
@@ -422,6 +429,15 @@
                     }
                     else if (roleStr == '005') {
                         role = '采购';
+                    }
+                }
+                // the ministry of budget
+                else if (/^009-\d{3}$/i.test(level)) {
+                    if (roleStr == '001') {
+                        role = '主管';
+                    }
+                    else if (roleStr == '002') {
+                        role = '员工';
                     }
                 }
                 else {

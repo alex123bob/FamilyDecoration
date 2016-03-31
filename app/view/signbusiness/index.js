@@ -142,7 +142,8 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 				flex: 1,
 				renderer: function (val, meta, rec){
 					var str = '',
-						signBusinessLevel = rec.get('signBusinessLevel');
+						signBusinessLevel = rec.get('signBusinessLevel'),
+						requestDead = rec.get('requestDead');
 					switch(signBusinessLevel) {
 						case "A":
 						meta.style = 'background: lightpink;';
@@ -168,6 +169,9 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 					str += rec.get('regionName') + ' ' + val;
 					if (signBusinessLevel != '') {
 						str += '[<strong><font color="blue">' + signBusinessLevel + '</font></strong>]';
+					}
+					if (requestDead == '1') {
+						str += '[<strong><font color="red">申请废单</font></strong>]';
 					}
 					return str;
 				}
@@ -209,12 +213,14 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 				var applyTransferBtn = Ext.getCmp('button-applyForTransferenceToProject'),
 					transferProjectBtn = Ext.getCmp('button-transferToProjectForSignBusiness'),
 					applyBudgetBtn = Ext.getCmp('button-applyForBudget'),
-					checkBudgetBtn = Ext.getCmp('button-checkBudgetForSignBusiness');
+					checkBudgetBtn = Ext.getCmp('button-checkBudgetForSignBusiness'),
+					requestBtn = Ext.getCmp('button-requestDisableBusiness');
 
 				applyTransferBtn.setDisabled(!address);
 				transferProjectBtn.setDisabled(!address);
 				applyBudgetBtn.setDisabled(!address);
 				checkBudgetBtn.setDisabled(!address);
+				requestBtn.setDisabled(!address);
 			},
 			listeners: {
 				selectionchange: function (view, sels){
@@ -676,8 +682,104 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 						win.show();
 					}
 					else {
-						showMsg('请选择具体业务！')
+						showMsg('请选择具体业务！');
 					}
+				}
+			}, {
+				text: '申请废单',
+				id: 'button-requestDisableBusiness',
+				name: 'button-requestDisableBusiness',
+				icon: './resources/img/trashbin.png',
+				disabled: true,
+				handler: function (){
+					var win = Ext.create('Ext.window.Window', {
+						title: '申请废单',
+						width: 500,
+						height: 200,
+						modal: true,
+						layout: 'fit',
+						items: [{
+							xtype: 'textarea',
+							emptyText: '输入废单信息及原因',
+							autoScroll: true,
+							allowBlank: false
+						}],
+						buttons: [{
+							text: '确定',
+							handler: function (){
+								var txtArea = win.down('textarea'),
+									reason = txtArea.getValue(),
+									businessGrid = Ext.getCmp('gridpanel-detailedAddressForSignBusiness'),
+									rec = businessGrid.getSelectionModel().getSelection()[0];
+
+								if (rec) {
+									if (txtArea.isValid()) {
+										Ext.Ajax.request({
+											url: './libs/business.php?action=requestDeadBusiness',
+											method: 'POST',
+											params: {
+												businessId: rec.getId(),
+												requestDeadBusinessReason: reason
+											},
+											callback: function (opts, success, res){
+												if (success) {
+													var obj = Ext.decode(res.responseText);
+													if ('successful' == obj.status) {
+														win.close();
+														showMsg('废单申请成功！');
+														businessGrid.refresh();
+														Ext.Ajax.request({
+															url: './libs/user.php?action=view',
+															method: 'GET',
+															callback: function (opts, success, res){
+																if (success) {
+																	var userArr = Ext.decode(res.responseText),
+																		mailObjects = [],
+																		content = '', subject = '',
+																		business = rec.get('regionName') + ' ' + rec.get('address');
+																	for (var i = 0; i < userArr.length; i++) {
+																		var level = userArr[i].level;
+																		if (/^001-\d{3}$/i.test(level) || '004-001' == level) {
+																			mailObjects.push(userArr[i]);
+																		}
+																	}
+
+																	// request dead business announcement
+																	var content = User.getRealName() + '为业务[' + business + ']申请置为废单，\n原因为：' + reason,
+																		subject = '申请废单通知';
+																	for (i = 0; i < mailObjects.length; i++) {
+																		setTimeout((function (index){
+																			return function (){
+																				sendMsg(User.getName(), mailObjects[index].name, content, 'requestDeadBusiness', rec.getId());
+																				sendMail(mailObjects[index].name, mailObjects[index].mail, subject, content);
+																			}
+																		})(i), 1000 * (i + 1));
+																	}
+																	// end of announcement
+																}
+															}
+														});
+													}
+													else {
+														showMsg(obj.errMsg);
+													}
+												}
+											}
+										});
+									}
+								}
+								else {
+									showMsg('请选择业务!');
+								}
+							}
+						}, {
+							text: '取消',
+							handler: function (){
+								win.close();
+							}
+						}]
+					});
+					win.show();
 				}
 			}],
 		    listeners: {

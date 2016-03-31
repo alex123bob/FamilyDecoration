@@ -104,9 +104,9 @@ Ext.define('FamilyDecoration.view.basicitem.AddBasicSubItem', {
 			],
 			selType: 'cellmodel',
 			isItemEmpty: function (rec) {
-				var flag = Ext.isEmpty(rec.get('subItemName')) || Ext.isEmpty(rec.get('subItemUnit')) || Ext.isEmpty(rec.get('mainMaterialPrice'))
-							|| Ext.isEmpty(rec.get('auxiliaryMaterialPrice')) || Ext.isEmpty(rec.get('manpowerPrice')) || Ext.isEmpty(rec.get('machineryPrice'))
-							|| Ext.isEmpty(rec.get('lossPercent')) || Ext.isEmpty(rec.get('manpowerCost')) || Ext.isEmpty(rec.get('mainMaterialCost'))
+				var flag = Ext.isEmpty(rec.get('subItemName')) || Ext.isEmpty(rec.get('subItemUnit')) || !Ext.isNumber(rec.get('mainMaterialPrice'))
+							|| !Ext.isNumber(rec.get('auxiliaryMaterialPrice')) || !Ext.isNumber(rec.get('manpowerPrice')) || !Ext.isNumber(rec.get('machineryPrice'))
+							|| !Ext.isNumber(rec.get('lossPercent')) || !Ext.isNumber(rec.get('manpowerCost')) || !Ext.isNumber(rec.get('mainMaterialCost'))
 							|| Ext.isEmpty(rec.get('workCategory'));
 
 				return flag;
@@ -198,7 +198,7 @@ Ext.define('FamilyDecoration.view.basicitem.AddBasicSubItem', {
 						})
 					}
 					else {
-						Ext.Msg.info('第' + (i + 1) + '项有条目未填写，请填写完整再保存！');
+						Ext.Msg.info('第' + (i + 1) + '项有条目未填写或填写不符合规范，请填写完整再保存！');
 					}
 				}
 			}

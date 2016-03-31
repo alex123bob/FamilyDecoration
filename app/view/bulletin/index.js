@@ -486,10 +486,24 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                 });
                             }
                             else if ('requestDeadBusiness' == type) {
-                                win.add({
-                                    xtype: 'deadbusiness-index',
-                                    businessId: rec.get('extraId'),
-                                    businessStaff: rec.get('sender')
+                                Ext.Ajax.request({
+                                    url: 'libs/business.php?action=getBusinessById',
+                                    method: 'GET',
+                                    params: {
+                                        businessId: rec.get('extraId')
+                                    },
+                                    callback: function (opts, success, res){
+                                        if (success) {
+                                            var obj = Ext.decode(res.responseText),
+                                                businessStaff = obj[0]['salesmanName'];
+                                            win.add({
+                                                xtype: 'deadbusiness-index',
+                                                businessId: rec.get('extraId'),
+                                                businessStaff: businessStaff
+                                            });
+                                            win.show();
+                                        }
+                                    }
                                 });
                             }
                             else {
@@ -497,7 +511,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                 return;
                             }
                             setRead(rec);
-                            win.show();
+                            win.items.length > 0 && win.show();
                         }
                     }]
                 }],
