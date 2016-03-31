@@ -1,6 +1,7 @@
 Ext.define('FamilyDecoration.model.PersonnelProject', {
 	extend: 'Ext.data.Model',
 	fields: [
+        'id',
         {name: 'businessId', type: 'string'},
         {name: 'projectId', type: 'string'},
         {name: 'businessName', type: 'string'},

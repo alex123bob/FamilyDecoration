@@ -29,22 +29,22 @@ Ext.define('FamilyDecoration.view.personnel.Index', {
 						var curYear = new Date().getFullYear(),
 							curMonth = new Date().getMonth() + 1;
 						if (rec && rec.get('name') && rec.childNodes.length == 0) {
-							var startYear = 2014,
+							var startYear = 2015,
 								obj = [];
 							while(startYear <= curYear) {
 								obj = {
-									year: startYear
+									year: curYear
 								};
 								rec.appendChild(obj);
 								rec.lastChild.set({
 									leaf: true,
 									icon: 'resources/img/calendar2.png',
-									text: startYear
+									text: curYear
 								});
 								rec.set({
 									leaf: false
 								});
-								startYear++;
+								curYear--;
 							}
 							view.refresh();
 							rec.expand();
@@ -54,17 +54,17 @@ Ext.define('FamilyDecoration.view.personnel.Index', {
 								endMonth = (rec.get('year') == curYear) ? curMonth : 12;
 							while (startMonth <= endMonth) {
 								rec.appendChild({
-									month: startMonth
+									month: endMonth
 								});
 								rec.lastChild.set({
 									leaf: true,
 									icon: 'resources/img/month1.png',
-									text: startMonth
+									text: endMonth
 								});
 								rec.set({
 									leaf: false
 								});
-								startMonth++;
+								endMonth--;
 							}
 							view.refresh();
 							rec.expand();
@@ -155,7 +155,7 @@ Ext.define('FamilyDecoration.view.personnel.Index', {
 			        		{
 			        			text: '日记录',
 			        			dataIndex: 'logListDailyAmount',
-			        			width: 60,
+			        			width: 75,
 	                			draggable: false,
 	                			align: 'center',
 	                			sortable: false,
@@ -163,7 +163,7 @@ Ext.define('FamilyDecoration.view.personnel.Index', {
 			        		},
 			        		{
 			        			text: '月纪录',
-			        			width: 60,
+			        			width: 75,
 	                			draggable: false,
 	                			align: 'center',
 	                			sortable: false,
@@ -181,7 +181,7 @@ Ext.define('FamilyDecoration.view.personnel.Index', {
 			        		{
 			        			text: '日记录',
 			        			dataIndex: 'businessDailyAmount',
-			        			width: 60,
+			        			width: 75,
 	                			draggable: false,
 	                			align: 'center',
 	                			sortable: false,
@@ -189,7 +189,7 @@ Ext.define('FamilyDecoration.view.personnel.Index', {
 			        		},
 			        		{
 			        			text: '月纪录',
-			        			width: 60,
+			        			width: 75,
 	                			draggable: false,
 	                			align: 'center',
 	                			sortable: false,
@@ -198,7 +198,7 @@ Ext.define('FamilyDecoration.view.personnel.Index', {
 			        		},
 			        		{
 			        			text: '总量',
-			        			width: 60,
+			        			width: 75,
 			        			draggable: false,
 			        			align: 'center',
 			        			sortable: false,
@@ -216,7 +216,7 @@ Ext.define('FamilyDecoration.view.personnel.Index', {
 			        		{
 			        			text: '日记录',
 			        			dataIndex: 'signedBusinessDailyAmount',
-			        			width: 60,
+			        			width: 75,
 	                			draggable: false,
 	                			align: 'center',
 	                			sortable: false,
@@ -224,7 +224,7 @@ Ext.define('FamilyDecoration.view.personnel.Index', {
 			        		},
 			        		{
 			        			text: '月纪录',
-			        			width: 60,
+			        			width: 75,
 	                			draggable: false,
 	                			align: 'center',
 	                			sortable: false,
@@ -233,7 +233,7 @@ Ext.define('FamilyDecoration.view.personnel.Index', {
 			        		},
 			        		{
 			        			text: '总量',
-			        			width: 60,
+			        			width: 75,
 			        			draggable: false,
 			        			align: 'center',
 			        			sortable: false,
@@ -251,7 +251,7 @@ Ext.define('FamilyDecoration.view.personnel.Index', {
 			        		{
 			        			text: '日记录',
 			        			dataIndex: 'potentialBusinessDailyAmount',
-			        			width: 60,
+			        			width: 75,
 	                			draggable: false,
 	                			align: 'center',
 	                			sortable: false,
@@ -259,7 +259,7 @@ Ext.define('FamilyDecoration.view.personnel.Index', {
 			        		},
 			        		{
 			        			text: '月纪录',
-			        			width: 60,
+			        			width: 75,
 	                			draggable: false,
 	                			align: 'center',
 	                			sortable: false,
@@ -268,7 +268,7 @@ Ext.define('FamilyDecoration.view.personnel.Index', {
 			        		},
 			        		{
 			        			text: '总量',
-			        			width: 60,
+			        			width: 75,
 			        			draggable: false,
 			        			align: 'center',
 			        			sortable: false,
@@ -311,6 +311,15 @@ Ext.define('FamilyDecoration.view.personnel.Index', {
 					
 				},
 				columns: [
+					{
+						text: '编号',
+						dataIndex: 'id',
+						width: 50,
+						draggable: false,
+						align: 'center',
+						sortable: false,
+						menuDisabled: true
+					},
 			        {
 			        	text: '业务名称',
 			        	dataIndex: 'businessName',

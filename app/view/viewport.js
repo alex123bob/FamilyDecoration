@@ -59,7 +59,12 @@ Ext.define('FamilyDecoration.view.Viewport', {
             listeners: {
                 itemclick: function (view, rec){
                     if (/-parent/i.test(rec.get('cmp'))) {
-                        return false;
+                        if (rec.isExpanded()) {
+                            rec.collapse();
+                        }
+                        else {
+                            rec.expand();
+                        }
                     }
                 },
                 selectionchange: function (selModel, sels){

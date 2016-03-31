@@ -75,7 +75,7 @@
         // business
         $whereSql = "where isDeleted = 'false' and isFrozen = 'false' and isTransfered = 'false' and isDead = 'false' and year(createTime) = '$year' and month(createTime) = '$month' and salesmanName = '$user' GROUP BY day(`createTime`) ORDER BY day(`createTime`) ";
         $businessArr = $mysql->DBGetSomeRows("`business`", " *, day(createTime) AS `day`, count(*) AS `businessDailyAmount` ", $whereSql);
-        $userBusinessTotalNumber = $mysql->DBGetAsMap("select count(*) as `totalNumber` from `business` where isDeleted = 'false' and isFrozen = 'false' and isTransfered = 'false' and isDead = 'false' and year(createTime) = '$year' and month(createTime) = '$month' and salesmanName = '$user'");
+        $userBusinessTotalNumber = $mysql->DBGetAsMap("select count(*) as `totalNumber` from `business` where isDeleted = 'false' and isFrozen = 'false' and isTransfered = 'false' and isDead = 'false' and (year(createTime) < '$year' OR (year(createTime) = '$year' and month(createTime) < '$month')) and salesmanName = '$user'");
         if (count($userBusinessTotalNumber) > 0) {
         	$userBusinessTotalNumber = $userBusinessTotalNumber[0]["totalNumber"];
         }
@@ -83,7 +83,7 @@
         // signed business
         $whereSql = "where isDeleted = 'false' and isFrozen = 'false' and isTransfered = 'false' and isDead = 'false' and year(createTime) = '$year' and month(createTime) = '$month' and designerName = '$user' GROUP BY day(`createTime`) ORDER BY day(`createTime`) ";
         $signedBusinessArr = $mysql->DBGetSomeRows("`business`", " *, day(createTime) AS `day`, count(*) AS `signedBusinessDailyAmount` ", $whereSql);
-        $userSignedBusinessTotalNumber = $mysql->DBGetAsMap("select count(*) as `totalNumber` from `business` where isDeleted = 'false' and isFrozen = 'false' and isTransfered = 'false' and isDead = 'false' and year(createTime) = '$year' and month(createTime) = '$month' and designerName = '$user'");
+        $userSignedBusinessTotalNumber = $mysql->DBGetAsMap("select count(*) as `totalNumber` from `business` where isDeleted = 'false' and isFrozen = 'false' and isTransfered = 'false' and isDead = 'false' and (year(createTime) < '$year' OR (year(createTime) = '$year' and month(createTime) < '$month')) and designerName = '$user'");
         if (count($userSignedBusinessTotalNumber) > 0) {
         	$userSignedBusinessTotalNumber = $userSignedBusinessTotalNumber[0]["totalNumber"];
         }
@@ -91,7 +91,7 @@
         // potential business
         $whereSql = "where isDeleted = 'false' and year(createTime) = '$year' and month(createTime) = '$month' and salesmanName = '$user' GROUP BY day(`createTime`) ORDER BY day(`createTime`) ";
         $potentialBusinessArr = $mysql->DBGetSomeRows("`potential_business`", " *, day(createTime) AS `day`, count(*) AS `potentialBusinessDailyAmount` ", $whereSql);
-        $userPotentialBusinessTotalNumber = $mysql->DBGetAsMap("select count(*) as `totalNumber` from `potential_business` where isDeleted = 'false' and year(createTime) = '$year' and month(createTime) = '$month' and salesmanName = '$user'");
+        $userPotentialBusinessTotalNumber = $mysql->DBGetAsMap("select count(*) as `totalNumber` from `potential_business` where isDeleted = 'false' and (year(createTime) < '$year' OR (year(createTime) = '$year' and month(createTime) < '$month')) and salesmanName = '$user'");
         if (count($userPotentialBusinessTotalNumber) > 0) {
                 $userPotentialBusinessTotalNumber = $userPotentialBusinessTotalNumber[0]["totalNumber"];
         }
@@ -127,7 +127,7 @@
         	else {
         		$res["business"][$i]["businessMonthlyAmount"] = (int)$res["business"][$i]["businessDailyAmount"] + (int)$res["business"][$i-1]["businessMonthlyAmount"];
         	}
-        	$res["business"][$i]["businessTotalNumber"] = $userBusinessTotalNumber;
+        	$res["business"][$i]["businessTotalNumber"] = (int)$userBusinessTotalNumber + $res["business"][$i]["businessMonthlyAmount"];
         	// end business
         	
         	// signed business
@@ -144,24 +144,24 @@
         	else {
         		$res["signedBusiness"][$i]["signedBusinessMonthlyAmount"] = (int)$res["signedBusiness"][$i]["signedBusinessDailyAmount"] + (int)$res["signedBusiness"][$i-1]["signedBusinessMonthlyAmount"];
         	}
-        	$res["signedBusiness"][$i]["signedBusinessTotalNumber"] = $userSignedBusinessTotalNumber;
+        	$res["signedBusiness"][$i]["signedBusinessTotalNumber"] = (int)$userSignedBusinessTotalNumber + $res["signedBusiness"][$i]["signedBusinessMonthlyAmount"];
         	// end signed business
         	
         	// potential business
         	if (count($potentialBusinessArr) > 0  && $i + 1 == $potentialBusinessArr[0]["day"]) {
-                        array_push($res["potentialBusiness"], $potentialBusinessArr[0]);
-                        array_shift($potentialBusinessArr);
-                }
-                else {
-                        array_push($res["potentialBusiness"], array("day"=>$i+1, "potentialBusinessDailyAmount"=>0));
-                }
-                if ($i == 0) {
-                        $res["potentialBusiness"][$i]["potentialBusinessMonthlyAmount"] = (int)$res["potentialBusiness"][$i]["potentialBusinessDailyAmount"];
-                }
-                else {
-                        $res["potentialBusiness"][$i]["potentialBusinessMonthlyAmount"] = (int)$res["potentialBusiness"][$i]["potentialBusinessDailyAmount"] + (int)$res["potentialBusiness"][$i-1]["potentialBusinessMonthlyAmount"];
-                }
-                $res["potentialBusiness"][$i]["potentialBusinessTotalNumber"] = $userPotentialBusinessTotalNumber;
+                array_push($res["potentialBusiness"], $potentialBusinessArr[0]);
+                array_shift($potentialBusinessArr);
+            }
+            else {
+                array_push($res["potentialBusiness"], array("day"=>$i+1, "potentialBusinessDailyAmount"=>0));
+            }
+            if ($i == 0) {
+                $res["potentialBusiness"][$i]["potentialBusinessMonthlyAmount"] = (int)$res["potentialBusiness"][$i]["potentialBusinessDailyAmount"];
+            }
+            else {
+                $res["potentialBusiness"][$i]["potentialBusinessMonthlyAmount"] = (int)$res["potentialBusiness"][$i]["potentialBusinessDailyAmount"] + (int)$res["potentialBusiness"][$i-1]["potentialBusinessMonthlyAmount"];
+            }
+            $res["potentialBusiness"][$i]["potentialBusinessTotalNumber"] = (int)$userPotentialBusinessTotalNumber + $res["potentialBusiness"][$i]["potentialBusinessMonthlyAmount"];
         	// end potential business
         }
 
@@ -191,6 +191,7 @@
 		$res = array();
 		$businessArr = $mysql->DBGetAsMap("select `b`.*, `r`.`name` from `business` `b` left join `region` `r` on `b`.`regionId` = `r`.`id` where `b`.`isDeleted` = 'false' and `b`.`isFrozen` = 'false' and `b`.`isTransfered` = 'false' and `b`.`isDead` = 'false' and `b`.`salesmanName` = '$user' ");
 		$projectArr = $mysql->DBGetAsMap("select * from `project` where isDeleted = 'false' and isFrozen = '0' and captainName = '$user' ");
+		$recordCount = 1;
 
 		for ($i=0; $i < count($businessArr); $i++) { 
 			$businessId = $businessArr[$i]["id"];
@@ -204,6 +205,7 @@
 			$timeDistance = strtotime("now") - strtotime($lastRecordTime);
 			$timeDistance = floor($timeDistance / 60 / 60 / 24);
 			array_push($res, array(
+				"id" => $recordCount++,
 				"businessId" => $businessId,
 				"businessName" => $businessArr[$i]["name"]." ".$businessArr[$i]["address"],
 				"businessTimeDistance" => $timeDistance."天",
@@ -240,6 +242,7 @@
 			}
 
 			array_push($res, array(
+				"id" => $recordCount++,
 				"projectId" => $projectId,
 				"projectName" => $projectArr[$i]["projectName"],
 				"businessTimeDistance" => "",

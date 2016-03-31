@@ -82,7 +82,7 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 									autoLoad: true,
 									filters: [
 										function (item){
-											return item.get('level') == '002-002';
+											return item.get('level') == '002-002' || item.get('level') == '002-001';
 										}
 									]
 								}),

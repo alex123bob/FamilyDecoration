@@ -14,7 +14,7 @@
             },
             {
                 name: "业务列表",
-                expanded: true,
+                expanded: false,
                 cmp: 'business-parent',
                 leaf: false,
                 icon: 'resources/img/business.png',
@@ -59,7 +59,7 @@
             },
             {
                 name: "工作日志", 
-                expanded: true, 
+                expanded: false, 
                 icon: 'resources/img/blog-parent.png',
                 cmp: 'logbook-parent',
                 children: [
@@ -103,7 +103,7 @@
             },
             {
                 name: "预算", 
-                expanded: true, 
+                expanded: false, 
                 icon: 'resources/img/budget-parent.png',
                 cmp: 'budget-parent',
                 children: [
@@ -135,7 +135,7 @@
             },
             {
                 name: "工程情况", 
-                expanded: true, 
+                expanded: false, 
                 cmp: 'project-parent',
                 icon: 'resources/img/project-parent.png',
                 children: [
@@ -161,7 +161,7 @@
             },
             {
                 name: "应用设置", 
-                expanded: true,
+                expanded: false,
                 cmp: 'setting-parent', 
                 icon: 'resources/img/setting-parent.png',
                 children: [
@@ -175,12 +175,12 @@
             },
             {
                 name: '人事管理',
-                expanded: true,
+                expanded: false,
                 cmp: 'personnel-parent',
                 icon: 'resources/img/personnel.png',
                 children: [
                     {
-                        name: "账户设置",
+                        name: "账户管理",
                         cmp: 'setting-index',
                         leaf: true,
                         icon: 'resources/img/account.png'
@@ -270,6 +270,9 @@
             }
             else if (rec.get('cmp') == 'personnel-parent') {
                 flag = User.isAdmin() || User.isBusinessStaff() || User.isAdministrationManager() ? true : false;
+            }
+            else if (rec.get('cmp') == 'personnel-index') {
+                flag = User.isAdmin() || User.isAdministrationManager() || User.isAdministrationStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'setting-index') {
                 flag = User.isAdmin() || User.isBusinessStaff() || User.isAdministrationManager() ? true : false;
