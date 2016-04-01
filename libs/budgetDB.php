@@ -159,7 +159,7 @@
 		$item['budgetItemId'] = "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
 		$mysql->DBInsertAsArray("`budget_item`",$item);
 		//O
-		$item = array('itemCode'=>'O','itemName'=>'设计费3%','itemUnit'=>'元','itemAmount'=>0.03,'budgetId'=>$budgetId);
+		$item = array('itemCode'=>'O','itemName'=>'设计费6%','itemUnit'=>'元','itemAmount'=>0.06,'budgetId'=>$budgetId);
 		$item['budgetItemId'] = "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
 		$mysql->DBInsertAsArray("`budget_item`",$item);
 		//P
@@ -422,7 +422,7 @@
 		}
 		// O 设计费
 		$itemUnit = '元';
-		$itemName = '设计费3%';
+		$itemName = '设计费6%';
 		$itemCode = 'O';
 		$item = $NOPQRSItems[$itemCode];
 		$itemAmount = $item['itemAmount'];

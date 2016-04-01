@@ -65,7 +65,7 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 	            		var node = ope.node;
 	            		if (node.get('captain')) {
 	            			st.proxy.url = './libs/project.php';
-	            			if (User.isAdmin() || User.isProjectManager() || User.isSupervisor()) {
+	            			if (User.isAdmin() || User.isProjectManager() || User.isSupervisor() || User.isProjectStaff()) {
 								st.proxy.extraParams = {
 		            				captainName: node.get('captainName'),
 		            				action: 'getProjectsByCaptainName'

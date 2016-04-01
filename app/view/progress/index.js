@@ -263,13 +263,20 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 											var obj = Ext.JSON.decode(res.responseText),
 												proPanel = Ext.getCmp('treepanel-projectName'),
 												st = proPanel.getStore(),
-												frozenSt = panel.getStore();
+												frozenSt = panel.getStore(),
+												extraParams = {};
 											if (obj.status == 'successful') {
 												showMsg('解封成功！');
 												st.proxy.url = './libs/project.php';
-												st.proxy.extraParams = {
+												extraParams = {
 													action: 'getProjectCaptains'
 												};
+												if (User.isProjectStaff()) {
+													Ext.apply(extraParams, {
+														captainName: User.getName()
+													});
+												}
+												st.proxy.extraParams = extraParams;
 												st.load({
 													node: proPanel.getRootNode(),
 													callback: function (){
