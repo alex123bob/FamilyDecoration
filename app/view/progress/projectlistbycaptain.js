@@ -45,9 +45,17 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 	                type: 'rest',
 	                appendId: false,
 	                url: './libs/project.php',
-	                extraParams: {
-	                	action: 'getProjectCaptains'
-	                },
+	                extraParams: (function (){
+	                	var p = {
+	                		action: 'getProjectCaptains'
+	                	}
+	                	if (User.isProjectStaff()) {
+	                		Ext.apply(p, {
+	                			captainName: User.getName()
+	                		});
+	                	}
+	                	return p;
+	                })(),
 	                reader: {
 	                    type: 'json'
 	                }
@@ -57,10 +65,19 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 	            		var node = ope.node;
 	            		if (node.get('captain')) {
 	            			st.proxy.url = './libs/project.php';
-	            			st.proxy.extraParams = {
-	            				captainName: node.get('captainName'),
-	            				action: 'getProjectsByCaptainName'
-	            			};
+	            			if (User.isAdmin() || User.isProjectManager() || User.isSupervisor()) {
+								st.proxy.extraParams = {
+		            				captainName: node.get('captainName'),
+		            				action: 'getProjectsByCaptainName'
+		            			};	            				
+	            			}
+	            			else {
+	            				st.proxy.extraParams = {
+	            					captainName: node.get('captainName'),
+	            					action: 'getProjectsByCaptainName',
+	            					userName: User.getName()
+	            				};
+	            			}
 	            		}
 	            	},
 	            	beforeappend: function (pNode, node){

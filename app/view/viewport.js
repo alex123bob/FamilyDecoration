@@ -57,16 +57,19 @@ Ext.define('FamilyDecoration.view.Viewport', {
                 }
             }],
             listeners: {
-                itemclick: function (view, rec){
-                    if (/-parent/i.test(rec.get('cmp'))) {
-                        if (rec.isExpanded()) {
-                            rec.collapse();
-                        }
-                        else {
-                            rec.expand();
-                        }
-                    }
-                },
+                // itemclick: function (view, rec){
+                //     if (/-parent/i.test(rec.get('cmp'))) {
+                //         if (rec.isExpanded()) {
+                //             rec.collapse();
+                //         }
+                //         else {
+                //             rec.expand();
+                //         }
+                //     }
+                // },
+                // beforeitemdblclick: function (){
+                //     return false;
+                // },
                 selectionchange: function (selModel, sels){
                     var rec = sels[0], xtype;
                     if (rec && /-index/i.test(rec.get('cmp'))) {

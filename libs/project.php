@@ -37,11 +37,12 @@
 			break;
 		case "getProjectCaptains":
 			$visitorName = $_SESSION["name"];
+			$captainName = isset($_GET["captainName"]) ? $_GET["captainName"] : "";
 			if ($_SESSION["level"] == "006-001") {
 				$res = getVisitorProjectCaptain($visitorName);
 			}
 			else {
-				$res = getProjectCaptains();
+				$res = getProjectCaptains($captainName);
 			}
 			break;
 		case "getProjects":

@@ -49,7 +49,7 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 						name: '项目经理',
 						value: '002'
 					}, {
-						name: '项目监理',
+						name: '监理',
 						value: '003'
 					});
 				}
@@ -302,7 +302,7 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 								name: '项目经理',
 								value: '002'
 							}, {
-								name: '项目监理',
+								name: '监理',
 								value: '003'
 							});
 						}

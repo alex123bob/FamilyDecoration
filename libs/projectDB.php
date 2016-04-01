@@ -64,9 +64,14 @@
 		$sql = "select distinct YEAR(`projectTime`) as `projectYear` from project where `isDeleted` = 'false' ORDER BY `projectTime` DESC ";
 		return $mysql->DBGetAsMap($sql);
 	}
-	function getProjectCaptains (){
+	function getProjectCaptains ($captainName){
 		global $mysql;
-		return $mysql->DBGetAsMap("select distinct `captainName`, `captain` from project where `isDeleted` = 'false' and `captainName` is not NULL");
+		if ($captainName != "") {
+			return $mysql->DBGetAsMap("select distinct `captainName`, `captain` from project where `isDeleted` = 'false' and `captainName` = '$captainName' ");
+		}
+		else {
+			return $mysql->DBGetAsMap("select distinct `captainName`, `captain` from project where `isDeleted` = 'false' and `captainName` is not NULL");
+		}
 	}
 
 	function getVisitorProjectsByCaptain($visitorName, $captainName){
@@ -133,7 +138,13 @@
 
 	function getProjectsByCaptainName ($captainName){
 		global $mysql;
-		$projects = $mysql->DBGetAsMap("select * from project where `isDeleted` = 'false' and `captainName` = '?' and `isFrozen` = 'false' ORDER BY `projectTime` ASC ", $captainName);
+		$userName = isset($_REQUEST["userName"]) ? $_REQUEST["userName"] : "";
+		if ($userName == "") {
+			$projects = $mysql->DBGetAsMap("select * from project where `isDeleted` = 'false' and `captainName` = '?' and `isFrozen` = 'false' ORDER BY `projectTime` ASC ", $captainName);
+		}
+		else {
+			$projects = $mysql->DBGetAsMap("select * from project where `isDeleted` = 'false' and `captainName` = '?' and `isFrozen` = 'false' and (`salesmanName` = '?' || `designerName` = '?') ORDER BY `projectTime` ASC ", $captainName, $userName, $userName);
+		}
 		$sqlBudget = "select * from budget where projectId = '?' and isDeleted = 'false'";
 		foreach($projects as $key=>$project) {
 			$projects[$key]["budgets"] = $mysql->DBGetAsMap($sqlBudget,$project['projectId']);

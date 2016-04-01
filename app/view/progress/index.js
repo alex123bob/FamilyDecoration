@@ -972,10 +972,6 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 							beforeshow: function(tip) {
 								var gridColumns = view.getGridColumns();
 								if (tip.triggerElement.cellIndex == 1 && (User.isAdmin() || User.isSupervisor())) {
-									// var column = gridColumns[tip.triggerElement.cellIndex];
-									// var val = view.getRecord(tip.triggerElement.parentNode).get(column.dataIndex);
-									// val.replace && val.replace(/\n/gi, '<br />');
-									// tip.update(val);
 									tip.update('请点击栏目，编辑监理意见');
 								}
 								else {

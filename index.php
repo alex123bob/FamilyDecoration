@@ -223,7 +223,7 @@
                 name: '项目经理',
                 value: '003-002'
             }, {
-                name: '项目监理',
+                name: '监理',
                 value: '003-003'
             }, {
                 name: '业务部主管',
@@ -379,7 +379,7 @@
                         role = '项目经理';
                     }
                     else if (roleStr == '003') {
-                        role = '项目监理';
+                        role = '监理';
                     }
                 }
                 // business department
