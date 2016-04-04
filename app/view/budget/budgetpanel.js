@@ -84,7 +84,8 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			addSmallBtn = cmp.down('[name="button-addSmallItemToBigItem"]'),
 			delItemBtn = cmp.down('[name="button-deleteItem"]'),
 			discountBtn = cmp.down('[name="button-priceAdjust"]'),
-			calculateBtn = cmp.down('[name="button-calculate"]');
+			calculateBtn = cmp.down('[name="button-calculate"]'),
+			editSmallItemNameBtn = cmp.down('[name="button-editSmallItemName"]');
 		st.removeAll();
 		cmp.budgetId = undefined;
 		custNameField.setValue('');
@@ -94,6 +95,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 		addSmallBtn.hide();
 		delItemBtn.hide();
 		discountBtn.hide();
+		editSmallItemNameBtn.hide();
 		!cmp.isSynchronousCalculation && calculateBtn.hide();
 	},
 
