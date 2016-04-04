@@ -13,6 +13,13 @@ Ext.define('FamilyDecoration.view.bulletin.EditBulletin', {
     	me.title = me.bulletin ? '编辑公告' : '添加公告';
 
     	me.items = [{
+    		xtype: 'textfield',
+    		emptyText: '请输入公告标题',
+    		hideLabel: true,
+    		width: '100%',
+    		flex: 1,
+    		value: me.bulletin ? unescape(me.bulletin.get('title')) : ''
+    	}, {
     		xtype: 'textareafield',
             emptyText: '请输入公告内容',
             hideLabel: true,
@@ -33,7 +40,9 @@ Ext.define('FamilyDecoration.view.bulletin.EditBulletin', {
 	        text: '确定',
 	        handler: function (){
 	            var textarea = me.down('textareafield'),
+	            	titleField = me.down('textfield'),
 	            	p = {
+	            		title: escape(titleField.getValue()),
 	                    content: escape(textarea.getValue())
 	                },
 	                chk = Ext.getCmp('checkbox-announcementViaEmail');

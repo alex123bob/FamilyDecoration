@@ -21,11 +21,12 @@
 	 */
 	function publish (){
 		global $mysql;
+		$title = $_POST["title"];
 		$content = $_POST["content"];
 		if (isset($_POST["id"])) {
-			$mysql->DBUpdate('bulletin',array('content'=>$content), "`id` = ?",array($_POST["id"]));
+			$mysql->DBUpdate('bulletin',array('content'=>$content, 'title'=>$title), "`id` = ?",array($_POST["id"]));
 		}else {
-			$mysql->DBInsertAsArray('bulletin',array('content'=>$content));
+			$mysql->DBInsertAsArray('bulletin',array('content'=>$content, 'title'=>$title));
 		}
 		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}

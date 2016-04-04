@@ -9,7 +9,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
         'FamilyDecoration.view.signbusiness.Index', 'FamilyDecoration.view.mybusiness.Index',
         'FamilyDecoration.view.checklog.Index', 'FamilyDecoration.view.taskassign.Index',
         'FamilyDecoration.view.checksignbusiness.Index', 'FamilyDecoration.view.mytask.Index',
-        'FamilyDecoration.view.msg.Index'
+        'FamilyDecoration.view.msg.Index', 'FamilyDecoration.view.bulletin.BulletinInspection'
     ],
     autoScroll: true,
     layout: 'hbox',
@@ -95,7 +95,18 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                             // val += '<sup style="color: red; font-size: 10px;">置顶公告</sup>';
                             val += '<img src="./resources/img/pin.png" width="20" height="20" />';
                         }
+                        else {
+                            val = unescape(rec.get('title'));
+                        }
                         return val.replace(/\n/ig, '<br />');
+                    }
+                }, {
+                    text: '公告时间',
+                    dataIndex: 'createTime',
+                    align: 'center',
+                    flex: 1,
+                    renderer: function (val, meta, rec){
+                        return val;
                     }
                 }],
                 store: bulletinSt,
@@ -187,6 +198,22 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                             showMsg('请选择要取消置顶的公告！');
                         }
                     }
+                }, {
+                    text: '查看公告',
+                    icon: './resources/img/look.png',
+                    handler: function (){
+                         var grid = Ext.getCmp('gridpanel-bulletin'),
+                            rec = grid.getSelectionModel().getSelection()[0];
+                        if (rec) {
+                            var win = Ext.create('FamilyDecoration.view.bulletin.BulletinInspection', {
+                                bulletin: rec
+                            });
+                            win.show();
+                        }
+                        else {
+                            showMsg('请选择要查看的公告！');
+                        }
+                    }
                 }],
                 bbar: [{
                     text: '添加公告',
@@ -198,6 +225,8 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                     }
                 }, {
                     text: '修改公告',
+                    id: 'button-modifyAnnouncement',
+                    name: 'button-modifyAnnouncement',
                     icon: './resources/img/edit.png',
                     hidden: !User.isAdmin() && !User.isAdministrationManager() && !User.isAdministrationStaff(),
                     handler: function (){
@@ -375,6 +404,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                     layout: 'fit',
                                     items: []
                                 });
+                            win.showable = true;
 
                             if ('checkLog' == type) {
                                 win.add({
@@ -389,6 +419,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                 });
                             }
                             else if ('applyDesigner' == type) {
+                                win.showable = false;
                                 Ext.Ajax.request({
                                     url: './libs/business.php?action=getBusinessById',
                                     method: 'GET',
@@ -406,6 +437,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                                 salesmanName: salesmanName,
                                                 businessId: businessId
                                             });
+                                            win.show();
                                         }
                                     }
                                 });
@@ -424,6 +456,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                 });
                             }
                             else if ('editLogContent' == type) {
+                                win.showable = false;
                                 Ext.Ajax.request({
                                     url: './libs/loglist.php?action=getUserNameAndLogListIdByLogDetailId',
                                     method: 'GET',
@@ -438,6 +471,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                                 logListId: obj[0]['logListId'],
                                                 userName: obj[0]['userName']
                                             });
+                                            win.show();
                                         }
                                     }
                                 });
@@ -486,6 +520,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                 });
                             }
                             else if ('requestDeadBusiness' == type) {
+                                win.showable = false;
                                 Ext.Ajax.request({
                                     url: 'libs/business.php?action=getBusinessById',
                                     method: 'GET',
@@ -511,7 +546,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                 return;
                             }
                             setRead(rec);
-                            win.items.length > 0 && win.show();
+                            win.showable && win.show();
                         }
                     }]
                 }],

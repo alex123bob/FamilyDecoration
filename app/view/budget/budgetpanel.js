@@ -42,17 +42,26 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			addSmallBtn = panel.down('[name="button-addSmallItemToBigItem"]'),
 			delItemBtn = panel.down('[name="button-deleteItem"]'),
 			discountBtn = panel.down('[name="button-priceAdjust"]'),
-			calculateBtn = panel.down('[name="button-calculate"]');
+			calculateBtn = panel.down('[name="button-calculate"]'),
+			editSmallItemNameBtn = panel.down('[name="button-editSmallItemName"]');
 		addNewBtn.isHidden() && addNewBtn.show();
 		addSmallBtn.isHidden() && addSmallBtn.show();
 		delItemBtn.isHidden() && delItemBtn.show();
 		discountBtn.isHidden() && discountBtn.show();
+		editSmallItemNameBtn.isHidden() && editSmallItemNameBtn.show();
 		!panel.isSynchronousCalculation && calculateBtn.isHidden() && calculateBtn.show();
 		if (rec) {
 			if (rec.get('basicItemId') && !rec.get('basicSubItemId')) {
     			addSmallBtn.enable();
+    			editSmallItemNameBtn.disable();
     		}
     		else {
+    			if (rec.get('basicSubItemId')) {
+    				editSmallItemNameBtn.enable();
+    			}
+    			else {
+    				editSmallItemNameBtn.disable();
+    			}
     			addSmallBtn.disable();
     		}
     		delItemBtn.setDisabled(!rec.get('isEditable'));
@@ -60,6 +69,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 		else {
 			addSmallBtn.disable();
 			delItemBtn.disable();
+			editSmallItemNameBtn.disable();
 		}
 	},
 
@@ -182,6 +192,62 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 					}
 					else {
 						showMsg('请选择大项！');
+					}
+				}
+			},
+			{
+				text: '修改名称',
+				tooltip: '修改小项名称',
+				icon: './resources/img/edit.png',
+				name: 'button-editSmallItemName',
+				disabled: true,
+				hidden: true,
+				handler: function (){
+					var grid = me.getComponent('gridpanel-budgetContent'),
+						view = grid.getView(),
+						rec = grid.getSelectionModel().getSelection()[0];
+					if (rec) {
+						if (rec.get('basicSubItemId')) {
+							Ext.Msg.prompt('修改名称', '请输入小项名称:', function (btnId, txt){
+								if (btnId == 'ok') {
+									if (txt != '') {
+										Ext.Ajax.request({
+											url: './libs/budget.php?action=editItem',
+											method: 'POST',
+											params: {
+												budgetItemId: rec.getId(),
+												itemName: txt
+											},
+											callback: function (opts, success, res){
+												if (success){
+													var obj = Ext.decode(res.responseText);
+													if ('successful' == obj.status) {
+														showMsg('修改成功！');
+														me.refresh();
+														grid.getSelectionModel().select(rec);
+				            							view.focusRow(rec, 500);
+													}
+													else {
+														showMsg(obj.errMsg);
+													}
+												}
+											}
+										});
+									}
+									else {
+										Ext.Msg.error('名称不能为空！');
+										grid.getSelectionModel().select(rec);
+				            			view.focusRow(rec, 500);
+									}
+								}
+							}, window, false, rec.get('itemName'));
+						}
+						else {
+							showMsg('选择项不是小项！');
+						}
+					}
+					else {
+						showMsg('请选择需要更改名称的小项！');
 					}
 				}
 			},
@@ -572,6 +638,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				columnLines: true, // config vertical line of cell
 				plugins: [
 					Ext.create('Ext.grid.plugin.CellEditing', {
+						pluginId: 'cellEditor',
 			            clicksToEdit: 1,
 			            listeners: {
 			            	beforeedit: function (editor, e) {
@@ -637,9 +704,13 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			            		if (me.isSynchronousCalculation) {
 			            			me.refresh(function (){
 				            			var grid = me.getComponent('gridpanel-budgetContent'),
-				            				view = grid.getView();
+				            				view = grid.getView(),
+				            				st = grid.getStore(),
+				            				itemCount = st.getCount();
 				            			grid.getSelectionModel().select(rec);
-				            			view.focusRow(rec);
+				            			view.focusRow(rec, 500);
+				            			var rowIndex = st.indexOf(rec);
+				            			editor.startEditByPosition({row: rowIndex + 1, column: 3});
 				            		});
 			            		}
 			            		else {

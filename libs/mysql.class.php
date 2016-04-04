@@ -266,6 +266,10 @@
 			return array();
 		}
 
+		public function DBGetLastInsertId () {
+			return mysql_insert_id($this->dbConn);
+		}
+
 		public function DBInsertAsArray($tableValue, $obj){		//表名，字段数组，内容数组
 			//foreach 实际上是HashTable实现的，按照添加顺序遍历，for才按索引
 			//http://www.nowamagic.net/academy/detail/1204411
