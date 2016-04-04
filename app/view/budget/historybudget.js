@@ -137,7 +137,24 @@ Ext.define('FamilyDecoration.view.budget.HistoryBudget', {
 		            ]
 		        }
 			],
-			store: budgetSt
+			store: budgetSt,
+			listeners: {
+				itemdblclick: function (view, rec){
+					if (rec.getId() == me.budgetPanel.budgetId) {
+						showMsg('该预算已经被加载！');
+					}
+					else {
+						if (rec.get('businessId')) {
+							rec.set('projectOrBusinessName', rec.get('businessRegion') + ' ' + rec.get('businessAddress'));
+						}
+						else if (rec.get('projectId')) {
+							rec.set('projectOrBusinessName', rec.get('projectName'));
+						}
+						me.budgetPanel.loadBudget(rec.data);
+						me.close();
+					}
+				}
+			}
 		}];
 
 		this.callParent();
