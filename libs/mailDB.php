@@ -21,17 +21,29 @@
 		global $mysql;
 		$sql = "select * from mail where `isDeleted` = 'false' and mailReceiver = '?' or mailReceiver like '%?,%' or mailReceiver like '%,?%' ORDER BY `mailTime` DESC ";
 		$arr = $mysql->DBGetAsMap($sql,$user, $user, $user);
+		$usernames = array();
+		
+		for ($i = 0; $i < count($arr); $i++) {
+			$receiver = $arr[$i]["mailReceiver"];
+			$receiverList = explode(',',$receiver);
+			$usernames = array_merge($receiverList, $usernames);
+			array_push($usernames,$arr[$i]["mailSender"]);
+		}
+		$namesArray = $mysql->DBGetAsMap("select realname,name from user where name in ( '".implode("','", array_unique($usernames))."' )");
+        $names = array();
+        for ($i = 0; $i < count($namesArray); $i++) {
+        	$names[$namesArray[$i]['name']] = $namesArray[$i]['realname'];
+        }
 		for ($i = 0; $i < count($arr); $i++) {
 			$receiver = $arr[$i]["mailReceiver"];
 			$receiverList = explode(',',$receiver);
 			for ($j = 0; $j < count($receiverList); $j++) {
-				$receiverList[$j] = getUserRealName($receiverList[$j]);
-				$receiverList[$j] = $receiverList[$j]["realname"];
+                $n = $receiverList[$j];
+                $receiverList[$j] = isset( $names[$n] ) ? $names[$n]  : '未知用户' ;
 			}
 			$receiver = implode(",", $receiverList);
 			$arr[$i]["mailReceiver"] = $receiver;
-			$sender = getUserRealName($arr[$i]["mailSender"]);
-			$arr[$i]["mailSender"] = $sender["realname"];
+            $arr[$i]["mailSender"] = isset( $names[$arr[$i]["mailSender"]] ) ? $names[$arr[$i]["mailSender"]]  : '未知用户';
 		}
 		return $arr;
 	}

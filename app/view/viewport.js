@@ -302,7 +302,7 @@ Ext.define('FamilyDecoration.view.Viewport', {
                         mailMemberTree = Ext.getCmp('treepanel-memberNameForMail'),
                         dynamicMessageBox = Ext.getCmp('gridpanel-message');
                     // fetch email every period time
-                    /* close it temporarily because the number of mail is really huge, especially william's mailbox
+                    // close it temporarily because the number of mail is really huge, especially william's mailbox
                     Ext.Ajax.request({
                         url: './libs/mail.php?action=getReceivedMailByUser',
                         params: {
@@ -354,7 +354,6 @@ Ext.define('FamilyDecoration.view.Viewport', {
                         silent: true,
                         automatic: true
                     });
-                    */
                     // fetch message every period time
                     Ext.Ajax.request({
                         url: './libs/message.php?action=get',
