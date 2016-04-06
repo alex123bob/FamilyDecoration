@@ -12,7 +12,43 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 	},
 
 	initComponent: function() {
-		var me = this;
+		var me = this,
+			itemsPerPage = 10;
+
+		var receivedSt = Ext.create('FamilyDecoration.store.Mail', {
+			autoLoad: true,
+			pageSize: itemsPerPage, // items per page
+			proxy: {
+				type: 'rest',
+		    	url: './libs/mail.php',
+		        reader: {
+		            type: 'json',
+		            totalProperty: 'totalCount',
+		            root: 'resultSet'
+		        },
+		        extraParams: {
+		        	mailUser: User.getName(),
+					action: 'getReceivedMailByUser'
+		        }
+			}
+		});
+		var sentSt = Ext.create('FamilyDecoration.store.Mail', {
+			autoLoad: true,
+			proxy: {
+				type: 'rest',
+		    	url: './libs/mail.php',
+		        reader: {
+		            type: 'json',
+		            totalProperty: 'totalCount',
+		            root: 'resultSet'
+		        },
+		        extraParams: {
+		        	mailUser: User.getName(),
+					action: 'getSentMailByUser'
+		        }
+			}
+		});
+
 		me.items = [
 			{
 				xtype: 'container',
@@ -79,6 +115,12 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 					flex: 2,
 					width: '100%',
 					bodyCls: 'pointerCursor',
+					dockedItems: [{
+	                    xtype: 'pagingtoolbar',
+	                    store: receivedSt,   // same store GridPanel is using
+	                    dock: 'bottom',
+	                    displayInfo: true
+	                }],
 					tbar: [{
 						xtype: 'button',
 						text: '写信',
@@ -211,20 +253,7 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 						flex: 2
 					}],
 					autoScroll: true,
-					store: Ext.create('FamilyDecoration.store.Mail', {
-						autoLoad: true,
-						proxy: {
-							type: 'rest',
-					    	url: './libs/mail.php',
-					        reader: {
-					            type: 'json'
-					        },
-					        extraParams: {
-					        	mailUser: User.getName(),
-								action: 'getReceivedMailByUser'
-					        }
-						}
-					}),
+					store: receivedSt,
 					listeners: {
 						itemdblclick: function(view, rec, item, index, e, opts) {
 							if (rec) {
@@ -261,6 +290,12 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 					name: 'gridpanel-sentBox',
 					flex: 1,
 					width: '100%',
+					dockedItems: [{
+	                    xtype: 'pagingtoolbar',
+	                    store: sentSt,   // same store GridPanel is using
+	                    dock: 'bottom',
+	                    displayInfo: true
+	                }],
 					tbar: [{
 						xtype: 'button',
 						icon: './resources/img/preview1.png',
@@ -301,20 +336,7 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 						flex: 2
 					}],
 					autoScroll: true,
-					store: Ext.create('FamilyDecoration.store.Mail', {
-						autoLoad: true,
-						proxy: {
-							type: 'rest',
-					    	url: './libs/mail.php',
-					        reader: {
-					            type: 'json'
-					        },
-					        extraParams: {
-					        	mailUser: User.getName(),
-								action: 'getSentMailByUser'
-					        }
-						}
-					}),
+					store: sentSt,
 					listeners: {
 						itemdblclick: function(view, rec, item, index, e, opts) {
 							if (rec) {

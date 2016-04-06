@@ -6,7 +6,9 @@ Ext.define('FamilyDecoration.store.Mail', {
 		type: 'rest',
     	url: './libs/mail.php',
         reader: {
-            type: 'json'
+            type: 'json',
+            totalProperty: 'totalCount',
+            root: 'resultSet'
         }
 	}
 });

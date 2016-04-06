@@ -192,13 +192,13 @@
                         icon: 'resources/img/statistics.png'
                     }
                 ]
+            },
+            {
+                name: '邮箱平台',
+                cmp: 'mail-index',
+                leaf: true,
+                icon: 'resources/img/email.png'
             }
-            // {
-            //     name: '邮箱平台',
-            //     cmp: 'mail-index',
-            //     leaf: true,
-            //     icon: 'resources/img/email.png'
-            // }
         ]
     },
 
