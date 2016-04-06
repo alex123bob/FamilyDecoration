@@ -34,6 +34,7 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 		});
 		var sentSt = Ext.create('FamilyDecoration.store.Mail', {
 			autoLoad: true,
+			pageSize: itemsPerPage, // items per page
 			proxy: {
 				type: 'rest',
 		    	url: './libs/mail.php',
