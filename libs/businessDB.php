@@ -141,7 +141,7 @@
 	
 	function getBusinessListForBudget (){
 		global $mysql;
-		return $mysql->DBGetAsMap("select `b`.*, `r`.`name` from `business` `b` left join `region` `r` on (`b`.`regionId` = `r`.`id`) where `b`.`isDeleted` = 'false' and `b`.`isTransfered` = 'false' and `b`.`applyBudget` != 0 ");
+		return $mysql->DBGetAsMap("select `b`.*, `r`.`name` from `business` `b` left join `region` `r` on (`b`.`regionId` = `r`.`id`) where `b`.`isDeleted` = 'false' and `b`.`isTransfered` = 'false' and `b`.`applyBudget` != 0 and `b`.`budgetFinished` = 'false' ");
 	}
 	function addBusiness($post){
 		$businesss = getBusinessByAddress($post["address"], $post["regionId"]);

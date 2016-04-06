@@ -189,6 +189,30 @@
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
+	// 预算完成，将对应project或者business的budgetFinished字段置为'true'
+	function finishBudget ($budgetId){
+		global $mysql;
+		$arr = $mysql->DBGetAsMap("select * from `budget` WHERE `budgetId` = '$budgetId' ");
+		if (count($arr) > 0) {
+			if ($arr[0]["projectId"]) {
+				$projectId = $arr[0]["projectId"];
+				$mysql->DBUpdate("`project`", array("budgetFinished"=>'true'), "`projectId`='?'", array($projectId));
+				return array('status'=>'successful', 'errMsg' => '', 'projectId'=>$projectId);
+			}
+			else if ($arr[0]["businessId"]) {
+				$businessId = $arr[0]["businessId"];
+				$mysql->DBUpdate("`business`", array("budgetFinished"=>'true'), "`id`='?'", array($businessId));
+				return array('status'=>'successful', 'errMsg' => '', 'businessId'=>$businessId);
+			}
+			else {
+				return array('status'=>'failing', 'errMsg' => '没有找到预算对应的工程或者业务！');
+			}
+		}
+		else {
+			return array('status'=>'failing', 'errMsg' => '没有找到对应预算！');
+		}
+	}
+
 	//供本地备份脚本使用
 	function getBudgetIds (){
 		global $mysql;

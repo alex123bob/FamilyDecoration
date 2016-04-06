@@ -104,6 +104,7 @@ Ext.define('FamilyDecoration.view.budget.EditHeader', {
 									searchFilter: true,
 									flex: 2,
 									width: '100%',
+									isForBudgetProjectList: true,
 									listeners: {
 										itemclick: function (view, rec){
 											if (rec.get('projectName')) {

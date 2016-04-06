@@ -5,6 +5,7 @@ Ext.define('FamilyDecoration.view.progress.ProjectList', {
 	isForChart: false,
 	isForAddCategory: false,
 	isForFrozen: false,
+	isForBudgetProjectList: false,
 
 	loadAll: true,
 	searchFilter: false,
@@ -137,6 +138,29 @@ Ext.define('FamilyDecoration.view.progress.ProjectList', {
 	            			else if (me.isForFrozen) {
 	            				if (node.get('projectName')) {
 	            					if (node.get('isFrozen') == 1) {
+	            						node.set({
+	            							leaf: true,
+	            							icon: 'resources/img/project.png'
+	            						});
+	            					}
+	            					else {
+	            						return false;
+	            					}
+	            				}
+	            				else if (node.get('projectMonth')) {
+	            					node.set({
+	            						icon: 'resources/img/month.png'
+	            					});
+	            				}
+	            				else {
+	            					node.set({
+	            						icon: 'resources/img/calendar.gif'
+	            					});
+	            				}
+	            			}
+	            			else if (me.isForBudgetProjectList) {
+	            				if (node.get('projectName')) {
+	            					if (node.get('budgetFinished') == 'false') {
 	            						node.set({
 	            							leaf: true,
 	            							icon: 'resources/img/project.png'

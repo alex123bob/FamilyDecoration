@@ -259,4 +259,10 @@
 		$arr = $mysql->DBGetSomeRows("`user`", "*" ,"where `level` like '001-%' and `isDeleted` = 'false' ");
 		return ($arr);
 	}
+
+	function getUserByName ($name){
+		global $mysql;
+		$arr = $mysql->DBGetSomeRows("`user`", "*" ,"where `name` = '$name' ");
+		return ($arr);
+	}
 ?>

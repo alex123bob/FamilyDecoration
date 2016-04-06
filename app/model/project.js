@@ -21,7 +21,8 @@ Ext.define('FamilyDecoration.model.Project', {
         {name: 'budgets'},
         {name: 'isFrozen', type: 'string'},
         {name: 'businessId', type: 'string'},
-        {name: 'hasChart', type: 'string'}
+        {name: 'hasChart', type: 'string'},
+        {name: 'budgetFinished', type: 'string'}
     ],
     idProperty: 'projectId',
     proxy: {

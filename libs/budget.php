@@ -41,6 +41,8 @@
 		case "getBudgetTemplate":$res = getBudgetTemplate();break;
 		//根据预算模板id获取预算模板项目
 		case "getBudgetTemplateItem":$res = getBudgetTemplateItem($_REQUEST['budgetTemplateId']);break;
+		// 预算完成，将对应的project或者business的budgetFinished置为true
+		case "finishBudget":$res = finishBudget($_REQUEST['budgetId']);break;
 		//删除预算模板
 		case "deleteBudgetTemplate":$res = deleteBudgetTemplate($_REQUEST['budgetTemplateId']);break;
 		default: throw new Exception("unknown action:".$action);

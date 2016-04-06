@@ -451,20 +451,20 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 					win.show();
 				}
 			},
-			{
-				text: '导出预算',
-				icon: './resources/img/excel.png',
-				tooltip: '导出excel版本的预算，用于需要调整打印格式的预算',
-				handler: function (){
-					if (me.budgetId) {
-						var exportFrame = document.getElementById('exportFrame');
-						exportFrame.src = './phpexcel/index.php?budgetId=' + me.budgetId;
-					}
-					else {
-						showMsg('没有预算！');
-					}
-				}
-			},
+			// {
+			// 	text: '导出预算',
+			// 	icon: './resources/img/excel.png',
+			// 	tooltip: '导出excel版本的预算，用于需要调整打印格式的预算',
+			// 	handler: function (){
+			// 		if (me.budgetId) {
+			// 			var exportFrame = document.getElementById('exportFrame');
+			// 			exportFrame.src = './phpexcel/index.php?budgetId=' + me.budgetId;
+			// 		}
+			// 		else {
+			// 			showMsg('没有预算！');
+			// 		}
+			// 	}
+			// },
 			{
 				text: '置为模板',
 				icon: './resources/img/convert.png',
@@ -492,6 +492,142 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 										}
 									}
 								});
+							}
+						});
+					}
+					else {
+						showMsg('没有预算！');
+					}
+				}
+			},
+			{
+				text: '预算完成',
+				icon: './resources/img/complete.png',
+				tooltip: '将当前预算置为完成，此后对应项目无需出现在待做预算的列表中',
+				name: 'button-completeBudget',
+				handler: function (){
+					if (me.budgetId) {
+						Ext.Msg.warning('确认将当前预算置为完成吗？', function (btnId){
+							if ('yes' == btnId) {
+								Ext.Ajax.request({
+									url: './libs/budget.php?action=finishBudget',
+									method: 'POST',
+									params: {
+										budgetId: me.budgetId
+									},
+									callback: function (opts, success, res){
+										if (success) {
+											var obj = Ext.decode(res.responseText);
+											if ('successful' == obj.status) {
+												showMsg('预算完成！');
+												if (obj.projectId) {
+													Ext.Ajax.request({
+														url: './libs/project.php?action=getProjectsByProjectId',
+														method: 'GET',
+														params: {
+															projectId: obj.projectId
+														},
+														callback: function (opts, success, res){
+															if (success) {
+																var arr = Ext.decode(res.responseText),
+																	salesmanName = arr[0]['salesmanName'],
+																	designerName = arr[0]['designerName'],
+																	budgetName = me.down('[name="displayfield-budgetName"]').getValue(),
+																	address = me.down('[name="displayfield-projectOrBusinessName"]').getValue(),
+																	custName = me.down('[name="displayfield-custName"]').getValue();
+																var content = User.getRealName() + '将预算"' + budgetName + '"置为完成！对应工程地址为"' + address + '", 客户名称为"' + custName + '"';
+																Ext.Ajax.request({
+																	url: './libs/user.php?action=getUserByName',
+																	method: 'GET',
+																	params: {
+																		name: salesmanName
+																	},
+																	callback: function (opts, success, res){
+																		if (success) {
+																			var user = Ext.decode(res.responseText);
+																			user = user[0];
+																			sendMsg(User.getName(), salesmanName, content);
+																			sendMail(User.getName(), user['mail'], '预算完成！', content);
+																		}
+																	}
+																});
+																Ext.Ajax.request({
+																	url: './libs/user.php?action=getUserByName',
+																	method: 'GET',
+																	params: {
+																		name: designerName
+																	},
+																	callback: function (opts, success, res){
+																		if (success) {
+																			var user = Ext.decode(res.responseText);
+																			user = user[0];
+																			sendMsg(User.getName(), designerName, content);
+																			sendMail(User.getName(), user['mail'], '预算完成！', content);
+																		}
+																	}
+																});
+															}
+														}
+													})
+												}
+												else if (obj.businessId) {
+													Ext.Ajax.request({
+														url: './libs/business.php?action=getBusinessById',
+														method: 'GET',
+														params: {
+															businessId: obj.businessId
+														},
+														callback: function (opts, success, res){
+															if (success) {
+																var arr = Ext.decode(res.responseText),
+																	salesmanName = arr[0]['salesmanName'],
+																	designerName = arr[0]['designerName'],
+																	budgetName = me.down('[name="displayfield-budgetName"]').getValue(),
+																	address = me.down('[name="displayfield-projectOrBusinessName"]').getValue(),
+																	custName = me.down('[name="displayfield-custName"]').getValue();
+																var content = User.getRealName() + '将预算"' + budgetName + '"置为完成！对应工程地址为"' + address + '", 客户名称为"' + custName + '"';
+																var content = User.getRealName() + '将预算' + budgetName + '置为完成！';
+																Ext.Ajax.request({
+																	url: './libs/user.php?action=getUserByName',
+																	method: 'GET',
+																	params: {
+																		name: salesmanName
+																	},
+																	callback: function (opts, success, res){
+																		if (success) {
+																			var user = Ext.decode(res.responseText);
+																			user = user[0];
+																			sendMsg(User.getName(), salesmanName, content);
+																			sendMail(User.getName(), user['mail'], '预算完成！', content);
+																		}
+																	}
+																});
+																Ext.Ajax.request({
+																	url: './libs/user.php?action=getUserByName',
+																	method: 'GET',
+																	params: {
+																		name: designerName
+																	},
+																	callback: function (opts, success, res){
+																		if (success) {
+																			var user = Ext.decode(res.responseText);
+																			user = user[0];
+																			sendMsg(User.getName(), designerName, content);
+																			sendMail(User.getName(), user['mail'], '预算完成！', content);
+																		}
+																	}
+																});
+															}
+														}
+													});
+												}
+											}
+											else {
+												showMsg(obj.errMsg);
+											}
+										}
+									}
+								})
 							}
 						});
 					}
