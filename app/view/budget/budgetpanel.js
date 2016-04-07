@@ -227,7 +227,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 														showMsg('修改成功！');
 														me.refresh();
 														grid.getSelectionModel().select(rec);
-				            							view.focusRow(rec, 500);
+				            							view.focusRow(rec, 200);
 													}
 													else {
 														showMsg(obj.errMsg);
@@ -239,7 +239,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 									else {
 										Ext.Msg.error('名称不能为空！');
 										grid.getSelectionModel().select(rec);
-				            			view.focusRow(rec, 500);
+				            			view.focusRow(rec, 200);
 									}
 								}
 							}, window, false, rec.get('itemName'));
@@ -801,6 +801,14 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 										return false;
 									}
 			            		}
+			            		else if (e.field == 'itemName') {
+			            			if (rec.get('basicSubItemId')) {
+			            				return true;
+			            			}
+			            			else {
+			            				return false;
+			            			}
+			            		}
 			            		else if (e.field == 'remark') {
 			            			return false;
 			            		}
@@ -832,6 +840,27 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				            			}
 				            		});
 			            		}
+			            		else if (field == 'itemName') {
+			            			Ext.Ajax.request({
+										url: './libs/budget.php?action=editItem',
+										method: 'POST',
+										params: {
+											budgetItemId: rec.getId(),
+											itemName: rec.get('itemName')
+										},
+										callback: function (opts, success, res){
+											if (success){
+												var obj = Ext.decode(res.responseText);
+												if ('successful' == obj.status) {
+													showMsg('修改成功！');
+												}
+												else {
+													showMsg(obj.errMsg);
+												}
+											}
+										}
+									});
+			            		}
 			            		else if (field == 'remark') {
 			            			// todo
 			            		}
@@ -846,9 +875,11 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				            				st = grid.getStore(),
 				            				itemCount = st.getCount();
 				            			grid.getSelectionModel().select(rec);
-				            			view.focusRow(rec, 500);
-				            			var rowIndex = st.indexOf(rec);
-				            			editor.startEditByPosition({row: rowIndex + 1, column: 3});
+				            			view.focusRow(rec, 200);
+				            			if (field == 'itemAmount') {
+			            					var rowIndex = st.indexOf(rec);
+				            				editor.startEditByPosition({row: rowIndex + 1, column: 3});	
+			            				}
 				            		});
 			            		}
 			            		else {
@@ -859,11 +890,18 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			            	},
 			            	validateedit: function (editor, e, opts){
 			            		var rec = e.record;
-			            		if (isNaN(e.value) || !/^\d+(\.\d+)?$/.test(e.value) ){
-			            			return false;
+			            		if (e.field == 'itemAmount') {
+			            			if (isNaN(e.value) || !/^\d+(\.\d+)?$/.test(e.value) ){
+				            			return false;
+				            		}
+				            		else if (e.value == e.originalValue) {
+				            			return false;
+				            		}
 			            		}
-			            		else if (e.value == e.originalValue) {
-			            			return false;
+			            		else if (e.field == 'itemName') {
+			            			if (e.value == e.originalValue) {
+			            				return false;
+			            			}
 			            		}
 			            	}
 			            }
@@ -891,7 +929,11 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 	                	draggable: false,
 	                	align: 'center',
 	                	sortable: false,
-	                	menuDisabled: true
+	                	menuDisabled: true,
+	                	editor: me.isForPreview ? null : {
+	                		xtype: 'textfield',
+	                		allowBlank: false
+	                	}
 			        },
 			        {
 			        	text: '单位', 
