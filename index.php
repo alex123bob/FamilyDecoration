@@ -232,10 +232,10 @@
                 name: '业务员',
                 value: '004-002'
             }, {
-                name: '行政部主管',
+                name: '人事行政部主管',
                 value: '005-001'
             }, {
-                name: '行政部员工',
+                name: '人事行政部员工',
                 value: '005-002'
             }, {
                 name: '游客',
@@ -329,7 +329,7 @@
                     department = '业务部';
                 }
                 else if (/^005-\d{3}$/i.test(level)) {
-                    department = '行政部';
+                    department = '人事行政部';
                 }
                 else if (/^006-\d{3}$/i.test(level)) {
                     department = '游客';

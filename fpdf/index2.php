@@ -43,7 +43,7 @@ $pdf->AliasNbPages("__totalPage__");
 //echo $custName.":".$projectName;
 foreach($budgetItems as $bItem){
 	$fields = array('budgetItemId','itemName','budgetId','mainMaterialTotalPrice','auxiliaryMaterialTotalPrice','manpowerTotalPrice','mainMaterialTotalCost','manpowerTotalCost',
-					'machineryTotalPrice','remark','itemAmount','itemCode','itemUnit','mainMaterialPrice','auxiliaryMaterialPrice','lossPercent','machineryPrice','manpowerPrice');
+					'machineryTotalPrice','remark','itemAmount','itemCode','itemUnit','mainMaterialPrice','auxiliaryMaterialPrice','lossPercent','machineryPrice','manpowerPrice','basicItemId','basicSubItemId');
 	foreach($fields as $field){
 		if(!isset($bItem[$field]))
 			$bItem[$field] = "";
@@ -65,6 +65,9 @@ foreach($budgetItems as $bItem){
 	$align = array('C','L','C','C','C','C','C','C','C','C','C','C','C','L');
 	if(in_array($bItem['itemCode'],array('O','P','Q','R','S'))){
 		$data[3]= '';
+	}
+	if ($itemCode != "A" && $bItem["basicItemId"] != "" && $bItem["basicSubItemId"] == "") {
+		$pdf->writeCellLine($CellWidth,array("","","","","","","","","","","","","",""),$borders,0,$align,14,$fontSizes);
 	}
 	$pdf->writeCellLine($CellWidth,$data,$borders,0,$align,14,$fontSizes);
 }

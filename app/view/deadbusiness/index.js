@@ -317,6 +317,7 @@ Ext.define('FamilyDecoration.view.deadbusiness.Index', {
 				}
 			}, {
 				text: '恢复',
+				hidden: User.isAdmin() || User.isDesignManager() ? false : true,
 				name: 'button-recoverDeadBusiness',
 				id: 'button-recoverDeadBusiness',
 				icon: './resources/img/restore.png',

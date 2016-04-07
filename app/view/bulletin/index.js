@@ -92,11 +92,13 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                     renderer: function (val, meta, rec){
                         val = unescape(val);
                         if (rec.get('isStickTop') == 'true') {
+                            meta.style = 'font-size: 18px;';
                             // val += '<sup style="color: red; font-size: 10px;">置顶公告</sup>';
                             val += '<img src="./resources/img/pin.png" width="20" height="20" />';
                         }
                         else {
                             val = unescape(rec.get('title'));
+                            meta.style = 'font-size: 16px;';
                         }
                         return val.replace(/\n/ig, '<br />');
                     }
@@ -106,6 +108,12 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                     align: 'center',
                     flex: 1,
                     renderer: function (val, meta, rec){
+                        if (rec.get('isStickTop') == 'true') {
+                            meta.style = 'font-size: 18px;';
+                        }
+                        else {
+                            meta.style = 'font-size: 16px;';
+                        }
                         return val;
                     }
                 }],

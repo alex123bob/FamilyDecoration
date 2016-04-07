@@ -8,6 +8,7 @@
 			"proprietor"=>$data['proprietor'],
 			"salesman"=>$data['salesman'],
 			"salesmanName"=>$data['salesmanName'],
+			"lastUpdateTime"=>'now()'
 		);
 		if(isset($data['phone']))
 			$obj['phone'] = $data['phone'];

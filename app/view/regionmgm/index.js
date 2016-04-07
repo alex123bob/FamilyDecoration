@@ -275,7 +275,7 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 								count++;
 							}
 						});
-						if (User.isAdmin() || User.isBusinessManager()) {
+						if (User.isAdmin() || User.isBusinessManager() || User.isAdministrationManager()) {
 							str = '[<strong><font color="blue">' + total + '</font></strong>]';
 						}
 						else {
@@ -450,7 +450,7 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 					autoLoad: false,
 					filters: [
 						function (item){
-							if (User.isAdmin() || User.isBusinessManager()) {
+							if (User.isAdmin() || User.isBusinessManager() || User.isAdministrationManager()) {
 								return true;
 							}
 							else {
