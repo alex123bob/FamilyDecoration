@@ -146,7 +146,7 @@ Ext.define('FamilyDecoration.view.basicitem.AddBasicSubItem', {
 						}
 						else {
 							p.subItemName.push(items[i].get('subItemName'));
-							p.subItemUnit.push(items[i].get('subItemUnit'));
+							p.subItemUnit.push(items[i].get('subItemUnit').replace(/M²/gi, '㎡'));
 							p.mainMaterialPrice.push(items[i].get('mainMaterialPrice'));
 							p.auxiliaryMaterialPrice.push(items[i].get('auxiliaryMaterialPrice'));
 							p.manpowerPrice.push(items[i].get('manpowerPrice'));
