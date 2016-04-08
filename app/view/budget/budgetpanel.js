@@ -913,6 +913,107 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				],
 				store: Ext.create('FamilyDecoration.store.BudgetItem'),
 				columns: [
+					{
+						xtype: 'actioncolumn',
+						width: 20,
+						align: 'center',
+						items: [
+							{
+								icon: './resources/img/upward-arrow.png',
+								tooltip: '向上调整',
+								getClass: function (val, meta, rec){
+									if (rec.get('basicSubItemId')) {
+										return '';
+									}
+									else {
+										return 'visibilityHidden';
+									}
+								},
+								isDisabled: function (view, rowIndex, colIndex, item, rec){
+									if (rec.get('basicSubItemId')) {
+										return false;
+									}
+									else {
+										return true;
+									}
+								},
+								handler: function (view, rowIndex, colIndex){
+									var rec = view.getStore().getAt(rowIndex);
+									Ext.Ajax.request({
+										url: './libs/budget.php?action=moveItemUpward',
+										method: 'POST',
+										params: {
+											itemCode: rec.get('itemCode'),
+											budgetItemId: rec.getId(),
+											budgetId: rec.get('budgetId')
+										},
+										callback: function (opts, success, res){
+											if (success) {
+												var obj = Ext.decode(res.responseText);
+												if ('successful' == obj.status) {
+													showMsg('调整成功！');
+													me.refresh(function (){
+														view.getSelectionModel().select(rec);
+				            							view.focusRow(rec, 200);
+													});
+												}
+												else {
+													showMsg(obj.errMsg);
+												}
+											}
+										}
+									});
+								}
+							},
+							{
+								icon: './resources/img/downward-arrow.png',
+								tooltip: '向下调整',
+								getClass: function (val, meta, rec){
+									if (rec.get('basicSubItemId')) {
+										return '';
+									}
+									else {
+										return 'visibilityHidden';
+									}
+								},
+								isDisabled: function (view, rowIndex, colIndex, item, rec){
+									if (rec.get('basicSubItemId')) {
+										return false;
+									}
+									else {
+										return true;
+									}
+								},
+								handler: function (view, rowIndex, colIndex){
+									var rec = view.getStore().getAt(rowIndex);
+									Ext.Ajax.request({
+										url: './libs/budget.php?action=moveItemDownward',
+										method: 'POST',
+										params: {
+											itemCode: rec.get('itemCode'),
+											budgetItemId: rec.getId(),
+											budgetId: rec.get('budgetId')
+										},
+										callback: function (opts, success, res){
+											if (success) {
+												var obj = Ext.decode(res.responseText);
+												if ('successful' == obj.status) {
+													showMsg('调整成功！');
+													me.refresh(function (){
+														view.getSelectionModel().select(rec);
+				            							view.focusRow(rec, 200);
+													});
+												}
+												else {
+													showMsg(obj.errMsg);
+												}
+											}
+										}
+									});
+								}
+							}
+						]
+					},
 			        {
 			        	text: '编号',
 			        	dataIndex: 'itemCode',

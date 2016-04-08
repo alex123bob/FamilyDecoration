@@ -17,6 +17,10 @@
 		case "createBudgetFromTemplate" : $res = createBudgetFromTemplate($_REQUEST);break;
 		//添加小项
 		case "addItem":	$res = addItem($_REQUEST);  break;
+		//将小项上移一位
+		case "moveItemUpward": $res = moveItemUpward($_REQUEST); break;
+		//将小项下移一位
+		case "moveItemDownward": $res = moveItemDownward($_REQUEST); break;
 		//添加大项
 		case "addBigItem":	$res = addBigItem($_REQUEST);  break;
 		//删除项，不区分大项，小项

@@ -83,6 +83,44 @@
 		$mysql->DBInsertAsArray("`budget_item`",$obj);
 		return array('status'=>'successful', 'errMsg' => '','itemCode'=>$itemCode);
 	}
+	//将小项上移一位
+	function moveItemUpward($post){
+		global $mysql;
+		$itemCode = $post["itemCode"];
+		$basicCode = substr($itemCode, 0, 2);
+		$itemCodeIndex = substr($itemCode, 2);
+		if ($itemCodeIndex == "1") {
+			return array('status'=>'failing', 'errMsg'=>'当前小项已是第一项，无法上移');
+		}
+		else {
+			$previousItemCodeIndex = intval($itemCodeIndex) - 1;
+			$previousItemId = $mysql->DBGetAsMap("select `budgetItemId` from `budget_item` where `budgetId` = '?' and `itemCode` = '?' and `isDeleted` = 'false' ", $post["budgetId"], $basicCode.$previousItemCodeIndex);
+			$previousItemId = $previousItemId[0]["budgetItemId"];
+			$mysql->DBUpdate("`budget_item`",array("itemCode"=>$basicCode.$previousItemCodeIndex),"`budgetId`='?' and `budgetItemId` = '?'",array($post['budgetId'],$post['budgetItemId']));
+			$mysql->DBUpdate("`budget_item`",array("itemCode"=>$itemCode),"`budgetId`='?' and `budgetItemId` = '?'",array($post['budgetId'],$previousItemId));
+			return array('status'=>'successful', 'errMsg'=>'调整成功！');
+		}
+	}
+	//将小项下移一位
+	function moveItemDownward($post){
+		global $mysql;
+		$itemCode = $post["itemCode"];
+		$basicCode = substr($itemCode, 0, 2);
+		$itemCodeIndex = substr($itemCode, 2);
+		$count = $mysql->DBGetAsMap("select count(*) as number from `budget_item` where `budgetId` = '?' and `itemCode` like '?%' and `isDeleted` = 'false' ", $post["budgetId"], $basicCode);
+		$count = $count[0]["number"];
+		if ($itemCodeIndex == $count) {
+			return array('status'=>'failing', 'errMsg'=>'当前小项已是当前最后一项，无法下移');
+		}
+		else {
+			$nextItemCodeIndex = intval($itemCodeIndex) + 1;
+			$nextItemId = $mysql->DBGetAsMap("select `budgetItemId` from `budget_item` where `budgetId` = '?' and `itemCode` = '?' and `isDeleted` = 'false' ", $post["budgetId"], $basicCode.$nextItemCodeIndex);
+			$nextItemId = $nextItemId[0]["budgetItemId"];
+			$mysql->DBUpdate("`budget_item`",array("itemCode"=>$basicCode.$nextItemCodeIndex),"`budgetId`='?' and `budgetItemId` = '?'",array($post['budgetId'],$post['budgetItemId']));
+			$mysql->DBUpdate("`budget_item`",array("itemCode"=>$itemCode),"`budgetId`='?' and `budgetItemId` = '?'",array($post['budgetId'],$nextItemId));
+			return array('status'=>'successful', 'errMsg'=>'调整成功！');
+		}
+	}
 	//修改项
 	function editItem($post){
 		global $mysql;

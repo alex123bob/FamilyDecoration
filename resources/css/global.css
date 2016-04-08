@@ -161,6 +161,10 @@ table.pros td{
   font-size: 20px;
 }
 
+.visibilityHidden {
+  visibility: hidden;
+}
+
 /*html { 
   -webkit-filter: grayscale(100%); 
   -moz-filter: grayscale(100%); 
