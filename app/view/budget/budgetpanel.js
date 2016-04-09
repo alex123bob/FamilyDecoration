@@ -878,7 +878,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				            			view.focusRow(rec, 200);
 				            			if (field == 'itemAmount') {
 			            					var rowIndex = st.indexOf(rec);
-				            				editor.startEditByPosition({row: rowIndex + 1, column: 3});	
+				            				editor.startEditByPosition({row: rowIndex + 1, column: 4});	
 			            				}
 				            		});
 			            		}
