@@ -952,6 +952,41 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 			    										win.close();
 			    										showMsg('监理意见添加成功！');
 			    										progressPanel.refresh(pro);
+			    										var title = '监理意见添加提醒',
+			    											content = User.getRealName() + '为项目"' + pro.get('projectName') + '"添加监理意见，内容为:' + textarea.getValue();
+			    										// send SMS
+			    										Ext.Ajax.request({
+			    											url: './libs/user.php?action=getuserphone',
+			    											method: 'GET',
+			    											params: {
+			    												name: pro.get('captainName')
+			    											},
+			    											callback: function (opts, success, res){
+			    												if (success) {
+			    													var obj = Ext.decode(res.responseText);
+			    													if ('successful' == obj.status) {
+			    														sendSMS(User.getName(), pro.get('captainName'), obj['phone'], content);
+			    													}
+			    												}
+			    											}
+			    										});
+			    										// send Email
+			    										Ext.Ajax.request({
+			    											url: './libs/user.php?action=view',
+			    											method: 'GET',
+			    											callback: function (opts, success, res){
+			    												if (success) {
+			    													var arr = Ext.decode(res.responseText);
+			    													for (var i = arr.length - 1; i >= 0; i--) {
+			    														var el = arr[i];
+			    														if (el.level == '001-001' || el.level == '001-002'
+			    															|| el.level == '003-001' || el.name == pro.get('captainName')) {
+			    															sendMail(el.name, el.mail, title, content);
+			    														}
+			    													}
+			    												}
+			    											}
+			    										});
 			    									}
 			    								}
 			    							}

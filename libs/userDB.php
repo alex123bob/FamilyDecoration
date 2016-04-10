@@ -218,6 +218,20 @@
 		return array('status'=>'successful',"realname"=>$name);
 	}
 
+	function getUserPhone($name){
+		global $mysql;
+		$phones = $mysql->DBGetAsOneArray("select phone from user where name = '?' ",$name);
+		$phone = count($phones) > 0 ? $phones[0] : "";
+		return array('status'=>'successful',"phone"=>$phone);
+	}
+
+	function getUserEmail($name){
+		global $mysql;
+		$emails = $mysql->DBGetAsOneArray("select mail from user where name = '?' ",$name);
+		$email = count($emails) > 0 ? $emails[0] : "";
+		return array('status'=>'successful',"email"=>$email);
+	}
+
 	function getUserByLevel ($level) {
 		global $mysql;
 		$arr = $mysql->DBGetSomeRows("`user`", "*" ,"where `level` = '".$level."' and `isDeleted` = 'false' ");
