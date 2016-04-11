@@ -6,7 +6,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 	layout: 'vbox',
 	requires: ['Ext.form.FieldContainer', 'FamilyDecoration.store.BudgetItem', 'FamilyDecoration.view.budget.EditHeader',
 			   'FamilyDecoration.view.budget.AddBasicItem', 'FamilyDecoration.view.budget.AddExistedItem',
-			   'FamilyDecoration.view.budget.HistoryBudget', 'Ext.slider.Single'],
+			   'FamilyDecoration.view.budget.HistoryBudget', 'Ext.slider.Single', 'FamilyDecoration.view.budget.AddBlankItem'],
 
 	title: '预算面板',
 	header: false,
@@ -39,13 +39,17 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 	initBtn: function (rec){
 		var panel = this,
 			addNewBtn = panel.down('[name="button-addNewItem"]'),
+			addSmallBtnCombo = panel.down('[name="button-addSmallItemCombo"]'),
 			addSmallBtn = panel.down('[name="button-addSmallItemToBigItem"]'),
+			addBlankBtn = panel.down('[name="button-addBlankItemToBigItem"]'),
 			delItemBtn = panel.down('[name="button-deleteItem"]'),
 			discountBtn = panel.down('[name="button-priceAdjust"]'),
 			calculateBtn = panel.down('[name="button-calculate"]'),
 			editSmallItemNameBtn = panel.down('[name="button-editSmallItemName"]');
 		addNewBtn.isHidden() && addNewBtn.show();
+		addSmallBtnCombo.isHidden() && addSmallBtnCombo.show();
 		addSmallBtn.isHidden() && addSmallBtn.show();
+		addBlankBtn.isHidden() && addBlankBtn.show();
 		delItemBtn.isHidden() && delItemBtn.show();
 		discountBtn.isHidden() && discountBtn.show();
 		editSmallItemNameBtn.isHidden() && editSmallItemNameBtn.show();
@@ -53,6 +57,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 		if (rec) {
 			if (rec.get('basicItemId') && !rec.get('basicSubItemId')) {
     			addSmallBtn.enable();
+    			addBlankBtn.enable();
     			editSmallItemNameBtn.disable();
     		}
     		else {
@@ -63,11 +68,13 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
     				editSmallItemNameBtn.disable();
     			}
     			addSmallBtn.disable();
+    			addBlankBtn.disable();
     		}
     		delItemBtn.setDisabled(!rec.get('isEditable'));
 		}
 		else {
 			addSmallBtn.disable();
+			addBlankBtn.disable();
 			delItemBtn.disable();
 			editSmallItemNameBtn.disable();
 		}
@@ -81,7 +88,9 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			projectOrBusinessNameField = cmp.down('[name="displayfield-projectOrBusinessName"]'),
 			budgetNameField = cmp.down('[name="displayfield-budgetName"]'),
 			addNewBtn = cmp.down('[name="button-addNewItem"]'),
+			addSmallBtnCombo = cmp.down('[name="button-addSmallItemCombo"]'),
 			addSmallBtn = cmp.down('[name="button-addSmallItemToBigItem"]'),
+			addBlankBtn = panel.down('[name="button-addBlankItemToBigItem"]'),
 			delItemBtn = cmp.down('[name="button-deleteItem"]'),
 			discountBtn = cmp.down('[name="button-priceAdjust"]'),
 			calculateBtn = cmp.down('[name="button-calculate"]'),
@@ -93,6 +102,8 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 		budgetNameField.setValue('');
 		addNewBtn.hide();
 		addSmallBtn.hide();
+		addBlankBtn.hide();
+		addSmallBtnCombo.hide();
 		delItemBtn.hide();
 		discountBtn.hide();
 		editSmallItemNameBtn.hide();
@@ -169,33 +180,74 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				}
 			},
 			{
+				xtype: 'splitbutton',
 				text: '添加小项',
 				tooltip: '为已有大项添加小项',
-				icon: './resources/img/add3.png',
-				name: 'button-addSmallItemToBigItem',
-				disabled: true,
+				icon: './resources/img/combo.png',
 				hidden: true,
-				handler: function (){
-					var grid = me.getComponent('gridpanel-budgetContent'),
-						rec = grid.getSelectionModel().getSelection()[0];
-					if (rec) {
-						if (rec.get('basicItemId') && !rec.get('basicSubItemId')) {
-							var win = Ext.create('FamilyDecoration.view.budget.AddExistedItem', {
-								grid: me.getComponent('gridpanel-budgetContent'),
-								budgetId: me.budgetId,
-								bigItem: rec
-							});
+				name: 'button-addSmallItemCombo',
+				menu: new Ext.menu.Menu({
+					items: [
+						{
+							text: '基础项',
+							tooltip: '从基础项中选择小项',
+							icon: './resources/img/add3.png',
+							name: 'button-addSmallItemToBigItem',
+							disabled: true,
+							hidden: true,
+							handler: function (){
+								var grid = me.getComponent('gridpanel-budgetContent'),
+									rec = grid.getSelectionModel().getSelection()[0];
+								if (rec) {
+									if (rec.get('basicItemId') && !rec.get('basicSubItemId')) {
+										var win = Ext.create('FamilyDecoration.view.budget.AddExistedItem', {
+											grid: me.getComponent('gridpanel-budgetContent'),
+											budgetId: me.budgetId,
+											bigItem: rec
+										});
 
-							win.show();
+										win.show();
+									}
+									else {
+										showMsg('选择项不是大项！');
+									}
+								}
+								else {
+									showMsg('请选择大项！');
+								}
+							}
+						},
+						{
+							text: '空白项',
+							tooltip: '添加空白项到所选大项中',
+							icon: './resources/img/blank.png',
+							name: 'button-addBlankItemToBigItem',
+							disabled: true,
+							hidden: true,
+							handler: function (){
+								var grid = me.getComponent('gridpanel-budgetContent'),
+									rec = grid.getSelectionModel().getSelection()[0];
+								if (rec) {
+									if (rec.get('basicItemId') && !rec.get('basicSubItemId')) {
+										var win = Ext.create('FamilyDecoration.view.budget.AddBlankItem', {
+											grid: grid,
+											budgetId: me.budgetId,
+											bigItem: rec
+										});
+
+										win.show();
+									}
+									else {
+										showMsg('选择项不是大项！');
+									}
+								}
+								else {
+									showMsg('请选择大项！');
+								}
+							}
 						}
-						else {
-							showMsg('选择项不是大项！');
-						}
-					}
-					else {
-						showMsg('请选择大项！');
-					}
-				}
+					]
+				})
 			},
 			{
 				text: '修改名称',

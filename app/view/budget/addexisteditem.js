@@ -162,7 +162,11 @@ Ext.define('FamilyDecoration.view.budget.AddExistedItem', {
 		            type: 'json'
 		        },
 		        extraParams: {
-		        	parentId: me.bigItem.get('basicItemId')
+		        	// originally we need the following parameter
+		        	// to screen those subitems don't belong to specific big item we demand.
+		        	// but now, we don't need it coz according to the requirement, all subitems could be added
+		        	// into any budget bigitem.
+		        	// parentId: me.bigItem.get('basicItemId')
 		        }
 			},
 			autoLoad: true

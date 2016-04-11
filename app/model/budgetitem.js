@@ -26,6 +26,7 @@ Ext.define('FamilyDecoration.model.BudgetItem', {
 		{name: 'basicItemId', type: 'string'}, // 基础项目中大项的id
 		{name: 'basicSubItemId', type: 'string'},
 		{name: 'isEditable', type: 'boolean'},
+		{name: 'isCustomized', type: 'string'}, // 是否是空白的自定义字段
 		{name: 'orgMainMaterialPrice', type: 'string'},
 		{name: 'orgAuxiliaryMaterialPrice', type: 'string'},
 		{name: 'orgManpowerPrice', type: 'string'},

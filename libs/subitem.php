@@ -18,7 +18,7 @@
 			$res = deleteBasicSubItem($_POST['subItemId']);
 			break;
 		case "get":
-			$res = getBasicSubItems($_GET['parentId']);
+			$res = getBasicSubItems();
 			break;
 		default: 
 			throw new Exception("unknown action:".$action);

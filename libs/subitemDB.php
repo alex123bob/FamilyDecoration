@@ -1,9 +1,14 @@
 <?php
 	include_once "conn.php";
 
-	function getBasicSubItems ($parentId){
+	function getBasicSubItems (){
 		global $mysql;
-		return $mysql->DBGetSomeRows("`basic_sub_item`", "*", "where `parentId` = '$parentId'");
+		if (isset($_GET['parentId'])) {
+			return $mysql->DBGetSomeRows("`basic_sub_item`", "*", "where `parentId` = '".$_GET["parentId"]."'");	
+		}
+		else {
+			return $mysql->DBGetSomeRows("`basic_sub_item`", "*");
+		}
 	}
 
 	function addBunchBasicSubItems ($subItem){
