@@ -44,6 +44,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			addBlankBtn = panel.down('[name="button-addBlankItemToBigItem"]'),
 			delItemBtn = panel.down('[name="button-deleteItem"]'),
 			discountBtn = panel.down('[name="button-priceAdjust"]'),
+			editBlankItemBtn = panel.down('[name="button-editBlankItem"]'),
 			calculateBtn = panel.down('[name="button-calculate"]'),
 			editSmallItemNameBtn = panel.down('[name="button-editSmallItemName"]');
 		addNewBtn.isHidden() && addNewBtn.show();
@@ -53,6 +54,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 		delItemBtn.isHidden() && delItemBtn.show();
 		discountBtn.isHidden() && discountBtn.show();
 		editSmallItemNameBtn.isHidden() && editSmallItemNameBtn.show();
+		editBlankItemBtn.isHidden() && editBlankItemBtn.show();
 		!panel.isSynchronousCalculation && calculateBtn.isHidden() && calculateBtn.show();
 		if (rec) {
 			if (rec.get('basicItemId') && !rec.get('basicSubItemId')) {
@@ -69,6 +71,12 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
     			}
     			addSmallBtn.disable();
     			addBlankBtn.disable();
+    			if (rec.get('isCustomized') == 'true') {
+    				editBlankItemBtn.enable();
+    			}
+    			else {
+    				editBlankItemBtn.disable();
+    			}
     		}
     		delItemBtn.setDisabled(!rec.get('isEditable'));
 		}
@@ -90,9 +98,10 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			addNewBtn = cmp.down('[name="button-addNewItem"]'),
 			addSmallBtnCombo = cmp.down('[name="button-addSmallItemCombo"]'),
 			addSmallBtn = cmp.down('[name="button-addSmallItemToBigItem"]'),
-			addBlankBtn = panel.down('[name="button-addBlankItemToBigItem"]'),
+			addBlankBtn = cmp.down('[name="button-addBlankItemToBigItem"]'),
 			delItemBtn = cmp.down('[name="button-deleteItem"]'),
 			discountBtn = cmp.down('[name="button-priceAdjust"]'),
+			editBlankItemBtn = cmp.down('[name="button-editBlankItem"]'),
 			calculateBtn = cmp.down('[name="button-calculate"]'),
 			editSmallItemNameBtn = cmp.down('[name="button-editSmallItemName"]');
 		st.removeAll();
@@ -106,6 +115,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 		addSmallBtnCombo.hide();
 		delItemBtn.hide();
 		discountBtn.hide();
+		editBlankItemBtn.hide();
 		editSmallItemNameBtn.hide();
 		!cmp.isSynchronousCalculation && calculateBtn.hide();
 	},
@@ -440,6 +450,29 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 						showMsg('计算完毕!');
 					});
 				}
+			},
+			{
+				text: '修改空白项',
+				icon: './resources/img/edit1.png',
+				hidden: true,
+				disabled: true,
+				name: 'button-editBlankItem',
+				handler: function (){
+					var grid = me.getComponent('gridpanel-budgetContent'),
+						rec = grid.getSelectionModel().getSelection()[0];
+					if (rec && rec.get('isCustomized') == 'true') {
+						var win = Ext.create('FamilyDecoration.view.budget.AddBlankItem', {
+							grid: grid,
+							budgetId: me.budgetId,
+							rec: rec
+						});
+
+						win.show();
+					}
+					else {
+						showMsg('请选择要编辑的空白项！');
+					}
+				}
 			}
 		];
 
@@ -692,7 +725,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 
 		me.columnRenderer = function (val, meta, rec, rowIndex, colIndex, st, view){
 			// 小项
-			if (rec.get('basicSubItemId') && !rec.get('basicItemId')) {
+			if ((rec.get('basicSubItemId') && !rec.get('basicItemId')) || rec.get('isCustomized') == 'true' ) {
 				return val;
 			}
 			// 大项
@@ -706,31 +739,31 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			// 特殊项
 			else if ('NOPQRS'.indexOf(rec.get('itemCode')) != -1 && rec.get('itemCode') != '') {
 				switch (colIndex) {
-					case 3:
+					case 4:
 					if ('NS'.indexOf(rec.get('itemCode')) != -1) {
 						val = '';
 					}
 					break;
 					// 主单
-					case 4:
+					case 5:
 					// 辅单
-					case 6:
-					// 辅总
 					case 7:
-					// 人单
+					// 辅总
 					case 8:
-					// 人总
+					// 人单
 					case 9:
-					// 机单
+					// 人总
 					case 10:
-					// 机总
+					// 机单
 					case 11:
-					// 损耗
+					// 机总
 					case 12:
+					// 损耗
+					case 13:
 					// 人成本
-					case 14:
-					// 主成本
 					case 15:
+					// 主成本
+					case 16:
 					val = '';
 					break;
 				}
@@ -740,25 +773,25 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			else if (!rec.get('basicItemId') && !rec.get('basicSubItemId') && rec.get('itemCode') == '') {
 				switch (colIndex) {
 					// 数量
-					case 3:
-					// 主单
 					case 4:
+					// 主单
+					case 5:
 					// 辅单
-					case 6:
+					case 7:
 					// 人单
-					case 8:
+					case 9:
 					// 机单
-					case 10:
+					case 11:
 					// 损耗
-					case 12:
+					case 13:
 					val = '';
 					break;
 					// 人成本
-					case 14:
+					case 15:
 					val = rec.get('manpowerTotalCost');
 					break;
 					// 主成本
-					case 15:
+					case 16:
 					val = rec.get('mainMaterialTotalCost');
 					break;
 				}
@@ -834,7 +867,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			            	beforeedit: function (editor, e) {
 			            		var rec = e.record;
 			            		if (e.field == 'itemAmount') {
-									if (rec.get('basicSubItemId')) {
+									if (rec.get('basicSubItemId') || 'true' == rec.get('isCustomized')) {
 										return true;
 									}
 									// 效果图编辑数量
@@ -854,7 +887,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 									}
 			            		}
 			            		else if (e.field == 'itemName') {
-			            			if (rec.get('basicSubItemId')) {
+			            			if (rec.get('basicSubItemId') || 'true' == rec.get('isCustomized')) {
 			            				return true;
 			            			}
 			            			else {
@@ -974,7 +1007,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 								icon: './resources/img/upward-arrow.png',
 								tooltip: '向上调整',
 								getClass: function (val, meta, rec){
-									if (rec.get('basicSubItemId')) {
+									if (rec.get('basicSubItemId') || 'true' == rec.get('isCustomized')) {
 										return '';
 									}
 									else {
@@ -982,7 +1015,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 									}
 								},
 								isDisabled: function (view, rowIndex, colIndex, item, rec){
-									if (rec.get('basicSubItemId')) {
+									if (rec.get('basicSubItemId') || 'true' == rec.get('isCustomized')) {
 										return false;
 									}
 									else {
@@ -1021,7 +1054,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 								icon: './resources/img/downward-arrow.png',
 								tooltip: '向下调整',
 								getClass: function (val, meta, rec){
-									if (rec.get('basicSubItemId')) {
+									if (rec.get('basicSubItemId') || 'true' == rec.get('isCustomized')) {
 										return '';
 									}
 									else {
@@ -1029,7 +1062,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 									}
 								},
 								isDisabled: function (view, rowIndex, colIndex, item, rec){
-									if (rec.get('basicSubItemId')) {
+									if (rec.get('basicSubItemId') || 'true' == rec.get('isCustomized')) {
 										return false;
 									}
 									else {
@@ -1073,7 +1106,13 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 	                	draggable: false,
 	                	align: 'center',
 	                	sortable: false,
-	                	menuDisabled: true
+	                	menuDisabled: true,
+	                	renderer: function (val, meta, rec){
+	                		if (rec.get('isCustomized') == 'true') {
+	                			meta.tdAttr = 'style="background: #EBF49D;"';
+	                		}
+	                		return val;
+	                	}
 			        },
 			        {
 			        	text: '名称',
@@ -1315,19 +1354,19 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 									if (val) {
 										switch (cellIndex) {
 											// 主单
-											case 4:
+											case 5:
 											val = val + '<br />' + rec.get('orgMainMaterialPrice');
 											break;
 											// 辅单
-											case 6:
+											case 7:
 											val = val + '<br />' + rec.get('orgAuxiliaryMaterialPrice');
 											break;
 											// 人单
-											case 8:
+											case 9:
 											val = val + '<br />' + rec.get('orgManpowerPrice');
 											break;
 											// 机单
-											case 10:
+											case 11:
 											val = val + '<br />' + rec.get('orgMachineryPrice');
 											break;
 											default:

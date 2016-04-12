@@ -17,7 +17,7 @@ Ext.define('FamilyDecoration.view.costanalysis.TotalCost', {
 
 		function columnRenderer (val, meta, rec, rowIndex, colIndex, st, view){
 			// 小项
-			if (rec.get('basicSubItemId') && !rec.get('basicItemId')) {
+			if ( (rec.get('basicSubItemId') && !rec.get('basicItemId')) || 'true' == rec.get('isCustomized') ) {
 				switch (colIndex) {
 					// 工种
 					case 8:

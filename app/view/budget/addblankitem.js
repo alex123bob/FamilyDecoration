@@ -1,14 +1,16 @@
 Ext.define('FamilyDecoration.view.budget.AddBlankItem', {
 	extend: 'Ext.window.Window',
 	alias: 'widget.budget-addblankitem',
+	requires: ['FamilyDecoration.store.WorkCategory'],
 	resizable: false,
 	modal: true,
 	layout: 'fit',
 	title: '添加空白项',
 	width: 560,
-	height: 420,
+	height: 460,
 	padding: 2,
 
+	rec: null,
 	grid: null, // 预算表格
 	budgetId: undefined, // 预算id
 	bigItem: undefined, // 添加到此大项下
@@ -16,9 +18,74 @@ Ext.define('FamilyDecoration.view.budget.AddBlankItem', {
 	initComponent: function () {
 		var me = this;
 
+		if (me.rec) {
+			me.title = '编辑空白项';
+		}
+		else {
+			me.title = '添加空白项';
+		}
+
 		me.buttons = [{
-			text: '添加',
+			text: me.rec ? '编辑' : '添加',
 			handler: function (){
+				var frm = me.down('[name="formpanel-customizedFrm"]').getForm(),
+					params,
+					p;
+				if (frm.isValid()) {
+					params = frm.getFieldValues();
+					p = {
+						itemName: params['budgetItemName'],
+						itemCode: !me.rec ? me.bigItem.get('itemCode') : '',
+						budgetId: me.budgetId,
+						itemUnit: params['budgetUnit'],
+						mainMaterialPrice: params['budgetMainMaterialPrice'],
+						auxiliaryMaterialPrice: params['budgetAuxiliaryMaterialPrice'],
+						manpowerPrice: params['budgetManpowerPrice'],
+						machineryPrice: params['budgetMachineryPrice'],
+						lossPercent: params['budgetLossPercent'],
+						remark: params['budgetRemark'],
+						manpowerCost: params['budgetManpowerCost'],
+						mainMaterialCost: params['budgetMainMaterialCost'],
+						workCategory: params['budgetWorkCategory'],
+						isCustomized: 'true'
+					};
+					if (me.rec) {
+						Ext.apply(p, {
+							budgetItemId: me.rec.getId()
+						});
+						// coz we don't need itemCode in editing
+						delete p.itemCode;
+					}
+					Ext.Ajax.request({
+						url: me.rec ? './libs/budget.php?action=editItem' : './libs/budget.php?action=addItem',
+						params: p,
+						method: 'POST',
+						callback: function (opts, success, res){
+							if (success) {
+								var obj = Ext.decode(res.responseText);
+								if (obj.status == 'successful') {
+									me.rec ? showMsg('编辑成功！') : showMsg('添加成功！');
+									me.grid.getStore().load({
+										params: {
+											budgetId: me.budgetId
+										},
+										callback: function (recs, ope, success){
+											if (success && me.rec) {
+												var selModel = me.grid.getSelectionModel();
+												selModel.deselectAll();
+												selModel.select(me.grid.getStore().getById(me.rec.getId()));
+											}
+										}
+									});
+									me.close();
+								}
+								else {
+									showMsg(obj.errMsg);
+								}
+							}
+						}
+					});
+				}
 			}
 		}, {
 			text: '取消',
@@ -29,68 +96,91 @@ Ext.define('FamilyDecoration.view.budget.AddBlankItem', {
 
 		me.items = [
 			{
-				xtype: 'container',
+				xtype: 'form',
 				autoScroll: true,
 				layout: 'form',
+				name: 'formpanel-customizedFrm',
 				defaultType: 'textfield',
 				items: [
 					{
 						fieldLabel: '名称',
 						name: 'budgetItemName',
-						allowBlank: false
+						allowBlank: false,
+						value: me.rec ? me.rec.get('itemName') : ''
 					},
 					{
 						fieldLabel: '单位',
 						name: 'budgetUnit',
-						allowBlank: false
+						allowBlank: false,
+						value: me.rec ? me.rec.get('itemUnit') : ''
 					},
 					{
 						xtype: 'numberfield',
 						fieldLabel: '主材单价',
 						name: 'budgetMainMaterialPrice',
-						allowBlank: false
+						allowBlank: false,
+						value: me.rec ? me.rec.get('mainMaterialPrice') : ''
 					},
 					{
 						xtype: 'numberfield',
 						fieldLabel: '辅材单价',
 						name: 'budgetAuxiliaryMaterialPrice',
-						allowBlank: false
+						allowBlank: false,
+						value: me.rec ? me.rec.get('auxiliaryMaterialPrice') : ''
 					},
 					{
 						xtype: 'numberfield',
 						fieldLabel: '人工单价',
 						name: 'budgetManpowerPrice',
-						allowBlank: false
+						allowBlank: false,
+						value: me.rec ? me.rec.get('manpowerPrice') : ''
 					},
 					{
 						xtype: 'numberfield',
 						fieldLabel: '机械单价',
 						name: 'budgetMachineryPrice',
-						allowBlank: false
+						allowBlank: false,
+						value: me.rec ? me.rec.get('machineryPrice') : ''
 					},
 					{
 						xtype: 'numberfield',
 						fieldLabel: '损耗单价',
 						name: 'budgetLossPercent',
-						allowBlank: false
+						allowBlank: false,
+						value: me.rec ? me.rec.get('lossPercent') : ''
 					},
 					{
 						fieldLabel: '备注',
 						name: 'budgetRemark',
 						allowBlank: false,
-						xtype: 'textarea'
+						xtype: 'textarea',
+						value: me.rec ? me.rec.get('remark') : ''
 					},
 					{
 						xtype: 'numberfield',
 						fieldLabel: '人工成本',
 						name: 'budgetManpowerCost',
-						allowBlank: false
+						allowBlank: false,
+						value: me.rec ? me.rec.get('manpowerCost') : ''
 					},
 					{
 						xtype: 'numberfield',
 						fieldLabel: '主材成本',
 						name: 'budgetMainMaterialCost',
-						allowBlank: false
+						allowBlank: false,
+						value: me.rec ? me.rec.get('mainMaterialCost') : ''
+					},
+					{
+						fieldLabel: '工种',
+						name: 'budgetWorkCategory',
+						xtype: 'combobox',
+						queryMode: 'local',
+						displayField: 'name',
+						allowBlank: false,
+						valueField: 'value',
+						editable: false,
+						store: FamilyDecoration.store.WorkCategory,
+						value: me.rec ? me.rec.get('workCategory') : ''
 					}
 				]
 			}

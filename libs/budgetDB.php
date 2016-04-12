@@ -71,7 +71,13 @@
 	function addItem($post){
 		$itemCode = _getNextBasicCode($post["budgetId"],$post["itemCode"]);
 		global $mysql;
-		$fields = array('itemName','budgetId','itemUnit','workCategory','itemAmount','remark','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','manpowerCost', 'mainMaterialCost', 'basicItemId','basicSubItemId');
+		if (isset($post["isCustomized"])) {
+			$isExistedItemName = $mysql->DBGetAsMap("select * from basic_sub_item where subItemName = '?'", $post["itemName"]);
+			if (count($isExistedItemName) > 0) {
+				return array("status"=>"failing", 'errMsg'=>'已经存在小项名称，请重新填写空白项名称！');
+			}
+		}
+		$fields = array('itemName','budgetId','itemUnit','workCategory','itemAmount','remark','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','manpowerCost', 'mainMaterialCost', 'basicItemId','basicSubItemId', 'isCustomized');
 		$obj = array('itemCode'=>$itemCode,'budgetItemId' => "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT));
 		foreach($fields as $field){
 			if(isset($post[$field])){
@@ -124,7 +130,7 @@
 	//修改项
 	function editItem($post){
 		global $mysql;
-		$fields = array('itemName','budgetId','itemUnit','itemAmount','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','lossPercent','remark','basicItemId','basicSubItemId');
+		$fields = array('itemName','budgetId','itemUnit','itemAmount','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','lossPercent','remark','workCategory','basicItemId','basicSubItemId','isCustomized');
 		$obj = array('budgetItemId'=>$post["budgetItemId"]);
 		foreach($fields as $field){
 			if(isset($post[$field]))
@@ -297,7 +303,7 @@
 	function costAnalysis($budgetId){
 		global $mysql;
 		$res= array();
-		$arr = $mysql->DBGetAsMap(" select itemCode,basicItemId,basicSubItemId,itemName,budgetItemId,itemAmount,itemUnit,manpowerCost,mainMaterialCost,workCategory from `budget_item` where `budgetId` = '?' and itemCode not in ('N','O','P','Q','R','S') and `isDeleted` = 'false' ORDER BY LEFT( itemCode, 2 ) ASC , ( SUBSTRING( itemCode, 2 ) ) *1 DESC ",$budgetId);
+		$arr = $mysql->DBGetAsMap(" select itemCode,basicItemId,basicSubItemId,itemName,budgetItemId,itemAmount,itemUnit,manpowerCost,mainMaterialCost,workCategory,isCustomized from `budget_item` where `budgetId` = '?' and itemCode not in ('N','O','P','Q','R','S') and `isDeleted` = 'false' ORDER BY LEFT( itemCode, 2 ) ASC , ( SUBSTRING( itemCode, 2 ) ) *1 DESC ",$budgetId);
 		$workCategorys = array();
 		$count = 0;
 		$isFirstSmallCount = true;

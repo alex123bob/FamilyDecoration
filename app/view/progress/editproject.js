@@ -394,8 +394,27 @@ Ext.define('FamilyDecoration.view.progress.EditProject', {
 													});
 
 													// announce related staffs via email
-													var content = User.getRealName() + '创建了工程' + params['projectName'],
+													var content = '"' + params['projectName'] + '"工程已经创建，',
 														subject = '工程创建通知';
+													for (var pro in params) {
+														switch(pro) {
+															case 'designer':
+															content += '设计师：' + params[pro] + '，';
+															break;
+															case 'captain':
+															content += '项目经理：' + params[pro] + '，';
+															break;
+															case 'supervisor':
+															content += '项目监理：' + params[pro] + '，';
+															break;
+															case 'salesman':
+															content += '客户经理：' + params[pro] + '，';
+															break;
+															default:
+															break;
+														}
+													}
+													content += '祝您工作愉快！';
 													for (i = 0; i < mailObjects.length; i++) {
 														setTimeout((function (index){
 															return function (){

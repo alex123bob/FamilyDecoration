@@ -12,7 +12,8 @@ Ext.define('FamilyDecoration.model.TotalCost', {
 		{name: 'mainMaterialTotalCost', type: 'float'},
 		{name: 'workCategory', type: 'string'},
 		{name: 'basicItemId', type: 'string'},
-		{name: 'basicSubItemId', type: 'string'}
+		{name: 'basicSubItemId', type: 'string'},
+		{name: 'isCustomized', type: 'string'}
 	],
 	idProperty: 'id'
 });

@@ -26,7 +26,7 @@
 		$items = getBudgetItemsByBudgetId($budgetId,false,false);
 		//这里是所有的，只要个别字段。
 		//'budgetTemplateItemId','itemName','budgetTemplateId','itemCode','itemUnit','itemAmount','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','lossPercent','isDeleted','remark','basicItemId','basicSubItemId','manpowerCost','mainMaterialCost','discount','workCategory'
-		$templateItemFields = array('itemName','itemCode','itemUnit','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','lossPercent','remark','basicItemId','basicSubItemId','manpowerCost','mainMaterialCost','discount','workCategory');
+		$templateItemFields = array('itemName','itemCode','itemUnit','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','lossPercent','remark','basicItemId','basicSubItemId','manpowerCost','mainMaterialCost','discount','workCategory','isCustomized');
 		$NOPRQS = array('N','P','O','Q','R','S');
 		foreach($items as $key=> $item){
 			if(in_array($item['itemCode'],$NOPRQS)){
@@ -63,7 +63,7 @@
 		global $mysql;
 		$budget = addBudget($post);
 		$items = getBudgetTemplateItem($post['budgetTemplateId']);
-		$budgetItemFields = array('itemCode','workCategory','','remark','mainMaterialPrice','auxiliaryMaterialPrice','manpowerCost', 'mainMaterialCost','itemName','budgetId','itemUnit','itemAmount','manpowerPrice','machineryPrice','lossPercent','basicItemId','basicSubItemId');
+		$budgetItemFields = array('itemCode','workCategory','','remark','mainMaterialPrice','auxiliaryMaterialPrice','manpowerCost', 'mainMaterialCost','itemName','budgetId','itemUnit','itemAmount','manpowerPrice','machineryPrice','lossPercent','basicItemId','basicSubItemId','isCustomized');
 		foreach($items as $key=> $item){
 			foreach($item as $key=> $val){
 				if(is_numeric($key) || !in_array($key,$budgetItemFields))
