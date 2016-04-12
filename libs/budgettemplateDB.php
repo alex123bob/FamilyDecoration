@@ -20,10 +20,9 @@
 		$template['budgetTemplateName'] = isset($templateName) && !empty($templateName) ? $templateName : (isset($template['budgetName']) ? $template['budgetName'] : '未命名' ).'模板';
 		$template['budgetTemplateId'] = $templateId;
 		$template['custName'] = '客户姓名';
-		$mysql->DBInsertAsArray("budget_template",$template);
 			
 		//创建模板对应条目
-		$items = getBudgetItemsByBudgetId($budgetId,false,false);
+		$items = getBudgetItemsByBudgetId($budgetId,false,true);
 		//这里是所有的，只要个别字段。
 		//'budgetTemplateItemId','itemName','budgetTemplateId','itemCode','itemUnit','itemAmount','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','lossPercent','isDeleted','remark','basicItemId','basicSubItemId','manpowerCost','mainMaterialCost','discount','workCategory'
 		$templateItemFields = array('itemName','itemCode','itemUnit','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','lossPercent','remark','basicItemId','basicSubItemId','manpowerCost','mainMaterialCost','discount','workCategory','isCustomized');
@@ -38,9 +37,12 @@
 					unset($item[$key]);
 			}
 			$item['budgetTemplateId'] = $templateId;
-			$item['budgetTemplateItemId'] = date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
+			$item['budgetTemplateItemId'] = uniqid().str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
 			$mysql->DBInsertAsArray("`budget_template_item`",$item);
 		}
+		// sae mysql 不支持事务。因此，放最后插模版，如果有小项失败，模版也不会插进去。看不到。 因此，可能会有脏数据，要定期删一下template不存在的template_item 
+		$mysql->DBInsertAsArray("budget_template",$template);
+		
 		return array('status'=>'successful', 'errMsg' => '', "templateId" => $templateId);
 	}
 
@@ -70,7 +72,7 @@
 					unset($item[$key]);
 			}
 			$item['budgetId'] = $budget['budgetId'];
-			$item['budgetItemId'] = date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
+			$item['budgetItemId'] = uniqid().str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
 			$mysql->DBInsertAsArray("`budget_item`",$item);
 		}
 		return array('status'=>'successful', 'errMsg' => '', "budgetId" => $budget['budgetId']);

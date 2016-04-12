@@ -3,7 +3,7 @@
 	 * @desc Common operations including functions and operations.
 	 * @auth Diego & Alex
 	 */
-
+	
 	function ErrorHandler($errno, $errstr,$errorFile,$errorLine){
 		//print_r();
 		$result = array("status" => "failing","errMsg" =>"[$errno]:$errstr","file"=>$errorFile,"line"=>$errorLine);

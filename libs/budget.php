@@ -49,7 +49,8 @@
 		case "finishBudget":$res = finishBudget($_REQUEST['budgetId']);break;
 		//删除预算模板
 		case "deleteBudgetTemplate":$res = deleteBudgetTemplate($_REQUEST['budgetTemplateId']);break;
-		default: throw new Exception("unknown action:".$action);
+		default:
+			throw new Exception("unknown action:".$action);
 	}
 	if($isParseResut){
 		echo (json_encode($res));

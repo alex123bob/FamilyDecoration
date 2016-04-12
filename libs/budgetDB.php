@@ -369,15 +369,11 @@
 		return array('cost'=>$res,'total'=>$cates);
 		
 	}
-	//获取预算所有条目
-	function getBudgetItemsByBudgetId ($budgetId , $isGBK = false , $isAppendNOPQRSItems = true) {
+	//获取预算所有条目  //forTemlpateTransfer 供转成模板时使用,不需要NOPQRS 和小计
+	function getBudgetItemsByBudgetId ($budgetId , $isGBK = false , $forTemlpateTransfer = false) {
 		global $mysql;
 		$res= array();
 		$arr = $mysql->DBGetAsMap(" select * from `budget_item` where `budgetId` = '?' and `isDeleted` = 'false' ORDER BY LEFT( itemCode, 2 ) ASC , ( SUBSTRING( itemCode, 2 ) ) *1 DESC ",$budgetId);
-		//供转成模板时使用
-		if(!$isAppendNOPQRSItems){
-			return $arr;
-		}
 		$count = 0;
 		$smallCount = array(0,0,0,0,0,0);
 		$directFee = 0;
@@ -403,15 +399,17 @@
 				//第一个大项出现时不输出小计
 					$isFirstSmallCount = false;
 				}else{
-					//增加一行小计
-					$res[$count++] = array('budgetItemId'=>'NULL'.$count,'itemName'=>$isGBK ? str2GBK('小计') : ('小计'),'budgetId'=>$budgetId,
+					if(!$forTemlpateTransfer){
+						//增加一行小计
+						$res[$count++] = array('budgetItemId'=>'NULL'.$count,'itemName'=>$isGBK ? str2GBK('小计') : ('小计'),'budgetId'=>$budgetId,
 									'mainMaterialTotalPrice'=>$smallCount[0],'auxiliaryMaterialTotalPrice'=>$smallCount[1],'manpowerTotalPrice'=>$smallCount[2],
 									'machineryTotalPrice'=>$smallCount[3],'manpowerTotalCost'=>$smallCount[4],'mainMaterialTotalCost'=>$smallCount[5]);
-					$directFee+=$smallCount[0];
-					$directFee+=$smallCount[1];
-					$directFee+=$smallCount[2];
-					$directFee+=$smallCount[3];
-					$smallCount = array(0,0,0,0,0,0);
+						$directFee+=$smallCount[0];
+						$directFee+=$smallCount[1];
+						$directFee+=$smallCount[2];
+						$directFee+=$smallCount[3];
+						$smallCount = array(0,0,0,0,0,0);
+					}					
 				}
 				//输出大项
 				$res[$count++] = array('itemName'=>$itemName,'basicItemId'=>$val['basicItemId'],'itemCode'=>$val['itemCode'],'budgetId'=>$val['budgetId'],'budgetItemId'=>$val['budgetItemId'],'isEditable'=>true);
@@ -463,6 +461,18 @@
 				}
 			}
 			$count++;
+		}
+		//forTemlpateTransfer 供转成模板时使用,不需要NOPQRS 和小计, 直接返回
+		if($forTemlpateTransfer){
+			foreach($res as $count=>$bItem){
+				//保留小数点后两位,不足补0
+				foreach($bItem as $key=> $val){
+					if(!in_array($key,array('itemAmount','mainMaterialTotalPrice','auxiliaryMaterialTotalPrice','manpowerTotalPrice','mainMaterialTotalCost','lossPercent','manpowerTotalCost','machineryTotalPrice','mainMaterialPrice','auxiliaryMaterialPrice','machineryPrice','manpowerPrice')))
+						continue;
+					$res[$count][$key] = formatNumber($val);
+				}
+			}
+			return $res;
 		}
 		//如果 isFirstSmallCount 还是初始化的状态true说明没有一行小计,false的时候，说明至少有一个大项输出了。
 		if(!$isFirstSmallCount){

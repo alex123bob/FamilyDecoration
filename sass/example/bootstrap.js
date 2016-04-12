@@ -113,6 +113,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.basicitem.Index": "../../app/view/basicitem/index.js",
   "FamilyDecoration.view.basicitem.SubItemTable": "../../app/view/basicitem/subitemtable.js",
   "FamilyDecoration.view.budget.AddBasicItem": "../../app/view/budget/addbasicitem.js",
+  "FamilyDecoration.view.budget.AddBlankItem": "../../app/view/budget/addblankitem.js",
   "FamilyDecoration.view.budget.AddExistedItem": "../../app/view/budget/addexisteditem.js",
   "FamilyDecoration.view.budget.BudgetPanel": "../../app/view/budget/budgetpanel.js",
   "FamilyDecoration.view.budget.EditHeader": "../../app/view/budget/editheader.js",
@@ -1139,6 +1140,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.basicitem.Index": [],
   "FamilyDecoration.view.basicitem.SubItemTable": [],
   "FamilyDecoration.view.budget.AddBasicItem": [],
+  "FamilyDecoration.view.budget.AddBlankItem": [],
   "FamilyDecoration.view.budget.AddExistedItem": [],
   "FamilyDecoration.view.budget.BudgetPanel": [],
   "FamilyDecoration.view.budget.EditHeader": [],
@@ -2340,6 +2342,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.budget.AddBasicItem": [
     "widget.budget-addbasicitem"
+  ],
+  "FamilyDecoration.view.budget.AddBlankItem": [
+    "widget.budget-addblankitem"
   ],
   "FamilyDecoration.view.budget.AddExistedItem": [
     "widget.budget-addexisteditem"
