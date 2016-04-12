@@ -1277,7 +1277,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			        	columns: [
 			        		{
 			        			text: '单价',
-			        			dataIndex: 'lossPercent',
+			        			dataIndex: 'lossComputed',
 			        			// flex: 0.5,
 			        			width: 60,
 	                			draggable: false,

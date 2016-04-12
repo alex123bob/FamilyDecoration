@@ -77,7 +77,7 @@
 				return array("status"=>"failing", 'errMsg'=>'已经存在小项名称，请重新填写空白项名称！');
 			}
 		}
-		$fields = array('itemName','budgetId','itemUnit','workCategory','itemAmount','remark','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','manpowerCost', 'mainMaterialCost', 'basicItemId','basicSubItemId', 'isCustomized');
+		$fields = array('itemName','budgetId','itemUnit','workCategory','itemAmount','remark','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','manpowerCost', 'mainMaterialCost', 'basicItemId','basicSubItemId', 'isCustomized', 'lossPercent');
 		$obj = array('itemCode'=>$itemCode,'budgetItemId' => "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT));
 		foreach($fields as $field){
 			if(isset($post[$field])){
@@ -85,7 +85,8 @@
 			}
 		}
 		//损耗=（主材单价+辅料单价）*0.05
-		$obj['lossPercent'] = ($obj['mainMaterialPrice']+$obj['auxiliaryMaterialPrice']) * 0.05;
+		// $obj['lossPercent'] = ($obj['mainMaterialPrice']+$obj['auxiliaryMaterialPrice']) * 0.05;
+		$obj['lossPercent'] = $obj['lossPercent'];
 		$mysql->DBInsertAsArray("`budget_item`",$obj);
 		return array('status'=>'successful', 'errMsg' => '','itemCode'=>$itemCode);
 	}
@@ -130,6 +131,12 @@
 	//修改项
 	function editItem($post){
 		global $mysql;
+		if (isset($post["isCustomized"])) {
+			$isExistedItemName = $mysql->DBGetAsMap("select * from basic_sub_item where subItemName = '?'", $post["itemName"]);
+			if (count($isExistedItemName) > 0) {
+				return array("status"=>"failing", 'errMsg'=>'已经存在小项名称，请重新填写空白项名称！');
+			}
+		}
 		$fields = array('itemName','budgetId','itemUnit','itemAmount','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','lossPercent','remark','workCategory','basicItemId','basicSubItemId','isCustomized');
 		$obj = array('budgetItemId'=>$post["budgetItemId"]);
 		foreach($fields as $field){
@@ -384,6 +391,7 @@
 			$budgetId = $val['budgetId'];
 			$itemName = $isGBK ? str2GBK($val['itemName']) :  ($val['itemName']);
 			$itemUnit = $isGBK ? str2GBK($val['itemUnit']) :  ($val['itemUnit']);
+			$lossPercent = $val['lossPercent'];
 			//这几项需要单独计算
 			if(in_array($itemCode,array('N','O','P','Q','R','S'))){
 				$NOPQRSItems[$itemCode] = $val;
@@ -423,13 +431,10 @@
 			$res[$count]['orgManpowerPrice'] = "原价:".$val['manpowerPrice']." ".( $discount == 100 ? "" : ($discount/10)."折");
 			$res[$count]['orgMachineryPrice'] = "原价:".$val['machineryPrice']." ".( $discount == 100 ? "" : ($discount/10)."折");
 
-			//损耗=（主材单价+辅料单价）*0.05,按折扣后的价格
-			$loss = ($res[$count]['mainMaterialPrice']+$res[$count]['auxiliaryMaterialPrice']) * 0.05;
-			if($val['lossPercent'] != $loss){
-				$val['lossPercent'] = $loss;
-				editItem($val);
-			}
-			$res[$count]['lossPercent'] = $loss;
+			//损耗=（主材单价+辅料单价）*lossPercent,按折扣后的价格
+			$loss = ($res[$count]['mainMaterialPrice']+$res[$count]['auxiliaryMaterialPrice']) * $lossPercent;
+			$res[$count]['lossPercent'] = $lossPercent;
+			$res[$count]['lossComputed'] = $loss;
 			//主材总价=（主菜单价+损耗）* 数量,按折扣后的价格
 			$mainMaterialTotalPrice = $itemAmount * ($res[$count]['mainMaterialPrice'] + $loss);
 			$res[$count]['mainMaterialTotalPrice'] = $mainMaterialTotalPrice;

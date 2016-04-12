@@ -15,7 +15,8 @@ Ext.define('FamilyDecoration.model.BudgetItem', {
 		{name: 'manpowerTotalPrice', type: 'float'},
 		{name: 'machineryPrice', type: 'float'},
 		{name: 'machineryTotalPrice', type: 'float'},
-		{name: 'lossPercent', type: 'float'},
+		{name: 'lossPercent', type: 'float'}, // 对应budget_item表中损耗的百分比
+		{name: 'lossComputed', type: 'float'}, // 为计算出来的值，（主单+辅单）*lossPercent
 		{name: 'parentId', type: 'string'},  //预算中该条项目对应的大项目id
 		{name: 'remark', type: 'string'},
 		// {name: 'cost', type: 'float'}, // 预算中该条基础项目对应的成本
