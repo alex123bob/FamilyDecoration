@@ -887,7 +887,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 									}
 			            		}
 			            		else if (e.field == 'itemName') {
-			            			if (rec.get('basicSubItemId') || 'true' == rec.get('isCustomized')) {
+			            			if (rec.get('basicSubItemId')) {
 			            				return true;
 			            			}
 			            			else {
