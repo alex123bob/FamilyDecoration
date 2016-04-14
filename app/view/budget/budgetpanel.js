@@ -324,7 +324,10 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				hidden: true,
 				handler: function (){
 					var grid = me.getComponent('gridpanel-budgetContent'),
-						rec = grid.getSelectionModel().getSelection()[0];
+						view = grid.getView(),
+						st = grid.getStore(),
+						rec = grid.getSelectionModel().getSelection()[0],
+						index = st.indexOf(rec);
 					if (rec && rec.get('isEditable')) {
 						Ext.Msg.warning('确定要删除选中项目吗？', function (btnId){
 							if (btnId == 'yes') {
@@ -339,7 +342,11 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 											var obj = Ext.decode(res.responseText);
 											if (obj.status == 'successful') {
 												showMsg('删除成功！');
-												me.refresh();
+												me.refresh(function (){
+													var newRec = st.getAt(index);
+													grid.getSelectionModel().select(newRec);
+				            						view.focusRow(newRec, 200);
+												});
 											}
 											else {
 												showMsg(obj.errMsg);
