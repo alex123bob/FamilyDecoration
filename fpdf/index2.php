@@ -8,9 +8,9 @@ if(strpos($_SERVER["HTTP_USER_AGENT"],"Safari") && !strpos($_SERVER["HTTP_USER_A
 	$UserBrowserClient = 'default';
 }
 
-$FirstCellWidth=array(11,41,8,11,   27,   26,   27,   23,10,82);
+$FirstCellWidth=array(11,41,8,12,   27,   27,   27,   23,8,82);
 //$FirstCellWidth	= array(11,41,9,14,   28,   28,   28,   28,10,95);
-$CellWidth 	= array(11,41,8,11,11,16,13,13,12,15,10,13,10,82);
+$CellWidth 	= array(11,41,8,12,11,16,13,14,12,15,10,13,8,82);
 //$CellWidth 		= array(11,41,9,14,12,16,12,16,12,16,12,16,10,95);
 $lineHeight 	= 6;
 $titleLeft      = array(17,39,67.5,77,236);
@@ -57,7 +57,7 @@ foreach($budgetItems as $bItem){
 				$bItem["mainMaterialPrice"],$bItem["mainMaterialTotalPrice"],
 				$bItem["auxiliaryMaterialPrice"],$bItem["auxiliaryMaterialTotalPrice"],$bItem["manpowerPrice"],
 				$bItem["manpowerTotalPrice"],$bItem["machineryPrice"],$bItem["machineryTotalPrice"],
-				($bItem["mainMaterialPrice"] + $bItem["auxiliaryMaterialPrice"]) * $bItem["lossPercent"],$remark);
+				formatNumber(($bItem["mainMaterialPrice"] + $bItem["auxiliaryMaterialPrice"]) * $bItem["lossPercent"]),$remark);
 	$fontSizes = array($GfontSize,$GfontSize,$GfontSize,$GfontSize,$GfontSize,
 							$GfontSize,$GfontSize,$GfontSize,$GfontSize,$GfontSize,
 							$GfontSize,$GfontSize,$GfontSize,8);
