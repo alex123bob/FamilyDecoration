@@ -57,7 +57,7 @@ foreach($budgetItems as $bItem){
 				$bItem["mainMaterialPrice"],$bItem["mainMaterialTotalPrice"],
 				$bItem["auxiliaryMaterialPrice"],$bItem["auxiliaryMaterialTotalPrice"],$bItem["manpowerPrice"],
 				$bItem["manpowerTotalPrice"],$bItem["machineryPrice"],$bItem["machineryTotalPrice"],
-				$bItem["lossPercent"],$remark);
+				($bItem["mainMaterialPrice"] + $bItem["auxiliaryMaterialPrice"]) * $bItem["lossPercent"],$remark);
 	$fontSizes = array($GfontSize,$GfontSize,$GfontSize,$GfontSize,$GfontSize,
 							$GfontSize,$GfontSize,$GfontSize,$GfontSize,$GfontSize,
 							$GfontSize,$GfontSize,$GfontSize,8);
