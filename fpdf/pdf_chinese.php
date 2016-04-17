@@ -61,7 +61,7 @@ class PDF extends PDF_Chinese{
 		//$this->Cell(220,10,date("Y-m-d"),0,0,'R'); 
 	}
 	// 输出一行表格
-	function writeCellLine($widths,$txts,$borders,$positions,$aligns,$times=14,$fontSizes=10){
+	function writeCellLine($widths,$txts,$borders,$positions,$aligns,$times=14,$fontSizes=10,$fontStyles = array()){
 		global $lineHeight;
 		$c = 0;
 		$thisLineHeight = $lineHeight;
@@ -69,10 +69,14 @@ class PDF extends PDF_Chinese{
 		//而是输出好几行，先遍历所有表格，判断需要输出多少行
 		for( ; $c < $times ; $c ++){
 			$thisLineFontSize = $fontSizes;
+			$thisLineFontStyle = '';
 			if($fontSizes != null && is_array($fontSizes) && isset($fontSizes[$c])){
 				$thisLineFontSize = $fontSizes[$c];
 			}
-			$this->SetFont('GB','',$thisLineFontSize);
+			if($fontStyles != null && is_array($fontStyles) && isset($fontStyles[$c])){
+				$thisLineFontStyle = $fontStyles[$c];
+			}
+			$this->SetFont('GB',$thisLineFontStyle,$thisLineFontSize);
 			$txt = is_array($txts) ? $txts[$c] : $txts;
 			$txt = ($txt === null || $txt === "NULL")? "" : $txt;
 			$w = is_array($widths) ? $widths[$c] : $widths;
@@ -96,11 +100,12 @@ class PDF extends PDF_Chinese{
 		$lastCellHeight;
 		//遍历所有表格，输出
 		for( ; $c < $times ; $c ++){
+			$this->cMargin = $c == 1 || $c == 13 ? 1 : 0;
 			$thisLineFontSize = $fontSizes;
 			if($fontSizes != null && is_array($fontSizes) && isset($fontSizes[$c])){
 				$thisLineFontSize = $fontSizes[$c];
 			}
-			$this->SetFont('GB','',$thisLineFontSize);
+			$this->SetFont('GB',$thisLineFontStyle,$thisLineFontSize);
 			$txt = is_array($txts) ? $txts[$c] : $txts;
 			$txt = ($txt === null || $txt === "NULL")? "" : $txt;
 			$w = is_array($widths) ? $widths[$c] : $widths;
