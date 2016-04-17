@@ -98,9 +98,12 @@ Ext.define('FamilyDecoration.view.budget.AddBlankItem', {
 			{
 				xtype: 'form',
 				autoScroll: true,
-				layout: 'form',
+				layout: 'anchor',
 				name: 'formpanel-customizedFrm',
 				defaultType: 'textfield',
+				defaults: {
+					anchor: '90%'
+				},
 				items: [
 					{
 						fieldLabel: '名称',
@@ -116,37 +119,40 @@ Ext.define('FamilyDecoration.view.budget.AddBlankItem', {
 					},
 					{
 						xtype: 'numberfield',
-						fieldLabel: '主材单价',
+						fieldLabel: '主材单价(元)',
 						name: 'budgetMainMaterialPrice',
 						allowBlank: false,
 						value: me.rec ? me.rec.get('mainMaterialPrice') : ''
 					},
 					{
 						xtype: 'numberfield',
-						fieldLabel: '辅材单价',
+						fieldLabel: '辅材单价(元)',
 						name: 'budgetAuxiliaryMaterialPrice',
 						allowBlank: false,
 						value: me.rec ? me.rec.get('auxiliaryMaterialPrice') : ''
 					},
 					{
 						xtype: 'numberfield',
-						fieldLabel: '人工单价',
+						fieldLabel: '人工单价(元)',
 						name: 'budgetManpowerPrice',
 						allowBlank: false,
 						value: me.rec ? me.rec.get('manpowerPrice') : ''
 					},
 					{
 						xtype: 'numberfield',
-						fieldLabel: '机械单价',
+						fieldLabel: '机械单价(元)',
 						name: 'budgetMachineryPrice',
 						allowBlank: false,
 						value: me.rec ? me.rec.get('machineryPrice') : ''
 					},
 					{
 						xtype: 'numberfield',
-						fieldLabel: '损耗单价',
+						fieldLabel: '损耗单价(%)',
 						name: 'budgetLossPercent',
 						allowBlank: false,
+						minValue: 0,
+						maxValue: 1,
+						step: 0.05,
 						value: me.rec ? me.rec.get('lossPercent') : ''
 					},
 					{
@@ -158,14 +164,14 @@ Ext.define('FamilyDecoration.view.budget.AddBlankItem', {
 					},
 					{
 						xtype: 'numberfield',
-						fieldLabel: '人工成本',
+						fieldLabel: '人工成本(元)',
 						name: 'budgetManpowerCost',
 						allowBlank: false,
 						value: me.rec ? me.rec.get('manpowerCost') : ''
 					},
 					{
 						xtype: 'numberfield',
-						fieldLabel: '主材成本',
+						fieldLabel: '主材成本(元)',
 						name: 'budgetMainMaterialCost',
 						allowBlank: false,
 						value: me.rec ? me.rec.get('mainMaterialCost') : ''

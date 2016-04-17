@@ -245,7 +245,7 @@
                 }
             }
             else if (rec.get('cmp') == 'budget-parent') {
-                flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() || User.isBudgetManager() || User.isBudgetStaff() ? true : false;
+                flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() || User.isBudgetManager() || User.isBudgetStaff() || User.isFinanceManager() || User.isFinanceStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'chart-index') {
                 flag = true;
@@ -284,7 +284,7 @@
                 flag = User.isGeneral() ? false : true;
             }
             else if (rec.get('cmp') == 'budget-index') {
-                flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() || User.isBudgetManager() || User.isBudgetStaff() ? true : false;
+                flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() || User.isBudgetManager() || User.isBudgetStaff() || User.isFinanceManager() || User.isFinanceStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'costanalysis-index') {
                 flag = User.isAdmin() || User.isBudgetManager() ? true : false;
