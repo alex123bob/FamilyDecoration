@@ -61,7 +61,7 @@
 
 	function getProjectYears (){
 		global $mysql;
-		$sql = "select distinct YEAR(`projectTime`) as `projectYear` from project where `isDeleted` = 'false' ORDER BY `projectTime` DESC ";
+		$sql = "select distinct YEAR(`projectTime`) as `projectYear` from project where `isDeleted` = 'false' ORDER BY projectYear DESC ";
 		return $mysql->DBGetAsMap($sql);
 	}
 	function getProjectCaptains ($captainName){

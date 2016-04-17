@@ -15,7 +15,19 @@ $CellWidth 	= array(11,41,8,12,11,16,13,14,12,15,10,13,8,82);
 $lineHeight 	= 6;
 $titleLeft      = array(17,39,67.5,77,236);
 //$titleLeft      = array(4,25,54.5,65,236);
+//全局字体
 $GfontSize		= 10;
+$GfontStyle		= ''; // B bold,U:underline
+//大项字体
+$bigItemFontSize = 11;
+$bigItemFontStyles = array_fill(0,14,'B');
+//小计字体
+$smallCountFontSize = 10;
+$smallCountFontStyles = array_fill(0,14,'');
+//OPQRST字体样式
+$NOPQRSTFontSize = 10;
+$NOPQRSTFontStyles = array_fill(0,14,'');
+
 
 include_once "../libs/conn.php";
 include_once '../libs/budgetDB.php'; 
@@ -38,7 +50,7 @@ $pdf=new PDF('L','mm', 'A4'); //创建新的FPDF对象
 $pdf->AddGBFont(); //设置中文字体 
 $pdf->Open(); //开始创建PDF 
 $pdf->AddPage(); //增加一页 
-$pdf->SetFont("GB",'',$GfontSize); //设置字体样式 
+$pdf->SetFont("GB",$GfontStyle,$GfontSize); //设置字体样式 
 $pdf->AliasNbPages("__totalPage__");
 //echo $custName.":".$projectName;
 foreach($budgetItems as $bItem){
@@ -58,18 +70,31 @@ foreach($budgetItems as $bItem){
 				$bItem["auxiliaryMaterialPrice"],$bItem["auxiliaryMaterialTotalPrice"],$bItem["manpowerPrice"],
 				$bItem["manpowerTotalPrice"],$bItem["machineryPrice"],$bItem["machineryTotalPrice"],
 				formatNumber(($bItem["mainMaterialPrice"] + $bItem["auxiliaryMaterialPrice"]) * $bItem["lossPercent"]),$remark);
-	$fontSizes = array($GfontSize,$GfontSize,$GfontSize,$GfontSize,$GfontSize,
-							$GfontSize,$GfontSize,$GfontSize,$GfontSize,$GfontSize,
-							$GfontSize,$GfontSize,$GfontSize,8);
+	$fontStyles = array_fill(0,14,$GfontStyle);
+	$fontSizes = array_fill(0,13,$GfontSize); //14列,这里13列字体一致,14列备注稍小
+	array_push($fontSizes,8);
 	$borders = array('LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LBR');
 	$align = array('C','L','C','C','C','C','C','C','C','C','C','C','C','L');
-	if(in_array($bItem['itemCode'],array('O','P','Q','R','S'))){
+	if(in_array($bItem['itemCode'],array('N','O','P','Q','R','S'))){
 		$data[3]= '';
+		$fontSizes = array_fill(0,14,$NOPQRSTFontSize);
+		$fontStyles = $NOPQRSTFontStyles;
 	}
+	if($itemName == '小计'){
+		$fontSizes = array_fill(0,14,$smallCountFontSize);
+		$fontStyles = $smallCountFontStyles;
+	}
+	//输出大项
+	if(strlen($itemCode) == 1){
+		$data[12] = ''; //大项不需要输出损耗
+		$fontSizes = array_fill(0,14,$bigItemFontSize);
+		$fontStyles = $bigItemFontStyles;
+	}
+	//小计后面空行
 	if ($itemCode != "A" && $bItem["basicItemId"] != "" && $bItem["basicSubItemId"] == "") {
 		$pdf->writeCellLine($CellWidth,array("","","","","","","","","","","","","",""),$borders,0,$align,14,$fontSizes);
 	}
-	$pdf->writeCellLine($CellWidth,$data,$borders,0,$align,14,$fontSizes);
+	$pdf->writeCellLine($CellWidth,$data,$borders,0,$align,14,$fontSizes,$fontStyles);
 }
 
 
