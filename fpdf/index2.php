@@ -81,8 +81,14 @@ foreach($budgetItems as $bItem){
 		$fontStyles = $NOPQRSTFontStyles;
 	}
 	if($itemName == '小计'){
+		$data[12]= '';
 		$fontSizes = array_fill(0,14,$smallCountFontSize);
 		$fontStyles = $smallCountFontStyles;
+	}
+	// 空白项
+	if($itemName == '') {
+		//不需要损耗
+		$data[12] = '';
 	}
 	//输出大项
 	if(strlen($itemCode) == 1){
