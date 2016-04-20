@@ -59,7 +59,7 @@
 		$itemCode = _getNextItemCode($post["budgetId"]);
 		global $mysql;
 		$fields = array('itemName','budgetId','itemUnit','itemAmount','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','lossPercent','remark','basicItemId','basicSubItemId');
-		$obj = array('itemCode'=>$itemCode,'budgetItemId' => "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT));
+		$obj = array('itemCode'=>$itemCode,'budgetItemId' => uniqid().str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT));
 		foreach($fields as $field){
 			if(isset($post[$field]))
 				$obj[$field] = $post[$field];
@@ -78,7 +78,7 @@
 			}
 		}
 		$fields = array('itemName','budgetId','itemUnit','workCategory','itemAmount','remark','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','manpowerCost', 'mainMaterialCost', 'basicItemId','basicSubItemId', 'isCustomized', 'lossPercent');
-		$obj = array('itemCode'=>$itemCode,'budgetItemId' => "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT));
+		$obj = array('itemCode'=>$itemCode,'budgetItemId' => uniqid().str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT));
 		foreach($fields as $field){
 			if(isset($post[$field])){
 				$obj[$field] = $post[$field];
