@@ -983,7 +983,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			            	validateedit: function (editor, e, opts){
 			            		var rec = e.record;
 			            		if (e.field == 'itemAmount') {
-			            			if (isNaN(e.value) || !/^\d+(\.\d+)?$/.test(e.value) ){
+			            			if (isNaN(e.value) || !/^-?\d+(\.\d+)?$/.test(e.value) ){
 				            			return false;
 				            		}
 				            		else if (e.value == e.originalValue) {
@@ -1152,7 +1152,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 	                	editor: me.isForPreview ? null : {
 	                		xtype: 'textfield',
 	                		allowBlank: false,
-	                		maskRe: /[\d\.]/
+	                		maskRe: /[\d\.\-]/
 	                	},
 	                	sortable: false,
 	                	menuDisabled: true,
