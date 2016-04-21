@@ -11,6 +11,7 @@ Ext.define('FamilyDecoration.view.budget.BulkDeleteSmallItem', {
 	modal: true,
 	budgetId: null,
 	grid: null,
+	maximizable: true,
 
 	initComponent: function (){
 		var me = this;
@@ -65,7 +66,11 @@ Ext.define('FamilyDecoration.view.budget.BulkDeleteSmallItem', {
 		            				});
 		            			}
 		            			// small items
-		            			else if (!node.get('basicItemId') && node.get('basicSubItemId')) {
+		            			else if (
+		            				(!node.get('basicItemId') && node.get('basicSubItemId'))
+		            				||
+		            				(node.get('isCustomized'))
+		            			) {
 		            				node.set({
 		            					text: node.get('itemCode') + ' ' + node.get('itemName'),
 		            					leaf: true,
@@ -114,7 +119,11 @@ Ext.define('FamilyDecoration.view.budget.BulkDeleteSmallItem', {
 					var deleteArr = [];
 					for (var i = checkedItems.length - 1; i >= 0; i--) {
 						var item = checkedItems[i];
-						if (!item.get('basicItemId') && item.get('basicSubItemId')) {
+						if (
+							(!item.get('basicItemId') && item.get('basicSubItemId'))
+							||
+							(item.get('isCustomized'))
+						) {
 							deleteArr.push(item.getId('budgetItemId'));
 						}
 					}

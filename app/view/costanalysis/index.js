@@ -195,13 +195,13 @@ Ext.define('FamilyDecoration.view.costanalysis.Index', {
                                         var rec = view.getRecord(tip.triggerElement.parentNode);
                                         var val = rec.get(column.dataIndex);
                                         if (val) {
-                                            val = '预算名称： ' + rec.get('budgetName') + '<br />';
-                                            val += '预算地址： ' + rec.get('businessRegion') + ' ' + rec.get('businessAddress') + '<br />';
-                                            val += '预算说明： ' + rec.get('comments').replace(/\n/g, '<br />') + '<br />';
-                                            val += '户型大小： ' + rec.get('areaSize') + '<br />';
-                                            val += '客户名称： ' + rec.get('custName') + '<br />';
-                                            val += '预算总价： ' + rec.get('totalFee') + '<br />';
-                                            val += '创建时间： ' + rec.get('createTime') + '<br />';
+                                            val = '<strong>预算名称：</strong> ' + rec.get('budgetName') + '<br />';
+                                            val += '<strong>预算地址：</strong> ' + rec.get('businessRegion') + ' ' + rec.get('businessAddress') + '<br />';
+                                            val += '<strong>预算说明：</strong> ' + rec.get('comments').replace(/\n/g, '<br />') + '<br />';
+                                            val += '<strong>户型大小：</strong> ' + rec.get('areaSize') + '<br />';
+                                            val += '<strong>客户名称：</strong> ' + rec.get('custName') + '<br />';
+                                            val += '<strong>预算总价：</strong> ' + rec.get('totalFee') + '<br />';
+                                            val += '<strong>创建时间：</strong> ' + rec.get('createTime') + '<br />';
                                             tip.update(val);
                                         }
                                         else {
