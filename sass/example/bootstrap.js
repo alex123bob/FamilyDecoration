@@ -116,6 +116,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.budget.AddBlankItem": "../../app/view/budget/addblankitem.js",
   "FamilyDecoration.view.budget.AddExistedItem": "../../app/view/budget/addexisteditem.js",
   "FamilyDecoration.view.budget.BudgetPanel": "../../app/view/budget/budgetpanel.js",
+  "FamilyDecoration.view.budget.BulkDeleteSmallItem": "../../app/view/budget/bulkdeletesmallitem.js",
   "FamilyDecoration.view.budget.EditHeader": "../../app/view/budget/editheader.js",
   "FamilyDecoration.view.budget.HistoryBudget": "../../app/view/budget/historybudget.js",
   "FamilyDecoration.view.budget.Index": "../../app/view/budget/index.js",
@@ -1143,6 +1144,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.budget.AddBlankItem": [],
   "FamilyDecoration.view.budget.AddExistedItem": [],
   "FamilyDecoration.view.budget.BudgetPanel": [],
+  "FamilyDecoration.view.budget.BulkDeleteSmallItem": [],
   "FamilyDecoration.view.budget.EditHeader": [],
   "FamilyDecoration.view.budget.HistoryBudget": [],
   "FamilyDecoration.view.budget.Index": [],
@@ -2351,6 +2353,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.budget.BudgetPanel": [
     "widget.budget-budgetpanel"
+  ],
+  "FamilyDecoration.view.budget.BulkDeleteSmallItem": [
+    "widget.budget-bulkdeletesmallitem"
   ],
   "FamilyDecoration.view.budget.EditHeader": [],
   "FamilyDecoration.view.budget.HistoryBudget": [
