@@ -11,6 +11,10 @@
 		case "listIds": 	$res = getBudgetIds();  $isParseResut = false;break;
 		//获取预算所有条目
 		case "itemlist":$res = getBudgetItemsByBudgetId($_REQUEST["budgetId"]);break;
+		//根据预算id获取业务的大项
+		case "getBudgetBigItems": $res = getBudgetBigItems($_REQUEST["budgetId"]); break;
+		//根据预算id和大项itemCode获取对应小项
+		case "getBudgetSmallItemsByBudgetIdAndItemCode": $res = getBudgetSmallItemsByBudgetIdAndItemCode($_REQUEST["budgetId"],$_REQUEST["itemCode"]); break;
 		//添加预算
 		case "add":  	$res = addBudget($_REQUEST);  break;
 		//从模板添加预算
@@ -23,6 +27,8 @@
 		case "moveItemDownward": $res = moveItemDownward($_REQUEST); break;
 		//添加大项
 		case "addBigItem":	$res = addBigItem($_REQUEST);  break;
+		//批量删除小项
+		case "bulkDeleteSmallItems": $res = bulkDeleteSmallItems($_REQUEST["budgetItemIds"]); break;
 		//删除项，不区分大项，小项
 		case "delItem":$res = delItem($_REQUEST['budgetItemId']);break;
 		//修改项，不区分大项，小项

@@ -6,7 +6,8 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 	layout: 'vbox',
 	requires: ['Ext.form.FieldContainer', 'FamilyDecoration.store.BudgetItem', 'FamilyDecoration.view.budget.EditHeader',
 			   'FamilyDecoration.view.budget.AddBasicItem', 'FamilyDecoration.view.budget.AddExistedItem',
-			   'FamilyDecoration.view.budget.HistoryBudget', 'Ext.slider.Single', 'FamilyDecoration.view.budget.AddBlankItem'],
+			   'FamilyDecoration.view.budget.HistoryBudget', 'Ext.slider.Single', 'FamilyDecoration.view.budget.AddBlankItem',
+			   'FamilyDecoration.view.budget.BulkDeleteSmallItem'],
 
 	title: '预算面板',
 	header: false,
@@ -44,6 +45,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			addBlankBtn = panel.down('[name="button-addBlankItemToBigItem"]'),
 			delItemBtn = panel.down('[name="button-deleteItem"]'),
 			discountBtn = panel.down('[name="button-priceAdjust"]'),
+			bulkdeleteBtn = panel.down('[name="button-bulkDeleteSmallItem"]'),
 			editBlankItemBtn = panel.down('[name="button-editBlankItem"]'),
 			calculateBtn = panel.down('[name="button-calculate"]'),
 			editSmallItemNameBtn = panel.down('[name="button-editSmallItemName"]');
@@ -53,6 +55,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 		addBlankBtn.isHidden() && addBlankBtn.show();
 		delItemBtn.isHidden() && delItemBtn.show();
 		discountBtn.isHidden() && discountBtn.show();
+		bulkdeleteBtn.isHidden() && bulkdeleteBtn.show();
 		editSmallItemNameBtn.isHidden() && editSmallItemNameBtn.show();
 		editBlankItemBtn.isHidden() && editBlankItemBtn.show();
 		!panel.isSynchronousCalculation && calculateBtn.isHidden() && calculateBtn.show();
@@ -101,6 +104,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			addBlankBtn = cmp.down('[name="button-addBlankItemToBigItem"]'),
 			delItemBtn = cmp.down('[name="button-deleteItem"]'),
 			discountBtn = cmp.down('[name="button-priceAdjust"]'),
+			bulkdeleteBtn = cmp.down('[name="button-bulkDeleteSmallItem"]'),
 			editBlankItemBtn = cmp.down('[name="button-editBlankItem"]'),
 			calculateBtn = cmp.down('[name="button-calculate"]'),
 			editSmallItemNameBtn = cmp.down('[name="button-editSmallItemName"]');
@@ -115,6 +119,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 		addSmallBtnCombo.hide();
 		delItemBtn.hide();
 		discountBtn.hide();
+		bulkdeleteBtn.hide();
 		editBlankItemBtn.hide();
 		editSmallItemNameBtn.hide();
 		!cmp.isSynchronousCalculation && calculateBtn.hide();
@@ -479,6 +484,21 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 					else {
 						showMsg('请选择要编辑的空白项！');
 					}
+				}
+			},
+			{
+				text: '批量删除',
+				tooltip: '自定义删除预算条目，只删除对应大项下面的小项，不删除大项。如要删除大项，请选择删除按钮。',
+				icon: './resources/img/delete1.png',
+				hidden: true,
+				name: 'button-bulkDeleteSmallItem',
+				handler: function (){
+					var grid = me.getComponent('gridpanel-budgetContent');
+					var win = Ext.create('FamilyDecoration.view.budget.BulkDeleteSmallItem', {
+						grid: grid,
+						budgetId: me.budgetId
+					});
+					win.show();
 				}
 			}
 		];

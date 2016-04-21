@@ -186,6 +186,14 @@
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
+	function bulkDeleteSmallItems ($budgetItemIds){
+		$arr = explode(">>><<<", $budgetItemIds);
+		for ($i=0; $i < count($arr); $i++) { 
+			delItem($arr[$i]);
+		}
+		return array("status"=>"successful", "errMsg"=>"");
+	}
+
 	//添加预算
 	function addBudget($post){
 		global $mysql;
@@ -301,6 +309,18 @@
 		return $mysql->DBGetAsMap("SELECT b.*,bz.address as businessAddress,`r`.`name` as businessRegion FROM `budget` b left join `business` bz on bz.id = b.businessId left join `region` `r` on `bz`.`regionId` = `r`.id where b.`isDeleted` = 'false' and b.`businessId` = '?' ",$businessId);
 	}
 	
+	function getBudgetBigItems($budgetId){
+		global $mysql;
+		$arr = $mysql->DBGetAsMap(" select * from `budget_item` where `budgetId` = '?' and `isDeleted` = 'false' and `basicItemId` IS NOT NULL ",$budgetId);
+		return $arr;
+	}
+
+	function getBudgetSmallItemsByBudgetIdAndItemCode ($budgetId, $itemCode){
+		global $mysql;
+		$arr = $mysql->DBGetAsMap(" select * from `budget_item` where `budgetId` = '?' and `isDeleted` = 'false' and `itemCode` like '?-%' ORDER BY (SUBSTRING(itemCode, 3)*1) ASC ",$budgetId, $itemCode);
+		return $arr;
+	}
+
 	function compareBudgetItem($arg1,$arg2){
 		return strcasecmp($arg1["itemCode"],$arg2["itemCode"]);
 	}
