@@ -274,7 +274,19 @@
 	}
 	function getBudgets (){
 		global $mysql;
-		return $mysql->DBGetAsMap("SELECT b.*,p.projectName,bz.address as businessAddress,`r`.`name` as businessRegion FROM `budget` b left join `project` p on b.projectId=p.projectId left join `business` `bz` on `bz`.`id` = `b`.`businessId` left join `region` `r` on `r`.`id` = `bz`.`regionId` where b.`isDeleted` = 'false' ORDER BY `b`.`createTime` DESC ");
+		$arr = $mysql->DBGetAsMap("SELECT b.*,p.projectName,bz.address as businessAddress,`r`.`name` as businessRegion FROM `budget` b left join `project` p on b.projectId=p.projectId left join `business` `bz` on `bz`.`id` = `b`.`businessId` left join `region` `r` on `r`.`id` = `bz`.`regionId` where b.`isDeleted` = 'false' ORDER BY `b`.`createTime` DESC ");
+		$res = array();
+		if (isset($_GET["onlyBusiness"]) && $_GET["onlyBusiness"] == true) {
+			for ($i=0; $i < count($arr); $i++) { 
+				if ($arr[$i]["businessId"]) {
+					array_push($res, $arr[$i]);
+				}
+			}
+			return $res;
+		}
+		else {
+			return $arr;
+		}
 	}
 	
 	function getBudgetsByBudgetId ($budgetId){
@@ -439,21 +451,23 @@
 			$res[$count]['auxiliaryMaterialTotalPrice'] =  $itemAmount * $res[$count]['auxiliaryMaterialPrice'];
 			$res[$count]['manpowerTotalPrice'] = $itemAmount * $res[$count]['manpowerPrice'];
 			$res[$count]['machineryTotalPrice'] = $itemAmount * $res[$count]['machineryPrice'];
+			$res[$count]['manpowerTotalCost'] = $itemAmount * $res[$count]['manpowerCost'];
+			$res[$count]['mainMaterialTotalCost'] = $itemAmount * $res[$count]['mainMaterialCost'];
 			$res[$count]['remark'] = $val['remark'] == 'NULL' ? '' : ($isGBK ? str2GBK($val['remark']) :  (addslashes(nl2br(str_replace("\n", "<br />", $val['remark'])))));
 			$res[$count]['isEditable'] = true;
 			/**
 			2.辅材总价=辅材单价*数量
 			3.人工总价=人工单价*数量
 			4.机械总价=机械单价*数量
-			6.小计=各类小项总价之和
-			7.合计=所有小巷综合			
+			6.小计=各类小项总价之和(其中成本小计为各个成本乘以数量然后算和)
+			7.合计=所有小巷综合		
 			**/
 			$smallCount[0] +=  $res[$count]['mainMaterialTotalPrice'];
 			$smallCount[1] +=  $res[$count]['auxiliaryMaterialTotalPrice'];
 			$smallCount[2] +=  $res[$count]['manpowerTotalPrice'];
 			$smallCount[3] +=  $res[$count]['machineryTotalPrice'];
-			$smallCount[4] +=  $res[$count]['manpowerCost'];
-			$smallCount[5] +=  $res[$count]['mainMaterialCost'];
+			$smallCount[4] +=  $res[$count]['manpowerTotalCost'];
+			$smallCount[5] +=  $res[$count]['mainMaterialTotalCost'];
 			foreach($res[$count] as $key => $val){
 				if($val === "" || $val === null){
 					//去除空值，减少网络数据量

@@ -16,84 +16,204 @@ Ext.define('FamilyDecoration.view.costanalysis.Index', {
         var me = this;
 
         me.items = [{
-            xtype: 'progress-projectlistbycaptain',
+            xtype: 'container',
+            layout: 'vbox',
             flex: 2,
+            margin: '0 1 0 0',
             height: '100%',
-            title: '工程项目名称',
-            searchFilter: true,
-            style: {
-                borderRightStyle: 'solid',
-                borderRightWidth: '1px'
-            },
-            listeners: {
-                itemclick: function (view, record, item){
-                    var pro = record,
-                        totalCost = Ext.getCmp('gridpanel-totalCost'),
-                        costAnalysis = Ext.getCmp('gridpanel-costAnalysis');
-                    if (pro && pro.get('projectName') && pro.get('budgets').length > 0) {
-                        var win = Ext.create('Ext.window.Window', {
-                            title: '预算列表',
-                            width: 500,
-                            height: 400,
-                            modal: true,
-                            layout: 'fit',
-                            items: [
-                                {
-                                    xtype: 'gridpanel',
-                                    columns: [
+            items: [
+                {
+                    xtype: 'progress-projectlistbycaptain',
+                    id: 'projectlistbycaptain-projectlistForBudget',
+                    name: 'projectlistbycaptain-projectlistForBudget',
+                    flex: 1,
+                    width: '100%',
+                    title: '工程项目名称',
+                    searchFilter: true,
+                    listeners: {
+                        itemclick: function (view, record, item){
+                            var pro = record,
+                                totalCost = Ext.getCmp('gridpanel-totalCost'),
+                                costAnalysis = Ext.getCmp('gridpanel-costAnalysis'),
+                                businessBudgetGrid = Ext.getCmp('gridpanel-businessBudget');
+                            if (pro && pro.get('projectName') && pro.get('budgets').length > 0) {
+                                var win = Ext.create('Ext.window.Window', {
+                                    title: '预算列表',
+                                    width: 500,
+                                    height: 400,
+                                    modal: true,
+                                    layout: 'fit',
+                                    items: [
                                         {
-                                            text: '工程地址',
-                                            dataIndex: 'projectName',
-                                            flex: 1
-                                        },
-                                        {
-                                            text: '预算名称',
-                                            dataIndex: 'budgetName',
-                                            flex: 1
+                                            xtype: 'gridpanel',
+                                            columns: [
+                                                {
+                                                    text: '工程地址',
+                                                    dataIndex: 'projectName',
+                                                    flex: 1
+                                                },
+                                                {
+                                                    text: '预算名称',
+                                                    dataIndex: 'budgetName',
+                                                    flex: 1
+                                                }
+                                            ],
+                                            store: Ext.create('FamilyDecoration.store.Budget', {
+                                                autoLoad: true,
+                                                filters: [
+                                                    function (item){
+                                                        return item.get('projectId') == pro.getId();
+                                                    }
+                                                ]
+                                            }),
+                                            listeners: {
+                                                itemdblclick: function(view, rec, item, index, e, opts) {
+                                                    totalCost.getStore().load({
+                                                        params: {
+                                                            budgetId: rec.get('budgetId')
+                                                        }
+                                                    });
+                                                    costAnalysis.getStore().load({
+                                                        params: {
+                                                            budgetId: rec.get('budgetId')
+                                                        }
+                                                    });
+                                                    win.close();
+                                                }
+                                            }
                                         }
                                     ],
-                                    store: Ext.create('FamilyDecoration.store.Budget', {
-                                        autoLoad: true,
-                                        filters: [
-                                            function (item){
-                                                return item.get('projectId') == pro.getId();
-                                            }
-                                        ]
-                                    })
-                                }
-                            ],
-                            buttons: [{
-                                text: '加载',
-                                handler: function (){
-                                    var grid = win.down('gridpanel'),
-                                        rec = grid.getSelectionModel().getSelection()[0];
-                                    totalCost.getStore().load({
-                                        params: {
-                                            budgetId: rec.get('budgetId')
+                                    buttons: [{
+                                        text: '加载',
+                                        handler: function (){
+                                            var grid = win.down('gridpanel'),
+                                                rec = grid.getSelectionModel().getSelection()[0];
+                                            totalCost.getStore().load({
+                                                params: {
+                                                    budgetId: rec.get('budgetId')
+                                                }
+                                            });
+                                            costAnalysis.getStore().load({
+                                                params: {
+                                                    budgetId: rec.get('budgetId')
+                                                }
+                                            });
+                                            win.close();
                                         }
-                                    });
-                                    costAnalysis.getStore().load({
-                                        params: {
-                                            budgetId: rec.get('budgetId')
+                                    }, {
+                                        text: '取消',
+                                        handler: function (){
+                                            win.close();
                                         }
-                                    });
-                                    win.close();
-                                }
-                            }, {
-                                text: '取消',
-                                handler: function (){
-                                    win.close();
-                                }
-                            }]
-                        });
+                                    }]
+                                });
 
-                        win.show();
+                                win.show();
+                            }
+                            else {
+                                showMsg('该工程没有预算！');
+                            }
+                            // remove selection of the grid underneath
+                            businessBudgetGrid.getSelectionModel().deselectAll();
+                        }
                     }
-                    else {
-                        showMsg('该工程没有预算！');
+                },
+                {
+                    title: '业务预算',
+                    xtype: 'gridpanel',
+                    id: 'gridpanel-businessBudget',
+                    name: 'gridpanel-businessBudget',
+                    width: '100%',
+                    flex: 1,
+                    columns: [
+                        {
+                            flex: 1,
+                            text: '业务名称',
+                            dataIndex: 'businessAddress',
+                            renderer: function (val, meta, rec){
+                                return rec.get('businessRegion') + ' ' + val;
+                            }
+                        }
+                    ],
+                    store: Ext.create('FamilyDecoration.store.Budget', {
+                        autoLoad: true,
+                        proxy: {
+                            type: 'rest',
+                            url: './libs/budget.php',
+                            extraParams: {
+                                action: 'list',
+                                onlyBusiness: true
+                            },
+                            reader: {
+                                type: 'json'
+                            }
+                        }
+                    }),
+                    listeners: {
+                        selectionchange: function (selModel, recs, opts){
+                            var businessBudgetGrid = Ext.getCmp('gridpanel-businessBudget'),
+                                st = businessBudgetGrid.getStore(),
+                                totalCostGrid = Ext.getCmp('gridpanel-totalCost'),
+                                costAnalysisGrid = Ext.getCmp('gridpanel-costAnalysis'),
+                                projectListByCaptain = Ext.getCmp('projectlistbycaptain-projectlistForBudget');
+                            if (recs.length > 0) {
+                                var rec = recs[0];
+                                totalCostGrid.getStore().load({
+                                    params: {
+                                        budgetId: rec.get('budgetId')
+                                    }
+                                });
+                                costAnalysisGrid.getStore().load({
+                                    params: {
+                                        budgetId: rec.get('budgetId')
+                                    }
+                                });
+                                // remove selection in the treepanel above
+                                projectListByCaptain.getSelectionModel().deselectAll();
+                            }
+                            else {
+                                totalCostGrid.getStore().removeAll();
+                                costAnalysisGrid.getStore().removeAll();
+                            }
+                        },
+                        afterrender: function (grid, opts){
+                            var view = grid.getView();
+                            var tip = Ext.create('Ext.tip.ToolTip', {
+                                // The overall target element.
+                                target: view.el,
+                                // Each grid row causes its own separate show and hide.
+                                delegate: view.cellSelector,
+                                // Moving within the row should not hide the tip.
+                                trackMouse: true,
+                                // Render immediately so that tip.body can be referenced prior to the first show.
+                                renderTo: Ext.getBody(),
+                                listeners: {
+                                    // Change content dynamically depending on which element triggered the show.
+                                    beforeshow: function updateTipBody(tip) {
+                                        var gridColumns = view.getGridColumns();
+                                        var column = gridColumns[tip.triggerElement.cellIndex];
+                                        var rec = view.getRecord(tip.triggerElement.parentNode);
+                                        var val = rec.get(column.dataIndex);
+                                        if (val) {
+                                            val = '预算名称： ' + rec.get('budgetName') + '<br />';
+                                            val += '预算地址： ' + rec.get('businessRegion') + ' ' + rec.get('businessAddress') + '<br />';
+                                            val += '预算说明： ' + rec.get('comments').replace(/\n/g, '<br />') + '<br />';
+                                            val += '户型大小： ' + rec.get('areaSize') + '<br />';
+                                            val += '客户名称： ' + rec.get('custName') + '<br />';
+                                            val += '预算总价： ' + rec.get('totalFee') + '<br />';
+                                            val += '创建时间： ' + rec.get('createTime') + '<br />';
+                                            tip.update(val);
+                                        }
+                                        else {
+                                            return false;
+                                        }
+                                    }
+                                }
+                            });
+                        }
                     }
                 }
-            }
+            ]
         }, {
             xtype: 'panel',
             height: '100%',

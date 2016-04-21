@@ -157,16 +157,12 @@ Ext.define('FamilyDecoration.view.budget.AddExistedItem', {
 		var bsiSt = Ext.create('FamilyDecoration.store.BasicSubItem', {
 			proxy: {
 				type: 'rest',
-		    	url: './libs/subitem.php?action=get',
+		    	url: './libs/subitem.php?action=getSortedItems',
 		        reader: {
 		            type: 'json'
 		        },
 		        extraParams: {
-		        	// originally we need the following parameter
-		        	// to screen those subitems don't belong to specific big item we demand.
-		        	// but now, we don't need it coz according to the requirement, all subitems could be added
-		        	// into any budget bigitem.
-		        	// parentId: me.bigItem.get('basicItemId')
+		        	parentId: me.bigItem.get('basicItemId')
 		        }
 			},
 			autoLoad: true

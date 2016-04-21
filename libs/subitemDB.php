@@ -11,6 +11,14 @@
 		}
 	}
 
+	function getSortedItems ($parentId){
+		global $mysql;
+		$currentItemCluster = $mysql->DBGetSomeRows("`basic_sub_item`", "*", "where `parentId` = '".$_GET["parentId"]."'");	
+		$otherItemCluster = $mysql->DBGetSomeRows("`basic_sub_item`", "*", "where `parentId` != '".$_GET["parentId"]."' ORDER BY parentId ");
+		$res = array_merge($currentItemCluster, $otherItemCluster);
+		return $res;
+	}
+
 	function addBunchBasicSubItems ($subItem){
 		$count = count(explode(">>><<<", $subItem["subItemName"]));
 	

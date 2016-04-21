@@ -20,6 +20,9 @@
 		case "get":
 			$res = getBasicSubItems();
 			break;
+		case "getsorteditems":
+			$res = getSortedItems($_GET["parentId"]);
+			break;
 		default: 
 			throw new Exception("unknown action:".$action);
 	}

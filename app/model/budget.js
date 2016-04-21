@@ -11,7 +11,8 @@ Ext.define('FamilyDecoration.model.Budget', {
 		{name: 'areaSize', type: 'string'},
 		{name: 'totalFee', type: 'string'},
 		{name: 'comments', type: 'string'},
-		{name: 'budgetName', type: 'string'}
+		{name: 'budgetName', type: 'string'},
+		{name: 'createTime', type: 'string'}
 	],
 	idProperty: 'budgetId'
 });
