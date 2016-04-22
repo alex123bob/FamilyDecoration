@@ -35,7 +35,7 @@
 		global $mysql;
 		$sql = "SELECT DISTINCT LEFT( itemCode, 1 ) as code , itemName FROM  `budget_item` WHERE `isDeleted` = 'false' and `budgetId` = '?' and LEFT( itemCode, 1 ) NOT IN ('N','O','P','Q','R','S') order by code asc";
 		$existItemCodes = $mysql->DBGetAsOneArray($sql,$budgetId);
-		$ItemCodeList = array("A","B","C","D","E","F","G","H","I","J","K","L","M");
+		$ItemCodeList = array("A","B","C","D","E","F","G","H","I","J","K","L","M","T","U","V","W","X","Y","Z");
 		foreach($ItemCodeList as $char){
 			if(!in_array($char,$existItemCodes)){
 				return $char;

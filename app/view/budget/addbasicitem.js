@@ -113,6 +113,14 @@ Ext.define('FamilyDecoration.view.budget.AddBasicItem', {
 															me.grid.getStore().load({
 																params: {
 																	budgetId: me.budgetId
+																},
+																callback: function (recs, ope, success){
+																	if (success) {
+																		var index = me.grid.getStore().find('itemCode', obj.itemCode),
+																			rec = me.grid.getStore().getAt(index);
+																		me.grid.getView().focusRow(rec, 200);
+																		me.grid.getSelectionModel().select(rec);
+																	}
 																}
 															});
 															me.close();
@@ -167,6 +175,14 @@ Ext.define('FamilyDecoration.view.budget.AddBasicItem', {
 														me.grid.getStore().load({
 															params: {
 																budgetId: me.budgetId
+															},
+															callback: function (recs, ope, success){
+																if (success) {
+																	var index = me.grid.getStore().find('itemCode', obj.itemCode),
+																		rec = me.grid.getStore().getAt(index);
+																	me.grid.getView().focusRow(rec, 200);
+																	me.grid.getSelectionModel().select(rec);
+																}
 															}
 														});
 														me.close();
