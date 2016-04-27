@@ -398,6 +398,14 @@
 		foreach($workCategorys as $key=>$val){
 			$cates[$count++] = array('name'=>$key,'manpowerCost'=>$val['manpowerCost'],'mainMaterialCost'=>$val['mainMaterialCost']);
 		}
+		$manpowerCostSmallCount = 0;
+		$mainMaterialCostSmallCount = 0;
+		for ($i=0; $i < count($cates); $i++) { 
+			$manpowerCostSmallCount += (float)$cates[$i]['manpowerCost'];
+			$mainMaterialCostSmallCount += (float)$cates[$i]['mainMaterialCost'];
+		}
+		$cates[$count++] = array('name'=>'小计', 'manpowerCost'=>$manpowerCostSmallCount, 'mainMaterialCost'=>$mainMaterialCostSmallCount);
+		$cates[$count++] = array('name'=>'总计', 'manpowerCost'=>$manpowerCostSmallCount + $mainMaterialCostSmallCount, 'mainMaterialCost'=>'');
 		return array('cost'=>$res,'total'=>$cates);
 		
 	}
