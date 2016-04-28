@@ -105,11 +105,13 @@ Ext.define('FamilyDecoration.view.user.Index', {
 				text: '登录地点',
 				dataIndex: 'location',
 				flex: 1
-			}, {
-				text: 'sessionId',
-				dataIndex: 'sessionId',
-				flex: 1
-			}],
+			}
+			// , {
+			// 	text: 'sessionId',
+			// 	dataIndex: 'sessionId',
+			// 	flex: 1
+			// }
+			],
 			store: st,
 			listeners: {
 				afterrender: function(grid, opts) {
