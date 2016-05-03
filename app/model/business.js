@@ -19,7 +19,8 @@ Ext.define('FamilyDecoration.model.Business', {
 		{name: 'requestDead', type: 'string'}, // 该业务是否申请废单，是为1，否为0
 		{name: 'isDead', type: 'string'}, // 该业务是否已经是废单，是为true,否为false
 		{name: 'requestDeadBusinessReason', type: 'string'}, // 该业务申请废单的原因
-		{name: 'budgetFinished', type: 'string'} // an indicator used for telling if the corresponding budget is finished or not
+		{name: 'budgetFinished', type: 'string'}, // an indicator used for telling if the corresponding budget is finished or not
+		{name: 'createTime', type: 'string'}
 	],
 	idProperty: 'id'
 });

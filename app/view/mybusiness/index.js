@@ -108,6 +108,14 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					}
 				}],
 				columns: [{
+					text: '时间',
+					flex: 0.7,
+					dataIndex: 'createTime',
+					renderer: function (val, meta, rec){
+						var dt = new Date(val.replace(/-/ig, '/'));
+						return Ext.Date.format(dt, 'Y-m');
+					}
+				}, {
 					text: '小区名称',
 					flex: 1,
 					dataIndex: 'regionName',
