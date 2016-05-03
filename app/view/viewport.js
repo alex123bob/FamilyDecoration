@@ -137,6 +137,7 @@ Ext.define('FamilyDecoration.view.Viewport', {
                     title: '用户名片图片上传',
                     url: './libs/uploadUserProfileImage.php',
                     supportMult: false,
+                    closable: false,
                     afterUpload: function(fp, o) {
                         var p = {},
                             content = '',
