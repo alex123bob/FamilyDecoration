@@ -16,7 +16,7 @@
 			$mailSubject = $_REQUEST["subject"];
 			$mailContent = $_REQUEST["body"];
 			
-			sendEmail($receiverAddress,null,$mailSender,$mailSubject, $mailContent, null);
+			sendEmail($receiverAddress,null,$mailSender,$mailSubject, preg_replace('/\n/i','<br />',$mailContent), null);
 			global $mysql;
 			$mailReceivers = $mysql->DBGetAsOneArray("select name from user where `mail` = '$receiverAddress' and `isDeleted` = 'false' ");
 			//如果多个用户用同一个邮箱，则此处会出问题，收件人不一定对。
