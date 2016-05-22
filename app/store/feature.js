@@ -156,6 +156,12 @@
                         cmp: 'mainmaterial-index',
                         leaf: true,
                         icon: 'resources/img/order.png'
+                    },
+                    {
+                        name: '工程目录',
+                        cmp: 'projectcategory-index',
+                        leaf: true,
+                        icon: 'resources/img/projectcategory.png'
                     }
                 ] 
             },

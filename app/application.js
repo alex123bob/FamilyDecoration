@@ -33,7 +33,8 @@ Ext.define('FamilyDecoration.Application', {
         'CheckSignBusiness',
         'RegionMgm',
         'DeadBusiness',
-        'Personnel'
+        'Personnel',
+        'ProjectCategory'
     ],
 
     stores: [
