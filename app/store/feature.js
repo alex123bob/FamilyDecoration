@@ -159,7 +159,7 @@
                     },
                     {
                         name: '工程目录',
-                        cmp: 'projectcategory-index',
+                        cmp: isDebug() ? 'projectcategory-index' : '',
                         leaf: true,
                         icon: 'resources/img/projectcategory.png'
                     }

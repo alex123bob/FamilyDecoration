@@ -763,6 +763,11 @@ function ga(url){
     });
 }
 
+function isDebug (){
+    var hashTag = location.hash;
+    return '#debug' == hashTag;
+}
+
 window.onresize = function() {
     var w = Ext.query('.x-window');
     Ext.each(w, function(item) {        
