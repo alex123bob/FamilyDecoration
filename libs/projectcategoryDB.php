@@ -3,10 +3,14 @@
 
 	function getProjectCategoryItems (){
 		global $mysql;
+		$start = $_GET["start"];
+		$limit = $_GET["limit"];
 		$sql = "select *, YEAR(`projectTime`) as projectYear , MONTH(`projectTime`) as projectMonth from `project` where `isDeleted` = 'false' and `isFrozen` = 0 ";
-		$projects = $mysql->DBGetAsMap($sql);
+		$limitSql = " limit $start, $limit ";
+		$count = count($mysql->DBGetAsMap($sql));
+		$projects = $mysql->DBGetAsMap($sql.$limitSql);
 		for ($i=0; $i < count($projects); $i++) {
-			$projects[$i]["serialNumber"] = $i + 1;
+			$projects[$i]["serialNumber"] = $start + $i + 1;
 			$businessId = $projects[$i]["businessId"];
 			$projectId = $projects[$i]["projectId"];
 			if ($businessId) {
@@ -38,6 +42,6 @@
 				$projects[$i]["projectProgress"] = '';
 			}
 		}
-		return $projects;
+		return array("items"=>$projects, "total"=>$count);
 	}
 ?>

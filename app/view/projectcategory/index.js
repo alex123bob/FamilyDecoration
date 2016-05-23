@@ -8,7 +8,27 @@ Ext.define('FamilyDecoration.view.projectcategory.Index', {
 	layout: 'fit',
 
 	initComponent: function (){
-		var me = this;
+		var me = this,
+			itemsPerPage = 10,
+			st = Ext.create('FamilyDecoration.store.ProjectCategory', {
+				autoLoad: false,
+				pageSize: itemsPerPage,
+				proxy: {
+			        type: 'rest',
+			        url: './libs/projectcategory.php?action=get',
+			        reader: {
+			            type: 'json',
+			            root: 'items',
+			            totalProperty: 'total'
+			        }
+			    }
+			});
+		st.load({
+			params: {
+				start: 0,
+				limit: itemsPerPage
+			}
+		});
 		me.items = [{
 			id: 'gridpanel-projectcategory',
 			name: 'gridpanel-projectcategory',
@@ -74,9 +94,15 @@ Ext.define('FamilyDecoration.view.projectcategory.Index', {
 					align: 'center'
 				}
 			},
-			store: Ext.create('FamilyDecoration.store.ProjectCategory', {
-				autoLoad: true
-			})
+			store: st,
+			dockedItems: [
+				{
+					xtype: 'pagingtoolbar',
+					store: st,
+					dock: 'bottom',
+					displayInfo: true
+				}
+			]
 		}];
 
 		this.callParent();
