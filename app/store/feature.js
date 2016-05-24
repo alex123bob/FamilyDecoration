@@ -166,6 +166,26 @@
                 ] 
             },
             {
+                name: '财务模块',
+                expanded: true,
+                cmp: 'finance-parent',
+                icon: 'resources/img/finance-parent.png',
+                children: [
+                    {
+                        name: '人工对账',
+                        cmp: 'manuallycheckbill-index',
+                        leaf: true,
+                        icon: 'resources/img/bill.png'
+                    },
+                    {
+                        name: '对账项目编辑',
+                        cmp: 'billitemedit-index',
+                        leaf: true,
+                        icon: 'resources/img/bill-edit.png'
+                    }
+                ]
+            },
+            {
                 name: "应用设置", 
                 expanded: true,
                 cmp: 'setting-parent', 
