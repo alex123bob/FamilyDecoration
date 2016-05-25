@@ -159,7 +159,7 @@
                     },
                     {
                         name: '工程目录',
-                        cmp: isDebug() ? 'projectcategory-index' : '',
+                        cmp: 'projectcategory-index',
                         leaf: true,
                         icon: 'resources/img/projectcategory.png'
                     }
@@ -168,7 +168,7 @@
             {
                 name: '财务模块',
                 expanded: true,
-                cmp: 'finance-parent',
+                cmp: isDebug() ? 'finance-parent' : '',
                 icon: 'resources/img/finance-parent.png',
                 children: [
                     {

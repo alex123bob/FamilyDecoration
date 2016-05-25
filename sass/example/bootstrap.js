@@ -24,6 +24,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.LeaveApproval": "../../app/controller/leaveapproval.js",
   "FamilyDecoration.controller.Mail": "../../app/controller/mail.js",
   "FamilyDecoration.controller.MainMaterial": "../../app/controller/mainmaterial.js",
+  "FamilyDecoration.controller.ManuallyCheckBill": "../../app/controller/manuallycheckbill.js",
   "FamilyDecoration.controller.Msg": "../../app/controller/msg.js",
   "FamilyDecoration.controller.MyBusiness": "../../app/controller/mybusiness.js",
   "FamilyDecoration.controller.MyLog": "../../app/controller/mylog.js",
@@ -147,6 +148,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.mail.NewMail": "../../app/view/mail/newmail.js",
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": "../../app/view/mainmaterial/editmainmaterial.js",
   "FamilyDecoration.view.mainmaterial.Index": "../../app/view/mainmaterial/index.js",
+  "FamilyDecoration.view.manuallycheckbill.Index": "../../app/view/manuallycheckbill/index.js",
   "FamilyDecoration.view.msg.Index": "../../app/view/msg/index.js",
   "FamilyDecoration.view.mybusiness.EditClient": "../../app/view/mybusiness/editclient.js",
   "FamilyDecoration.view.mybusiness.EditCommunity": "../../app/view/mybusiness/editcommunity.js",
@@ -1056,6 +1058,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.LeaveApproval": [],
   "FamilyDecoration.controller.Mail": [],
   "FamilyDecoration.controller.MainMaterial": [],
+  "FamilyDecoration.controller.ManuallyCheckBill": [],
   "FamilyDecoration.controller.Msg": [],
   "FamilyDecoration.controller.MyBusiness": [],
   "FamilyDecoration.controller.MyLog": [],
@@ -1179,6 +1182,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.mail.NewMail": [],
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": [],
   "FamilyDecoration.view.mainmaterial.Index": [],
+  "FamilyDecoration.view.manuallycheckbill.Index": [],
   "FamilyDecoration.view.msg.Index": [],
   "FamilyDecoration.view.mybusiness.EditClient": [],
   "FamilyDecoration.view.mybusiness.EditCommunity": [],
@@ -2254,6 +2258,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.LeaveApproval": [],
   "FamilyDecoration.controller.Mail": [],
   "FamilyDecoration.controller.MainMaterial": [],
+  "FamilyDecoration.controller.ManuallyCheckBill": [],
   "FamilyDecoration.controller.Msg": [],
   "FamilyDecoration.controller.MyBusiness": [],
   "FamilyDecoration.controller.MyLog": [],
@@ -2442,6 +2447,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.mainmaterial.Index": [
     "widget.mainmaterial-index"
+  ],
+  "FamilyDecoration.view.manuallycheckbill.Index": [
+    "widget.manuallycheckbill-index"
   ],
   "FamilyDecoration.view.msg.Index": [
     "widget.msg-index"

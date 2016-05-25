@@ -9,7 +9,7 @@ Ext.define('FamilyDecoration.view.projectcategory.Index', {
 
 	initComponent: function (){
 		var me = this,
-			itemsPerPage = 10,
+			itemsPerPage = 30,
 			st = Ext.create('FamilyDecoration.store.ProjectCategory', {
 				autoLoad: false,
 				pageSize: itemsPerPage,
