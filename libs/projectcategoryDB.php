@@ -14,7 +14,8 @@
 			$businessId = $projects[$i]["businessId"];
 			$projectId = $projects[$i]["projectId"];
 			if ($businessId) {
-				$customer = $mysql->DBGetAsMap("select customer from business where id = '?' and `isDeleted` = 'false' and `isFrozen` = 'false' and `isTransfered` = 'false' and `isDead` = 'false' ", $businessId);
+				// $customer = $mysql->DBGetAsMap("select customer from business where id = '?' and `isDeleted` = 'false' and `isFrozen` = 'false' and `isTransfered` = 'true' and `isDead` = 'false' ", $businessId);
+				$customer = $mysql->DBGetAsMap("select customer from business where id = '?' ", $businessId);
 				if (count($customer) > 0) {
 					$projects[$i]["customer"] = $customer[0]["customer"];
 				}

@@ -282,6 +282,9 @@
             else if (rec.get('cmp') == 'progress-index') {
                 flag = true;
             }
+            else if (rec.get('cmp') == 'projectcategory-index') {
+                flag = true;
+            }
             else if (rec.get('cmp') == 'plan-index') {
                 flag = true;
             }

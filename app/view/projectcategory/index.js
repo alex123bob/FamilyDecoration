@@ -40,7 +40,7 @@ Ext.define('FamilyDecoration.view.projectcategory.Index', {
 					{
 						text: '序号',
 						dataIndex: 'serialNumber',
-						flex: 0.5
+						flex: 0.7
 					},
 					{
 						text: '项目经理',
@@ -48,45 +48,74 @@ Ext.define('FamilyDecoration.view.projectcategory.Index', {
 					},
 					{
 						text: '工程地址',
-						dataIndex: 'projectName'
+						dataIndex: 'projectName',
+						flex: 1.5
 					},
 					{
 						text: '开工时间',
 						dataIndex: 'period',
 						renderer: function (val, meta, rec){
 							return val.split(':')[0];
-						}
+						},
+						flex: 1.2
 					},
 					{
 						text: '竣工时间',
 						dataIndex: 'period',
 						renderer: function (val, meta, rec){
 							return val.split(':')[1];
-						}
+						},
+						flex: 1.2
+					},
+					{
+						text: '所剩工时',
+						dataIndex: 'period',
+						renderer: function (val, meta, rec){
+							var finishTime = val.split(':')[1],
+								timeLeft = '';
+							if (finishTime) {
+								finishTime = new Date(finishTime.replace(/-/ig, '/'));
+								if (!isNaN(finishTime.getTime())) {
+									timeLeft = Math.round((finishTime.getTime() - new Date().getTime()) / 1000 / 60 / 60 / 24);
+									if (timeLeft == 0) {
+										timeLeft = Math.abs(timeLeft);
+									}
+									timeLeft += '天';
+								}
+							}
+							return timeLeft;
+						},
+						flex: 1.2
 					},
 					{
 						text: '设计师',
-						dataIndex: 'designer'
+						dataIndex: 'designer',
+						flex: 0.9
 					},
 					{
 						text: '业务员',
-						dataIndex: 'salesman'
+						dataIndex: 'salesman',
+						flex: 0.9
 					},
 					{
-						text: '客户姓名',
-						dataIndex: 'customer'
-					},
-					{
-						text: '二期工程款',
-						dataIndex: 'tilerProCheck'
-					},
-					{
-						text: '三期工程款',
-						dataIndex: 'woodProCheck'
+						text: '客户',
+						dataIndex: 'customer',
+						flex: 0.9
 					},
 					{
 						text: '目前状态',
-						dataIndex: 'projectProgress'
+						dataIndex: 'projectProgress',
+						flex: 2.4
+					},
+					{
+						text: '二期工程款',
+						dataIndex: 'tilerProCheck',
+						flex: 1.2
+					},
+					{
+						text: '三期工程款',
+						dataIndex: 'woodProCheck',
+						flex: 1.2
 					}
 				],
 				defaults: {
