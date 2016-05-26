@@ -394,7 +394,7 @@ Ext.define('FamilyDecoration.view.progress.EditProject', {
 													});
 
 													// announce related staffs via email
-													var content = '"' + params['projectName'] + '"工程已经创建，',
+													var content = '"您好,' + params['projectName'] + '"工程已经创建，',
 														subject = '工程创建通知';
 													for (var pro in params) {
 														switch(pro) {
