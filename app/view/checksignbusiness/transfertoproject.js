@@ -288,9 +288,18 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 					mail = Ext.getCmp('fieldcontainer-sendMsgForTransference').getComponent('checkbox-sendMail'),
 					memberTree = Ext.getCmp('treepanel-memberlistForTransference'),
 					selMembers = memberTree.getChecked(),
-					sendContent = User.getRealName() + '将客户"' + me.client.get('customer') + '"的"'
+					/*sendContent = User.getRealName() + '将客户"' + me.client.get('customer') + '"的"'
 								  + me.client.get('regionName') + ' ' + me.client.get('address') + '"'
 								  + '转为了工程';
+				    */
+				    String.prototype.format = function(){
+				    	var res = this;
+				    	for(var i = 0 ;i < arguments.length;i++)
+				    		res = res.replace("%"+(i+1),arguments[i]);
+				    	return res;
+				    }
+				    sendContent = "您好! %1工程已经创建，工期为%2-%3。监理%4 设计师%5 客户姓名%6 联系号码%7  祝您工作愉快！"
+				    sendContent = sendContent.format(me.client.get('address'),startTime,endTime,supervisorName,"TODO",me.client.get('customer'),"TODO");
 
 				if (customer.isValid() && address.isValid() && createTime.isValid() && startTime.isValid() 
 					&& endTime.isValid() && captain.isValid() && supervisor.isValid()) {
