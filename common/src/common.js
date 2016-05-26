@@ -777,6 +777,13 @@ window.onresize = function() {
     })
 }
 
+String.prototype.format = function(){
+    var res = this;
+    for(var i = 0 ;i < arguments.length;i++)
+        res = res.replace("%"+(i+1),arguments[i]);
+    return res;
+}
+
 Ext.require('Ext.form.field.VTypes', function (){
     Ext.apply(Ext.form.field.VTypes, {
         'phone': function() {

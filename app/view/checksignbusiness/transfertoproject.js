@@ -292,14 +292,8 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 								  + me.client.get('regionName') + ' ' + me.client.get('address') + '"'
 								  + '转为了工程';
 				    */
-				    String.prototype.format = function(){
-				    	var res = this;
-				    	for(var i = 0 ;i < arguments.length;i++)
-				    		res = res.replace("%"+(i+1),arguments[i]);
-				    	return res;
-				    }
-				    sendContent = "您好! %1工程已经创建，工期为%2-%3。监理%4 设计师%5 客户姓名%6 联系号码%7  祝您工作愉快！"
-				    sendContent = sendContent.format(me.client.get('address'),startTime,endTime,supervisorName,"TODO",me.client.get('customer'),"TODO");
+				    sendContent = "您好! %1工程已经创建，工期为%2 - %3。监理%4， 设计师%5， 客户姓名%6， 联系号码%7，  祝您工作愉快！"
+				    sendContent = sendContent.format(me.client.get('address'),Ext.Date.format(startTime.getValue(), 'Y-m-d'),Ext.Date.format(endTime.getValue(), 'Y-m-d'),supervisor.getValue(),me.client.get('designer'),me.client.get('customer'),"");
 
 				if (customer.isValid() && address.isValid() && createTime.isValid() && startTime.isValid() 
 					&& endTime.isValid() && captain.isValid() && supervisor.isValid()) {
