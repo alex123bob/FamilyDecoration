@@ -20,7 +20,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 				hidden: me.projectId ? true : false,
 				xtype: 'container',
 				layout: 'fit',
-				flex: 0.6,
+				flex: 0.5,
 				height: '100%',
 				items: [{
 					style: {
@@ -60,7 +60,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 					borderRightWidth: '1px'
 				},
 				hideHeaders: true,
-				flex: 0.5,
+				flex: 0.2,
 				height: '100%'
 			},
 			{
