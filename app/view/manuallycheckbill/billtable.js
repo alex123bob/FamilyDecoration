@@ -128,8 +128,9 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 			},
 			{
 				xtype: 'gridpanel',
-				flex: 2,
+				flex: 1,
 				width: '100%',
+				autoScroll: true,
 				columns: [
 					{
 						text: '序号',
@@ -161,50 +162,6 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 						flex: 1,
 						dataIndex: 'subtotal'
 					}
-				]
-			},
-			{
-				xtype: 'gridpanel',
-				title: '单据列表',
-				width: '100%',
-				flex: 1,
-				autoScroll: true,
-				tools: [
-					{
-						type: 'close',
-						tooltip: '删除单据',
-						itemId: 'deleteBill',
-						callback: function (){
-
-						}
-					}
-				],
-				columns: [
-					{
-						text: '单名',
-						dataIndex: 'billName',
-						flex: 1
-					},
-					{
-						text: '单值',
-						dataIndex: 'billValue',
-						flex: 1
-					},
-					{
-						text: '是否审核',
-						dataIndex: 'isChecked',
-						flex: 1
-					},
-					{
-						text: '审核人',
-						dataIndex: 'checker',
-						flex: 1
-					},
-					{
-						text: '是否付款',
-						dataIndex: 'isPaid',
-						flex: 1
-					},
 				]
 			}
 		];
