@@ -71,16 +71,68 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 				tbar: [
 					{
 						text: '添加单据',
-						icon: ''
+						icon: 'resources/img/addbill.png',
+						handler: function (){
+							var win = Ext.create('Ext.window.Window', {
+								layout: 'fit',
+								width: 615,
+								height: 410,
+								title: '添加单据',
+								modal: true,
+								items: [
+									{
+										xtype: 'manuallycheckbill-billtable'
+									}
+								],
+								tbar: [
+									{
+										text: '添加小项',
+										icon: 'resources/img/addsmallitem.png',
+										handler: function (){
+
+										}
+									},
+									{
+										text: '添加空白项',
+										icon: 'resources/img/addblankitem.png',
+										handler: function (){
+
+										}
+									},
+									{
+										text: '添加预付',
+										icon: 'resources/img/addprepay.png',
+										handler: function (){
+
+										}
+									}
+								],
+								buttons: [
+									{
+										text: '确定'
+									},
+									{
+										text: '取消',
+										handler: function (){
+											win.close();
+										}
+									}
+								]
+							});
+							win.show();
+						}
 					},
 					{
-						text: '递交审核'
+						text: '递交审核',
+						icon: 'resources/img/uploadbill.png'
 					},
 					{
-						text: '预览单据'
+						text: '预览单据',
+						icon: 'resources/img/previewbill.png'
 					},
 					{
-						text: '打印单据'
+						text: '打印单据',
+						icon: 'resources/img/printbill.png'
 					}
 				],
 				layout: 'vbox',
