@@ -29,9 +29,11 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 						value: '佳诚装饰<br />单项工程施工工程款领取审批单&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 12px;">公司联</font>',
 						hideLabel: true,
 						fieldStyle: {
-							fontFamily: '黑体',
 							fontSize: '24px',
 							lineHeight: '30px'
+						},
+						style: {
+							fontFamily: '黑体'
 						},
 						flex: 1,
 						height: '100%'

@@ -850,9 +850,11 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 						value: '',
 						hideLabel: true,
 						fieldStyle: {
-							fontFamily: '黑体',
 							fontSize: '24px',
 							lineHeight: '60px'
+						},
+						style: {
+							fontFamily: '黑体'
 						},
 						width: 700
 					}
