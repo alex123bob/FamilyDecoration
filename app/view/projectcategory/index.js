@@ -23,7 +23,7 @@ Ext.define('FamilyDecoration.view.projectcategory.Index', {
 			        }
 			    }
 			});
-		if (User.isAdmin() || User.isProjectManager() || User.isFinanceManager()) {
+		if (User.isAdmin() || User.isProjectManager() || User.isFinanceManager() || User.isFinanceStaff()) {
 			st.load({
 				params: {
 					start: 0,
