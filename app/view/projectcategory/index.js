@@ -23,13 +23,23 @@ Ext.define('FamilyDecoration.view.projectcategory.Index', {
 			        }
 			    }
 			});
-		st.load({
-			params: {
-				start: 0,
-				limit: itemsPerPage,
-				userName: User.getName()
-			}
-		});
+		if (User.isAdmin() || User.isProjectManager() || User.isFinanceManager()) {
+			st.load({
+				params: {
+					start: 0,
+					limit: itemsPerPage
+				}
+			});
+		}
+		else {
+			st.load({
+				params: {
+					start: 0,
+					limit: itemsPerPage,
+					userName: User.getName()
+				}
+			});
+		}
 		me.items = [{
 			id: 'gridpanel-projectcategory',
 			name: 'gridpanel-projectcategory',
