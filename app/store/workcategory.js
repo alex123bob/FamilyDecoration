@@ -20,8 +20,12 @@ Ext.define('FamilyDecoration.store.WorkCategory', {
 			value: '0004'
 		},
 		{
-			name: '杂工',
+			name: '力工',
 			value: '0005'
+		},
+		{
+			name: '其他',
+			value: '0009'
 		}
 	],
 

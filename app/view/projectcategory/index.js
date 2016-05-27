@@ -26,7 +26,8 @@ Ext.define('FamilyDecoration.view.projectcategory.Index', {
 		st.load({
 			params: {
 				start: 0,
-				limit: itemsPerPage
+				limit: itemsPerPage,
+				userName: User.getName()
 			}
 		});
 		me.items = [{

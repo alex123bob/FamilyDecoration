@@ -148,6 +148,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.mail.NewMail": "../../app/view/mail/newmail.js",
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": "../../app/view/mainmaterial/editmainmaterial.js",
   "FamilyDecoration.view.mainmaterial.Index": "../../app/view/mainmaterial/index.js",
+  "FamilyDecoration.view.manuallycheckbill.BillTable": "../../app/view/manuallycheckbill/billtable.js",
   "FamilyDecoration.view.manuallycheckbill.Index": "../../app/view/manuallycheckbill/index.js",
   "FamilyDecoration.view.msg.Index": "../../app/view/msg/index.js",
   "FamilyDecoration.view.mybusiness.EditClient": "../../app/view/mybusiness/editclient.js",
@@ -1182,6 +1183,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.mail.NewMail": [],
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": [],
   "FamilyDecoration.view.mainmaterial.Index": [],
+  "FamilyDecoration.view.manuallycheckbill.BillTable": [],
   "FamilyDecoration.view.manuallycheckbill.Index": [],
   "FamilyDecoration.view.msg.Index": [],
   "FamilyDecoration.view.mybusiness.EditClient": [],
@@ -2447,6 +2449,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.mainmaterial.Index": [
     "widget.mainmaterial-index"
+  ],
+  "FamilyDecoration.view.manuallycheckbill.BillTable": [
+    "widget.manuallycheckbill-billtable"
   ],
   "FamilyDecoration.view.manuallycheckbill.Index": [
     "widget.manuallycheckbill-index"

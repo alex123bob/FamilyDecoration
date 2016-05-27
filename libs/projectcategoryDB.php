@@ -5,7 +5,8 @@
 		global $mysql;
 		$start = $_GET["start"];
 		$limit = $_GET["limit"];
-		$sql = "select *, YEAR(`projectTime`) as projectYear , MONTH(`projectTime`) as projectMonth from `project` where `isDeleted` = 'false' and `isFrozen` = 0 ";
+		$userName = $_GET["userName"];
+		$sql = "select *, YEAR(`projectTime`) as projectYear , MONTH(`projectTime`) as projectMonth from `project` where `isDeleted` = 'false' and `isFrozen` = 0 and (`captainName` = '$userName' or `designerName` = '$userName' or `salesmanName` = '$userName' or `supervisorName` = '$userName') ";
 		$limitSql = " limit $start, $limit ";
 		$count = count($mysql->DBGetAsMap($sql));
 		$projects = $mysql->DBGetAsMap($sql.$limitSql);
