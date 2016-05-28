@@ -107,6 +107,42 @@
 		}
 		return $arg;
 	}
+	//微妙时间
+	function microtime_float()
+	{
+	    list($usec, $sec) = explode(" ", microtime());
+	    return ((float)$usec + (float)$sec);
+	}
+	//微妙时间
+	function microtime_float2()
+	{
+	    list($usec, $sec) = explode(" ", microtime());
+	    return (int)($usec*1000);
+	}
+	 
+	//将下划线命名转换为驼峰式命名
+	function underlineToCamel ( $str , $ucfirst = true){
+	     $str = ucwords(str_replace('_', ' ', $str));
+   		 $str = str_replace(' ','',lcfirst($str));
+     	return $ucfirst ? ucfirst($str) : $str;
+	}
+	//驼峰命名法转下划线风格
+    function camelToUnderline($str){
+        $array = array();
+        for($i=0;$i<strlen($str);$i++){
+            if($str[$i] == strtolower($str[$i])){
+                $array[] = $str[$i];
+            }else{
+                if($i>0){
+                    $array[] = '_';
+                }
+                $array[] = strtolower($str[$i]);
+            }
+        }
+        
+        $result = implode('',$array);
+        return $result;
+    }
 	function ga($data){
 		global $mysql;
 		$fields = array("userName", "interfaceName");

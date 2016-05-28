@@ -214,8 +214,13 @@
 			$this->dbSQL = $sql;
 			$this->DBExecute($this->dbSQL);
 			if (mysqli_num_rows($this->dbResult) > 0){
-				while($partRows = mysqli_fetch_array($this->dbResult,MYSQLI_BOTH))
+				while($partRows = mysqli_fetch_array($this->dbResult,MYSQLI_BOTH)){
+					foreach ($partRows as $key => $value) {
+						if(is_numeric($key))
+							unset($partRows[$key]);
+					}
 					$partSomeRows[] = $partRows;
+				}
 				return $partSomeRows;
 			}
 			return array();
@@ -381,6 +386,11 @@
 				$sql .= " where ".$condition;
 			$this->dbSQL = $sql;
 			$this->DBExecute($this->dbSQL);
+			if($this->dbResult){
+				return mysqli_affected_rows($this->dbConn);
+			}else{
+				return -1;
+			}
 		}
 		
 		//创建新的数据库
@@ -427,7 +437,7 @@
 				$fp = fopen($fileName, "ab");
 				fwrite($fp, $inputStr);
 				fclose($fp);
-			}		
+			}
 			throw new Exception($errorMsg);			
 			exit();
 		 }
