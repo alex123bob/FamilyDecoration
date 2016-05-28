@@ -7,17 +7,16 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 		'FamilyDecoration.view.progress.ProjectListByCaptain',
 		'Ext.form.FieldSet',
 		'FamilyDecoration.view.manuallycheckbill.BillTable',
-		'FamilyDecoration.store.WorkCategory'
+		'FamilyDecoration.store.WorkCategory',
+		'FamilyDecoration.view.manuallycheckbill.AddBill'
 	],
 	// autoScroll: true,
 	layout: 'hbox',
-	projectId: undefined,
 
 	initComponent: function (){
 		var me = this;
 		me.items = [
 			{
-				hidden: me.projectId ? true : false,
 				xtype: 'container',
 				layout: 'fit',
 				flex: 0.5,
@@ -28,7 +27,6 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						borderRightWidth: '1px'
 					},
 					xtype: 'progress-projectlistbycaptain',
-					projectId: me.projectId,
 					searchFilter: true,
 					title: '工程项目名称',
 					id: 'treepanel-projectNameForBillCheck',
@@ -73,51 +71,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						text: '添加单据',
 						icon: 'resources/img/addbill.png',
 						handler: function (){
-							var win = Ext.create('Ext.window.Window', {
-								layout: 'fit',
-								width: 615,
-								height: 410,
-								title: '添加单据',
-								modal: true,
-								items: [
-									{
-										xtype: 'manuallycheckbill-billtable'
-									}
-								],
-								tbar: [
-									{
-										text: '添加小项',
-										icon: 'resources/img/addsmallitem.png',
-										handler: function (){
-
-										}
-									},
-									{
-										text: '添加空白项',
-										icon: 'resources/img/addblankitem.png',
-										handler: function (){
-
-										}
-									},
-									{
-										text: '添加预付',
-										icon: 'resources/img/addprepay.png',
-										handler: function (){
-
-										}
-									}
-								],
-								buttons: [
-									{
-										text: '确定'
-									},
-									{
-										text: '取消',
-										handler: function (){
-											win.close();
-										}
-									}
-								]
+							var win = Ext.create('FamilyDecoration.view.manuallycheckbill.AddBill', {
 							});
 							win.show();
 						}
@@ -140,7 +94,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 					{
 						xtype: 'manuallycheckbill-billtable',
 						flex: 1,
-						width: '100%'
+						width: '100%',
+						isPreview: true
 					},
 					{
 						xtype: 'gridpanel',
@@ -158,33 +113,34 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								}
 							}
 						],
-						columns: [
-							{
-								text: '单名',
-								dataIndex: 'billName',
-								flex: 1
-							},
-							{
-								text: '单值',
-								dataIndex: 'billValue',
-								flex: 1
-							},
-							{
-								text: '是否审核',
-								dataIndex: 'isChecked',
-								flex: 1
-							},
-							{
-								text: '审核人',
-								dataIndex: 'checker',
-								flex: 1
-							},
-							{
-								text: '是否付款',
-								dataIndex: 'isPaid',
-								flex: 1
-							},
-						]
+						columns: {
+							items: [
+								{
+									text: '单名',
+									dataIndex: 'billName'
+								},
+								{
+									text: '单值',
+									dataIndex: 'billValue'
+								},
+								{
+									text: '是否审核',
+									dataIndex: 'isChecked'
+								},
+								{
+									text: '审核人',
+									dataIndex: 'checker'
+								},
+								{
+									text: '是否付款',
+									dataIndex: 'isPaid'
+								},
+							],
+							defaults: {
+								flex: 1,
+								align: 'center'
+							}
+						}
 					}
 				]
 			}

@@ -4,9 +4,11 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 	layout: 'vbox',
 	requires: [],
 	header: false,
+	isPreview: false,
 
 	initComponent: function (){
-		var me = this;
+		var me = this,
+			previewMode = me.isPreview;
 
 		me.items = [
 			{
@@ -60,13 +62,15 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								xtype: 'textfield',
 								fieldLabel: '领款人',
 								flex: 1,
-								height: '100%'
+								height: '100%',
+								readOnly: previewMode ? true : false
 							},
 							{
 								xtype: 'textfield',
 								fieldLabel: '工程地址',
 								flex: 2,
-								height: '100%'
+								height: '100%',
+								readOnly: true
 							}
 						]
 					},
@@ -84,19 +88,22 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								xtype: 'textfield',
 								fieldLabel: '联系电话',
 								flex: 1,
-								height: '100%'
+								height: '100%',
+								readOnly: previewMode ? true : false
 							},
 							{
 								xtype: 'textfield',
 								fieldLabel: '总金额',
 								flex: 1,
-								height: '100%'
+								height: '100%',
+								readOnly: true
 							},
 							{
 								xtype: 'textfield',
 								fieldLabel: '申领金额',
 								flex: 1,
-								height: '100%'
+								height: '100%',
+								readOnly: previewMode ? true : false
 							}
 						]
 					},
@@ -114,13 +121,15 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								xtype: 'textfield',
 								fieldLabel: '领款次数',
 								flex: 1,
-								height: '100%'
+								height: '100%',
+								readOnly: previewMode ? true : false
 							},
 							{
 								xtype: 'textfield',
 								fieldLabel: '完成情况',
 								flex: 2,
-								height: '100%'
+								height: '100%',
+								readOnly: previewMode ? true : false
 							}
 						]
 					},
@@ -131,38 +140,38 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 				flex: 1,
 				width: '100%',
 				autoScroll: true,
-				columns: [
-					{
-						text: '序号',
+				columns: {
+					items: [
+						{
+							text: '序号',
+							dataIndex: 'serialNumber'
+						},
+						{
+							text: '项目',
+							dataIndex: 'projectName'
+						},
+						{
+							text: '单位',
+							dataIndex: 'unit'
+						},
+						{
+							text: '数量',
+							dataIndex: 'amount'
+						},
+						{
+							text: '单价(元)',
+							dataIndex: 'unitPrice'
+						},
+						{
+							text: '小计',
+							dataIndex: 'subtotal'
+						}
+					],
+					defaults: {
 						flex: 1,
-						dataIndex: 'serialNumber'
-					},
-					{
-						text: '项目',
-						flex: 1,
-						dataIndex: 'projectName'
-					},
-					{
-						text: '单位',
-						flex: 1,
-						dataIndex: 'unit'
-					},
-					{
-						text: '数量',
-						flex: 1,
-						dataIndex: 'amount'
-					},
-					{
-						text: '单价(元)',
-						flex: 1,
-						dataIndex: 'unitPrice'
-					},
-					{
-						text: '小计',
-						flex: 1,
-						dataIndex: 'subtotal'
+						align: 'center'
 					}
-				]
+				}
 			}
 		];
 

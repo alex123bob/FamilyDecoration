@@ -179,7 +179,7 @@
                     },
                     {
                         name: '对账项目编辑',
-                        cmp: 'billitemedit-index',
+                        cmp: 'checkbillitem-index',
                         leaf: true,
                         icon: 'resources/img/bill-edit.png'
                     }
