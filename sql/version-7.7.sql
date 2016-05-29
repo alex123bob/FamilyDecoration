@@ -60,6 +60,7 @@ CREATE TABLE `statement_basic_item` (
   `unitPrice` decimal(10,0) DEFAULT NULL,
   `subtotal` decimal(10,0) DEFAULT NULL,
   `type` varchar(3) DEFAULT NULL COMMENT '小项类型',
+  `professionType` varchar(5) DEFAULT NULL,
   `createTime` datetime DEFAULT NULL,
   `updateTime` datetime DEFAULT NULL,
   `isDeleted` varchar(5) DEFAULT NULL,

@@ -2,7 +2,7 @@ Ext.define('FamilyDecoration.view.checkbillitem.Index', {
 	extend: 'Ext.container.Container',
 	alias: 'widget.checkbillitem-index',
 	requires: [
-		'FamilyDecoration.store.WorkCategory',
+		'FamilyDecoration.store.ProfessionType',
 		'FamilyDecoration.view.checkbillitem.AddCheckBillItem'
 	],
 	// autoScroll: true,
@@ -17,28 +17,48 @@ Ext.define('FamilyDecoration.view.checkbillitem.Index', {
 				columns: [
 					{
 						text: '列表',
-						dataIndex: 'name',
+						dataIndex: 'cname',
 						flex: 1
 					}
 				],
-				store: FamilyDecoration.store.WorkCategory,
+				store: Ext.create('FamilyDecoration.store.ProfessionType', {
+					autoLoad: true
+				}),
 				style: {
 					borderRightStyle: 'solid',
 					borderRightWidth: '1px'
 				},
 				hideHeaders: true,
 				flex: 0.2,
-				height: '100%'
+				height: '100%',
+				listeners: {
+					selectionchange: function (selModel, sels, opts){
+						var rec = sels[0],
+							billItemGrid = Ext.getCmp('gridpanel-checkBillItemTable');
+						if (rec) {
+							billItemGrid.workCategory = rec.get('value');
+							billItemGrid.refresh();
+						}
+						else {
+							billItemGrid.workCategory = undefined;
+							billItemGrid.refresh();
+						}
+					}
+				}
 			},
 			{
 				xtype: 'checkbillitem-addcheckbillitem',
+				id: 'gridpanel-checkBillItemTable',
+				name: 'gridpanel-checkBillItemTable',
 				flex: 2,
 				height: '100%',
+				workCategory: undefined,
 				bbar: [
 					{
 						text: '添加',
 						icon: 'resources/img/addcheckbillitem.png',
 						handler: function (){
+							var billItemGrid = Ext.getCmp('gridpanel-checkBillItemTable');
 							var win = Ext.create('Ext.window.Window', {
 								layout: 'fit',
 								maximizable: true,
@@ -48,7 +68,9 @@ Ext.define('FamilyDecoration.view.checkbillitem.Index', {
 								title: '添加对账项目',
 								items: {
 									xtype: 'checkbillitem-addcheckbillitem',
-									header: false
+									isEditable: true,
+									header: false,
+									workCategory: billItemGrid.workCategory
 								},
 								buttons: [
 									{

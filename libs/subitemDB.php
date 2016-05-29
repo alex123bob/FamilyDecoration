@@ -11,6 +11,11 @@
 		}
 	}
 
+	function getItemsByWorkCategory ($workCategory){
+		global $mysql;
+		return $mysql->DBGetSomeRows("`basic_sub_item`", "*", "where `workCategory` = '".$workCategory."'");
+	}
+
 	function getSortedItems ($parentId){
 		global $mysql;
 		$currentItemCluster = $mysql->DBGetSomeRows("`basic_sub_item`", "*", "where `parentId` = '".$_GET["parentId"]."'");	
