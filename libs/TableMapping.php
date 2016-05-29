@@ -4,7 +4,7 @@
 		"profession_type"=>array('id','name','value','cname'),
 		"statement_bill"=>array('id','billName','billValue','isChecked','checker','isPaid','payee','projectId','projectName','phoneNumber','totalFee','claimAmount','payedTimes','projectProgress','professionType'),
 		"statement_bill_item"=>array('id','billId','serialNumber','billItemName','unit','amount','unitPrice','subtotal','referenceNumber','professionType'),
-		"statement_basic_item"=>array('id','serialNumber','billItemName','unit','amount','unitPrice','subtotal','referenceNumber','type'),
+		"statement_basic_item"=>array('id','serialNumber','billItemName','unit','amount','unitPrice','subtotal','referenceNumber','professionType'),
 		"statement_bill_audit"=>array('id','billId','checker','comments','isChecked')
 	);
 

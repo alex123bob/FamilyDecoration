@@ -38,7 +38,7 @@ class BaseSvc{
 
 	public function getUUID(){
 		//return uniqid().str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
-		return date("YmdHis").str_pad(microtime_float2(),4,0,STR_PAD_LEFT).str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
+		return date("YmdHis").str_pad(microtime_float2(),4,0,STR_PAD_LEFT).str_pad(rand(0, 99), 2, rand(0, 9), STR_PAD_LEFT);
 	}
 
 	public function parseLimitSql($q){
