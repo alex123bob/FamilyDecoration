@@ -98,7 +98,10 @@ Ext.define('FamilyDecoration.view.checkbillitem.AddCheckBillItem', {
 					editor: me.isEditable ? {
 				                xtype: 'textfield',
 				                allowBlank: false
-				            } : null
+				            } : null,
+				    renderer: function (val, meta, rec){
+				    	return Ext.String.trim(val);
+				    }
 				},
 				{
 					flex: 1,
@@ -107,7 +110,10 @@ Ext.define('FamilyDecoration.view.checkbillitem.AddCheckBillItem', {
 					editor: me.isEditable ? {
 				                xtype: 'textfield',
 				                allowBlank: false
-				            } : null
+				            } : null,
+				    renderer: function (val, meta, rec){
+				    	return Ext.String.trim(val);
+				    }
 				},
 				{
 					flex: 1,
