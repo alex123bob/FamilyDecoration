@@ -41,6 +41,14 @@ class BaseSvc{
 		return date("YmdHis").str_pad(microtime_float2(),4,0,STR_PAD_LEFT).str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
 	}
 
+	public function parseLimitSql($q){
+		return isset($qryParams['limit']) && trim($qryParams['limit']) != "" ? " limit ".$q['limit'] : "";
+	}
+
+	public function parseOrderBySql($q){
+		return isset($qryParams['orderby']) && trim($qryParams['orderby']) != "" ? " order by  ".$q['orderby'] : "";
+	}
+
 	public function parseWhereSql($prefix,$tableName,$q,&$params){
 		global $TableMapping;
 		global $mysql;
@@ -70,38 +78,13 @@ class BaseSvc{
 	?action=getNameAndPhone&xxx=xxxx&ddd=xxxx
 
 	*/
-	public function get($qryParams){
-		global $TableMapping;
-		global $mysql;
-		$whereSql = " where 1 = 1 ";
-		$orderBy = "";
-		$limit = "";
-		$params = array();
-		foreach ($this->fields as $f) {
-			if(isset($qryParams[$f])){
-				array_push($params, $qryParams[$f]);
-				$whereSql = $whereSql." and `".$f."` = '?' ";
-			}
-			if(isset($qryParams["_".$f])){
-				array_push($params, $qryParams['_'.$f]);
-				$whereSql = $whereSql." and `".$f."` like '%?%' ";
-			}
-		}
-		if(!contains($whereSql,'isDeleted')){
-			$whereSql = $whereSql." and `isDeleted` = 'false' ";
-		}
-		if(isset($qryParams['orderby']) && trim($qryParams['orderby']) != ""){
-			$orderBy = " order by  ".$qryParams['orderby'];
-		}
-		if(isset($qryParams['limit']) && trim($qryParams['limit']) != ""){
-			$limit = " limit ".$qryParams['limit'];
-		}
-		$row = $mysql->DBGetAsMap("select * from ".$this->tableName.$whereSql.$orderBy.$limit,$params);
-		$count = $mysql->DBGetAsOneArray("select count(1) as count from ".$this->tableName.$whereSql,$params)[0];
-		return array('total'=>$count,'data'=>$row);
+	public function get($q){
+		return $this->_get($q,false);
 	}
-
-	public function getCount($qryParams){
+	public function getCount($q){
+		return $this->_get($q,true);
+	}
+	private function _get($qryParams,$onlyCount){
 		global $TableMapping;
 		global $mysql;
 		$whereSql = " where 1 = 1 ";
@@ -126,8 +109,12 @@ class BaseSvc{
 		}
 		if(isset($qryParams['limit']) && trim($qryParams['limit']) != ""){
 			$limit = " limit ".$qryParams['limit'];
-		}
-		return $mysql->DBGetAsOneArray("select count(1) as count from ".$this->tableName.$whereSql,$params)[0];
+		}		
+		$count = $mysql->DBGetAsOneArray("select count(1) as count from ".$this->tableName.$whereSql,$params)[0];
+		if($onlyCount)
+			return array('status'=>'successful', 'count'=>$count,'errMsg' => '');
+		$row = $mysql->DBGetAsMap("select * from ".$this->tableName.$whereSql.$orderBy.$limit,$params);
+		return array('total'=>$count,'data'=>$row);
 	}
 
 	/*
@@ -165,38 +152,14 @@ class BaseSvc{
 		if(!isset($this->fields) || count($this->fields) == 0){
 			throw new Exception("table ".$this->tableName."not defined in TableMapping.php");
 		}
+		return $this;
 	}
 
 	public static function getSvc($svcName){
 		require_once $svcName."Svc.class.php";
-		$class = new ReflectionClass(ucfirst($svcName)."Svc");
+		$class = new ReflectionClass($svcName."Svc");
 		$fin = $class->newInstanceArgs();
-		$fin->setTableName($svcName);
-	}
-
-	public static function processAction($req){
-		$ac = explode('.',$req["action"]);
-		$controller = $ac[0];
-		$action = $ac[1];
-		require_once $controller."Svc.class.php";
-		$class = new ReflectionClass(ucfirst($controller)."Svc");
-		$fin = $class->newInstanceArgs();
-		$fin->setTableName($controller);
-		$class = new ReflectionClass($fin);//建立 Person这个类的反射类  
-		$methods=$class->getmethods();  //获取Person 类中的getName方法 
-		$found = false;
-		$res = array('status'=>'successful', 'errMsg' => '');
-		foreach($methods as $method){
-			if(strtolower($method->getName()) == $action){
-				$res = $class->getMethod($method->getName())->invoke($fin,$req);
-				$found = true;
-				break;				
-			}
-		}
-		if(!$found)
-			throw new Exception("unknown action:".$action);
-		if($res != null)
-			echo (json_encode($res));
+		return $fin->setTableName($svcName);
 	}
 }
 ?>
