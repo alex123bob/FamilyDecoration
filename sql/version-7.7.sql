@@ -31,6 +31,7 @@ COMMIT;
 DROP TABLE IF EXISTS `statement_bill_item`;
 CREATE TABLE `statement_bill_item` (
   `id` varchar(20) NOT NULL,
+  `billId` varchar(20) NOT NULL,
   `serialNumber` varchar(10) DEFAULT NULL,
   `billItemName` varchar(50) DEFAULT NULL,
   `unit` varchar(10) DEFAULT NULL,
@@ -72,6 +73,7 @@ DROP TABLE IF EXISTS `statement_bill`;
 CREATE TABLE `statement_bill` (
   `id` varchar(20) NOT NULL,
   `payee` varchar(100) DEFAULT NULL,
+  `projectId` varchar(20) NOT NULL,
   `projectName` varchar(500) DEFAULT NULL,
   `totalFee` decimal(12,0) DEFAULT NULL,
   `claimAmount` decimal(12,0) DEFAULT NULL,
@@ -81,6 +83,7 @@ CREATE TABLE `statement_bill` (
   `updateTime` datetime DEFAULT NULL,
   `isDeleted` varchar(5) DEFAULT NULL,
   `phoneNumber` varchar(30) DEFAULT NULL,
+  `professionType` varchar(5) DEFAULT NULL,
   `billName` varchar(50) DEFAULT NULL,
   `billValue` varchar(50) DEFAULT NULL,
   `isChecked` varchar(5) DEFAULT NULL,
