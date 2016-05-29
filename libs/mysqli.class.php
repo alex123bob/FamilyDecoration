@@ -419,6 +419,8 @@
 		 */
 		 public function DBOutputErrorInfo() {
 			$errorMsg = mysql_error();
+			if($errorMsg == "")
+				$errorMsg = $this->dbConn->error." sql:".$this->dbSQL;
 			if(contains($errorMsg,'Duplicate entry')){
 				$ems = str_replace('Duplicate entry','已经存在',$errorMsg);
 				$ems = substr($ems,0,stripos($ems,' for key'));

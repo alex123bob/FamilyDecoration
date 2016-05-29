@@ -16,33 +16,20 @@ class ProfessionTypeSvc extends BaseSvc
 		}*/
 		
 		/*
-
-		select p.* ,IFNULL(outer_b.hightLight,0) as hightLight
-		from profession_type p 
-		left join 
-		( 
-			select count(*) as hightLight , professionType from statement_bill b
-			where b.`projectId` = '123' 
-			and b.`isDeleted` = 'false'
-			group by b.professionType
-		) outer_b on outer_b.professionType = p.name where 1=1  and p.`isDeleted` = 'false';
-
+		select p.* ,IFNULL(b.h,0) as hightLight from profession_type p left join ( 
+			select count(*) as h , professionType from statement_bill where `projectId` = '123' and `isDeleted` = 'false' group by professionType
+		) b on b.professionType = p.name where 1=1  and p.`isDeleted` = 'false';
 		*/
 		if(isset($q['projectId'])){
 			global $mysql;
 			$params = array();
-			$whereSql1 = parent::parseWhereSql('b.','statement_bill',$q,$params);
+			$whereSql1 = parent::parseWhereSql('','statement_bill',$q,$params);
 			$whereSql2 = parent::parseWhereSql('p.','profession_type',$q,$params);
 			$orderBy = parent::parseOrderBySql($q);
 			$limit = parent::parseLimitSql($q);
-			$sql = "select p.* ,IFNULL(outer_b.hightLight,0) as hightLight
-					from profession_type p 
-					left join 
-					( 
-						select count(*) as hightLight , professionType from statement_bill b
-						where 1=1 $whereSql1
-						group by b.professionType
-					) outer_b on outer_b.professionType = p.name where 1=1 $whereSql2 ";
+			$sql = "select p.* ,IFNULL(b.h,0) as hightLight from profession_type p left join ( 
+						select count(*) as h , professionType from statement_bill where 1=1 $whereSql1 group by professionType
+					) b on b.professionType = p.name where 1=1 $whereSql2 ";
 			$row = $mysql->DBGetAsMap($sql.$orderBy.$limit,$params);
 			$count = $mysql->DBGetAsOneArray("select count(*) from ( $sql ) as a",$params)[0];
 			return array('total'=>$count,'data'=>$row);
