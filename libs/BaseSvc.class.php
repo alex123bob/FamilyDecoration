@@ -26,6 +26,11 @@ class BaseSvc{
 				$obj[$f] = $qryParams[$f];
 			}
 		}
+		if(isset($obj['isDeleted']))
+			$obj['isDelete'] = 'false';
+		if(isset($obj['createTime']))
+			$obj['createTime'] = 'now()';
+
 		$mysql->DBInsertAsArray($this->tableName,$obj);
 		return array('status'=>'successful', 'data'=>$obj,'errMsg' => '');
 	}
