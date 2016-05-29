@@ -26,6 +26,7 @@ class BaseSvc{
 				$obj[$f] = $qryParams[$f];
 			}
 		}
+
 		if(isset($obj['isDeleted']))
 			$obj['isDelete'] = 'false';
 		if(isset($obj['createTime']))
