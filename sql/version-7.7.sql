@@ -22,7 +22,7 @@ CREATE TABLE `profession_type` (
 --  Records of `profession_type`
 -- ----------------------------
 BEGIN;
-INSERT INTO `profession_type` VALUES ('20160529031937146446', 'plaster', '泥工', null, null, null, '0001'), ('20160529031949146446', 'carpenter', '木工', null, null, null, '0002'), ('20160529031957146446', 'painter', '油漆工', null, null, null, '0003'), ('20160529032009146446', 'electrician', '水电工', null, null, null, '0004'), ('20160529032021146446', 'handyman', '力工', null, null, null, '0005'), ('20160529032030146446', 'other', '其他', null, null, null, '0009');
+INSERT INTO `profession_type` VALUES ('20160529031937146446', 'plaster', '泥工', now(), null, 'false', '0001'), ('20160529031949146446', 'carpenter', '木工', now(), null, 'false', '0002'), ('20160529031957146446', 'painter', '油漆工', now(), null, 'false', '0003'), ('20160529032009146446', 'electrician', '水电工', now(), null, 'false', '0004'), ('20160529032021146446', 'handyman', '力工', now(), null, 'false', '0005'), ('20160529032030146446', 'other', '其他', now(), null, 'false', '0009');
 COMMIT;
 
 -- ----------------------------
