@@ -143,6 +143,44 @@
         $result = implode('',$array);
         return $result;
     }
+    /*
+	从数组中取部分字段
+	如[{a:1,b:1,c:1},{a:1,b:1,c:1},{a:1,b:1,c:1},{a:1,b:1,c:1}]
+	执行array_get($array,'a')
+	返回
+	[{a:1},{a:1},{a:1}]
+    */
+    function array_get($array){
+		$count = func_num_args() - 1;
+		$requiredField = array();
+		$res = array();
+		for ($i = 0;$i<$count;$i++) {
+			$requiredField[$count] = func_get_arg(i+1);
+		}
+		foreach ($array as $key => $value) {
+			foreach ($requiredField as $field) {
+				$res[$key][$field] = $array[$key][$field];
+			}
+		}
+		return $res;
+    }
+	/*
+	从数组中取部分字段
+	如{a:1,b:1,c:1}
+	map_get($map,'a')
+	返回
+	{a:1}
+    */
+	function map_get($map){
+		$count = func_num_args() - 1;
+		$res = array();
+		for ($i = 0;$i<$count;$i++) {
+			$fieldName = func_get_arg(i+1);
+			$res[$fieldName] = $map[$fieldName];
+		}
+		return $res;
+    }
+
 	function ga($data){
 		global $mysql;
 		$fields = array("userName", "interfaceName");

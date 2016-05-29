@@ -2,13 +2,13 @@
 	//createTime,updateTime,isDeleted 不用写
 	$TableMapping = array(
 		"profession_type"=>array('id','name','value','cname'),
-		"statement_bill"=>array('id','billName','billValue','isChecked','checker','isPaid','payee','projectName','phoneNumber','totalFee','claimAmount','payedTimes','projectProgress'),
-		"statement_bill_item"=>array('id','serialNumber','billItemName','unit','amount','unitPrice','subtotal','type'),
+		"statement_bill"=>array('id','billName','billValue','isChecked','checker','isPaid','payee','projectId','projectName','phoneNumber','totalFee','claimAmount','payedTimes','projectProgress','professionType'),
+		"statement_bill_item"=>array('id','billId','serialNumber','billItemName','unit','amount','unitPrice','subtotal','type'),
 		"statement_baisc_item"=>array('id','serialNumber','billItemName','unit','amount','unitPrice','subtotal','type'),
 		"statement_bill_audit"=>array('id','billId','checker','comments','isChecked')
 	);
 
-	foreach ($TableMapping as $key => $value) {
+	foreach ($TableMapping as $key => &$value) {
 		array_push($value, 'createTime');
 		array_push($value, 'isDeleted');
 		array_push($value, 'updateTime');
