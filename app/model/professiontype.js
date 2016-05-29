@@ -7,7 +7,9 @@ Ext.define('FamilyDecoration.model.ProfessionType', {
 		{name: 'value', type: 'string'}, // 0001
 		{name: 'createTime', type: 'string'},
 		{name: 'updateTime', type: 'string'},
-		{name: 'isDeleted', type: 'string'}
+		{name: 'isDeleted', type: 'string'},
+
+		{name: 'billNumber', type: 'string'} // 工种下单子的数量
 	],
 	idProperty: 'id'
 });
