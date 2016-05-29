@@ -35,15 +35,15 @@ CREATE TABLE `statement_bill_item` (
   `serialNumber` varchar(10) DEFAULT NULL,
   `billItemName` varchar(50) DEFAULT NULL,
   `unit` varchar(10) DEFAULT NULL,
-  `amount` decimal(10,0) DEFAULT NULL,
-  `unitPrice` decimal(10,0) DEFAULT NULL,
-  `subtotal` decimal(10,0) DEFAULT NULL,
+  `amount` double DEFAULT NULL,
+  `unitPrice` double DEFAULT NULL,
+  `subtotal` double DEFAULT NULL,
   `professionType` varchar(5) DEFAULT NULL,
   `createTime` datetime DEFAULT NULL,
   `updateTime` datetime DEFAULT NULL,
   `isDeleted` varchar(5) DEFAULT NULL,
-  `referenceNumber` decimal(10,0) DEFAULT NULL,
-  `checkedNumber` decimal(10,0) DEFAULT NULL,
+  `referenceNumber` double DEFAULT NULL,
+  `checkedNumber` double DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -56,15 +56,15 @@ CREATE TABLE `statement_basic_item` (
   `serialNumber` varchar(10) DEFAULT NULL,
   `billItemName` varchar(50) DEFAULT NULL,
   `unit` varchar(10) DEFAULT NULL,
-  `amount` decimal(10,0) DEFAULT NULL,
-  `unitPrice` decimal(10,0) DEFAULT NULL,
-  `subtotal` decimal(10,0) DEFAULT NULL,
+  `amount` double DEFAULT NULL,
+  `unitPrice` double DEFAULT NULL,
+  `subtotal` double DEFAULT NULL,
   `professionType` varchar(5) DEFAULT NULL,
   `createTime` datetime DEFAULT NULL,
   `updateTime` datetime DEFAULT NULL,
   `isDeleted` varchar(5) DEFAULT NULL,
-  `referenceNumber` decimal(10,0) DEFAULT NULL,
-  `checkedNumber` decimal(10,0) DEFAULT NULL,
+  `referenceNumber` double DEFAULT NULL,
+  `checkedNumber` double DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
