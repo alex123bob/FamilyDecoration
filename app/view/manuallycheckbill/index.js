@@ -7,7 +7,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 		'FamilyDecoration.view.progress.ProjectListByCaptain',
 		'Ext.form.FieldSet',
 		'FamilyDecoration.view.manuallycheckbill.BillTable',
-		'FamilyDecoration.store.WorkCategory',
+		'FamilyDecoration.store.ProfessionType',
 		'FamilyDecoration.view.manuallycheckbill.AddBill'
 	],
 	// autoScroll: true,
@@ -37,7 +37,19 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 							return rec.get('projectName') ? true : false;
 						},
 						selectionchange: function (selModel, sels, opts){
-							
+							var pro = sels[0],
+								professtionTypeGrid = Ext.getCmp('gridpanel-professionType'),
+								st = professtionTypeGrid.getStore();
+							if (pro && pro.get('projectName')) {
+								st.load({
+									params: {
+										projectId: pro.getId()
+									}
+								});
+							}
+							else if (!pro) {
+								st.removeAll();
+							}
 						}
 					}
 				}]
@@ -45,14 +57,18 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 			{
 				xtype: 'gridpanel',
 				title: '工种列表',
+				id: 'gridpanel-professionType',
+				name: 'gridpanel-professionType',
 				columns: [
 					{
 						text: '列表',
-						dataIndex: 'name',
+						dataIndex: 'cname',
 						flex: 1
 					}
 				],
-				store: FamilyDecoration.store.WorkCategory,
+				store: Ext.create('FamilyDecoration.store.ProfessionType', {
+					autoLoad: false
+				}),
 				style: {
 					borderRightStyle: 'solid',
 					borderRightWidth: '1px'
