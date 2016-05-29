@@ -76,7 +76,26 @@ Ext.define('FamilyDecoration.view.checkbillitem.Index', {
 									{
 										text: '确定',
 										handler: function (){
-
+											var grid = win.down('grid'),
+												st = grid.getStore(),
+												flag = true,
+												index = 0;
+											st.each(function (rec){
+												index++;
+												if (!rec.get('billItemName') || !rec.get('unit') 
+													|| !rec.get('referenceNumber') || !rec.get('unitPrice')) {
+													flag = false;
+													return false;
+												}
+											});
+											if (flag) {
+												// Ext.Ajax.request({
+												// 	url: './libs/api.php?'
+												// });
+											}
+											else {
+												showMsg('第' + index + '项有未填写项，请补充完整！');
+											}
 										}
 									},
 									{

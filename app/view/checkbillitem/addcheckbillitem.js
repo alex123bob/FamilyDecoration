@@ -23,6 +23,14 @@ Ext.define('FamilyDecoration.view.checkbillitem.AddCheckBillItem', {
 		            	edit: function (editor, e){
 		            		e.record.commit();
 		            		editor.completeEdit();
+		            	},
+		            	validateedit: function (editor, e, opts){
+		            		var rec = e.record;
+		            		if (e.field == 'referenceNumber' || e.field == 'unitPrice') {
+		            			if (isNaN(e.value) || !/^-?\d+(\.\d+)?$/.test(e.value) ){
+			            			return false;
+			            		}
+		            		}
 		            	}
 		            }
 		        })
@@ -139,7 +147,8 @@ Ext.define('FamilyDecoration.view.checkbillitem.AddCheckBillItem', {
 					var clickedDataIndex = view.panel.headerCt.getHeaderAtIndex(cellIndex).dataIndex;
 					if (clickedDataIndex == 'referenceNumber') {
 						var win = Ext.create('FamilyDecoration.view.checkbillitem.PickBasicItemWithSameType', {
-							workCategory: me.workCategory
+							workCategory: me.workCategory,
+							basicBillItem: rec
 						});
 						win.show();
 					}

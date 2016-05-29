@@ -5,14 +5,15 @@ Ext.define('FamilyDecoration.model.StatementBasicItem', {
 		{name: 'serialNumber', type: 'string'},
 		{name: 'billItemName', type: 'string'},
 		{name: 'unit', type: 'string'},
-		{name: 'amount', type: 'string'},
-		{name: 'unitPrice', type: 'string'},
-		{name: 'subtotal', type: 'string'},
+		{name: 'amount', type: 'float'},
+		{name: 'unitPrice', type: 'float'},
+		{name: 'subtotal', type: 'float'},
 		{name: 'type', type: 'string'},
 		{name: 'createTime', type: 'string'},
 		{name: 'updateTime', type: 'string'},
 		{name: 'isDeleted', type: 'string'},
-		{name: 'referenceNumber', type: 'string'},
+		{name: 'referenceNumber', type: 'int'},
+		{name: 'referenceItemIds', type: 'string'}, // 参考量对应的基础小项的id
 		{name: 'checkedNumber', type: 'string'}
 	]
 });

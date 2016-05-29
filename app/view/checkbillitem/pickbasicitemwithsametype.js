@@ -11,6 +11,7 @@ Ext.define('FamilyDecoration.view.checkbillitem.PickBasicItemWithSameType', {
 	width: 520,
 	height: 300,
 	workCategory: undefined,
+	basicBillItem: undefined,
 
 	initComponent: function (){
 		var me = this;
@@ -48,7 +49,23 @@ Ext.define('FamilyDecoration.view.checkbillitem.PickBasicItemWithSameType', {
 			{
 				text: '添加',
 				handler: function (){
-					
+					var grid = me.down('gridpanel'),
+						items = [],
+						sels = grid.getSelectionModel().getSelection();
+					for (var i = sels.length - 1; i >= 0; i--) {
+						items.push(sels[i].getId());
+					}
+					if (items.length <= 0) {
+						showMsg('请选择参考量！');
+					}
+					else {
+						me.basicBillItem.set({
+							referenceNumber: items.length,
+							referenceItemIds: items.join('>>><<<')
+						});
+						me.basicBillItem.commit();
+						me.close();
+					}
 				}
 			},
 			{
