@@ -27,9 +27,9 @@ class BaseSvc{
 			}
 		}
 
-		if(isset($obj['isDeleted']))
-			$obj['isDelete'] = 'false';
-		if(isset($obj['createTime']))
+		if(!isset($obj['isDeleted']))
+			$obj['isDeleted'] = 'false';
+		if(!isset($obj['createTime']))
 			$obj['createTime'] = 'now()';
 
 		$mysql->DBInsertAsArray($this->tableName,$obj);
