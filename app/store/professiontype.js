@@ -8,6 +8,10 @@ Ext.define('FamilyDecoration.store.ProfessionType', {
 			type: 'json',
 			root: 'data'
 		},
+		pageParam: false, //to remove param "page"
+		startParam: false, //to remove param "start"
+		limitParam: false, //to remove param "limit"
+		noCache: false, //to remove param "_dc"
 		extraParams: {
 			action: 'ProfessionType.get'
 		}
