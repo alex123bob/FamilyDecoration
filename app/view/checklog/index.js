@@ -359,7 +359,6 @@ Ext.define('FamilyDecoration.view.checklog.Index', {
 				}),
 				autoScroll: true,
 				flex: 1,
-				width: '100%',
 				// hideHeaders: true,
 				columns: [{
 					text: '批阅内容',

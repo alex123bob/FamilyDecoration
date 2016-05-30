@@ -140,7 +140,7 @@ class BaseSvc{
 		if(trim($whereSql) == "1 = 1"){
 			throw new Exception("no where condition. Cant update all records.");
 		}
-		$obj['lastUpdateTime'] = 'now()';		
+		$obj['updateTime'] = 'now()';		
 		$affect = $mysql->DBUpdate($this->tableName,$obj,$whereSql,$params);
 		return array('status'=>'successful','affect'=>$affect, 'errMsg' => '','data'=>$obj);
 	}

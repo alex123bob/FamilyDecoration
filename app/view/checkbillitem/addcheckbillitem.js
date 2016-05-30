@@ -10,6 +10,8 @@ Ext.define('FamilyDecoration.view.checkbillitem.AddCheckBillItem', {
 
 	isEditable: false,
 	workCategory: undefined,
+	statementBasicItem: undefined,
+	initBtn: Ext.emptyFn,
 
 	initComponent: function (){
 		var me = this;
@@ -35,7 +37,7 @@ Ext.define('FamilyDecoration.view.checkbillitem.AddCheckBillItem', {
 		            }
 		        })
 		    ];
-		    me.tbar = [
+		    me.tbar = !me.statementBasicItem ? [
 		    	{
 		    		text: '添加',
 		    		icon: 'resources/img/add1.png',
@@ -46,7 +48,7 @@ Ext.define('FamilyDecoration.view.checkbillitem.AddCheckBillItem', {
 		    			st.add(rec);
 		    		}
 		    	}
-		    ];
+		    ] : null;
 		}
 
 		me.refresh = function (){
@@ -141,6 +143,11 @@ Ext.define('FamilyDecoration.view.checkbillitem.AddCheckBillItem', {
 		me.store = Ext.create('FamilyDecoration.store.StatementBasicItem', {
 			autoLoad: false
 		});
+		
+		// if there is a record bound to this grid, we are gonna load this data into this grid and edit it.
+		if (me.statementBasicItem) {
+			me.store.add(me.statementBasicItem);
+		}
 
 		me.listeners = {
 			cellclick: function (view, td, cellIndex, rec, tr, rowIndex, e, opts){
@@ -158,6 +165,11 @@ Ext.define('FamilyDecoration.view.checkbillitem.AddCheckBillItem', {
 						});
 						win.show();
 					}
+				}
+			},
+			selectionchange: function (selModel, sels, opts){
+				if (!me.isEditable) {
+					me.initBtn();
 				}
 			}
 		};
