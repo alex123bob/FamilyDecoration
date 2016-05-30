@@ -1,9 +1,9 @@
-Ext.onReady(function (){
+Ext.onReady(function () {
     swal.setDefaults({
         confirmButtonColor: '#317040'
     });
 });
-Ext.require('Ext.window.MessageBox', function (){
+Ext.require('Ext.window.MessageBox', function () {
     Ext.override(Ext.window.MessageBox, {
         info: function (msg, fn, scope) {
             var cfg = {
@@ -62,11 +62,11 @@ Ext.require('Ext.window.MessageBox', function (){
             }
             else if (msg.errMsg) {
                 // css 强制换行: word-wrap:break-word;word-break:break-all;
-                text = '<div style="word-wrap:break-word;word-break:break-all;">'+ msg.errMsg + '</div>';
+                text = '<div style="word-wrap:break-word;word-break:break-all;">' + msg.errMsg + '</div>';
                 if (msg.detail) {
                     text = text + '<p style="margin:10px 0 0;"><a onclick="$(\'.detailedInfo\').toggle();" id="viewErrorMsgDetail" class="expandable" href="javascript:void(0);" ' +
                         '><span>+</span>' + '详细信息' + '</a></p>' +
-                        '<div class="detailedInfo" style="display:none;max-height:200px;overflow: auto;border: 1px solid #ccc;width: 350px;margin: 0 auto;">' +  msg.detail + '</div>';
+                        '<div class="detailedInfo" style="display:none;max-height:200px;overflow: auto;border: 1px solid #ccc;width: 350px;margin: 0 auto;">' + msg.detail + '</div>';
                 }
             }
 
@@ -105,7 +105,7 @@ Ext.require('Ext.window.MessageBox', function (){
 // });
 
 // override enableOverflow property to make sure tha tall toolbar will automatically overflow.
-Ext.require('Ext.toolbar.Toolbar', function (){
+Ext.require('Ext.toolbar.Toolbar', function () {
     Ext.toolbar.Toolbar.prototype.enableOverflow = true;
 });
 
@@ -132,7 +132,7 @@ function getId(index) {
     }
 }
 
-function getIndex (c){
+function getIndex(c) {
     var str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     return str.indexOf(c) + 1;
 }
@@ -255,7 +255,7 @@ Ext.require('Ext.Ajax', function () {
          * Fires if the request was successfully completed.
          * @return {?boolean}
          */
-         function (conn, response, opts, eopts) {
+        function (conn, response, opts, eopts) {
             if (!opts.silent) {
                 if (opts.mask) {
                     Ext.get(opts.mask).unmask();
@@ -342,11 +342,11 @@ Ext.require('Ext.Ajax', function () {
     });
 });
 
-function logout (){
+function logout() {
     Ext.Ajax.request({
         url: './libs/user.php?action=logout',
         method: 'POST',
-        callback: function (opts, success, res){
+        callback: function (opts, success, res) {
             if (success) {
                 var obj = Ext.decode(res.responseText);
                 if (obj.status == 'successful') {
@@ -358,7 +358,7 @@ function logout (){
     });
 }
 
-function logoutWithoutCleanningSession (){
+function logoutWithoutCleanningSession() {
     location.href = 'login/index.html';
 }
 
@@ -367,7 +367,7 @@ function logoutWithoutCleanningSession (){
  * @param  {string} str raw data
  * @return {string}     decorated string
  */
-function polish (str){
+function polish(str) {
     str = unescape(str);
     str = str.replace(/[\r\n]/gi, '<br>').replace(/[\s]/ig, '&nbsp;');
     return str;
@@ -502,7 +502,7 @@ Number.prototype.div = function (arg) {
     return accDiv(this, arg);
 };
 
-function requestChannel (receiver, content){
+function requestChannel(receiver, content) {
     if (privateChannel) {
         Ext.Ajax.request({
             url: './channel/message.php',
@@ -511,14 +511,14 @@ function requestChannel (receiver, content){
                 message: content,
                 to: 'sae_channel_' + receiver
             },
-            callback: function (opts, success, res){
+            callback: function (opts, success, res) {
             }
         });
     }
 }
 
 // send message to make a record.
-function sendMsg (sender, receiver, content, type, extraId){
+function sendMsg(sender, receiver, content, type, extraId) {
     var p = {
         action: 'add',
         sender: sender,
@@ -539,7 +539,7 @@ function sendMsg (sender, receiver, content, type, extraId){
         url: './libs/message.php',
         method: 'POST',
         params: p,
-        callback: function (opts, success, res){
+        callback: function (opts, success, res) {
             if (success) {
                 var obj = Ext.decode(res.responseText);
                 if (obj.status == 'successful') {
@@ -553,14 +553,14 @@ function sendMsg (sender, receiver, content, type, extraId){
     });
 }
 
-function checkMsg (obj) {
+function checkMsg(obj) {
     Ext.Ajax.request({
         url: './libs/msg.php?action=checkmsg',
         method: 'POST',
         params: {
             content: obj.content
         },
-        callback: function (opts, success, res){
+        callback: function (opts, success, res) {
             if (success) {
                 obj.success(res);
             }
@@ -572,7 +572,7 @@ function checkMsg (obj) {
 }
 
 // time: 20151019124530 yyyyMMddHHmmss
-function sendSMS (sender, reciever, recieverPhone, content, time){
+function sendSMS(sender, reciever, recieverPhone, content, time) {
     if (sender && reciever) {
         Ext.Ajax.request({
             url: './libs/user.php?action=getrealname',
@@ -580,7 +580,7 @@ function sendSMS (sender, reciever, recieverPhone, content, time){
             params: {
                 name: sender
             },
-            callback: function (opts, success, res){
+            callback: function (opts, success, res) {
                 if (success) {
                     var obj = Ext.decode(res.responseText);
                     if (obj.status == 'successful') {
@@ -591,12 +591,12 @@ function sendSMS (sender, reciever, recieverPhone, content, time){
                             params: {
                                 name: reciever
                             },
-                            callback: function (opts, success, res){
+                            callback: function (opts, success, res) {
                                 obj = Ext.decode(res.responseText);
                                 if (obj.status == 'successful') {
                                     reciever = obj['realname'];
                                     if (!recieverPhone) {
-                                        setTimeout(function (){
+                                        setTimeout(function () {
                                             showMsg('发送用户没有手机号，无法发送！');
                                         }, 1000);
                                     }
@@ -616,16 +616,16 @@ function sendSMS (sender, reciever, recieverPhone, content, time){
                                             url: './libs/msg.php?action=sendmsg',
                                             method: 'POST',
                                             params: p,
-                                            callback: function (opts, success, res){
+                                            callback: function (opts, success, res) {
                                                 if (success) {
                                                     var obj = Ext.decode(res.responseText);
                                                     if (obj.status == 'successful') {
-                                                        setTimeout(function (){
+                                                        setTimeout(function () {
                                                             showMsg('短信发送成功！');
                                                         }, 500);
                                                     }
                                                     else {
-                                                        setTimeout(function (){
+                                                        setTimeout(function () {
                                                             showMsg(obj.errMsg);
                                                         }, 500);
                                                     }
@@ -648,13 +648,13 @@ function sendSMS (sender, reciever, recieverPhone, content, time){
         });
     }
     else {
-        setTimeout(function (){
+        setTimeout(function () {
             showMsg('短信发送没有发送方或接收方!');
         })
     }
 }
 
-function sendExternalMail (mailAddress, subject, content) {
+function sendExternalMail(mailAddress, subject, content) {
     if (mailAddress && subject && content) {
         var p = {
             recipient: mailAddress,
@@ -665,16 +665,16 @@ function sendExternalMail (mailAddress, subject, content) {
             url: './libs/mail.php?action=send',
             method: 'POST',
             params: p,
-            callback: function (opts, success, res){
+            callback: function (opts, success, res) {
                 if (success) {
                     var obj = Ext.decode(res.responseText);
                     if (obj.status == 'successful') {
-                        setTimeout(function (){
+                        setTimeout(function () {
                             showMsg('邮件发送成功！');
                         }, 500);
                     }
                     else {
-                        setTimeout(function (){
+                        setTimeout(function () {
                             showMsg(obj.errMsg);
                         }, 500);
                     }
@@ -687,7 +687,7 @@ function sendExternalMail (mailAddress, subject, content) {
     }
 }
 
-function sendMail (reciever, recieverMail, subject, content) {
+function sendMail(reciever, recieverMail, subject, content) {
     if (reciever) {
         var originalReceiverName = reciever;
         Ext.Ajax.request({
@@ -696,12 +696,12 @@ function sendMail (reciever, recieverMail, subject, content) {
             params: {
                 name: reciever
             },
-            callback: function (opts, success, res){
+            callback: function (opts, success, res) {
                 obj = Ext.decode(res.responseText);
                 if (obj.status == 'successful') {
                     reciever = obj['realname'];
                     if (!recieverMail) {
-                        setTimeout(function (){
+                        setTimeout(function () {
                             showMsg('用户' + reciever + '没有邮箱地址，请通知用户尽快完善信息！');
                         }, 1000);
                     }
@@ -715,17 +715,17 @@ function sendMail (reciever, recieverMail, subject, content) {
                             url: './libs/mail.php?action=send',
                             method: 'POST',
                             params: p,
-                            callback: function (opts, success, res){
+                            callback: function (opts, success, res) {
                                 if (success) {
                                     var obj = Ext.decode(res.responseText);
                                     if (obj.status == 'successful') {
-                                        setTimeout(function (){
+                                        setTimeout(function () {
                                             showMsg('邮件发送成功！');
                                         }, 500);
                                         requestChannel(originalReceiverName, content);
                                     }
                                     else {
-                                        setTimeout(function (){
+                                        setTimeout(function () {
                                             showMsg(obj.errMsg);
                                         }, 500);
                                     }
@@ -741,13 +741,13 @@ function sendMail (reciever, recieverMail, subject, content) {
         });
     }
     else {
-        setTimeout(function (){
+        setTimeout(function () {
             showMsg('邮件发送没有接收方!');
         })
     }
 }
 
-function ga(url){
+function ga(url) {
     Ext.Ajax.request({
         ga: true,
         silent: true,
@@ -757,69 +757,69 @@ function ga(url){
             interfaceName: url
         },
         method: 'POST',
-        callback: function (opts, success, res){
+        callback: function (opts, success, res) {
 
         }
     });
 }
 
-function isDebug (){
+function isDebug() {
     var hashTag = location.hash;
     return '#debug' == hashTag;
 }
 
-window.onresize = function() {
+window.onresize = function () {
     var w = Ext.query('.x-window');
-    Ext.each(w, function(item) {        
+    Ext.each(w, function (item) {
         var win = Ext.getCmp(item.id);
-        
+
         win.center();
     })
 }
 
-String.prototype.format = function(){
+String.prototype.format = function () {
     var res = this;
-    for(var i = 0 ;i < arguments.length;i++)
-        res = res.replace("%"+(i+1),arguments[i]);
+    for (var i = 0; i < arguments.length; i++)
+        res = res.replace("%" + (i + 1), arguments[i]);
     return res;
 }
 
-Ext.require('Ext.form.field.VTypes', function (){
+Ext.require('Ext.form.field.VTypes', function () {
     Ext.apply(Ext.form.field.VTypes, {
-        'phone': function() {
+        'phone': function () {
             var re = /^[\(\)\.\- ]{0,}[0-9]{3}[\(\)\.\- ]{0,}[0-9]{4}[\(\)\.\- ]{0,}[0-9]{4}[\(\)\.\- ]{0,}$/;
-            return function(v) {
+            return function (v) {
                 return re.test(v);
             };
-        }(),
+        } (),
         'phoneText': '手机号码错误, 例如: 123-456-7890 (破折号可选) 或者 (123) 456-7890',
-        'fax': function() {
+        'fax': function () {
             var re = /^[\(\)\.\- ]{0,}[0-9]{3}[\(\)\.\- ]{0,}[0-9]{3}[\(\)\.\- ]{0,}[0-9]{4}[\(\)\.\- ]{0,}$/;
-            return function(v) {
+            return function (v) {
                 return re.test(v);
             };
-        }(),
+        } (),
         'faxText': 'The fax format is wrong',
-        'zipCode': function() {
+        'zipCode': function () {
             var re = /^\d{5}(-\d{4})?$/;
-            return function(v) {
+            return function (v) {
                 return re.test(v);
             };
-        }(),
+        } (),
         'zipCodeText': 'The zip code format is wrong, e.g., 94105-0011 or 94105',
-        'ssn': function() {
+        'ssn': function () {
             var re = /^\d{3}-\d{2}-\d{4}$/;
-            return function(v) {
+            return function (v) {
                 return re.test(v);
             };
-        }(),
+        } (),
         'ssnText': 'The SSN format is wrong, e.g., 123-45-6789',
         'mail': function () {
             var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-            return function(v) {
+            return function (v) {
                 return re.test(v);
             }
-        }(),
+        } (),
         'mailText': '邮箱格式错误，请重新输入'
     });
 });
