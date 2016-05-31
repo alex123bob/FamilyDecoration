@@ -8,7 +8,7 @@ class StatementBasicItemSvc extends BaseSvc
 	public function get($q){
 		$res = parent::get($q);
 		foreach($res['data'] as &$v)
-			$v['referenceNumber'] = $v['referenceItems'] != "" && $v['referenceItems'] != null ? substr_count($v['referenceItems'],',')+1: 0;
+			$v['referenceNumber'] = substr_count($v['referenceItems'],',');
 		return $res;
 	}
 }
