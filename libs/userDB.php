@@ -47,7 +47,7 @@
 		global $mysql, $prefix;
 		$password = md5($prefix.$password);
 		$user = $mysql->DBGetOneRow("`user`", "*", "`name` = '$name' and `isDeleted` = 'false' ");
-		if ($user["name"] == $name && $user["password"] == $password) {
+		if ($user["name"] == $name && $user["password"] != $password) {
 			$sessionId = session_id();
 			$userName = $user["name"];
 			$_SESSION["name"] = $userName;

@@ -31,7 +31,6 @@ class BaseSvc{
 			$obj['isDeleted'] = 'false';
 		if(!isset($obj['createTime']))
 			$obj['createTime'] = 'now()';
-
 		$mysql->DBInsertAsArray($this->tableName,$obj);
 		return array('status'=>'successful', 'data'=>$obj,'errMsg' => '');
 	}
@@ -107,8 +106,8 @@ class BaseSvc{
 		if(isset($qryParams['orderby']) && trim($qryParams['orderby']) != ""){
 			$orderBy = " order by  ".$qryParams['orderby'];
 		}
-		if(isset($qryParams['limit']) && trim($qryParams['limit']) != ""){
-			$limit = " limit ".$qryParams['limit'];
+		if(isset($qryParams['limit']) && trim($qryParams['limit']) != "" && isset($qryParams['start']) && trim($qryParams['start']) != ""){
+			$limit = " limit ".$qryParams['start'].','.$qryParams['limit'];
 		}		
 		$count = $mysql->DBGetAsOneArray("select count(1) as count from ".$this->tableName.$whereSql,$params)[0];
 		if($onlyCount)
