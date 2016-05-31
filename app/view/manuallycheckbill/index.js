@@ -8,12 +8,13 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 		'Ext.form.FieldSet',
 		'FamilyDecoration.view.manuallycheckbill.BillTable',
 		'FamilyDecoration.store.ProfessionType',
-		'FamilyDecoration.view.manuallycheckbill.AddBill'
+		'FamilyDecoration.view.manuallycheckbill.AddBill',
+		'FamilyDecoration.store.StatementBill'
 	],
 	// autoScroll: true,
 	layout: 'hbox',
 
-	initComponent: function (){
+	initComponent: function () {
 		var me = this;
 		me.items = [
 			{
@@ -33,13 +34,13 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 					name: 'treepanel-projectNameForBillCheck',
 					autoScroll: true,
 					listeners: {
-						itemclick: function (view, rec){
+						itemclick: function (view, rec) {
 							return rec.get('projectName') ? true : false;
 						},
-						selectionchange: function (selModel, sels, opts){
+						selectionchange: function (selModel, sels, opts) {
 							var pro = sels[0],
-								professtionTypeGrid = Ext.getCmp('gridpanel-professionType'),
-								st = professtionTypeGrid.getStore();
+								professionTypeGrid = Ext.getCmp('gridpanel-professionType'),
+								st = professionTypeGrid.getStore();
 							if (pro && pro.get('projectName')) {
 								st.load({
 									params: {
@@ -53,7 +54,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						}
 					}
 				}]
-			}, 
+			},
 			{
 				xtype: 'gridpanel',
 				title: '工种列表',
@@ -63,7 +64,13 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 					{
 						text: '列表',
 						dataIndex: 'cname',
-						flex: 1
+						flex: 1,
+						renderer: function (val, meta, rec) {
+							var num = parseInt(rec.get('billNumber'), 10);
+							var numStr = '<font style="color: ' + (num > 0 ? 'blue; text-shadow: #8F7 ' : 'white; text-shadow: black ')
+								+ '0.1em 0.1em 0.2em;"><strong>[' + num + ']</strong></font>';
+							return val + numStr;
+						}
 					}
 				],
 				store: Ext.create('FamilyDecoration.store.ProfessionType', {
@@ -75,7 +82,27 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 				},
 				hideHeaders: true,
 				flex: 0.2,
-				height: '100%'
+				height: '100%',
+				listeners: {
+					selectionchange: function (selModel, sels, opts) {
+						var rec = sels[0],
+							projectGrid = Ext.getCmp('treepanel-projectNameForBillCheck'),
+							project = projectGrid.getSelectionModel().getSelection()[0],
+							billList = Ext.getCmp('gridpanel-billList'),
+							blSt = billList.getStore();
+						if (project && rec) {
+							blSt.load({
+								params: {
+									projectId: project.getId(),
+									professionType: rec.get('value')
+								}
+							});
+						}
+						else {
+							blSt.removeAll();
+						}
+					}
+				}
 			},
 			{
 				xtype: 'panel',
@@ -86,7 +113,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 					{
 						text: '添加单据',
 						icon: 'resources/img/addbill.png',
-						handler: function (){
+						handler: function () {
 							var win = Ext.create('FamilyDecoration.view.manuallycheckbill.AddBill', {
 							});
 							win.show();
@@ -111,11 +138,15 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						xtype: 'manuallycheckbill-billtable',
 						flex: 1,
 						width: '100%',
-						isPreview: true
+						isPreview: true,
+						id: 'billtable-previewTable',
+						name: 'billtable-previewTable'
 					},
 					{
 						xtype: 'gridpanel',
 						title: '单据列表',
+						id: 'gridpanel-billList',
+						name: 'gridpanel-billList',
 						width: '100%',
 						flex: 0.5,
 						autoScroll: true,
@@ -124,7 +155,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								type: 'close',
 								tooltip: '删除单据',
 								itemId: 'deleteBill',
-								callback: function (){
+								callback: function () {
 
 								}
 							}
@@ -141,7 +172,15 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								},
 								{
 									text: '是否审核',
-									dataIndex: 'isChecked'
+									dataIndex: 'isChecked',
+									renderer: function (val, meta, rec) {
+										if ('false' == val) {
+											return '未审核';
+										}
+										else {
+											return '已审核';
+										}
+									}
 								},
 								{
 									text: '审核人',
@@ -149,12 +188,30 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								},
 								{
 									text: '是否付款',
-									dataIndex: 'isPaid'
+									dataIndex: 'isPaid',
+									renderer: function (val, meta, rec) {
+										if ('false' == val) {
+											return '未付款';
+										}
+										else {
+											return '已付款';
+										}
+									}
 								},
 							],
 							defaults: {
 								flex: 1,
 								align: 'center'
+							}
+						},
+						store: Ext.create('FamilyDecoration.store.StatementBill', {
+							autoLoad: false
+						}),
+						listeners: {
+							selectionchange: function (selModel, sels, opts) {
+								var rec = sels[0],
+									billDetailPanel = Ext.getCmp('billtable-previewTable');
+								billDetailPanel.refresh(rec);
 							}
 						}
 					}

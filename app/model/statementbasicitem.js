@@ -13,7 +13,7 @@ Ext.define('FamilyDecoration.model.StatementBasicItem', {
 		{name: 'updateTime', type: 'string'},
 		{name: 'isDeleted', type: 'string'},
 		{name: 'referenceNumber', type: 'int'},
-		{name: 'referenceItemIds', type: 'string'}, // 参考量对应的基础小项的id
+		{name: 'referenceItems', type: 'string'}, // 参考量对应的基础小项的id
 		{name: 'checkedNumber', type: 'string'}
 	]
 });

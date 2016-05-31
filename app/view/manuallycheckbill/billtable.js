@@ -9,6 +9,29 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 	initComponent: function (){
 		var me = this,
 			previewMode = me.isPreview;
+			
+		me.refresh = function (bill){
+			var form = me.down('form'),
+				data, field;
+			if (bill) {
+				data = bill.data;
+				for (var pro in data) {
+					if (data.hasOwnProperty(pro)) {
+						field = form.query('[name="' + pro + '"]');
+						if (field.length > 0) {
+							field = field[0];
+							field.setValue(data[pro]);
+						}
+					}
+				}
+			}
+			else {
+				field = form.query('textfield');
+				Ext.each(field, function (cmp, index, fld){
+					cmp.setValue('');
+				});
+			}
+		};
 
 		me.items = [
 			{
@@ -63,6 +86,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								fieldLabel: '领款人',
 								flex: 1,
 								height: '100%',
+								name: 'payee',
 								readOnly: previewMode ? true : false
 							},
 							{
@@ -70,6 +94,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								fieldLabel: '工程地址',
 								flex: 2,
 								height: '100%',
+								name: 'projectName',
 								readOnly: true
 							}
 						]
@@ -89,6 +114,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								fieldLabel: '联系电话',
 								flex: 1,
 								height: '100%',
+								name: 'phoneNumber',
 								readOnly: previewMode ? true : false
 							},
 							{
@@ -96,6 +122,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								fieldLabel: '总金额',
 								flex: 1,
 								height: '100%',
+								name: 'totalFee',
 								readOnly: true
 							},
 							{
@@ -103,6 +130,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								fieldLabel: '申领金额',
 								flex: 1,
 								height: '100%',
+								name: 'claimAmount',
 								readOnly: previewMode ? true : false
 							}
 						]
@@ -122,6 +150,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								fieldLabel: '领款次数',
 								flex: 1,
 								height: '100%',
+								name: 'payedTimes',
 								readOnly: previewMode ? true : false
 							},
 							{
@@ -129,6 +158,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								fieldLabel: '完成情况',
 								flex: 2,
 								height: '100%',
+								name: 'projectProgress',
 								readOnly: previewMode ? true : false
 							}
 						]

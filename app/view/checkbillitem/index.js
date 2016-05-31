@@ -112,7 +112,7 @@ Ext.define('FamilyDecoration.view.checkbillitem.Index', {
 														billItemName: rec.get('billItemName'),
 														unit: rec.get('unit'),
 														referenceNumber: rec.get('referenceNumber'),
-														referenceItemIds: rec.get('referenceItemIds'),
+														referenceItems: rec.get('referenceItems'),
 														unitPrice: rec.get('unitPrice'),
 														professionType: billItemGrid.workCategory
 													});
@@ -212,7 +212,7 @@ Ext.define('FamilyDecoration.view.checkbillitem.Index', {
 														billItemName: rec.get('billItemName'),
 														unit: rec.get('unit'),
 														referenceNumber: rec.get('referenceNumber'),
-														referenceItemIds: rec.get('referenceItemIds'),
+														referenceItems: rec.get('referenceItems'),
 														unitPrice: rec.get('unitPrice'),
 														_id: rec.getId()
 													};
