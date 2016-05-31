@@ -8,7 +8,7 @@ class StatementBillItemSvc extends BaseSvc
 	public function get($q){
 		$res = parent::get($q);
 		foreach($res['data'] as &$v)
-			$v['referenceNumber'] = substr_count($v['referenceItems'],',');
+			$v['referenceNumber'] = $v['referenceItems'] != "" && $v['referenceItems'] != null ? substr_count($v['referenceItems'],',')+1: 0;
 		return $res;
 	}
 }
