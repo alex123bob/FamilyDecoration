@@ -58,6 +58,17 @@ Ext.define('FamilyDecoration.view.checkbillitem.AddCheckBillItem', {
 				st.load({
 					params: {
 						professionType: me.workCategory
+					},
+					callback: function (recs, ope, success){
+						if (success) {
+							var selModel = grid.getSelectionModel(),
+								rec = selModel.getSelection()[0];
+							selModel.deselectAll();
+							if (rec) {
+								rec = st.getById(rec.getId());
+								selModel.select(rec);
+							}
+						}
 					}
 				});
 			}
