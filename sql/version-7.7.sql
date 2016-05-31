@@ -42,7 +42,7 @@ CREATE TABLE `statement_bill_item` (
   `createTime` datetime DEFAULT NULL,
   `updateTime` datetime DEFAULT NULL,
   `isDeleted` varchar(5) DEFAULT NULL,
-  `referenceNumber` double DEFAULT NULL,
+  `referenceItems` text DEFAULT NULL,
   `checkedNumber` double DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -63,7 +63,7 @@ CREATE TABLE `statement_basic_item` (
   `createTime` datetime DEFAULT NULL,
   `updateTime` datetime DEFAULT NULL,
   `isDeleted` varchar(5) DEFAULT NULL,
-  `referenceNumber` double DEFAULT NULL,
+  `referenceItems` text DEFAULT NULL,
   `checkedNumber` double DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
