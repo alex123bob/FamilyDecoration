@@ -61,7 +61,7 @@ Ext.define('FamilyDecoration.view.checkbillitem.PickBasicItemWithSameType', {
 					else {
 						me.basicBillItem.set({
 							referenceNumber: items.length,
-							referenceItemIds: items.join(',')
+							referenceItems: items.join(',')
 						});
 						me.basicBillItem.commit();
 						me.close();
