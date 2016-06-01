@@ -91,11 +91,11 @@ class BaseSvc{
 		$limit = "";
 		$params = array();
 		foreach ($this->fields as $f) {
-			if(isset($qryParams[$f])){
+			if(isset($qryParams[$f]) && $qryParams[$f] != ""){
 				array_push($params, $qryParams[$f]);
 				$whereSql = $whereSql." and `".$f."` = '?' ";
 			}
-			if(isset($qryParams["_".$f])){
+			if(isset($qryParams["_".$f]) && $qryParams["_".$f] != ""){
 				array_push($params, $qryParams['_'.$f]);
 				$whereSql = $whereSql." and `".$f."` like '%?%' ";
 			}
@@ -148,6 +148,9 @@ class BaseSvc{
 	public function setTableName($tablename){
 		global $TableMapping;
 		$this->tableName = camelToUnderline($tablename);
+		if(!isset($TableMapping[$this->tableName])){
+			throw new Exception("could not find $this->tableName in TableMapping");
+		}
 		$this->fields = $TableMapping[$this->tableName];
 		if(!isset($this->fields) || count($this->fields) == 0){
 			throw new Exception("table ".$this->tableName."not defined in TableMapping.php");
