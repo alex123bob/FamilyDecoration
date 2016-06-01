@@ -32,6 +32,6 @@
 	if (isset($_GET["action"]) && $_GET["action"] == "ga") {
 		ga($_POST);
 	}
-	require_once "TableMapping.php";
+	require_once "svc/base/TableMapping.php";
 	require_once "svc/base/BaseSvc.class.php";
 ?>
