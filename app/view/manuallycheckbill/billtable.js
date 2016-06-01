@@ -5,6 +5,9 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 	requires: [],
 	header: false,
 	isPreview: false,
+	
+	project: undefined,
+	professionType: undefined,
 
 	initComponent: function (){
 		var me = this,
@@ -95,7 +98,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								flex: 2,
 								height: '100%',
 								name: 'projectName',
-								readOnly: true
+								readOnly: true,
+								value: me.project ? me.project.get('projectName') : ''
 							}
 						]
 					},

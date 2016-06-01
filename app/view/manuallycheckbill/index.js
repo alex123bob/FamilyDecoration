@@ -16,6 +16,25 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 
 	initComponent: function () {
 		var me = this;
+		// get all resources which used to be retrieved a lot of times. quite redundant before.
+		// now we just encapsulate it.
+		me.getRes = function (){
+			var projectGrid = Ext.getCmp('treepanel-projectNameForBillCheck'),
+				professionTypeGrid = Ext.getCmp('gridpanel-professionType'),
+				billList = Ext.getCmp('gridpanel-billList'),
+				billDetailPanel = Ext.getCmp('billtable-previewTable');
+			return {
+				projectGrid: projectGrid,
+				project: projectGrid.getSelectionModel().getSelection()[0],
+				professionTypeGrid: professionTypeGrid,
+				professionType: professionTypeGrid.getSelectionModel().getSelection()[0],
+				billList: billList,
+				bill: billList.getSelectionModel().getSelection()[0],
+				billDetailPanel: billDetailPanel,
+				billCt: billDetailPanel.ownerCt
+			}
+		};
+		
 		me.items = [
 			{
 				xtype: 'container',
@@ -39,9 +58,10 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						},
 						selectionchange: function (selModel, sels, opts) {
 							var pro = sels[0],
-								professionTypeGrid = Ext.getCmp('gridpanel-professionType'),
-								st = professionTypeGrid.getStore();
+								resourceObj = me.getRes(),
+								st = resourceObj.professionTypeGrid.getStore();
 							if (pro && pro.get('projectName')) {
+								resourceObj.professionTypeGrid.getSelectionModel().deselectAll();
 								st.load({
 									params: {
 										projectId: pro.getId()
@@ -86,14 +106,14 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 				listeners: {
 					selectionchange: function (selModel, sels, opts) {
 						var rec = sels[0],
-							projectGrid = Ext.getCmp('treepanel-projectNameForBillCheck'),
-							project = projectGrid.getSelectionModel().getSelection()[0],
-							billList = Ext.getCmp('gridpanel-billList'),
-							blSt = billList.getStore();
-						if (project && rec) {
+							resourceObj = me.getRes(),
+							blSt = resourceObj.billList.getStore();
+						resourceObj.billList.getSelectionModel().deselectAll();
+						resourceObj.billCt.initBtn();
+						if (resourceObj.project && rec) {
 							blSt.load({
 								params: {
-									projectId: project.getId(),
+									projectId: resourceObj.project.getId(),
 									professionType: rec.get('value')
 								}
 							});
@@ -109,26 +129,66 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 				flex: 2,
 				height: '100%',
 				title: '单据细目',
+				getButtons: function (){
+					var panel = this;
+					return {
+						addBill: panel.query('[name="addBill"]')[0],
+						submitBill: panel.query('[name="submitBill"]')[0],
+						previewBill: panel.query('[name="previewBill"]')[0],
+						printBill: panel.query('[name="printBill"]')[0]
+					};
+				},
+				initBtn: function (){
+					var resourceObj = me.getRes(),
+						btnObj = this.getButtons();
+					for (var name in btnObj) {
+						if (btnObj.hasOwnProperty(name)) {
+							var btn = btnObj[name];
+							if (name == 'addBill') {
+								btn.setDisabled(!(resourceObj.project && resourceObj.professionType));
+							}
+							else {
+								btn.setDisabled(!(resourceObj.project && resourceObj.professionType && resourceObj.bill));
+							}
+						}
+					}
+				},
 				tbar: [
 					{
 						text: '添加单据',
 						icon: 'resources/img/addbill.png',
+						name: 'addBill',
+						disabled: true,
 						handler: function () {
-							var win = Ext.create('FamilyDecoration.view.manuallycheckbill.AddBill', {
-							});
-							win.show();
+							var resourceObj = me.getRes();
+							if (resourceObj.project && resourceObj.professionType) {
+								var win = Ext.create('FamilyDecoration.view.manuallycheckbill.AddBill', {
+									project: resourceObj.project,
+									professionType: resourceObj.professionType
+								});
+								win.show();	
+							}
+							else {
+								showMsg('请选择项目和工种！');
+							}
 						}
 					},
 					{
 						text: '递交审核',
+						name: 'submitBill',
+						disabled: true,
 						icon: 'resources/img/uploadbill.png'
 					},
 					{
 						text: '预览单据',
+						name: 'previewBill',
+						disabled: true,
 						icon: 'resources/img/previewbill.png'
 					},
 					{
 						text: '打印单据',
+						name: 'printBill',
+						disabled: true,
 						icon: 'resources/img/printbill.png'
 					}
 				],
@@ -210,8 +270,9 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						listeners: {
 							selectionchange: function (selModel, sels, opts) {
 								var rec = sels[0],
-									billDetailPanel = Ext.getCmp('billtable-previewTable');
-								billDetailPanel.refresh(rec);
+									resourceObj = me.getRes();
+								resourceObj.billDetailPanel.refresh(rec);
+								resourceObj.billCt.initBtn();
 							}
 						}
 					}

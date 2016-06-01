@@ -2,7 +2,9 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 	extend: 'Ext.window.Window',
 	alias: 'widget.manuallycheckbill-addbill',
 
-	requires: [],
+	requires: [
+		'FamilyDecoration.store.StatementBasicItem'
+	],
 
 	layout: 'fit',
 	width: 615,
@@ -10,13 +12,18 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 	modal: true,
 	title: '添加单据',
 	maximizable: true,
+	
+	project: undefined,
+	professionType: undefined,
 
 	initComponent: function (){
 		var me = this;
 		
 		me.items = [
 			{
-				xtype: 'manuallycheckbill-billtable'
+				xtype: 'manuallycheckbill-billtable',
+				project: me.project,
+				professionType: me.professionType
 			}
 		];
 		me.tbar = [
@@ -42,46 +49,29 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 									items: [
 										{
 											text: '名称',
-											dataIndex: 'name',
+											dataIndex: 'billItemName',
 											flex: 1
 										}
 									]
 								},
-								store: Ext.create('Ext.data.Store', {
-									fields: ['name'],
-									data: [
-										{
-											name: 'test'
-										},
-										{
-											name: 'test1'
-										},
-										{
-											name: 'test2'
-										},
-										{
-											name: 'test'
-										},
-										{
-											name: 'test1'
-										},
-										{
-											name: 'test2'
-										}
-									],
-									proxy: {
-								        type: 'memory',
-								        reader: {
-								            type: 'json'
-								        }
-								    }
+								store: Ext.create('FamilyDecoration.store.StatementBasicItem', {
+									autoLoad: false
 								}),
 								selModel: {
 									mode: 'SIMPLE'
 								},
 								selType: 'checkboxmodel',
-								hideHeaders: true,
-								autoScroll: true
+								// hideHeaders: true,
+								autoScroll: true,
+								listeners: {
+									afterrender: function (cmp, opts){
+										cmp.getStore().load({
+											params: {
+												professionType: me.professionType.get('value')
+											}
+										});
+									}
+								}
 							}
 						],
 						buttons: [
