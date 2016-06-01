@@ -31,7 +31,8 @@ class ProfessionTypeSvc extends BaseSvc
 						select count(*) as h , professionType from statement_bill where 1=1 $whereSql1 group by professionType
 					) b on b.professionType = p.name where 1=1 $whereSql2 ";
 			$row = $mysql->DBGetAsMap($sql.$orderBy.$limit,$params);
-			$count = $mysql->DBGetAsOneArray("select count(*) from ( $sql ) as a",$params)[0];
+			$count = $mysql->DBGetAsOneArray("select count(*) from ( $sql ) as a",$params);
+			$count = $count[0];
 			return array('total'=>$count,'data'=>$row);
 		}else{
 			return parent::get($q);

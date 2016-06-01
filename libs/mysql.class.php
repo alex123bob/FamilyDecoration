@@ -210,12 +210,13 @@
 			$this->dbSQL = $sql;
 			$this->DBExecute($this->dbSQL);
 			if (mysql_num_rows($this->dbResult) > 0){
-				while($partRows = mysql_fetch_array($this->dbResult,MYSQL_ASSOC))
+				while($partRows = mysql_fetch_array($this->dbResult,MYSQL_ASSOC)){
 					foreach ($partRows as $key => $value) {
 						if(is_numeric($key))
 							unset($partRows[$key]);
 					}
 					$partSomeRows[] = $partRows;
+				}
 				return $partSomeRows;
 			}
 			return array();

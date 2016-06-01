@@ -109,7 +109,8 @@ class BaseSvc{
 		if(isset($qryParams['limit']) && trim($qryParams['limit']) != "" && isset($qryParams['start']) && trim($qryParams['start']) != ""){
 			$limit = " limit ".$qryParams['start'].','.$qryParams['limit'];
 		}		
-		$count = $mysql->DBGetAsOneArray("select count(1) as count from ".$this->tableName.$whereSql,$params)[0];
+		$count = $mysql->DBGetAsOneArray("select count(1) as count from ".$this->tableName.$whereSql,$params);
+		$count = $count[0];
 		if($onlyCount)
 			return array('status'=>'successful', 'count'=>$count,'errMsg' => '');
 		$row = $mysql->DBGetAsMap("select * from ".$this->tableName.$whereSql.$orderBy.$limit,$params);
