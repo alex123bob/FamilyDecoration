@@ -2,7 +2,9 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 	extend: 'Ext.panel.Panel',
 	alias: 'widget.manuallycheckbill-billtable',
 	layout: 'vbox',
-	requires: [],
+	requires: [
+		'FamilyDecoration.store.StatementBillItem'
+	],
 	header: false,
 	isPreview: false,
 	
@@ -34,6 +36,12 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 					cmp.setValue('');
 				});
 			}
+		};
+		
+		me.addBillItem = function (rec){
+			var grid = me.down('gridpanel'),
+				st = grid.getStore();
+			st.add(rec);
 		};
 
 		me.items = [
@@ -174,35 +182,83 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 				flex: 1,
 				width: '100%',
 				autoScroll: true,
+				store: Ext.create('FamilyDecoration.store.StatementBillItem', {
+					autoLoad: false
+				}),
+				// selType: previewMode ? 'row' 'cellmodel',
+				plugins: previewMode ? [] : [
+					Ext.create('Ext.grid.plugin.CellEditing', {
+						clicksToEdit: 1,
+						listeners: {
+							edit: function (editor, e){
+								e.record.commit();
+								editor.completeEdit();
+							},
+							validateedit: function (editor, e, opts){
+								var rec = e.record;
+								if (e.field == 'amount') {
+									if (isNaN(e.value) || !/^-?\d+(\.\d+)?$/.test(e.value) ){
+										return false;
+									}
+								}
+							}
+						}
+					})
+				],
 				columns: {
 					items: [
 						{
+							hidden: previewMode ? true : false,
+							xtype: 'actioncolumn',
+							width: 30,
+							items: [
+								{
+									icon: 'resources/img/delete_for_action_column.png',
+									tooltip: '删除条目',
+									handler: function(grid, rowIndex, colIndex) {
+										var st = grid.getStore(),
+											rec = st.getAt(rowIndex);
+										st.remove(rec);
+									}
+								}
+							]
+						},
+						{
 							text: '序号',
-							dataIndex: 'serialNumber'
+							dataIndex: 'serialNumber',
+							flex: 1
 						},
 						{
 							text: '项目',
-							dataIndex: 'projectName'
+							dataIndex: 'billItemName',
+							flex: 1
 						},
 						{
 							text: '单位',
-							dataIndex: 'unit'
+							dataIndex: 'unit',
+							flex: 1
 						},
 						{
 							text: '数量',
-							dataIndex: 'amount'
+							dataIndex: 'amount',
+							flex: 1,
+							editor: !previewMode ? {
+				                xtype: 'textfield',
+				                allowBlank: false
+				            } : {},
 						},
 						{
 							text: '单价(元)',
-							dataIndex: 'unitPrice'
+							dataIndex: 'unitPrice',
+							flex: 1
 						},
 						{
 							text: '小计',
-							dataIndex: 'subtotal'
+							dataIndex: 'subtotal',
+							flex: 1
 						}
 					],
 					defaults: {
-						flex: 1,
 						align: 'center'
 					}
 				}

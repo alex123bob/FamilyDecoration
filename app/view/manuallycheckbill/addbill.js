@@ -12,13 +12,13 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 	modal: true,
 	title: '添加单据',
 	maximizable: true,
-	
+
 	project: undefined,
 	professionType: undefined,
 
-	initComponent: function (){
+	initComponent: function () {
 		var me = this;
-		
+
 		me.items = [
 			{
 				xtype: 'manuallycheckbill-billtable',
@@ -30,7 +30,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 			{
 				text: '添加小项',
 				icon: 'resources/img/addsmallitem.png',
-				handler: function (){
+				handler: function () {
 					var win = Ext.create('Ext.window.Window', {
 						title: '项目',
 						modal: true,
@@ -64,7 +64,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 								// hideHeaders: true,
 								autoScroll: true,
 								listeners: {
-									afterrender: function (cmp, opts){
+									afterrender: function (cmp, opts) {
 										cmp.getStore().load({
 											params: {
 												professionType: me.professionType.get('value')
@@ -77,13 +77,24 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 						buttons: [
 							{
 								text: '确定',
-								handler: function (){
-
+								handler: function () {
+									var basicBillItemGrid = win.down('gridpanel'),
+										billTable = me.down('manuallycheckbill-billtable'),
+										selBasicItems = basicBillItemGrid.getSelectionModel().getSelection();
+									Ext.each(selBasicItems, function (item, index, arr){
+										var obj = item.data;
+										delete obj.id;
+										obj.createTime = '';
+										obj.updateTime = '';
+										arr[index] = obj;
+									});
+									billTable.addBillItem(selBasicItems);
+									win.close();
 								}
 							},
 							{
 								text: '取消',
-								handler: function (){
+								handler: function () {
 									win.close();
 								}
 							}
@@ -96,14 +107,14 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 			{
 				text: '添加空白项',
 				icon: 'resources/img/addblankitem.png',
-				handler: function (){
+				handler: function () {
 
 				}
 			},
 			{
 				text: '添加预付',
 				icon: 'resources/img/addprepay.png',
-				handler: function (){
+				handler: function () {
 
 				}
 			}
@@ -111,13 +122,13 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 		me.buttons = [
 			{
 				text: '确定',
-				handler: function (){
+				handler: function () {
 
 				}
 			},
 			{
 				text: '取消',
-				handler: function (){
+				handler: function () {
 					me.close();
 				}
 			}
