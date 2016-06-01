@@ -33,5 +33,5 @@
 		ga($_POST);
 	}
 	require_once "TableMapping.php";
-	require_once "BaseSvc.class.php";
+	require_once "svc/base/BaseSvc.class.php";
 ?>
