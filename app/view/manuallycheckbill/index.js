@@ -244,7 +244,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								},
 								{
 									text: '审核人',
-									dataIndex: 'checker'
+									dataIndex: 'checkerRealName'
 								},
 								{
 									text: '是否付款',

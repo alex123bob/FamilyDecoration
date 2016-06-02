@@ -16,6 +16,7 @@ Ext.define('FamilyDecoration.model.StatementBill', {
 		{name: 'billValue', type: 'string'},
 		{name: 'isChecked', type: 'string'},
 		{name: 'checker', type: 'string'},
+		{name: 'checkerRealName', type: 'string', mapping: 'realname'},
 		{name: 'isPaid', type: 'string'},
 		{name: 'professionType', type: 'string'},
 		{name: 'projectId', type: 'string'}
