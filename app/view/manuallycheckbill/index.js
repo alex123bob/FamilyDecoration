@@ -162,11 +162,32 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						handler: function () {
 							var resourceObj = me.getRes();
 							if (resourceObj.project && resourceObj.professionType) {
-								var win = Ext.create('FamilyDecoration.view.manuallycheckbill.AddBill', {
-									project: resourceObj.project,
-									professionType: resourceObj.professionType
+								ajaxAdd('StatementBill', {
+									projectId: resourceObj.project.getId(),
+									professionType: resourceObj.professionType.get('value')
+								}, function (obj){
+									var win = Ext.create('FamilyDecoration.view.manuallycheckbill.AddBill', {
+										project: resourceObj.project,
+										professionType: resourceObj.professionType,
+										
+										bill: Ext.create('FamilyDecoration.model.StatementBill', obj.data),
+										callbackAfterClose: function (){
+											var resourceObj = me.getRes(),
+												professionTypeId = resourceObj.professionType.getId(),
+												professionTypeSelModel = resourceObj.professionTypeGrid.getSelectionModel(),
+												professionTypeSt = resourceObj.professionTypeGrid.getStore();
+											professionTypeSelModel.deselectAll();
+											professionTypeSt.reload({
+												callback: function (recs, ope, success){
+													if (success) {
+														professionTypeSelModel.select(professionTypeSt.getById(professionTypeId));
+													}
+												}
+											});
+										}
+									});
+									win.show();
 								});
-								win.show();	
 							}
 							else {
 								showMsg('请选择项目和工种！');
@@ -234,11 +255,11 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 									text: '是否审核',
 									dataIndex: 'isChecked',
 									renderer: function (val, meta, rec) {
-										if ('false' == val) {
-											return '未审核';
+										if ('true' == val) {
+											return '已审核';
 										}
 										else {
-											return '已审核';
+											return '未审核';
 										}
 									}
 								},
@@ -250,11 +271,11 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 									text: '是否付款',
 									dataIndex: 'isPaid',
 									renderer: function (val, meta, rec) {
-										if ('false' == val) {
-											return '未付款';
+										if ('true' == val) {
+											return '已付款';
 										}
 										else {
-											return '已付款';
+											return '未付款';
 										}
 									}
 								},

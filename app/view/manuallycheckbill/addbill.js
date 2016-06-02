@@ -16,6 +16,10 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 	project: undefined,
 	professionType: undefined,
 
+	bill: undefined, // bill indicates the statementBill attached to the window.
+
+	callbackAfterClose: Ext.emptyFn, // we could define the content of callback function whereever we instantiate this class.
+
 	initComponent: function () {
 		var me = this;
 
@@ -81,7 +85,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 									var basicBillItemGrid = win.down('gridpanel'),
 										billTable = me.down('manuallycheckbill-billtable'),
 										selBasicItems = basicBillItemGrid.getSelectionModel().getSelection();
-									Ext.each(selBasicItems, function (item, index, arr){
+									Ext.each(selBasicItems, function (item, index, arr) {
 										var obj = item.data;
 										delete obj.id;
 										obj.createTime = '';
@@ -123,13 +127,42 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 			{
 				text: '确定',
 				handler: function () {
-
+					var billTable = me.down('manuallycheckbill-billtable'),
+						result = billTable.getValues();
+					Ext.apply(result, {
+						id: me.bill.getId()
+					});
+					ajaxUpdate('StatementBill', result, 'id', function (obj){
+						showMsg('单据已保存！');
+						me.close();
+						me.callbackAfterClose();
+					});
 				}
 			},
 			{
 				text: '取消',
 				handler: function () {
-					me.close();
+					Ext.Msg.warning('取消会将当前单据所有内容删除，<br />确定要取消吗？', function (btnId) {
+						if ('yes' == btnId) {
+							Ext.Ajax.request({
+								url: './libs/api.php?action=StatementBill.update&isDeleted=true&_id=' + me.bill.getId(),
+								method: 'POST',
+								callback: function (opts, success, res) {
+									if (success) {
+										var obj = Ext.decode(res.responseText);
+										if ('successful' == obj.status) {
+											showMsg('单据已删除！');
+											me.close();
+											me.callbackAfterClose();
+										}
+										else {
+											showMsg(obj.errMsg);
+										}
+									}
+								}
+							});
+						}
+					});
 				}
 			}
 		]

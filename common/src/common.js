@@ -109,6 +109,82 @@ Ext.require('Ext.toolbar.Toolbar', function () {
     Ext.toolbar.Toolbar.prototype.enableOverflow = true;
 });
 
+function ajaxUpdate (className, params, conditionParams, callback){
+    if (Ext.isObject(params) && !Ext.Object.isEmpty(params)) {
+        var url = './libs/api.php?action=' + className + '.update';
+        if (!Ext.isArray(conditionParams)) {
+            conditionParams = [conditionParams];
+        }
+        for (var pro in params) {
+            if (params.hasOwnProperty(pro)) {
+                var val = params[pro];
+                if (Ext.Array.contains(conditionParams, pro)) {
+                    url += '&_' + pro + '=' + val;
+                }
+                else {
+                    url += '&' + pro + '=' + val;
+                }
+            }
+        }
+        Ext.Ajax.request({
+            url: url,
+            method: 'POST',
+            callback: function (opts, success, res){
+                if (success) {
+                    var obj = Ext.decode(res.responseText);
+                    if ('successful' == obj.status) {
+                        callback(obj);
+                    }
+                    else {
+                        showMsg(obj.errMsg);
+                    }
+                }
+            }
+        });
+    }
+    else {
+        showMsg('参数不正确！');
+    }
+}
+
+function ajaxAdd (className, params, callback){
+    function add (className, p){
+        if (p && !Ext.Object.isEmpty(p)) {
+            var url = './libs/api.php?action=' + className + '.add';
+            for (var pro in p) {
+                if (p.hasOwnProperty(pro)) {
+                    var val = p[pro];
+                    url += '&' + pro + '=' + val;
+                }
+            }
+            Ext.Ajax.request({
+                url: url,
+                method: 'POST',
+                callback: function (opts, success, res){
+                    if (success) {
+                        var obj = Ext.decode(res.responseText);
+                        if ('successful' == obj.status) {
+                            callback(obj);
+                        }
+                        else {
+                            showMsg(obj.errMsg);
+                        }
+                    }
+                }
+            });
+        }
+        else {
+            showMsg('参数有误！');
+        }
+    }
+    if (Ext.isObject(params)) {
+        add(className, params);
+    }
+    else {
+        showMsg('参数不正确！');
+    }
+}
+
 // index为对应要生成的编号，从1开始
 function getId(index) {
     if (index) {

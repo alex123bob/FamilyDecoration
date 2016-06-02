@@ -15,6 +15,22 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 		var me = this,
 			previewMode = me.isPreview;
 			
+		me.getValues = function (){
+			var form = me.down('form'),
+				txts = form.query('textfield'),
+				grid = me.down('gridpanel'),
+				result = {};
+			Ext.each(txts, function (txt, index){
+				result[txt.name] = txt.getValue();
+			});
+			
+			// special field value.
+			result['billName'] = result['payee'] + '领款单';
+			
+			result['billItems'] = grid.getStore().data;
+			return result;
+		};
+			
 		me.refresh = function (bill){
 			var form = me.down('form'),
 				data, field;
