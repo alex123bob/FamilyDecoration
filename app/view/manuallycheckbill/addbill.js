@@ -84,7 +84,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 								handler: function () {
 									var basicBillItemGrid = win.down('gridpanel'),
 										billTable = me.down('manuallycheckbill-billtable'),
-										selBasicItems = basicBillItemGrid.getSelectionModel().getSelection();
+										selBasicItems = basicBillItemGrid.getSelectionModel().getSelection(),
+										failedMembers = [];
 									Ext.each(selBasicItems, function (item, index, arr) {
 										var obj = item.data;
 										delete obj.id;
@@ -92,8 +93,31 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 										obj.updateTime = '';
 										arr[index] = obj;
 									});
-									billTable.addBillItem(selBasicItems);
-									win.close();
+									function addItems (arr){
+										var func = arguments.callee;
+										if (arr.length > 0) {
+											var item = arr[0];
+											ajaxAdd('StatementBillItem', item, function (obj){
+												arr.splice(0, 1);
+												func(arr);
+											}, function (obj){
+												failedMembers.push(obj.data.billItemName);
+												arr.splice(0, 1);
+												func(arr);
+											});
+										}
+										else {
+											if (failedMembers.length <= 0) {
+												showMsg('添加成功！');
+											}
+											else {
+												Ext.Msg.error('以下几项添加失败：<br />' + failedMembers.join('<br />'));
+											}
+											win.close();
+											billTable.refresh();
+										}
+									}
+									addItems(selBasicItems);
 								}
 							},
 							{

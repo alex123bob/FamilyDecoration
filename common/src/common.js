@@ -147,7 +147,7 @@ function ajaxUpdate (className, params, conditionParams, callback){
     }
 }
 
-function ajaxAdd (className, params, callback){
+function ajaxAdd (className, params, callback, errorHandler){
     function add (className, p){
         if (p && !Ext.Object.isEmpty(p)) {
             var url = './libs/api.php?action=' + className + '.add';
@@ -168,6 +168,9 @@ function ajaxAdd (className, params, callback){
                         }
                         else {
                             showMsg(obj.errMsg);
+                            if (typeof errorHandler == 'function') {
+                                errorHandler(obj);
+                            }
                         }
                     }
                 }
@@ -179,6 +182,39 @@ function ajaxAdd (className, params, callback){
     }
     if (Ext.isObject(params)) {
         add(className, params);
+    }
+    else {
+        showMsg('参数不正确！');
+    }
+}
+
+/**
+ * @params only need pass the id of corresponding record.
+ */
+function ajaxDel (className, params, callback) {
+    if (Ext.isObject(params) && !Ext.Object.isEmpty(params)) {
+        var url = './libs/api.php?action=' + className + '.del';
+        for (var pro in params) {
+            if (params.hasOwnProperty(pro)) {
+                var val = params[pro];
+                url += '&_' + pro + '=' + val;
+            }
+        }
+        Ext.Ajax.request({
+            url: url,
+            method: 'POST',
+            callback: function (opts, success, res){
+                if (success) {
+                    var obj = Ext.decode(res.responseText);
+                    if ('successful' == obj.status) {
+                        callback(obj);
+                    }
+                    else {
+                        showMsg(obj.errMsg);
+                    }
+                }
+            }
+        });
     }
     else {
         showMsg('参数不正确！');

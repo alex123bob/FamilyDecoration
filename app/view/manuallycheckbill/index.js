@@ -27,6 +27,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 				projectGrid: projectGrid,
 				project: projectGrid.getSelectionModel().getSelection()[0],
 				professionTypeGrid: professionTypeGrid,
+				professionTypeSt: professionTypeGrid.getStore(),
 				professionType: professionTypeGrid.getSelectionModel().getSelection()[0],
 				billList: billList,
 				bill: billList.getSelectionModel().getSelection()[0],
@@ -175,7 +176,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 											var resourceObj = me.getRes(),
 												professionTypeId = resourceObj.professionType.getId(),
 												professionTypeSelModel = resourceObj.professionTypeGrid.getSelectionModel(),
-												professionTypeSt = resourceObj.professionTypeGrid.getStore();
+												professionTypeSt = resourceObj.professionTypeSt;
 											professionTypeSelModel.deselectAll();
 											professionTypeSt.reload({
 												callback: function (recs, ope, success){
@@ -237,7 +238,33 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								tooltip: '删除单据',
 								itemId: 'deleteBill',
 								callback: function () {
-
+									var resourceObj = me.getRes(),
+										professionType = resourceObj.professionType,
+										professionTypeId = professionType.getId(),
+										professionTypeSt = resourceObj.professionTypeSt,
+										professionTypeSelModel = resourceObj.professionTypeGrid.getSelectionModel();
+									if (resourceObj.bill) {
+										Ext.Msg.warning('确定要删除当前账单吗?', function (btnId){
+											if ('yes' == btnId) {
+												ajaxDel('StatementBill', {
+													id: resourceObj.bill.getId()
+												}, function (obj){
+													showMsg('删除成功！');
+													professionTypeSelModel.deselectAll();
+													professionTypeSt.reload({
+														callback: function (recs, ope, success){
+															if (success) {
+																professionTypeSelModel.select(professionTypeSt.getById(professionTypeId));
+															}
+														}
+													})
+												});
+											}
+										});
+									}
+									else {
+										showMsg('请选择账单！');
+									}
 								}
 							}
 						],

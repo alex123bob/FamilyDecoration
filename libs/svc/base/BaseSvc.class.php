@@ -14,7 +14,7 @@ class BaseSvc{
 	*/
 	public function del($qryParams){
 		$qryParams['isDeleted'] = 'true';
-		$qryParams['createTime'] = 'now()';
+		$qryParams['updateTime'] = 'now()';
 		return $this->update($qryParams);
 	}
 	//增加

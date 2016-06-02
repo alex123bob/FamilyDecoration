@@ -33,6 +33,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 			
 		me.refresh = function (bill){
 			var form = me.down('form'),
+				grid = me.down('grid'),
+				st = grid.getStore(),
 				data, field;
 			if (bill) {
 				data = bill.data;
@@ -45,20 +47,30 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 						}
 					}
 				}
+				st.load({
+					params: {
+						'id': bill.getId()
+					}
+				});
 			}
 			else {
 				field = form.query('textfield');
 				Ext.each(field, function (cmp, index, fld){
 					cmp.setValue('');
 				});
+				st.removeAll();
 			}
 		};
 		
-		me.addBillItem = function (rec){
-			var grid = me.down('gridpanel'),
-				st = grid.getStore();
-			st.add(rec);
-		};
+		// there is no need to invoke this functionality coz we put all calculation in the back-end.
+		// once we click confirm button to add billItems, all items are written into database with attached billID.
+		// don't worry about this circumstance that user added items but give up the bill, 
+		// actually in that time, bill couldn't be found, therefore billItems will never get the chance to show up.
+		// me.addBillItem = function (rec){
+		// 	var grid = me.down('gridpanel'),
+		// 		st = grid.getStore();
+		// 	st.add(rec);
+		// };
 
 		me.items = [
 			{
