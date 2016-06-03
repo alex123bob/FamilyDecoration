@@ -181,6 +181,11 @@
 		return $res;
     }
 
+    function notNullCheck($d,$msg){
+    	if(!isset($d) || $d == ""){
+    		throw new Exception($msg);
+    	}
+    }
 	function ga($data){
 		global $mysql;
 		$fields = array("userName", "interfaceName");
