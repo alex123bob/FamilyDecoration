@@ -49,7 +49,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 				}
 				st.load({
 					params: {
-						'id': bill.getId()
+						'billId': bill.getId()
 					}
 				});
 			}

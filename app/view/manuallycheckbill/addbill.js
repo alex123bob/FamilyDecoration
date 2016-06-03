@@ -22,6 +22,30 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 
 	initComponent: function () {
 		var me = this;
+		
+		function operationBeforeClose (){
+			Ext.Msg.warning('取消会将当前单据所有内容删除，<br />确定要取消吗？', function (btnId) {
+				if ('yes' == btnId) {
+					Ext.Ajax.request({
+						url: './libs/api.php?action=StatementBill.update&isDeleted=true&_id=' + me.bill.getId(),
+						method: 'POST',
+						callback: function (opts, success, res) {
+							if (success) {
+								var obj = Ext.decode(res.responseText);
+								if ('successful' == obj.status) {
+									showMsg('单据已删除！');
+									me.close();
+									me.callbackAfterClose();
+								}
+								else {
+									showMsg(obj.errMsg);
+								}
+							}
+						}
+					});
+				}
+			});
+		}
 
 		me.items = [
 			{
@@ -91,6 +115,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 										delete obj.id;
 										obj.createTime = '';
 										obj.updateTime = '';
+										obj.billId = me.bill.getId();
 										arr[index] = obj;
 									});
 									function addItems (arr){
@@ -114,7 +139,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 												Ext.Msg.error('以下几项添加失败：<br />' + failedMembers.join('<br />'));
 											}
 											win.close();
-											billTable.refresh();
+											billTable.refresh(me.bill);
 										}
 									}
 									addItems(selBasicItems);
@@ -166,30 +191,16 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 			{
 				text: '取消',
 				handler: function () {
-					Ext.Msg.warning('取消会将当前单据所有内容删除，<br />确定要取消吗？', function (btnId) {
-						if ('yes' == btnId) {
-							Ext.Ajax.request({
-								url: './libs/api.php?action=StatementBill.update&isDeleted=true&_id=' + me.bill.getId(),
-								method: 'POST',
-								callback: function (opts, success, res) {
-									if (success) {
-										var obj = Ext.decode(res.responseText);
-										if ('successful' == obj.status) {
-											showMsg('单据已删除！');
-											me.close();
-											me.callbackAfterClose();
-										}
-										else {
-											showMsg(obj.errMsg);
-										}
-									}
-								}
-							});
-						}
-					});
+					operationBeforeClose();
 				}
 			}
-		]
+		];
+		
+		me.listeners = {
+			beforeclose: function (win, opts){
+				// operationBeforeClose();
+			}
+		};
 
 		this.callParent();
 	}
