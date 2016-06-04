@@ -10,6 +10,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 	
 	project: undefined,
 	professionType: undefined,
+	
+	bill: undefined,
 
 	initComponent: function (){
 		var me = this,
@@ -32,9 +34,12 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 		};
 			
 		me.refresh = function (bill){
+			me.refreshForm(bill);
+			me.refreshGrid(bill);
+		};
+		
+		me.refreshForm = function (bill){
 			var form = me.down('form'),
-				grid = me.down('grid'),
-				st = grid.getStore(),
 				data, field;
 			if (bill) {
 				data = bill.data;
@@ -47,6 +52,19 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 						}
 					}
 				}
+			}
+			else {
+				field = form.query('textfield');
+				Ext.each(field, function (cmp, index, fld){
+					cmp.setValue('');
+				});
+			}
+		}
+		
+		me.refreshGrid = function (bill){
+			var grid = me.down('grid'),
+				st = grid.getStore();
+			if (bill) {
 				st.load({
 					params: {
 						'billId': bill.getId()
@@ -54,10 +72,6 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 				});
 			}
 			else {
-				field = form.query('textfield');
-				Ext.each(field, function (cmp, index, fld){
-					cmp.setValue('');
-				});
 				st.removeAll();
 			}
 		};
@@ -246,7 +260,12 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 									handler: function(grid, rowIndex, colIndex) {
 										var st = grid.getStore(),
 											rec = st.getAt(rowIndex);
-										st.remove(rec);
+										ajaxDel('StatementBillItem', {
+											id: rec.getId()
+										}, function (){
+											showMsg('删除成功！');
+											me.refreshGrid(me.bill);
+										})
 									}
 								}
 							]

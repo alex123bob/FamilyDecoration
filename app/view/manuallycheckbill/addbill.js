@@ -51,7 +51,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 			{
 				xtype: 'manuallycheckbill-billtable',
 				project: me.project,
-				professionType: me.professionType
+				professionType: me.professionType,
+				bill: me.bill
 			}
 		];
 		me.tbar = [
@@ -139,7 +140,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 												Ext.Msg.error('以下几项添加失败：<br />' + failedMembers.join('<br />'));
 											}
 											win.close();
-											billTable.refresh(me.bill);
+											billTable.refreshGrid(me.bill);
 										}
 									}
 									addItems(selBasicItems);

@@ -319,6 +319,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 							selectionchange: function (selModel, sels, opts) {
 								var rec = sels[0],
 									resourceObj = me.getRes();
+								resourceObj.billDetailPanel.bill = rec;
 								resourceObj.billDetailPanel.refresh(rec);
 								resourceObj.billCt.initBtn();
 							}
