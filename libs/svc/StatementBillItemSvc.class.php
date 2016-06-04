@@ -39,7 +39,7 @@ class StatementBillItemSvc extends BaseSvc
 			$v['referenceNumber'] = $v['referenceItems'] == null || $v['referenceItems'] == "" ? 0 : substr_count($v['referenceItems'],',')+1;
 			$v['serialNumber'] = $i++;
 			try{
-				$v['subtotal'] = $v['amount'] * $v['unitPrice'];
+				$v['subtotal'] = round((($v['amount']*100) * (100*$v['unitPrice']))/10000,2);
 			}catch(Exception $e){
 
 			}
