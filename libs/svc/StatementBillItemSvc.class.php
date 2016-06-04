@@ -3,9 +3,9 @@ class StatementBillItemSvc extends BaseSvc
 {
 	public function updateAndAddCheck($q){
 		if(isset($q['amount']) && !is_numeric($q['amount']))
-			throw new Exception('amount must be number type:'.$q['amount']);
+			throw new Exception('数量必须为数字:'.$q['amount']);
 		if(isset($q['unitPrice']) && !is_numeric($q['unitPrice']))
-			throw new Exception('amount must be number type:'.$q['amount']);
+			throw new Exception('单价必须为数字:'.$q['amount']);
 	}
 	public function add($q){
 		$q['id'] = $this->getUUID();

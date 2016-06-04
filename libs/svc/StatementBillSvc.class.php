@@ -20,7 +20,9 @@ class StatementBillSvc extends BaseSvc
 		$sql = "select IFNULL(sum(amount*unitPrice),0) as totalFee from statement_bill_item where billId = ? ";
 		$res = $mysql->DBGetAsMap($sql,array($q['id']));
 		$res[0]['id'] = $q['id'];
-		return $res[0];
+		$res = $res[0];
+		parent::update(array('_id'=>$res['id'],'totalFee' => $res['totalFee']));
+		return $res;
 	}
 }
 ?>
