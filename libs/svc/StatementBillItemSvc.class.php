@@ -3,15 +3,15 @@ class StatementBillItemSvc extends BaseSvc
 {
 	public function add($q){
 		$q['id'] = $this->getUUID();
-		notNullCheck($q['billId'],"bill id can not be empty !;");
+		notNullCheck($q,'billId');
 		$count = parent::getCount(array('billId'=>$q['billId']));
 		$q['serialNumber'] = $count['count'] + 1;
 		return parent::add($q);
 	}
 	public function update($q){
 		global $mysql;
-		notNullCheck($q['_id'],"id can not be empty !;");
-		notNullCheck($q['_billId'],"bill id can not be empty !;");
+		notNullCheck($q,'_id');
+		notNullCheck($q,'_billId');
 		$data = parent::get(array('id'=>$q['id']));
 		return parent::update(array());
 	}
