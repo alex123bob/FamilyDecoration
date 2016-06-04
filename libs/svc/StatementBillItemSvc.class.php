@@ -1,23 +1,21 @@
 <?php
 class StatementBillItemSvc extends BaseSvc
 {
-	public function add($q){
-		$q['id'] = $this->getUUID();
-		notNullCheck($q,'billId');
-		$count = parent::getCount(array('billId'=>$q['billId']));
-		$q['serialNumber'] = $count['count'] + 1;
+	public function updateAndAddCheck($q){
 		if(isset($q['amount']) && !is_numeric($q['amount']))
 			throw new Exception('amount must be number type:'.$q['amount']);
 		if(isset($q['unitPrice']) && !is_numeric($q['unitPrice']))
 			throw new Exception('amount must be number type:'.$q['amount']);
+	}
+	public function add($q){
+		$q['id'] = $this->getUUID();
+		notNullCheck($q,'billId');
+		$this->updateAndAddCheck($q);
 		return parent::add($q);
 	}
 	public function update($q){
 		global $mysql;	
-		if(isset($q['amount']) && !is_numeric($q['amount']))
-			throw new Exception('amount must be number type:'.$q['amount']);
-		if(isset($q['unitPrice']) && !is_numeric($q['unitPrice']))
-			throw new Exception('amount must be number type:'.$q['amount']);
+		$this->updateAndAddCheck($q);
 		return parent::update($q);
 	}
 	public function get($q){

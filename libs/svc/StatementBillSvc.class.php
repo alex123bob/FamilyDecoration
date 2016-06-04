@@ -13,5 +13,14 @@ class StatementBillSvc extends BaseSvc
 		$userSvc->appendRealName($data['data'],'checker');
 		return $data;
 	}
+
+	public function getTotalFee($q){
+		notNullCheck($q,'id');
+		global $mysql;
+		$sql = "select IFNULL(sum(amount*unitPrice),0) as totalFee from statement_bill_item where billId = ? ";
+		$res = $mysql->DBGetAsMap($sql,array($q['id']));
+		$res[0]['id'] = $q['id'];
+		return $res[0];
+	}
 }
 ?>

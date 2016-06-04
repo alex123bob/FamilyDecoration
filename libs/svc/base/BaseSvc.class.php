@@ -189,6 +189,7 @@ class BaseSvc{
 
 	public static function getSvc($svcName){
 		require_once "svc/".$svcName."Svc.class.php";
+		global $mysql;
 		$class = new ReflectionClass($svcName."Svc");
 		$fin = $class->newInstanceArgs();
 		return $fin->setTableName($svcName);
