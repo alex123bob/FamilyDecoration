@@ -23,8 +23,12 @@ Ext.define('FamilyDecoration.view.checkbillitem.AddCheckBillItem', {
 		            clicksToEdit: 1,
 		            listeners: {
 		            	edit: function (editor, e){
+							Ext.suspendLayouts();
+							
 		            		e.record.commit();
 		            		editor.completeEdit();
+							
+							Ext.resumeLayouts();
 		            	},
 		            	validateedit: function (editor, e, opts){
 		            		var rec = e.record;
