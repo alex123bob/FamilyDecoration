@@ -109,6 +109,32 @@ Ext.require('Ext.toolbar.Toolbar', function () {
     Ext.toolbar.Toolbar.prototype.enableOverflow = true;
 });
 
+// actionName: if false, use default action "get"
+function ajaxGet (className, actionName, params, callback) {
+    if (Ext.isObject(params) && !Ext.Object.isEmpty(params)) {
+        var url = './libs/api.php?action=' + className + '.' + (actionName ? actionName : 'get');
+        for (var pro in params) {
+            if (params.hasOwnProperty(pro)) {
+                var val = params[pro];
+                url += '&' + pro + '=' + val;
+            }
+        }
+        Ext.Ajax.request({
+            url: url,
+            method: 'GET',
+            callback: function (opts, success, res){
+                if (success) {
+                    var obj = Ext.decode(res.responseText);
+                    callback(obj);
+                }
+            }
+        });
+    }
+    else {
+        showMsg('参数不正确！');
+    }
+}
+
 function ajaxUpdate (className, params, conditionParams, callback){
     if (Ext.isObject(params) && !Ext.Object.isEmpty(params)) {
         var url = './libs/api.php?action=' + className + '.update';
