@@ -14,8 +14,6 @@ class StatementBillItemSvc extends BaseSvc
 	}
 	public function update($q){
 		global $mysql;
-		notNullCheck($q,'_id');
-		notNullCheck($q,'_billId');
 		if(isset($q['amount']) && !is_numeric($q['amount']))
 			throw new Exception('amount must be number type:'.$q['amount']);
 		if(isset($q['unitPrice']) && !is_numeric($q['unitPrice']))
