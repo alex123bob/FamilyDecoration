@@ -13,6 +13,7 @@ Ext.define('FamilyDecoration.store.StatementBill', {
         },
         extraParams: {
             action: 'StatementBill.get',
+            orderby: 'createTime DESC'
         }
     }
 });

@@ -169,6 +169,11 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 						bill: me.bill,
 						callbackAfterClose: function (){
 							billTable.refreshGrid(me.bill);
+							ajaxGet('StatementBill', 'getTotalFee', {
+								id: me.bill.getId()
+							}, function (obj){
+								billTable.setTotalFee(obj.totalFee);
+							});
 						}
 					});
 					win.show();
@@ -185,6 +190,11 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 						isForPrePaidItem: true,
 						callbackAfterClose: function (){
 							billTable.refreshGrid(me.bill);
+							ajaxGet('StatementBill', 'getTotalFee', {
+								id: me.bill.getId()
+							}, function (obj){
+								billTable.setTotalFee(obj.totalFee);
+							});
 						}
 					});
 					win.show();
