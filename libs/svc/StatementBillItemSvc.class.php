@@ -13,13 +13,12 @@ class StatementBillItemSvc extends BaseSvc
 		return parent::add($q);
 	}
 	public function update($q){
-		global $mysql;
+		global $mysql;	
 		if(isset($q['amount']) && !is_numeric($q['amount']))
 			throw new Exception('amount must be number type:'.$q['amount']);
 		if(isset($q['unitPrice']) && !is_numeric($q['unitPrice']))
 			throw new Exception('amount must be number type:'.$q['amount']);
-		$data = parent::get(array('id'=>$q['id']));
-		return parent::update(array());
+		return parent::update($q);
 	}
 	public function get($q){
 		$res = parent::get($q);
