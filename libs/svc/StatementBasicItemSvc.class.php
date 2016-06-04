@@ -6,6 +6,12 @@ class StatementBasicItemSvc extends BaseSvc
 			throw new Exception('数量必须为数字:'.$q['amount']);
 		if(isset($q['unitPrice']) && !is_numeric($q['unitPrice']))
 			throw new Exception('单价必须为数字:'.$q['amount']);
+		if(!isset($q['amount']))
+			$q['amount'] = 0;
+		if(!isset($q['unitPrice']))
+			$q['unitPrice'] = 0;
+		$q['unitPrice'] = round($q['unitPrice'],2);
+		$q['amount'] = round($q['amount'],2);
 	}
 	public function add($q){
 		$this->updateAndAddCheck($q);

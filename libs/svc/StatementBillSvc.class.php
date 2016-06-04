@@ -14,10 +14,14 @@ class StatementBillSvc extends BaseSvc
 		return $data;
 	}
 
+	public function syncTotalFee($q){
+		return $this->getTotalFee($q);
+	}
+
 	public function getTotalFee($q){
 		notNullCheck($q,'id');
 		global $mysql;
-		$sql = "select IFNULL(sum(amount*unitPrice),0) as totalFee from statement_bill_item where billId = ? ";
+		$sql = "select IFNULL(sum(((amount*100)*(unitPrice*100)))/10000,0) as totalFee from statement_bill_item where billId = ? and isDeleted='false' ";
 		$res = $mysql->DBGetAsMap($sql,array($q['id']));
 		$res[0]['id'] = $q['id'];
 		$res = $res[0];
