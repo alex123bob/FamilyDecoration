@@ -6,12 +6,20 @@ class StatementBillItemSvc extends BaseSvc
 		notNullCheck($q,'billId');
 		$count = parent::getCount(array('billId'=>$q['billId']));
 		$q['serialNumber'] = $count['count'] + 1;
+		if(isset($q['amount']) && !is_numeric($q['amount']))
+			throw new Exception('amount must be number type:'.$q['amount']);
+		if(isset($q['unitPrice']) && !is_numeric($q['unitPrice']))
+			throw new Exception('amount must be number type:'.$q['amount']);
 		return parent::add($q);
 	}
 	public function update($q){
 		global $mysql;
 		notNullCheck($q,'_id');
 		notNullCheck($q,'_billId');
+		if(isset($q['amount']) && !is_numeric($q['amount']))
+			throw new Exception('amount must be number type:'.$q['amount']);
+		if(isset($q['unitPrice']) && !is_numeric($q['unitPrice']))
+			throw new Exception('amount must be number type:'.$q['amount']);
 		$data = parent::get(array('id'=>$q['id']));
 		return parent::update(array());
 	}
@@ -21,6 +29,11 @@ class StatementBillItemSvc extends BaseSvc
 		foreach($res['data'] as &$v){
 			$v['referenceNumber'] = $v['referenceItems'] == null || $v['referenceItems'] == "" ? 0 : substr_count($v['referenceItems'],',')+1;
 			$v['serialNumber'] = $i++;
+			try{
+				$v['subtotal'] = $v['amount'] * $v['unitPrice'];
+			}catch(Exception $e){
+
+			}
 		}
 		return $res;
 	}
