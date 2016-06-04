@@ -3,6 +3,7 @@ class StatementBillSvc extends BaseSvc
 {
 	public function add($qryParams){
 		$qryParams['id'] = $this->getUUID();
+		$qryParams['creator'] = $_SESSION['name'];
 		return parent::add($qryParams);
 	}
 

@@ -88,6 +88,7 @@ CREATE TABLE `statement_bill` (
   `billValue` varchar(50) DEFAULT NULL,
   `isChecked` varchar(5) DEFAULT NULL,
   `checker` varchar(50) DEFAULT NULL,
+  `creator` varchar(50) DEFAULT NULL,
   `isPaid` varchar(5) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
