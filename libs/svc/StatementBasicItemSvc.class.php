@@ -1,10 +1,22 @@
 <?php
 class StatementBasicItemSvc extends BaseSvc
 {
-	public function add($qryParams){
-		$qryParams['id'] = $this->getUUID();
-		return parent::add($qryParams);
+	public function updateAndAddCheck($q){
+		if(isset($q['amount']) && !is_numeric($q['amount']))
+			throw new Exception('数量必须为数字:'.$q['amount']);
+		if(isset($q['unitPrice']) && !is_numeric($q['unitPrice']))
+			throw new Exception('单价必须为数字:'.$q['amount']);
 	}
+	public function add($q){
+		$this->updateAndAddCheck($q);
+		$q['id'] = $this->getUUID();
+		return parent::add($q);
+	}
+	public function update($q){
+		$this->updateAndAddCheck($q);
+		return parent::update($q);
+	}
+
 	public function get($q){
 		$res = parent::get($q);
 		$i = 1;
