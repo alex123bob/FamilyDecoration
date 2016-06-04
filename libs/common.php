@@ -182,7 +182,7 @@
     }
 
     function notNullCheck($d,$msg){
-    	if(!isset($d) || $d == ""){
+    	if(isset($d) || $d == ""){
     		throw new Exception($msg);
     	}
     }
