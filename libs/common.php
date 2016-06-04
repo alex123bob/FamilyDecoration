@@ -181,8 +181,10 @@
 		return $res;
     }
 
-    function notNullCheck($d,$msg){
-    	if(isset($d) || $d == ""){
+    function notNullCheck($d,$f,$msg =""){
+    	if(!isset($d[$f]) || $d[$f] == ""){
+    		if($msg == "")
+    			$msg = $f." can not be empty";
     		throw new Exception($msg);
     	}
     }
