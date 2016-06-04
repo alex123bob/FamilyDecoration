@@ -10,8 +10,8 @@ class StatementBasicItemSvc extends BaseSvc
 			$q['amount'] = 0;
 		if(!isset($q['unitPrice']))
 			$q['unitPrice'] = 0;
-		$q['unitPrice'] = round($q['unitPrice'],2);
-		$q['amount'] = round($q['amount'],2);
+		$q['unitPrice'] = round($q['unitPrice'],3);
+		$q['amount'] = round($q['amount'],3);
 	}
 	public function add($q){
 		$this->updateAndAddCheck($q);

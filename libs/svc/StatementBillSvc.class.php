@@ -21,10 +21,11 @@ class StatementBillSvc extends BaseSvc
 	public function getTotalFee($q){
 		notNullCheck($q,'id');
 		global $mysql;
-		$sql = "select IFNULL(sum(((amount*100)*(unitPrice*100)))/10000,0) as totalFee from statement_bill_item where billId = ? and isDeleted='false' ";
+		$sql = "select IFNULL(sum(amount*unitPrice),0) as totalFee from statement_bill_item where billId = ? and isDeleted='false' ";
 		$res = $mysql->DBGetAsMap($sql,array($q['id']));
 		$res[0]['id'] = $q['id'];
 		$res = $res[0];
+		$res['totalFee'] = round($res['totalFee'],3);
 		parent::update(array('_id'=>$res['id'],'totalFee' => $res['totalFee']));
 		return $res;
 	}

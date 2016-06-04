@@ -1,17 +1,15 @@
 <?php
 class StatementBillItemSvc extends BaseSvc
 {
-	public function updateAndAddCheck($q){
+	public function updateAndAddCheck(&$q){
 		if(isset($q['amount']) && !is_numeric($q['amount']))
 			throw new Exception('数量必须为数字:'.$q['amount']);
 		if(isset($q['unitPrice']) && !is_numeric($q['unitPrice']))
 			throw new Exception('单价必须为数字:'.$q['amount']);
-		if(!isset($q['amount']))
-			$q['amount'] = 0;
-		if(!isset($q['unitPrice']))
-			$q['unitPrice'] = 0;
-		$q['unitPrice'] = round($q['unitPrice'],2);
-		$q['amount'] = round($q['amount'],2);
+		if(isset($q['amount']))
+			$q['amount'] = round($q['amount'],3);
+		if(isset($q['unitPrice']))
+			$q['unitPrice'] = round($q['unitPrice'],3);
 	}
 
 	public function add($q){
@@ -39,7 +37,7 @@ class StatementBillItemSvc extends BaseSvc
 			$v['referenceNumber'] = $v['referenceItems'] == null || $v['referenceItems'] == "" ? 0 : substr_count($v['referenceItems'],',')+1;
 			$v['serialNumber'] = $i++;
 			try{
-				$v['subtotal'] = round((($v['amount']*100) * (100*$v['unitPrice']))/10000,2);
+				$v['subtotal'] = round($v['amount']*$v['unitPrice'],3);
 			}catch(Exception $e){
 
 			}
