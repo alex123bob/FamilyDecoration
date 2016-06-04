@@ -20,7 +20,6 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 		me.getValues = function (){
 			var form = me.down('form'),
 				txts = form.query('textfield'),
-				grid = me.down('gridpanel'),
 				result = {};
 			Ext.each(txts, function (txt, index){
 				result[txt.name] = txt.getValue();
@@ -28,8 +27,6 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 			
 			// special field value.
 			result['billName'] = result['payee'] + '领款单';
-			
-			result['billItems'] = grid.getStore().data;
 			return result;
 		};
 			
@@ -233,13 +230,27 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 						clicksToEdit: 1,
 						listeners: {
 							edit: function (editor, e){
+								Ext.suspendLayouts();
+								
 								e.record.commit();
 								editor.completeEdit();
+								ajaxUpdate('StatementBillItem', {
+									amount: e.record.get('amount'),
+									id: e.record.getId(),
+									billId: me.bill.getId()
+								}, 'id', function (obj){
+									me.refresh(me.bill);
+								});
+								
+								Ext.resumeLayouts();
 							},
 							validateedit: function (editor, e, opts){
 								var rec = e.record;
 								if (e.field == 'amount') {
 									if (isNaN(e.value) || !/^-?\d+(\.\d+)?$/.test(e.value) ){
+										return false;
+									}
+									else if (e.value == e.originalValue) {
 										return false;
 									}
 								}
