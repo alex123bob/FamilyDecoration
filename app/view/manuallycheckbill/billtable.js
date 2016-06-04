@@ -73,6 +73,12 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 			}
 		};
 		
+		me.setTotalFee = function (totalFee){
+			var form = me.down('form'),
+				totalFeeField = form.query('[name="totalFee"]')[0];
+			totalFeeField.setValue(totalFee);
+		}
+		
 		// there is no need to invoke this functionality coz we put all calculation in the back-end.
 		// once we click confirm button to add billItems, all items are written into database with attached billID.
 		// don't worry about this circumstance that user added items but give up the bill, 
@@ -239,7 +245,12 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 									id: e.record.getId(),
 									billId: me.bill.getId()
 								}, 'id', function (obj){
-									me.refresh(me.bill);
+									me.refreshGrid(me.bill);
+									ajaxGet('StatementBill', 'getTotalFee', {
+										id: me.bill.getId()
+									}, function (obj){
+										me.setTotalFee(obj.totalFee);
+									});
 								});
 								
 								Ext.resumeLayouts();
