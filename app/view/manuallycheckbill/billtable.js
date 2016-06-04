@@ -12,6 +12,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 	professionType: undefined,
 	
 	bill: undefined,
+	isEdit: false, // this one tells current component if he needs to load bill data after rendition or not.
 
 	initComponent: function (){
 		var me = this,
@@ -333,6 +334,14 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 				}
 			}
 		];
+		
+		me.listeners = {
+			afterrender: function (panel, opts){
+				if (panel.isEdit) {
+					panel.refresh(panel.bill);
+				}
+			}
+		};
 
 		me.callParent();
 	}

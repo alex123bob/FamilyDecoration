@@ -18,32 +18,45 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 	professionType: undefined,
 
 	bill: undefined, // bill indicates the statementBill attached to the window.
+	isEdit: false, // this one indicates the mode of editing
 
 	callbackAfterClose: Ext.emptyFn, // we could define the content of callback function whereever we instantiate this class.
 
 	initComponent: function () {
 		var me = this;
 		
+		if (me.isEdit) {
+			me.title = '编辑单据';
+		}
+		
 		function operationBeforeClose (){
-			Ext.Msg.warning('取消会将当前单据所有内容删除，<br />确定要取消吗？', function (btnId) {
+			var warnMsg = me.isEdit ? 
+						'编辑模式下取消将导致单据表头更改的信息无法保存<br />确定要取消吗？' 
+						: '取消会将当前单据所有内容删除，<br />确定要取消吗？';
+			Ext.Msg.warning(warnMsg, function (btnId) {
 				if ('yes' == btnId) {
-					Ext.Ajax.request({
-						url: './libs/api.php?action=StatementBill.update&isDeleted=true&_id=' + me.bill.getId(),
-						method: 'POST',
-						callback: function (opts, success, res) {
-							if (success) {
-								var obj = Ext.decode(res.responseText);
-								if ('successful' == obj.status) {
-									showMsg('单据已删除！');
-									me.close();
-									me.callbackAfterClose();
-								}
-								else {
-									showMsg(obj.errMsg);
+					if (me.isEdit) {
+						me.close();
+					}
+					else {
+						Ext.Ajax.request({
+							url: './libs/api.php?action=StatementBill.update&isDeleted=true&_id=' + me.bill.getId(),
+							method: 'POST',
+							callback: function (opts, success, res) {
+								if (success) {
+									var obj = Ext.decode(res.responseText);
+									if ('successful' == obj.status) {
+										showMsg('单据已删除！');
+										me.close();
+										me.callbackAfterClose();
+									}
+									else {
+										showMsg(obj.errMsg);
+									}
 								}
 							}
-						}
-					});
+						});
+					}
 				}
 			});
 		}
@@ -53,7 +66,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 				xtype: 'manuallycheckbill-billtable',
 				project: me.project,
 				professionType: me.professionType,
-				bill: me.bill
+				bill: me.bill,
+				isEdit: me.isEdit
 			}
 		];
 		me.tbar = [

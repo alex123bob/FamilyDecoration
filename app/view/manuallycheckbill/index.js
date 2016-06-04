@@ -134,6 +134,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 					var panel = this;
 					return {
 						addBill: panel.query('[name="addBill"]')[0],
+						editBill: panel.query('[name="editBill"]')[0],
 						submitBill: panel.query('[name="submitBill"]')[0],
 						previewBill: panel.query('[name="previewBill"]')[0],
 						printBill: panel.query('[name="printBill"]')[0]
@@ -189,6 +190,41 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 									});
 									win.show();
 								});
+							}
+							else {
+								showMsg('请选择项目和工种！');
+							}
+						}
+					},
+					{
+						text: '编辑单据',
+						name: 'editBill',
+						disabled: true,
+						icon: 'resources/img/editbill.png',
+						handler: function (){
+							var resourceObj = me.getRes();
+							if (resourceObj.project && resourceObj.professionType) {
+								var win = Ext.create('FamilyDecoration.view.manuallycheckbill.AddBill', {
+									project: resourceObj.project,
+									professionType: resourceObj.professionType,
+									isEdit: true,
+									bill: resourceObj.bill,
+									callbackAfterClose: function (){
+										var resourceObj = me.getRes(),
+											professionTypeId = resourceObj.professionType.getId(),
+											professionTypeSelModel = resourceObj.professionTypeGrid.getSelectionModel(),
+											professionTypeSt = resourceObj.professionTypeSt;
+										professionTypeSelModel.deselectAll();
+										professionTypeSt.reload({
+											callback: function (recs, ope, success){
+												if (success) {
+													professionTypeSelModel.select(professionTypeSt.getById(professionTypeId));
+												}
+											}
+										});
+									}
+								});
+								win.show();
 							}
 							else {
 								showMsg('请选择项目和工种！');
@@ -276,7 +312,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								},
 								{
 									text: '单值',
-									dataIndex: 'billValue'
+									dataIndex: 'totalFee'
 								},
 								{
 									text: '是否审核',
