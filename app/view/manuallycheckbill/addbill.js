@@ -3,7 +3,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 	alias: 'widget.manuallycheckbill-addbill',
 
 	requires: [
-		'FamilyDecoration.store.StatementBasicItem'
+		'FamilyDecoration.store.StatementBasicItem',
+		'FamilyDecoration.view.manuallycheckbill.CustomizedBillItem'
 	],
 
 	layout: 'fit',
@@ -162,14 +163,31 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 				text: '添加空白项',
 				icon: 'resources/img/addblankitem.png',
 				handler: function () {
-
+					var billTable = me.down('manuallycheckbill-billtable');
+					var win = Ext.create('FamilyDecoration.view.manuallycheckbill.CustomizedBillItem', {
+						title: '添加空白项',
+						bill: me.bill,
+						callbackAfterClose: function (){
+							billTable.refreshGrid(me.bill);
+						}
+					});
+					win.show();
 				}
 			},
 			{
 				text: '添加预付',
 				icon: 'resources/img/addprepay.png',
 				handler: function () {
-
+					var billTable = me.down('manuallycheckbill-billtable');
+					var win = Ext.create('FamilyDecoration.view.manuallycheckbill.CustomizedBillItem', {
+						title: '添加预付项',
+						bill: me.bill,
+						isForPrePaidItem: true,
+						callbackAfterClose: function (){
+							billTable.refreshGrid(me.bill);
+						}
+					});
+					win.show();
 				}
 			}
 		];
