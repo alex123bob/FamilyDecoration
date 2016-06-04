@@ -13,9 +13,36 @@ class BaseSvc{
 
 	*/
 	public function del($qryParams){
+		foreach ($this->fields as $f) {
+			if(isset($qryParams[$f]) && $qryParams[$f] != "" && $f != 'isDeleted' && $f != 'updateTime'){
+				$qryParams["_".$f] = $qryParams[$f];
+				unset($qryParams[$f]);
+			}
+		}
 		$qryParams['isDeleted'] = 'true';
 		$qryParams['updateTime'] = 'now()';
-		return $this->update($qryParams);
+		global $TableMapping;
+		global $mysql;
+		$obj = array();
+		$conditionObj = array();
+		$whereSql = " 1 = 1 ";
+		$params = array();
+		foreach ($this->fields as $f) {
+			if(isset($qryParams[$f])){
+				$obj[$f] = $qryParams[$f];
+			}
+			if(isset($qryParams["_".$f])){
+				array_push($params, $qryParams['_'.$f]);
+				$whereSql = $whereSql." and `".$f."` = '?' ";
+				$conditionObj[$f] = $qryParams["_".$f];
+			}
+		}
+		if(trim($whereSql) == "1 = 1"){
+			throw new Exception("no where condition. Cant update all records.");
+		}
+		$obj['updateTime'] = 'now()';		
+		$affect = $mysql->DBUpdate($this->tableName,$obj,$whereSql,$params);
+		return array('status'=>'successful','affect'=>$affect, 'errMsg' => '','update'=>$obj,'where'=>$conditionObj);
 	}
 	//增加
 	public function add($qryParams){
@@ -126,6 +153,7 @@ class BaseSvc{
 		global $TableMapping;
 		global $mysql;
 		$obj = array();
+		$conditionObj = array();
 		$whereSql = " 1 = 1 ";
 		$params = array();
 		foreach ($this->fields as $f) {
@@ -135,6 +163,7 @@ class BaseSvc{
 			if(isset($qryParams["_".$f])){
 				array_push($params, $qryParams['_'.$f]);
 				$whereSql = $whereSql." and `".$f."` = '?' ";
+				$conditionObj[$f] = $qryParams["_".$f];
 			}
 		}
 		if(trim($whereSql) == "1 = 1"){
@@ -142,7 +171,7 @@ class BaseSvc{
 		}
 		$obj['updateTime'] = 'now()';		
 		$affect = $mysql->DBUpdate($this->tableName,$obj,$whereSql,$params);
-		return array('status'=>'successful','affect'=>$affect, 'errMsg' => '','data'=>$obj);
+		return array('status'=>'successful','affect'=>$affect, 'errMsg' => '','update'=>$obj,'where'=>$conditionObj);
 	}
 
 	public function setTableName($tablename){

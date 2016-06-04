@@ -10,8 +10,8 @@ class StatementBillItemSvc extends BaseSvc
 	}
 	public function update($q){
 		global $mysql;
-		notNullCheck($q['id'],"id can not be empty !;");
-		notNullCheck($q['billId'],"bill id can not be empty !;");
+		notNullCheck($q['_id'],"id can not be empty !;");
+		notNullCheck($q['_billId'],"bill id can not be empty !;");
 		$data = parent::get(array('id'=>$q['id']));
 		return parent::update(array());
 	}
