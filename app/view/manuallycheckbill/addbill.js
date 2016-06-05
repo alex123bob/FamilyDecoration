@@ -39,22 +39,12 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 						me.close();
 					}
 					else {
-						Ext.Ajax.request({
-							url: './libs/api.php?action=StatementBill.del&id=' + me.bill.getId(),
-							method: 'POST',
-							callback: function (opts, success, res) {
-								if (success) {
-									var obj = Ext.decode(res.responseText);
-									if ('successful' == obj.status) {
-										showMsg('单据已删除！');
-										me.close();
-										me.callbackAfterClose();
-									}
-									else {
-										showMsg(obj.errMsg);
-									}
-								}
-							}
+						ajaxDel('StatementBill', {
+							id: me.bill.getId()
+						}, function (obj){
+							showMsg('单据已删除！');
+							me.close();
+							me.callbackAfterClose();
 						});
 					}
 				}
