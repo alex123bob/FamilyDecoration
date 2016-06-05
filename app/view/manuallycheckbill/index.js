@@ -318,7 +318,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								},
 								{
 									text: '是否审核',
-									dataIndex: 'isChecked',
+									dataIndex: 'status',
 									renderer: function (val, meta, rec) {
 										if ('true' == val) {
 											return '已审核';

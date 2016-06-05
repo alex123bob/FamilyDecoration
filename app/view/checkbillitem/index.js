@@ -122,29 +122,14 @@ Ext.define('FamilyDecoration.view.checkbillitem.Index', {
 												function recursivelyAddStatementBasicItem(arr) {
 													if (arr.length > 0) {
 														var func = arguments.callee;
-														var url = './libs/api.php?action=StatementBasicItem.add';
 														var paramObj = arr[0];
-														for (var pro in paramObj) {
-															url += '&@' + pro + '=' + paramObj[pro];
-														}
-														Ext.Ajax.request({
-															url: url,
-															method: 'POST',
-															callback: function (opts, success, res) {
-																if (success) {
-																	var obj = Ext.decode(res.responseText);
-																	if ('successful' == obj.status) {
-																	}
-																	else {
-																		failedMembers.push(paramObj['billItemName']);
-																	}
-																	arr.splice(0, 1);
-																	func(arr);
-																}
-																else {
-																	// otherwise, pop up window showing request error info.
-																}
-															}
+														ajaxAdd('StatementBasicItem', paramObj, function (obj){
+															arr.splice(0, 1);
+															func(arr);
+														}, function (obj){
+															failedMembers.push(paramObj['billItemName']);
+															arr.splice(0, 1);
+															func(arr);
 														});
 													}
 													else {
@@ -192,7 +177,7 @@ Ext.define('FamilyDecoration.view.checkbillitem.Index', {
 									width: 500,
 									height: 400,
 									modal: true,
-									title: '添加对账项目',
+									title: '编辑对账项目',
 									items: {
 										xtype: 'checkbillitem-addcheckbillitem',
 										isEditable: true,
@@ -206,38 +191,18 @@ Ext.define('FamilyDecoration.view.checkbillitem.Index', {
 											handler: function () {
 												var grid = win.down('grid'),
 													st = grid.getStore(),
-													rec = st.first(),
-													url = './libs/api.php?action=StatementBasicItem.update',
-													paramObj = {
-														'@billItemName': rec.get('billItemName'),
-														'@unit': rec.get('unit'),
-														'@referenceNumber': rec.get('referenceNumber'),
-														'@referenceItems': rec.get('referenceItems'),
-														'@unitPrice': rec.get('unitPrice'),
-														id: rec.getId()
-													};
-												for (var pro in paramObj) {
-													if (paramObj.hasOwnProperty(pro)) {
-														var value = paramObj[pro];
-														url += '&' + pro + '=' + value;
-													}
-												}
-												Ext.Ajax.request({
-													url: url,
-													method: 'POST',
-													callback: function (opts, success, res) {
-														if (success) {
-															var obj = Ext.decode(res.responseText);
-															if ('successful' == obj.status) {
-																showMsg('编辑成功！');
-																win.close();
-																billItemGrid.refresh();
-															}
-															else {
-																showMsg(obj.errMsg);
-															}
-														}
-													}
+													rec = st.first();
+												ajaxUpdate('StatementBasicItem', {
+													billItemName: rec.get('billItemName'),
+													unit: rec.get('unit'),
+													referenceNumber: rec.get('referenceNumber'),
+													referenceItems: rec.get('referenceItems'),
+													unitPrice: rec.get('unitPrice'),
+													id: rec.getId()
+												}, 'id', function (obj){
+													showMsg('编辑成功！');
+													win.close();
+													billItemGrid.refresh();
 												});
 											}
 										},
@@ -268,22 +233,12 @@ Ext.define('FamilyDecoration.view.checkbillitem.Index', {
 							if (rec) {
 								Ext.Msg.warning('确认要删除当前项吗？', function (btnId) {
 									if ('yes' == btnId) {
-										Ext.Ajax.request({
-											url: './libs/api.php?action=StatementBasicItem.del&id=' + rec.getId(),
-											method: 'POST',
-											callback: function (opts, success, res) {
-												if (success) {
-													var obj = Ext.decode(res.responseText);
-													if ('successful' == obj.status) {
-														showMsg('删除成功！');
-														billItemGrid.refresh();
-													}
-													else {
-														showMsg(obj.errMsg);
-													}
-												}
-											}
-										})
+										ajaxDel('StatementBasicItem', {
+											id: rec.getId()
+										}, function (obj){
+											showMsg('删除成功！');
+											billItemGrid.refresh();
+										});
 									}
 								});
 							}
