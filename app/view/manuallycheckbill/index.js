@@ -317,16 +317,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 									dataIndex: 'totalFee'
 								},
 								{
-									text: '是否审核',
-									dataIndex: 'status',
-									renderer: function (val, meta, rec) {
-										if ('true' == val) {
-											return '已审核';
-										}
-										else {
-											return '未审核';
-										}
-									}
+									text: '审核状态',
+									dataIndex: 'statusName'
 								},
 								{
 									text: '审核人',
