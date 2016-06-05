@@ -136,7 +136,8 @@ Ext.define('FamilyDecoration.view.checkbillitem.AddCheckBillItem', {
 					flex: 1,
 					text: '数量',
 					dataIndex: 'amount',
-					hidden: me.isEditable ? true : false
+					// hidden: me.isEditable ? true : false
+					hidden: true
 				},
 				{
 					flex: 1,
