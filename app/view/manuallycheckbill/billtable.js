@@ -7,6 +7,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 	],
 	header: false,
 	isPreview: false,
+	isAudit: false,
 	
 	project: undefined,
 	professionType: undefined,
@@ -16,7 +17,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 
 	initComponent: function (){
 		var me = this,
-			previewMode = me.isPreview;
+			previewMode = me.isPreview,
+			auditMode = me.isAudit;
 			
 		me.getValues = function (){
 			var form = me.down('form'),
@@ -335,6 +337,12 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 							flex: 1
 						},
 						{
+							text: '参考量',
+							dataIndex: 'referenceNumber',
+							flex: 1,
+							hidden: auditMode ? false : true
+						},
+						{
 							text: '数量',
 							dataIndex: 'amount',
 							flex: 1,
@@ -342,6 +350,12 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 				                xtype: 'textfield',
 				                allowBlank: false
 				            } : {},
+						},
+						{
+							text: '审核数量',
+							dataIndex: 'checkedNumber',
+							flex: 1,
+							hidden: auditMode ? false : true
 						},
 						{
 							text: '单价(元)',
