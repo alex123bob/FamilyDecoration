@@ -32,7 +32,8 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
         billSt.load({
             params: {
                 action: 'StatementBill.get',
-                orderby: 'createTime DESC'
+                orderby: 'createTime DESC',
+                status: 'rdyck'
             }
         });
 

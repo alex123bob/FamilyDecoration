@@ -138,7 +138,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						editBill: panel.query('[name="editBill"]')[0],
 						submitBill: panel.query('[name="submitBill"]')[0],
 						previewBill: panel.query('[name="previewBill"]')[0],
-						printBill: panel.query('[name="printBill"]')[0]
+						printBill: panel.query('[name="printBill"]')[0],
+						deleteBill: Ext.getCmp('gridpanel-billList').getHeader().getComponent('deleteBill')
 					};
 				},
 				initBtn: function (rec){
@@ -150,7 +151,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 							if (name == 'addBill') {
 								btn.setDisabled(!(resourceObj.project && resourceObj.professionType));
 							}
-							else if (name == 'editBill') {
+							else if (name == 'editBill' || name == 'deleteBill') {
 								if (rec && (rec.get('status') == 'rdyck' || rec.get('status') == 'chk')) {
 									btn.disable();
 								}
@@ -245,7 +246,31 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						text: '递交审核',
 						name: 'submitBill',
 						disabled: true,
-						icon: 'resources/img/uploadbill.png'
+						icon: 'resources/img/uploadbill.png',
+						handler: function (){
+							var resourceObj = me.getRes(),
+								st = resourceObj.billList.getStore(),
+								index = st.indexOf(resourceObj.bill),
+								selModel = resourceObj.billList.getSelectionModel();
+							Ext.Msg.warning('递交后不可再进行修改单据，确定要递交单据吗？', function (btnId){
+								if ('yes' == btnId) {
+									ajaxCustomAction('StatementBill', 'changeStatus', {
+										id: resourceObj.bill.getId(),
+										status: 'rdyck'
+									}, 'id', function (obj){
+										showMsg('递交成功!');
+										selModel.deselectAll();
+										st.reload({
+											callback: function (recs, ope, success){
+												if (success) {
+													selModel.select(index);
+												}
+											}
+										});
+									});
+								}
+							});
+						}
 					},
 					{
 						text: '预览单据',
