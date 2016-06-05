@@ -141,7 +141,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						printBill: panel.query('[name="printBill"]')[0]
 					};
 				},
-				initBtn: function (){
+				initBtn: function (status){
 					var resourceObj = me.getRes(),
 						btnObj = this.getButtons();
 					for (var name in btnObj) {
@@ -149,6 +149,14 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 							var btn = btnObj[name];
 							if (name == 'addBill') {
 								btn.setDisabled(!(resourceObj.project && resourceObj.professionType));
+							}
+							else if (name == 'editBill') {
+								if (status == 'rdyck' || status == 'chk') {
+									btn.disable();
+								}
+								else {
+									btn.setDisabled(!(resourceObj.project && resourceObj.professionType && resourceObj.bill));
+								}
 							}
 							else {
 								btn.setDisabled(!(resourceObj.project && resourceObj.professionType && resourceObj.bill));
@@ -351,7 +359,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 									resourceObj = me.getRes();
 								resourceObj.billDetailPanel.bill = rec;
 								resourceObj.billDetailPanel.refresh(rec);
-								resourceObj.billCt.initBtn();
+								resourceObj.billCt.initBtn(rec.get('status'));
 							}
 						}
 					}
