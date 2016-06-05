@@ -4,45 +4,18 @@ class BaseSvc{
 
 	public $tableName="";
 	public $fields = "";
-
 	/*
-	删除,如:
-	http://localhost/fd/libs/fina.php?action=user.del&orderby=name%20
-	http://xxx/?action=get&name=xxx&phone=xxx&age=xxx&_name=王
-	_开头的,模糊查询,like
-
+	xxx=value 表示xxx字段严格匹配
+	_xxx=value 表示xxx字段 like 模糊匹配
+	-xxx=value update时使用,表示xxx字段值更新为value
+	_fields=xxx,xxx 查询时使用,表示只查询xxx,xxx字段
+	_distinct=t 查询时使用,t表示唯一,默认t,f表示不过滤唯一性
 	*/
-	public function del($qryParams){
-		foreach ($this->fields as $f) {
-			if(isset($qryParams[$f]) && $qryParams[$f] != "" && $f != 'isDeleted' && $f != 'updateTime'){
-				$qryParams["_".$f] = $qryParams[$f];
-				unset($qryParams[$f]);
-			}
-		}
-		$qryParams['isDeleted'] = 'true';
-		$qryParams['updateTime'] = 'now()';
-		global $TableMapping;
-		global $mysql;
-		$obj = array();
-		$conditionObj = array();
-		$whereSql = " 1 = 1 ";
-		$params = array();
-		foreach ($this->fields as $f) {
-			if(isset($qryParams[$f])){
-				$obj[$f] = $qryParams[$f];
-			}
-			if(isset($qryParams["_".$f])){
-				array_push($params, $qryParams['_'.$f]);
-				$whereSql = $whereSql." and `".$f."` = '?' ";
-				$conditionObj[$f] = $qryParams["_".$f];
-			}
-		}
-		if(trim($whereSql) == "1 = 1"){
-			throw new Exception("no where condition. Cant update all records.");
-		}
-		$obj['updateTime'] = 'now()';		
-		$affect = $mysql->DBUpdate($this->tableName,$obj,$whereSql,$params);
-		return array('status'=>'successful','affect'=>$affect, 'errMsg' => '','update'=>$obj,'where'=>$conditionObj);
+
+	public function del($q){
+		$q['@isDeleted'] = 'true';
+		$q['@updateTime'] = 'now()';
+		return $this->update($q);
 	}
 	//增加
 	public function add($qryParams){
@@ -71,29 +44,65 @@ class BaseSvc{
 		return isset($qryParams['limit']) && trim($qryParams['limit']) != "" ? " limit ".$q['limit'] : "";
 	}
 
+	public function parseSelectSql($q,$tableName = ""){
+		$sql = "select ";
+		$tableName = $tableName == "" ? $this->tableName : $tableName;
+		if(isset($q['_fields']) && $q['_fields'] != "" && trim($q['_fields']) != ""){
+			$sql .= $q['_fields'] ;
+		}else{
+			$sql .= "*";
+		}
+
+		return $sql." from ".$tableName;
+	}
+
 	public function parseOrderBySql($q){
 		return isset($qryParams['orderby']) && trim($qryParams['orderby']) != "" ? " order by  ".$q['orderby'] : "";
 	}
 
-	public function parseWhereSql($prefix,$tableName,$q,&$params){
+	public function parseWhereSql($prefix,$q,&$params,$tableName = "",$errorNoWhere=false){
 		global $TableMapping;
 		global $mysql;
 		$prefix = trim($prefix);
-		if(!isset($q['isDeleted'])){
-			$q['isDeleted'] = 'false';
-		}
-		$whereSql = " ";
+		$tableName = $tableName == "" ? $this->tableName : $tableName;
+		$whereSql = " where 1 = 1 ";
+		$hasWhere = false;
 		foreach ($TableMapping[$tableName] as $f) {
 			if(isset($q[$f])){
 				array_push($params, $q[$f]);
 				$whereSql = $whereSql." and $prefix`$f` = '?' ";
+				$hasWhere = true;
 			}
 			if(isset($q["_".$f])){
 				array_push($params, $q['_'.$f]);
 				$whereSql = $whereSql." and $prefix`$f` like '%?%' ";
+				$hasWhere = true;
 			}
 		}
+		if($errorNoWhere && !$hasWhere)
+			throw new Exception("没有约束条件! no where condition !");
+		if(!contains($whereSql,'isDeleted')){
+			$whereSql = $whereSql." and $prefix`isDeleted` = 'false' ";
+		}
 		return $whereSql;
+	}
+
+	public function parseUpdateObj($q,$tableName = ""){
+		global $TableMapping;
+		global $mysql;
+		$tableName = $tableName == "" ? $this->tableName : $tableName;
+		$obj = array();
+		$hasUpdate = false;
+		foreach ($TableMapping[$tableName] as $f) {
+			if(isset($q["@".$f])){
+				$obj[$f] = $q['@'.$f];
+				$hasUpdate = true;
+			}
+		}
+		if(!$hasUpdate)
+			throw new Exception("没有更新! no update field !");
+		$obj['updateTime'] = 'now()';		
+		return $obj;
 	}
 
 	/*
@@ -110,68 +119,37 @@ class BaseSvc{
 	public function getCount($q){
 		return $this->_get($q,true);
 	}
-	private function _get($qryParams,$onlyCount){
+	private function _get($q,$onlyCount){
 		global $TableMapping;
 		global $mysql;
 		$whereSql = " where 1 = 1 ";
 		$orderBy = "";
 		$limit = "";
 		$params = array();
-		foreach ($this->fields as $f) {
-			if(isset($qryParams[$f]) && $qryParams[$f] != ""){
-				array_push($params, $qryParams[$f]);
-				$whereSql = $whereSql." and `".$f."` = '?' ";
-			}
-			if(isset($qryParams["_".$f]) && $qryParams["_".$f] != ""){
-				array_push($params, $qryParams['_'.$f]);
-				$whereSql = $whereSql." and `".$f."` like '%?%' ";
-			}
-		}
-		if(!contains($whereSql,'isDeleted')){
-			$whereSql = $whereSql." and `isDeleted` = 'false' ";
-		}
-		if(isset($qryParams['orderby']) && trim($qryParams['orderby']) != ""){
-			$orderBy = " order by  ".$qryParams['orderby'];
-		}
-		if(isset($qryParams['limit']) && trim($qryParams['limit']) != "" && isset($qryParams['start']) && trim($qryParams['start']) != ""){
-			$limit = " limit ".$qryParams['start'].','.$qryParams['limit'];
-		}		
-		$count = $mysql->DBGetAsOneArray("select count(1) as count from ".$this->tableName.$whereSql,$params);
-		$count = $count[0];
+		$where = $this->parseWhereSql('',$q,$params);
+		$limit = $this->parseLimitSql($q);
+		$orderBy = $this->parseOrderBySql($q);		
+		$count = $mysql->DBGetAsOneArray("select count(1) as count from ".$this->tableName.$where,$params);
 		if($onlyCount)
-			return array('status'=>'successful', 'count'=>$count,'errMsg' => '');
-		$row = $mysql->DBGetAsMap("select * from ".$this->tableName.$whereSql.$orderBy.$limit,$params);
-		return array('total'=>$count,'data'=>$row);
+			return array('status'=>'successful', 'count'=>$count[0],'errMsg' => '');
+		$select = $this->parseSelectSql($q);
+		$row = $mysql->DBGetAsMap($select.$where.$orderBy.$limit,$params);
+		return array('total'=>$count[0],'data'=>$row);
 	}
 
 	/*
 		修改
-		http://localhost/fd/libs/api.php?action=user.update&name=10&_name=0
+		http://localhost/fd/libs/api.php?action=user.update&name=10&_name=0&-age=123&.title=123
 		_开头的where条件,不带_的是需要设值得字段以及要设的值
 	*/
-	public function update($qryParams){
+	public function update($q){
 		global $TableMapping;
 		global $mysql;
-		$obj = array();
 		$conditionObj = array();
-		$whereSql = " 1 = 1 ";
-		$params = array();
-		foreach ($this->fields as $f) {
-			if(isset($qryParams[$f])){
-				$obj[$f] = $qryParams[$f];
-			}
-			if(isset($qryParams["_".$f])){
-				array_push($params, $qryParams['_'.$f]);
-				$whereSql = $whereSql." and `".$f."` = '?' ";
-				$conditionObj[$f] = $qryParams["_".$f];
-			}
-		}
-		if(trim($whereSql) == "1 = 1"){
-			throw new Exception("no where condition. Cant update all records.");
-		}
-		$obj['updateTime'] = 'now()';		
-		$affect = $mysql->DBUpdate($this->tableName,$obj,$whereSql,$params);
-		return array('status'=>'successful','affect'=>$affect, 'errMsg' => '','update'=>$obj,'where'=>$conditionObj);
+		$where = $this->parseWhereSql('',$q,$conditionObj,null,true);
+		$updateObj = $this->parseUpdateObj($q);
+		$affect = $mysql->DBUpdate($this->tableName,$updateObj,$where,$conditionObj);
+		return array('status'=>'successful','affect'=>$affect, 'errMsg' => '','update'=>$updateObj,'where'=>$conditionObj);
 	}
 
 	public function setTableName($tablename){
