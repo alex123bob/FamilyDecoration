@@ -45,7 +45,7 @@ class StatementBillSvc extends BaseSvc
 	}
 	public function get($q){
 		$data = parent::get($q);
-		foreach($data['data'] as $key => $value)
+		foreach($data['data'] as $key => &$value)
 			$value['statusName'] = $this->statusMapping[$value['status']];
 		$userSvc = parent::getSvc('User');
 		$userSvc->appendRealName($data['data'],'checker');
