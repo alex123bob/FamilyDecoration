@@ -209,12 +209,12 @@ Ext.define('FamilyDecoration.view.checkbillitem.Index', {
 													rec = st.first(),
 													url = './libs/api.php?action=StatementBasicItem.update',
 													paramObj = {
-														billItemName: rec.get('billItemName'),
-														unit: rec.get('unit'),
-														referenceNumber: rec.get('referenceNumber'),
-														referenceItems: rec.get('referenceItems'),
-														unitPrice: rec.get('unitPrice'),
-														_id: rec.getId()
+														'@billItemName': rec.get('billItemName'),
+														'@unit': rec.get('unit'),
+														'@referenceNumber': rec.get('referenceNumber'),
+														'@referenceItems': rec.get('referenceItems'),
+														'@unitPrice': rec.get('unitPrice'),
+														id: rec.getId()
 													};
 												for (var pro in paramObj) {
 													if (paramObj.hasOwnProperty(pro)) {
@@ -269,7 +269,7 @@ Ext.define('FamilyDecoration.view.checkbillitem.Index', {
 								Ext.Msg.warning('确认要删除当前项吗？', function (btnId) {
 									if ('yes' == btnId) {
 										Ext.Ajax.request({
-											url: './libs/api.php?action=StatementBasicItem.update&_id=' + rec.getId() + '&isDeleted=true',
+											url: './libs/api.php?action=StatementBasicItem.del&id=' + rec.getId(),
 											method: 'POST',
 											callback: function (opts, success, res) {
 												if (success) {

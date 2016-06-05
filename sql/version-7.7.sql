@@ -86,7 +86,7 @@ CREATE TABLE `statement_bill` (
   `professionType` varchar(5) DEFAULT NULL,
   `billName` varchar(50) DEFAULT NULL,
   `billValue` varchar(50) DEFAULT NULL,
-  `isChecked` varchar(5) DEFAULT NULL,
+  `status` varchar(5) DEFAULT NULL,
   `checker` varchar(50) DEFAULT NULL,
   `creator` varchar(50) DEFAULT NULL,
   `isPaid` varchar(5) DEFAULT NULL,

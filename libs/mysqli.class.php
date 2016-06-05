@@ -382,8 +382,9 @@
 				}
 				$condition = str_replace_once($condition,"?",$value);
 			}
-			if($condition != "" && trim($condition) != "")
-				$sql .= " where ".$condition;
+			if($condition != "" && trim($condition) != ""){
+				$sql .= (contains($condition,"where") ? "" : " where " ).$condition;
+			}
 			$this->dbSQL = $sql;
 			$this->DBExecute($this->dbSQL);
 			if($this->dbResult){

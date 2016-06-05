@@ -40,7 +40,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 					}
 					else {
 						Ext.Ajax.request({
-							url: './libs/api.php?action=StatementBill.update&isDeleted=true&_id=' + me.bill.getId(),
+							url: './libs/api.php?action=StatementBill.del&id=' + me.bill.getId(),
 							method: 'POST',
 							callback: function (opts, success, res) {
 								if (success) {

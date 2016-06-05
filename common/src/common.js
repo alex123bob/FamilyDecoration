@@ -145,10 +145,10 @@ function ajaxUpdate (className, params, conditionParams, callback){
             if (params.hasOwnProperty(pro)) {
                 var val = params[pro];
                 if (Ext.Array.contains(conditionParams, pro)) {
-                    url += '&_' + pro + '=' + val;
+                    url += '&' + pro + '=' + val;
                 }
                 else {
-                    url += '&' + pro + '=' + val;
+                    url += '&@' + pro + '=' + val;
                 }
             }
         }
@@ -223,7 +223,7 @@ function ajaxDel (className, params, callback) {
         for (var pro in params) {
             if (params.hasOwnProperty(pro)) {
                 var val = params[pro];
-                url += '&_' + pro + '=' + val;
+                url += '&' + pro + '=' + val;
             }
         }
         Ext.Ajax.request({
