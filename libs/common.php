@@ -11,7 +11,7 @@
 		die();
 	}
 	function ExceptionHandler($e){
-		$result = array("status" => "failing","errMsg" =>$e->getMessage(),"file"=>$e->getFile(),"line"=>$e->getLine());
+		$result = array("status" => "failing","errMsg" =>$e->getMessage(),"detail"=>$e->getTraceAsString());
 		echo json_encode($result);
 		die();
 	}

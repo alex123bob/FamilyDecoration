@@ -2,14 +2,14 @@
 class StatementBillSvc extends BaseSvc
 {
 	private $statusMapping = array('new'=>'新创建','chk'=>'已审核','rbk'=>'打回');
-	public function add($qryParams){
-		$qryParams['id'] = $this->getUUID();
-		$qryParams['creator'] = $_SESSION['name'];
-		$qryParams['status'] = 'new';
+	public function add($q){
+		$q['@id'] = $this->getUUID();
+		$q['@creator'] = $_SESSION['name'];
+		$q['@status'] = 'new';
 		/*new: 新创建,未审核
 		  chk : 已审核
 		  rbk: return back 打回*/
-		return parent::add($qryParams);
+		return parent::add($q);
 	}
 
 	public function update($q){

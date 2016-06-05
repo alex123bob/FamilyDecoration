@@ -1,21 +1,25 @@
 <?php
 class StatementBasicItemSvc extends BaseSvc
 {
-	public function updateAndAddCheck($q){
-		if(isset($q['@amount']) && !is_numeric($q['@amount']))
-			throw new Exception('数量必须为数字:'.$q['@amount']);
-		if(isset($q['@unitPrice']) && !is_numeric($q['@unitPrice']))
-			throw new Exception('单价必须为数字:'.$q['@amount']);
-		if(!isset($q['@amount']))
-			$q['@amount'] = 0;
-		if(!isset($q['@unitPrice']))
-			$q['unitPrice'] = 0;
-		$q['@unitPrice'] = round($q['@unitPrice'],3);
-		$q['@amount'] = round($q['@amount'],3);
+	public function updateAndAddCheck(&$q){
+		if(isset($q['@amount'])){
+			if(is_numeric($q['@amount'])){
+				$q['@amount'] = round($q['@amount'],3);
+			}else{
+				throw new Exception('数量必须为数字:'.$q['@amount']);
+			}
+		}
+		if(isset($q['@unitPrice'])){
+			if(!is_numeric($q['@unitPrice'])){
+				throw new Exception('单价必须为数字:'.$q['@amount']);
+			}else{
+				$q['@unitPrice'] = round($q['@unitPrice'],3);
+			}
+		}
 	}
 	public function add($q){
 		$this->updateAndAddCheck($q);
-		$q['id'] = $this->getUUID();
+		$q['@id'] = $this->getUUID();
 		return parent::add($q);
 	}
 	public function update($q){
