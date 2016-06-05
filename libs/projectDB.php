@@ -139,6 +139,7 @@
 	function getProjectsByCaptainName ($captainName){
 		global $mysql;
 		$userName = isset($_REQUEST["userName"]) ? $_REQUEST["userName"] : "";
+		$needStatementBillCount = $_REQUEST["needStatementBillCount"];
 		if ($userName == "") {
 			$projects = $mysql->DBGetAsMap("select * from project where `isDeleted` = 'false' and `captainName` = '?' and `isFrozen` = 'false' ORDER BY `projectTime` ASC ", $captainName);
 		}
@@ -147,7 +148,12 @@
 		}
 		$sqlBudget = "select * from budget where projectId = '?' and isDeleted = 'false'";
 		foreach($projects as $key=>$project) {
-			$projects[$key]["budgets"] = $mysql->DBGetAsMap($sqlBudget,$project['projectId']);
+			$projectId = $project['projectId'];
+			$projects[$key]["budgets"] = $mysql->DBGetAsMap($sqlBudget, $projectId);
+			if ($needStatementBillCount == true) {
+				$count = $mysql->DBGetAsMap("select count(*) as statementBillCount from statement_bill where projectId = '?' and isDeleted = 'false'", $projectId);
+				$projects[$key]["statementBillCount"] = $count[0]["statementBillCount"];
+			}
 		}
 		return $projects;
 	}

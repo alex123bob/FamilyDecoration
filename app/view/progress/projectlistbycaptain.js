@@ -9,6 +9,8 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 	loadAll: true,
 	searchFilter: false,
 	projectId: undefined,
+	
+	needStatementBillCount: false,
 
 	initComponent: function (){
 		var me = this;
@@ -68,14 +70,16 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 	            			if (User.isAdmin() || User.isProjectManager() || User.isSupervisor() || User.isProjectStaff() || User.isAdministrationManager() || User.isFinanceManager() || User.isBudgetManager() || User.isBudgetStaff()) {
 								st.proxy.extraParams = {
 		            				captainName: node.get('captainName'),
-		            				action: 'getProjectsByCaptainName'
+		            				action: 'getProjectsByCaptainName',
+									needStatementBillCount: me.needStatementBillCount
 		            			};	            				
 	            			}
 	            			else {
 	            				st.proxy.extraParams = {
 	            					captainName: node.get('captainName'),
 	            					action: 'getProjectsByCaptainName',
-	            					userName: User.getName()
+	            					userName: User.getName(),
+									needStatementBillCount: me.needStatementBillCount
 	            				};
 	            			}
 	            		}
@@ -88,7 +92,12 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 	            				if ((me.projectId && me.projectId == node.getId()) || !me.projectId) {
 	            					node.set({
 		            					// text: node.get('projectName') + '(' + node.get('projectTime').split(' ')[0] + ')',
-		            					text: node.get('projectName'),
+		            					text: me.needStatementBillCount && parseInt(node.get('statementBillCount'), 10) > 0 ? 
+												(node.get('projectName') 
+													+ '&nbsp;<font style="color: blue; text-shadow: #8F7 0.1em 0.1em 0.2em;"><strong>' 
+													+ renderNumber(node.get('statementBillCount')) 
+													+ '</strong></font>') : 
+												node.get('projectName'),
 		            					leaf: true,
 		            					icon: './resources/img/project.png'
 		            				});

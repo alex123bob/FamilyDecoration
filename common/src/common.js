@@ -247,6 +247,20 @@ function ajaxDel (className, params, callback) {
     }
 }
 
+function renderNumber(n) {
+    var str = '⓪①②③④⑤⑥⑦⑧⑨',
+        result = [];
+    n = parseInt(n ,10);
+    if (Ext.isNumber(n) && n >= 0) {
+        n = n.toString();
+        result = n.split('');
+        Ext.each(result, function (item, index, arr){
+            arr[index] = str[parseInt(item, 10)];
+        });
+    }
+    return result.join('');
+}
+
 // index为对应要生成的编号，从1开始
 function getId(index) {
     if (index) {

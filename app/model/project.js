@@ -22,7 +22,10 @@ Ext.define('FamilyDecoration.model.Project', {
         {name: 'isFrozen', type: 'string'},
         {name: 'businessId', type: 'string'},
         {name: 'hasChart', type: 'string'},
-        {name: 'budgetFinished', type: 'string'}
+        {name: 'budgetFinished', type: 'string'},
+        
+        // this is used in manuallyCheckBill module
+        {name: 'statementBillCount', type: 'string'}
     ],
     idProperty: 'projectId',
     proxy: {
