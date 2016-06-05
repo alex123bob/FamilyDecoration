@@ -1,7 +1,13 @@
 <?php
 class StatementBillSvc extends BaseSvc
 {
-	private $statusMapping = array('new'=>'新创建','chk'=>'已审核','rbk'=>'打回');
+	private $statusMapping = array('new'=>'新创建','rdyck'=>'待审核','chk'=>'已审核','rbk'=>'打回');
+	private $statusChangingMapping = array(
+			'new->rdyck', //新创建->待审核
+			'rdyck->chk', //待审核->已审核
+			'rdyck->rbk', //待审核->打回
+			'rbk->rdyck'  //打回->待审核
+		);
 	public function add($q){
 		$q['@id'] = $this->getUUID();
 		$q['@creator'] = $_SESSION['name'];
@@ -23,10 +29,11 @@ class StatementBillSvc extends BaseSvc
 		$data = parent::get($q);
 		$bills = $data['data'];
 		$auditSvc = parent::getSvc('StatementBillAudit');
+		$res = array();
 		foreach ($bills as $bill) {
-			//只有被打回或者新创建的账单才能申请审核
-			if($bill['status'] != 'new' && $bill['status'] != 'rbk')
-				throw new Exception($bill['billName']."状态为".$this->statusMapping[$bill['status']]."不能提交审核!");
+			$statusChange = $bill['status']."->".$q['@status'];
+			if(!isset($this->statusChangingMapping[$statusChange]))
+				throw new Exception("不能".$statusMapping[$bill['status']]."由转为".$statusMapping[$q['@status']]);
 			$auditRecord = array();
 			$auditRecord['operator'] = $_SESSION['name'];
 			$auditRecord['billId'] = $q['id'];
@@ -34,8 +41,10 @@ class StatementBillSvc extends BaseSvc
 			$auditRecord['newStatus'] = $q['@status'];
 			$auditRecord['comments'] = $q['@comments'];
 			$auditSvc.add($auditRecord);
-			parent::update($q);
+			$r = parent::update($q);
+			array_push($res, $r);
 		}
+		return $res;
 	}
 	public function get($q){
 		$data = parent::get($q);
