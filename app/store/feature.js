@@ -182,6 +182,12 @@
                         cmp: 'checkbillitem-index',
                         leaf: true,
                         icon: 'resources/img/bill-edit.png'
+                    },
+                    {
+                        name: '对账审核',
+                        cmp: 'billaudit-index',
+                        leaf: true,
+                        icon: 'resources/img/audit.png'
                     }
                 ]
             },
@@ -335,6 +341,9 @@
             }
             else if (rec.get('cmp') == 'regionmgm-index') {
                 flag = User.isGeneral() ? false : true;
+            }
+            else if (rec.get('cmp') == 'billaudit-index') {
+                flag = User.isAdmin() || User.isFinanceManager() || User.isFinanceStaff() ? true : false;
             }
             else {
                 flag = true;

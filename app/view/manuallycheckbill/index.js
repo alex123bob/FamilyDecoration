@@ -343,7 +343,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 											return '未付款';
 										}
 									}
-								},
+								}
 							],
 							defaults: {
 								flex: 1,
