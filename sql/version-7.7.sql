@@ -100,9 +100,10 @@ DROP TABLE IF EXISTS `statement_bill_audit`;
 CREATE TABLE `statement_bill_audit` (
   `id` varchar(20) DEFAULT NULL,
   `billId` varchar(20) DEFAULT NULL,
-  `checker` varchar(50) DEFAULT NULL,
   `comments` varchar(500) DEFAULT NULL,
-  `isChecked` varchar(5) DEFAULT NULL,
+  `operator` varchar(25) DEFAULT NULL,
+  `orignalStatus` varchar(50) DEFAULT NULL,
+  `newStatus` varchar(50) DEFAULT NULL,
   `isDeleted` varchar(5) DEFAULT NULL,
   `createTime` datetime DEFAULT NULL,
   `updateTime` datetime DEFAULT NULL
