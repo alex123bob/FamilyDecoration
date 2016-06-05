@@ -180,7 +180,7 @@ function ajaxAdd (className, params, callback, errorHandler){
             for (var pro in p) {
                 if (p.hasOwnProperty(pro)) {
                     var val = p[pro];
-                    url += '&' + pro + '=' + val;
+                    url += '&@' + pro + '=' + val;
                 }
             }
             Ext.Ajax.request({

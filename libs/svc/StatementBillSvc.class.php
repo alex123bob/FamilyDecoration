@@ -13,8 +13,8 @@ class StatementBillSvc extends BaseSvc
 	}
 
 	public function update($q){
-		if(isset($q['status']) && !isset($this->statusMapping[$q['status']])){
-			throw new Exception("无效状态:".$q['status']);
+		if(isset($q['@status']) && !isset($this->statusMapping[$q['@status']])){
+			throw new Exception("无效状态:".$q['@status']);
 		}
 		return parent::update($q);
 	}
@@ -31,8 +31,8 @@ class StatementBillSvc extends BaseSvc
 			$auditRecord['operator'] = $_SESSION['name'];
 			$auditRecord['billId'] = $q['id'];
 			$auditRecord['orignalStatus'] = $bill['status'];
-			$auditRecord['newStatus'] = $q['status'];
-			$auditRecord['comments'] = $q['comments'];
+			$auditRecord['newStatus'] = $q['@status'];
+			$auditRecord['comments'] = $q['@comments'];
 			$auditSvc.add($auditRecord);
 			parent::update($q);
 		}

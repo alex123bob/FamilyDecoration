@@ -125,7 +125,7 @@ Ext.define('FamilyDecoration.view.checkbillitem.Index', {
 														var url = './libs/api.php?action=StatementBasicItem.add';
 														var paramObj = arr[0];
 														for (var pro in paramObj) {
-															url += '&' + pro + '=' + paramObj[pro];
+															url += '&@' + pro + '=' + paramObj[pro];
 														}
 														Ext.Ajax.request({
 															url: url,

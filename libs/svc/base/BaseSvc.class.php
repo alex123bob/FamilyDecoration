@@ -18,12 +18,12 @@ class BaseSvc{
 		return $this->update($q);
 	}
 	//增加
-	public function add($qryParams){
+	public function add($q){
 		global $mysql;
 		$obj = array();
 		foreach ($this->fields as $f) {
-			if(isset($qryParams[$f])){
-				$obj[$f] = $qryParams[$f];
+			if(isset($q['@'.$f])){
+				$obj[$f] = $q['@'.$f];
 			}
 		}
 
@@ -41,7 +41,7 @@ class BaseSvc{
 	}
 
 	public function parseLimitSql($q){
-		return isset($qryParams['limit']) && trim($qryParams['limit']) != "" ? " limit ".$q['limit'] : "";
+		return isset($q['limit']) && trim($q['limit']) != "" ? " limit ".$q['limit'] : "";
 	}
 
 	public function parseSelectSql($q,$tableName = ""){
@@ -57,7 +57,7 @@ class BaseSvc{
 	}
 
 	public function parseOrderBySql($q){
-		return isset($qryParams['orderby']) && trim($qryParams['orderby']) != "" ? " order by  ".$q['orderby'] : "";
+		return isset($q['orderby']) && trim($q['orderby']) != "" ? " order by  ".$q['orderby'] : "";
 	}
 
 	public function parseWhereSql($prefix,$q,&$params,$tableName = "",$errorNoWhere=false){
