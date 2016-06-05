@@ -251,7 +251,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 					autoLoad: false
 				}),
 				// selType: previewMode ? 'row' 'cellmodel',
-				plugins: previewMode ? [] : [
+				plugins: previewMode && !auditMode ? [] : [
 					Ext.create('Ext.grid.plugin.CellEditing', {
 						clicksToEdit: 1,
 						listeners: {
@@ -260,24 +260,35 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								
 								e.record.commit();
 								editor.completeEdit();
-								ajaxUpdate('StatementBillItem', {
-									amount: e.record.get('amount'),
-									id: e.record.getId(),
-									billId: me.bill.getId()
-								}, 'id', function (obj){
-									me.refreshGrid(me.bill);
-									ajaxGet('StatementBill', 'getTotalFee', {
-										id: me.bill.getId()
-									}, function (obj){
-										me.setTotalFee(obj.totalFee);
+								if (e.field == 'amount') {
+									ajaxUpdate('StatementBillItem', {
+										amount: e.record.get('amount'),
+										id: e.record.getId(),
+										billId: me.bill.getId()
+									}, 'id', function (obj){
+										me.refreshGrid(me.bill);
+										ajaxGet('StatementBill', 'getTotalFee', {
+											id: me.bill.getId()
+										}, function (obj){
+											me.setTotalFee(obj.totalFee);
+										});
 									});
-								});
+								}
+								else if (e.field == 'checkedNumber') {
+									ajaxUpdate('StatementBillItem', {
+										checkedNumber: e.record.get('checkedNumber'),
+										id: e.record.getId(),
+										billId: me.bill.getId()
+									}, 'id', function (obj){
+										me.refreshGrid(me.bill);
+									});
+								}
 								
 								Ext.resumeLayouts();
 							},
 							validateedit: function (editor, e, opts){
 								var rec = e.record;
-								if (e.field == 'amount') {
+								if (e.field == 'amount' || e.field == 'checkedNumber') {
 									if (isNaN(e.value) || !/^-?\d+(\.\d+)?$/.test(e.value) ){
 										return false;
 									}
@@ -349,13 +360,17 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 							editor: !previewMode ? {
 				                xtype: 'textfield',
 				                allowBlank: false
-				            } : {},
+				            } : false,
 						},
 						{
 							text: '审核数量',
 							dataIndex: 'checkedNumber',
 							flex: 1,
-							hidden: auditMode ? false : true
+							hidden: auditMode ? false : true,
+							editor: auditMode ? {
+								xtype: 'textfield',
+								allowBlank: false
+							} : false
 						},
 						{
 							text: '单价(元)',

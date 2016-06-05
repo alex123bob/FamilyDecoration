@@ -119,6 +119,7 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                     selectionchange: function (selModel, sels, opts){
                         var rec = sels[0],
                             resourceObj = me.getRes();
+                        resourceObj.billDetailCt.bill = rec;
                         resourceObj.billDetailCt.refresh(rec);
                     }
                 }
