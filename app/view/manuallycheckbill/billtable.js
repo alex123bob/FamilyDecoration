@@ -59,19 +59,36 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 			}
 		}
 		
-		me.refreshGrid = function (bill){
+		me.refreshGrid = function (bill, callback){
 			var grid = me.down('grid'),
 				st = grid.getStore();
 			if (bill) {
 				st.load({
 					params: {
 						'billId': bill.getId()
+					},
+					callback: function (recs, ope, success){
+						if (typeof callback === 'function') {
+							callback(recs, ope, success);
+						}
+						else {
+							// TODO
+						}
 					}
 				});
 			}
 			else {
 				st.removeAll();
 			}
+		};
+		
+		me.focusOnLastRow = function (){
+			var grid = me.down('grid'),
+				view = grid.getView(),
+				st = grid.getStore(),
+				last = st.last();
+			grid.getSelectionModel().select(last);
+			view.focusRow(last, 200);
 		};
 		
 		me.setTotalFee = function (totalFee){
@@ -280,14 +297,23 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								{
 									icon: 'resources/img/delete_for_action_column.png',
 									tooltip: '删除条目',
-									handler: function(grid, rowIndex, colIndex) {
-										var st = grid.getStore(),
-											rec = st.getAt(rowIndex);
+									handler: function(view, rowIndex, colIndex) {
+										var st = view.getStore(),
+											rec = st.getAt(rowIndex),
+											index = st.indexOf(rec);
 										ajaxDel('StatementBillItem', {
 											id: rec.getId()
 										}, function (){
 											showMsg('删除成功！');
-											me.refreshGrid(me.bill);
+											me.refreshGrid(me.bill, function (recs, ope, success){
+												if (success) {
+													var newRec = st.getAt(index);
+													if (newRec) {
+														view.getSelectionModel().select(newRec);
+														view.focusRow(newRec, 200);	
+													}
+												}
+											});
 										})
 									}
 								}

@@ -166,7 +166,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 							if (resourceObj.project && resourceObj.professionType) {
 								ajaxAdd('StatementBill', {
 									projectId: resourceObj.project.getId(),
-									professionType: resourceObj.professionType.get('value')
+									professionType: resourceObj.professionType.get('value'),
+									projectName: resourceObj.project.get('projectName')
 								}, function (obj){
 									var win = Ext.create('FamilyDecoration.view.manuallycheckbill.AddBill', {
 										project: resourceObj.project,

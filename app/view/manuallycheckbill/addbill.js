@@ -155,7 +155,11 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 												Ext.Msg.error('以下几项添加失败：<br />' + failedMembers.join('<br />'));
 											}
 											win.close();
-											billTable.refreshGrid(me.bill);
+											billTable.refreshGrid(me.bill, function (recs, ope, success){
+												if (success) {
+													billTable.focusOnLastRow();
+												}
+											});
 										}
 									}
 									addItems(selBasicItems);
@@ -182,7 +186,9 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 						title: '添加空白项',
 						bill: me.bill,
 						callbackAfterClose: function (){
-							billTable.refreshGrid(me.bill);
+							billTable.refreshGrid(me.bill, function (){
+								billTable.focusOnLastRow();
+							});
 							ajaxGet('StatementBill', 'getTotalFee', {
 								id: me.bill.getId()
 							}, function (obj){
