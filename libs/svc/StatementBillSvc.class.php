@@ -1,7 +1,7 @@
 <?php
 class StatementBillSvc extends BaseSvc
 {
-	private $statusMapping = array('new'=>'新创建','rdyck'=>'待审核','chk'=>'已审核','rbk'=>'打回');
+	private $statusMapping = array('new'=>'未提交','rdyck'=>'待审核','chk'=>'已审核','rbk'=>'打回');
 	private $statusChangingMapping = array(
 			'new->rdyck', //新创建->待审核
 			'rdyck->chk', //待审核->已审核
@@ -12,9 +12,6 @@ class StatementBillSvc extends BaseSvc
 		$q['@id'] = $this->getUUID();
 		$q['@creator'] = $_SESSION['name'];
 		$q['@status'] = 'new';
-		/*new: 新创建,未审核
-		  chk : 已审核
-		  rbk: return back 打回*/
 		return parent::add($q);
 	}
 
@@ -48,6 +45,8 @@ class StatementBillSvc extends BaseSvc
 	}
 	public function get($q){
 		$data = parent::get($q);
+		foreach($data['data'] as $key => $value)
+			$value['statusName'] = $this->statusMapping[$value['status']];
 		$userSvc = parent::getSvc('User');
 		$userSvc->appendRealName($data['data'],'checker');
 		return $data;
