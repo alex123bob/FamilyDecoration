@@ -94,7 +94,7 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 		            					// text: node.get('projectName') + '(' + node.get('projectTime').split(' ')[0] + ')',
 		            					text: me.needStatementBillCount && parseInt(node.get('statementBillCount'), 10) > 0 ? 
 												(node.get('projectName') 
-													+ '&nbsp;<font style="color: blue; text-shadow: #8F7 0.1em 0.1em 0.2em;"><strong>' 
+													+ '&nbsp;<font style="color: orange;"><strong>' 
 													+ renderNumber(node.get('statementBillCount')) 
 													+ '</strong></font>') : 
 												node.get('projectName'),
