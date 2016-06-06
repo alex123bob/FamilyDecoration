@@ -30,22 +30,23 @@ class StatementBillSvc extends BaseSvc
 		$bills = $data['data'];
 		$auditSvc = parent::getSvc('StatementBillAudit');
 		$res = array();
-
-
-		foreach ($bills as $bill) {
-			$statusChange = $bill['status']."->".$q['@status'];
-			if(!isset($this->statusChangingMapping[$statusChange]))
-				throw new Exception("不能由".$this->statusMapping[$bill['status']]."转为".$this->statusMapping[$q['@status']]);
-			$auditRecord = array();
-			$auditRecord['operator'] = $_SESSION['name'];
-			$auditRecord['billId'] = $q['id'];
-			$auditRecord['orignalStatus'] = $bill['status'];
-			$auditRecord['newStatus'] = $q['@status'];
-			$auditRecord['comments'] = isset($q['@comments']) ? $q['@comments'] : "没有评论";
-			$auditSvc->add($auditRecord);
-			$r = parent::update($q);
-			array_push($res, $r);
-		}
+		if(count($bills) > 1)
+			throw new Exception("查到多条记录:".count($bills));
+		if(count($bills) == 0)
+			throw new Exception("查不到记录");
+		$bill = $bills[0];
+		$statusChange = $bill['status']."->".$q['@status'];
+		if(!isset($this->statusChangingMapping[$statusChange]))
+			throw new Exception("不能由".$this->statusMapping[$bill['status']]."转为".$this->statusMapping[$q['@status']]);
+		$auditRecord = array();
+		$auditRecord['operator'] = $_SESSION['name'];
+		$auditRecord['billId'] = $q['id'];
+		$auditRecord['orignalStatus'] = $bill['status'];
+		$auditRecord['newStatus'] = $q['@status'];
+		$auditRecord['comments'] = isset($q['@comments']) ? $q['@comments'] : "没有评论";
+		$auditSvc->add($auditRecord);
+		$r = parent::update($q);
+		array_push($res, $r);
 		return $res;
 	}
 	public function get($q){
