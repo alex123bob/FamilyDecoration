@@ -3,10 +3,10 @@ class StatementBillSvc extends BaseSvc
 {
 	private $statusMapping = array('new'=>'未提交','rdyck'=>'待审核','chk'=>'已审核','rbk'=>'打回');
 	private $statusChangingMapping = array(
-			'new->rdyck', //新创建->待审核
-			'rdyck->chk', //待审核->已审核
-			'rdyck->rbk', //待审核->打回
-			'rbk->rdyck'  //打回->待审核
+			'new->rdyck'=>1, //新创建->待审核
+			'rdyck->chk'=>1, //待审核->已审核
+			'rdyck->rbk'=>1, //待审核->打回
+			'rbk->rdyck'=>1  //打回->待审核
 		);
 	public function add($q){
 		$q['@id'] = $this->getUUID();
@@ -23,21 +23,26 @@ class StatementBillSvc extends BaseSvc
 	}
 
 	public function changeStatus($q){
+		if(!isset($this->statusMapping['@status'])){
+			throw new Exception("未知状态:".$q['@status']);
+		}
 		$data = parent::get($q);
 		$bills = $data['data'];
 		$auditSvc = parent::getSvc('StatementBillAudit');
 		$res = array();
+
+
 		foreach ($bills as $bill) {
 			$statusChange = $bill['status']."->".$q['@status'];
 			if(!isset($this->statusChangingMapping[$statusChange]))
-				throw new Exception("不能".$statusMapping[$bill['status']]."由转为".$statusMapping[$q['@status']]);
+				throw new Exception("不能由".$this->statusMapping[$bill['status']]."转为".$this->statusMapping[$q['@status']]);
 			$auditRecord = array();
 			$auditRecord['operator'] = $_SESSION['name'];
 			$auditRecord['billId'] = $q['id'];
 			$auditRecord['orignalStatus'] = $bill['status'];
 			$auditRecord['newStatus'] = $q['@status'];
 			$auditRecord['comments'] = $q['@comments'];
-			$auditSvc.add($auditRecord);
+			$auditSvc->add($auditRecord);
 			$r = parent::update($q);
 			array_push($res, $r);
 		}
