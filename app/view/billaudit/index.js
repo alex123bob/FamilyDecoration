@@ -129,7 +129,7 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                                             resourceObj.billList.getStore().reload();
                                         }, true);
                                     }
-                                }, window, true);
+                                }, window, false);
                             }
                             else {
                                 showMsg('请选择要退回的账单！');

@@ -9,7 +9,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 		'FamilyDecoration.view.manuallycheckbill.BillTable',
 		'FamilyDecoration.store.ProfessionType',
 		'FamilyDecoration.view.manuallycheckbill.AddBill',
-		'FamilyDecoration.store.StatementBill'
+		'FamilyDecoration.store.StatementBill',
+		'FamilyDecoration.view.manuallycheckbill.BillRecord'
 	],
 	// autoScroll: true,
 	layout: 'hbox',
@@ -342,22 +343,27 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						columns: {
 							items: [
 								{
+									flex: 1,
 									text: '单名',
 									dataIndex: 'billName'
 								},
 								{
+									flex: 1,
 									text: '单值',
 									dataIndex: 'totalFee'
 								},
 								{
+									flex: 1,
 									text: '审核状态',
 									dataIndex: 'statusName'
 								},
 								{
+									flex: 1,
 									text: '审核人',
 									dataIndex: 'checkerRealName'
 								},
 								{
+									flex: 1,
 									text: '是否付款',
 									dataIndex: 'isPaid',
 									renderer: function (val, meta, rec) {
@@ -368,10 +374,26 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 											return '未付款';
 										}
 									}
+								},
+								{
+									xtype: 'actioncolumn',
+									width: 50,
+									items: [
+										{
+											icon: 'resources/img/bill-history.png',
+											tooltip: '查看账单历史',
+											handler: function (grid, rowIndex,colIndex){
+												var rec = grid.getStore().getAt(rowIndex);
+												var win = Ext.create('FamilyDecoration.view.manuallycheckbill.BillRecord', {
+													bill: rec
+												});
+												win.show();
+											}
+										}
+									]
 								}
 							],
 							defaults: {
-								flex: 1,
 								align: 'center'
 							}
 						},
