@@ -38,11 +38,11 @@ class StatementBillSvc extends BaseSvc
 		if(!isset($this->statusChangingMapping[$statusChange]))
 			throw new Exception("不能由".$this->statusMapping[$bill['status']]."转为".$this->statusMapping[$q['@status']]);
 		$auditRecord = array();
-		$auditRecord['operator'] = $_SESSION['name'];
-		$auditRecord['billId'] = $q['id'];
-		$auditRecord['orignalStatus'] = $bill['status'];
-		$auditRecord['newStatus'] = $q['@status'];
-		$auditRecord['comments'] = isset($q['@comments']) ? $q['@comments'] : "没有评论";
+		$auditRecord['@operator'] = $_SESSION['name'];
+		$auditRecord['@billId'] = $q['id'];
+		$auditRecord['@orignalStatus'] = $bill['status'];
+		$auditRecord['@newStatus'] = $q['@status'];
+		$auditRecord['@comments'] = isset($q['@comments']) ? $q['@comments'] : "没有评论";
 		$auditSvc->add($auditRecord);
 		return parent::update($q);
 	}
