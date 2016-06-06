@@ -6,7 +6,8 @@
 	
 	function ErrorHandler($errno, $errstr,$errorFile,$errorLine){
 		//print_r();
-		$result = array("status" => "failing","errMsg" =>"[$errno]:$errstr","file"=>$errorFile,"line"=>$errorLine);
+		$errstr = str_replace("Undefined index:","缺少参数:",$errstr);
+		$result = array("status" => "failing","errMsg" =>"$errstr","file"=>$errorFile,"line"=>$errorLine);
 		echo json_encode($result);
 		die();
 	}
