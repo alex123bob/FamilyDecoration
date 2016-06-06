@@ -342,6 +342,9 @@
             else if (rec.get('cmp') == 'regionmgm-index') {
                 flag = User.isGeneral() ? false : true;
             }
+            else if (rec.get('cmp') == 'checkbillitem-index') {
+                flag = User.isAdmin() ? true : false;
+            }
             else if (rec.get('cmp') == 'billaudit-index') {
                 flag = User.isAdmin() || User.isFinanceManager() || User.isFinanceStaff() ? true : false;
             }
