@@ -38,11 +38,11 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillRecord', {
                     items: [
                         {
                             text: '原状态',
-                            dataIndex: 'orignalStatus'
+                            dataIndex: 'orignalStatusName'
                         },
                         {
                             text: '新状态',
-                            dataIndex: 'newStatus'
+                            dataIndex: 'newStatusName'
                         },
                         {
                             text: '评论',
