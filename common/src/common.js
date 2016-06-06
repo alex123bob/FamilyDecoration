@@ -135,47 +135,16 @@ function ajaxGet (className, actionName, params, callback) {
     }
 }
 
-function ajaxCustomAction (className, actionName, params, conditionParams, callback){
+// isCustomAction: if true, className will be the classical className + actionName. 
+// combined by developer before invoke this function.
+function ajaxUpdate (className, params, conditionParams, callback, isCustomAction){
     if (Ext.isObject(params) && !Ext.Object.isEmpty(params)) {
-        var url = './libs/api.php?action=' + className + '.' + actionName;
-        if (!Ext.isArray(conditionParams)) {
-            conditionParams = [conditionParams];
+        if (isCustomAction == true) {
+            var url = './libs/api.php?action=' + className;
         }
-        for (var pro in params) {
-            if (params.hasOwnProperty(pro)) {
-                var val = params[pro];
-                if (Ext.Array.contains(conditionParams, pro)) {
-                    url += '&' + pro + '=' + val;
-                }
-                else {
-                    url += '&@' + pro + '=' + val;
-                }
-            }
+        else {
+            var url = './libs/api.php?action=' + className + '.update';
         }
-        Ext.Ajax.request({
-            url: url,
-            method: 'POST',
-            callback: function (opts, success, res){
-                if (success) {
-                    var obj = Ext.decode(res.responseText);
-                    if ('successful' == obj.status) {
-                        callback(obj);
-                    }
-                    else {
-                        showMsg(obj.errMsg);
-                    }
-                }
-            }
-        });
-    }
-    else {
-        showMsg('参数不正确！');
-    }
-}
-
-function ajaxUpdate (className, params, conditionParams, callback){
-    if (Ext.isObject(params) && !Ext.Object.isEmpty(params)) {
-        var url = './libs/api.php?action=' + className + '.update';
         if (!Ext.isArray(conditionParams)) {
             conditionParams = [conditionParams];
         }

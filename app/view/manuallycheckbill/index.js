@@ -151,7 +151,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 							if (name == 'addBill') {
 								btn.setDisabled(!(resourceObj.project && resourceObj.professionType));
 							}
-							else if (name == 'editBill' || name == 'deleteBill') {
+							else if (name == 'editBill' || name == 'deleteBill' || name == 'submitBill') {
 								if (rec && (rec.get('status') == 'rdyck' || rec.get('status') == 'chk')) {
 									btn.disable();
 								}
@@ -254,7 +254,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								selModel = resourceObj.billList.getSelectionModel();
 							Ext.Msg.warning('递交后不可再进行修改单据，确定要递交单据吗？', function (btnId){
 								if ('yes' == btnId) {
-									ajaxCustomAction('StatementBill', 'changeStatus', {
+									ajaxUpdate('StatementBill.changeStatus', {
 										id: resourceObj.bill.getId(),
 										status: 'rdyck'
 									}, 'id', function (obj){
@@ -267,7 +267,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 												}
 											}
 										});
-									});
+									}, true);
 								}
 							});
 						}
