@@ -23,7 +23,7 @@ class StatementBillSvc extends BaseSvc
 	}
 
 	public function changeStatus($q){
-		if(!isset($this->statusMapping['@status'])){
+		if(!isset($this->statusMapping[$q['@status']])){
 			throw new Exception("未知状态:".$q['@status']);
 		}
 		$data = parent::get($q);
