@@ -50,11 +50,11 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                         width: '100%',
                         selectionchangeEvent: function (selModel, sels, opts){
                             var rec = sels[0],
-                                    resourceObj = me.getRes();
+                                resourceObj = me.getRes();
+                                rec && resourceObj.passedBillList.getSelectionModel().deselectAll();
                                 resourceObj.billDetailCt.initBtn();
                                 resourceObj.billDetailCt.bill = rec;
                                 resourceObj.billDetailCt.refresh(rec);
-                                resourceObj.passedBillList.getSelectionModel().deselectAll();
                         }
                     },
                     {
@@ -71,11 +71,11 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                         isPassedBillList: true,
                         selectionchangeEvent: function (selModel, sels, opts){
                             var rec = sels[0],
-                                    resourceObj = me.getRes();
-                                resourceObj.billDetailCt.initBtn();
+                                resourceObj = me.getRes();
+                                rec && resourceObj.billList.getSelectionModel().deselectAll();
+                                // resourceObj.billDetailCt.initBtn();
                                 resourceObj.billDetailCt.bill = rec;
                                 resourceObj.billDetailCt.refresh(rec);
-                                resourceObj.billList.getSelectionModel().deselectAll();
                         }
                     }
                 ]
@@ -115,7 +115,25 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                         name: 'returnBill',
                         icon: 'resources/img/returnBill.png',
                         handler: function (){
-                            
+                            var resourceObj = me.getRes();
+                            if (resourceObj.bill) {
+                                Ext.Msg.prompt('退单原因', '请输入退单原因', function (btnId, txt){
+                                    if (btnId == 'ok') {
+                                        ajaxUpdate('StatementBill.changeStatus', {
+                                            id: resourceObj.bill.getId(),
+                                            status: 'rbk',
+                                            comments: txt
+                                        }, 'id', function (obj){
+                                            showMsg('账单已退回！');
+                                            resourceObj.billList.getSelectionModel().deselectAll();
+                                            resourceObj.billList.getStore().reload();
+                                        }, true);
+                                    }
+                                }, window, true);
+                            }
+                            else {
+                                showMsg('请选择要退回的账单！');
+                            }
                         }
                     },
                     {
@@ -124,7 +142,26 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                         name: 'auditPass',
                         icon: 'resources/img/auditPass.png',
                         handler: function (){
-                            
+                            var resourceObj = me.getRes();
+                            if (resourceObj.bill) {
+                                Ext.Msg.warning('确定要将当前账单置为通过吗？', function (btnId){
+                                    if (btnId == 'yes') {
+                                        ajaxUpdate('StatementBill.changeStatus', {
+                                            id: resourceObj.bill.getId(),
+                                            status: 'chk',
+                                            comments: resourceObj.bill.get('billName') + '置为通过'
+                                        }, 'id', function (obj){
+                                            showMsg('账单已置为通过！');
+                                            resourceObj.billList.getSelectionModel().deselectAll();
+                                            resourceObj.billList.getStore().reload();
+                                            resourceObj.passedBillList.getStore().reload();
+                                        }, true);
+                                    }
+                                });
+                            }
+                            else {
+                                showMsg('请选择账单！');
+                            }
                         }
                     },
                     {

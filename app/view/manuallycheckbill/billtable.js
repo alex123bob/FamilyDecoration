@@ -267,6 +267,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 										billId: me.bill.getId()
 									}, 'id', function (obj){
 										me.refreshGrid(me.bill);
+										showMsg('编辑成功！');
 										ajaxGet('StatementBill', 'getTotalFee', {
 											id: me.bill.getId()
 										}, function (obj){
@@ -280,6 +281,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 										id: e.record.getId(),
 										billId: me.bill.getId()
 									}, 'id', function (obj){
+										showMsg('编辑成功！');
 										me.refreshGrid(me.bill);
 									});
 								}

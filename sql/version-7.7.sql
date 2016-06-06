@@ -106,7 +106,8 @@ CREATE TABLE `statement_bill_audit` (
   `newStatus` varchar(50) DEFAULT NULL,
   `isDeleted` varchar(5) DEFAULT NULL,
   `createTime` datetime DEFAULT NULL,
-  `updateTime` datetime DEFAULT NULL
+  `updateTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 SET FOREIGN_KEY_CHECKS = 1;
