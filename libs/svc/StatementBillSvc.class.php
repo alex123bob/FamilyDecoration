@@ -29,7 +29,6 @@ class StatementBillSvc extends BaseSvc
 		$data = parent::get($q);
 		$bills = $data['data'];
 		$auditSvc = parent::getSvc('StatementBillAudit');
-		$res = array();
 		if(count($bills) > 1)
 			throw new Exception("查到多条记录:".count($bills));
 		if(count($bills) == 0)
@@ -45,9 +44,7 @@ class StatementBillSvc extends BaseSvc
 		$auditRecord['newStatus'] = $q['@status'];
 		$auditRecord['comments'] = isset($q['@comments']) ? $q['@comments'] : "没有评论";
 		$auditSvc->add($auditRecord);
-		$r = parent::update($q);
-		array_push($res, $r);
-		return $res;
+		return parent::update($q);
 	}
 	public function get($q){
 		$data = parent::get($q);
