@@ -17,7 +17,7 @@ Ext.define('FamilyDecoration.model.StatementBill', {
 		{name: 'status', type: 'string'}, // 'new', 'rdyck', 'chk','rbk'
 		{name: 'statusName', type: 'string'}, // '新创建', '待审核', '已审核', '打回'
 		{name: 'checker', type: 'string'},
-		{name: 'checkerRealName', type: 'string', mapping: 'realname'},
+		{name: 'checkerRealName', type: 'string'},
 		{name: 'isPaid', type: 'string'},
 		{name: 'professionType', type: 'string'},
 		{name: 'projectId', type: 'string'}

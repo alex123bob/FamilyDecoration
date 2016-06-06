@@ -75,6 +75,7 @@ Ext.define('FamilyDecoration.view.billaudit.BillList', {
                             val += '<strong>工种：</strong> ' + FamilyDecoration.store.WorkCategory.renderer(rec.get('professionType')) + '<br />';
                             val += '<strong>总金额：</strong> ' + rec.get('totalFee') + '<br />';
                             val += '<strong>领款人：</strong> ' + rec.get('payee') + '<br />';
+                            val += '<strong>审核人：</strong> ' + rec.get('checkerRealName') + '<br />';
                             val += '<strong>申领金额：</strong> ' + rec.get('claimAmount') + '<br />';
                             val += '<strong>完成情况：</strong> ' + rec.get('projectProgress') + '<br />';
                             val += '<strong>预算总价：</strong> ' + rec.get('totalFee') + '<br />';
