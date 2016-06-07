@@ -20,9 +20,9 @@ Ext.define('FamilyDecoration.view.billaudit.BillList', {
         
         billSt.load({
             params: {
-                action: 'StatementBill.get',
+                action: 'StatementBill.getByStatus',
                 orderby: 'createTime DESC',
-                status: me.isPassedBillList ? 'chk' : 'rdyck'
+                status: me.isPassedBillList ? 'chk,paid' : 'rdyck'
             }
         });
         
