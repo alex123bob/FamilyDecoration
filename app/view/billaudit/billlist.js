@@ -80,6 +80,7 @@ Ext.define('FamilyDecoration.view.billaudit.BillList', {
                             val += '<strong>完成情况：</strong> ' + rec.get('projectProgress') + '<br />';
                             val += '<strong>预算总价：</strong> ' + rec.get('totalFee') + '<br />';
                             val += '<strong>创建时间：</strong> ' + rec.get('createTime') + '<br />';
+                            val += '<strong>是否付款：</strong> ' + (rec.get('status') == 'paid' ? '已付款' : '未付款') + '<br />';
                             tip.update(val);
                         }
                     }
