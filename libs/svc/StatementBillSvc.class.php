@@ -6,7 +6,8 @@ class StatementBillSvc extends BaseSvc
 			'new->rdyck'=>1, //新创建->待审核
 			'rdyck->chk'=>1, //待审核->已审核
 			'rdyck->rbk'=>1, //待审核->打回
-			'rbk->rdyck'=>1  //打回->待审核
+			'rbk->rdyck'=>1, //打回->待审核
+			'chk->paid'=>1  //已审核->已付款
 		);
 	public function add($q){
 		$q['@id'] = $this->getUUID();
@@ -34,6 +35,8 @@ class StatementBillSvc extends BaseSvc
 		if(count($bills) == 0)
 			throw new Exception("查不到记录");
 		$bill = $bills[0];
+		if($bill['status'] == 'paid')
+			throw new Exception("已付款,无法更改状态.");
 		$statusChange = $bill['status']."->".$q['@status'];
 		if(!isset(self::$statusChangingMapping[$statusChange]))
 			throw new Exception("不能由".self::$statusMapping[$bill['status']]."转为".self::$statusMapping[$q['@status']]);
@@ -45,7 +48,7 @@ class StatementBillSvc extends BaseSvc
 		$auditRecord['@comments'] = isset($q['@comments']) ? $q['@comments'] : "没有评论";
 		$auditSvc->add($auditRecord);
 		$res = parent::update($q);
-		if($q['@status'] == "chk"){
+		if($q['@status'] == "chk" || $q['@status'] == 'rbk'){
 			parent::update(array('id'=>$q['id'],'@checker'=>$_SESSION['name']));
 		}
 		return $res;
