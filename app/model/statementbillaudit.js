@@ -8,6 +8,7 @@ Ext.define('FamilyDecoration.model.StatementBillAudit', {
 		{name: 'updateTime', type: 'string'},
 		{name: 'isDeleted', type: 'string'},
 		{name: 'operator', type: 'string'},
+		{name: 'operatorRealName', type: 'string'},
         {name: 'orignalStatus', type: 'string'},
         {name: 'orignalStatusName', type: 'string'},
         {name: 'newStatus', type: 'string'},

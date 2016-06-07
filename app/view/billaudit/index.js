@@ -73,7 +73,7 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                             var rec = sels[0],
                                 resourceObj = me.getRes();
                                 rec && resourceObj.billList.getSelectionModel().deselectAll();
-                                // resourceObj.billDetailCt.initBtn();
+                                resourceObj.billDetailCt.initBtn();
                                 resourceObj.billDetailCt.bill = rec;
                                 resourceObj.billDetailCt.refresh(rec);
                         }
@@ -104,7 +104,28 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                     for (var btnKey in btns) {
                         if (btns.hasOwnProperty(btnKey)) {
                             var btnEl = btns[btnKey];
-                            btnEl.setDisabled(!resourceObj.bill);
+                            if (btnKey == 'financialPayment') {
+                                if (resourceObj.passedBill) {
+                                    btnEl.setDisabled(!(resourceObj.passedBill.get('status') == 'chk'));
+                                }
+                                else if (resourceObj.bill) {
+                                    btnEl.disable();
+                                }
+                                else {
+                                    btnEl.disable();
+                                }
+                            }
+                            else if (btnKey == 'returnBill' || btnKey == 'auditPass') {
+                                if (resourceObj.bill) {
+                                    btnEl.setDisabled(!(resourceObj.bill.get('status') == 'rdyck'));
+                                }
+                                else if (resourceObj.passedBill) {
+                                    btnEl.disable();
+                                }
+                                else {
+                                    btnEl.disable();
+                                }
+                            }
                         }
                     }
                 },
@@ -170,7 +191,23 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                         name: 'financialPayment',
                         icon: 'resources/img/pay.png',
                         handler: function (){
-                            
+                            Ext.Msg.warning('确定要进行财务付款吗？', function (btnId){
+                                var resourceObj = me.getRes();
+                                if (resourceObj.passedBill) {
+                                    if ('yes' == btnId) {
+                                        ajaxUpdate('StatementBill.changeStatus', {
+                                            status: 'paid',
+                                            id: resourceObj.passedBill.getId(),
+                                            comments: resourceObj.passedBill.get('billName') + '已付款'
+                                        }, 'id', function (obj){
+                                            showMsg('已付款！');
+                                            resourceObj.billList.getSelectionModel().deselectAll();
+                                            resourceObj.billList.getStore().reload();
+                                            resourceObj.passedBillList.getStore().reload();
+                                        }, true);
+                                    }
+                                }
+                            });
                         }
                     }
                 ]
