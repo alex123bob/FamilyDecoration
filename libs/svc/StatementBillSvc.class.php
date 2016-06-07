@@ -44,7 +44,11 @@ class StatementBillSvc extends BaseSvc
 		$auditRecord['@newStatus'] = $q['@status'];
 		$auditRecord['@comments'] = isset($q['@comments']) ? $q['@comments'] : "没有评论";
 		$auditSvc->add($auditRecord);
-		return parent::update($q);
+		$res = parent::update($q);
+		if($q['@status'] == "chk"){
+			parent::update(array('id'=>$q['id'],'@checker'=>$_SESSION['name']));
+		}
+		return $res;
 	}
 	public function get($q){
 		$data = parent::get($q);
