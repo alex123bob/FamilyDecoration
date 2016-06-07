@@ -4,6 +4,7 @@ class BaseSvc{
 
 	public $tableName="";
 	public $fields = "";
+	public $appendWhere="";
 	/*
 	xxx=value 表示xxx字段严格匹配
 	_xxx=value 表示xxx字段 like 模糊匹配
@@ -113,14 +114,13 @@ class BaseSvc{
 	?action=getNameAndPhone&xxx=xxxx&ddd=xxxx
 
 	*/
-	public function get($q,$appendWhere=''){
-		return $this->_get($q,false,$appendWhere);
+	public function get($q){
+		return $this->_get($q,false);
 	}
-	public function getCount($q,$appendWhere=''){
+	public function getCount($q){
 		return $this->_get($q,true,$appendWhere);
 	}
-
-	private function _get($q,$onlyCount,$appendWhere = ""){
+	private function _get($q,$onlyCount){
 		global $TableMapping;
 		global $mysql;
 		$whereSql = " where 1 = 1 ";
@@ -130,11 +130,11 @@ class BaseSvc{
 		$where = $this->parseWhereSql('',$q,$params);
 		$limit = $this->parseLimitSql($q);
 		$orderBy = $this->parseOrderBySql($q);	
-		$count = $mysql->DBGetAsOneArray("select count(1) as count from ".$this->tableName.$where.$appendWhere,$params);
+		$count = $mysql->DBGetAsOneArray("select count(1) as count from ".$this->tableName.$where.$this->appendWhere,$params);
 		if($onlyCount)
 			return array('status'=>'successful', 'count'=>$count[0],'errMsg' => '');
 		$select = $this->parseSelectSql($q);
-		$row = $mysql->DBGetAsMap($select.$where.$appendWhere.$orderBy.$limit,$params);
+		$row = $mysql->DBGetAsMap($select.$where.$this->appendWhere.$orderBy.$limit,$params);
 		return array('total'=>$count[0],'data'=>$row);
 	}
 
