@@ -14,6 +14,8 @@ class StatementBillAuditSvc extends BaseSvc
 			if(isset($v['newStatus']))
 				$v['newStatusName'] = StatementBillSvc::$statusMapping[$v['newStatus']];
 		}
+		$u = $this->getSvc('User');
+		$u->appendRealName($res['data'],'operator');
 		return $res;
 	}
 }
