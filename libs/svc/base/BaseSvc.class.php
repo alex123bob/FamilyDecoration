@@ -113,13 +113,14 @@ class BaseSvc{
 	?action=getNameAndPhone&xxx=xxxx&ddd=xxxx
 
 	*/
-	public function get($q){
-		return $this->_get($q,false);
+	public function get($q,$appendWhere=''){
+		return $this->_get($q,false,$appendWhere);
 	}
-	public function getCount($q){
-		return $this->_get($q,true);
+	public function getCount($q,$appendWhere=''){
+		return $this->_get($q,true,$appendWhere);
 	}
-	private function _get($q,$onlyCount){
+
+	private function _get($q,$onlyCount,$appendWhere = ""){
 		global $TableMapping;
 		global $mysql;
 		$whereSql = " where 1 = 1 ";
@@ -128,12 +129,12 @@ class BaseSvc{
 		$params = array();
 		$where = $this->parseWhereSql('',$q,$params);
 		$limit = $this->parseLimitSql($q);
-		$orderBy = $this->parseOrderBySql($q);		
-		$count = $mysql->DBGetAsOneArray("select count(1) as count from ".$this->tableName.$where,$params);
+		$orderBy = $this->parseOrderBySql($q);	
+		$count = $mysql->DBGetAsOneArray("select count(1) as count from ".$this->tableName.$where.$appendWhere,$params);
 		if($onlyCount)
 			return array('status'=>'successful', 'count'=>$count[0],'errMsg' => '');
 		$select = $this->parseSelectSql($q);
-		$row = $mysql->DBGetAsMap($select.$where.$orderBy.$limit,$params);
+		$row = $mysql->DBGetAsMap($select.$where.$appendWhere.$orderBy.$limit,$params);
 		return array('total'=>$count[0],'data'=>$row);
 	}
 

@@ -53,13 +53,22 @@ class StatementBillSvc extends BaseSvc
 		}
 		return $res;
 	}
-	public function get($q){
-		$data = parent::get($q);
+	public function get($q,$appendWhere = ''){
+		$data = parent::get($q,$appendWhere);
 		foreach($data['data'] as $key => &$value)
 			$value['statusName'] = self::$statusMapping[$value['status']];
 		$userSvc = parent::getSvc('User');
 		$userSvc->appendRealName($data['data'],'checker');
 		return $data;
+	}
+
+	public function getByStatus($q){
+		$appendWhere = '';
+		if(contains($q['status'],',')){
+			$appendWhere = " and status in ('".str_replace(",","','",$q['status'])."' ) ";
+			unset($q['status']);
+		}
+		return $this->get($q,$appendWhere);
 	}
 
 	public function syncTotalFee($q){
