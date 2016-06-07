@@ -51,7 +51,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillRecord', {
                         },
                         {
                             text: '经办人',
-                            dataIndex: 'operator',
+                            dataIndex: 'operatorRealName',
                             flex: 0.8
                         },
                         {
