@@ -152,6 +152,12 @@
                         icon: 'resources/img/plan.png'
                     },
                     {
+                        name: "计划生成",
+                        cmp: isDebug() ? 'planmaking-index' : '',
+                        leaf: true,
+                        icon: 'resources/img/plan_new.png'
+                    },
+                    {
                         name: '主材订购单',
                         cmp: 'mainmaterial-index',
                         leaf: true,
@@ -292,6 +298,9 @@
                 flag = true;
             }
             else if (rec.get('cmp') == 'plan-index') {
+                flag = true;
+            }
+            else if (rec.get('cmp') == 'planmaking-index') {
                 flag = true;
             }
             else if (rec.get('cmp') == 'mainmaterial-index') {
