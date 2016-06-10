@@ -51,8 +51,8 @@ $totalBillCount = 0;
 foreach($billItems as $value) {
 	$data = array();
 	$data[0] = $value['serialNumber'];
-	$data[1] = $value['billItemName'];
-	$data[2] = $value['unit'];
+	$data[1] = str2GBK($value['billItemName']);
+	$data[2] = str2GBK($value['unit']);
 	$data[3] = $value['amount'];
 	$data[4] = $value['unitPrice'];
 	$data[5] = $value['subtotal'];
