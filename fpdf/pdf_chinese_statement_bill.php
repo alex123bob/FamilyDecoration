@@ -6,36 +6,36 @@ class PDF extends PDF_Chinese{
 	
 		global $name,$phone,$times,$address,$totalFee,$finishPercentage,$requiredFee,$cny; 
 		
-		$this->SetFont('GB','B',20); 
+		$this->SetFont('GB','',13); 
 		$this->SetLeftMargin(15);
 		$this->SetRightMargin(15);
 		//$this->SetTopMargin(15);
 		$this->SetAutoPageBreak(true,10);
 		//$this->SetTopMargin(5);
 		//$this->Image('../resources/img/logo.jpg',60,4,30,30); //增加一张图片，文件名为sight.jpg 
-		$this->Image('../resources/img/logo.jpg',30,4,22.5,22.5); //增加一张图片，文件名为sight.jpg 
-		$this->Text(65,20,'佳诚装饰');
-		$this->Text(65,30,'单项工程施工工程款领取审批单');
+		$this->Image('../resources/img/logo.jpg',50,4,22.5,22.5); //增加一张图片，文件名为sight.jpg 
+		$this->Text(80,15,'佳诚装饰');
+		$this->Text(80,22,'单项工程施工工程款领取审批单');
 		$this->SetFont('GB','',8); 
 		$this->Text(185,30,'公司联');
 		$this->Ln(5); //换行
 		$this->SetFont('GB','',10); 
-		$this->Text(20,40,'领款人:');
-		$this->Text(37,40,$name);
-		$this->Text(20,48,'联系电话:');
-		$this->Text(37,48,$phone);
-		$this->Text(20,56,'领款次数:');
-		$this->Text(37,56,'times'.$times);
-		$this->Text(100,40,'工程地址:');
-		$this->Text(117,40,$address);
-		$this->Text(100,48,'总金额:');
-		$this->Text(117,48,$totalFee.' (元)');
-		$this->Text(160,48,'申领金额:');
-		$this->Text(177,48,$requiredFee.' (元)');
-		$this->Text(100,56,'完成情况:');
-		$this->Text(117,56,$finishPercentage);
-		$this->Text(160,56,'大写:');
-		$this->Text(177,56,$cny);
+		$this->Text(35,40,'领款人:');
+		$this->Text(47,40,$name);
+		$this->Text(35,48,'联系电话:');
+		$this->Text(51,48,$phone);
+		$this->Text(35,56,'领款次数:');
+		$this->Text(51,56,$times);
+		$this->Text(80,40,'工程地址:');
+		$this->Text(97,40,$address);
+		$this->Text(80,48,'总金额:');
+		$this->Text(93,48,$totalFee.' (元)');
+		$this->Text(80,56,'完成情况:');
+		$this->Text(97,56,$finishPercentage);
+		$this->Text(130,48,'申领金额:');
+		$this->Text(147,48,$requiredFee.' (元)');
+		$this->Text(130,56,'大写:');
+		$this->Text(140,56,$cny);
 		
 
 		//$this->Line(10,50,280,50);
@@ -45,7 +45,7 @@ class PDF extends PDF_Chinese{
 		$this->SetY(-10); 
 		global $GfontSize;
 		$this->SetFont('GB','',$GfontSize); 
-		$this->Cell(170,10,'第'.$this->PageNo().'页  共__totalPage__页',0,0,'R'); 
+		$this->Cell(120,10,'第'.$this->PageNo().'页  共__totalPage__页',0,0,'R'); 
 		//$this->Cell(220,10,date("Y-m-d"),0,0,'R'); 
 	}
 	// 输出一行表格
