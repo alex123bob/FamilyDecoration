@@ -152,7 +152,7 @@
                         icon: 'resources/img/plan.png'
                     },
                     {
-                        name: "计划生成",
+                        name: "计划生成 <font color='green'><strong>新</strong></font>",
                         cmp: isDebug() ? 'planmaking-index' : '',
                         leaf: true,
                         icon: 'resources/img/plan_new.png'
