@@ -11,10 +11,12 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.Application": "../../app/application.js",
   "FamilyDecoration.Common": "../../common/src/common.js",
   "FamilyDecoration.controller.BasicItem": "../../app/controller/basicitem.js",
+  "FamilyDecoration.controller.BillAudit": "../../app/controller/billaudit.js",
   "FamilyDecoration.controller.Budget": "../../app/controller/budget.js",
   "FamilyDecoration.controller.Bulletin": "../../app/controller/bulletin.js",
   "FamilyDecoration.controller.Chart": "../../app/controller/chart.js",
   "FamilyDecoration.controller.Chat": "../../app/controller/chat.js",
+  "FamilyDecoration.controller.CheckBillItem": "../../app/controller/checkbillitem.js",
   "FamilyDecoration.controller.CheckBusiness": "../../app/controller/checkbusiness.js",
   "FamilyDecoration.controller.CheckLog": "../../app/controller/checklog.js",
   "FamilyDecoration.controller.CheckSignBusiness": "../../app/controller/checksignbusiness.js",
@@ -31,6 +33,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.MyTask": "../../app/controller/mytask.js",
   "FamilyDecoration.controller.Personnel": "../../app/controller/personnel.js",
   "FamilyDecoration.controller.Plan": "../../app/controller/plan.js",
+  "FamilyDecoration.controller.PlanMaking": "../../app/controller/planmaking.js",
   "FamilyDecoration.controller.Progress": "../../app/controller/progress.js",
   "FamilyDecoration.controller.ProjectCategory": "../../app/controller/projectcategory.js",
   "FamilyDecoration.controller.RegionMgm": "../../app/controller/regionmgm.js",
@@ -63,12 +66,18 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.model.PersonnelIndividual": "../../app/model/personnelindividual.js",
   "FamilyDecoration.model.PersonnelProject": "../../app/model/personnelproject.js",
   "FamilyDecoration.model.Plan": "../../app/model/plan.js",
+  "FamilyDecoration.model.PlanMaking": "../../app/model/planmaking.js",
   "FamilyDecoration.model.PotentialBusiness": "../../app/model/potentialbusiness.js",
+  "FamilyDecoration.model.ProfessionType": "../../app/model/professiontype.js",
   "FamilyDecoration.model.Progress": "../../app/model/progress.js",
   "FamilyDecoration.model.Project": "../../app/model/project.js",
   "FamilyDecoration.model.ProjectCategory": "../../app/model/projectcategory.js",
   "FamilyDecoration.model.RegionList": "../../app/model/regionlist.js",
   "FamilyDecoration.model.ScrutinizeList": "../../app/model/scrutinizelist.js",
+  "FamilyDecoration.model.StatementBasicItem": "../../app/model/statementbasicitem.js",
+  "FamilyDecoration.model.StatementBill": "../../app/model/statementbill.js",
+  "FamilyDecoration.model.StatementBillAudit": "../../app/model/statementbillaudit.js",
+  "FamilyDecoration.model.StatementBillItem": "../../app/model/statementbillitem.js",
   "FamilyDecoration.model.StatisticTree": "../../app/model/statistictree.js",
   "FamilyDecoration.model.TaskList": "../../app/model/tasklist.js",
   "FamilyDecoration.model.TaskScrutinize": "../../app/model/taskscrutinize.js",
@@ -100,11 +109,17 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.store.PersonnelIndividual": "../../app/store/personnelindividual.js",
   "FamilyDecoration.store.PersonnelProject": "../../app/store/personnelproject.js",
   "FamilyDecoration.store.PlanCategory": "../../app/store/plancategory.js",
+  "FamilyDecoration.store.PlanMaking": "../../app/store/planmaking.js",
   "FamilyDecoration.store.PotentialBusiness": "../../app/store/potentialbusiness.js",
+  "FamilyDecoration.store.ProfessionType": "../../app/store/professiontype.js",
   "FamilyDecoration.store.Project": "../../app/store/project.js",
   "FamilyDecoration.store.ProjectCategory": "../../app/store/projectcategory.js",
   "FamilyDecoration.store.RegionList": "../../app/store/regionlist.js",
   "FamilyDecoration.store.ScrutinizeList": "../../app/store/scrutinizelist.js",
+  "FamilyDecoration.store.StatementBasicItem": "../../app/store/statementbasicitem.js",
+  "FamilyDecoration.store.StatementBill": "../../app/store/statementbill.js",
+  "FamilyDecoration.store.StatementBillAudit": "../../app/store/statementbillaudit.js",
+  "FamilyDecoration.store.StatementBillItem": "../../app/store/statementbillitem.js",
   "FamilyDecoration.store.StatisticTree": "../../app/store/statistictree.js",
   "FamilyDecoration.store.TaskList": "../../app/store/tasklist.js",
   "FamilyDecoration.store.TaskScrutinize": "../../app/store/taskscrutinize.js",
@@ -116,6 +131,8 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.basicitem.AddBasicSubItem": "../../app/view/basicitem/addbasicsubitem.js",
   "FamilyDecoration.view.basicitem.Index": "../../app/view/basicitem/index.js",
   "FamilyDecoration.view.basicitem.SubItemTable": "../../app/view/basicitem/subitemtable.js",
+  "FamilyDecoration.view.billaudit.BillList": "../../app/view/billaudit/billlist.js",
+  "FamilyDecoration.view.billaudit.Index": "../../app/view/billaudit/index.js",
   "FamilyDecoration.view.budget.AddBasicItem": "../../app/view/budget/addbasicitem.js",
   "FamilyDecoration.view.budget.AddBlankItem": "../../app/view/budget/addblankitem.js",
   "FamilyDecoration.view.budget.AddExistedItem": "../../app/view/budget/addexisteditem.js",
@@ -132,6 +149,9 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.chart.Index": "../../app/view/chart/index.js",
   "FamilyDecoration.view.chart.UploadForm": "../../app/view/chart/uploadform.js",
   "FamilyDecoration.view.chat.Index": "../../app/view/chat/index.js",
+  "FamilyDecoration.view.checkbillitem.AddCheckBillItem": "../../app/view/checkbillitem/addcheckbillitem.js",
+  "FamilyDecoration.view.checkbillitem.Index": "../../app/view/checkbillitem/index.js",
+  "FamilyDecoration.view.checkbillitem.PickBasicItemWithSameType": "../../app/view/checkbillitem/pickbasicitemwithsametype.js",
   "FamilyDecoration.view.checkbusiness.Index": "../../app/view/checkbusiness/index.js",
   "FamilyDecoration.view.checklog.Index": "../../app/view/checklog/index.js",
   "FamilyDecoration.view.checklog.MemberList": "../../app/view/checklog/memberlist.js",
@@ -148,7 +168,10 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.mail.NewMail": "../../app/view/mail/newmail.js",
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": "../../app/view/mainmaterial/editmainmaterial.js",
   "FamilyDecoration.view.mainmaterial.Index": "../../app/view/mainmaterial/index.js",
+  "FamilyDecoration.view.manuallycheckbill.AddBill": "../../app/view/manuallycheckbill/addbill.js",
+  "FamilyDecoration.view.manuallycheckbill.BillRecord": "../../app/view/manuallycheckbill/billrecord.js",
   "FamilyDecoration.view.manuallycheckbill.BillTable": "../../app/view/manuallycheckbill/billtable.js",
+  "FamilyDecoration.view.manuallycheckbill.CustomizedBillItem": "../../app/view/manuallycheckbill/customizedbillitem.js",
   "FamilyDecoration.view.manuallycheckbill.Index": "../../app/view/manuallycheckbill/index.js",
   "FamilyDecoration.view.msg.Index": "../../app/view/msg/index.js",
   "FamilyDecoration.view.mybusiness.EditClient": "../../app/view/mybusiness/editclient.js",
@@ -169,6 +192,8 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.personnel.StatisticTree": "../../app/view/personnel/statistictree.js",
   "FamilyDecoration.view.plan.EditPlan": "../../app/view/plan/editplan.js",
   "FamilyDecoration.view.plan.Index": "../../app/view/plan/index.js",
+  "FamilyDecoration.view.planmaking.Index": "../../app/view/planmaking/index.js",
+  "FamilyDecoration.view.planmaking.PlanTable": "../../app/view/planmaking/plantable.js",
   "FamilyDecoration.view.progress.EditProgress": "../../app/view/progress/editprogress.js",
   "FamilyDecoration.view.progress.EditProject": "../../app/view/progress/editproject.js",
   "FamilyDecoration.view.progress.Index": "../../app/view/progress/index.js",
@@ -1046,10 +1071,12 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.Application": [],
   "FamilyDecoration.Common": [],
   "FamilyDecoration.controller.BasicItem": [],
+  "FamilyDecoration.controller.BillAudit": [],
   "FamilyDecoration.controller.Budget": [],
   "FamilyDecoration.controller.Bulletin": [],
   "FamilyDecoration.controller.Chart": [],
   "FamilyDecoration.controller.Chat": [],
+  "FamilyDecoration.controller.CheckBillItem": [],
   "FamilyDecoration.controller.CheckBusiness": [],
   "FamilyDecoration.controller.CheckLog": [],
   "FamilyDecoration.controller.CheckSignBusiness": [],
@@ -1066,6 +1093,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.MyTask": [],
   "FamilyDecoration.controller.Personnel": [],
   "FamilyDecoration.controller.Plan": [],
+  "FamilyDecoration.controller.PlanMaking": [],
   "FamilyDecoration.controller.Progress": [],
   "FamilyDecoration.controller.ProjectCategory": [],
   "FamilyDecoration.controller.RegionMgm": [],
@@ -1098,12 +1126,18 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.model.PersonnelIndividual": [],
   "FamilyDecoration.model.PersonnelProject": [],
   "FamilyDecoration.model.Plan": [],
+  "FamilyDecoration.model.PlanMaking": [],
   "FamilyDecoration.model.PotentialBusiness": [],
+  "FamilyDecoration.model.ProfessionType": [],
   "FamilyDecoration.model.Progress": [],
   "FamilyDecoration.model.Project": [],
   "FamilyDecoration.model.ProjectCategory": [],
   "FamilyDecoration.model.RegionList": [],
   "FamilyDecoration.model.ScrutinizeList": [],
+  "FamilyDecoration.model.StatementBasicItem": [],
+  "FamilyDecoration.model.StatementBill": [],
+  "FamilyDecoration.model.StatementBillAudit": [],
+  "FamilyDecoration.model.StatementBillItem": [],
   "FamilyDecoration.model.StatisticTree": [],
   "FamilyDecoration.model.TaskList": [],
   "FamilyDecoration.model.TaskScrutinize": [],
@@ -1135,11 +1169,17 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.store.PersonnelIndividual": [],
   "FamilyDecoration.store.PersonnelProject": [],
   "FamilyDecoration.store.PlanCategory": [],
+  "FamilyDecoration.store.PlanMaking": [],
   "FamilyDecoration.store.PotentialBusiness": [],
+  "FamilyDecoration.store.ProfessionType": [],
   "FamilyDecoration.store.Project": [],
   "FamilyDecoration.store.ProjectCategory": [],
   "FamilyDecoration.store.RegionList": [],
   "FamilyDecoration.store.ScrutinizeList": [],
+  "FamilyDecoration.store.StatementBasicItem": [],
+  "FamilyDecoration.store.StatementBill": [],
+  "FamilyDecoration.store.StatementBillAudit": [],
+  "FamilyDecoration.store.StatementBillItem": [],
   "FamilyDecoration.store.StatisticTree": [],
   "FamilyDecoration.store.TaskList": [],
   "FamilyDecoration.store.TaskScrutinize": [],
@@ -1151,6 +1191,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.basicitem.AddBasicSubItem": [],
   "FamilyDecoration.view.basicitem.Index": [],
   "FamilyDecoration.view.basicitem.SubItemTable": [],
+  "FamilyDecoration.view.billaudit.BillList": [],
+  "FamilyDecoration.view.billaudit.Index": [],
   "FamilyDecoration.view.budget.AddBasicItem": [],
   "FamilyDecoration.view.budget.AddBlankItem": [],
   "FamilyDecoration.view.budget.AddExistedItem": [],
@@ -1167,6 +1209,9 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.chart.Index": [],
   "FamilyDecoration.view.chart.UploadForm": [],
   "FamilyDecoration.view.chat.Index": [],
+  "FamilyDecoration.view.checkbillitem.AddCheckBillItem": [],
+  "FamilyDecoration.view.checkbillitem.Index": [],
+  "FamilyDecoration.view.checkbillitem.PickBasicItemWithSameType": [],
   "FamilyDecoration.view.checkbusiness.Index": [],
   "FamilyDecoration.view.checklog.Index": [],
   "FamilyDecoration.view.checklog.MemberList": [],
@@ -1183,7 +1228,10 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.mail.NewMail": [],
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": [],
   "FamilyDecoration.view.mainmaterial.Index": [],
+  "FamilyDecoration.view.manuallycheckbill.AddBill": [],
+  "FamilyDecoration.view.manuallycheckbill.BillRecord": [],
   "FamilyDecoration.view.manuallycheckbill.BillTable": [],
+  "FamilyDecoration.view.manuallycheckbill.CustomizedBillItem": [],
   "FamilyDecoration.view.manuallycheckbill.Index": [],
   "FamilyDecoration.view.msg.Index": [],
   "FamilyDecoration.view.mybusiness.EditClient": [],
@@ -1204,6 +1252,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.personnel.StatisticTree": [],
   "FamilyDecoration.view.plan.EditPlan": [],
   "FamilyDecoration.view.plan.Index": [],
+  "FamilyDecoration.view.planmaking.Index": [],
+  "FamilyDecoration.view.planmaking.PlanTable": [],
   "FamilyDecoration.view.progress.EditProgress": [],
   "FamilyDecoration.view.progress.EditProject": [],
   "FamilyDecoration.view.progress.Index": [],
@@ -2247,10 +2297,12 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.Application": [],
   "FamilyDecoration.Common": [],
   "FamilyDecoration.controller.BasicItem": [],
+  "FamilyDecoration.controller.BillAudit": [],
   "FamilyDecoration.controller.Budget": [],
   "FamilyDecoration.controller.Bulletin": [],
   "FamilyDecoration.controller.Chart": [],
   "FamilyDecoration.controller.Chat": [],
+  "FamilyDecoration.controller.CheckBillItem": [],
   "FamilyDecoration.controller.CheckBusiness": [],
   "FamilyDecoration.controller.CheckLog": [],
   "FamilyDecoration.controller.CheckSignBusiness": [],
@@ -2267,6 +2319,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.MyTask": [],
   "FamilyDecoration.controller.Personnel": [],
   "FamilyDecoration.controller.Plan": [],
+  "FamilyDecoration.controller.PlanMaking": [],
   "FamilyDecoration.controller.Progress": [],
   "FamilyDecoration.controller.ProjectCategory": [],
   "FamilyDecoration.controller.RegionMgm": [],
@@ -2299,12 +2352,18 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.model.PersonnelIndividual": [],
   "FamilyDecoration.model.PersonnelProject": [],
   "FamilyDecoration.model.Plan": [],
+  "FamilyDecoration.model.PlanMaking": [],
   "FamilyDecoration.model.PotentialBusiness": [],
+  "FamilyDecoration.model.ProfessionType": [],
   "FamilyDecoration.model.Progress": [],
   "FamilyDecoration.model.Project": [],
   "FamilyDecoration.model.ProjectCategory": [],
   "FamilyDecoration.model.RegionList": [],
   "FamilyDecoration.model.ScrutinizeList": [],
+  "FamilyDecoration.model.StatementBasicItem": [],
+  "FamilyDecoration.model.StatementBill": [],
+  "FamilyDecoration.model.StatementBillAudit": [],
+  "FamilyDecoration.model.StatementBillItem": [],
   "FamilyDecoration.model.StatisticTree": [],
   "FamilyDecoration.model.TaskList": [],
   "FamilyDecoration.model.TaskScrutinize": [],
@@ -2336,11 +2395,17 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.store.PersonnelIndividual": [],
   "FamilyDecoration.store.PersonnelProject": [],
   "FamilyDecoration.store.PlanCategory": [],
+  "FamilyDecoration.store.PlanMaking": [],
   "FamilyDecoration.store.PotentialBusiness": [],
+  "FamilyDecoration.store.ProfessionType": [],
   "FamilyDecoration.store.Project": [],
   "FamilyDecoration.store.ProjectCategory": [],
   "FamilyDecoration.store.RegionList": [],
   "FamilyDecoration.store.ScrutinizeList": [],
+  "FamilyDecoration.store.StatementBasicItem": [],
+  "FamilyDecoration.store.StatementBill": [],
+  "FamilyDecoration.store.StatementBillAudit": [],
+  "FamilyDecoration.store.StatementBillItem": [],
   "FamilyDecoration.store.StatisticTree": [],
   "FamilyDecoration.store.TaskList": [],
   "FamilyDecoration.store.TaskScrutinize": [],
@@ -2359,6 +2424,12 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.basicitem.SubItemTable": [
     "widget.basicitem-subitemtable"
+  ],
+  "FamilyDecoration.view.billaudit.BillList": [
+    "widget.billaudit-billlist"
+  ],
+  "FamilyDecoration.view.billaudit.Index": [
+    "widget.billaudit-index"
   ],
   "FamilyDecoration.view.budget.AddBasicItem": [
     "widget.budget-addbasicitem"
@@ -2401,6 +2472,15 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.chat.Index": [
     "widget.chat-index"
+  ],
+  "FamilyDecoration.view.checkbillitem.AddCheckBillItem": [
+    "widget.checkbillitem-addcheckbillitem"
+  ],
+  "FamilyDecoration.view.checkbillitem.Index": [
+    "widget.checkbillitem-index"
+  ],
+  "FamilyDecoration.view.checkbillitem.PickBasicItemWithSameType": [
+    "widget.checkbillitem-pickbasicitemwithsametype"
   ],
   "FamilyDecoration.view.checkbusiness.Index": [
     "widget.checkbusiness-index"
@@ -2450,8 +2530,17 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.mainmaterial.Index": [
     "widget.mainmaterial-index"
   ],
+  "FamilyDecoration.view.manuallycheckbill.AddBill": [
+    "widget.manuallycheckbill-addbill"
+  ],
+  "FamilyDecoration.view.manuallycheckbill.BillRecord": [
+    "widget.manuallycheckbill-billrecord"
+  ],
   "FamilyDecoration.view.manuallycheckbill.BillTable": [
     "widget.manuallycheckbill-billtable"
+  ],
+  "FamilyDecoration.view.manuallycheckbill.CustomizedBillItem": [
+    "widget.manuallycheckbill-customizedbillitem"
   ],
   "FamilyDecoration.view.manuallycheckbill.Index": [
     "widget.manuallycheckbill-index"
@@ -2512,6 +2601,12 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.plan.Index": [
     "widget.plan-index"
+  ],
+  "FamilyDecoration.view.planmaking.Index": [
+    "widget.planmaking-index"
+  ],
+  "FamilyDecoration.view.planmaking.PlanTable": [
+    "widget.planmaking-plantable"
   ],
   "FamilyDecoration.view.progress.EditProgress": [
     "widget.progress-editprogress"

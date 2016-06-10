@@ -406,7 +406,7 @@ Ext.define('FamilyDecoration.view.Viewport', {
             refreshEmailAndMsg(3000);
 
             // use sina channel to push message which is more like the long connection websocket
-            if (sae.Channel && privateChannel) {
+            if (typeof sae != 'undefined' && sae.Channel && privateChannel) {
                 privateChannel = new sae.Channel(privateChannel);
                 privateChannel.onopen = function(){
                     console.log('privateChannel' + " opened");
