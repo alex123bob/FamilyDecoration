@@ -1,6 +1,8 @@
 <?php
 	header("Content-type: text/html; charset=utf-8");
 	header("message-queue: 1");
+	define('__ROOT__', dirname(dirname(__FILE__))); 
+
 	if (!session_id()) session_start();
 	// error_reporting(E_ALL ^ E_DEPRECATED);
 	date_default_timezone_set('Asia/Shanghai');

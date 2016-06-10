@@ -6,6 +6,7 @@
 		"statement_bill_item"=>array('id','billId','serialNumber','billItemName','unit','amount','unitPrice','subtotal','referenceItems','professionType','checkedNumber'),
 		"statement_basic_item"=>array('id','serialNumber','billItemName','unit','amount','unitPrice','subtotal','referenceItems','professionType'),
 		"statement_bill_audit"=>array('id','billId','operator','orignalStatus','newStatus','comments'),
+		'project'=>array('projectId','projectName'),
 		"user"=>array('name','phone','mail','projectId','realname','password','level','priority','profileImage','priorityTitle')
 	);
 
