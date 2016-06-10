@@ -23,7 +23,7 @@ class PDF extends PDF_Chinese{
 		$this->Text(20,40,'领款人:');
 		$this->Text(37,40,$name);
 		$this->Text(20,48,'联系电话:');
-		$this->Text(37,48,'phone'.$phone);
+		$this->Text(37,48,$phone);
 		$this->Text(20,56,'领款次数:');
 		$this->Text(37,56,'times'.$times);
 		$this->Text(100,40,'工程地址:');
