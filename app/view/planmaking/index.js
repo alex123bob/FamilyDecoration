@@ -35,10 +35,12 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 						selectionchange: function (selModel, sels, opts) {
 							var rec = sels[0],
 								projectPlanPane = Ext.getCmp('panel-projectPlan'),
+								planTable = projectPlanPane.down('planmaking-plantable'),
 								btns = projectPlanPane.getButtons();
 							if (rec && rec.get('projectName')) {
 								btns.addPlan.enable();
 								btns.backToProject.enable();
+								planTable.rerenderGridByProject(rec);
 							}
 							else {
 								btns.addPlan.disable();
@@ -58,9 +60,6 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 				id: 'panel-projectPlan',
 				name: 'panel-projectPlan',
 				layout: 'fit',
-				refresh: function (rec) {
-					
-				},
 				getButtons: function (){
 					var panel = this;
 					return {
