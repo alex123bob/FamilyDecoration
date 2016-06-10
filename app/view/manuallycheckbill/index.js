@@ -277,13 +277,34 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						text: '预览单据',
 						name: 'previewBill',
 						disabled: true,
-						icon: 'resources/img/previewbill.png'
+						icon: 'resources/img/previewbill.png',
+						handler: function (){
+							var resourceObj = me.getRes(),
+								bill = resourceObj.bill;
+							if (bill) {
+								var win = window.open('./fpdf/statement_bill.php?id=' + bill.getId(),'打印','height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+							}
+							else {
+								showMsg('没有账单！');
+							}
+						}
 					},
 					{
 						text: '打印单据',
 						name: 'printBill',
 						disabled: true,
-						icon: 'resources/img/printbill.png'
+						icon: 'resources/img/printbill.png',
+						handler: function (){
+							var resourceObj = me.getRes(),
+								bill = resourceObj.bill;
+							if (bill) {
+								var win = window.open('./fpdf/statement_bill.php?id=' + bill.getId(),'打印','height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+								win.print();
+							}
+							else {
+								showMsg('没有账单！');
+							}
+						}
 					}
 				],
 				layout: 'vbox',
@@ -294,7 +315,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						width: '100%',
 						isPreview: true,
 						id: 'billtable-previewTable',
-						name: 'billtable-previewTable'
+						name: 'billtable-previewTable',
+						html: '<iframe id="exportBill"  src="javascript:void(0);" style="display:none"></iframe>'
 					},
 					{
 						xtype: 'gridpanel',
