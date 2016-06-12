@@ -47,6 +47,7 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 								btns.editPlan.disable();
 								btns.deletePlan.disable();
 								btns.backToProject.disable();
+								planTable.rerenderGridByProject();
 							}
 
 						}

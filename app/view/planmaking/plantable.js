@@ -3,7 +3,7 @@ Ext.define('FamilyDecoration.view.planmaking.PlanTable', {
     alias: 'widget.planmaking-plantable',
     layout: 'vbox',
     requires: [
-        
+        'FamilyDecoration.store.PlanMaking'
     ],
 
     initComponent: function () {
@@ -25,89 +25,92 @@ Ext.define('FamilyDecoration.view.planmaking.PlanTable', {
             return months <= 0 ? 0 : months;
         }
 
-        me.rerenderGridByProject = function (project){
-            var period = project.get('period'),
-                projectTime = period.split(':'),
-                grid = me.down('grid'),
-                startTime, endTime;
-            if (projectTime.length == 2) {
-                Ext.suspendLayouts();
-                startTime = Ext.Date.parse(projectTime[0], 'Y-m-d');
-                endTime = Ext.Date.parse(projectTime[1], 'Y-m-d');
-                grid.reconfigure(false, [
+        me.removeGridColumnAndData = function (grid) {
+            Ext.suspendLayouts();
+            grid.reconfigure(false, []);
+            Ext.resumeLayouts(true);
+        }
+
+        me.rerenderGridByProject = function (project) {
+            var grid = me.down('grid'),
+                st = Ext.create('FamilyDecoration.store.PlanMaking');
+            if (project) {
+                var period = project.get('period'),
+                    projectTime = period.split(':'),
+                    startTime, endTime, daysInBetween;
+                configuredColumns = [
                     {
                         text: '序号',
                         dataIndex: 'serialNumber',
-                        flex: 1,
-                        align: 'center'
+                        width: 60,
+                        minWidth: 50,
+                        align: 'center',
+                        sortable: false,
+                        menuDisabled: true
                     },
                     {
                         text: '项目',
                         dataIndex: 'parentItemName',
-                        flex: 1,
-                        align: 'center'
+                        width: 70,
+                        minWidth: 50,
+                        align: 'center',
+                        sortable: false,
+                        menuDisabled: true
                     },
                     {
                         text: '子项目',
                         dataIndex: 'itemName',
-                        flex: 1,
-                        align: 'center'
-                    },
-                    {
-                        text: '4月',
-                        columns: [
-                            {
-                                text: '1日',
-                                flex: 1,
-                                align: 'center'
-                            },
-                            {
-                                text: '2日',
-                                flex: 1,
-                                align: 'center'
-                            },
-                            {
-                                text: '3日',
-                                flex: 1,
-                                align: 'center'
-                            },
-                            {
-                                text: '4日',
-                                flex: 1,
-                                align: 'center'
-                            },
-                            {
-                                text: '5日',
-                                flex: 1,
-                                align: 'center'
-                            },
-                            {
-                                text: '6日',
-                                flex: 1,
-                                align: 'center'
-                            },
-                            {
-                                text: '7日',
-                                flex: 1,
-                                align: 'center'
-                            },
-                            {
-                                text: '8日',
-                                flex: 1,
-                                align: 'center'
-                            },
-                            {
-                                text: '9日',
-                                flex: 1,
-                                align: 'center'
-                            }
-                        ]
+                        width: 70,
+                        minWidth: 60,
+                        align: 'center',
+                        sortable: false,
+                        menuDisabled: true
                     }
-                ]);
-                Ext.resumeLayouts(true);  
+                ];
+                if (projectTime.length == 2 && isDate(projectTime)) {
+                    Ext.suspendLayouts();
+                    startTime = Ext.Date.parse(projectTime[0], 'Y-m-d');
+                    endTime = Ext.Date.parse(projectTime[1], 'Y-m-d');
+
+                    for (var d = new Date(startTime); d.getTime() <= endTime.getTime(); d.setDate(d.getDate() + 1)) {
+                        var index;
+                        if (d.getDate() == 1 || d.getTime() === startTime.getTime()) {
+                            index = configuredColumns.push({
+                                text: (d.getMonth() + 1) + '月',
+                                columns: []
+                            });
+                        }
+                        else {
+                            index = configuredColumns.length;
+                        }
+                        configuredColumns[index - 1].columns.push({
+                            text: d.getDate() + '日',
+                            flex: 1,
+                            align: 'center',
+                            dataIndex: 'startTime',
+                            sortable: false,
+                            curTime: Ext.Date.format(d, 'Y-m-d'),
+                            renderer: function (val, meta, rec, rowIndex, colIndex, st, view){
+                                var startTime = Ext.Date.parse(val, 'Y-m-d'),
+                                    endTime = Ext.Date.parse(rec.get('endTime'), 'Y-m-d'),
+                                    curTime = Ext.Date.parse(meta.column.curTime, 'Y-m-d');
+                                if (curTime.getTime() >= startTime.getTime() && curTime.getTime() <= endTime.getTime()) {
+                                    meta.style = 'background: grey;';
+                                }
+                                return '';
+                            }
+                        });
+                    }
+                    grid.reconfigure(st, configuredColumns);
+                    Ext.resumeLayouts(true);
+                }
+                else {
+                    showMsg('时间格式不对!');
+                    me.removeGridColumnAndData(grid);
+                }
             }
             else {
-                showMsg('时间格式不对!');
+                me.removeGridColumnAndData(grid);
             }
         }
 
@@ -148,6 +151,7 @@ Ext.define('FamilyDecoration.view.planmaking.PlanTable', {
                 width: '100%',
                 flex: 0.5,
                 layout: 'hbox',
+                name: 'fieldcontainer-plantableHeader',
                 defaults: {
                     xtype: 'displayfield'
                 },
@@ -179,11 +183,13 @@ Ext.define('FamilyDecoration.view.planmaking.PlanTable', {
                 width: '100%',
                 autoScroll: true,
                 flex: 10,
+                cls: 'gridpanel-planmaking',
                 columns: [
                 ],
                 viewConfig: {
                     emptyText: '请选择项目加载对应计划表',
-                    deferEmptyText: false
+                    deferEmptyText: false,
+                    forceFit: true
                 }
             },
             {
@@ -191,6 +197,7 @@ Ext.define('FamilyDecoration.view.planmaking.PlanTable', {
                 width: '100%',
                 flex: 0.5,
                 layout: 'hbox',
+                name: 'fieldcontainer-plantableFooter',
                 defaults: {
                     xtype: 'displayfield',
                     labelWidth: 70

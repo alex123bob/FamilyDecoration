@@ -927,6 +927,66 @@ function isDebug() {
     return '#debug' == hashTag;
 }
 
+// get how many days in one specific month of a year.
+function daysInMonth(month,year) {
+    return new Date(year, month, 0).getDate();
+}
+
+// check if an array is full of Date or one variable is a Date
+function isDate (d){
+    var flag = true;
+    if (d.constructor === Array) {
+        for (var i = 0; i < d.length; i++) {
+            var element = d[i];
+            if (element.constructor === Date) {
+                continue;
+            }
+            else if (typeof element === 'string') {
+                var elementD = Ext.Date.parse(element, 'Y-m-d');
+                if (elementD && elementD.constructor === Date) {
+                    continue;
+                }
+                else {
+                    flag = false;
+                    break;
+                }
+            }
+            else {
+                flag = false;
+                break;
+            }
+        }
+    }
+    else {
+        if (d.constructor === Date) {
+            flag = true;
+        }
+        else if (typeof d === 'string') {
+            var dd = Ext.Date.parse(d, 'Y-m-d');
+            if (dd && dd.constructor === Date) {
+                flag = true;
+            }
+            else {
+                flag = false;
+            }
+        }
+        else {
+            flag = false;
+        }
+    }
+    return flag;
+}
+
+// get how many days between two given dates.
+function daysBetweenTwoDates (first, second){
+    if (isDate([first, second])) {
+        return Math.abs(first - second) / 1000 / 60 / 60 / 24;
+    }
+    else {
+        return false;
+    }
+}
+
 window.onresize = function () {
     var w = Ext.query('.x-window');
     Ext.each(w, function (item) {
