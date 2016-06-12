@@ -16,6 +16,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 
 	project: undefined,
 	professionType: undefined,
+	closable: false,
 
 	bill: undefined, // bill indicates the statementBill attached to the window.
 	isEdit: false, // this one indicates the mode of editing
@@ -193,21 +194,31 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 				text: '添加预付',
 				icon: 'resources/img/addprepay.png',
 				handler: function () {
-					var billTable = me.down('manuallycheckbill-billtable');
-					var win = Ext.create('FamilyDecoration.view.manuallycheckbill.CustomizedBillItem', {
-						title: '添加预付项',
-						bill: me.bill,
-						isForPrePaidItem: true,
-						callbackAfterClose: function (){
-							billTable.refreshGrid(me.bill);
-							ajaxGet('StatementBill', 'getTotalFee', {
-								id: me.bill.getId()
-							}, function (obj){
-								billTable.setTotalFee(obj.totalFee);
+					Ext.Msg.warning('添加预付项，此账单将置为预付单，<br />预付款项将在之后对应账单的总金额中扣除。<br />确定要添加吗？', function (btnId){
+						if ('yes' == btnId) {
+							var billTable = me.down('manuallycheckbill-billtable');
+							var win = Ext.create('FamilyDecoration.view.manuallycheckbill.CustomizedBillItem', {
+								title: '添加预付项',
+								bill: me.bill,
+								isForPrePaidItem: true,
+								callbackAfterClose: function (){
+									billTable.refreshGrid(me.bill);
+									ajaxGet('StatementBill', 'getTotalFee', {
+										id: me.bill.getId()
+									}, function (obj){
+										billTable.setTotalFee(obj.totalFee);
+										ajaxUpdate('StatementBill', {
+											isPrePaid: true,
+											id: me.bill.getId()
+										}, 'id', function (obj){
+											showMsg('已置为预付单！');
+										});
+									});
+								}
 							});
+							win.show();
 						}
 					});
-					win.show();
 				}
 			}
 		];
