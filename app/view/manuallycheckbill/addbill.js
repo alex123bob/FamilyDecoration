@@ -180,11 +180,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 							billTable.refreshGrid(me.bill, function (){
 								billTable.focusOnLastRow();
 							});
-							ajaxGet('StatementBill', 'getTotalFee', {
-								id: me.bill.getId()
-							}, function (obj){
-								billTable.setTotalFee(obj.totalFee);
-							});
+							billTable.setTotalFee();
 						}
 					});
 					win.show();
@@ -203,16 +199,13 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 								isForPrePaidItem: true,
 								callbackAfterClose: function (){
 									billTable.refreshGrid(me.bill);
-									ajaxGet('StatementBill', 'getTotalFee', {
+									billTable.setTotalFee();
+									
+									ajaxUpdate('StatementBill', {
+										billType: 'ppd',
 										id: me.bill.getId()
-									}, function (obj){
-										billTable.setTotalFee(obj.totalFee);
-										ajaxUpdate('StatementBill', {
-											billType: 'ppd',
-											id: me.bill.getId()
-										}, 'id', function (obj){
-											showMsg('已置为预付单！');
-										});
+									}, 'id', function (obj){
+										showMsg('已置为预付单！');
 									});
 								}
 							});
