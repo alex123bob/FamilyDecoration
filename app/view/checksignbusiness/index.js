@@ -20,7 +20,7 @@ Ext.define('FamilyDecoration.view.checksignbusiness.Index', {
 			height: '100%',
 			id: 'gridpanel-designStaff',
 			name: 'gridpanel-designStaff',
-			flex: 2,
+			flex: 1,
 			hidden: me.designer ? true : false,
 			columns: [{
 				text: '姓名',

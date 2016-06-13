@@ -31,7 +31,7 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 
 		me.items = [{
 			xtype: 'gridpanel',
-			flex: 3,
+			flex: 1.8,
 			height: '100%',
 			title: '详细地址',
 			hideHeaders: true,
