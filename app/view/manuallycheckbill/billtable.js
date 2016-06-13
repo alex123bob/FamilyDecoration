@@ -8,6 +8,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 	header: false,
 	isPreview: false,
 	isAudit: false,
+	hasPrePaidBill: false, // if current bill has its prePaid deposit bill or not. default false.
 	
 	project: undefined,
 	professionType: undefined,
@@ -18,7 +19,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 	initComponent: function (){
 		var me = this,
 			previewMode = me.isPreview,
-			auditMode = me.isAudit;
+			auditMode = me.isAudit,
+			hasPrePaidBill = me.hasPrePaidBill;
 			
 		me.getValues = function (){
 			var form = me.down('form'),
@@ -36,7 +38,28 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 		me.refresh = function (bill){
 			me.refreshForm(bill);
 			me.refreshGrid(bill);
+			me.refreshPrePaidItems(bill);
 		};
+
+		me.refreshPrePaidItems = function (bill){
+			var form = me.down('form'),
+				remainingTotalFeeField = form.down('[name="remainingTotalFee"]'),
+				prePaidFeeField = form.down('[name="prePaidFee"]');
+
+			if (bill) {
+				remainingTotalFeeField
+					.setValue(bill.get('remainingTotalFee'))
+					.setVisible(bill.get('hasPrePaidBill') == 'true');
+
+				prePaidFeeField
+					.setValue(bill.get('prePaidFee'))
+					.setVisible(bill.get('hasPrePaidBill') == 'true');
+			}
+			else {
+				remainingTotalFeeField.setValue('').hide();
+				prePaidFeeField.setValue('').hide();
+			}
+		}
 		
 		me.refreshForm = function (bill){
 			var form = me.down('form'),
@@ -237,6 +260,24 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								height: '100%',
 								name: 'projectProgress',
 								readOnly: previewMode ? true : false
+							},
+							{
+								xtype: 'textfield',
+								fieldLabel: '剩余总金额',
+								flex: 1,
+								height: '100%',
+								name: 'remainingTotalFee',
+								readOnly: true,
+								hidden: !hasPrePaidBill
+							},
+							{
+								xtype: 'textfield',
+								fieldLabel: '预付款',
+								flex: 1,
+								height: '100%',
+								name: 'prePaidFee',
+								readOnly: true,
+								hidden: !hasPrePaidBill
 							}
 						]
 					},

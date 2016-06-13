@@ -208,7 +208,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 									}, function (obj){
 										billTable.setTotalFee(obj.totalFee);
 										ajaxUpdate('StatementBill', {
-											isPrePaid: true,
+											billType: 'ppd',
 											id: me.bill.getId()
 										}, 'id', function (obj){
 											showMsg('已置为预付单！');

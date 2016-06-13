@@ -19,6 +19,16 @@ Ext.define('FamilyDecoration.model.StatementBill', {
 		{name: 'checker', type: 'string'},
 		{name: 'checkerRealName', type: 'string'},
 		{name: 'isPaid', type: 'string'},
+		// billType: ppd->prepaid deposit预付款,
+		// billType: reg->regular bill普通账单
+		// billType: qgd->quality guarantee deposit质量保证金
+		{name: 'billType', type: 'string'}, 
+
+		// this three fields got from dynamically operation.
+		{name: 'hasPrePaidBill', type: 'string'},
+		{name: 'remainingTotalFee', type: 'string'},
+		{name: 'prePaidFee', type: 'string'},
+		
 		{name: 'professionType', type: 'string'},
 		{name: 'projectId', type: 'string'}
 	]

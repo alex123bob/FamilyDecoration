@@ -178,7 +178,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								ajaxAdd('StatementBill', {
 									projectId: resourceObj.project.getId(),
 									professionType: resourceObj.professionType.get('value'),
-									projectName: resourceObj.project.get('projectName')
+									projectName: resourceObj.project.get('projectName'),
+									billType: 'reg'
 								}, function (obj){
 									var win = Ext.create('FamilyDecoration.view.manuallycheckbill.AddBill', {
 										project: resourceObj.project,
@@ -428,6 +429,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 									resourceObj = me.getRes();
 								resourceObj.billDetailPanel.bill = rec;
 								resourceObj.billDetailPanel.refresh(rec);
+								resourceObj.billDetailPanel.hasPrePaidBill = (rec && rec.get('hasPrePaidBill') == 'true');
 								resourceObj.billCt.initBtn(rec);
 							}
 						}

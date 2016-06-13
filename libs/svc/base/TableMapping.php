@@ -2,7 +2,7 @@
 	//createTime,updateTime,isDeleted 不用写
 	$TableMapping = array(
 		"profession_type"=>array('id','name','value','cname'),
-		"statement_bill"=>array('id','creator','billName','billValue','status','checker','isPaid','payee','projectId','projectName','phoneNumber','totalFee','claimAmount','payedTimes','projectProgress','professionType'),
+		"statement_bill"=>array('id','creator','billName','billValue','status','checker','isPaid','billType','payee','projectId','projectName','phoneNumber','totalFee','claimAmount','payedTimes','projectProgress','professionType'),
 		"statement_bill_item"=>array('id','billId','serialNumber','billItemName','unit','amount','unitPrice','subtotal','referenceItems','professionType','checkedNumber'),
 		"statement_basic_item"=>array('id','serialNumber','billItemName','unit','amount','unitPrice','subtotal','referenceItems','professionType'),
 		"statement_bill_audit"=>array('id','billId','operator','orignalStatus','newStatus','comments'),
