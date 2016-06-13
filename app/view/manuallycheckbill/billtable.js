@@ -116,10 +116,14 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 			view.focusRow(last, 200);
 		};
 		
-		me.setTotalFee = function (totalFee){
+		me.setTotalFee = function (){
 			var form = me.down('form'),
 				totalFeeField = form.query('[name="totalFee"]')[0];
-			totalFeeField.setValue(totalFee);
+			ajaxGet('StatementBill', 'getTotalFee', {
+				id: me.bill.getId()
+			}, function (obj){
+				totalFeeField.setValue(obj.totalFee);
+			});
 		}
 		
 		// there is no need to invoke this functionality coz we put all calculation in the back-end.
@@ -309,11 +313,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 									}, 'id', function (obj){
 										me.refreshGrid(me.bill);
 										showMsg('编辑成功！');
-										ajaxGet('StatementBill', 'getTotalFee', {
-											id: me.bill.getId()
-										}, function (obj){
-											me.setTotalFee(obj.totalFee);
-										});
+										me.setTotalFee()
 									});
 								}
 								else if (e.field == 'checkedNumber') {
@@ -361,6 +361,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 											id: rec.getId()
 										}, function (){
 											showMsg('删除成功！');
+											me.setTotalFee();
 											me.refreshGrid(me.bill, function (recs, ope, success){
 												if (success) {
 													var newRec = st.getAt(index);
