@@ -68,6 +68,9 @@ $lineHeight = $before;
 $pdf->Cell(10,5,'','L','','L');
 $pdf->Cell(175,5,'','R','','L');
 $pdf->ln();
+$pdf->Cell(10,5,'','L','','L');
+$pdf->Cell(175,5,'','R','','L');
+$pdf->ln();
 
 $pdf->Cell(10,5,'','L','','L');
 $pdf->Cell(115,5,'´óÐ´½ð¶î: '.str2GBK(cny($totalBillCount)),'','','L');
