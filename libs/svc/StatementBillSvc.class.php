@@ -72,8 +72,9 @@ class StatementBillSvc extends BaseSvc
 			$map2[$key] = $value;
 		}
 
+		//print_r($data['data']);
 		foreach ($data['data'] as &$value) {
-			if(!isset($value['billType']) || $value['billType']!='ppd')
+			if(!isset($value['billType']) || $value['billType']!='reg')
 				continue;
 			$key = $value['projectId'].$value['payee'].$value['professionType'];
 			if(isset($map2[$key])){
