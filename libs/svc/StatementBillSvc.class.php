@@ -1,6 +1,7 @@
 <?php
 class StatementBillSvc extends BaseSvc
 {
+	public static $billType = array('ppd'=>'预付款','reg'=>'普通账单','qgd'=>'质量保证金');
 	public static $statusMapping = array('new'=>'未提交','rdyck'=>'待审核','chk'=>'已审核','rbk'=>'打回','paid'=>'已付款');
 	public static $statusChangingMapping = array(
 			'new->rdyck'=>1, //新创建->待审核
@@ -59,6 +60,32 @@ class StatementBillSvc extends BaseSvc
 			$value['statusName'] = self::$statusMapping[$value['status']];
 		$userSvc = parent::getSvc('User');
 		$userSvc->appendRealName($data['data'],'checker');
+
+		//查预付款
+		global $TableMapping;
+		global $mysql;
+		$sql = 'select count(*) as count,count(totalFee) as totalPreFee,projectId,payee,professionType from statement_bill where billType = \'ppd\' group by projectId,payee,professionType;';
+		$rows = $mysql->DBGetAsMap($sql);
+		$map2 = array();
+		foreach ($rows as $value) {
+			$key = $value['projectId'].$value['payee'].$value['professionType'];
+			$map2[$key] = $value;
+		}
+
+		foreach ($data['data'] as &$value) {
+			if(!isset($value['billType']) || $value['billType']!='ppd')
+				continue;
+			$key = $value['projectId'].$value['payee'].$value['professionType'];
+			if(isset($map2[$key])){
+				$value['hasPrePaidBill'] = 'true';
+				$value['remainingTotalFee'] = $value['totalFee'] - $map2[$key]['totalPreFee'];
+				$value['prePaidFee'] = $map2[$key]['totalPreFee'];
+			}else{
+				$value['hasPrePaidBill'] = 'false';
+				$value['remainingTotalFee'] = '';
+				$value['prePaidFee'] = '';
+			}
+		}
 		return $data;
 	}
 

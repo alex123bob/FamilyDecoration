@@ -134,6 +134,8 @@ class BaseSvc{
 		if($onlyCount)
 			return array('status'=>'successful', 'count'=>$count[0],'errMsg' => '');
 		$select = $this->parseSelectSql($q);
+		//echo $select.$where.$this->appendWhere.$orderBy.$limit;
+		//print_r($params);
 		$row = $mysql->DBGetAsMap($select.$where.$this->appendWhere.$orderBy.$limit,$params);
 		return array('total'=>$count[0],'data'=>$row);
 	}
