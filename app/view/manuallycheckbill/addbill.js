@@ -240,6 +240,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 			},
 			{
 				text: '取消',
+				hidden: me.isEdit,
 				handler: function () {
 					operationBeforeClose();
 				}
