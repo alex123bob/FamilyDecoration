@@ -56,35 +56,37 @@ class StatementBillSvc extends BaseSvc
 	}
 	public function get($q){
 		$data = parent::get($q);
-		foreach($data['data'] as $key => &$value)
+		foreach($data['data'] as $key => &$value){
 			$value['statusName'] = self::$statusMapping[$value['status']];
+		}
 		$userSvc = parent::getSvc('User');
 		$userSvc->appendRealName($data['data'],'checker');
 
 		//查预付款
 		global $TableMapping;
 		global $mysql;
-		$sql = 'select count(*) as count,count(totalFee) as totalPreFee,projectId,payee,professionType from statement_bill where billType = \'ppd\' group by projectId,payee,professionType;';
+		$sql = 'select count(*) as count,sum(totalFee) as totalPreFee,projectId,payee,professionType from statement_bill where billType = \'ppd\' group by projectId,payee,professionType;';
 		$rows = $mysql->DBGetAsMap($sql);
 		$map2 = array();
-		foreach ($rows as $value) {
-			$key = $value['projectId'].$value['payee'].$value['professionType'];
-			$map2[$key] = $value;
+		foreach ($rows as $item) {
+			$combinedkey = $item['projectId'].'-'.$item['payee'].'-'.$item['professionType'];
+			$map2[$combinedkey] = $item;
 		}
 
-		//print_r($data['data']);
-		foreach ($data['data'] as &$value) {
-			if(!isset($value['billType']) || $value['billType']!='reg')
+		foreach ($data['data'] as &$item) {
+			if($item['billType']!='reg'){
+				$item['billName'] = $item['billName']."(".self::$billType[$item['billType']].")";
 				continue;
-			$key = $value['projectId'].$value['payee'].$value['professionType'];
+			}
+			$key = $item['projectId'].'-'.$item['payee'].'-'.$item['professionType'];
 			if(isset($map2[$key])){
-				$value['hasPrePaidBill'] = 'true';
-				$value['remainingTotalFee'] = $value['totalFee'] - $map2[$key]['totalPreFee'];
-				$value['prePaidFee'] = $map2[$key]['totalPreFee'];
+				$item['hasPrePaidBill'] = 'true';
+				$item['remainingTotalFee'] = $item['totalFee'] - $map2[$key]['totalPreFee'];
+				$item['prePaidFee'] = $map2[$key]['totalPreFee'];
 			}else{
-				$value['hasPrePaidBill'] = 'false';
-				$value['remainingTotalFee'] = '';
-				$value['prePaidFee'] = '';
+				$item['hasPrePaidBill'] = 'false';
+				$item['remainingTotalFee'] = '';
+				$item['prePaidFee'] = '';
 			}
 		}
 		return $data;
