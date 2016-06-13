@@ -25,15 +25,15 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 
 	initComponent: function () {
 		var me = this;
-		
+
 		if (me.isEdit) {
 			me.title = '编辑单据';
 		}
-		
-		function operationBeforeClose (){
-			var warnMsg = me.isEdit ? 
-						'编辑模式下取消将导致单据表头更改的信息无法保存<br />确定要取消吗？' 
-						: '取消会将当前单据所有内容删除，<br />确定要取消吗？';
+
+		function operationBeforeClose() {
+			var warnMsg = me.isEdit ?
+				'编辑模式下取消将导致单据表头更改的信息无法保存<br />确定要取消吗？'
+				: '取消会将当前单据所有内容删除，<br />确定要取消吗？';
 			Ext.Msg.warning(warnMsg, function (btnId) {
 				if ('yes' == btnId) {
 					if (me.isEdit) {
@@ -42,7 +42,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 					else {
 						ajaxDel('StatementBill', {
 							id: me.bill.getId()
-						}, function (obj){
+						}, function (obj) {
 							showMsg('单据已删除！');
 							me.close();
 							me.callbackAfterClose();
@@ -50,6 +50,27 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 					}
 				}
 			});
+		}
+
+		me.getButtons = function () {
+			return {
+				addBillItemBtn: me.down('[name="addBillItemBtn"]'),
+				addBlankItemBtn: me.down('[name="addBlankItemBtn"]'),
+				addPrePaidItemBtn: me.down('[name="addPrePaidItemBtn"]')
+			};
+		}
+
+		me.refreshBtn = function () {
+			var btns = me.getButtons();
+			for (var key in btns) {
+				if (btns.hasOwnProperty(key)) {
+					var btn = btns[key];
+					btn.setDisabled(
+						(me.bill.get('billType') == 'ppd')
+						|| (me.bill.get('billType') == 'qgd')
+					);
+				}
+			}
 		}
 
 		me.items = [
@@ -64,6 +85,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 		me.tbar = [
 			{
 				text: '添加小项',
+				name: 'addBillItemBtn',
 				icon: 'resources/img/addsmallitem.png',
 				handler: function () {
 					var win = Ext.create('Ext.window.Window', {
@@ -125,14 +147,14 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 										obj.billId = me.bill.getId();
 										arr[index] = obj;
 									});
-									function addItems (arr){
+									function addItems(arr) {
 										var func = arguments.callee;
 										if (arr.length > 0) {
 											var item = arr[0];
-											ajaxAdd('StatementBillItem', item, function (obj){
+											ajaxAdd('StatementBillItem', item, function (obj) {
 												arr.splice(0, 1);
 												func(arr);
-											}, function (obj){
+											}, function (obj) {
 												failedMembers.push(obj.data.billItemName);
 												arr.splice(0, 1);
 												func(arr);
@@ -146,7 +168,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 												Ext.Msg.error('以下几项添加失败：<br />' + failedMembers.join('<br />'));
 											}
 											win.close();
-											billTable.refreshGrid(me.bill, function (recs, ope, success){
+											billTable.refreshGrid(me.bill, function (recs, ope, success) {
 												if (success) {
 													billTable.focusOnLastRow();
 												}
@@ -170,14 +192,15 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 			},
 			{
 				text: '添加空白项',
+				name: 'addBlankItemBtn',
 				icon: 'resources/img/addblankitem.png',
 				handler: function () {
 					var billTable = me.down('manuallycheckbill-billtable');
 					var win = Ext.create('FamilyDecoration.view.manuallycheckbill.CustomizedBillItem', {
 						title: '添加空白项',
 						bill: me.bill,
-						callbackAfterClose: function (){
-							billTable.refreshGrid(me.bill, function (){
+						callbackAfterClose: function () {
+							billTable.refreshGrid(me.bill, function () {
 								billTable.focusOnLastRow();
 							});
 							billTable.setTotalFee();
@@ -188,24 +211,27 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 			},
 			{
 				text: '添加预付',
+				name: 'addPrePaidItemBtn',
 				icon: 'resources/img/addprepay.png',
 				handler: function () {
-					Ext.Msg.warning('添加预付项，此账单将置为预付单，<br />预付款项将在之后对应账单的总金额中扣除。<br />确定要添加吗？', function (btnId){
+					Ext.Msg.warning('添加预付项，此账单将置为预付单，<br />预付款项将在之后对应账单的总金额中扣除。<br />确定要添加吗？', function (btnId) {
 						if ('yes' == btnId) {
 							var billTable = me.down('manuallycheckbill-billtable');
 							var win = Ext.create('FamilyDecoration.view.manuallycheckbill.CustomizedBillItem', {
 								title: '添加预付项',
 								bill: me.bill,
 								isForPrePaidItem: true,
-								callbackAfterClose: function (){
+								callbackAfterClose: function () {
 									billTable.refreshGrid(me.bill);
 									billTable.setTotalFee();
-									
+
 									ajaxUpdate('StatementBill', {
 										billType: 'ppd',
 										id: me.bill.getId()
-									}, 'id', function (obj){
+									}, 'id', function (obj) {
 										showMsg('已置为预付单！');
+										me.bill.set('billType', 'ppd');
+										me.refreshBtn();
 									});
 								}
 							});
@@ -224,7 +250,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 					Ext.apply(result, {
 						id: me.bill.getId()
 					});
-					ajaxUpdate('StatementBill', result, 'id', function (obj){
+					ajaxUpdate('StatementBill', result, 'id', function (obj) {
 						showMsg('单据已保存！');
 						me.close();
 						me.callbackAfterClose();
@@ -239,10 +265,13 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 				}
 			}
 		];
-		
+
 		me.listeners = {
-			beforeclose: function (win, opts){
+			beforeclose: function (win, opts) {
 				// operationBeforeClose();
+			},
+			show: function (win) {
+				win.refreshBtn();
 			}
 		};
 

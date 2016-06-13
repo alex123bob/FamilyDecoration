@@ -20,7 +20,15 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 		var me = this,
 			previewMode = me.isPreview,
 			auditMode = me.isAudit,
-			hasPrePaidBill = me.hasPrePaidBill;
+			hasPrePaidBill = me.hasPrePaidBill,
+			isRegularBill;
+		
+		if (me.bill) {
+			isRegularBill = (me.bill.get('billType') == 'reg');
+		}
+		else {
+			isRegularBill = undefined;
+		}
 			
 		me.getValues = function (){
 			var form = me.down('form'),
@@ -401,10 +409,10 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 							text: '数量',
 							dataIndex: 'amount',
 							flex: 1,
-							editor: !previewMode ? {
+							editor: !previewMode ? (isRegularBill ? {
 				                xtype: 'textfield',
 				                allowBlank: false
-				            } : false,
+				            } : false) : false,
 						},
 						{
 							text: '审核数量',
