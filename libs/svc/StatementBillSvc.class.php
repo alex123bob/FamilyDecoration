@@ -14,6 +14,11 @@ class StatementBillSvc extends BaseSvc
 		$q['@id'] = $this->getUUID();
 		$q['@creator'] = $_SESSION['name'];
 		$q['@status'] = 'new';
+		notNullCheck($q,'@billType');
+		if($q['@billType'] == 'ppd'){
+			//预付款 总金额就是领取金额
+			$q['@claimAmount'] = $q['@totalFee'];
+		}
 		return parent::add($q);
 	}
 
