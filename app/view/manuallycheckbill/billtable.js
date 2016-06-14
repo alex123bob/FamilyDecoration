@@ -54,7 +54,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 				remainingTotalFeeField = form.down('[name="remainingTotalFee"]'),
 				prePaidFeeField = form.down('[name="prePaidFee"]');
 
-			if (bill) {
+			if (bill && previewMode) {
 				remainingTotalFeeField
 					.setValue(bill.get('remainingTotalFee'))
 					.setVisible(bill.get('hasPrePaidBill') == 'true');
@@ -126,13 +126,15 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 		
 		me.setTotalFee = function (){
 			var form = me.down('form'),
-				totalFeeField = form.query('[name="totalFee"]')[0];
+				totalFeeField = form.query('[name="totalFee"]')[0],
+				claimAmountField = form.query('[name="claimAmount"]')[0];
 			ajaxGet('StatementBill', 'getTotalFee', {
 				id: me.bill.getId()
 			}, function (obj){
 				totalFeeField.setValue(obj.totalFee);
+				!isRegularBill && claimAmountField.setValue(obj.totalFee);
 			});
-		}
+		};
 		
 		// there is no need to invoke this functionality coz we put all calculation in the back-end.
 		// once we click confirm button to add billItems, all items are written into database with attached billID.
@@ -243,7 +245,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								flex: 1,
 								height: '100%',
 								name: 'claimAmount',
-								readOnly: previewMode ? true : false
+								readOnly: previewMode || !isRegularBill ? true : false
 							}
 						]
 					},
@@ -280,7 +282,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								height: '100%',
 								name: 'remainingTotalFee',
 								readOnly: true,
-								hidden: !hasPrePaidBill
+								hidden: !hasPrePaidBill ? true : (previewMode ? false : true)
 							},
 							{
 								xtype: 'textfield',
@@ -289,7 +291,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								height: '100%',
 								name: 'prePaidFee',
 								readOnly: true,
-								hidden: !hasPrePaidBill
+								hidden: !hasPrePaidBill ? true : (previewMode ? false : true)
 							}
 						]
 					},
@@ -334,12 +336,23 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 										me.refreshGrid(me.bill);
 									});
 								}
+								else if (e.field == 'unitPrice') {
+									ajaxUpdate('StatementBillItem', {
+										unitPrice: e.record.get('unitPrice'),
+										id: e.record.getId(),
+										billId: me.bill.getId()
+									}, 'id', function (obj){
+										me.refreshGrid(me.bill);
+										showMsg('编辑成功！');
+										me.setTotalFee()
+									});
+								}
 								
 								Ext.resumeLayouts();
 							},
 							validateedit: function (editor, e, opts){
 								var rec = e.record;
-								if (e.field == 'amount' || e.field == 'checkedNumber') {
+								if (e.field == 'amount' || e.field == 'checkedNumber' || e.field == 'unitPrice') {
 									if (isNaN(e.value) || !/^-?\d+(\.\d+)?$/.test(e.value) ){
 										return false;
 									}
@@ -354,7 +367,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 				columns: {
 					items: [
 						{
-							hidden: previewMode ? true : false,
+							hidden: previewMode || !isRegularBill ? true : false,
 							xtype: 'actioncolumn',
 							width: 30,
 							items: [
@@ -427,7 +440,11 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 						{
 							text: '单价(元)',
 							dataIndex: 'unitPrice',
-							flex: 1
+							flex: 1,
+							editor: !isRegularBill && !previewMode ? {
+								xtype: 'textfield',
+								allowBlank: false
+							} : false
 						},
 						{
 							text: '小计',

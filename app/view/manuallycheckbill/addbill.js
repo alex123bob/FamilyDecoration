@@ -61,14 +61,24 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 		}
 
 		me.refreshBtn = function () {
-			var btns = me.getButtons();
+			var btns = me.getButtons(),
+				billType = me.bill.get('billType');
 			for (var key in btns) {
 				if (btns.hasOwnProperty(key)) {
 					var btn = btns[key];
-					btn.setDisabled(
-						(me.bill.get('billType') == 'ppd')
-						|| (me.bill.get('billType') == 'qgd')
-					);
+					switch (key) {
+						case 'addBillItemBtn':
+							btn.setVisible(billType == 'reg');
+							break;
+						case 'addBlankItemBtn':
+							btn.setVisible(billType == 'reg');
+							break;
+						case 'addPrePaidItemBtn':
+							btn.setVisible(billType == 'ppd' || billType == 'qgd');
+							break;
+						default:
+							break;
+					}
 				}
 			}
 		}
@@ -79,7 +89,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 				project: me.project,
 				professionType: me.professionType,
 				bill: me.bill,
-				isEdit: me.isEdit
+				isEdit: me.isEdit,
+				hasPrePaidBill: me.bill.get('hasPrePaidBill') == 'true'
 			}
 		];
 		me.tbar = [
@@ -214,30 +225,17 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 				name: 'addPrePaidItemBtn',
 				icon: 'resources/img/addprepay.png',
 				handler: function () {
-					Ext.Msg.warning('添加预付项，此账单将置为预付单，<br />预付款项将在之后对应账单的总金额中扣除。<br />确定要添加吗？', function (btnId) {
-						if ('yes' == btnId) {
-							var billTable = me.down('manuallycheckbill-billtable');
-							var win = Ext.create('FamilyDecoration.view.manuallycheckbill.CustomizedBillItem', {
-								title: '添加预付项',
-								bill: me.bill,
-								isForPrePaidItem: true,
-								callbackAfterClose: function () {
-									billTable.refreshGrid(me.bill);
-									billTable.setTotalFee();
-
-									ajaxUpdate('StatementBill', {
-										billType: 'ppd',
-										id: me.bill.getId()
-									}, 'id', function (obj) {
-										showMsg('已置为预付单！');
-										me.bill.set('billType', 'ppd');
-										me.refreshBtn();
-									});
-								}
-							});
-							win.show();
+					var billTable = me.down('manuallycheckbill-billtable');
+					var win = Ext.create('FamilyDecoration.view.manuallycheckbill.CustomizedBillItem', {
+						title: '添加预付项',
+						bill: me.bill,
+						isForPrePaidItem: true,
+						callbackAfterClose: function () {
+							billTable.refreshGrid(me.bill);
+							billTable.setTotalFee();
 						}
 					});
+					win.show();
 				}
 			}
 		];

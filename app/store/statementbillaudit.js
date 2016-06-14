@@ -13,7 +13,7 @@ Ext.define('FamilyDecoration.store.StatementBillAudit', {
         },
         extraParams: {
             action: 'StatementBillAudit.get',
-            orderby: 'createTime ASC'
+            orderby: 'createTime DESC'
         }
     }
 });
