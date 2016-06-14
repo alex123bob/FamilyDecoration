@@ -15,10 +15,6 @@ class StatementBillSvc extends BaseSvc
 		$q['@creator'] = $_SESSION['name'];
 		$q['@status'] = 'new';
 		notNullCheck($q,'@billType','审批单类型不能为空!');
-		if($q['@billType'] == 'ppd'){
-			//预付款 总金额就是领取金额
-			$q['@claimAmount'] = $q['@totalFee'];
-		}
 		return parent::add($q);
 	}
 
@@ -26,7 +22,11 @@ class StatementBillSvc extends BaseSvc
 		if(isset($q['@status']) && !isset(self::$statusMapping[$q['@status']])){
 			throw new Exception("无效状态:".$q['@status']);
 		}
-		//notNullCheck($q,'@payee','领款人不能为空!');
+		if(isset($q['@billType']) && $q['@billType'] == 'ppd'){
+			//预付款 总金额就是领取金额
+			$q['@claimAmount'] = $q['@totalFee'];
+		}
+		//   notNullCheck($q,'@payee','领款人不能为空!');
 		return parent::update($q);
 	}
 
