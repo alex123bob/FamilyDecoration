@@ -22,7 +22,7 @@ class StatementBillSvc extends BaseSvc
 		if(isset($q['@status']) && !isset(self::$statusMapping[$q['@status']])){
 			throw new Exception("无效状态:".$q['@status']);
 		}
-		if(isset($q['@billType']) && $q['@billType'] == 'ppd'){
+		if(isset($q['@billType']) && isset($q['@totalFee']) && $q['@billType'] == 'ppd'){
 			//预付款 总金额就是领取金额
 			$q['@claimAmount'] = $q['@totalFee'];
 		}
