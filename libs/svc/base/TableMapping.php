@@ -7,6 +7,7 @@
 		"statement_basic_item"=>array('id','serialNumber','billItemName','unit','amount','unitPrice','subtotal','referenceItems','professionType'),
 		"statement_bill_audit"=>array('id','billId','operator','orignalStatus','newStatus','comments'),
 		'project'=>array('projectId','projectName'),
+		'plan'=>array('id','projectId','conCleaHeatDefine','bottomDig','toiletBalCheck','plumbElecCheck','knockWall','tileMarbleCabiDefine','waterElecCheck','waterElecConstruct','waterElecPhoto','tilerMateConstruct','tilerProCheck','woodMateCheck','woodProConstruct','woodProCheck','paintMateCheck','paintProConstruct','cabiInstall','toilKitchSuspend','paintProCheck','switchSocketInstall','lampSanitInstall','floorInstall','paintRepair','wallpaperPave','housekeepingClean','elecInstall','curtainFuniInstall'),
 		"user"=>array('name','phone','mail','projectId','realname','password','level','priority','profileImage','priorityTitle')
 	);
 
