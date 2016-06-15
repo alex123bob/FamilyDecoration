@@ -10,7 +10,7 @@ Ext.define('FamilyDecoration.view.planmaking.AddPlanTable', {
     width: 500,
     height: 400,
 
-    project: undefined,
+    planId: undefined,
     maximizable: true,
 
     initComponent: function () {
@@ -89,11 +89,11 @@ Ext.define('FamilyDecoration.view.planmaking.AddPlanTable', {
 
         me.listeners = {
             show: function (win){
-                if (win.project) {
+                if (win.planId) {
                     var grid = win.down('gridpanel');
                     grid.getStore().load({
                         params: {
-                            projectId: win.project.getId()
+                            planId: win.planId
                         }
                     });
                 }
