@@ -10,10 +10,14 @@ if(strpos($_SERVER["HTTP_USER_AGENT"],"Safari") && !strpos($_SERVER["HTTP_USER_A
 
 global $name,$phone,$times,$address,$totalFee,$finishPercentage,$requiredFee,$cny; 
 
-$lineHeight 	= 6;
 //全局字体
 $GfontSize		= 10; // 1~5 个月10,6个月9,7个月8,8个月6
 $GfontStyle		= ''; // B bold,U:underline
+
+$titleLineHeight1 = 6;   //表头上半部分行高
+$titleLineHeight2 = 12;   //表头下半部分行高
+$height = 6; //数据表格每行高度
+$xuhaoLineHeight = ($titleLineHeight1  + $titleLineHeight2);  //序号总高度
 
 
 include_once "../libs/conn.php";
@@ -46,7 +50,7 @@ $month = array();
 $header1 =array();
 $days = array();
 $header1Borders = array('LT','LT','LT');
-$width = array(5,13,13);  //左侧三列宽度, 序号,项目,子项目
+$width = array(5,13,16);  //左侧三列宽度, 序号,项目,子项目
 $leftNameWith = 12+13+13;
 $timespanWidth = $pdf->w - $leftNameWith - 15 -15;//margin
 $daysInTotal = floor((strtotime($end) - strtotime($start))/60/60/24)+1;
@@ -71,11 +75,6 @@ for($count = 0;$count<$daysInTotal;$count++){
 }
 
 
-$titleLineHeight1 = 6;   //表头上半部分行高
-$titleLineHeight2 = 12;   //表头下半部分行高
-$height = 8; //数据表格每行高度
-$xuhaoLineHeight = ($titleLineHeight1  + $titleLineHeight2);  //序号总高度
-
 //--------表头输出开始
 $pdf->Cell($width[0],$xuhaoLineHeight/2,'序','LRT',2,'C',0);
 $pdf->Cell($width[0],$xuhaoLineHeight/2,'号','LRB',0,'C',0);
@@ -83,8 +82,8 @@ $pdf->SetXY($pdf->getx(),$pdf->gety()- $xuhaoLineHeight/2);
 $pdf->Cell($width[1],$titleLineHeight1+$titleLineHeight2,'项目','LTRB',0,'C',0);
 $pdf->Cell($width[2],$titleLineHeight1+$titleLineHeight2,'子项目','LTRB',0,'C',0);
 foreach ($months as $key => $value) {  //输出月份
-	if(startWith($value,'0'))
-		$value = substr($value, 1);
+	if(startWith($key,'0'))
+		$key = substr($key, 1);
 	$pdf->Cell($singleDayWidth*$value,$titleLineHeight1,$key.'月','LTRB',0,'C',0);
 }
 $pdf->ln();
@@ -142,6 +141,7 @@ foreach($bigItems as $key => $bigItem) {
 	$bigItem['smallItemLinesNeed'] = $allSmallItemsLines;
 	//当前大项实际需要的行数
 	$itemLines = $bigItemNameLines > $allSmallItemsLines ? $bigItemNameLines : $allSmallItemsLines;
+	//记录下起始位置,等下换行对齐
 	$startX = $pdf->getx();
 	$startY = $pdf->gety();
 	//输出序号
@@ -149,20 +149,29 @@ foreach($bigItems as $key => $bigItem) {
 	//输出大项名
 	if($bigItem['itemNamelinesNeed'] == $itemLines){
 		$pdf->MultiCell($width[1],$height,$bigItemName,'LBRT','C',false,$height);
+		$pdf->ln();
+		$pdf->setXY($startX+$width[0]+$width[1],$pdf->gety()-$height*($itemLines+1));
 	}else{
 		$linesLeft =  $itemLines - $bigItem['itemNamelinesNeed'];
-		$frontLines = intval($linesLeft/2)+$linesLeft%2;
-		$endLines = intval($linesLeft/2);
+		$frontLines = intval($linesLeft/2);
+		$endLines = intval($linesLeft/2)+$linesLeft%2;
 		$pdf->Cell($width[1],$height*$frontLines,'','LTR',2,'C',0);
 		$pdf->MultiCell($width[1],$height,$bigItemName,'LR','C',false,$height);
 		$pdf->Cell($width[1]+$width[0],$height*$endLines,'','LBR',0,'C',0);
+		$pdf->ln();
+		$pdf->setXY($startX+$width[0]+$width[1],$pdf->gety()-$height*$itemLines);
 	}
-	$pdf->setXY($startX+$width[0]+$width[1],$startY);
+	
 	//---输出大项名结束
 	//输出子项目
+	$lastPageNum = $pdf->page;
 	foreach ($smallItems as $key => &$item) {
+		//记录下起始位置,等下换行对齐
 		$smallStartX = $pdf->getx();
 		$smallStartY = $pdf->gety();
+		if($pdf->page != $lastPageNum){
+			$smallStartY  = 0;
+		}
 		//输出小项名
 		if($bigItem['itemNamelinesNeed'] == $itemLines){
 			//整个大项高度因为大项名撑开了,要再计算小项高度
@@ -170,16 +179,13 @@ foreach($bigItems as $key => $bigItem) {
 		}else{
 			//整个大项高度因为大项名撑开了,不需要计算小项高度
 		}
-		if($item['linesNeed'] == 1){
-			$pdf->Cell($width[2],$height,str2GBK($item['itemName']),'LTBR',2,'C',0);
-		}else{
-			$pdf->MultiCell($width[2],$height,str2GBK($item['itemName']),'LBTR','C',false,$height);
-		}
+		$pdf->MultiCell($width[2],$height,str2GBK($item['itemName']),'LBTR','L',false,$height);
 		$pdf->setXY($smallStartX+$width[2],$smallStartY);
 		//---输出小项名结束
 		//输出日期填充
+		$alldaysdata = getdaysfill($item['startTime'],$item['endTime'],$daysInTotal,$start,$end);
 		for($smallCount = 0;$smallCount < $daysInTotal ;$smallCount++){
-			$pdf->Cell($singleDayWidth,$height*$item['linesNeed'],'1','LBTR',0,'C',0);
+			$pdf->Cell($singleDayWidth,$height*$item['linesNeed'],'','LBTR',0,'L',$alldaysdata[$smallCount]);
 		}
 		$pdf->ln();
 		$pdf->SetXY($pdf->getx()+$width[0]+$width[1],$pdf->gety());

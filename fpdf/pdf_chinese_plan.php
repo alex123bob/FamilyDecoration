@@ -116,5 +116,22 @@ class PDF extends PDF_Chinese{
 		$this->setxy($x,$y+$thisLineHeight-$lastCellHeight);
 		$this->Ln();
 	}
+}/**
+
+
+*/
+function getdaysfill($startTime,$endTime,$totalNumber,$minDay,$maxDay){
+	$days = array();
+	if($minDay == "" || $maxDay == ""){
+		for($i = 0;$i< $totalNumber;$i++) {
+			array_push($days, 0);
+		}
+		return $days;
+	}
+	for($count = 0;$count<$totalNumber;$count++){
+		$d = date('Y-m-d', strtotime($startTime."+$count day"));
+		array_push($days, $d <= $endTime && $d >= $startTime ? 1 : 0);
+	}
+	return $days;
 }
 ?>
