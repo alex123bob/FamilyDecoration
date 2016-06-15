@@ -118,6 +118,7 @@ CREATE TABLE `plan_making` (
   `projectId` varchar(20) DEFAULT NULL,
   `projectAddress` varchar(500) DEFAULT NULL,
   `startTime` varchar(25) DEFAULT NULL,
+  `custName` varchar(50) DEFAULT NULL,
   `endTime` varchar(50) DEFAULT NULL,
   `c1` varchar(20) DEFAULT NULL ,
   `c2` varchar(20) DEFAULT NULL ,
