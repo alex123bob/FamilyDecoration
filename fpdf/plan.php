@@ -8,7 +8,7 @@ if(strpos($_SERVER["HTTP_USER_AGENT"],"Safari") && !strpos($_SERVER["HTTP_USER_A
 	$UserBrowserClient = 'default';
 }
 
-global $name,$phone,$times,$address,$totalFee,$finishPercentage,$requiredFee,$cny; 
+global $name,$phone,$times,$address,$totalFee,$finishPercentage,$requiredFee,$cny,$start,$end;
 
 //全局字体
 $GfontSize		= 10; // 1~5 个月10,6个月9,7个月8,8个月6
@@ -42,7 +42,7 @@ $pdf->AddPage(); //增加一页
 $pdf->SetFont("GB",$GfontStyle,$GfontSize); //设置字体样式 
 
 $pdf->AliasNbPages("__totalPage__");
-
+ 
 $start=$plan['startTime'];
 $end=$plan['endTime'];
 
@@ -183,7 +183,7 @@ foreach($bigItems as $key => $bigItem) {
 		$pdf->setXY($smallStartX+$width[2],$smallStartY);
 		//---输出小项名结束
 		//输出日期填充
-		$alldaysdata = getdaysfill($item['startTime'],$item['endTime'],$daysInTotal,$start,$end);
+		$alldaysdata = getdaysfill($item['startTime'],$item['endTime'],$daysInTotal);
 		for($smallCount = 0;$smallCount < $daysInTotal ;$smallCount++){
 			$pdf->Cell($singleDayWidth,$height*$item['linesNeed'],'','LBTR',0,'L',$alldaysdata[$smallCount]);
 		}

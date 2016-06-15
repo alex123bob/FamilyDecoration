@@ -4,7 +4,7 @@ class PDF extends PDF_Chinese{
 	
 	function Header(){ //ÉèÖÃÒ³Ã¼ 
 	
-		global $name,$phone,$times,$address,$totalFee,$finishPercentage,$requiredFee,$cny; 
+		global $name,$phone,$times,$address,$totalFee,$finishPercentage,$requiredFee,$cny,$start,$end; 
 		
 		$this->SetLeftMargin(15);
 		$this->SetRightMargin(15);
@@ -120,17 +120,18 @@ class PDF extends PDF_Chinese{
 
 
 */
-function getdaysfill($startTime,$endTime,$totalNumber,$minDay,$maxDay){
+function getdaysfill($startTime,$endTime,$totalNumber){
+	global $start,$end;
 	$days = array();
-	if($minDay == "" || $maxDay == ""){
+	if($start == "" || $end == ""){
 		for($i = 0;$i< $totalNumber;$i++) {
 			array_push($days, 0);
 		}
 		return $days;
 	}
 	for($count = 0;$count<$totalNumber;$count++){
-		$d = date('Y-m-d', strtotime($startTime."+$count day"));
-		array_push($days, $d <= $endTime && $d >= $startTime ? 1 : 0);
+		$d = date('Y-m-d', strtotime($start."+$count day"));
+		array_push($days, $d >= $startTime && $d <= $endTime ? 1 : 0);
 	}
 	return $days;
 }
