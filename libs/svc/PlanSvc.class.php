@@ -71,7 +71,7 @@ Class PlanSvc extends BaseSvc{
 		$res = array();
 		$count = 0;
 		foreach (PlanSvc::$map as $key => $value) {
-			$time = explode("-",isset($plan[$key]) ? 'none-none':$plan[$key]);
+			$time = explode("~",isset($plan[$key]) ? 'none~none':$plan[$key]);
 			$startTime = $time[0];
 			$endTime = $time[1];
 			$item = array(
