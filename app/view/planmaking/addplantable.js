@@ -10,6 +10,9 @@ Ext.define('FamilyDecoration.view.planmaking.AddPlanTable', {
     width: 500,
     height: 400,
 
+    project: undefined,
+    maximizable: true,
+
     initComponent: function () {
         var me = this;
 
@@ -24,6 +27,9 @@ Ext.define('FamilyDecoration.view.planmaking.AddPlanTable', {
                         clicksToEdit: 1
                     })
                 ],
+                store: Ext.create('FamilyDecoration.store.PlanMaking', {
+                    autoLoad: false
+                }),
                 columns: {
                     defaults: {
                         align: 'center',
@@ -42,7 +48,7 @@ Ext.define('FamilyDecoration.view.planmaking.AddPlanTable', {
                             text: '开始时间',
                             dataIndex: 'startTime',
                             flex: 2,
-                            renderer: Ext.util.Format.dateRenderer('M d, Y'),
+                            renderer: Ext.util.Format.dateRenderer('Y-m-d'),
                             editor: {
                                 xtype: 'datefield',
                                 format: 'm/d/y'
@@ -55,6 +61,7 @@ Ext.define('FamilyDecoration.view.planmaking.AddPlanTable', {
                             text: '结束时间',
                             dataIndex: 'endTime',
                             flex: 2,
+                            renderer: Ext.util.Format.dateRenderer('Y-m-d'),
                             editor: {
                                 xtype: 'datefield',
                                 format: 'm/d/y'
@@ -81,6 +88,16 @@ Ext.define('FamilyDecoration.view.planmaking.AddPlanTable', {
         ];
 
         me.listeners = {
+            show: function (win){
+                if (win.project) {
+                    var grid = win.down('gridpanel');
+                    grid.getStore().load({
+                        params: {
+                            projectId: win.project.getId()
+                        }
+                    });
+                }
+            }
         };
 
         me.callParent();

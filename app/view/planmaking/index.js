@@ -36,7 +36,7 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 					listeners: {
 						itemclick: function (view, rec) {
 							if (rec.get('projectName')) {
-
+								return true;
 							}
 							else {
 								return false;
@@ -88,11 +88,19 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 						hidden: User.isGeneral() ? true : false,
 						disabled: true,
 						handler: function () {
-							var resourceObj = me.getRes();
-							var win = Ext.create('FamilyDecoration.view.planmaking.AddPlanTable', {
-
-							});
-							win.show();
+							var resourceObj = me.getRes(),
+								period = resourceObj.project.get('period').split(':');
+							ajaxAdd('PlanMaking', {
+								projectId: resourceObj.project.getId(),
+								projectAddress: resourceObj.project.get('projectName'),
+								startTime: period[0],
+								endTime: period[1]
+							}, function (obj){
+								var win = Ext.create('FamilyDecoration.view.planmaking.AddPlanTable', {
+									project: resourceObj.project
+								});
+								win.show();
+							})
 						}
 					},
 					{

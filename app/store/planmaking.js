@@ -12,7 +12,7 @@ Ext.define('FamilyDecoration.store.PlanMaking', {
             root: 'data'
         },
         extraParams: {
-            action: 'PlanMaking.get'
+            action: 'PlanMaking.getItems'
         }
     }/*,
     data: {
