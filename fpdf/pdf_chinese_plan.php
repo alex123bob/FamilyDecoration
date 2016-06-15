@@ -12,19 +12,17 @@ class PDF extends PDF_Chinese{
 		$this->SetAutoPageBreak(true,10);
 		//$this->SetTopMargin(5);
 		//$this->Image('../resources/img/logo.jpg',60,4,30,30); //增加一张图片，文件名为sight.jpg 
-		$this->Image('../resources/img/logo.jpg',150,2,17,17); //增加一张图片，文件名为sight.jpg 
 		$this->SetFont('GB','',25); 
-		$this->Text(170,15,'  佳诚装饰    施工进度表');
+		$imgWidth = 17;
+		$title = '  佳诚装饰    施工进度表';
+		$firstLine = "客户姓名: $name      工程地址: $address       开工日期: $start      完工日期: $end";
+		$leftOffset = ($this->w - $this->getstringwidth($title) - $imgWidth)/2;
+		$this->Image('../resources/img/logo.jpg',$leftOffset,2,17,17); //增加一张图片，文件名为sight.jpg 
+		$this->Text($leftOffset+$imgWidth,15,'  佳诚装饰    施工进度表');
 		$this->Ln(5); //换行
 		$this->SetFont('','',15); 
-		$this->Text(40,30,'客户姓名:');
-		$this->Text(80,30,$name);
-		$this->Text(130,30,'工程地址:');
-		$this->Text(160,30,$address);
-		$this->Text(230,30,'开工日期:');
-		$this->Text(260,30,$start);
-		$this->Text(320,30,'完工日期:');
-		$this->Text(350,30,$end);
+		$leftOffset = ($this->w - $this->getstringwidth($firstLine))/2;
+		$this->Text($leftOffset,30,$firstLine);
 		
 
 		//$this->Line(10,50,280,50);
@@ -34,7 +32,7 @@ class PDF extends PDF_Chinese{
 		$this->SetY(-10); 
 		global $GfontSize;
 		$this->SetFont('GB','',$GfontSize); 
-		$this->Cell(120,10,'第'.$this->PageNo().'页  共__totalPage__页',0,0,'R'); 
+		$this->Cell(0,10,'第'.$this->PageNo().'页  共__totalPage__页',0,0,'C'); 
 		//$this->Cell(220,10,date("Y-m-d"),0,0,'R'); 
 	}
 	// 输出一行表格

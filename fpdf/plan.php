@@ -11,14 +11,19 @@ if(strpos($_SERVER["HTTP_USER_AGENT"],"Safari") && !strpos($_SERVER["HTTP_USER_A
 global $name,$phone,$times,$address,$totalFee,$finishPercentage,$requiredFee,$cny,$start,$end;
 
 //全局字体
-$GfontSize		= 10; // 1~5 个月10,6个月9,7个月8,8个月6
+$GfontSize		= 10; 
 $GfontStyle		= ''; // B bold,U:underline
 
 $titleLineHeight1 = 6;   //表头上半部分行高
 $titleLineHeight2 = 12;   //表头下半部分行高
 $height = 6; //数据表格每行高度
+$width = array();  //左侧三列宽度, 序号,项目,子项目
+$pagetype = isset($_REQUEST['page']) ? $_REQUEST['page'] : 'A4';
+array_push($width, isset($_REQUEST['c1']) ? isset($_REQUEST['c1']) : 5); //序号宽度
+array_push($width, isset($_REQUEST['c2']) ? isset($_REQUEST['c2']) : 40); //序号宽度
+array_push($width, isset($_REQUEST['c3']) ? isset($_REQUEST['c3']) : 45); //序号宽度
 $xuhaoLineHeight = ($titleLineHeight1  + $titleLineHeight2);  //序号总高度
-
+$leftNameWith = $width[0]+$width[1]+$width[2];   //左侧三列
 
 include_once "../libs/conn.php";
 include_once 'chinese.php';
@@ -40,7 +45,7 @@ $start=$plan['startTime'];
 $end=$plan['endTime'];
 
 
-$pdf=new PDF('L','mm', 'A3'); //创建新的FPDF对象 
+$pdf=new PDF('L','mm', $pagetype); //创建新的FPDF对象 
 $pdf->AddGBFont(); //设置中文字体 
 $pdf->Open(); //开始创建PDF 
 $pdf->AddPage(); //增加一页 
@@ -49,12 +54,9 @@ $pdf->SetFont("GB",$GfontStyle,$GfontSize); //设置字体样式
 $pdf->AliasNbPages("__totalPage__");
  
 $month = array();
-$header1 =array();
 $days = array();
 $header1Borders = array('LT','LT','LT');
-$width = array(5,13,16);  //左侧三列宽度, 序号,项目,子项目
-$leftNameWith = 12+13+13;
-$timespanWidth = $pdf->w - $leftNameWith - 15 -15;//margin
+$timespanWidth = $pdf->w - $leftNameWith - 15 -15;//右侧时间表占用宽度.  - page margin
 $daysInTotal = floor((strtotime($end) - strtotime($start))/60/60/24)+1;
 $singleDayWidth = $timespanWidth/$daysInTotal;
 
@@ -65,13 +67,11 @@ for($count = 0;$count<$daysInTotal;$count++){
 	$month = $tmp[1];
 	if(!isset($months[$month])){
 		$months[$month] = 0;
-		array_push($header1,$month);
 		array_push($header1Borders,'LBT');
 	}else{
 		array_push($header1Borders,$daysInTotal == $count +1 ? 'TBR':'TB');
 	}
 	$months[$month] ++;
-	array_push($header1,'');
 	array_push($days,$day);
 	array_push($width,$singleDayWidth);
 }
@@ -92,7 +92,7 @@ $pdf->ln();
 $pdf->SetXY($pdf->getx()+$width[0]+$width[1]+$width[2],$pdf->gety());
 $count = 1;
 
-if(count($months)>5)  //超过6个月,把字体调小
+if(count($months)>5)  //超过6个月,每多一个月,字体小2号
 	$pdf->SetFont("GB",$GfontStyle,$GfontSize - (count($months)-5)*2); //设置字体样式 
 
 foreach ($days as $key => $value) { //输出日期
@@ -107,6 +107,7 @@ foreach ($days as $key => $value) { //输出日期
 }
 $pdf->ln();
 $pdf->SetXY($pdf->getx(),$pdf->gety()+$titleLineHeight2/2);
+$pdf->SetFont("GB",$GfontStyle,$GfontSize); //设置回字体 
 //--------表头输出结束
 
 
@@ -165,29 +166,26 @@ foreach($bigItems as $key => $bigItem) {
 	}
 	
 	//---输出大项名结束
+	//---输出子项
+	//计算子项行高
+	$tmpheight = $height;
+	if($bigItem['itemNamelinesNeed'] > $bigItem['smallItemLinesNeed']){
+		//整个高度等于大项的高度,要把小项拉高
+		$tmpheight = $tmpheight*$bigItem['itemNamelinesNeed']/$bigItem['smallItemLinesNeed'];
+	}
 	//输出子项目
 	$lastPageNum = $pdf->page;
 	foreach ($smallItems as $key => &$item) {
-		//记录下起始位置,等下换行对齐
-		$smallStartX = $pdf->getx();
-		$smallStartY = $pdf->gety();
-		if($pdf->page != $lastPageNum){
-			$smallStartY  = 0;
-		}
+		$startX = $pdf->getx();
+		$startY = $pdf->gety();
 		//输出小项名
-		if($bigItem['itemNamelinesNeed'] == $itemLines){
-			//整个大项高度因为大项名撑开了,要再计算小项高度
-			//不计算的话,小项下面结束会留白
-		}else{
-			//整个大项高度因为大项名撑开了,不需要计算小项高度
-		}
-		$pdf->MultiCell($width[2],$height,str2GBK($item['itemName']),'LBTR','L',false,$height);
-		$pdf->setXY($smallStartX+$width[2],$smallStartY);
+		$pdf->MultiCell($width[2],$tmpheight,str2GBK($item['itemName']),'LBTR','L',false,$height);
+		$pdf->setXY($startX + $width[2],$startY);
 		//---输出小项名结束
 		//输出日期填充
 		$alldaysdata = getdaysfill($item['startTime'],$item['endTime'],$daysInTotal);
 		for($smallCount = 0;$smallCount < $daysInTotal ;$smallCount++){
-			$pdf->Cell($singleDayWidth,$height*$item['linesNeed'],'','LBTR',0,'L',$alldaysdata[$smallCount]);
+			$pdf->Cell($singleDayWidth,$tmpheight*$item['linesNeed'],'','LBTR',0,'L',$alldaysdata[$smallCount]);
 		}
 		$pdf->ln();
 		$pdf->SetXY($pdf->getx()+$width[0]+$width[1],$pdf->gety());
