@@ -28,7 +28,7 @@ class PDF extends PDF_Chinese{
 		
 
 		//$this->Line(10,50,280,50);
-		$this->Ln(45);
+		$this->Ln(20);
 	} 
 	function Footer(){ //ÉèÖÃÒ³½Å  
 		$this->SetY(-10); 
