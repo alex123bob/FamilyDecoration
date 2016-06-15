@@ -48,12 +48,11 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 								planTable = projectPlanPane.down('planmaking-plantable'),
 								btns = projectPlanPane.getButtons();
 							if (rec && rec.get('projectName')) {
-								btns.addPlan.enable();
+								btns.editPlan.enable();
 								btns.backToProject.enable();
 								planTable.rerenderGridByProject(rec);
 							}
 							else {
-								btns.addPlan.disable();
 								btns.editPlan.disable();
 								btns.deletePlan.disable();
 								btns.backToProject.disable();
@@ -74,7 +73,6 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 				getButtons: function (){
 					var panel = this;
 					return {
-						addPlan: panel.query('[name="button-addplan"]')[0],
 						editPlan: panel.query('[name="button-editplan"]')[0],
 						deletePlan: panel.query('[name="button-deleteplan"]')[0],
 						backToProject: panel.query('[name="button-backToProject"]')[0]
@@ -82,43 +80,42 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 				},
 				tbar: [
 					{
-						text: '添加',
-						icon: './resources/img/add.png',
-						name: 'button-addplan',
+						text: '编辑',
+						icon: './resources/img/edit.png',
+						name: 'button-editplan',
 						hidden: User.isGeneral() ? true : false,
 						disabled: true,
 						handler: function () {
 							var resourceObj = me.getRes(),
 								period = resourceObj.project.get('period').split(':');
-							ajaxAdd('PlanMaking', {
-								projectId: resourceObj.project.getId(),
-								projectAddress: resourceObj.project.get('projectName'),
-								startTime: period[0],
-								endTime: period[1]
+							ajaxGet('PlanMaking', false, {
+								projectId: resourceObj.project.getId()
 							}, function (obj){
-								var win = Ext.create('FamilyDecoration.view.planmaking.AddPlanTable', {
-									planId: obj['data']['id']
-								});
-								win.show();
-							})
-						}
-					},
-					{
-						text: '修改',
-						name: 'button-editplan',
-						icon: './resources/img/edit.png',
-						hidden: User.isGeneral() ? true : false,
-						disabled: true,
-						handler: function () {
-							var treepanel = Ext.getCmp('treepanel-projectNameForPlanMaking'),
-								rec = treepanel.getSelectionModel().getSelection()[0],
-								grid = Ext.getCmp('gridpanel-projectPlanMaking');
-							var win = Ext.create('FamilyDecoration.view.plan.EditPlan', {
-								project: rec,
-								projectId: rec.getId(),
-								plan: grid.plan
+								if (obj.data.length > 0) {
+									var win = Ext.create('FamilyDecoration.view.planmaking.AddPlanTable', {
+										planId: obj['data'][0]['id'],
+										project: resourceObj.project,
+										isEdit: true
+									});
+									win.show();
+									showMsg('进入计划编辑！');
+								}
+								else {
+									ajaxAdd('PlanMaking', {
+										projectId: resourceObj.project.getId(),
+										projectAddress: resourceObj.project.get('projectName'),
+										startTime: period[0],
+										endTime: period[1]
+									}, function (obj){
+										var win = Ext.create('FamilyDecoration.view.planmaking.AddPlanTable', {
+											planId: obj['data']['id'],
+											project: resourceObj.project
+										});
+										win.show();
+										showMsg('已添加计划！');
+									});
+								}
 							});
-							win.show();
 						}
 					},
 					{

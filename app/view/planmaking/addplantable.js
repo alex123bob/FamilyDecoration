@@ -10,11 +10,17 @@ Ext.define('FamilyDecoration.view.planmaking.AddPlanTable', {
     width: 500,
     height: 400,
 
+    project: undefined,
     planId: undefined,
     maximizable: true,
 
     initComponent: function () {
-        var me = this;
+        var me = this,
+            projectTime;
+        
+        if (me.project) {
+            projectTime = me.project.get('period').split(':');
+        }
 
         me.title = me.isEdit ? '修改计划' : '添加计划';
 
@@ -22,9 +28,65 @@ Ext.define('FamilyDecoration.view.planmaking.AddPlanTable', {
             {
                 xtype: 'gridpanel',
                 autoScroll: true,
+                refresh: function (){
+                    var st = this.getStore();
+                    st.reload();
+                },
                 plugins: [
                     Ext.create('Ext.grid.plugin.CellEditing', {
-                        clicksToEdit: 1
+                        clicksToEdit: 1,
+                        listeners: {
+							edit: function (editor, e){
+								Ext.suspendLayouts();
+								
+								e.record.commit();
+								editor.completeEdit();
+                                var period,
+                                    startTime = new Date(e.record.get('startTime')),
+                                    endTime = new Date(e.record.get('endTime'));
+                                startTime = isNaN(startTime) ? '' : startTime;
+                                endTime = isNaN(endTime) ? '' : endTime;
+								if (e.field == 'startTime' || e.field == 'endTime') {
+                                    period = Ext.Date.format(startTime, 'Y-m-d') + '~'
+                                             + Ext.Date.format(endTime, 'Y-m-d');
+									ajaxUpdate('PlanMaking.updateItem', {
+										time: period,
+										id: e.record.getId()
+									}, 'id', function (obj){
+										showMsg('编辑成功！');
+                                        me.down('gridpanel').refresh();
+									});
+								}
+								
+								Ext.resumeLayouts();
+							},
+							validateedit: function (editor, e, opts){
+								var rec = e.record;
+								if (e.field == 'startTime' || e.field == 'endTime') {
+									if (Ext.Date.format(e.value, 'Y-m-d') == e.originalValue) {
+										return false;
+									}
+                                    if (e.field == 'startTime') {
+                                        var endTime = new Date(rec.get('endTime') + ' 00:00:00');
+                                        if (!isNaN(endTime)) {
+                                            if (e.value - endTime > 0) {
+                                                showMsg('开始时间不能大于结束时间！');
+                                                return false;
+                                            }
+                                        }
+                                    }
+                                    else if (e.field == 'endTime') {
+                                        var startTime = new Date(rec.get('startTime') + ' 00:00:00');
+                                        if (!isNaN(startTime)) {
+                                            if (e.value - startTime < 0) {
+                                                showMsg('开始时间不能大于结束时间！');
+                                                return false;
+                                            }
+                                        }
+                                    }
+								}
+							}
+						}
                     })
                 ],
                 store: Ext.create('FamilyDecoration.store.PlanMaking', {
@@ -51,10 +113,15 @@ Ext.define('FamilyDecoration.view.planmaking.AddPlanTable', {
                             renderer: Ext.util.Format.dateRenderer('Y-m-d'),
                             editor: {
                                 xtype: 'datefield',
-                                format: 'm/d/y'
-                                // minValue: '01/01/06',
-                                // disabledDays: [0, 6],
-                                // disabledDaysText: 'Plants are not available on the weekends'
+                                format: 'Y-m-d',
+                                editable: false,
+                                minValue: projectTime[0],
+                                maxValue: projectTime[1],
+                                listeners: {
+                                    select: function (picker, val, opts){
+                                        console.log(picker);
+                                    }
+                                }
                             }
                         },
                         {
@@ -64,7 +131,10 @@ Ext.define('FamilyDecoration.view.planmaking.AddPlanTable', {
                             renderer: Ext.util.Format.dateRenderer('Y-m-d'),
                             editor: {
                                 xtype: 'datefield',
-                                format: 'm/d/y'
+                                format: 'Y-m-d',
+                                editable: false,
+                                minValue: projectTime[0],
+                                maxValue: projectTime[1]
                             }
                         }
                     ]
@@ -74,13 +144,7 @@ Ext.define('FamilyDecoration.view.planmaking.AddPlanTable', {
 
         me.buttons = [
             {
-                text: '确定',
-                handler: function (){
-
-                }
-            },
-            {
-                text: '取消',
+                text: '关闭',
                 handler: function (){
                     me.close();
                 }

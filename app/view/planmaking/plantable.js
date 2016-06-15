@@ -9,14 +9,6 @@ Ext.define('FamilyDecoration.view.planmaking.PlanTable', {
     initComponent: function () {
         var me = this;
 
-        me.getValues = function () {
-
-        };
-
-        me.refresh = function () {
-
-        };
-
         function monthDiff(d1, d2) {
             var months;
             months = (d2.getFullYear() - d1.getFullYear()) * 12;
@@ -38,7 +30,7 @@ Ext.define('FamilyDecoration.view.planmaking.PlanTable', {
                 var period = project.get('period'),
                     projectTime = period.split(':'),
                     startTime, endTime, daysInBetween;
-                configuredColumns = [
+                var configuredColumns = [
                     {
                         text: '序号',
                         dataIndex: 'serialNumber',
@@ -69,12 +61,12 @@ Ext.define('FamilyDecoration.view.planmaking.PlanTable', {
                 ];
                 if (projectTime.length == 2 && isDate(projectTime)) {
                     Ext.suspendLayouts();
-                    startTime = Ext.Date.parse(projectTime[0], 'Y-m-d');
-                    endTime = Ext.Date.parse(projectTime[1], 'Y-m-d');
+                    projectStartTime = Ext.Date.parse(projectTime[0], 'Y-m-d');
+                    projectEndTime = Ext.Date.parse(projectTime[1], 'Y-m-d');
 
-                    for (var d = new Date(startTime); d.getTime() <= endTime.getTime(); d.setDate(d.getDate() + 1)) {
+                    for (var d = new Date(projectStartTime); d.getTime() <= projectEndTime.getTime(); d.setDate(d.getDate() + 1)) {
                         var index;
-                        if (d.getDate() == 1 || d.getTime() === startTime.getTime()) {
+                        if (d.getDate() == 1 || d.getTime() === projectStartTime.getTime()) {
                             index = configuredColumns.push({
                                 text: (d.getMonth() + 1) + '月',
                                 columns: []
@@ -91,18 +83,35 @@ Ext.define('FamilyDecoration.view.planmaking.PlanTable', {
                             sortable: false,
                             curTime: Ext.Date.format(d, 'Y-m-d'),
                             renderer: function (val, meta, rec, rowIndex, colIndex, st, view){
+                                
                                 var startTime = Ext.Date.parse(val, 'Y-m-d'),
                                     endTime = Ext.Date.parse(rec.get('endTime'), 'Y-m-d'),
                                     curTime = Ext.Date.parse(meta.column.curTime, 'Y-m-d');
-                                if (curTime.getTime() >= startTime.getTime() && curTime.getTime() <= endTime.getTime()) {
-                                    meta.style = 'background: grey;';
+                                if (isDate([startTime, endTime, curTime])) {
+                                    if (curTime.getTime() >= startTime.getTime() && curTime.getTime() <= endTime.getTime()) {
+                                        meta.style = 'background: grey;';
+                                    }
+                                    return '';
                                 }
                                 return '';
                             }
                         });
                     }
-                    grid.reconfigure(st, configuredColumns);
-                    Ext.resumeLayouts(true);
+                    st.load({
+                        params: {
+                            projectId: project.getId()
+                        },
+                        callback: function (recs, ope, success){
+                            if (success) {
+                                grid.reconfigure(st, configuredColumns);
+                                Ext.resumeLayouts(true);
+                            }
+                            else {
+                                me.removeGridColumnAndData(grid);
+                                Ext.resumeLayouts(true);
+                            }
+                        }
+                    });
                 }
                 else {
                     showMsg('时间格式不对!');

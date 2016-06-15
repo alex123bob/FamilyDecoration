@@ -938,7 +938,7 @@ function isDate (d){
     if (d.constructor === Array) {
         for (var i = 0; i < d.length; i++) {
             var element = d[i];
-            if (element.constructor === Date) {
+            if (element && element.constructor === Date) {
                 continue;
             }
             else if (typeof element === 'string') {
@@ -958,7 +958,7 @@ function isDate (d){
         }
     }
     else {
-        if (d.constructor === Date) {
+        if (d && d.constructor === Date) {
             flag = true;
         }
         else if (typeof d === 'string') {
