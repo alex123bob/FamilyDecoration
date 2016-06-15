@@ -2,13 +2,23 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 	extend: 'Ext.container.Container',
 	alias: 'widget.planmaking-index',
 	requires: [
-		'FamilyDecoration.view.plan.EditPlan', 'FamilyDecoration.view.progress.ProjectListByCaptain',
-		'FamilyDecoration.view.planmaking.PlanTable'
+ 		'FamilyDecoration.view.progress.ProjectListByCaptain',
+		'FamilyDecoration.view.planmaking.PlanTable', 'FamilyDecoration.view.planmaking.AddPlanTable'
 	],
 	layout: 'border',
 
 	initComponent: function () {
 		var me = this;
+
+		me.getRes = function (){
+			var projectPane = Ext.getCmp('treepanel-projectNameForPlanMaking'),
+				project = projectPane.getSelectionModel().getSelection()[0];
+			return {
+				projectPane: projectPane,
+				project: project
+			};
+		};
+
 		me.items = [
 			{
 				xtype: 'container',
@@ -78,11 +88,9 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 						hidden: User.isGeneral() ? true : false,
 						disabled: true,
 						handler: function () {
-							var treepanel = Ext.getCmp('treepanel-projectNameForPlanMaking'),
-								rec = treepanel.getSelectionModel().getSelection()[0];
-							var win = Ext.create('FamilyDecoration.view.plan.EditPlan', {
-								project: rec,
-								projectId: rec.getId()
+							var resourceObj = me.getRes();
+							var win = Ext.create('FamilyDecoration.view.planmaking.AddPlanTable', {
+
 							});
 							win.show();
 						}
