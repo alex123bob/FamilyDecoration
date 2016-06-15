@@ -72,22 +72,26 @@ Class PlanMakingSvc extends BaseSvc{
 		'c32'=>'竣工验收、保修单签单'
 	);
 
+	public function get($q){
+		$q['_fields'] = 'id,projectId,projectAddress,startTime,endTime,custName,isDeleted,updateTime,createTime';
+		return parent::get($q);
+	}
 	//get,横标转纵表
 	public function getItems($q){
-		$res = parent::get($q);
+		$res = parent::get(array('id'=>$q['planId']));
 		if($res['total'] == 0)
 			throw new Excpetion("没有找到项目计划!");
 		$plan = $res['data'][0];
 		$res = array();
 		$count = 0;
 		foreach (PlanMakingSvc::$map as $key => $value) {
-			$v = !isset($plan[$key]) ? '2016-01-01~2016-01-01':$plan[$key];
-			if(!contains($v,'~')){
-				$v = $v.'~2016-01-01';
+			$startTime = '';
+			$endTime = '';
+			if(isset($plan[$key]) && contains($plan[$key],'~')){
+				$time = explode("~",$plan[$key]);
+				$startTime = $time[0];
+				$endTime = $time[1];
 			}
-			$time = explode("~",$v);
-			$startTime = $time[0];
-			$endTime = $time[1];
 			$item = array(
 				'serialNumber'=>++$count,
 				'parentItemName'=>PlanMakingSvc::$pmap[$key],
