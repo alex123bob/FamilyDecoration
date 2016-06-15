@@ -78,9 +78,13 @@ Class PlanMakingSvc extends BaseSvc{
 	}
 	//get,横标转纵表
 	public function getItems($q){
-		$res = parent::get(array('id'=>$q['planId']));
+		$res = null;
+		if(isset($q['planId']))
+			$res = parent::get(array('id'=>$q['planId']));
+		if(isset($q['projectId']))
+			$res = parent::get(array('projectId'=>$q['projectId']));
 		if($res['total'] == 0)
-			throw new Excpetion("没有找到项目计划!");
+			throw new Exception("没有找到项目计划!");
 		$plan = $res['data'][0];
 		$res = array();
 		$count = 0;
