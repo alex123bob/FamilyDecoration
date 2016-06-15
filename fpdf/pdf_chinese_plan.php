@@ -22,9 +22,9 @@ class PDF extends PDF_Chinese{
 		$this->Text(130,30,'工程地址:');
 		$this->Text(160,30,$address);
 		$this->Text(230,30,'开工日期:');
-		$this->Text(260,30,'2014-23-12');
+		$this->Text(260,30,$start);
 		$this->Text(320,30,'完工日期:');
-		$this->Text(350,30,'2012-01-02');
+		$this->Text(350,30,$end);
 		
 
 		//$this->Line(10,50,280,50);
