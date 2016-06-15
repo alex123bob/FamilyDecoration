@@ -111,5 +111,51 @@ CREATE TABLE `statement_bill_audit` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+DROP TABLE IF EXISTS `plan_making`;
+CREATE TABLE `plan_making` (
+  `id` varchar(20) DEFAULT NULL,
+  `projectId` varchar(20) DEFAULT NULL,
+  `projectAddress` varchar(500) DEFAULT NULL,
+  `startTime` varchar(25) DEFAULT NULL,
+  `endTime` varchar(50) DEFAULT NULL,
+  `c1` varchar(20) DEFAULT NULL ,
+  `c2` varchar(20) DEFAULT NULL ,
+  `c3` varchar(20) DEFAULT NULL ,
+  `c4` varchar(20) DEFAULT NULL ,
+  `c5` varchar(20) DEFAULT NULL ,
+  `c6` varchar(20) DEFAULT NULL ,
+  `c7` varchar(20) DEFAULT NULL ,
+  `c8` varchar(20) DEFAULT NULL ,
+  `c9` varchar(20) DEFAULT NULL ,
+  `c10` varchar(20) DEFAULT NULL ,
+  `c11` varchar(20) DEFAULT NULL ,
+  `c12` varchar(20) DEFAULT NULL ,
+  `c13` varchar(20) DEFAULT NULL ,
+  `c14` varchar(20) DEFAULT NULL ,
+  `c15` varchar(20) DEFAULT NULL ,
+  `c16` varchar(20) DEFAULT NULL ,
+  `c17` varchar(20) DEFAULT NULL ,
+  `c18` varchar(20) DEFAULT NULL ,
+  `c19` varchar(20) DEFAULT NULL ,
+  `c20` varchar(20) DEFAULT NULL ,
+  `c21` varchar(20) DEFAULT NULL ,
+  `c22` varchar(20) DEFAULT NULL ,
+  `c23` varchar(20) DEFAULT NULL ,
+  `c24` varchar(20) DEFAULT NULL ,
+  `c25` varchar(20) DEFAULT NULL ,
+  `c26` varchar(20) DEFAULT NULL ,
+  `c27` varchar(20) DEFAULT NULL ,
+  `c28` varchar(20) DEFAULT NULL ,
+  `c29` varchar(20) DEFAULT NULL ,
+  `c30` varchar(20) DEFAULT NULL ,
+  `c31` varchar(20) DEFAULT NULL ,
+  `isDeleted` varchar(5) DEFAULT NULL,
+  `createTime` datetime DEFAULT NULL,
+  `updateTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 SET FOREIGN_KEY_CHECKS = 1;
 update `familydecoration`.`system` set `paramDesc`='', `isDeleted`='false', `id`='4', `updateTime`='0000-00-00 00:00:00', `paramName`='version', `createTime`='2015-04-11 13:51:14', `paramValue`='version-7.7' where `id`='4';
