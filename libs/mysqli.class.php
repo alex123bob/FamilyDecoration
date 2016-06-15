@@ -436,10 +436,6 @@
 			$inputStr.= "【Meg】   $errorMsg\r\n\r\n";
 			if (defined("SAE_MYSQL_HOST_M")) {
 				$mysql = new mysql(SAE_MYSQL_HOST_M.':'.SAE_MYSQL_PORT, SAE_MYSQL_USER, SAE_MYSQL_PASS, SAE_MYSQL_DB, 'utf8');
-			} else {
-				$fp = fopen($fileName, "ab");
-				fwrite($fp, $inputStr);
-				fclose($fp);
 			}
 			throw new Exception($errorMsg);			
 			exit();
