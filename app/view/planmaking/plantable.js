@@ -230,9 +230,6 @@ Ext.define('FamilyDecoration.view.planmaking.PlanTable', {
 
         me.listeners = {
             afterrender: function (panel, opts) {
-                if (panel.isEdit) {
-                    panel.refresh(panel.bill);
-                }
             }
         };
 
