@@ -97,7 +97,7 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 								endTime: period[1]
 							}, function (obj){
 								var win = Ext.create('FamilyDecoration.view.planmaking.AddPlanTable', {
-									project: resourceObj.project
+									planId: obj['data']['id']
 								});
 								win.show();
 							})
