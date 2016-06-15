@@ -35,6 +35,11 @@ $address = str2GBK($plan['projectAddress']);
 $planItems = $planSvc->getItems(array('planId'=>$_REQUEST['id']));
 $action = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "view";
 
+
+$start=$plan['startTime'];
+$end=$plan['endTime'];
+
+
 $pdf=new PDF('L','mm', 'A3'); //创建新的FPDF对象 
 $pdf->AddGBFont(); //设置中文字体 
 $pdf->Open(); //开始创建PDF 
@@ -43,9 +48,6 @@ $pdf->SetFont("GB",$GfontStyle,$GfontSize); //设置字体样式
 
 $pdf->AliasNbPages("__totalPage__");
  
-$start=$plan['startTime'];
-$end=$plan['endTime'];
-
 $month = array();
 $header1 =array();
 $days = array();
