@@ -12,10 +12,14 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 
 		me.getRes = function (){
 			var projectPane = Ext.getCmp('treepanel-projectNameForPlanMaking'),
-				project = projectPane.getSelectionModel().getSelection()[0];
+				project = projectPane.getSelectionModel().getSelection()[0],
+				planPane = Ext.getCmp('panel-projectPlan'),
+				planTable = planPane.down('gridpanel');
 			return {
 				projectPane: projectPane,
-				project: project
+				project: project,
+				planPane: planPane,
+				planTable: planTable
 			};
 		};
 
@@ -95,7 +99,11 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 									var win = Ext.create('FamilyDecoration.view.planmaking.AddPlanTable', {
 										planId: obj['data'][0]['id'],
 										project: resourceObj.project,
-										isEdit: true
+										isEdit: true,
+										callbackAfterClose: function (){
+											var resourceObj = me.getRes();
+											resourceObj.planTable.getStore().reload();
+										}
 									});
 									win.show();
 									showMsg('进入计划编辑！');
@@ -109,7 +117,11 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 									}, function (obj){
 										var win = Ext.create('FamilyDecoration.view.planmaking.AddPlanTable', {
 											planId: obj['data']['id'],
-											project: resourceObj.project
+											project: resourceObj.project,
+											callbackAfterClose: function (){
+												var resourceObj = me.getRes();
+												resourceObj.planTable.getStore().reload();
+											}
 										});
 										win.show();
 										showMsg('已添加计划！');

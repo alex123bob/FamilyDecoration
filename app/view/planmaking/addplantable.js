@@ -14,6 +14,8 @@ Ext.define('FamilyDecoration.view.planmaking.AddPlanTable', {
     planId: undefined,
     maximizable: true,
 
+    callbackAfterClose: Ext.emptyFn,
+
     initComponent: function () {
         var me = this,
             projectTime;
@@ -29,8 +31,20 @@ Ext.define('FamilyDecoration.view.planmaking.AddPlanTable', {
                 xtype: 'gridpanel',
                 autoScroll: true,
                 refresh: function (){
-                    var st = this.getStore();
-                    st.reload();
+                    var st = this.getStore(),
+                        view = this.getView(),
+                        selModel = this.getSelectionModel(),
+                        rec = selModel.getSelection()[0],
+                        index = st.indexOf(rec);
+                    st.reload({
+                        callback: function (recs, ope, success){
+                            if (success) {
+                                selModel.deselectAll();
+                                view.getSelectionModel().select(index);
+					            view.focusRow(index, 200);
+                            }
+                        }
+                    });	
                 },
                 plugins: [
                     Ext.create('Ext.grid.plugin.CellEditing', {
@@ -120,6 +134,11 @@ Ext.define('FamilyDecoration.view.planmaking.AddPlanTable', {
                                 listeners: {
                                     select: function (picker, val, opts){
                                         console.log(picker);
+                                    },
+                                    expand: function (picker, opts){
+                                        if (!picker.getValue()){
+                                            picker.setValue(projectTime[0]);
+                                        }
                                     }
                                 }
                             }
@@ -134,7 +153,14 @@ Ext.define('FamilyDecoration.view.planmaking.AddPlanTable', {
                                 format: 'Y-m-d',
                                 editable: false,
                                 minValue: projectTime[0],
-                                maxValue: projectTime[1]
+                                maxValue: projectTime[1],
+                                listeners: {
+                                    expand: function (picker, opts){
+                                        if (!picker.getValue()){
+                                            picker.setValue(projectTime[1]);
+                                        }
+                                    }
+                                }
                             }
                         }
                     ]
@@ -147,6 +173,7 @@ Ext.define('FamilyDecoration.view.planmaking.AddPlanTable', {
                 text: '关闭',
                 handler: function (){
                     me.close();
+                    me.callbackAfterClose();
                 }
             }
         ];
