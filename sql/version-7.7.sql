@@ -151,6 +151,7 @@ CREATE TABLE `plan_making` (
   `c29` varchar(21) DEFAULT NULL ,
   `c30` varchar(21) DEFAULT NULL ,
   `c31` varchar(21) DEFAULT NULL ,
+  `c32` varchar(21) DEFAULT NULL ,
   `isDeleted` varchar(5) DEFAULT NULL,
   `createTime` datetime DEFAULT NULL,
   `updateTime` datetime DEFAULT NULL,
