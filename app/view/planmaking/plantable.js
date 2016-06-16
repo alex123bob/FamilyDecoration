@@ -101,6 +101,7 @@ Ext.define('FamilyDecoration.view.planmaking.PlanTable', {
                         params: {
                             projectId: project.getId()
                         },
+                        silent: true,
                         callback: function (recs, ope, success){
                             if (success) {
                                 grid.reconfigure(st, configuredColumns);
@@ -120,6 +121,74 @@ Ext.define('FamilyDecoration.view.planmaking.PlanTable', {
             }
             else {
                 me.removeGridColumnAndData(grid);
+            }
+        }
+
+        me.goThroughField = function (project){
+            var header = me.down('[name="fieldcontainer-plantableHeader"]'),
+                footer = me.down('[name="fieldcontainer-plantableFooter"]'),
+                headerItems = header.items.items,
+                footerItems = footer.items.items;
+            if (project) {
+                Ext.Array.each(headerItems, function (item, index, arr){
+                    item.setValue(project.get(item.name));
+                });
+                Ext.Array.each(footerItems, function (item, index, arr){
+                    if (item.name != 'phoneNumber') {
+                        item.setValue(project.get(item.name));
+                    }
+                });
+            }
+            else {
+                Ext.Array.each(headerItems, function (item, index, arr){
+                    item.setValue('');
+                });
+                Ext.Array.each(footerItems, function (item, index, arr){
+                    if (item.name != 'phoneNumber') {
+                        item.setValue('');
+                    }
+                });
+            }
+        }
+
+        me.renderHeaderAndFooterInfo = function (project){
+            if (project) {
+                var projectTime = project.get('period').split(':');
+                project.set({
+                    startTime: projectTime[0],
+                    endTime: projectTime[1]
+                });
+                if (project.get('businessId')) {
+                    Ext.Ajax.request({
+                        url: './libs/business.php',
+                        method: 'GET',
+                        params: {
+                            action: 'getBusinessById',
+                            businessId: project.get('businessId')
+                        },
+                        callback: function (opts, success, res){
+                            if (success) {
+                                var obj = Ext.decode(res.responseText);
+                                if (obj.length > 0) {
+                                    project.set({
+                                        custName: obj[0]['customer']
+                                    });
+                                    me.goThroughField(project);
+                                }
+                                else {
+                                    showMsg('该工程没有客户名称！');
+                                    me.goThroughField(project);
+                                }
+                            }
+                        }
+                    })
+                }
+                else {
+                    me.goThroughField(project);
+                }
+            }
+            else {
+                me.goThroughField();
             }
         }
 
@@ -162,12 +231,13 @@ Ext.define('FamilyDecoration.view.planmaking.PlanTable', {
                 layout: 'hbox',
                 name: 'fieldcontainer-plantableHeader',
                 defaults: {
-                    xtype: 'displayfield'
+                    xtype: 'displayfield',
+                    labelWidth: 70
                 },
                 items: [
                     {
                         fieldLabel: '客户姓名',
-                        name: 'customerName',
+                        name: 'custName',
                         flex: 1
                     },
                     {
@@ -199,6 +269,36 @@ Ext.define('FamilyDecoration.view.planmaking.PlanTable', {
                     emptyText: '请选择项目加载对应计划表',
                     deferEmptyText: false,
                     forceFit: true
+                },
+                listeners: {
+                    afterrender: function (grid, opts){
+                        var view = grid.getView();
+                        var tip = Ext.create('Ext.tip.ToolTip', {
+                            // The overall target element.
+                            target: view.el,
+                            // Each grid row causes its own separate show and hide.
+                            delegate: view.cellSelector,
+                            // Moving within the row should not hide the tip.
+                            trackMouse: true,
+                            // Render immediately so that tip.body can be referenced prior to the first show.
+                            renderTo: Ext.getBody(),
+                            listeners: {
+                                // Change content dynamically depending on which element triggered the show.
+                                beforeshow: function updateTipBody(tip) {
+                                    var gridColumns = view.getGridColumns();
+                                    var column = gridColumns[tip.triggerElement.cellIndex];
+                                    var rec = view.getRecord(tip.triggerElement.parentNode);
+                                    var val = rec.get(column.dataIndex);
+                                    if (val && (column.dataIndex == 'parentItemName' || column.dataIndex == 'itemName') ) {
+                                        tip.update(val);
+                                    }
+                                    else {
+                                        return false;
+                                    }
+                                }
+                            }
+                        });
+                    }
                 }
             },
             {

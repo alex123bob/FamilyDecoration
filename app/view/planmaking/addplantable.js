@@ -13,6 +13,7 @@ Ext.define('FamilyDecoration.view.planmaking.AddPlanTable', {
     project: undefined,
     planId: undefined,
     maximizable: true,
+    closable: false,
 
     callbackAfterClose: Ext.emptyFn,
 
@@ -133,7 +134,7 @@ Ext.define('FamilyDecoration.view.planmaking.AddPlanTable', {
                                 maxValue: projectTime[1],
                                 listeners: {
                                     select: function (picker, val, opts){
-                                        console.log(picker);
+                                        picker.triggerBlur(); // private function
                                     },
                                     expand: function (picker, opts){
                                         if (!picker.getValue()){
@@ -155,6 +156,9 @@ Ext.define('FamilyDecoration.view.planmaking.AddPlanTable', {
                                 minValue: projectTime[0],
                                 maxValue: projectTime[1],
                                 listeners: {
+                                    select: function (picker, val, opts){
+                                        picker.triggerBlur(); // private function
+                                    },
                                     expand: function (picker, opts){
                                         if (!picker.getValue()){
                                             picker.setValue(projectTime[1]);

@@ -14,12 +14,14 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 			var projectPane = Ext.getCmp('treepanel-projectNameForPlanMaking'),
 				project = projectPane.getSelectionModel().getSelection()[0],
 				planPane = Ext.getCmp('panel-projectPlan'),
-				planTable = planPane.down('gridpanel');
+				planTable = planPane.down('planmaking-plantable'),
+				planGrid = planTable.down('grid');
 			return {
 				projectPane: projectPane,
 				project: project,
 				planPane: planPane,
-				planTable: planTable
+				planTable: planTable,
+				planGrid: planGrid
 			};
 		};
 
@@ -53,14 +55,17 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 								btns = projectPlanPane.getButtons();
 							if (rec && rec.get('projectName')) {
 								btns.editPlan.enable();
+								btns.deletePlan.enable();
 								btns.backToProject.enable();
 								planTable.rerenderGridByProject(rec);
+								planTable.renderHeaderAndFooterInfo(rec);
 							}
 							else {
 								btns.editPlan.disable();
 								btns.deletePlan.disable();
 								btns.backToProject.disable();
 								planTable.rerenderGridByProject();
+								planTable.renderHeaderAndFooterInfo();
 							}
 
 						}
@@ -102,7 +107,7 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 										isEdit: true,
 										callbackAfterClose: function (){
 											var resourceObj = me.getRes();
-											resourceObj.planTable.getStore().reload();
+											resourceObj.planGrid.getStore().reload();
 										}
 									});
 									win.show();
@@ -120,7 +125,7 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 											project: resourceObj.project,
 											callbackAfterClose: function (){
 												var resourceObj = me.getRes();
-												resourceObj.planTable.getStore().reload();
+												resourceObj.planTable.rerenderGridByProject(resourceObj.project);
 											}
 										});
 										win.show();
@@ -137,27 +142,26 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 						hidden: User.isGeneral() ? true : false,
 						disabled: true,
 						handler: function () {
-							var treepanel = Ext.getCmp('treepanel-projectNameForPlanMaking'),
-								rec = treepanel.getSelectionModel().getSelection()[0],
-								grid = Ext.getCmp('gridpanel-projectPlanMaking');
+							var resourceObj = me.getRes();
 							Ext.Msg.warning('确定要删除此计划吗？', function (btn) {
 								if ('yes' == btn) {
-									Ext.Ajax.request({
-										url: './libs/plan.php?action=deletePlanByProjectId',
-										method: 'POST',
-										params: {
-											projectId: rec.getId()
-										},
-										callback: function (opts, success, res) {
-											if (success) {
-												var obj = Ext.decode(res.responseText);
-												if (obj.status == 'successful') {
-													showMsg('删除计划成功！');
-													grid.refresh(rec);
-												}
-											}
+									ajaxGet('PlanMaking', false, {
+										projectId: resourceObj.project.getId()
+									}, function (obj){
+										if (obj.data.length > 0) {
+											var planId = obj['data'][0]['id'];
+											ajaxUpdate('PlanMaking', {
+												id: planId,
+												isDeleted: 'true'
+											}, 'id', function (obj){
+												resourceObj.planTable.rerenderGridByProject(resourceObj.project);
+												resourceObj.planTable.renderHeaderAndFooterInfo(resourceObj.project);
+											});
 										}
-									})
+										else {
+											showMsg('改工程暂时没有计划，不能执行删除操作！');
+										}
+									});
 								}
 							});
 						}

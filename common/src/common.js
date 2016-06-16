@@ -415,14 +415,12 @@ Ext.require('Ext.Ajax', function () {
          * @return {?boolean}
          */
         function (conn, response, opts, eopts) {
-            if (!opts.silent) {
-                if (opts.mask) {
-                    Ext.get(opts.mask).unmask();
-                }
-                else {
-                    var el = Ext.get('topMask');
-                    el && el.setStyle('display', 'none');
-                }
+            if (opts.mask) {
+                Ext.get(opts.mask).unmask();
+            }
+            else {
+                var el = Ext.get('topMask');
+                el && el.setStyle('display', 'none');
             }
             var text = response.responseText;
             var showMgs = opts.showMsg || Ext.Ajax.showMsg;
