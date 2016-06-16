@@ -57,6 +57,8 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 								btns.editPlan.enable();
 								btns.deletePlan.enable();
 								btns.backToProject.enable();
+								btns.previewPlan.enable();
+								btns.printPlan.enable();
 								planTable.rerenderGridByProject(rec);
 								planTable.renderHeaderAndFooterInfo(rec);
 							}
@@ -64,6 +66,8 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 								btns.editPlan.disable();
 								btns.deletePlan.disable();
 								btns.backToProject.disable();
+								btns.previewPlan.disable();
+								btns.printPlan.disable();
 								planTable.rerenderGridByProject();
 								planTable.renderHeaderAndFooterInfo();
 							}
@@ -84,7 +88,9 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 					return {
 						editPlan: panel.query('[name="button-editplan"]')[0],
 						deletePlan: panel.query('[name="button-deleteplan"]')[0],
-						backToProject: panel.query('[name="button-backToProject"]')[0]
+						backToProject: panel.query('[name="button-backToProject"]')[0],
+						previewPlan: panel.query('[name="button-previewPlan"]')[0],
+						printPlan: panel.query('[name="button-printPlan"]')[0]
 					}
 				},
 				tbar: [
@@ -97,42 +103,69 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 						handler: function () {
 							var resourceObj = me.getRes(),
 								period = resourceObj.project.get('period').split(':');
-							ajaxGet('PlanMaking', false, {
-								projectId: resourceObj.project.getId()
-							}, function (obj){
-								if (obj.data.length > 0) {
-									var win = Ext.create('FamilyDecoration.view.planmaking.AddPlanTable', {
-										planId: obj['data'][0]['id'],
-										project: resourceObj.project,
-										isEdit: true,
-										callbackAfterClose: function (){
-											var resourceObj = me.getRes();
-											resourceObj.planGrid.getStore().reload();
-										}
-									});
-									win.show();
-									showMsg('进入计划编辑！');
-								}
-								else {
-									ajaxAdd('PlanMaking', {
-										projectId: resourceObj.project.getId(),
-										projectAddress: resourceObj.project.get('projectName'),
-										startTime: period[0],
-										endTime: period[1]
-									}, function (obj){
+							function add (custName){
+								ajaxGet('PlanMaking', false, {
+									projectId: resourceObj.project.getId()
+								}, function (obj){
+									if (obj.data.length > 0) {
 										var win = Ext.create('FamilyDecoration.view.planmaking.AddPlanTable', {
-											planId: obj['data']['id'],
+											planId: obj['data'][0]['id'],
 											project: resourceObj.project,
+											isEdit: true,
 											callbackAfterClose: function (){
 												var resourceObj = me.getRes();
-												resourceObj.planTable.rerenderGridByProject(resourceObj.project);
+												resourceObj.planGrid.getStore().reload();
 											}
 										});
 										win.show();
-										showMsg('已添加计划！');
-									});
-								}
-							});
+										showMsg('进入计划编辑！');
+									}
+									else {
+										ajaxAdd('PlanMaking', {
+											projectId: resourceObj.project.getId(),
+											projectAddress: resourceObj.project.get('projectName'),
+											startTime: period[0],
+											endTime: period[1],
+											custName: custName
+										}, function (obj){
+											var win = Ext.create('FamilyDecoration.view.planmaking.AddPlanTable', {
+												planId: obj['data']['id'],
+												project: resourceObj.project,
+												callbackAfterClose: function (){
+													var resourceObj = me.getRes();
+													resourceObj.planTable.rerenderGridByProject(resourceObj.project);
+												}
+											});
+											win.show();
+											showMsg('已添加计划！');
+										});
+									}
+								});
+							}
+							if (resourceObj.project.get('businessId')) {
+								Ext.Ajax.request({
+									url: './libs/business.php',
+									method: 'GET',
+									params: {
+										action: 'getBusinessById',
+										businessId: resourceObj.project.get('businessId')
+									},
+									callback: function (opts, success, res){
+										if (success) {
+											var obj = Ext.decode(res.responseText);
+											if (obj.length > 0) {
+												add(obj[0]['customer']);
+											}
+											else {
+												add();
+											}
+										}
+									}
+								});
+							}
+							else {
+								add();
+							}
 						}
 					},
 					{
@@ -187,6 +220,78 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 								showMsg('请选择工程！');
 							}
 						}
+					},
+					{
+						text: '打印预览',
+						icon: 'resources/img/preview_plan.png',
+						name: 'button-previewPlan',
+						disabled: true,
+						handler: function (){
+							var resourceObj = me.getRes(),
+								project = resourceObj.project;
+							if (project) {
+								ajaxGet('PlanMaking', false, {
+									projectId: resourceObj.project.getId()
+								}, function (obj){
+									if (obj.data.length > 0) {
+										var planId = obj['data'][0]['id'];
+										var win = window.open('./fpdf/plan.php?id=' + planId + '&page=A3','打印','height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+									}
+									else {
+										showMsg('该工程没有计划！');
+									}
+								});
+							}
+							else {
+								showMsg('没有选中项目！');
+							}
+						}
+					},
+					{
+						text: '打印进度表',
+						icon: 'resources/img/print_plan.png',
+						name: 'button-printPlan',
+						disabled: true,
+						xtype: 'splitbutton',
+						printHandler: function (paperType){
+							var resourceObj = me.getRes(),
+								project = resourceObj.project;
+							if (project) {
+								ajaxGet('PlanMaking', false, {
+									projectId: resourceObj.project.getId()
+								}, function (obj){
+									if (obj.data.length > 0) {
+										var planId = obj['data'][0]['id'];
+										var win = window.open('./fpdf/plan.php?id=' + planId + '&page=' + paperType,'打印','height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+										win.print();
+									}
+									else {
+										showMsg('该工程没有计划！');
+									}
+								});
+							}
+							else {
+								showMsg('没有选中项目！');
+							}
+						},
+						menu: [
+							{
+								text: 'A3',
+								handler: function (){
+									var splitBtn = this.ownerCt.ownerButton,
+										printFunc = splitBtn.printHandler;
+									printFunc('A3');
+								}
+							},
+							{
+								text: 'A2',
+								handler: function (){
+									var splitBtn = this.ownerCt.ownerButton,
+										printFunc = splitBtn.printHandler;
+									printFunc('A2');
+								}
+							}
+						]
 					}
 				],
 				items: [
