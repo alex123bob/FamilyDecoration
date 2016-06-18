@@ -103,7 +103,7 @@
 				$arg = mysql_real_escape_string($arg);
 			}
 			else {
-				$val = mysqli_real_escape_string($mysql->DBGetConnection(), $arg);
+				$arg = mysqli_real_escape_string($mysql->DBGetConnection(), $arg);
 			}
 		}
 		return $arg;

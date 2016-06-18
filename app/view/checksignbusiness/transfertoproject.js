@@ -41,6 +41,13 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 					fieldLabel: '客户姓名',
 					value: me.client.get('customer')
 				}, {
+					id: 'textfield-custContact',
+					name: 'textfield-custContact',
+					xtype: 'textfield',
+					readOnly: true,
+					fieldLabel: '联系方式',
+					value: me.client.get('custContact')
+				}, {
 					id: 'textfield-projectAddressForCheckSign',
 					name: 'textfield-projectAddressForCheckSign',
 					xtype: 'textfield',
@@ -276,6 +283,7 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 			text: '确定',
 			handler: function (){
 				var customer = Ext.getCmp('textfield-clientNameForCheckSign'),
+					custContact = Ext.getCmp('textfield-custContact'),
 					address = Ext.getCmp('textfield-projectAddressForCheckSign'),
 					createTime = Ext.getCmp('datefield-createTimeForCheckSign'),
 					startTime = Ext.getCmp('datefield-projectStartTimeForCheckSign'),
@@ -293,9 +301,9 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 								  + '转为了工程';
 				    */
 				    sendContent = "您好! %1工程已经创建，工期为%2 - %3。监理%4， 设计师%5， 客户姓名%6， 联系号码%7，  祝您工作愉快！"
-				    sendContent = sendContent.format(me.client.get('address'),Ext.Date.format(startTime.getValue(), 'Y-m-d'),Ext.Date.format(endTime.getValue(), 'Y-m-d'),supervisor.getValue(),me.client.get('designer'),me.client.get('customer'),"");
+				    sendContent = sendContent.format(me.client.get('address'),Ext.Date.format(startTime.getValue(), 'Y-m-d'),Ext.Date.format(endTime.getValue(), 'Y-m-d'),supervisor.getValue(),me.client.get('designer'),me.client.get('customer'),me.client.get('custContact'));
 
-				if (customer.isValid() && address.isValid() && createTime.isValid() && startTime.isValid() 
+				if (customer.isValid() && custContact.isValid() && address.isValid() && createTime.isValid() && startTime.isValid() 
 					&& endTime.isValid() && captain.isValid() && supervisor.isValid()) {
 
 					if (startTime.getValue() - endTime.getValue() > 0) {
@@ -312,6 +320,7 @@ Ext.define('FamilyDecoration.view.checksignbusiness.TransferToProject', {
 							var p = {
 								businessId: me.client.getId(),
 								customer: customer.getValue(),
+								custContact: custContact.getValue(),
 								projectName: address.getValue(),
 								createTime: Ext.Date.format(createTime.getValue(), 'Y-m-d'),
 								startTime: Ext.Date.format(startTime.getValue(), 'Y-m-d'),

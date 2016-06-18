@@ -158,6 +158,9 @@ CREATE TABLE `plan_making` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+# alter business table, adding customer contact information as some improvement demanded by Zenan recorded in github issue panel.
+ALTER TABLE `business` ADD `custContact` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT 'customer''s contact information' AFTER `customer`;
+
 
 SET FOREIGN_KEY_CHECKS = 1;
 update `familydecoration`.`system` set `paramDesc`='', `isDeleted`='false', `id`='4', `updateTime`='0000-00-00 00:00:00', `paramName`='version', `createTime`='2015-04-11 13:51:14', `paramValue`='version-7.7' where `id`='4';

@@ -123,7 +123,7 @@
 	
 	function getBusiness($data){
 		global $mysql;
-		$fields = array('regionId','address','isFrozen','requestDead','isDead','requestDeadBusinessReason','customer','salesman','salesmanName','designer','designerName','applyDesigner','level');
+		$fields = array('regionId','address','isFrozen','requestDead','isDead','requestDeadBusinessReason','customer','custContact','salesman','salesmanName','designer','designerName','applyDesigner','level');
 		$params = array();
 		$sql = "select `b`.*, `r`.name from `business` `b` left join `region` `r` on `b`.regionId = `r`.id where `b`.`isDeleted` = 'false' and b.isTransfered = 'false' ";
 		foreach($fields as $field){
@@ -152,6 +152,7 @@
 		$obj = array("id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
 			"regionId"=>$post["regionId"],
 			"customer"=>$post["customer"],
+			"custContact"=>$post["custContact"],
 			"address"=>$post["address"],
 			"salesman"=>$post["salesman"],
 			"salesmanName"=>$post["salesmanName"],
@@ -184,7 +185,7 @@
 	function editBusiness($data){
 		global $mysql;
 		$id = $data["id"];
-		$fields = array("regionId","address","isFrozen",'requestDead','isDead','requestDeadBusinessReason',"isTransfered","updateTime","signTime","customer","salesman","source","salesmanName","designer","designerName","applyDesigner","applyProjectTransference","applyBudget");
+		$fields = array("regionId","address","isFrozen",'requestDead','isDead','requestDeadBusinessReason',"isTransfered","updateTime","signTime","customer","custContact","salesman","source","salesmanName","designer","designerName","applyDesigner","applyProjectTransference","applyBudget");
 		$obj = array();
 		foreach($fields as $field){
 			if(isset($data[$field]))
@@ -210,7 +211,7 @@
 		global $mysql;
 		//必须字段
 		$businessId = $data['businessId'];
-		$obj = array('customer'=>$data['customer'],"businessId"=>$businessId);
+		$obj = array('customer'=>$data['customer'],"custContact"=>$data["custContact"],"businessId"=>$businessId);
 		//可选字段
 		$fields = array("projectTime","projectName","designer","designerName","captain","captainName","salesman","supervisor","supervisorName","salesmanName");
 		foreach($fields as $field){

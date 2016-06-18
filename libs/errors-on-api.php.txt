@@ -1,4 +1,0 @@
-【Error】 select IFNULL(sum(amount*unitPrice),0) as totalFee from statement_bill_item where billId = undefined 
-【Time】  2016-06-04 11:42:41
-【Meg】   Unknown column 'undefined' in 'where clause' sql:select IFNULL(sum(amount*unitPrice),0) as totalFee from statement_bill_item where billId = undefined 
-

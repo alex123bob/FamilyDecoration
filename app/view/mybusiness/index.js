@@ -353,7 +353,6 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						}
 					}]
 				}),
-				autoScroll: true,
 				listeners: {
 					itemclick: function (view, rec){
 					},
@@ -511,6 +510,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 				},
 				refresh: function (client){
 					var clientName = Ext.getCmp('textfield-clientNameOnTop'),
+						custContact = Ext.getCmp('textfield-custContactOnTop'),
 						businessStaff = Ext.getCmp('textfield-businessStaffOnTop'),
 						businessSource = Ext.getCmp('textfield-businessSourceOnTop'),
 						businessDesigner = Ext.getCmp('textfield-businessDesignerOnTop');
@@ -533,6 +533,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 							}
 						});
 						clientName.setValue(client.get('customer'));
+						custContact.setValue(client.get('custContact'));
 						businessStaff.setValue(client.get('salesman'));
 						businessSource.setValue(client.get('source'));
 						businessDesigner.setValue(client.get('designer'));
@@ -540,6 +541,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 					else {
 						this.getStore().removeAll();
 						clientName.setValue('');
+						custContact.setValue('');
 						businessStaff.setValue('');
 						businessSource.setValue('');
 						businessDesigner.setValue('');
@@ -576,6 +578,14 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						width: 140,
 						readOnly: true,
 						fieldLabel: ' 客户姓名'
+					}, {
+						xtype: 'textfield',
+						name: 'textfield-custContactOnTop',
+						id: 'textfield-custContactOnTop',
+						labelWidth: 60,
+						width: 140,
+						readOnly: true,
+						fieldLabel: ' 联系方式'
 					}, {
 						xtype: 'textfield',
 						name: 'textfield-businessStaffOnTop',
