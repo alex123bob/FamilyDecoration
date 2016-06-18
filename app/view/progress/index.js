@@ -232,13 +232,12 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					}
 				}
 			}, {
-				hidden: User.isGeneral() ? true : false,
 				xtype: 'progress-projectlist',
 				title: '已封存项目',
 				id: 'treepanel-frozenProject',
 				name: 'treepanel-frozenProject',
 				loadAll: false,
-				hidden: me.projectId ? true : false,
+				hidden: me.projectId || User.isGeneral() ? true : false,
 				tools: [{
 					type: 'gear',
 					disabled: true,

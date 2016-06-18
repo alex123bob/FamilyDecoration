@@ -146,6 +146,12 @@
                         icon: 'resources/img/progress.png'
                     },
                     {
+                        name: "工程进度 <font color='green'><strong>新</strong></font>",
+                        cmp: 'projectprogress-index',
+                        leaf: true,
+                        icon: 'resources/img/projectprogress.png'
+                    },
+                    {
                         name: "计划生成",
                         cmp: 'plan-index',
                         leaf: true,

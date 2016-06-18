@@ -38,7 +38,8 @@ Ext.define('FamilyDecoration.Application', {
         'ManuallyCheckBill',
         'CheckBillItem',
         'BillAudit',
-        'PlanMaking'
+        'PlanMaking',
+        'ProjectProgress'
     ],
 
     stores: [
