@@ -14,6 +14,35 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
 
     initComponent: function () {
         var me = this;
+
+        me.getRes = function () {
+            var proPanel = Ext.getCmp('treepanel-projectNameForProjectProgress'),
+                pro = proPanel.getSelectionModel().getSelection()[0],
+                proSt = proPanel.getStore(),
+                proSelModel = proPanel.getSelectionModel(),
+                freezeProBtn = Ext.getCmp('tool-frozeProjectForProjectProgress'),
+                frozenPanel = Ext.getCmp('treepanel-frozenProjectForProjectProgress'),
+                frozenPro = frozenPanel.getSelectionModel().getSelection()[0],
+                frozenSt = frozenPanel.getStore(),
+                frozenProSelModel = frozenPanel.getSelectionModel(),
+                unfreezeProBtn = Ext.getCmp('tool-unfreezeProjectForProjectProgress'),
+                progressGrid = Ext.getCmp('gridpanel-projectProgressForProjectProgress');
+
+            return {
+                proPanel: proPanel,
+                pro: pro,
+                proSt: proSt,
+                proSelModel: proSelModel,
+                freezeProBtn: freezeProBtn,
+                frozenPanel: frozenPanel,
+                frozenPro: frozenPro,
+                frozenSt: frozenSt,
+                frozenProSelModel: frozenProSelModel,
+                unfreezeProBtn: unfreezeProBtn,
+                progressGrid: progressGrid
+            };
+        };
+
         me.items = [
             {
                 hidden: me.projectId ? true : false,
@@ -42,42 +71,37 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                                 name: 'tool-frozeProjectForProjectProgress',
                                 tooltip: '工程完工',
                                 callback: function () {
-                                    var panel = Ext.getCmp('treepanel-projectNameForProjectProgress');
-                                    var pro = panel.getSelectionModel().getSelection()[0];
+                                    var resObj = me.getRes();
 
-                                    Ext.Msg.warning('确定要封存项目"' + pro.get('projectName') + '"吗？', function (id) {
+                                    Ext.Msg.warning('确定要封存项目"' + resObj.pro.get('projectName') + '"吗？', function (id) {
                                         if (id == 'yes') {
                                             Ext.Ajax.request({
                                                 url: './libs/project.php?action=editProject',
                                                 method: 'POST',
                                                 params: {
-                                                    projectId: pro.get('projectId'),
+                                                    projectId: resObj.pro.get('projectId'),
                                                     isFrozen: 1
                                                 },
                                                 callback: function (opts, success, res) {
                                                     if (success) {
-                                                        var obj = Ext.JSON.decode(res.responseText),
-                                                            treePanel = Ext.getCmp('treepanel-projectNameForProjectProgress'),
-                                                            frozenPanel = Ext.getCmp('treepanel-frozenProjectForProjectProgress'),
-                                                            st = frozenPanel.getStore();
+                                                        var obj = Ext.JSON.decode(res.responseText);
                                                         if (obj.status == 'successful') {
                                                             showMsg('封存成功！');
-                                                            treePanel.getStore().load({
-                                                                node: pro.parentNode
+                                                            resObj.proSt.load({
+                                                                node: resObj.pro.parentNode
                                                             });
-                                                            treePanel.getSelectionModel().deselectAll();
-                                                            st.proxy.url = './libs/project.php';
-                                                            st.proxy.extraParams = {
+                                                            resObj.proSelModel.deselectAll();
+                                                            resObj.frozenSt.proxy.url = './libs/project.php';
+                                                            resObj.frozenSt.proxy.extraParams = {
                                                                 action: 'getProjectYears'
                                                             };
-                                                            st.load({
-                                                                node: frozenPanel.getRootNode(),
+                                                            resObj.frozenSt.load({
+                                                                node: resObj.frozenPanel.getRootNode(),
                                                                 callback: function () {
-                                                                    var progressGrid = Ext.getCmp('gridpanel-projectProgressForProjectProgress');
-                                                                    frozenPanel.getSelectionModel().deselectAll();
-                                                                    progressGrid.initBtn();
-                                                                    progressGrid.refresh();
-                                                                    Ext.getCmp('tool-frozeProjectForProjectProgress').disable();
+                                                                    resObj.frozenProSelModel.deselectAll();
+                                                                    resObj.progressGrid.initBtn();
+                                                                    resObj.progressGrid.refresh();
+                                                                    resObj.freezeProBtn.disable();
                                                                 }
                                                             });
                                                         }
@@ -109,10 +133,9 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                                 name: 'button-editProjectForProjectProgress',
                                 icon: './resources/img/edit2.png',
                                 handler: function () {
-                                    var panel = Ext.getCmp('treepanel-projectNameForProjectProgress');
-                                    var pro = panel.getSelectionModel().getSelection()[0];
+                                    var resObj = me.getRes();
                                     var win = Ext.create('FamilyDecoration.view.progress.EditProject', {
-                                        project: pro
+                                        project: resObj.pro
                                     });
                                     win.show();
                                 }
@@ -125,39 +148,37 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                                 id: 'button-deleteProjectForProjectProgress',
                                 name: 'button-deleteProjectForProjectProgress',
                                 handler: function () {
-                                    var panel = Ext.getCmp('treepanel-projectNameForProjectProgress');
-                                    var pro = panel.getSelectionModel().getSelection()[0];
-                                    var progressGrid = Ext.getCmp('gridpanel-projectProgressForProjectProgress');
+                                    var resObj = me.getRes();
 
-                                    Ext.Msg.warning('【注意】删除项目会删除项目下所有的进度内容。<br />确定要删除项目"' + pro.get('projectName') + '"吗？', function (id) {
+                                    Ext.Msg.warning('【注意】删除项目会删除项目下所有的进度内容。<br />确定要删除项目"' + resObj.pro.get('projectName') + '"吗？', function (id) {
                                         if (id == 'yes') {
                                             Ext.Ajax.request({
                                                 url: './libs/project.php?action=delProject',
                                                 method: 'POST',
                                                 params: {
-                                                    projectId: pro.get('projectId')
+                                                    projectId: resObj.pro.get('projectId')
                                                 },
                                                 callback: function (opts, success, res) {
                                                     if (success) {
                                                         var obj = Ext.JSON.decode(res.responseText);
                                                         if (obj.status == 'successful') {
                                                             panel.getStore().load({
-                                                                node: pro.parentNode.parentNode
+                                                                node: resObj.pro.parentNode.parentNode
                                                             });
-                                                            panel.getSelectionModel().deselectAll();
+                                                            resObj.proSelModel.deselectAll();
                                                             Ext.Ajax.request({
                                                                 url: './libs/progress.php?action=deleteProgressByProjectId',
                                                                 method: 'POST',
                                                                 params: {
-                                                                    projectId: pro.getId()
+                                                                    projectId: resObj.pro.getId()
                                                                 },
                                                                 callback: function (opts, success, res) {
                                                                     if (success) {
                                                                         var obj = Ext.decode(res.responseText);
                                                                         if (obj.status == 'successful') {
                                                                             showMsg('删除成功！');
-                                                                            progressGrid.refresh();
-                                                                            progressGrid.initBtn();
+                                                                            resObj.progressGrid.refresh();
+                                                                            resObj.progressGrid.initBtn();
                                                                         }
                                                                         else {
                                                                             showMsg(obj.errMsg);
