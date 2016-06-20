@@ -91,7 +91,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					icon: './resources/img/add5.png',
 					handler: function (){
 						var win = Ext.create('FamilyDecoration.view.progress.EditProject', {
-
+							proPanel: Ext.getCmp('treepanel-projectName')
 						});
 						win.show();
 					}
@@ -106,7 +106,8 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 						var panel = Ext.getCmp('treepanel-projectName');
 						var pro = panel.getSelectionModel().getSelection()[0];
 						var win = Ext.create('FamilyDecoration.view.progress.EditProject', {
-							project: pro
+							project: pro,
+							proPanel: Ext.getCmp('treepanel-projectName')
 						});
 						win.show();
 					}
@@ -526,6 +527,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 					var proPanel = Ext.getCmp('treepanel-projectName'),
 						project = proPanel.getSelectionModel().getSelection()[0];
 					var win = Ext.create('FamilyDecoration.view.progress.EditProgress', {
+						progressGrid: Ext.getCmp('gridpanel-projectProgress'),
 						project: project
 					});
 					win.show();
@@ -544,7 +546,8 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 						progress = gridPanel.getSelectionModel().getSelection()[0];
 					var win = Ext.create('FamilyDecoration.view.progress.EditProgress', {
 						project: project,
-						progress: progress
+						progress: progress,
+						progressGrid: Ext.getCmp('gridpanel-projectProgress')
 					});
 					win.show();
 				}

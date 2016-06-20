@@ -11,6 +11,7 @@ Ext.define('FamilyDecoration.view.progress.EditProgress', {
 	height: 240,
 	project: null,
 	progress: null,
+	progressGrid: null,
 	layout: 'vbox',
 
 	initComponent: function (){
@@ -64,7 +65,7 @@ Ext.define('FamilyDecoration.view.progress.EditProgress', {
 								str = (me.progress ? '编辑' : '添加') + str;
 								showMsg(str);
 								me.close();
-								Ext.getCmp('gridpanel-projectProgress').getStore().reload();
+								me.progressGrid.getStore().reload();
 							}
 							else {
 								Ext.Msg.error(obj.errMsg);

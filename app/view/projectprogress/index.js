@@ -142,8 +142,9 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                                 name: 'button-addProjectForProjectProgress',
                                 icon: './resources/img/add5.png',
                                 handler: function () {
+                                    var resObj = me.getRes();
                                     var win = Ext.create('FamilyDecoration.view.progress.EditProject', {
-
+                                        proPanel: resObj.proPanel
                                     });
                                     win.show();
                                 }
@@ -158,7 +159,8 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                                 handler: function () {
                                     var resObj = me.getRes();
                                     var win = Ext.create('FamilyDecoration.view.progress.EditProject', {
-                                        project: resObj.pro
+                                        project: resObj.pro,
+                                        proPanel: resObj.proPanel
                                     });
                                     win.show();
                                 }
@@ -584,7 +586,8 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                         handler: function () {
                             var resObj = me.getRes();
                             var win = Ext.create('FamilyDecoration.view.progress.EditProgress', {
-                                project: resObj.pro
+                                project: resObj.pro,
+                                progressGrid: resObj.progressGrid
                             });
                             win.show();
                         }
@@ -600,7 +603,8 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                             var resObj = me.getRes();
                             var win = Ext.create('FamilyDecoration.view.progress.EditProgress', {
                                 project: resObj.pro,
-                                progress: resObj.progress
+                                progress: resObj.progress,
+                                progressGrid: resObj.progressGrid
                             });
                             win.show();
                         }
