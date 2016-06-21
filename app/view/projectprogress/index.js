@@ -6,7 +6,7 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
         'FamilyDecoration.view.progress.EditProgress', 'FamilyDecoration.view.progress.ProjectList',
         'FamilyDecoration.view.budget.BudgetPanel', 'Ext.layout.container.Form', 'FamilyDecoration.model.Progress',
         'FamilyDecoration.store.BusinessDetail', 'FamilyDecoration.view.progress.ProjectListByCaptain',
-        'Ext.form.FieldSet'
+        'Ext.form.FieldSet', 'FamilyDecoration.view.projectprogress.ProgressTable'
     ],
     // autoScroll: true,
     layout: 'border',
@@ -329,10 +329,10 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
             },
             {
                 region: 'center',
-                xtype: 'gridpanel',
+                xtype: 'projectprogress-progresstable',
                 id: 'gridpanel-projectProgressForProjectProgress',
                 name: 'gridpanel-projectProgressForProjectProgress',
-                title: '工程进度查看情况',
+                title: '工程进度查看',
                 refresh: function (rec) {
                     var resObj = me.getRes(),
                         fieldObj = this.getFields(),
@@ -341,7 +341,7 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                         endTime = resObj.pro.get('period').split(':')[1]
                         resObj.progressSt.load({
                             params: {
-                                action: 'getProgressByProjectId',
+                                action: 'ProjectProgress.get',
                                 projectId: resObj.pro.getId()
                             }
                         });

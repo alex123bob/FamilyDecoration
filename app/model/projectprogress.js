@@ -1,0 +1,24 @@
+Ext.define('FamilyDecoration.model.ProjectProgress', {
+	extend: 'Ext.data.Model',
+	fields: [
+        'id',
+        {name: 'serialNumber', type: 'string'},
+        {name: 'parentItemName', type: 'string'},
+        {name: 'itemName', type: 'string'},
+        {name: 'planStartTime', type: 'string'},
+        {name: 'planEndTime', type: 'string'},
+        {name: 'professionType', type: 'string'}, // this indicates which working category it belongs to
+        {name: 'practicalStartTime', type: 'string'},
+        {name: 'practicalEndTime', type: 'string'},
+        {name: 'supervisorComment', type: 'string'},
+		{name: 'projectId', type: 'string'}
+    ],
+    idProperty: 'id',
+	proxy: {
+		type: 'rest',
+        reader: {
+            type: 'json',
+            root: 'data'
+        }
+	}
+});
