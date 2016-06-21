@@ -36,6 +36,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.PlanMaking": "../../app/controller/planmaking.js",
   "FamilyDecoration.controller.Progress": "../../app/controller/progress.js",
   "FamilyDecoration.controller.ProjectCategory": "../../app/controller/projectcategory.js",
+  "FamilyDecoration.controller.ProjectProgress": "../../app/controller/projectprogress.js",
   "FamilyDecoration.controller.RegionMgm": "../../app/controller/regionmgm.js",
   "FamilyDecoration.controller.Setting": "../../app/controller/setting.js",
   "FamilyDecoration.controller.SignBusiness": "../../app/controller/signbusiness.js",
@@ -72,6 +73,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.model.Progress": "../../app/model/progress.js",
   "FamilyDecoration.model.Project": "../../app/model/project.js",
   "FamilyDecoration.model.ProjectCategory": "../../app/model/projectcategory.js",
+  "FamilyDecoration.model.ProjectProgress": "../../app/model/projectprogress.js",
   "FamilyDecoration.model.RegionList": "../../app/model/regionlist.js",
   "FamilyDecoration.model.ScrutinizeList": "../../app/model/scrutinizelist.js",
   "FamilyDecoration.model.StatementBasicItem": "../../app/model/statementbasicitem.js",
@@ -114,6 +116,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.store.ProfessionType": "../../app/store/professiontype.js",
   "FamilyDecoration.store.Project": "../../app/store/project.js",
   "FamilyDecoration.store.ProjectCategory": "../../app/store/projectcategory.js",
+  "FamilyDecoration.store.ProjectProgress": "../../app/store/projectprogress.js",
   "FamilyDecoration.store.RegionList": "../../app/store/regionlist.js",
   "FamilyDecoration.store.ScrutinizeList": "../../app/store/scrutinizelist.js",
   "FamilyDecoration.store.StatementBasicItem": "../../app/store/statementbasicitem.js",
@@ -192,6 +195,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.personnel.StatisticTree": "../../app/view/personnel/statistictree.js",
   "FamilyDecoration.view.plan.EditPlan": "../../app/view/plan/editplan.js",
   "FamilyDecoration.view.plan.Index": "../../app/view/plan/index.js",
+  "FamilyDecoration.view.planmaking.AddPlanTable": "../../app/view/planmaking/addplantable.js",
   "FamilyDecoration.view.planmaking.Index": "../../app/view/planmaking/index.js",
   "FamilyDecoration.view.planmaking.PlanTable": "../../app/view/planmaking/plantable.js",
   "FamilyDecoration.view.progress.EditProgress": "../../app/view/progress/editprogress.js",
@@ -202,6 +206,9 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.progress.SearchFieldTree": "../../app/view/progress/searchfieldtree.js",
   "FamilyDecoration.view.progress.TreeFilter": "../../app/view/progress/treefilter.js",
   "FamilyDecoration.view.projectcategory.Index": "../../app/view/projectcategory/index.js",
+  "FamilyDecoration.view.projectprogress.EditProgress": "../../app/view/projectprogress/editprogress.js",
+  "FamilyDecoration.view.projectprogress.Index": "../../app/view/projectprogress/index.js",
+  "FamilyDecoration.view.projectprogress.ProgressTable": "../../app/view/projectprogress/progresstable.js",
   "FamilyDecoration.view.regionmgm.EditArea": "../../app/view/regionmgm/editarea.js",
   "FamilyDecoration.view.regionmgm.EditClient": "../../app/view/regionmgm/editclient.js",
   "FamilyDecoration.view.regionmgm.EditPotentialBusiness": "../../app/view/regionmgm/editpotentialbusiness.js",
@@ -1096,6 +1103,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.PlanMaking": [],
   "FamilyDecoration.controller.Progress": [],
   "FamilyDecoration.controller.ProjectCategory": [],
+  "FamilyDecoration.controller.ProjectProgress": [],
   "FamilyDecoration.controller.RegionMgm": [],
   "FamilyDecoration.controller.Setting": [],
   "FamilyDecoration.controller.SignBusiness": [],
@@ -1132,6 +1140,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.model.Progress": [],
   "FamilyDecoration.model.Project": [],
   "FamilyDecoration.model.ProjectCategory": [],
+  "FamilyDecoration.model.ProjectProgress": [],
   "FamilyDecoration.model.RegionList": [],
   "FamilyDecoration.model.ScrutinizeList": [],
   "FamilyDecoration.model.StatementBasicItem": [],
@@ -1174,6 +1183,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.store.ProfessionType": [],
   "FamilyDecoration.store.Project": [],
   "FamilyDecoration.store.ProjectCategory": [],
+  "FamilyDecoration.store.ProjectProgress": [],
   "FamilyDecoration.store.RegionList": [],
   "FamilyDecoration.store.ScrutinizeList": [],
   "FamilyDecoration.store.StatementBasicItem": [],
@@ -1252,6 +1262,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.personnel.StatisticTree": [],
   "FamilyDecoration.view.plan.EditPlan": [],
   "FamilyDecoration.view.plan.Index": [],
+  "FamilyDecoration.view.planmaking.AddPlanTable": [],
   "FamilyDecoration.view.planmaking.Index": [],
   "FamilyDecoration.view.planmaking.PlanTable": [],
   "FamilyDecoration.view.progress.EditProgress": [],
@@ -1262,6 +1273,9 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.progress.SearchFieldTree": [],
   "FamilyDecoration.view.progress.TreeFilter": [],
   "FamilyDecoration.view.projectcategory.Index": [],
+  "FamilyDecoration.view.projectprogress.EditProgress": [],
+  "FamilyDecoration.view.projectprogress.Index": [],
+  "FamilyDecoration.view.projectprogress.ProgressTable": [],
   "FamilyDecoration.view.regionmgm.EditArea": [],
   "FamilyDecoration.view.regionmgm.EditClient": [],
   "FamilyDecoration.view.regionmgm.EditPotentialBusiness": [],
@@ -2322,6 +2336,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.PlanMaking": [],
   "FamilyDecoration.controller.Progress": [],
   "FamilyDecoration.controller.ProjectCategory": [],
+  "FamilyDecoration.controller.ProjectProgress": [],
   "FamilyDecoration.controller.RegionMgm": [],
   "FamilyDecoration.controller.Setting": [],
   "FamilyDecoration.controller.SignBusiness": [],
@@ -2358,6 +2373,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.model.Progress": [],
   "FamilyDecoration.model.Project": [],
   "FamilyDecoration.model.ProjectCategory": [],
+  "FamilyDecoration.model.ProjectProgress": [],
   "FamilyDecoration.model.RegionList": [],
   "FamilyDecoration.model.ScrutinizeList": [],
   "FamilyDecoration.model.StatementBasicItem": [],
@@ -2400,6 +2416,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.store.ProfessionType": [],
   "FamilyDecoration.store.Project": [],
   "FamilyDecoration.store.ProjectCategory": [],
+  "FamilyDecoration.store.ProjectProgress": [],
   "FamilyDecoration.store.RegionList": [],
   "FamilyDecoration.store.ScrutinizeList": [],
   "FamilyDecoration.store.StatementBasicItem": [],
@@ -2602,6 +2619,9 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.plan.Index": [
     "widget.plan-index"
   ],
+  "FamilyDecoration.view.planmaking.AddPlanTable": [
+    "widget.planmaking-addplantable"
+  ],
   "FamilyDecoration.view.planmaking.Index": [
     "widget.planmaking-index"
   ],
@@ -2631,6 +2651,15 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.projectcategory.Index": [
     "widget.projectcategory-index"
+  ],
+  "FamilyDecoration.view.projectprogress.EditProgress": [
+    "widget.projectprogress-editprogress"
+  ],
+  "FamilyDecoration.view.projectprogress.Index": [
+    "widget.projectprogress-index"
+  ],
+  "FamilyDecoration.view.projectprogress.ProgressTable": [
+    "widget.projectprogress-progresstable"
   ],
   "FamilyDecoration.view.regionmgm.EditArea": [
     "widget.regionmgm-editarea"

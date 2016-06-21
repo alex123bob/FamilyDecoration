@@ -2,11 +2,11 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
     extend: 'Ext.container.Container',
     alias: 'widget.projectprogress-index',
     requires: [
-        'FamilyDecoration.store.Project', 'FamilyDecoration.view.progress.EditProject', 'Ext.tree.Panel',
-        'FamilyDecoration.view.progress.EditProgress', 'FamilyDecoration.view.progress.ProjectList',
-        'FamilyDecoration.view.budget.BudgetPanel', 'Ext.layout.container.Form', 'FamilyDecoration.model.Progress',
+        'FamilyDecoration.store.Project', 'FamilyDecoration.view.progress.EditProject',
+        'FamilyDecoration.view.progress.ProjectList', 'FamilyDecoration.view.projectprogress.EditProgress',
+        'FamilyDecoration.view.budget.BudgetPanel', 'FamilyDecoration.model.Progress',
         'FamilyDecoration.store.BusinessDetail', 'FamilyDecoration.view.progress.ProjectListByCaptain',
-        'Ext.form.FieldSet', 'FamilyDecoration.view.projectprogress.ProgressTable'
+        'FamilyDecoration.view.projectprogress.ProgressTable'
     ],
     // autoScroll: true,
     layout: 'border',
@@ -585,7 +585,7 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                         disabled: true,
                         handler: function () {
                             var resObj = me.getRes();
-                            var win = Ext.create('FamilyDecoration.view.progress.EditProgress', {
+                            var win = Ext.create('FamilyDecoration.view.projectprogress.EditProgress', {
                                 project: resObj.pro,
                                 progressGrid: resObj.progressGrid
                             });
@@ -601,7 +601,7 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                         disabled: true,
                         handler: function () {
                             var resObj = me.getRes();
-                            var win = Ext.create('FamilyDecoration.view.progress.EditProgress', {
+                            var win = Ext.create('FamilyDecoration.view.projectprogress.EditProgress', {
                                 project: resObj.pro,
                                 progress: resObj.progress,
                                 progressGrid: resObj.progressGrid
@@ -618,34 +618,6 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                         disabled: true,
                         handler: function () {
                             var resObj = me.getRes();
-                            if (resObj.progress) {
-                                Ext.Msg.warning('确定删除该条进度吗？', function (btn) {
-                                    if (btn == 'yes') {
-                                        Ext.Ajax.request({
-                                            url: './libs/progress.php?action=deleteProgress',
-                                            method: 'POST',
-                                            params: {
-                                                id: resObj.progress.getId()
-                                            },
-                                            callback: function (opts, success, res) {
-                                                if (success) {
-                                                    var obj = Ext.decode(res.responseText);
-                                                    if (obj.status == 'successful') {
-                                                        showMsg('删除进度成功！');
-                                                        resObj.progressGrid.refresh(resObj.pro);
-                                                    }
-                                                    else {
-                                                        showMsg(obj.errMsg);
-                                                    }
-                                                }
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                            else {
-                                showMsg('请选择进度！');
-                            }
                         }
                     },
                     {
@@ -927,49 +899,6 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                         }
                     }
                 ],
-                // hideHeaders: true,
-                store: Ext.create('Ext.data.Store', {
-                    model: 'FamilyDecoration.model.Progress',
-                    autoLoad: false
-                }),
-                columns: [
-                    {
-                        text: '工程进度',
-                        dataIndex: 'progress',
-                        flex: 1,
-                        draggable: false,
-                        menuDisabled: true,
-                        sortable: false,
-                        renderer: function (val) {
-                            if (val) {
-                                return val.replace(/\n/gi, '<br />');
-                            }
-                            else {
-                                return val;
-                            }
-                        }
-                    },
-                    {
-                        text: '监理意见',
-                        dataIndex: 'comments',
-                        flex: 1,
-                        hidden: User.isGeneral(),
-                        renderer: function (val, meta, rec) {
-                            // if (User.isAdmin() || User.isSupervisor()) {
-                            meta.style = 'cursor: pointer;';
-                            // }
-                            if (val) {
-                                return val.replace(/\n/gi, '<br />');
-                            }
-                            else {
-                                return val;
-                            }
-                        },
-                        draggable: false,
-                        menuDisabled: true,
-                        sortable: false
-                    }
-                ],
                 listeners: {
                     selectionchange: function (view, sels) {
                         var resObj = me.getRes();
@@ -977,7 +906,7 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                     },
                     cellclick: function (table, td, cellIndex, rec, tr, rowIndex, e, eOpts) {
                         // if (User.isAdmin() || User.isSupervisor()) {
-                        if (1 == cellIndex) {
+                        if (4 == cellIndex) {
                             var win = Ext.create('Ext.window.Window', {
                                 title: '添加监理意见',
                                 width: 500,
@@ -1074,7 +1003,7 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                             listeners: {
                                 beforeshow: function (tip) {
                                     var gridColumns = view.getGridColumns();
-                                    if (tip.triggerElement.cellIndex == 1 && (User.isAdmin() || User.isSupervisor())) {
+                                    if (tip.triggerElement.cellIndex == 4 && (User.isAdmin() || User.isSupervisor())) {
                                         tip.update('请点击栏目，编辑监理意见');
                                     }
                                     else {
