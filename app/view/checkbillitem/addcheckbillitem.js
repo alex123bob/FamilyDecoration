@@ -59,10 +59,19 @@ Ext.define('FamilyDecoration.view.checkbillitem.AddCheckBillItem', {
 			var grid = me,
 				st = grid.getStore();
 			if (me.workCategory) {
-				st.load({
-					params: {
-						professionType: me.workCategory
+				var newProxy = new Ext.data.proxy.Rest({
+					url: './libs/api.php',
+					reader: {
+						type: 'json',
+						root: 'data',
+						totalProperty: 'total'
 					},
+					extraParams: {
+						action: 'StatementBasicItem.get',
+						professionType: me.workCategory
+					}
+				});
+				var loadObj = {
 					callback: function (recs, ope, success){
 						if (success) {
 							var selModel = grid.getSelectionModel(),
@@ -74,7 +83,14 @@ Ext.define('FamilyDecoration.view.checkbillitem.AddCheckBillItem', {
 							}
 						}
 					}
-				});
+				};
+				if (me.workCategory != st.getProxy().extraParams.professionType) {
+					Ext.apply(loadObj, {
+						start: 0
+					});
+				}
+				st.setProxy(newProxy);
+				st.load(loadObj);
 			}
 			else {
 				st.removeAll();
@@ -163,6 +179,17 @@ Ext.define('FamilyDecoration.view.checkbillitem.AddCheckBillItem', {
 		// if there is a record bound to this grid, we are gonna load this data into this grid and edit it.
 		if (me.statementBasicItem) {
 			me.store.add(me.statementBasicItem);
+		}
+
+		if (!me.isEditable) {
+			me.dockedItems = [
+				{
+					xtype: 'pagingtoolbar',
+					store: me.store,
+					dock: 'bottom',
+					displayInfo: true
+				}
+			];
 		}
 
 		me.listeners = {

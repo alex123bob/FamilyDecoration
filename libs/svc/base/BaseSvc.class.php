@@ -42,7 +42,7 @@ class BaseSvc{
 	}
 
 	public function parseLimitSql($q){
-		return isset($q['limit']) && trim($q['limit']) != "" ? " limit ".$q['limit'] : "";
+		return isset($q['limit']) && trim($q['limit']) != "" ? " limit ".$q['start'].",".$q['limit'] : "";
 	}
 
 	public function parseSelectSql($q,$tableName = ""){

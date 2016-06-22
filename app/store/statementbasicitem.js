@@ -9,10 +9,11 @@ Ext.define('FamilyDecoration.store.StatementBasicItem', {
         // limitParam: false, //to remove param "limit"
         reader: {
             type: 'json',
-            root: 'data'
+            root: 'data',
+            totalProperty: 'total'
         },
         extraParams: {
-            action: 'StatementBasicItem.get',
+            action: 'StatementBasicItem.get'
         }
     }
 });
