@@ -84,6 +84,7 @@ Ext.define('FamilyDecoration.view.checkbillitem.Index', {
 								height: 400,
 								modal: true,
 								title: '添加对账项目',
+								closable: false,
 								items: {
 									xtype: 'checkbillitem-addcheckbillitem',
 									isEditable: true,
@@ -178,6 +179,7 @@ Ext.define('FamilyDecoration.view.checkbillitem.Index', {
 									height: 400,
 									modal: true,
 									title: '编辑对账项目',
+									closable: false,
 									items: {
 										xtype: 'checkbillitem-addcheckbillitem',
 										isEditable: true,

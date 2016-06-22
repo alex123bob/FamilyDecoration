@@ -1,7 +1,7 @@
 Ext.define('FamilyDecoration.view.checkbillitem.PickBasicItemWithSameType', {
 	extend: 'Ext.window.Window',
 	alias: 'widget.checkbillitem-pickbasicitemwithsametype',
-	requires: ['FamilyDecoration.store.BasicSubItem'],
+	requires: ['FamilyDecoration.store.BasicSubItem', 'Ext.ux.form.SearchField'],
 	// resizable: false,
 	modal: true,
 	layout: 'fit',
@@ -13,25 +13,38 @@ Ext.define('FamilyDecoration.view.checkbillitem.PickBasicItemWithSameType', {
 	workCategory: undefined,
 	basicBillItem: undefined,
 
-	initComponent: function (){
+	initComponent: function () {
 		var me = this;
+
+		var bsiSt = Ext.create('FamilyDecoration.store.BasicSubItem', {
+			autoLoad: true,
+			proxy: {
+				type: 'rest',
+				url: './libs/subitem.php',
+				reader: {
+					type: 'json'
+				},
+				extraParams: {
+					action: 'getitemsbyworkcategory',
+					workCategory: me.workCategory
+				}
+			}
+		});
+
+		me.dockedItems = [{
+			dock: 'top',
+			xtype: 'toolbar',
+			items: [{
+				xtype: 'searchfield',
+				flex: 1,
+				store: bsiSt,
+				paramName: 'subItemName'
+			}]
+		}];
 
 		me.items = [{
 			xtype: 'gridpanel',
-			store: Ext.create('FamilyDecoration.store.BasicSubItem', {
-				autoLoad: true,
-				proxy: {
-					type: 'rest',
-			        url: './libs/subitem.php',
-			        reader: {
-			            type: 'json'
-			        },
-			        extraParams: {
-			        	action: 'getitemsbyworkcategory',
-			        	workCategory: me.workCategory
-			        }
-				}
-			}),
+			store: bsiSt,
 			autoScroll: true,
 			columns: [{
 				header: '名称',
@@ -48,7 +61,7 @@ Ext.define('FamilyDecoration.view.checkbillitem.PickBasicItemWithSameType', {
 		me.buttons = [
 			{
 				text: '添加',
-				handler: function (){
+				handler: function () {
 					var grid = me.down('gridpanel'),
 						items = [],
 						sels = grid.getSelectionModel().getSelection();
@@ -70,7 +83,7 @@ Ext.define('FamilyDecoration.view.checkbillitem.PickBasicItemWithSameType', {
 			},
 			{
 				text: '取消',
-				handler: function (){
+				handler: function () {
 					me.close();
 				}
 			}
