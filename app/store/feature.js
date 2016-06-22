@@ -180,7 +180,7 @@
             {
                 name: '财务模块',
                 expanded: true,
-                cmp: isDebug() ? 'finance-parent' : '',
+                cmp: 'finance-parent',
                 icon: 'resources/img/finance-parent.png',
                 children: [
                     {
@@ -356,6 +356,9 @@
             }
             else if (rec.get('cmp') == 'regionmgm-index') {
                 flag = User.isGeneral() ? false : true;
+            }
+            else if (rec.get('cmp') == 'manuallycheckbill-index') {
+                flag = User.isAdmin() || User.isProjectManager() || User.isProjectStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'checkbillitem-index') {
                 flag = User.isAdmin() ? true : false;
