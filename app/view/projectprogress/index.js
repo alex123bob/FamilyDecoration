@@ -426,6 +426,15 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                         }
                     }
                 },
+                getHeadFields: function (){
+                    return {
+                        captain: Ext.getCmp('textfield-captainForProjectProgress'),
+                        supervisor: Ext.getCmp('textfield-supervisorForProjectProgress'),
+                        salesman: Ext.getCmp('textfield-salesmanForProjectProgress'),
+                        designer: Ext.getCmp('textfield-designerForProjectProgress'),
+                        period: Ext.getCmp('textfield-periodForProjectProgress')
+                    }
+                },
                 tbar: Ext.create('Ext.toolbar.Toolbar', {
                     enableOverflow: true,
                     items: [
