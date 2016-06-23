@@ -157,6 +157,15 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								if (rec && (rec.get('status') == 'rdyck' || rec.get('status') == 'chk')) {
 									btn.disable();
 								}
+								else if (rec && rec.get('status') == 'paid') {
+									if (name == 'deleteBill' 
+										&& (User.isAdmin() || User.isProjectManager()) ) {
+											btn.enable();
+									}
+									else {
+										btn.disable();
+									}
+								}
 								else {
 									btn.setDisabled(!(resourceObj.project && resourceObj.professionType && resourceObj.bill));
 								}

@@ -58,6 +58,9 @@ class StatementBillSvc extends BaseSvc
 		if($q['@status'] == "chk" || $q['@status'] == 'rbk'){
 			parent::update(array('id'=>$q['id'],'@checker'=>$_SESSION['name']));
 		}
+		if($q['@status'] == "paid") {
+			parent::update(array('id'=>$q['id'],'@checker'=>$_SESSION['name'],'@isPaid'=>'true'));
+		}
 		return $res;
 	}
 	public function get($q){
