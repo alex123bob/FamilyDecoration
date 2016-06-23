@@ -154,10 +154,10 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								btn.setDisabled(!(resourceObj.project && resourceObj.professionType));
 							}
 							else if (name == 'editBill' || name == 'deleteBill' || name == 'submitBill') {
-								if (rec && (rec.get('status') == 'rdyck' || rec.get('status') == 'chk')) {
+								if (rec && (rec.get('status') == 'rdyck' || rec.get('status') == 'paid')) {
 									btn.disable();
 								}
-								else if (rec && rec.get('status') == 'paid') {
+								else if (rec && rec.get('status') == 'chk') {
 									if (name == 'deleteBill' 
 										&& (User.isAdmin() || User.isProjectManager()) ) {
 											btn.enable();
