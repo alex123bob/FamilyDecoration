@@ -45,8 +45,14 @@ Class ProjectProgressSvc extends BaseSvc{
 
 	public function updateItem($q){
 		$temp = explode("-",$q['id']);   // projectId-columnName
-		$update = array('@'.$temp[1]=>$q['@time'],'projectId'=>$temp[0]);
-		return parent::update($update);
+		$obj = array('projectId'=>$temp[0]);
+		if(isset($q['@practicalProgress']))
+			$obj['@practicalProgress'] = $q['@practicalProgress']
+		if(isset($q['@professionType']))
+			$obj['@professionType'] = $q['@professionType']
+		if(isset($q['@supervisorComment']))
+			$obj['@supervisorComment'] = $q['@supervisorComment']
+		return parent::update($obj);
 	}
 }
 ?>
