@@ -341,7 +341,7 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                         endTime = resObj.pro.get('period').split(':')[1]
                         resObj.progressSt.load({
                             params: {
-                                action: 'ProjectProgress.get',
+                                action: 'ProjectProgress.getItems',
                                 projectId: resObj.pro.getId()
                             }
                         });
