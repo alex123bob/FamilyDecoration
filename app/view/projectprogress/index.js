@@ -333,7 +333,7 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                 id: 'gridpanel-projectProgressForProjectProgress',
                 name: 'gridpanel-projectProgressForProjectProgress',
                 title: '工程进度查看',
-                refresh: function (rec) {
+                refresh: function () {
                     var resObj = me.getRes(),
                         fieldObj = this.getFields(),
                         endTime;
@@ -383,8 +383,6 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                 getBtns: function () {
                     return {
                         addBtn: Ext.getCmp('button-addProgressForProjectProgress'),
-                        editBtn: Ext.getCmp('button-editProgressForProjectProgress'),
-                        delBtn: Ext.getCmp('button-deleteProgressForProjectProgress'),
                         chartBtn: Ext.getCmp('button-showProjectChartForProjectProgress'),
                         budgetBtn: Ext.getCmp('button-showBudgetForProjectProgress'),
                         planBtn: Ext.getCmp('button-showProjectPlanForProjectProgress'),
@@ -396,13 +394,11 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                     var resObj = me.getRes(),
                         btnObj = this.getBtns();
                     if (resObj.pro && resObj.pro.get('projectName')) {
-                        btnObj.addBtn.enable();
                         btnObj.chartBtn.enable();
                         btnObj.budgetBtn.enable();
                         btnObj.editHeadInfoBtn.enable();
                         btnObj.checkBusinessBtn.enable();
-                        btnObj.editBtn.setDisabled(!resObj.progress);
-                        btnObj.delBtn.setDisabled(!resObj.progress);
+                        btnObj.addBtn.setDisabled(!resObj.progress);
                         Ext.Ajax.request({
                             url: './libs/plan.php?action=getPlanByProjectId&projectId=' + resObj.pro.getId(),
                             method: 'GET',
@@ -426,7 +422,7 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                         }
                     }
                 },
-                getHeadFields: function (){
+                getHeadFields: function () {
                     return {
                         captain: Ext.getCmp('textfield-captainForProjectProgress'),
                         supervisor: Ext.getCmp('textfield-supervisorForProjectProgress'),
@@ -587,46 +583,19 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                 bbar: [
                     {
                         hidden: User.isGeneral() ? true : false,
-                        text: '添加',
+                        text: '添加图片',
                         id: 'button-addProgressForProjectProgress',
                         name: 'button-addProgressForProjectProgress',
                         icon: './resources/img/add.png',
                         disabled: true,
                         handler: function () {
                             var resObj = me.getRes();
-                            var win = Ext.create('FamilyDecoration.view.projectprogress.EditProgress', {
-                                project: resObj.pro,
-                                progressGrid: resObj.progressGrid
+                            var win = Ext.create('FamilyDecoration.view.chart.UploadForm', {
+                                url: './libs/upload_progress_pic.php',
+                                afterUpload: function (fp, o) {
+                                }
                             });
                             win.show();
-                        }
-                    },
-                    {
-                        hidden: User.isGeneral() ? true : false,
-                        text: '修改',
-                        id: 'button-editProgressForProjectProgress',
-                        name: 'button-editProgressForProjectProgress',
-                        icon: './resources/img/edit.png',
-                        disabled: true,
-                        handler: function () {
-                            var resObj = me.getRes();
-                            var win = Ext.create('FamilyDecoration.view.projectprogress.EditProgress', {
-                                project: resObj.pro,
-                                progress: resObj.progress,
-                                progressGrid: resObj.progressGrid
-                            });
-                            win.show();
-                        }
-                    },
-                    {
-                        hidden: User.isGeneral() ? true : false,
-                        text: '删除',
-                        id: 'button-deleteProgressForProjectProgress',
-                        name: 'button-deleteProgressForProjectProgress',
-                        icon: './resources/img/delete.png',
-                        disabled: true,
-                        handler: function () {
-                            var resObj = me.getRes();
                         }
                     },
                     {
@@ -915,91 +884,91 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                     },
                     cellclick: function (table, td, cellIndex, rec, tr, rowIndex, e, eOpts) {
                         // if (User.isAdmin() || User.isSupervisor()) {
-                        if (4 == cellIndex) {
-                            var win = Ext.create('Ext.window.Window', {
-                                title: '添加监理意见',
-                                width: 500,
-                                height: 200,
-                                modal: true,
-                                layout: 'fit',
-                                items: [
-                                    {
-                                        id: 'textarea-progresscommentForProjectProgress',
-                                        name: 'textarea-progresscommentForProjectProgress',
-                                        xtype: 'textarea',
-                                        value: rec.get('comments')
-                                    }
-                                ],
-                                buttons: [{
-                                    text: '添加',
-                                    handler: function () {
-                                        var resObj = me.getRes(),
-                                            pro = resObj.pro,
-                                            textarea = Ext.getCmp('textarea-progresscommentForProjectProgress');
-                                        Ext.Ajax.request({
-                                            url: './libs/progress.php?action=editProgress',
-                                            method: 'POST',
-                                            params: {
-                                                id: rec.getId(),
-                                                comments: textarea.getValue()
-                                            },
-                                            callback: function (opts, success, res) {
-                                                if (success) {
-                                                    var obj = Ext.decode(res.responseText),
-                                                        progressPanel = resObj.progressGrid;
-                                                    if (obj.status == 'successful') {
-                                                        win.close();
-                                                        showMsg('监理意见添加成功！');
-                                                        progressPanel.refresh(pro);
-                                                        var title = '监理意见添加提醒',
-                                                            content = User.getRealName() + '为项目"' + pro.get('projectName') + '"添加监理意见，内容为:' + textarea.getValue();
-                                                        // send SMS
-                                                        Ext.Ajax.request({
-                                                            url: './libs/user.php?action=getuserphone',
-                                                            method: 'GET',
-                                                            params: {
-                                                                name: pro.get('captainName')
-                                                            },
-                                                            callback: function (opts, success, res) {
-                                                                if (success) {
-                                                                    var obj = Ext.decode(res.responseText);
-                                                                    if ('successful' == obj.status) {
-                                                                        sendSMS(User.getName(), pro.get('captainName'), obj['phone'], content);
-                                                                    }
-                                                                }
-                                                            }
-                                                        });
-                                                        // send Email
-                                                        Ext.Ajax.request({
-                                                            url: './libs/user.php?action=view',
-                                                            method: 'GET',
-                                                            callback: function (opts, success, res) {
-                                                                if (success) {
-                                                                    var arr = Ext.decode(res.responseText);
-                                                                    for (var i = arr.length - 1; i >= 0; i--) {
-                                                                        var el = arr[i];
-                                                                        if (el.level == '001-001' || el.level == '001-002'
-                                                                            || el.level == '003-001' || el.name == pro.get('captainName')) {
-                                                                            sendMail(el.name, el.mail, title, content);
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        });
-                                                    }
-                                                }
-                                            }
-                                        })
-                                    }
-                                }, {
-                                        text: '取消',
-                                        handler: function () {
-                                            win.close();
-                                        }
-                                    }]
-                            });
-                            win.show();
-                        }
+                        // if (4 == cellIndex) {
+                        //     var win = Ext.create('Ext.window.Window', {
+                        //         title: '添加监理意见',
+                        //         width: 500,
+                        //         height: 200,
+                        //         modal: true,
+                        //         layout: 'fit',
+                        //         items: [
+                        //             {
+                        //                 id: 'textarea-progresscommentForProjectProgress',
+                        //                 name: 'textarea-progresscommentForProjectProgress',
+                        //                 xtype: 'textarea',
+                        //                 value: rec.get('comments')
+                        //             }
+                        //         ],
+                        //         buttons: [{
+                        //             text: '添加',
+                        //             handler: function () {
+                        //                 var resObj = me.getRes(),
+                        //                     pro = resObj.pro,
+                        //                     textarea = Ext.getCmp('textarea-progresscommentForProjectProgress');
+                        //                 Ext.Ajax.request({
+                        //                     url: './libs/progress.php?action=editProgress',
+                        //                     method: 'POST',
+                        //                     params: {
+                        //                         id: rec.getId(),
+                        //                         comments: textarea.getValue()
+                        //                     },
+                        //                     callback: function (opts, success, res) {
+                        //                         if (success) {
+                        //                             var obj = Ext.decode(res.responseText),
+                        //                                 progressPanel = resObj.progressGrid;
+                        //                             if (obj.status == 'successful') {
+                        //                                 win.close();
+                        //                                 showMsg('监理意见添加成功！');
+                        //                                 progressPanel.refresh(pro);
+                        //                                 var title = '监理意见添加提醒',
+                        //                                     content = User.getRealName() + '为项目"' + pro.get('projectName') + '"添加监理意见，内容为:' + textarea.getValue();
+                        //                                 // send SMS
+                        //                                 Ext.Ajax.request({
+                        //                                     url: './libs/user.php?action=getuserphone',
+                        //                                     method: 'GET',
+                        //                                     params: {
+                        //                                         name: pro.get('captainName')
+                        //                                     },
+                        //                                     callback: function (opts, success, res) {
+                        //                                         if (success) {
+                        //                                             var obj = Ext.decode(res.responseText);
+                        //                                             if ('successful' == obj.status) {
+                        //                                                 sendSMS(User.getName(), pro.get('captainName'), obj['phone'], content);
+                        //                                             }
+                        //                                         }
+                        //                                     }
+                        //                                 });
+                        //                                 // send Email
+                        //                                 Ext.Ajax.request({
+                        //                                     url: './libs/user.php?action=view',
+                        //                                     method: 'GET',
+                        //                                     callback: function (opts, success, res) {
+                        //                                         if (success) {
+                        //                                             var arr = Ext.decode(res.responseText);
+                        //                                             for (var i = arr.length - 1; i >= 0; i--) {
+                        //                                                 var el = arr[i];
+                        //                                                 if (el.level == '001-001' || el.level == '001-002'
+                        //                                                     || el.level == '003-001' || el.name == pro.get('captainName')) {
+                        //                                                     sendMail(el.name, el.mail, title, content);
+                        //                                                 }
+                        //                                             }
+                        //                                         }
+                        //                                     }
+                        //                                 });
+                        //                             }
+                        //                         }
+                        //                     }
+                        //                 })
+                        //             }
+                        //         }, {
+                        //                 text: '取消',
+                        //                 handler: function () {
+                        //                     win.close();
+                        //                 }
+                        //             }]
+                        //     });
+                        //     win.show();
+                        // }
                         // }
                     },
                     afterrender: function (grid, opts) {

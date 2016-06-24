@@ -5,8 +5,9 @@ Ext.define('FamilyDecoration.view.projectprogress.ProgressTable', {
         'FamilyDecoration.store.ProjectProgress'
 	],
 	autoScroll: true,
+	refresh: Ext.emptyFn,
 
-	initComponent: function (){
+	initComponent: function () {
 		var me = this;
 
 		me.columns = {
@@ -28,7 +29,7 @@ Ext.define('FamilyDecoration.view.projectprogress.ProgressTable', {
                     flex: 1,
                     text: '计划进度',
                     dataIndex: 'planStartTime',
-					renderer: function (val, meta, rec){
+					renderer: function (val, meta, rec) {
 						if (val) {
 							return val + ' ~ ' + rec.get('planEndTime');
 						}
@@ -40,12 +41,20 @@ Ext.define('FamilyDecoration.view.projectprogress.ProgressTable', {
                 {
                     flex: 1,
                     text: '实际进度',
-                    dataIndex: 'practicalStartTime'
+                    dataIndex: 'practicalProgress',
+					editor: {
+						xtype: 'textfield',
+						allowBlank: false
+					}
                 },
                 {
                     flex: 1,
                     text: '监理意见',
-                    dataIndex: 'supervisorComment'
+                    dataIndex: 'supervisorComment',
+					editor: {
+						xtype: 'textfield',
+						allowBlank: false
+					}
                 }
 			]
 		};
@@ -54,14 +63,38 @@ Ext.define('FamilyDecoration.view.projectprogress.ProgressTable', {
 			autoLoad: false
 		});
 
-		me.listeners = {
-			cellclick: function (view, td, cellIndex, rec, tr, rowIndex, e, opts){
-				
-			},
-			selectionchange: function (selModel, sels, opts){
-				
-			}
-		};
+		me.plugins = [
+			Ext.create('Ext.grid.plugin.CellEditing', {
+				clicksToEdit: 1,
+				listeners: {
+					edit: function (editor, e) {
+						Ext.suspendLayouts();
+
+						e.record.commit();
+						editor.completeEdit();
+						if (e.field == 'practicalProgress' || e.field == 'supervisorComment') {
+							var updateObj = {};
+							updateObj[e.field] = e.record.get(e.field);
+							Ext.apply(updateObj, {
+								id: e.record.getId()
+							});
+							ajaxUpdate('ProjectProgress.updateItem', updateObj, 'id', function (obj) {
+								showMsg('编辑成功！');
+								me.refresh();
+							}, true);
+						}
+
+						Ext.resumeLayouts();
+					},
+					validateedit: function (editor, e, opts) {
+						var rec = e.record;
+						if (e.value == e.originalValue) {
+							return false;
+						}
+					}
+				}
+			})
+		];
 
 		me.callParent();
 	}
