@@ -33,8 +33,8 @@ Class ProjectProgressSvc extends BaseSvc{
 				'itemName'=>$value,
 				'planStartTime'=>$startTime,
 				'planEndTime'=>$endTime,
-				'practicalProgress'=>$startTime,
-				'supervisorComment'=>$endTime,
+				'practicalProgress'=>$projectProgress['p'.$key],
+				'supervisorComment'=>$projectProgress['m'.$key],
 				'professionType'=>'xxx',
 				'projectId'=>$projectProgress['projectId'],
 				'id'=>$projectProgress['projectId'].'-'.$key);
