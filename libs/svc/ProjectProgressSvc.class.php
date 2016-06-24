@@ -9,7 +9,7 @@ Class ProjectProgressSvc extends BaseSvc{
 	public function getItems($q){
 		global $TableMapping;
 		global $mysql;
-		$sql = "select * from plan_making pr left join project_progress pl on pr.projectId = pl.projectId where pl.projectId = ? ";
+		$sql = "select * from plan_making pr left join project_progress pl on pr.projectId = pl.projectId where pr.projectId = ? ";
 		$projectProgress = $mysql->DBGetAsMap($sql,$q['projectId']);
 		if(count($projectProgress)==0)
 			throw new Exception('找不到id为'.$q['projectId'].'的项目!');
