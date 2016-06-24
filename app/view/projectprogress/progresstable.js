@@ -15,7 +15,7 @@ Ext.define('FamilyDecoration.view.projectprogress.ProgressTable', {
 			},
 			items: [
 				{
-					flex: 1,
+					flex: 0.7,
 					text: '项目',
 					dataIndex: 'parentItemName'
 				},
@@ -27,7 +27,15 @@ Ext.define('FamilyDecoration.view.projectprogress.ProgressTable', {
                 {
                     flex: 1,
                     text: '计划进度',
-                    dataIndex: 'planStartTime'
+                    dataIndex: 'planStartTime',
+					renderer: function (val, meta, rec){
+						if (val) {
+							return val + ' ~ ' + rec.get('planEndTime');
+						}
+						else {
+							return '';
+						}
+					}
                 },
                 {
                     flex: 1,
