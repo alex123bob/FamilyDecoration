@@ -10,7 +10,8 @@
 			"productNumber" => $post["productNumber"],
 			"productMerchant" => $post["productMerchant"],
 			"productSchedule" => $post["productSchedule"],
-			"productDeliver" => $post["productDeliver"]
+			"productDeliver" => $post["productDeliver"],
+			"isChecked" => $post["isChecked"]
 		);
 		global $mysql;
 		$mysql->DBInsertAsArray("`mainmaterial`",$obj);
@@ -44,6 +45,7 @@
 			$res[$count]["productMerchant"] = $val["productMerchant"];
 			$res[$count]["productSchedule"] = $val["productSchedule"];
 			$res[$count]["productDeliver"] = $val["productDeliver"];
+			$res[$count]["isChecked"] = $val["isChecked"];
 			$res[$count]["isDeleted"] = $val["isDeleted"];
 		    $count ++;
         }
@@ -65,6 +67,7 @@
 			$res[$count]["productMerchant"] = $val["productMerchant"];
 			$res[$count]["productSchedule"] = $val["productSchedule"];
 			$res[$count]["productDeliver"] = $val["productDeliver"];
+			$res[$count]["isChecked"] = $val["isChecked"];
 			$res[$count]["isDeleted"] = $val["isDeleted"];
 		    $count ++;
         }
@@ -81,6 +84,15 @@
 		$obj['productDeliver'] = $data['productDeliver'];
 		$obj['productMerchant'] = $data['productMerchant'];
 		$obj['productSchedule'] = $data['productSchedule'];
+		$obj['isChecked'] = $data['isChecked'];
+		$mysql->DBUpdate("`mainmaterial`",$obj,"`id` = '?' ",array($data["id"]));
+		return array('status'=>'successful', 'errMsg' => 'edit mainmaterial ok');
+	}
+
+	function checkMaterial ($data) {
+		global $mysql;
+		$obj= array();
+		$obj['isChecked'] = $data['isChecked'];
 		$mysql->DBUpdate("`mainmaterial`",$obj,"`id` = '?' ",array($data["id"]));
 		return array('status'=>'successful', 'errMsg' => 'edit mainmaterial ok');
 	}

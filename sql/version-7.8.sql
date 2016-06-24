@@ -71,3 +71,7 @@ CREATE TABLE `project_progress` (
   `updateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `mainmaterial` ADD `isChecked` VARCHAR(5) CHARACTER SET utf8 COLLATE utf8_general_ci NULL AFTER `productDeliver`;
+
+update `system` set `paramValue`='version-7.8' where `id`='4';

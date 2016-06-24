@@ -37,6 +37,7 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 							addPlanBtn = Ext.getCmp('button-addmaterial'),
 							editPlanBtn = Ext.getCmp('button-editmaterial'),
 							delPlanBtn = Ext.getCmp('button-deletematerial'),
+							confirmBtn = Ext.getCmp('button-confirmmaterial'),
 							grid = Ext.getCmp('gridpanel-mainMaterialContent'),
 							st = grid.getStore();
 						if (rec && rec.get('projectName')) {
@@ -48,6 +49,7 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 							addPlanBtn.disable();
 							editPlanBtn.disable();
 							delPlanBtn.disable();
+							confirmBtn.disable();
 						}
 					}
 				}
@@ -149,6 +151,48 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 						showMsg('请选择主材！');
 					}
 				}
+			}, {
+				text: '确认项目',
+				id: 'button-confirmmaterial',
+				name: 'button-confirmmaterial',
+				icon: './resources/img/confirm.png',
+				disabled: true,
+				handler: function (){
+					var treepanel = Ext.getCmp('treepanel-projectNameForMainMaterial'),
+						rec = treepanel.getSelectionModel().getSelection()[0],
+						grid = Ext.getCmp('gridpanel-mainMaterialContent'),
+						material = grid.getSelectionModel().getSelection()[0];
+					if (material) {
+						Ext.Msg.warning('确定要确认当前主材订购条目吗?', function (btnId){
+							if ('yes' == btnId) {
+								Ext.Ajax.request({
+									url: 'libs/mainmaterial.php?action=checkMaterial',
+									method: 'POST',
+									params: {
+										isChecked: 'true',
+										projectId: rec.getId(),
+										id: material.getId()
+									},
+									callback: function (opts, success, res){
+										if (success) {
+											var obj = Ext.decode(res.responseText);
+											if ('successful' == obj.status) {
+												showMsg('已经确认！');
+												grid.refresh(rec);
+											}
+											else {
+												showMsg(obj.errMsg);
+											}
+										}
+									}
+								})
+							}
+						});
+					}
+					else {
+						showMsg('请选择主材！');
+					}
+				}
 			}],
 			columns: [
 		        {
@@ -198,15 +242,33 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 		        	draggable: false,
 		        	menuDisabled: true,
 		        	sortable: false
-		        }
+		        },
+				{
+					text: '是否已确认',
+					dataIndex: 'isChecked',
+					flex: 1,
+					draggable: false,
+					menuDisabled: true,
+					sortable: false,
+					renderer: function (val, meta, rec){
+						if (val === 'true') {
+							return '<font color="green">已确认</font>';
+						}
+						else {
+							return '<font color="red">未确认</font>';
+						}
+					}
+				}
 		    ],
 		    listeners: {
 		    	selectionchange: function (view, sels){
 		    		var rec = sels[0],
 		    			editBtn = Ext.getCmp('button-editmaterial'),
-						delBtn = Ext.getCmp('button-deletematerial');
+						delBtn = Ext.getCmp('button-deletematerial'),
+						confirmBtn = Ext.getCmp('button-confirmmaterial');
 		    		editBtn.setDisabled(!rec);
 		    		delBtn.setDisabled(!rec);
+					confirmBtn.setDisabled(!rec);
 		    	}
 		    }
 		}];

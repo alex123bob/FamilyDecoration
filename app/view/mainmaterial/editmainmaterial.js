@@ -53,6 +53,11 @@ Ext.define('FamilyDecoration.view.mainmaterial.EditMainMaterial', {
 			id: 'textfield-productDeliver',
 			name: 'textfield-productDeliver',
 			value: me.mainmaterial ? me.mainmaterial.get('productDeliver') : ''
+		}, {
+			fieldLabel: '对应主材',
+			id: 'textfield-correspondingMainMaterial',
+			name: 'textfield-correspondingMainMaterial',
+			value: me.mainmaterial ? me.mainmaterial.get('correspondingMainMaterial') : ''
 		}];
 
 		me.buttons = [{

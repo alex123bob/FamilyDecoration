@@ -16,6 +16,9 @@
 		case "editMaterial":
 			$res = editMaterial($_POST);
 			break;
+		case "checkMaterial":
+			$res = checkMaterial($_POST);
+			break;
 		case "getMaterials":
 			$res = getMaterials($_REQUEST["id"]);
 			break;
