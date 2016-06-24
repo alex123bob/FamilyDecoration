@@ -9,12 +9,12 @@ Class ProjectProgressSvc extends BaseSvc{
 	public function getItems($q){
 		global $TableMapping;
 		global $mysql;
-		$sql = "select * from plan_making pr left join project_progress pl on pr.projectId = pl.projectId where pr.projectId = ? ";
+		$sql = "select pl.*,pr.* from plan_making pr left join project_progress pl on pr.projectId = pl.projectId where pr.projectId = ? ";
 		$projectProgress = $mysql->DBGetAsMap($sql,$q['projectId']);
 		if(count($projectProgress)==0)
-			throw new Exception('找不到id为'.$q['projectId'].'的项目!');
+			throw new Exception('工程'.$q['projectId'].'暂时没有计划表!');
 		if(count($projectProgress)>1)
-			throw new Exception('找到多个id为'.$q['projectId'].'的项目!');
+			throw new Exception('找到多个projectId为'.$q['projectId'].'的项目!');
 		require_once('PlanMakingSvc.class.php');
 		$count = 0;
 		$res = array();
@@ -45,14 +45,29 @@ Class ProjectProgressSvc extends BaseSvc{
 
 	public function updateItem($q){
 		$temp = explode("-",$q['id']);   // projectId-columnName
+		$projectId = $temp[0];
+		$columnName = $temp[1];
 		$obj = array('projectId'=>$temp[0]);
-		if(isset($q['@practicalProgress']))
-			$obj['@practicalProgress'] = $q['@practicalProgress'];
-		if(isset($q['@professionType']))
-			$obj['@professionType'] = $q['@professionType'];
-		if(isset($q['@supervisorComment']))
-			$obj['@supervisorComment'] = $q['@supervisorComment'];
-		return parent::update($obj);
+		$find = false;
+		if(isset($q['@practicalProgress'])){
+			$obj['@p'.$columnName] = $q['@practicalProgress'];
+			$find = true;
+		}
+		if(isset($q['@supervisorComment'])){
+			$obj['@m'.$columnName] = $q['@supervisorComment'];
+			$find = true;
+		}
+		if(!$find){
+			throw new Exception('没有审核评论或者实际进度!');
+		}
+		$res = parent::update($obj);
+		if($res['affect'] == 0){
+			$obj['@id'] = $this->getUUID();
+			$obj['@projectId'] = $projectId;
+			parent::add($obj);
+			$res['affect'] = 1;
+		}
+		return $res;
 	}
 }
 ?>
