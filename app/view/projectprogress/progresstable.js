@@ -12,7 +12,7 @@ Ext.define('FamilyDecoration.view.projectprogress.ProgressTable', {
 
 		me.columns = {
 			defaults: {
-				align: 'center'
+				align: 'left'
 			},
 			items: [
 				{
@@ -46,7 +46,7 @@ Ext.define('FamilyDecoration.view.projectprogress.ProgressTable', {
 						var result = '';
 						if (val.length > 0) {
 							Ext.each(val, function (obj, index){
-								result += (index + 1) + '. ' + obj['content'].replace(/\n/gi, '<br />') + '(' + obj['createTime'] + ')<br />';
+								result += '<strong>' + (index + 1) + '.</strong>' + ' ' + obj['content'].replace(/\n/gi, '<br />') + '(' + obj['createTime'] + ')<br />';
 							});
 							return result;
 						}
@@ -56,9 +56,21 @@ Ext.define('FamilyDecoration.view.projectprogress.ProgressTable', {
 					}
                 },
                 {
-                    flex: 1,
+                    flex: 2,
                     text: '监理意见',
-                    dataIndex: 'supervisorComment'
+                    dataIndex: 'supervisorComment',
+					renderer: function (val, meta, rec){
+						var result = '';
+						if (val.length > 0) {
+							Ext.each(val, function (obj, index){
+								result += '<strong>' + (index + 1) + '.</strong>' + ' ' + obj['content'].replace(/\n/gi, '<br />') + '(' + obj['createTime'] + ')<br />';
+							});
+							return result;
+						}
+						else {
+							return '';
+						}
+					}
                 }
 			]
 		};

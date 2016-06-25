@@ -19,9 +19,12 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
     bodyPadding: 5,
 
     layout: 'vbox',
+    isComment: false,
 
     initComponent: function () {
         var me = this;
+
+        me.title = me.isComment ? '添加监理意见' : '添加工程进度';
 
         me.items = [
             {
@@ -30,7 +33,7 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
                 flex: 1,
                 autoScroll: true,
                 allowBlank: false,
-                fieldLabel: '工程进度'
+                fieldLabel: me.isComment ? '监理意见' : '工程进度'
             }
         ];
 
@@ -40,12 +43,14 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
                 handler: function () {
                     var txtarea = me.down('textarea');
                     if (txtarea.isValid()) {
-                        Ext.Msg.warning('确定需要添加进度吗？添加之后不可更改。', function (btnId){
+                        var msg = me.isComment ? '确定要添加此监理意见吗？添加后不可更改。' : '确定需要添加进度吗？添加之后不可更改。';
+                        Ext.Msg.warning(msg, function (btnId){
                             if ('yes' == btnId) {
-                                ajaxAdd('ProjectProgress', {
+                                var params = {
                                     itemId: me.progress.getId(),
                                     content: txtarea.getValue()
-                                }, function (obj){
+                                };
+                                ajaxAdd(me.isComment ? 'ProjectProgressAudit' : 'ProjectProgress', params, function (obj){
                                     showMsg('添加成功！');
                                     me.progressGrid.refresh();
                                     me.close();

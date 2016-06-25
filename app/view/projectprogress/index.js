@@ -383,6 +383,7 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                 getBtns: function () {
                     return {
                         editBtn: Ext.getCmp('button-editProgressForProjectProgress'),
+                        commentBtn: Ext.getCmp('button-commentProgressForProjectProgress'),
                         delBtn: Ext.getCmp('button-deleteProgressForProjectProgress'),
                         chartBtn: Ext.getCmp('button-showProjectChartForProjectProgress'),
                         budgetBtn: Ext.getCmp('button-showBudgetForProjectProgress'),
@@ -401,6 +402,7 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                         btnObj.checkBusinessBtn.enable();
                         btnObj.planBtn.enable();
                         btnObj.editBtn.setDisabled(!resObj.progress || !resObj.progress.get('isEditable'));
+                        btnObj.commentBtn.setDisabled(!resObj.progress || !resObj.progress.get('isEditable'));
                         btnObj.delBtn.setDisabled(!resObj.progress || !resObj.progress.get('isEditable'));
                     }
                     else {
@@ -573,7 +575,7 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                 bbar: [
                     {
                         hidden: User.isGeneral() ? true : false,
-                        text: '修改',
+                        text: '编辑工程进度',
                         id: 'button-editProgressForProjectProgress',
                         name: 'button-editProgressForProjectProgress',
                         icon: './resources/img/edit.png',
@@ -590,6 +592,24 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                     },
                     {
                         hidden: User.isGeneral() ? true : false,
+                        text: '编辑监理意见',
+                        id: 'button-commentProgressForProjectProgress',
+                        name: 'button-commentProgressForProjectProgress',
+                        icon: './resources/img/edit1.png',
+                        disabled: true,
+                        handler: function () {
+                            var resObj = me.getRes();
+                            var win = Ext.create('FamilyDecoration.view.projectprogress.EditProgress', {
+                                project: resObj.pro,
+                                progress: resObj.progress,
+                                progressGrid: resObj.progressGrid,
+                                isComment: true
+                            });
+                            win.show();
+                        }
+                    },
+                    {
+                        hidden: true,
                         text: '删除',
                         id: 'button-deleteProgressForProjectProgress',
                         name: 'button-deleteProgressForProjectProgress',
