@@ -41,20 +41,12 @@ Ext.define('FamilyDecoration.view.projectprogress.ProgressTable', {
                 {
                     flex: 1,
                     text: '实际进度',
-                    dataIndex: 'practicalProgress',
-					editor: {
-						xtype: 'textfield',
-						allowBlank: false
-					}
+                    dataIndex: 'practicalProgress'
                 },
                 {
                     flex: 1,
                     text: '监理意见',
-                    dataIndex: 'supervisorComment',
-					editor: {
-						xtype: 'textfield',
-						allowBlank: false
-					}
+                    dataIndex: 'supervisorComment'
                 }
 			]
 		};
@@ -62,39 +54,6 @@ Ext.define('FamilyDecoration.view.projectprogress.ProgressTable', {
 		me.store = Ext.create('FamilyDecoration.store.ProjectProgress', {
 			autoLoad: false
 		});
-
-		me.plugins = [
-			Ext.create('Ext.grid.plugin.CellEditing', {
-				clicksToEdit: 1,
-				listeners: {
-					edit: function (editor, e) {
-						Ext.suspendLayouts();
-
-						e.record.commit();
-						editor.completeEdit();
-						if (e.field == 'practicalProgress' || e.field == 'supervisorComment') {
-							var updateObj = {};
-							updateObj[e.field] = e.record.get(e.field);
-							Ext.apply(updateObj, {
-								id: e.record.getId()
-							});
-							ajaxUpdate('ProjectProgress.updateItem', updateObj, 'id', function (obj) {
-								showMsg('编辑成功！');
-								me.refresh();
-							}, true);
-						}
-
-						Ext.resumeLayouts();
-					},
-					validateedit: function (editor, e, opts) {
-						var rec = e.record;
-						if (e.value == e.originalValue) {
-							return false;
-						}
-					}
-				}
-			})
-		];
 
 		me.callParent();
 	}
