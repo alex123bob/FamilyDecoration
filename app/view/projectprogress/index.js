@@ -1005,26 +1005,6 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                         //     win.show();
                         // }
                         // }
-                    },
-                    afterrender: function (grid, opts) {
-                        var view = grid.getView();
-                        var tip = Ext.create('Ext.tip.ToolTip', {
-                            target: view.el,
-                            delegate: view.cellSelector,
-                            trackMouse: true,
-                            renderTo: Ext.getBody(),
-                            listeners: {
-                                beforeshow: function (tip) {
-                                    var gridColumns = view.getGridColumns();
-                                    if (tip.triggerElement.cellIndex == 4 && (User.isAdmin() || User.isSupervisor())) {
-                                        tip.update('请点击栏目，编辑监理意见');
-                                    }
-                                    else {
-                                        return false;
-                                    }
-                                }
-                            }
-                        });
                     }
                 }
             }
