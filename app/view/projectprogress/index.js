@@ -382,7 +382,8 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                 },
                 getBtns: function () {
                     return {
-                        addBtn: Ext.getCmp('button-addProgressForProjectProgress'),
+                        editBtn: Ext.getCmp('button-editProgressForProjectProgress'),
+                        delBtn: Ext.getCmp('button-deleteProgressForProjectProgress'),
                         chartBtn: Ext.getCmp('button-showProjectChartForProjectProgress'),
                         budgetBtn: Ext.getCmp('button-showBudgetForProjectProgress'),
                         planBtn: Ext.getCmp('button-showProjectPlanForProjectProgress'),
@@ -398,20 +399,9 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                         btnObj.budgetBtn.enable();
                         btnObj.editHeadInfoBtn.enable();
                         btnObj.checkBusinessBtn.enable();
-                        btnObj.addBtn.setDisabled(!resObj.progress);
-                        Ext.Ajax.request({
-                            url: './libs/plan.php?action=getPlanByProjectId&projectId=' + resObj.pro.getId(),
-                            method: 'GET',
-                            callback: function (opts, success, res) {
-                                if (success) {
-                                    var arr = Ext.decode(res.responseText);
-                                    btnObj.planBtn.setDisabled(arr.length <= 0);
-                                }
-                                else {
-                                    btnObj.planBtn.disable();
-                                }
-                            }
-                        });
+                        btnObj.planBtn.enable();
+                        btnObj.editBtn.setDisabled(!resObj.progress);
+                        btnObj.delBtn.setDisabled(!resObj.progress);
                     }
                     else {
                         for (var key in btnObj) {
@@ -583,19 +573,30 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                 bbar: [
                     {
                         hidden: User.isGeneral() ? true : false,
-                        text: '添加图片',
-                        id: 'button-addProgressForProjectProgress',
-                        name: 'button-addProgressForProjectProgress',
-                        icon: './resources/img/add.png',
+                        text: '修改',
+                        id: 'button-editProgressForProjectProgress',
+                        name: 'button-editProgressForProjectProgress',
+                        icon: './resources/img/edit.png',
                         disabled: true,
                         handler: function () {
                             var resObj = me.getRes();
-                            var win = Ext.create('FamilyDecoration.view.chart.UploadForm', {
-                                url: './libs/upload_progress_pic.php',
-                                afterUpload: function (fp, o) {
-                                }
+                            var win = Ext.create('FamilyDecoration.view.projectprogress.EditProgress', {
+                                project: resObj.pro,
+                                progress: resObj.progress,
+                                progressGrid: resObj.progressGrid
                             });
                             win.show();
+                        }
+                    },
+                    {
+                        hidden: User.isGeneral() ? true : false,
+                        text: '删除',
+                        id: 'button-deleteProgressForProjectProgress',
+                        name: 'button-deleteProgressForProjectProgress',
+                        icon: './resources/img/delete.png',
+                        disabled: true,
+                        handler: function () {
+                            var resObj = me.getRes();
                         }
                     },
                     {
@@ -715,14 +716,28 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                         handler: function () {
                             var resObj = me.getRes(),
                                 year, month, pid, captainName;
-
                             if (resObj.pro && resObj.pro.get('projectName')) {
-                                window.pro = {
-                                    captainName: resObj.pro.get('captainName'),
-                                    pid: resObj.pro.getId()
-                                };
+                                Ext.Ajax.request({
+                                    url: './libs/plan.php?action=getPlanByProjectId&projectId=' + resObj.pro.getId(),
+                                    method: 'GET',
+                                    callback: function (opts, success, res) {
+                                        if (success) {
+                                            var arr = Ext.decode(res.responseText);
+                                            if (arr.length > 0) {
 
-                                changeMainCt('plan-index');
+                                                window.pro = {
+                                                    captainName: resObj.pro.get('captainName'),
+                                                    pid: resObj.pro.getId()
+                                                };
+
+                                                changeMainCt('planmaking-index');
+                                            }
+                                            else {
+                                                showMsg('没有对应计划!');
+                                            }
+                                        }
+                                    }
+                                });
                             }
                             else {
                                 showMsg('请选择工程！');

@@ -214,7 +214,7 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 									pid: sel.getId()
 								};
 
-								changeMainCt('progress-index');
+								changeMainCt('projectprogress-index');
 							}
 							else {
 								showMsg('请选择工程！');

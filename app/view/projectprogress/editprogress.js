@@ -23,8 +23,6 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
     initComponent: function () {
         var me = this;
 
-        me.title = me.progress ? '编辑工程进度' : '添加工程进度';
-
         me.items = [
             {
                 xtype: 'textarea',
