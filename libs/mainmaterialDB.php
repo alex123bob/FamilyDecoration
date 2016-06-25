@@ -1,5 +1,16 @@
 <?php
 
+	function getMaterialType(){
+		$res = array();
+		array_push($res,array('id'=>'001','value'=>'厨房橱柜、电器'));
+		array_push($res,array('id'=>'002','value'=>'卫生间卫浴、洁具'));
+		array_push($res,array('id'=>'003','value'=>'空调及供热系统'));
+		array_push($res,array('id'=>'004','value'=>'地砖及石材预定'));
+		array_push($res,array('id'=>'005','value'=>'客厅、卧室家具'));
+		array_push($res,array('id'=>'006','value'=>'成品门、门窗套预定'));
+		array_push($res,array('id'=>'007','value'=>'窗帘、墙纸、灯具、木地板'));
+		return $res;
+	}
 	function addMaterial($post){
 		$projectId = $post["projectId"];
 		$obj = array(
