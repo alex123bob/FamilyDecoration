@@ -103,7 +103,6 @@ Class PlanMakingSvc extends BaseSvc{
 				'itemName'=>$value,
 				'startTime'=>$startTime,
 				'endTime'=>$endTime,
-				'professionType'=>'xxx',
 				'id'=>$plan['id'].'-'.$key);
 			if($isDetailed){
 				//c3, c4, c5, c9, c13, c21, c24不可编辑

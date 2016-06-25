@@ -27,7 +27,7 @@ Class ProjectProgressSvc extends BaseSvc{
 		//查工程计划所有小项
 		$planItems = $planSvc->getItems(array('projectId'=>$q['projectId']),true);
 		//查工程进度审核
-		$progressAudit = $progressAuditSvc->get(array('projectId'=>$q['projectId']));
+		$progressAudit = $progressAuditSvc->get(array('projectPlanId'=>$plan['id']));
 		$progressAudit = $progressAudit['data'];
 		//查工程实际进度
 		$progress = parent::get(array('projectPlanId'=>$plan['id']));
