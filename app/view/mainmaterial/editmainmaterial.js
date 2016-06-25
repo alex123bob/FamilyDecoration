@@ -10,6 +10,7 @@ Ext.define('FamilyDecoration.view.mainmaterial.EditMainMaterial', {
 	mainmaterial: null,
 	projectId: undefined,
 	project: null,
+	bodyPadding: 5,
 
 	defaults: {
 		xtype: 'textfield',
@@ -55,6 +56,10 @@ Ext.define('FamilyDecoration.view.mainmaterial.EditMainMaterial', {
 			value: me.mainmaterial ? me.mainmaterial.get('productDeliver') : ''
 		}, {
 			fieldLabel: '对应主材',
+			xtype: 'combobox',
+			queryMode: 'local',
+			displayField: 'value',
+			valueField: 'id',
 			id: 'textfield-correspondingMainMaterial',
 			name: 'textfield-correspondingMainMaterial',
 			value: me.mainmaterial ? me.mainmaterial.get('correspondingMainMaterial') : ''
