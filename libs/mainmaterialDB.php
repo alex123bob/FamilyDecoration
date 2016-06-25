@@ -58,6 +58,7 @@
 			$res[$count]["productMerchant"] = $val["productMerchant"];
 			$res[$count]["productSchedule"] = $val["productSchedule"];
 			$res[$count]["productDeliver"] = $val["productDeliver"];
+			$res[$count]["materialType"] = $val["materialType"];
 			$res[$count]["isChecked"] = $val["isChecked"];
 			$res[$count]["isDeleted"] = $val["isDeleted"];
 		    $count ++;
