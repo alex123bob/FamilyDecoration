@@ -1,73 +1,78 @@
 <?php
 Class ProjectProgressSvc extends BaseSvc{
 	
-	public function get($q){
-		$q['_fields'] = 'id,projectId';
-		return parent::get($q);
+	public function add($q){
+		$content = $q['@content'];
+		if(!isset($q['@committer'])){
+			$q['@committer'] = $_SESSION['name'];
+		}
+		$itemId = $q['@itemId'];
+		$temp = explode("-",$itemId); 
+		$q['@projectPlanId'] = $temp[0]; 
+		$q['@columnName'] = $temp[1];
+		$q['@id'] = $this->getUUID();
+		return parent::add($q);
 	}
 
 	public function getItems($q){
-		global $TableMapping;
-		global $mysql;
-		$sql = "select pl.*,pr.* from plan_making pr left join project_progress pl on pr.projectId = pl.projectId where pr.projectId = ? ";
-		$projectProgress = $mysql->DBGetAsMap($sql,$q['projectId']);
-		if(count($projectProgress)==0)
+		$planSvc = parent::getSvc('PlanMaking');
+		$progressAuditSvc = parent::getSvc('ProjectProgressAudit');
+		//先查工程计划
+		$plan = $planSvc->get(array('projectId'=>$q['projectId']));
+		if(count($plan['data'])==0)
 			throw new Exception('工程'.$q['projectId'].'暂时没有计划表!');
-		if(count($projectProgress)>1)
+		if(count($plan['data'])>1)
 			throw new Exception('找到多个projectId为'.$q['projectId'].'的项目!');
-		require_once('PlanMakingSvc.class.php');
-		$count = 0;
-		$res = array();
-		$projectProgress = $projectProgress[0];
-		foreach (PlanMakingSvc::$map as $key => $value) {
-			$startTime = '';
-			$endTime = '';
-			if(isset($projectProgress[$key]) && contains($projectProgress[$key],'~')){
-				$time = explode("~",$projectProgress[$key]);
-				$startTime = $time[0];
-				$endTime = $time[1];
+		$plan = $plan['data'][0];
+		//查工程计划所有小项
+		$planItems = $planSvc->getItems(array('projectId'=>$q['projectId']),true);
+		//查工程进度审核
+		$progressAudit = $progressAuditSvc->get(array('projectId'=>$q['projectId']));
+		$progressAudit = $progressAudit['data'];
+		//查工程实际进度
+		$progress = parent::get(array('projectPlanId'=>$plan['id']));
+		$progress = $progress['data'];
+		//转为以工程计划planMaking 列名为key,value为进度条目数组的map
+		$progressByColumnName = array();
+		foreach ($progress as $key => &$value) {
+			if(!isset($progressByColumnName[$value['columnName']])){
+				$progressByColumnName[$value['columnName']] = array();
 			}
-			$item = array(
-				'serialNumber'=>++$count,
-				'parentItemName'=>PlanMakingSvc::$pmap[$key],
-				'itemName'=>$value,
-				'planStartTime'=>$startTime,
-				'planEndTime'=>$endTime,
-				'practicalProgress'=>$projectProgress['p'.$key],
-				'supervisorComment'=>$projectProgress['m'.$key],
-				'professionType'=>'xxx',
-				'projectId'=>$projectProgress['projectId'],
-				'id'=>$projectProgress['projectId'].'-'.$key);
-			array_push($res, $item);
+			//去掉冗余数据
+			$columnName = $value['columnName'];
+			unset($value['columnName']);
+			unset($value['isDeleted']);
+			unset($value['projectPlanId']);
+			array_push($progressByColumnName[$columnName], $value);
 		}
-		return array('total'=>32,'data'=>$res);
-	}
-
-	public function updateItem($q){
-		$temp = explode("-",$q['id']);   // projectId-columnName
-		$projectId = $temp[0];
-		$columnName = $temp[1];
-		$obj = array('projectId'=>$temp[0]);
-		$find = false;
-		if(isset($q['@practicalProgress'])){
-			$obj['@p'.$columnName] = $q['@practicalProgress'];
-			$find = true;
+		//转为以工程计划planMaking 列名为key,value为审核条目数组的map
+		$auditByColumnName = array();
+		foreach ($progressAudit as $key => &$value) {
+			if(!isset($auditByColumnName[$value['columnName']])){
+				$auditByColumnName[$value['columnName']] = array();
+			}
+			//去掉冗余数据
+			$columnName = $value['columnName'];
+			unset($value['columnName']);
+			unset($value['isDeleted']);
+			unset($value['projectPlanId']);
+			array_push($auditByColumnName[$columnName], $value);
 		}
-		if(isset($q['@supervisorComment'])){
-			$obj['@m'.$columnName] = $q['@supervisorComment'];
-			$find = true;
+		//遍历所有计划小项,将实际进度和审核追加
+		foreach ($planItems as $key => &$value) {
+			if(isset($progressByColumnName[$value['columnName']])){
+				$value['practicalProgress'] = $progressByColumnName[$value['columnName']];
+ 			}else{
+ 				$value['practicalProgress'] = array();
+ 			}
+ 			if(isset($auditByColumnName[$value['columnName']])){
+				$value['supervisorComment'] = $auditByColumnName[$value['columnName']];
+ 			}else{
+ 				$value['supervisorComment'] = array();
+ 			}
+ 			unset($value['columnName']);
 		}
-		if(!$find){
-			throw new Exception('没有审核评论或者实际进度!');
-		}
-		$res = parent::update($obj);
-		if($res['affect'] == 0){
-			$obj['@id'] = $this->getUUID();
-			$obj['@projectId'] = $projectId;
-			parent::add($obj);
-			$res['affect'] = 1;
-		}
-		return $res;
+		return array('total'=>32,'data'=>$planItems);
 	}
 }
 ?>

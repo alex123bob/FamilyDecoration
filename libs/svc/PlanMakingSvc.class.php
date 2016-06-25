@@ -76,8 +76,9 @@ Class PlanMakingSvc extends BaseSvc{
 		$q['_fields'] = 'id,projectId,projectAddress,startTime,endTime,custName,isDeleted,updateTime,createTime';
 		return parent::get($q);
 	}
+
 	//get,横标转纵表
-	public function getItems($q){
+	public function getItems($q,$isShowColumnName = false){
 		$res = null;
 		if(isset($q['planId']))
 			$res = parent::get(array('id'=>$q['planId']));
@@ -103,16 +104,17 @@ Class PlanMakingSvc extends BaseSvc{
 				'startTime'=>$startTime,
 				'endTime'=>$endTime,
 				'professionType'=>'xxx',
-				'projectId'=>$plan['projectId'],
-				'id'=>$plan['projectId'].'-'.$key);
+				'id'=>$plan['id'].'-'.$key);
+			if($isShowColumnName)
+				$item['columnName'] = $key;
 			array_push($res, $item);
 		}
 		return $res;
 	}
 
 	public function updateItem($q){
-		$temp = explode("-",$q['id']);   // projectId-columnName
-		$update = array('@'.$temp[1]=>$q['@time'],'projectId'=>$temp[0]);
+		$temp = explode("-",$q['id']);   // planId-columnName
+		$update = array('@'.$temp[1]=>$q['@time'],'id'=>$temp[0]);
 		return parent::update($update);
 	}
 
