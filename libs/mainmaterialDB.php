@@ -22,9 +22,10 @@
 			"productNumber" => $post["productNumber"],
 			"productMerchant" => $post["productMerchant"],
 			"productSchedule" => $post["productSchedule"],
-			"productDeliver" => $post["productDeliver"],
-			"isChecked" => $post["isChecked"]
+			"productDeliver" => $post["productDeliver"]
 		);
+		if(isset($post["isChecked"]))
+			$obj["isChecked"] = $post["isChecked"];
 		global $mysql;
 		$mysql->DBInsertAsArray("`mainmaterial`",$obj);
 		return array('status'=>'successful', 'errMsg' => '','materialId'=> $obj["id"]);
