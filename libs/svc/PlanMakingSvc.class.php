@@ -78,7 +78,7 @@ Class PlanMakingSvc extends BaseSvc{
 	}
 
 	//get,横标转纵表
-	public function getItems($q,$isShowColumnName = false){
+	public function getItems($q,$isDetailed = false){
 		$res = null;
 		if(isset($q['planId']))
 			$res = parent::get(array('id'=>$q['planId']));
@@ -105,8 +105,11 @@ Class PlanMakingSvc extends BaseSvc{
 				'endTime'=>$endTime,
 				'professionType'=>'xxx',
 				'id'=>$plan['id'].'-'.$key);
-			if($isShowColumnName)
+			if($isDetailed){
+				//c3, c4, c5, c9, c13, c21, c24不可编辑
 				$item['columnName'] = $key;
+				$item['isEditable'] = in_array($key, array('c3', 'c4','c5','c9','c13','c21','c24')) ? false:true;
+			}
 			array_push($res, $item);
 		}
 		return $res;
