@@ -214,11 +214,7 @@
 			$this->dbSQL = $sql;
 			$this->DBExecute($this->dbSQL);
 			if (mysqli_num_rows($this->dbResult) > 0){
-				while($partRows = mysqli_fetch_array($this->dbResult,MYSQLI_BOTH)){
-					foreach ($partRows as $key => $value) {
-						if(is_numeric($key))
-							unset($partRows[$key]);
-					}
+				while($partRows = mysqli_fetch_array($this->dbResult,MYSQLI_ASSOC)){
 					$partSomeRows[] = $partRows;
 				}
 				return $partSomeRows;
