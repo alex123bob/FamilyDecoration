@@ -77,8 +77,8 @@ Ext.define('FamilyDecoration.view.mainmaterial.EditMainMaterial', {
 				queryMode: 'local',
 				displayField: 'value',
 				valueField: 'id',
-				id: 'textfield-materialType',
-				name: 'textfield-materialType',
+				id: 'combobox-materialType',
+				name: 'combobox-materialType',
 				store: st,
 				editable: false,
 				value: me.mainmaterial ? me.mainmaterial.get('materialType') : ''
@@ -93,10 +93,12 @@ Ext.define('FamilyDecoration.view.mainmaterial.EditMainMaterial', {
 					merchant = Ext.getCmp('textfield-productMerchant'),
 					schedule = Ext.getCmp('textfield-productSchedule'),
 					deliver = Ext.getCmp('textfield-productDeliver'),
+					materialType = Ext.getCmp('combobox-materialType'),
 					obj = {
 						projectId: me.projectId
 					};
-				if (name.isValid() && type.isValid() && number.isValid() && merchant.isValid() && schedule.isValid() && deliver.isValid()) {
+				if (name.isValid() && type.isValid() && number.isValid() && merchant.isValid() 
+					&& schedule.isValid() && deliver.isValid() && materialType.isValid()) {
 					me.mainmaterial && Ext.apply(obj, {
 						id: me.mainmaterial.getId()
 					});
@@ -106,7 +108,8 @@ Ext.define('FamilyDecoration.view.mainmaterial.EditMainMaterial', {
 						productNumber: number.getValue(),
 						productMerchant: merchant.getValue(),
 						productSchedule: schedule.getValue(),
-						productDeliver: deliver.getValue()
+						productDeliver: deliver.getValue(),
+						materialType: materialType.getValue()
 					});
 
 					Ext.Ajax.request({
