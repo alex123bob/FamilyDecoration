@@ -27,20 +27,10 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
             {
                 xtype: 'textarea',
                 width: '100%',
-                flex: 4,
+                flex: 1,
                 autoScroll: true,
                 allowBlank: false,
-                fieldLabel: '工程进度',
-                value: me.progress ? me.progress.get('progress') : ''
-            },
-            {
-                xtype: 'combobox',
-                width: '100%',
-                flex: 1,
-                displayField: 'parentItemName',
-                editable: false,
-                valueField: 'id',
-                fieldLabel: '对应大项'
+                fieldLabel: '工程进度'
             }
         ];
 
@@ -48,7 +38,19 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
             {
                 text: '确定',
                 handler: function () {
-
+                    var txtarea = me.down('textarea');
+                    Ext.Msg.warning('确定需要添加进度吗？添加之后不可更改。', function (btnId){
+                        if ('yes' == btnId) {
+                            ajaxAdd('ProjectProgress', {
+                                itemId: me.progress.getId(),
+                                content: txtarea.getValue()
+                            }, function (obj){
+                                showMsg('添加成功！');
+                                me.progressGrid.refresh();
+                                me.close();
+                            });
+                        }
+                    });
                 }
             }, {
                 text: '取消',

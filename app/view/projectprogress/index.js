@@ -400,8 +400,8 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                         btnObj.editHeadInfoBtn.enable();
                         btnObj.checkBusinessBtn.enable();
                         btnObj.planBtn.enable();
-                        btnObj.editBtn.setDisabled(!resObj.progress);
-                        btnObj.delBtn.setDisabled(!resObj.progress);
+                        btnObj.editBtn.setDisabled(!resObj.progress || !resObj.progress.get('isEditable'));
+                        btnObj.delBtn.setDisabled(!resObj.progress || !resObj.progress.get('isEditable'));
                     }
                     else {
                         for (var key in btnObj) {

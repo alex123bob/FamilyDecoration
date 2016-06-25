@@ -8,9 +8,10 @@ Ext.define('FamilyDecoration.model.ProjectProgress', {
         {name: 'planStartTime', type: 'string'},
         {name: 'planEndTime', type: 'string'},
         {name: 'professionType', type: 'string'}, // this indicates which working category it belongs to
-        {name: 'practicalProgress', type: 'string'},
+        {name: 'practicalProgress'},
         {name: 'supervisorComment', type: 'string'},
-		{name: 'projectId', type: 'string'}
+		{name: 'projectId', type: 'string'},
+        {name: 'isEditable'}
     ],
     idProperty: 'id',
 	proxy: {

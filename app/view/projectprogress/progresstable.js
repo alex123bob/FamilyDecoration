@@ -39,9 +39,21 @@ Ext.define('FamilyDecoration.view.projectprogress.ProgressTable', {
 					}
                 },
                 {
-                    flex: 1,
+                    flex: 2,
                     text: '实际进度',
-                    dataIndex: 'practicalProgress'
+                    dataIndex: 'practicalProgress',
+					renderer: function (val, meta, rec){
+						var result = '';
+						if (val.length > 0) {
+							Ext.each(val, function (obj, index){
+								result += (index + 1) + '. ' + obj['content'] + '(' + obj['createTime'] + ')<br />';
+							});
+							return result;
+						}
+						else {
+							return '';
+						}
+					}
                 },
                 {
                     flex: 1,
