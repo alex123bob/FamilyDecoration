@@ -46,7 +46,7 @@ Ext.define('FamilyDecoration.view.projectprogress.ProgressTable', {
 						var result = '';
 						if (val.length > 0) {
 							Ext.each(val, function (obj, index){
-								result += (index + 1) + '. ' + obj['content'] + '(' + obj['createTime'] + ')<br />';
+								result += (index + 1) + '. ' + obj['content'].replace(/\n/gi, '<br />') + '(' + obj['createTime'] + ')<br />';
 							});
 							return result;
 						}

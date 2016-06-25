@@ -39,18 +39,20 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
                 text: '确定',
                 handler: function () {
                     var txtarea = me.down('textarea');
-                    Ext.Msg.warning('确定需要添加进度吗？添加之后不可更改。', function (btnId){
-                        if ('yes' == btnId) {
-                            ajaxAdd('ProjectProgress', {
-                                itemId: me.progress.getId(),
-                                content: txtarea.getValue()
-                            }, function (obj){
-                                showMsg('添加成功！');
-                                me.progressGrid.refresh();
-                                me.close();
-                            });
-                        }
-                    });
+                    if (txtarea.isValid()) {
+                        Ext.Msg.warning('确定需要添加进度吗？添加之后不可更改。', function (btnId){
+                            if ('yes' == btnId) {
+                                ajaxAdd('ProjectProgress', {
+                                    itemId: me.progress.getId(),
+                                    content: txtarea.getValue()
+                                }, function (obj){
+                                    showMsg('添加成功！');
+                                    me.progressGrid.refresh();
+                                    me.close();
+                                });
+                            }
+                        });
+                    }
                 }
             }, {
                 text: '取消',

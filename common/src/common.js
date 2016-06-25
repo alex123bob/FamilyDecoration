@@ -184,14 +184,16 @@ function ajaxAdd (className, params, callback, errorHandler){
     function add (className, p){
         if (p && !Ext.Object.isEmpty(p)) {
             var url = './libs/api.php?action=' + className + '.add';
+            var params = {};
             for (var pro in p) {
                 if (p.hasOwnProperty(pro)) {
                     var val = p[pro];
-                    url += '&@' + pro + '=' + val;
+                    params['@' + pro] = val;
                 }
             }
             Ext.Ajax.request({
                 url: url,
+                params: params,
                 method: 'POST',
                 callback: function (opts, success, res){
                     if (success) {
