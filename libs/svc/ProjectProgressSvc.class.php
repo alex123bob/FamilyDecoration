@@ -70,7 +70,11 @@ Class ProjectProgressSvc extends BaseSvc{
  			}else{
  				$value['supervisorComment'] = array();
  			}
+ 			$value['planStartTime'] = $value['startTime'];
+ 			$value['planEndTime'] = $value['endTime'];
  			unset($value['columnName']);
+ 			unset($value['startTime']);
+ 			unset($value['endTime']);
 		}
 		return array('total'=>32,'data'=>$planItems);
 	}
