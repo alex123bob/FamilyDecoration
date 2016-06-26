@@ -171,7 +171,9 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 									params: {
 										isChecked: 'true',
 										projectId: rec.getId(),
-										id: material.getId()
+										id: material.getId(),
+										materialType: material.get('materialType'),
+										productName: material.get('productName')
 									},
 									callback: function (opts, success, res){
 										if (success) {
