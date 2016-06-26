@@ -19,13 +19,12 @@ Ext.define('FamilyDecoration.view.planlabor.ScheduledTimeTable', {
             var grid = me.down('grid'),
                 st = Ext.create('FamilyDecoration.store.PlanLabor');
             if (professionType) {
-                var period = project.get('period'),
-                    startTime, endTime;
+                var startTime, endTime;
                 var configuredColumns = [
                     {
                         text: '工程项目',
                         dataIndex: 'projectName',
-                        width: 70,
+                        width: 74,
                         minWidth: 60,
                         align: 'center',
                         sortable: false,
@@ -56,6 +55,8 @@ Ext.define('FamilyDecoration.view.planlabor.ScheduledTimeTable', {
                             sortable: false,
                             curTime: Ext.Date.format(d, 'Y-m-d'),
                             renderer: function (val, meta, rec, rowIndex, colIndex, st, view){
+                                var curTime = Ext.Date.parse(meta.column.curTime, 'Y-m-d');
+                                console.log(val, curTime);
                             }
                         });
                     }
@@ -70,7 +71,7 @@ Ext.define('FamilyDecoration.view.planlabor.ScheduledTimeTable', {
                                 Ext.resumeLayouts(true);
                             }
                             else {
-                                me.removeGridColumnAndData(grid);
+                                removeGridColumnAndData(grid);
                                 Ext.resumeLayouts(true);
                             }
                         }
@@ -78,7 +79,7 @@ Ext.define('FamilyDecoration.view.planlabor.ScheduledTimeTable', {
                 }
                 else {
                     showMsg('时间格式不对!');
-                    me.removeGridColumnAndData(grid);
+                    removeGridColumnAndData(grid);
                 }
             }
             else {
