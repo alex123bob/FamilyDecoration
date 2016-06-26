@@ -33,6 +33,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.MyTask": "../../app/controller/mytask.js",
   "FamilyDecoration.controller.Personnel": "../../app/controller/personnel.js",
   "FamilyDecoration.controller.Plan": "../../app/controller/plan.js",
+  "FamilyDecoration.controller.PlanLabor": "../../app/controller/planlabor.js",
   "FamilyDecoration.controller.PlanMaking": "../../app/controller/planmaking.js",
   "FamilyDecoration.controller.Progress": "../../app/controller/progress.js",
   "FamilyDecoration.controller.ProjectCategory": "../../app/controller/projectcategory.js",
@@ -67,6 +68,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.model.PersonnelIndividual": "../../app/model/personnelindividual.js",
   "FamilyDecoration.model.PersonnelProject": "../../app/model/personnelproject.js",
   "FamilyDecoration.model.Plan": "../../app/model/plan.js",
+  "FamilyDecoration.model.PlanLabor": "../../app/model/planlabor.js",
   "FamilyDecoration.model.PlanMaking": "../../app/model/planmaking.js",
   "FamilyDecoration.model.PotentialBusiness": "../../app/model/potentialbusiness.js",
   "FamilyDecoration.model.ProfessionType": "../../app/model/professiontype.js",
@@ -111,6 +113,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.store.PersonnelIndividual": "../../app/store/personnelindividual.js",
   "FamilyDecoration.store.PersonnelProject": "../../app/store/personnelproject.js",
   "FamilyDecoration.store.PlanCategory": "../../app/store/plancategory.js",
+  "FamilyDecoration.store.PlanLabor": "../../app/store/planlabor.js",
   "FamilyDecoration.store.PlanMaking": "../../app/store/planmaking.js",
   "FamilyDecoration.store.PotentialBusiness": "../../app/store/potentialbusiness.js",
   "FamilyDecoration.store.ProfessionType": "../../app/store/professiontype.js",
@@ -195,6 +198,8 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.personnel.StatisticTree": "../../app/view/personnel/statistictree.js",
   "FamilyDecoration.view.plan.EditPlan": "../../app/view/plan/editplan.js",
   "FamilyDecoration.view.plan.Index": "../../app/view/plan/index.js",
+  "FamilyDecoration.view.planlabor.Index": "../../app/view/planlabor/index.js",
+  "FamilyDecoration.view.planlabor.ScheduledTimeTable": "../../app/view/planlabor/scheduledtimetable.js",
   "FamilyDecoration.view.planmaking.AddPlanTable": "../../app/view/planmaking/addplantable.js",
   "FamilyDecoration.view.planmaking.Index": "../../app/view/planmaking/index.js",
   "FamilyDecoration.view.planmaking.PlanTable": "../../app/view/planmaking/plantable.js",
@@ -1100,6 +1105,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.MyTask": [],
   "FamilyDecoration.controller.Personnel": [],
   "FamilyDecoration.controller.Plan": [],
+  "FamilyDecoration.controller.PlanLabor": [],
   "FamilyDecoration.controller.PlanMaking": [],
   "FamilyDecoration.controller.Progress": [],
   "FamilyDecoration.controller.ProjectCategory": [],
@@ -1134,6 +1140,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.model.PersonnelIndividual": [],
   "FamilyDecoration.model.PersonnelProject": [],
   "FamilyDecoration.model.Plan": [],
+  "FamilyDecoration.model.PlanLabor": [],
   "FamilyDecoration.model.PlanMaking": [],
   "FamilyDecoration.model.PotentialBusiness": [],
   "FamilyDecoration.model.ProfessionType": [],
@@ -1178,6 +1185,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.store.PersonnelIndividual": [],
   "FamilyDecoration.store.PersonnelProject": [],
   "FamilyDecoration.store.PlanCategory": [],
+  "FamilyDecoration.store.PlanLabor": [],
   "FamilyDecoration.store.PlanMaking": [],
   "FamilyDecoration.store.PotentialBusiness": [],
   "FamilyDecoration.store.ProfessionType": [],
@@ -1262,6 +1270,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.personnel.StatisticTree": [],
   "FamilyDecoration.view.plan.EditPlan": [],
   "FamilyDecoration.view.plan.Index": [],
+  "FamilyDecoration.view.planlabor.Index": [],
+  "FamilyDecoration.view.planlabor.ScheduledTimeTable": [],
   "FamilyDecoration.view.planmaking.AddPlanTable": [],
   "FamilyDecoration.view.planmaking.Index": [],
   "FamilyDecoration.view.planmaking.PlanTable": [],
@@ -2333,6 +2343,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.MyTask": [],
   "FamilyDecoration.controller.Personnel": [],
   "FamilyDecoration.controller.Plan": [],
+  "FamilyDecoration.controller.PlanLabor": [],
   "FamilyDecoration.controller.PlanMaking": [],
   "FamilyDecoration.controller.Progress": [],
   "FamilyDecoration.controller.ProjectCategory": [],
@@ -2367,6 +2378,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.model.PersonnelIndividual": [],
   "FamilyDecoration.model.PersonnelProject": [],
   "FamilyDecoration.model.Plan": [],
+  "FamilyDecoration.model.PlanLabor": [],
   "FamilyDecoration.model.PlanMaking": [],
   "FamilyDecoration.model.PotentialBusiness": [],
   "FamilyDecoration.model.ProfessionType": [],
@@ -2411,6 +2423,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.store.PersonnelIndividual": [],
   "FamilyDecoration.store.PersonnelProject": [],
   "FamilyDecoration.store.PlanCategory": [],
+  "FamilyDecoration.store.PlanLabor": [],
   "FamilyDecoration.store.PlanMaking": [],
   "FamilyDecoration.store.PotentialBusiness": [],
   "FamilyDecoration.store.ProfessionType": [],
@@ -2618,6 +2631,12 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.plan.Index": [
     "widget.plan-index"
+  ],
+  "FamilyDecoration.view.planlabor.Index": [
+    "widget.planlabor-index"
+  ],
+  "FamilyDecoration.view.planlabor.ScheduledTimeTable": [
+    "widget.planlabor-scheduledtimetable"
   ],
   "FamilyDecoration.view.planmaking.AddPlanTable": [
     "widget.planmaking-addplantable"
