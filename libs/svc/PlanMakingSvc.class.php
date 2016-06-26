@@ -115,7 +115,7 @@ Class PlanMakingSvc extends BaseSvc{
 		水电工 0004
 		力工	0005
 		其他	0009*/
-		$select = "select projectId,";
+		$select = "select projectId,projectAddress as projectName,";
 		switch ($q['professionType']){
 			case '0001':$select .= 'c7,c15,c17';break;
 			case '0002':$select .= 'c20';break;
@@ -133,7 +133,7 @@ Class PlanMakingSvc extends BaseSvc{
 		foreach ($res as &$item) {
 			$item['period'] = array();
 			foreach ($item as $key => $value) {
-				if($key == 'projectId' || $key =='period')
+				if($key == 'projectId' || $key =='period' || $key=='projectName')
 					continue;
 				if($value != null && contains($value,'~')){
 					$time = explode("~",$value);
