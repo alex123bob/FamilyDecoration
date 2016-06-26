@@ -31,6 +31,8 @@
 		//添加计划进度
 		$columnName = $post['materialType'];
 		//$projectProgressSvc = BaseSvc::getSvc('ProjectProgress');
+		//$progress = array('columnName'=>);
+		//$projectProgressSvc->update();
 		return array('status'=>'successful', 'errMsg' => '','materialId'=> $obj["id"]);
 	}
 
@@ -102,6 +104,7 @@
 		$obj['productDeliver'] = $data['productDeliver'];
 		$obj['productMerchant'] = $data['productMerchant'];
 		$obj['productSchedule'] = $data['productSchedule'];
+		$obj['materialType'] = $data['materialType'];
 		if(isset($data['isChecked']))
 			$obj['isChecked'] = $data['isChecked'];
 		$mysql->DBUpdate("`mainmaterial`",$obj,"`id` = '?' ",array($data["id"]));
