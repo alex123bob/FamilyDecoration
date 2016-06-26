@@ -62,7 +62,7 @@ Ext.define('FamilyDecoration.view.planlabor.ScheduledTimeTable', {
                                     var e = Ext.Date.parse(d.e, 'Y-m-d');
                                     if (s.getTime() <= curTime.getTime() && e.getTime() >= curTime.getTime()) {
                                         flag = true;
-                                        color = (d.c == 0 ? 'blue' : 'gray');
+                                        color = (d.c == 0 ? 'blue' : 'pink');
                                         return false;
                                     }
                                 });
