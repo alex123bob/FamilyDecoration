@@ -9,7 +9,7 @@ Ext.define('FamilyDecoration.store.PlanLabor', {
             root: 'data'
         },
         extraParams: {
-            action: 'PlanLabor.getItems'
+            action: 'PlanMaking.getLaborPlanByProfessionType'
         }
     }
 });

@@ -3,7 +3,7 @@ Ext.define('FamilyDecoration.model.PlanLabor', {
 	fields: [
 		'id',
         {name: 'projectName', type: 'string'},
-        'period' // [{s: xxxx-xx-xx, n: xxxx-xx-xx, c: 'colour'}]
+        'period' // [{s: xxxx-xx-xx, e: xxxx-xx-xx, c: 'colour'}]
 	],
 	idProperty: 'id',
 	proxy: {

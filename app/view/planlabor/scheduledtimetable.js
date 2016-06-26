@@ -55,14 +55,27 @@ Ext.define('FamilyDecoration.view.planlabor.ScheduledTimeTable', {
                             sortable: false,
                             curTime: Ext.Date.format(d, 'Y-m-d'),
                             renderer: function (val, meta, rec, rowIndex, colIndex, st, view){
-                                var curTime = Ext.Date.parse(meta.column.curTime, 'Y-m-d');
-                                console.log(val, curTime);
+                                var curTime = Ext.Date.parse(meta.column.curTime, 'Y-m-d'),
+                                    flag = false, color = '';
+                                Ext.each(val, function (d, index){
+                                    var s = Ext.Date.parse(d.s, 'Y-m-d');
+                                    var e = Ext.Date.parse(d.e, 'Y-m-d');
+                                    if (s.getTime() <= curTime.getTime() && e.getTime() >= curTime.getTime()) {
+                                        flag = true;
+                                        color = (d.c == 0 ? 'blue' : 'gray');
+                                        return false;
+                                    }
+                                });
+                                if (flag) {
+                                    meta.style = 'background: ' + color + ';';
+                                }
+                                return '';
                             }
                         });
                     }
                     st.load({
                         params: {
-                            value: professionType.get('value')
+                            professionType: professionType.get('value')
                         },
                         silent: true,
                         callback: function (recs, ope, success){
