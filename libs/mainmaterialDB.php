@@ -83,6 +83,7 @@
 			$res[$count]["productDeliver"] = $val["productDeliver"];
 			$res[$count]["isChecked"] = $val["isChecked"];
 			$res[$count]["isDeleted"] = $val["isDeleted"];
+			$res[$count]["materialType"] = $val["materialType"];
 		    $count ++;
         }
 		return $res;
