@@ -45,7 +45,13 @@ Ext.define('FamilyDecoration.view.planlabor.Index', {
 					selectionchange: function (selModel, sels, opts) {
 						var rec = sels[0],
 							resObj = me.getRes();
-						resObj['timetable'].refresh(rec);
+						ajaxGet('PlanMaking', 'getTimeSpanByProfessionType', {
+							professionType: rec.get('value')
+						}, function (obj){
+							var startTime = obj.startTime,
+								endTime = obj.endTime;
+							resObj['timetable'].refresh(rec, startTime, endTime);
+						});
 					}
 				}
 			},

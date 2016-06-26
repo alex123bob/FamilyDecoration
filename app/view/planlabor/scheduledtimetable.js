@@ -15,12 +15,11 @@ Ext.define('FamilyDecoration.view.planlabor.ScheduledTimeTable', {
             Ext.resumeLayouts(true);
         }
 
-        function renderGridByProfessionType (professionType) {
+        function renderGridByProfessionType (professionType, startTime, endTime) {
             var grid = me.down('grid'),
                 st = Ext.create('FamilyDecoration.store.PlanLabor');
             if (professionType) {
                 var period = project.get('period'),
-                    projectTime = period.split(':'),
                     startTime, endTime;
                 var configuredColumns = [
                     {
@@ -33,14 +32,14 @@ Ext.define('FamilyDecoration.view.planlabor.ScheduledTimeTable', {
                         menuDisabled: true
                     }
                 ];
-                if (projectTime.length == 2 && isDate(projectTime)) {
+                if (startTime && endTime) {
                     Ext.suspendLayouts();
-                    projectStartTime = Ext.Date.parse(projectTime[0], 'Y-m-d');
-                    projectEndTime = Ext.Date.parse(projectTime[1], 'Y-m-d');
+                    startTime = Ext.Date.parse(startTime, 'Y-m-d');
+                    endTime = Ext.Date.parse(endTime, 'Y-m-d');
 
-                    for (var d = new Date(projectStartTime); d.getTime() <= projectEndTime.getTime(); d.setDate(d.getDate() + 1)) {
+                    for (var d = new Date(startTime); d.getTime() <= endTime.getTime(); d.setDate(d.getDate() + 1)) {
                         var index;
-                        if (d.getDate() == 1 || d.getTime() === projectStartTime.getTime()) {
+                        if (d.getDate() == 1 || d.getTime() === startTime.getTime()) {
                             index = configuredColumns.push({
                                 text: (d.getMonth() + 1) + '月',
                                 columns: []
@@ -53,27 +52,16 @@ Ext.define('FamilyDecoration.view.planlabor.ScheduledTimeTable', {
                             text: d.getDate() + '日',
                             flex: 1,
                             align: 'center',
-                            dataIndex: 'startTime',
+                            dataIndex: 'period',
                             sortable: false,
                             curTime: Ext.Date.format(d, 'Y-m-d'),
                             renderer: function (val, meta, rec, rowIndex, colIndex, st, view){
-                                
-                                var startTime = Ext.Date.parse(val, 'Y-m-d'),
-                                    endTime = Ext.Date.parse(rec.get('endTime'), 'Y-m-d'),
-                                    curTime = Ext.Date.parse(meta.column.curTime, 'Y-m-d');
-                                if (isDate([startTime, endTime, curTime])) {
-                                    if (curTime.getTime() >= startTime.getTime() && curTime.getTime() <= endTime.getTime()) {
-                                        meta.style = 'background: grey;';
-                                    }
-                                    return '';
-                                }
-                                return '';
                             }
                         });
                     }
                     st.load({
                         params: {
-                            projectId: project.getId()
+                            value: professionType.get('value')
                         },
                         silent: true,
                         callback: function (recs, ope, success){
@@ -104,8 +92,9 @@ Ext.define('FamilyDecoration.view.planlabor.ScheduledTimeTable', {
             dispFd.setValue('佳诚装饰&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + professionType.get('cname') + '用工计划时间表');
         }
 
-        me.refresh = function (professionType){
+        me.refresh = function (professionType, startTime, endTime){
             renderTitle(professionType);
+            renderGridByProfessionType(professionType, startTime, endTime);
         }
 
         me.items = [
