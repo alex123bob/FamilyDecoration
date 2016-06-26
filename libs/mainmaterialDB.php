@@ -32,7 +32,7 @@
 		$projectProgressSvc = BaseSvc::getSvc('ProjectProgress');
 		$progress = array('@columnName'=>$post['materialType']);
 		$progress['@projectId'] = $post['projectId'];
-		$progress['@content'] = '已订购'.$post["productNumber"].' '.$post["productName"];
+		$progress['@content'] = '已订购'.$post["productName"].'(数量:'.$post["productNumber"].')';
 		$projectProgressSvc->add($progress);
 		return array('status'=>'successful', 'errMsg' => '','materialId'=> $obj["id"]);
 	}
