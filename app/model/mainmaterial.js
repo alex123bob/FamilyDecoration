@@ -11,6 +11,7 @@ Ext.define('FamilyDecoration.model.MainMaterial', {
 		{name: 'productMerchant', type: 'string'}, // 商家及联系人
 		{name: 'productSchedule', type: 'string'}, // 预定时间及预定人
 		{name: 'productDeliver', type: 'string'}, // 送货时间
+		{name: 'materialType', type: 'string'}, // 对应的主材类型
 		{name: 'isChecked', type: 'string'} // 是否已经确认
 	],
 	idProperty: 'id'
