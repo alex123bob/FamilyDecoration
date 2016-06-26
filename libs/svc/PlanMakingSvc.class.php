@@ -72,6 +72,107 @@ Class PlanMakingSvc extends BaseSvc{
 		'c32'=>'竣工验收、保修单签单'
 	);
 
+	public static $MainmaterialMap = array(
+			'c3' => '厨房橱柜、电器',
+			'c4'=>'卫生间卫浴、洁具',
+			'c5'=>'空调及供热系统',
+			'c9'=>'地砖及石材预定',
+			'c13'=>'客厅、卧室家具',
+			'c21'=>'成品门、门窗套预定',
+			'c24'=>'窗帘、墙纸、灯具、木地板'
+			);
+
+	public function msgPreNotice(){
+		global $TableMapping;
+		global $mysql;
+		$res = $mysql->DBGetAsOneArray('select paramValue from system where id = 9 or id = 10');
+		$msg = $res[0];
+		$days = $res[1];
+		if($days == null || $days == "")
+			return;
+		$days = explode(',', $days);
+		$startDays = array();
+		foreach ($days as $value) {
+			array_push($startDays, date('Y-m-d', strtotime("+$value day")));
+		}
+		$startDays = "'".join("','",$startDays)."'";
+		
+		//获取所有需要提醒的项目,按主材分
+		$res = array();
+		$r1 = $this->noticeOrder('c3',$startDays);
+		$r2 = $this->noticeOrder('c4',$startDays);
+		$r3 = $this->noticeOrder('c5',$startDays);
+		$r4 = $this->noticeOrder('c9',$startDays);
+		$r5 = $this->noticeOrder('c13',$startDays);
+		$r6 = $this->noticeOrder('c21',$startDays);
+		$r7 = $this->noticeOrder('c24',$startDays);
+		$res = array_merge($r1,$r2,$r3,$r4,$r5,$r6,$r7);
+
+		//所有需要发送短信的人
+		$recievers = array();
+		foreach ($res as $key => $value) {
+			array_push($recievers, $value['salesman']);
+			array_push($recievers, $value['designer']);
+		}
+		$recievers = array_unique($recievers);
+		//查询这些人手机号
+		$recievers = $mysql->DBGetAsMap("select name,mail,phone from user where name in ('".join("','",$recievers)."');");
+		$users = array();
+		//变成key为user name的map
+		foreach ($recievers as $key => &$value) {
+			$users[$value['name']] = array('phone'=>$value['phone'],'mail'=>$value['mail']);
+		}
+		print_r($res);
+		echo "<br />\n";
+		foreach ($res as $key => $item) {
+			$this->sendMsg($item,$msg,$users);
+		}
+		return array('success'=>true);
+	}
+
+	//发短信,邮件
+	private function sendMsg($item,$text,$users){
+		//您好,{项目}还有{天}就要开始了,请提前订购{主材}!
+		$text = str_replace('{项目}',$item['projectName'],$text);
+		$text = str_replace('{几}',$item['daysleft'],$text);
+		$text = str_replace('{主材}',PlanMakingSvc::$MainmaterialMap[$item['column']],$text);
+		$salesman = $item['salesman'];
+		$designer = $item['designer'];
+		echo "$text<br />\n";
+		if(isset($users[$salesman]) && strlen($users[$salesman]['phone']) == 11 ){ // 11位有效手机号
+			$phoneNumber = $users[$salesman]['phone'];
+			echo "send $text to $phoneNumber<br /> \n";
+		}
+		if(isset($users[$designer]) && strlen($users[$designer]['phone']) == 11 ){ // 11位有效手机号
+			$phoneNumber = $users[$designer]['phone'];
+			echo "send $text to $phoneNumber<br /> \n";
+		}
+		if(isset($users[$salesman]) && contains($users[$salesman]['mail'],'@')){ // 有效邮箱
+			$mail = $users[$salesman]['mail'];
+			echo "send email $text to $mail<br /> \n";
+		}
+		if(isset($users[$designer]) && contains($users[$designer]['mail'],'@')){ // 有效邮箱
+			$mail = $users[$designer]['mail'];
+			echo "send email $text to $mail<br /> \n";
+		}
+	}
+	//获取需要提醒的主材对应项目
+	private function noticeOrder($column,$startDays){
+		global $TableMapping;
+		global $mysql;
+		//查询未结束的项目,并且主材没有在主材订购表中出现(没有订购主材的),并且小项开始时间还差n天的(n为系统配置的提醒时间),关联业务员,设计师
+		$sql = "select r.*,p.salesman,p.designer from (
+					select  TO_DAYS(SUBSTR($column,1,10))  - TO_DAYS(NOW()) as daysleft ,projectId,projectAddress as projectName from plan_making 
+					where endTime > now() and isDeleted = 'false' and SUBSTR($column,1,10) in ($startDays) and projectId not in (
+						select projectId from mainmaterial where materialType = '$column' and isDeleted = 'false')
+					) r left join project p on p.projectId = r.projectId;";
+		$d = $mysql->DBGetAsMap($sql);
+		foreach ($d as $key => &$value) {
+			$value['column'] = $column;
+		}
+		return $d;
+	}
+
 	public function getTimeSpanByProfessionType($q){
 		/*	泥工	 0001
 		木工 0002
