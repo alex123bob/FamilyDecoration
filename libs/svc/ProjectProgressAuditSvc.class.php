@@ -7,9 +7,8 @@ class ProjectProgressAuditSvc extends BaseSvc{
 		}
 		$itemId = $q['@itemId'];
 		$temp = explode("-",$itemId); 
-		$q['@projectPlanId'] = $temp[0]; 
+		$q['@projectId'] = $temp[0]; 
 		$q['@columnName'] = $temp[1];
-		$q['@id'] = $this->getUUID();
 		$q['@id'] = $this->getUUID();
 		return parent::add($q);
 	}

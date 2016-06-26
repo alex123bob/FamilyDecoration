@@ -29,10 +29,11 @@
 		global $mysql;
 		$mysql->DBInsertAsArray("`mainmaterial`",$obj);
 		//添加计划进度
-		$columnName = $post['materialType'];
-		//$projectProgressSvc = BaseSvc::getSvc('ProjectProgress');
-		//$progress = array('columnName'=>);
-		//$projectProgressSvc->update();
+		$projectProgressSvc = BaseSvc::getSvc('ProjectProgress');
+		$progress = array('@columnName'=>$post['materialType']);
+		$progress['@projectId'] = $post['projectId'];
+		$progress['@content'] = '已订购'.$post["productNumber"].' '.$post["productName"];
+		$projectProgressSvc->add($progress);
 		return array('status'=>'successful', 'errMsg' => '','materialId'=> $obj["id"]);
 	}
 
@@ -116,6 +117,12 @@
 		$obj= array();
 		$obj['isChecked'] = $data['isChecked'];
 		$mysql->DBUpdate("`mainmaterial`",$obj,"`id` = '?' ",array($data["id"]));
+		//添加计划进度
+		$projectProgressSvc = BaseSvc::getSvc('ProjectProgress');
+		$progress = array('@columnName'=>$data['materialType']);
+		$progress['@projectId'] = $data['projectId'];
+		$progress['@content'] = $data["productName"].'已确定订购';
+		$projectProgressSvc->add($progress);
 		return array('status'=>'successful', 'errMsg' => 'edit mainmaterial ok');
 	}
 ?>

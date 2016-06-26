@@ -6,10 +6,12 @@ Class ProjectProgressSvc extends BaseSvc{
 		if(!isset($q['@committer'])){
 			$q['@committer'] = $_SESSION['name'];
 		}
-		$itemId = $q['@itemId'];
-		$temp = explode("-",$itemId); 
-		$q['@projectPlanId'] = $temp[0]; 
-		$q['@columnName'] = $temp[1];
+		if(isset($q['@itemId'])){
+			$itemId = $q['@itemId'];
+			$temp = explode("-",$itemId); 
+			$q['@projectId'] = $temp[0]; 
+			$q['@columnName'] = $temp[1];
+		}
 		$q['@id'] = $this->getUUID();
 		return parent::add($q);
 	}
@@ -27,10 +29,10 @@ Class ProjectProgressSvc extends BaseSvc{
 		//查工程计划所有小项
 		$planItems = $planSvc->getItems(array('projectId'=>$q['projectId']),true);
 		//查工程进度审核
-		$progressAudit = $progressAuditSvc->get(array('projectPlanId'=>$plan['id']));
+		$progressAudit = $progressAuditSvc->get(array('projectId'=>$plan['projectId']));
 		$progressAudit = $progressAudit['data'];
 		//查工程实际进度
-		$progress = parent::get(array('projectPlanId'=>$plan['id']));
+		$progress = parent::get(array('projectId'=>$plan['projectId']));
 		$progress = $progress['data'];
 		//转为以工程计划planMaking 列名为key,value为进度条目数组的map
 		$progressByColumnName = array();
@@ -42,7 +44,7 @@ Class ProjectProgressSvc extends BaseSvc{
 			$columnName = $value['columnName'];
 			unset($value['columnName']);
 			unset($value['isDeleted']);
-			unset($value['projectPlanId']);
+			unset($value['projectId']);
 			array_push($progressByColumnName[$columnName], $value);
 		}
 		//转为以工程计划planMaking 列名为key,value为审核条目数组的map
@@ -55,7 +57,7 @@ Class ProjectProgressSvc extends BaseSvc{
 			$columnName = $value['columnName'];
 			unset($value['columnName']);
 			unset($value['isDeleted']);
-			unset($value['projectPlanId']);
+			unset($value['projectId']);
 			array_push($auditByColumnName[$columnName], $value);
 		}
 		//遍历所有计划小项,将实际进度和审核追加

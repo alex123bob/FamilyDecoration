@@ -103,7 +103,7 @@ Class PlanMakingSvc extends BaseSvc{
 				'itemName'=>$value,
 				'startTime'=>$startTime,
 				'endTime'=>$endTime,
-				'id'=>$plan['id'].'-'.$key);
+				'id'=>$plan['projectId'].'-'.$key);
 			if($isDetailed){
 				//c3, c4, c5, c9, c13, c21, c24不可编辑
 				$item['columnName'] = $key;
@@ -115,8 +115,8 @@ Class PlanMakingSvc extends BaseSvc{
 	}
 
 	public function updateItem($q){
-		$temp = explode("-",$q['id']);   // planId-columnName
-		$update = array('@'.$temp[1]=>$q['@time'],'id'=>$temp[0]);
+		$temp = explode("-",$q['id']);   // projectId-columnName
+		$update = array('@'.$temp[1]=>$q['@time'],'projectId'=>$temp[0]);
 		return parent::update($update);
 	}
 
