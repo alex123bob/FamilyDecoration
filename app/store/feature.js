@@ -174,6 +174,12 @@
                         cmp: 'projectcategory-index',
                         leaf: true,
                         icon: 'resources/img/projectcategory.png'
+                    },
+                    {
+                        name: '计划用工',
+                        cmp: isDebug() ? 'planlabor-index' : '',
+                        leaf: true,
+                        icon: 'resources/img/planlabor.png'
                     }
                 ] 
             },
