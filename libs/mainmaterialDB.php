@@ -28,6 +28,9 @@
 			$obj["isChecked"] = $post["isChecked"];
 		global $mysql;
 		$mysql->DBInsertAsArray("`mainmaterial`",$obj);
+		//添加计划进度
+		$columnName = $post['materialType'];
+		//$projectProgressSvc = BaseSvc::getSvc('ProjectProgress');
 		return array('status'=>'successful', 'errMsg' => '','materialId'=> $obj["id"]);
 	}
 
@@ -99,7 +102,8 @@
 		$obj['productDeliver'] = $data['productDeliver'];
 		$obj['productMerchant'] = $data['productMerchant'];
 		$obj['productSchedule'] = $data['productSchedule'];
-		$obj['isChecked'] = $data['isChecked'];
+		if(isset($data['isChecked']))
+			$obj['isChecked'] = $data['isChecked'];
 		$mysql->DBUpdate("`mainmaterial`",$obj,"`id` = '?' ",array($data["id"]));
 		return array('status'=>'successful', 'errMsg' => 'edit mainmaterial ok');
 	}
