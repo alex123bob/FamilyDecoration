@@ -85,11 +85,13 @@ Class PlanMakingSvc extends BaseSvc{
 	public function msgPreNotice(){
 		global $TableMapping;
 		global $mysql;
+		//获取短信模板,及需要提前几天提醒的天数
 		$res = $mysql->DBGetAsOneArray('select paramValue from system where id = 9 or id = 10');
 		$msg = $res[0];
 		$days = $res[1];
 		if($days == null || $days == "")
 			return;
+		//需要提前n天提醒,即小项开始时间为当前时间+n天
 		$days = explode(',', $days);
 		$startDays = array();
 		foreach ($days as $value) {
@@ -114,9 +116,9 @@ Class PlanMakingSvc extends BaseSvc{
 			array_push($recievers, $value['salesman']);
 			array_push($recievers, $value['designer']);
 		}
-		$recievers = array_unique($recievers);
 		//查询这些人手机号
-		$recievers = $mysql->DBGetAsMap("select name,mail,phone from user where name in ('".join("','",$recievers)."');");
+		$recievers = "'".join("','",array_unique($recievers))."'";
+		$recievers = $mysql->DBGetAsMap("select name,mail,phone from user where name in ($recievers);");
 		$users = array();
 		//变成key为user name的map
 		foreach ($recievers as $key => &$value) {
