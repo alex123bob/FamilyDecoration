@@ -72,6 +72,40 @@ Class PlanMakingSvc extends BaseSvc{
 		'c32'=>'竣工验收、保修单签单'
 	);
 
+	public function getTimeSpanByProfessionType($q){
+		/*	泥工	 0001
+		木工 0002
+		油漆工 0003
+		水电工 0004
+		力工	0005
+		其他	0009*/
+		$select = "select ";
+		switch ($q['professionType']){
+			case '0001':$select .= 'c7,c15,c17';break;
+			case '0002':$select .= 'c20';break;
+			case '0003':$select .= 'c8,c22,c25,c29';break;
+			case '0004':$select .= 'c10';break;
+			case '0005':$select .= 'c6';break;
+			default:throw new Exception('找不到工种:'.$q['professionType']);
+		}
+		$select .= " from plan_making where isDeleted = 'false' and endTime > now() ";
+		global $TableMapping;
+		global $mysql;
+		$res = $mysql->DBGetAsOneArray($select);
+		$start='2999-12-31';
+		$end='1970-01-01';
+		foreach ($res as $key => $value) {
+			if($value != null && contains($value,'~')){
+				$tmp = explode("~",$value);
+				if($start>$tmp[0])
+					$start = $tmp[0];
+				if($end<$tmp[1])
+					$end = $tmp[1];
+			}
+		}
+		return array('startTime'=>$start,'endTime'=>$end);
+	}
+
 	public function get($q){
 		$q['_fields'] = 'id,projectId,projectAddress,startTime,endTime,custName,isDeleted,updateTime,createTime';
 		return parent::get($q);
