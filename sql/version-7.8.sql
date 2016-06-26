@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS `project_progress`;
 CREATE TABLE `project_progress`(
   `id` varchar(20) default null,
-  `projectPlanId` varchar(20) default null,
+  `projectId` varchar(20) default null,
   `columnName` varchar(5) default null,
   `content` text default null,
   `committer` varchar(20) default null,
@@ -14,7 +14,7 @@ CREATE TABLE `project_progress`(
 DROP TABLE IF EXISTS `project_progress_audit`;
 CREATE TABLE `project_progress_audit`(
   `id` varchar(20) default null,
-  `projectPlanId` varchar(20) default null,
+  `projectId` varchar(20) default null,
   `columnName` varchar(5) default null,
   `content` text default null,
   `auditor` varchar(20) default null,
