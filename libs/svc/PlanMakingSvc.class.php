@@ -163,7 +163,7 @@ Class PlanMakingSvc extends BaseSvc{
 		global $TableMapping;
 		global $mysql;
 		//查询未结束的项目,并且主材没有在主材订购表中出现(没有订购主材的),并且小项开始时间还差n天的(n为系统配置的提醒时间),关联业务员,设计师
-		$sql = "select r.*,p.salesman,p.designer from (
+		$sql = "select r.*,p.salesmanName as salesman,p.designerName as designer from (
 					select  TO_DAYS(SUBSTR($column,1,10))  - TO_DAYS(NOW()) as daysleft ,projectId,projectAddress as projectName from plan_making 
 					where endTime > now() and isDeleted = 'false' and SUBSTR($column,1,10) in ($startDays) and projectId not in (
 						select projectId from mainmaterial where materialType = '$column' and isDeleted = 'false')
