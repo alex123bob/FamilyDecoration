@@ -147,7 +147,7 @@
                     },
                     {
                         name: "工程进度 <font color='green'><strong>新</strong></font>",
-                        cmp: isDebug() ? 'projectprogress-index' : '',
+                        cmp: 'projectprogress-index',
                         leaf: true,
                         icon: 'resources/img/projectprogress.png'
                     },
@@ -159,7 +159,7 @@
                     },
                     {
                         name: "计划生成 <font color='green'><strong>新</strong></font>",
-                        cmp: isDebug() ? 'planmaking-index' : '',
+                        cmp: 'planmaking-index',
                         leaf: true,
                         icon: 'resources/img/plan_new.png'
                     },
@@ -177,7 +177,7 @@
                     },
                     {
                         name: '计划用工',
-                        cmp: isDebug() ? 'planlabor-index' : '',
+                        cmp: 'planlabor-index',
                         leaf: true,
                         icon: 'resources/img/planlabor.png'
                     }
