@@ -9,10 +9,10 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
     modal: true,
 
     title: '添加工程进度',
-    width: 400,
-    height: 240,
+    width: 500,
+    height: 400,
     resizable: false,
-    
+
     project: null,
     progress: null,
     progressGrid: null,
@@ -20,6 +20,7 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
 
     layout: 'vbox',
     isComment: false,
+    isDirty: false, // field to judge if current window has done several back interaction operation.
 
     initComponent: function () {
         var me = this;
@@ -34,6 +35,118 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
                 autoScroll: true,
                 allowBlank: false,
                 fieldLabel: me.isComment ? '监理意见' : '工程进度'
+            },
+            {
+                title: me.isComment ? '意见列表' : '进度列表',
+                xtype: 'gridpanel',
+                width: '100%',
+                flex: 2,
+                autoScroll: true,
+                cls: 'gridpanel-editprogress',
+                plugins: [
+                    Ext.create('Ext.grid.plugin.CellEditing', {
+                        clicksToEdit: 1,
+                        listeners: {
+                            edit: function (editor, e) {
+                                Ext.suspendLayouts();
+
+                                e.record.commit();
+                                editor.completeEdit();
+                                if (e.field == 'content') {
+                                    ajaxUpdate(me.isComment ? 'ProjectProgressAudit' : 'ProjectProgress', {
+                                        content: e.record.get('content'),
+                                        id: e.record.getId(),
+                                    }, 'id', function (obj) {
+                                        showMsg('编辑成功！');
+                                        e.record.store.reload();
+                                        me.isDirty = true;
+                                    });
+                                }
+
+                                Ext.resumeLayouts();
+                            },
+                            validateedit: function (editor, e, opts) {
+                                var rec = e.record;
+                                if (e.field == 'content') {
+                                    if (e.value == e.originalValue) {
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                    })
+                ],
+                columns: [
+                    {
+                        xtype: 'actioncolumn',
+                        width: 30,
+                        items: [
+                            {
+                                icon: 'resources/img/delete_for_action_column.png',
+                                tooltip: '删除',
+                                handler: function (view, rowIndex, colIndex) {
+                                    Ext.Msg.warning('确定要删除当前' + (me.isComment ? '监理意见' : '工程进度') + '吗？', function (btnId) {
+                                        if (btnId == 'yes') {
+                                            var st = view.getStore(),
+                                                rec = st.getAt(rowIndex),
+                                                index = st.indexOf(rec);
+                                            ajaxDel(me.isComment ? 'ProjectProgressAudit' : 'ProjectProgress', {
+                                                id: rec.getId()
+                                            }, function () {
+                                                showMsg('删除成功！');
+                                                st.reload({
+                                                    callback: function (recs, ope, success) {
+                                                        if (success) {
+                                                            var newRec = st.getAt(index);
+                                                            if (newRec) {
+                                                                view.getSelectionModel().select(newRec);
+                                                                view.focusRow(newRec, 200);
+                                                                me.isDirty = true;
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                            });
+                                        }
+                                    });
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        text: '内容',
+                        dataIndex: 'content',
+                        flex: 2,
+                        editor: {
+                            xtype: 'textarea',
+                            autoScroll: true,
+                            allowBlank: false
+                        },
+                        renderer: function (val, meta, rec) {
+                            return val.replace(/\n/ig, '<br />');
+                        }
+                    },
+                    {
+                        text: '经办人',
+                        dataIndex: me.isComment ? 'auditorRealName' : 'committerRealName'
+                    }
+                ],
+                store: Ext.create('Ext.data.Store', {
+                    fields: ['content', 'committer', 'committerRealName', 'auditor', 'auditorRealName'],
+                    proxy: {
+                        type: 'rest',
+                        url: './libs/api.php?action=' + (me.isComment ? 'ProjectProgressAudit' : 'ProjectProgress') + '.get',
+                        extraParams: {
+                            projectId: me.project.getId(),
+                            columnName: me.progress.getId().split('-')[1]
+                        },
+                        reader: {
+                            type: 'json',
+                            root: 'data'
+                        }
+                    },
+                    autoLoad: true
+                })
             }
         ];
 
@@ -43,26 +156,26 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
                 handler: function () {
                     var txtarea = me.down('textarea');
                     if (txtarea.isValid()) {
-                        var msg = me.isComment ? '确定要添加此监理意见吗？添加后不可更改。' : '确定需要添加进度吗？添加之后不可更改。';
-                        Ext.Msg.warning(msg, function (btnId){
-                            if ('yes' == btnId) {
-                                var params = {
-                                    itemId: me.progress.getId(),
-                                    content: txtarea.getValue()
-                                };
-                                ajaxAdd(me.isComment ? 'ProjectProgressAudit' : 'ProjectProgress', params, function (obj){
-                                    showMsg('添加成功！');
-                                    me.progressGrid.refresh();
-                                    me.close();
-                                });
-                            }
-                        });
+                        var params = {
+                            itemId: me.progress.getId(),
+                            content: txtarea.getValue()
+                        };
+                        ajaxAdd(me.isComment ? 'ProjectProgressAudit' : 'ProjectProgress',
+                            params,
+                            function (obj) {
+                                showMsg('添加成功！');
+                                me.progressGrid.refresh();
+                                me.close();
+                            });
                     }
                 }
             }, {
                 text: '取消',
                 handler: function () {
                     me.close();
+                    if (me.isDirty) {
+                        me.progressGrid.refresh();
+                    }
                 }
             },
             {

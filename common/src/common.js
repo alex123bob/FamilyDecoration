@@ -145,6 +145,7 @@ function ajaxUpdate (className, params, conditionParams, callback, isCustomActio
         else {
             var url = './libs/api.php?action=' + className + '.update';
         }
+        var p = {};
         if (!Ext.isArray(conditionParams)) {
             conditionParams = [conditionParams];
         }
@@ -152,16 +153,17 @@ function ajaxUpdate (className, params, conditionParams, callback, isCustomActio
             if (params.hasOwnProperty(pro)) {
                 var val = params[pro];
                 if (Ext.Array.contains(conditionParams, pro)) {
-                    url += '&' + pro + '=' + val;
+                    p[pro] = val;
                 }
                 else {
-                    url += '&@' + pro + '=' + val;
+                    p['@' + pro] = val;
                 }
             }
         }
         Ext.Ajax.request({
             url: url,
             method: 'POST',
+            params: p,
             callback: function (opts, success, res){
                 if (success) {
                     var obj = Ext.decode(res.responseText);

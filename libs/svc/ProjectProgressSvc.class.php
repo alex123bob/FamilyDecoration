@@ -16,6 +16,13 @@ Class ProjectProgressSvc extends BaseSvc{
 		return parent::add($q);
 	}
 
+	public function get($q){
+		$data = parent::get($q);
+		$userSvc = parent::getSvc('User');
+		$userSvc->appendRealName($data['data'],'committer');
+		return $data;
+	}
+
 	public function getItems($q){
 		$planSvc = parent::getSvc('PlanMaking');
 		$progressAuditSvc = parent::getSvc('ProjectProgressAudit');

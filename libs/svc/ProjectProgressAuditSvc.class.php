@@ -12,6 +12,13 @@ class ProjectProgressAuditSvc extends BaseSvc{
 		$q['@id'] = $this->getUUID();
 		return parent::add($q);
 	}
+
+	public function get($q){
+		$data = parent::get($q);
+		$userSvc = parent::getSvc('User');
+		$userSvc->appendRealName($data['data'],'auditor');
+		return $data;
+	}
 }
 
 ?>
