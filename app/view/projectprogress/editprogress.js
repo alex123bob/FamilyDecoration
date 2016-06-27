@@ -17,6 +17,8 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
     progress: null,
     progressGrid: null,
     bodyPadding: 5,
+    closable: false,
+    maximizable: true,
 
     layout: 'vbox',
     isComment: false,
@@ -43,6 +45,7 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
                 flex: 2,
                 autoScroll: true,
                 cls: 'gridpanel-editprogress',
+                collapsible: true,
                 plugins: [
                     Ext.create('Ext.grid.plugin.CellEditing', {
                         clicksToEdit: 1,
