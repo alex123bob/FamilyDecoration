@@ -268,11 +268,16 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								readOnly: previewMode ? true : false
 							},
 							{
-								xtype: 'textfield',
-								fieldLabel: '完成情况',
+								xtype: 'numberfield',
+								fieldLabel: '完成情况(%)',
+								labelWidth: 80,
 								flex: 2,
 								height: '100%',
+								editable: false,
 								name: 'projectProgress',
+								afterSubTpl: '%',
+								minValue: 0,
+								maxValue: 100,
 								readOnly: previewMode ? true : false
 							},
 							{

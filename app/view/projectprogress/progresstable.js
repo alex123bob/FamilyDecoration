@@ -12,7 +12,9 @@ Ext.define('FamilyDecoration.view.projectprogress.ProgressTable', {
 
 		me.columns = {
 			defaults: {
-				align: 'left'
+				align: 'left',
+				sortable: false,
+				menuDisabled: true
 			},
 			items: [
 				{

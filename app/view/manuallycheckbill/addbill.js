@@ -99,6 +99,9 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 				name: 'addBillItemBtn',
 				icon: 'resources/img/addsmallitem.png',
 				handler: function () {
+					var statementBasicSt = Ext.create('FamilyDecoration.store.StatementBasicItem', {
+						autoLoad: false
+					});
 					var win = Ext.create('Ext.window.Window', {
 						title: '项目',
 						modal: true,
@@ -122,9 +125,21 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 										}
 									]
 								},
-								store: Ext.create('FamilyDecoration.store.StatementBasicItem', {
-									autoLoad: false
-								}),
+								dockedItems: [
+									{
+										dock: 'top',
+										xtype: 'toolbar',
+										items: [
+											{
+												xtype: 'searchfield',
+												flex: 1,
+												store: statementBasicSt,
+												paramName: 'billItemName'
+											}
+										]
+									}
+								],
+								store: statementBasicSt,
 								selModel: {
 									mode: 'SIMPLE'
 								},
