@@ -43,11 +43,14 @@ class StatementBillSvc extends BaseSvc
 			throw new Exception("已付款,无法更改状态.");
 		$limit = $mysql->DBGetAsOneArray("select paramValue*10000 from system where id = 10 ");
 		if($limit >= $bill['claimAmount']){
+			if(!isset($_SESSION['phone']) || strlen($_SESSION['phone']) != 11){
+				throw new Exception('手机号不对,请联系管理员修改!');
+			}
 			//需要短信验证
 			$rand = rand(1000,9999);
 			$_SESSION['validateCode'] = $rand;
 			include_once __ROOT__."/libs/msgLogDB.php";
-			sendMsg($_SESSION['name'].'-BillStateChange',$_SESSION['name'],'13057530560','您的短信验证码是:'.$rand,null,'sendSMS');
+			sendMsg($_SESSION['name'].'-BillStateChange',$_SESSION['name'],$_SESSION['phone'],'您的短信验证码是:'.$rand,null,'sendSMS');
 			return "短信验证码";
 		}else{
 			return "安全密码验证";
