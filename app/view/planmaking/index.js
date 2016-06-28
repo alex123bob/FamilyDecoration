@@ -6,6 +6,7 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 		'FamilyDecoration.view.planmaking.PlanTable', 'FamilyDecoration.view.planmaking.AddPlanTable'
 	],
 	layout: 'border',
+	loadAll: true,
 
 	initComponent: function () {
 		var me = this;
@@ -35,6 +36,7 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 				items: [{
 					xtype: 'progress-projectlistbycaptain',
 					searchFilter: true,
+					loadAll: me.loadAll,
 					title: '工程项目',
 					id: 'treepanel-projectNameForPlanMaking',
 					name: 'treepanel-projectNameForPlanMaking',
@@ -214,7 +216,9 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 									pid: sel.getId()
 								};
 
-								changeMainCt('projectprogress-index');
+								changeMainCt('projectprogress-index', {
+									loadAll: false
+								});
 							}
 							else {
 								showMsg('请选择工程！');

@@ -7,6 +7,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 
 	autoScroll: true,
 	layout: 'border',
+	loadAll: true,
 
 	initComponent: function (){
 		var me = this;
@@ -24,6 +25,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 				xtype: 'progress-projectlistbycaptain',
 				id: 'treepanel-chartCategory',
 				name: 'treepanel-chartCategory',
+				loadAll: me.loadAll,
 				searchFilter: true,
 				isForChart: true,
 				autoScroll: true,
@@ -475,7 +477,9 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 							pid: sel.getId()
 						};
 
-						changeMainCt('progress-index');
+						changeMainCt('progress-index', {
+							loadAll: false
+						});
 					}
 					else {
 						showMsg('请选择工程！');

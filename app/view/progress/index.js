@@ -11,6 +11,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 	// autoScroll: true,
 	layout: 'border',
 	projectId: undefined,
+	loadAll: true, // if load all projects or not. default true.
 
 	initComponent: function (){
 		var me = this;
@@ -27,6 +28,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 			items: [{
 				xtype: 'progress-projectlistbycaptain',
 				projectId: me.projectId,
+				loadAll: me.loadAll,
 				searchFilter: true,
 				title: '工程项目名称',
 				id: 'treepanel-projectName',
@@ -615,7 +617,9 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 							pid: pid
 						};
 
-						changeMainCt('chart-index');
+						changeMainCt('chart-index', {
+							loadAll: false
+						});
 					}
 					else {
 						showMsg('该工程没有图库！');
@@ -728,7 +732,9 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 							pid: pid
 						};
 
-						changeMainCt('plan-index');
+						changeMainCt('plan-index', {
+							loadAll: false
+						});
 					}
 					else {
 						showMsg('请选择工程！');

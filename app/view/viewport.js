@@ -57,21 +57,8 @@ Ext.define('FamilyDecoration.view.Viewport', {
                 }
             }],
             listeners: {
-                // itemclick: function (view, rec){
-                //     if (/-parent/i.test(rec.get('cmp'))) {
-                //         if (rec.isExpanded()) {
-                //             rec.collapse();
-                //         }
-                //         else {
-                //             rec.expand();
-                //         }
-                //     }
-                // },
-                // beforeitemdblclick: function (){
-                //     return false;
-                // },
-                selectionchange: function (selModel, sels){
-                    var rec = sels[0], xtype;
+                itemclick: function (view, rec){
+                    var xtype;
                     if (rec && /-index/i.test(rec.get('cmp'))) {
                         xtype = rec.get('cmp');
                         changeMainCt(xtype);
@@ -103,12 +90,10 @@ Ext.define('FamilyDecoration.view.Viewport', {
 
             // Ext.util.Cookies.clear('lastXtype');
             if (User.isGeneral()) {
-                chartPanel = root.findChild('cmp', 'chart-index', true);
-                tree.getSelectionModel().select(chartPanel);
+                changeMainCt('chart-index');
             }
             else {
-                // tree.getSelectionModel().select(bulletin);
-                tree.getSelectionModel().select(lastPanel);
+                changeMainCt(lastXtype);
             }
 
             Ext.select('[name="realname"]').elements[0].innerHTML = User.getRealName();
@@ -467,7 +452,7 @@ Ext.define('FamilyDecoration.view.Viewport', {
     }
 });
 
-function changeMainCt (xtype){
+function changeMainCt (xtype, config){
     Ext.Ajax.abortAll();
     Ext.suspendLayouts();
 
@@ -491,9 +476,11 @@ function changeMainCt (xtype){
     if (cur) {
         center.removeAll(true);
     }
-    newCt = center.insert(0, {
+    newCt = center.insert(0, config ? Ext.apply(config, {
         xtype: xtype
-    });
+    }) : {
+        xtype: xtype
+    } );
 
     var cmp = option.getStore().getRootNode().findChild('cmp', xtype, true);
     option.getSelectionModel().select(cmp);

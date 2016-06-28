@@ -11,6 +11,7 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
     // autoScroll: true,
     layout: 'border',
     projectId: undefined,
+    loadAll: true,
 
     initComponent: function () {
         var me = this;
@@ -68,6 +69,7 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                         title: '工程项目',
                         id: 'treepanel-projectNameForProjectProgress',
                         name: 'treepanel-projectNameForProjectProgress',
+                        loadAll: me.loadAll,
                         getBtns: function () {
                             return {
                                 addBtn: Ext.getCmp('button-addProjectForProjectProgress'),
@@ -634,7 +636,9 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                                     pid: resObj.pro.getId()
                                 };
 
-                                changeMainCt('chart-index');
+                                changeMainCt('chart-index', {
+                                    loadAll: false
+                                });
                             }
                             else {
                                 showMsg('该工程没有图库！');
@@ -750,7 +754,9 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                                                     pid: resObj.pro.getId()
                                                 };
 
-                                                changeMainCt('planmaking-index');
+                                                changeMainCt('planmaking-index', {
+                                                    loadAll: false
+                                                });
                                             }
                                             else {
                                                 showMsg('没有对应计划!');

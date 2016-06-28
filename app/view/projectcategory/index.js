@@ -151,7 +151,9 @@ Ext.define('FamilyDecoration.view.projectcategory.Index', {
 						pid: rec.get('projectId')
 					};
 
-					changeMainCt('projectprogress-index');
+					changeMainCt('projectprogress-index', {
+						loadAll: false
+					});
 				}
 			}
 		}];
