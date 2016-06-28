@@ -143,7 +143,17 @@ Ext.define('FamilyDecoration.view.projectcategory.Index', {
 					dock: 'bottom',
 					displayInfo: true
 				}
-			]
+			],
+			listeners: {
+				itemdblclick: function (view, rec, item, index, e, opts){
+					window.pro = {
+						captainName: rec.get('captainName'),
+						pid: rec.get('projectId')
+					};
+
+					changeMainCt('projectprogress-index');
+				}
+			}
 		}];
 
 		this.callParent();

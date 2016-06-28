@@ -12,7 +12,8 @@
 		else {
 			$userCheckSql = '';
 		}
-		$sql = "select *, YEAR(`projectTime`) as projectYear , MONTH(`projectTime`) as projectMonth from `project` where `isDeleted` = 'false' and `isFrozen` = 0 ".$userCheckSql;
+		$orderBySql = " ORDER BY `captainName` ASC ";
+		$sql = "select *, YEAR(`projectTime`) as projectYear , MONTH(`projectTime`) as projectMonth from `project` where `isDeleted` = 'false' and `isFrozen` = 0 ".$userCheckSql.$orderBySql;
 		$limitSql = " limit $start, $limit ";
 		$count = count($mysql->DBGetAsMap($sql));
 		$projects = $mysql->DBGetAsMap($sql.$limitSql);
