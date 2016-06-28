@@ -93,7 +93,12 @@ Ext.define('FamilyDecoration.view.Viewport', {
                 changeMainCt('chart-index');
             }
             else {
-                changeMainCt(lastXtype);
+                if (lastXtype) {
+                    changeMainCt(lastXtype);
+                }
+                else {
+                    changeMainCt('bulletin-index');
+                }
             }
 
             Ext.select('[name="realname"]').elements[0].innerHTML = User.getRealName();
