@@ -24,7 +24,7 @@ Ext.require('Ext.window.MessageBox', function () {
                 animation: 'slide-from-top',
                 confirmButtonText: '确定',
                 closeOnConfirm: true
-            }, function (){
+            }, function () {
                 if (typeof fn === 'function') {
                     fn();
                 }
@@ -51,7 +51,7 @@ Ext.require('Ext.window.MessageBox', function () {
                 cancelButtonText: '否',
                 closeOnConfirm: true,
                 animation: 'slide-from-top'
-            }, function (){
+            }, function () {
                 if (typeof fn === 'function') {
                     fn('yes');
                 }
@@ -79,7 +79,7 @@ Ext.require('Ext.window.MessageBox', function () {
                 html: true,
                 confirmButtonText: '确定',
                 closeOnConfirm: true
-            }, function (){
+            }, function () {
                 if (typeof fn === 'function') {
                     fn();
                 }
@@ -106,13 +106,34 @@ Ext.require('Ext.window.MessageBox', function () {
 //     });
 // });
 
+Ext.require('Ext.form.field.Date', function (){
+    Ext.override(Ext.form.field.Date, {
+        cleanBtn: false, // config parameter, if you need, just set it as true. then a clean button will pop up beside today button used to clean value in inputEl.
+        onTriggerClick: function (){
+            var me = this;
+            me.callParent(arguments);
+            if (me.cleanBtn && me.picker.todayBtn.container.query('.datefield-clean-button').length <= 0) {
+                var btn = new Ext.Button({
+                    text: '清空',
+                    cls: 'datefield-clean-button',
+                    handler: function (){
+                        me.setValue('');
+                        me.triggerBlur(); // this is private functionality, not recommended. any better idea?
+                    }
+                });
+                btn.render(me.picker.todayBtn.container);
+            }
+        }
+    });
+});
+
 // override enableOverflow property to make sure tha tall toolbar will automatically overflow.
 Ext.require('Ext.toolbar.Toolbar', function () {
     Ext.toolbar.Toolbar.prototype.enableOverflow = true;
 });
 
 // actionName: if false, use default action "get"
-function ajaxGet (className, actionName, params, callback) {
+function ajaxGet(className, actionName, params, callback) {
     if (Ext.isObject(params) && !Ext.Object.isEmpty(params)) {
         var url = './libs/api.php?action=' + className + '.' + (actionName ? actionName : 'get');
         for (var pro in params) {
@@ -124,7 +145,7 @@ function ajaxGet (className, actionName, params, callback) {
         Ext.Ajax.request({
             url: url,
             method: 'GET',
-            callback: function (opts, success, res){
+            callback: function (opts, success, res) {
                 if (success) {
                     var obj = Ext.decode(res.responseText);
                     callback(obj);
@@ -139,7 +160,7 @@ function ajaxGet (className, actionName, params, callback) {
 
 // isCustomAction: if true, className will be the classical className + actionName. 
 // combined by developer before invoke this function.
-function ajaxUpdate (className, params, conditionParams, callback, isCustomAction){
+function ajaxUpdate(className, params, conditionParams, callback, isCustomAction) {
     if (Ext.isObject(params) && !Ext.Object.isEmpty(params)) {
         if (isCustomAction == true) {
             var url = './libs/api.php?action=' + className;
@@ -166,7 +187,7 @@ function ajaxUpdate (className, params, conditionParams, callback, isCustomActio
             url: url,
             method: 'POST',
             params: p,
-            callback: function (opts, success, res){
+            callback: function (opts, success, res) {
                 if (success) {
                     var obj = Ext.decode(res.responseText);
                     if ('successful' == obj.status) {
@@ -184,8 +205,8 @@ function ajaxUpdate (className, params, conditionParams, callback, isCustomActio
     }
 }
 
-function ajaxAdd (className, params, callback, errorHandler){
-    function add (className, p){
+function ajaxAdd(className, params, callback, errorHandler) {
+    function add(className, p) {
         if (p && !Ext.Object.isEmpty(p)) {
             var url = './libs/api.php?action=' + className + '.add';
             var params = {};
@@ -199,7 +220,7 @@ function ajaxAdd (className, params, callback, errorHandler){
                 url: url,
                 params: params,
                 method: 'POST',
-                callback: function (opts, success, res){
+                callback: function (opts, success, res) {
                     if (success) {
                         var obj = Ext.decode(res.responseText);
                         if ('successful' == obj.status) {
@@ -230,7 +251,7 @@ function ajaxAdd (className, params, callback, errorHandler){
 /**
  * @params only need pass the id of corresponding record.
  */
-function ajaxDel (className, params, callback) {
+function ajaxDel(className, params, callback) {
     if (Ext.isObject(params) && !Ext.Object.isEmpty(params)) {
         var url = './libs/api.php?action=' + className + '.del';
         for (var pro in params) {
@@ -242,7 +263,7 @@ function ajaxDel (className, params, callback) {
         Ext.Ajax.request({
             url: url,
             method: 'POST',
-            callback: function (opts, success, res){
+            callback: function (opts, success, res) {
                 if (success) {
                     var obj = Ext.decode(res.responseText);
                     if ('successful' == obj.status) {
@@ -263,11 +284,11 @@ function ajaxDel (className, params, callback) {
 function renderNumber(n) {
     var str = '⓪①②③④⑤⑥⑦⑧⑨',
         result = [];
-    n = parseInt(n ,10);
+    n = parseInt(n, 10);
     if (Ext.isNumber(n) && n >= 0) {
         n = n.toString();
         result = n.split('');
-        Ext.each(result, function (item, index, arr){
+        Ext.each(result, function (item, index, arr) {
             arr[index] = str[parseInt(item, 10)];
         });
     }
@@ -932,12 +953,12 @@ function isDebug() {
 }
 
 // get how many days in one specific month of a year.
-function daysInMonth(month,year) {
+function daysInMonth(month, year) {
     return new Date(year, month, 0).getDate();
 }
 
 // check if an array is full of Date or one variable is a Date
-function isDate (d){
+function isDate(d) {
     var flag = true;
     if (d.constructor === Array) {
         for (var i = 0; i < d.length; i++) {
@@ -982,7 +1003,7 @@ function isDate (d){
 }
 
 // get how many days between two given dates.
-function daysBetweenTwoDates (first, second){
+function daysBetweenTwoDates(first, second) {
     if (isDate([first, second])) {
         return Math.abs(first - second) / 1000 / 60 / 60 / 24;
     }

@@ -132,6 +132,7 @@ Ext.define('FamilyDecoration.view.planmaking.AddPlanTable', {
                                 editable: false,
                                 minValue: projectTime[0],
                                 maxValue: projectTime[1],
+                                cleanBtn: true,
                                 listeners: {
                                     select: function (picker, val, opts){
                                         picker.triggerBlur(); // private function
@@ -155,6 +156,7 @@ Ext.define('FamilyDecoration.view.planmaking.AddPlanTable', {
                                 editable: false,
                                 minValue: projectTime[0],
                                 maxValue: projectTime[1],
+                                cleanBtn: true,
                                 listeners: {
                                     select: function (picker, val, opts){
                                         picker.triggerBlur(); // private function
