@@ -118,6 +118,16 @@
 		throw new Exception('用户不存在！');
 	}
 
+	function getValidateCode(){
+		$rand = rand(1000,9999);
+		include_once __ROOT__."/libs/msgLogDB.php";
+		$_SESSION['user_validateCode'] = $rand;
+		if($_SESSION['phone']==null || strlen($_SESSION['phone']) != 11){
+			thrown new Exception('您的手机号码不对,请联系管理员修改!');
+		}
+		sendMsg($_SESSION['name'].'-BillStateChange',$_SESSION['name'],$_SESSION['phone'],'您的短信验证码是:'.$rand,null,'sendSMS');
+		return array('status'=>'successful', 'errMsg' => '');
+	}
 	/**
 	 * [edit password by administrator]
 	 * @param array $user [consists of name, password]
@@ -133,6 +143,16 @@
 		$profileImage = isset($_POST["profileImage"]) ? $_POST["profileImage"] : '';
 		$priority = isset($_POST["priority"]) ? $_POST["priority"] : '';
 		$priorityTitle = isset($_POST["priorityTitle"]) ? $_POST["priorityTitle"] : '';
+		//自己修改自己的手机或者安全密码,需要重新获取短信验证码.管理员不需要.
+		if($name == $_SESSION['name'] && ( isset($_POST['securePass']) || isset($_POST['phone']))){
+			if(!isset($_POST['validateCode'])){
+				throw new Exception('修改安全验证码或者手机号时,必须输入手机短信验证码!');
+			}
+			if($_POST['validateCode'] != $_SESSION['user_validateCode']){
+				throw new Exception('手机短信验证码错误!');
+			}
+			unset($_SESSION['user_validateCode']);
+		}
 		global $mysql, $prefix;
 		$password = md5($prefix.$password);
 		$mysql->DBUpdate('user',array('realname'=>$realname,'password'=>$password,'level'=>$level,'projectId'=>$projectId, 'phone'=>$phone, 'mail'=>$mail, 'profileImage'=>$profileImage, 'priority'=>$priority, 'priorityTitle'=>$priorityTitle),"`name`='?'",array($name));
@@ -142,6 +162,16 @@
 	function modifyPhoneNumber (){
 		$name = $_POST["name"];
 		$phone = $_POST["phone"];
+		//自己修改自己的手机或者安全密码,需要重新获取短信验证码.管理员不需要.
+		if($name == $_SESSION['name']){
+			if(!isset($_POST['validateCode'])){
+				throw new Exception('修改手机号时,必须输入手机短信验证码!');
+			}
+			if($_POST['validateCode'] != $_SESSION['user_validateCode']){
+				throw new Exception('手机短信验证码错误!');
+			}
+			unset($_SESSION['user_validateCode']);
+		}
 		global $mysql;
 		$mysql->DBUpdate('user',array('phone'=>$phone),"`name`='?'",array($name));
 		$_SESSION["phone"] = $phone;

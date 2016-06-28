@@ -141,21 +141,29 @@ Class PlanMakingSvc extends BaseSvc{
 		$salesman = $item['salesman'];
 		$designer = $item['designer'];
 		echo "$text<br />\n";
+		include_once __ROOT__."/libs/msgLogDB.php";
+		include_once __ROOT__."/libs/mailDB.php";
 		if(isset($users[$salesman]) && strlen($users[$salesman]['phone']) == 11 ){ // 11位有效手机号
 			$phoneNumber = $users[$salesman]['phone'];
-			echo "send $text to $phoneNumber<br /> \n";
+			echo "send  to $phoneNumber<br /> \n";
+			sendMsg($_SESSION['name'].'-ProjectProgressNotice',$_SESSION['name'],$phoneNumber,$text,null,'sendSMS');
 		}
 		if(isset($users[$designer]) && strlen($users[$designer]['phone']) == 11 ){ // 11位有效手机号
 			$phoneNumber = $users[$designer]['phone'];
 			echo "send $text to $phoneNumber<br /> \n";
+			sendMsg($_SESSION['name'].'-ProjectProgressNotice',$_SESSION['name'],$phoneNumber,$text,null,'sendSMS');
 		}
 		if(isset($users[$salesman]) && contains($users[$salesman]['mail'],'@')){ // 有效邮箱
 			$mail = $users[$salesman]['mail'];
 			echo "send email $text to $mail<br /> \n";
+			sendEMail($mail, null, 'sys-notice@dqjczs.com', '[佳诚装饰]主材预定提醒', $text, null);
+			insert('sys-notice@dqjczs.com','sys-notice@dqjczs.com',$mail,$mail,'[佳诚装饰]主材预定提醒',$text);
 		}
 		if(isset($users[$designer]) && contains($users[$designer]['mail'],'@')){ // 有效邮箱
 			$mail = $users[$designer]['mail'];
 			echo "send email $text to $mail<br /> \n";
+			sendEMail($mail, null, 'sys-notice@dqjczs.com', '[佳诚装饰]主材预定提醒', $text, null);
+			insert('sys-notice@dqjczs.com','sys-notice@dqjczs.com',$mail,$mail,'[佳诚装饰]主材预定提醒',$text);
 		}
 	}
 	//获取需要提醒的主材对应项目

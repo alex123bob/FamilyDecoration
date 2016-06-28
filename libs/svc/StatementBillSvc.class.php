@@ -29,6 +29,50 @@ class StatementBillSvc extends BaseSvc
 		//   notNullCheck($q,'@payee','领款人不能为空!');
 		return parent::update($q);
 	}
+	//获取限制信息,是否需要短信验证码或者安全密码验证
+	public function getLimit($q){
+		global $mysql;
+		$data = parent::get($q);
+		$bills = $data['data'];
+		if(count($bills) > 1)
+			throw new Exception("查到多条记录:".count($bills));
+		if(count($bills) == 0)
+			throw new Exception("查不到记录");
+		$bill = $bills[0];
+		if($bill['status'] == 'paid')
+			throw new Exception("已付款,无法更改状态.");
+		$limit = $mysql->DBGetAsOneArray("select paramValue*10000 from system where id = 10 ");
+		if($limit >= $bill['claimAmount']){
+			//需要短信验证
+			$rand = rand(1000,9999);
+			$_SESSION['validateCode'] = $rand;
+			include_once __ROOT__."/libs/msgLogDB.php";
+			sendMsg($_SESSION['name'].'-BillStateChange',$_SESSION['name'],'13057530560','您的短信验证码是:'.$rand,null,'sendSMS');
+			return "短信验证码";
+		}else{
+			return "安全密码验证";
+		}
+	}
+	//检查是否通过短信验证码或者安全密码验证
+	private function checkLimit($q,$bill,$statusChange){
+		//目前所有状态转换需要校验,但是参数带过来,方便以后某些状态转换不需要校验,直接返回
+		global $mysql;
+		$limit = $mysql->DBGetAsOneArray("select paramValue*10000 from system where id = 10 ");
+		if($limit <= $bill['claimAmount']){
+			//需要短信验证
+			if($q['validateCode'] !=  $_SESSION['validateCode']){
+				throw new Exception('短信校验码错误!');
+			}
+			unset($_SESSION['validateCode']);
+		}else{
+			//需要安全密码验证
+			$res = $mysql->DBGetAsMap("select * from user where name = ? and securePass = ? ",$_SESSION['name'],$q['validateCode']);
+			if(count($res) < 1){
+				throw new Exception('安全密码验证失败!');
+			}
+		}
+	}
+
 
 	public function changeStatus($q){
 		if(!isset(self::$statusMapping[$q['@status']])){
@@ -47,6 +91,8 @@ class StatementBillSvc extends BaseSvc
 		$statusChange = $bill['status']."->".$q['@status'];
 		if(!isset(self::$statusChangingMapping[$statusChange]))
 			throw new Exception("不能由".self::$statusMapping[$bill['status']]."转为".self::$statusMapping[$q['@status']]);
+		//检查额度,检查安全密码,如果超过一定额度要检查短信
+		$this->checkLimit($q,$bill,$statusChange);
 		$auditRecord = array();
 		$auditRecord['@operator'] = $_SESSION['name'];
 		$auditRecord['@billId'] = $q['id'];

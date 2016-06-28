@@ -1,16 +1,8 @@
 <?php
 	include_once "conn.php";
-	include_once "MsgErrorCode.php";
 	include_once "msgLogDB.php";
 	$action = $_REQUEST["action"];
 	$action = strtolower($action);
-	global $userAndPswd,$corpName,$apiUrl;
-	$userAndPswd = "cdkey=6SDK-EMY-6688-JBXTK&password=128150";
-	//咨询技术支持；李工  qq1399153029，座机电话010-58750495
-
-	//$userAndPswd = "cdkey=0SDK-EMY-6688-KHssZPK&password=453653";
-	$corpName = "【佳诚装饰】";
-	$apiUrl = "http://sdk4report.eucp.b2m.cn:8080/sdkproxy/";
 	$res;
 	switch($action){
 		//查询发送的短信

@@ -49,6 +49,7 @@ Class ProjectProgressSvc extends BaseSvc{
 			}
 			//去掉冗余数据
 			$columnName = $value['columnName'];
+			$value['createTime'] = date('Y-m-d',strtotime($value['createTime']));
 			unset($value['columnName']);
 			unset($value['isDeleted']);
 			unset($value['projectId']);
@@ -60,6 +61,7 @@ Class ProjectProgressSvc extends BaseSvc{
 			if(!isset($auditByColumnName[$value['columnName']])){
 				$auditByColumnName[$value['columnName']] = array();
 			}
+			$value['createTime'] = date('Y-m-d',strtotime($value['createTime']));
 			//去掉冗余数据
 			$columnName = $value['columnName'];
 			unset($value['columnName']);

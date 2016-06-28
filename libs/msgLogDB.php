@@ -1,4 +1,13 @@
 <?php
+	include_once "MsgErrorCode.php";
+	global $userAndPswd,$corpName,$apiUrl;
+	$userAndPswd = "cdkey=6SDK-EMY-6688-JBXTK&password=128150";
+	//咨询技术支持；李工  qq1399153029，座机电话010-58750495
+
+	//$userAndPswd = "cdkey=0SDK-EMY-6688-KHssZPK&password=453653";
+	$corpName = "【佳诚装饰】";
+	$apiUrl = "http://sdk4report.eucp.b2m.cn:8080/sdkproxy/";
+
 	function getValue($str,$key){
 		// get value from string like:<response><error>0</error><message>1.7</message></response>
 		// for example getValue($str,"error") will return 0;
