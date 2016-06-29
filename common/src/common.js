@@ -475,7 +475,9 @@ Ext.require('Ext.Ajax', function () {
 
             if (json.status == 'failing') {
                 if (!silent && showMgs) {
-                    Ext.Msg.error(json);
+                    Ext.defer(function (){
+                        Ext.Msg.error(json);
+                    }, 300);
                 }
                 return false;
             }
@@ -502,26 +504,36 @@ Ext.require('Ext.Ajax', function () {
         }
         var status = response.status;
         if (status === 0) {
-            Ext.Msg.error('请求失败, 服务器没有响应。');
+            Ext.defer(function (){
+                Ext.Msg.error('请求失败, 服务器没有响应。');
+            }, 300);
             return;
         }
         else if (status === 403) {
-            Ext.Msg.error('您没有进行该操作的权限, 可能由以下原因造成:<br/>1. 用户未被授予该操作的权限<br/>2. 产品或功能未授权或授权已失效');
+            Ext.defer(function (){
+                Ext.Msg.error('您没有进行该操作的权限, 可能由以下原因造成:<br/>1. 用户未被授予该操作的权限<br/>2. 产品或功能未授权或授权已失效');
+            }, 300);
             return;
         }
         else if (status === 404) {
-            Ext.Msg.error('您请求的页面不存在');
+            Ext.defer(function (){
+                Ext.Msg.error('您请求的页面不存在');
+            }, 300);
             return;
         }
         else if (status === 401) {
             var obj = Ext.decode(response.responseText);
-            Ext.Msg.error(obj.errMsg, logoutWithoutCleanningSession);
+            Ext.defer(function (){
+                Ext.Msg.error(obj.errMsg, logoutWithoutCleanningSession);
+            }, 300);
         }
         else if (status === -1) {
             // do nothing
         }
         else {
-            Ext.Msg.error(response.status + ':' + response.statusText);
+            Ext.defer(function (){
+                Ext.Msg.error(response.status + ':' + response.statusText);
+            }, 300);
         }
     });
 });
