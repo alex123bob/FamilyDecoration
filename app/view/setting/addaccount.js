@@ -6,13 +6,14 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 	autoScroll: true,
 	resizable: false,
 	modal: true,
-	width: 410,
-	height: 360,
+	width: 420,
+	height: 410,
 
 	title: '添加账号',
 
 	treepanel: undefined,
 	account: undefined,
+	bodyPadding: 6,
 
 	getRoleData: function () {
 		var roleArr = User.role,
@@ -154,7 +155,8 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 					name: 'phone',
 					vtype: 'phone',
 					allowBlank: true,
-					value: account ? account.get('phone') : ''
+					value: account ? account.get('phone') : '',
+					readOnly: account ? true : false
 				},
 				{
 					fieldLabel: '安全密码',
@@ -357,21 +359,37 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 			]
 		}];
 
-		me.buttons = [
+		me.tbar = [
+			{
+				text: '修改手机',
+				hidden: !account,
+				icon: 'resources/img/phone.png',
+				handler: function () {
+					var frm = me.down('form'),
+						phone = frm.child('[name="phone"]');
+					phone.setValue('').setReadOnly(false);
+					phone.allowBlank = false;
+					this.setVisible(false);
+					this.nextSibling().hide();
+				}
+			},
 			{
 				text: '修改安全密码',
 				hidden: !account,
-				handler: function (){
+				icon: 'resources/img/securepass.png',
+				handler: function () {
 					var frm = me.down('form'),
 						securePass = frm.child('[name="securePass"]');
 					securePass.setValue('').setReadOnly(false);
 					securePass.allowBlank = false;
 					this.setVisible(false);
+					this.previousSibling().hide();
 				}
 			},
 			{
 				text: '修改密码',
 				hidden: !account,
+				icon: 'resources/img/key.png',
 				handler: function () {
 					var frm = me.down('form'),
 						pwd = frm.child('[name="pwd"]'),
@@ -380,13 +398,17 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 					cfm.setValue('').setReadOnly(false);
 					this.setVisible(false);
 				}
-			},
+			}
+		];
+
+		me.buttons = [
 			{
 				text: '保存',
 				handler: function () {
 					var frm = me.down('form'),
 						container = Ext.getCmp('fieldcontainer-projectId'),
-						projectTxt = container.down('textfield');
+						projectTxt = container.down('textfield'),
+						needValidateCode = false;
 					if (frm.isValid()) {
 						if (container.isHidden() || (!container.isHidden() && projectTxt.getValue())) {
 							var data = frm.getValues(),
@@ -404,6 +426,7 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 								Ext.apply(p, {
 									securePass: md5(_PWDPREFIX + data.securePass)
 								});
+								needValidateCode = true;
 							}
 							if (!container.isHidden() && projectTxt.getValue()) {
 								Ext.apply(p, {
@@ -411,38 +434,85 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 								});
 							}
 							if (data.phone) {
-								Ext.apply(p, {
-									phone: data.phone
-								});
+								if (!frm.child('[name="phone"]').readOnly) {
+									Ext.apply(p, {
+										phone: data.phone
+									});
+									needValidateCode = true;
+								}
 							}
 							if (data.mail) {
 								Ext.apply(p, {
 									mail: data.mail
 								});
 							}
-							Ext.Ajax.request({
-								url: account ? './libs/user.php?action=modify' : './libs/user.php?action=register',
-								params: p,
-								method: 'POST',
-								callback: function (opts, success, res) {
-									if (success) {
-										var obj = Ext.decode(res.responseText);
-										if (obj.status == 'successful') {
-											account ? showMsg('编辑用户成功！') : showMsg('用户创建成功！');
-											me.treepanel.refresh();
-											me.close();
-											if (account && User.isCurrent(data.name)) {
-												Ext.Msg.info('修改的用户为当前所在用户，需要重新登录！点击【确定】后请重新登录！', function () {
-													logout();
-												});
+							function request(validateCode) {
+								if (validateCode) {
+									Ext.apply(p, {
+										validateCode: validateCode
+									});
+								}
+								Ext.Ajax.request({
+									url: account ? './libs/user.php?action=modify' : './libs/user.php?action=register',
+									params: p,
+									method: 'POST',
+									callback: function (opts, success, res) {
+										if (success) {
+											var obj = Ext.decode(res.responseText);
+											if (obj.status == 'successful') {
+												account ? Ext.Msg.success('编辑用户成功！') : Ext.Msg.success('用户创建成功！');
+												me.treepanel.refresh();
+												me.close();
+												if (account && User.isCurrent(data.name)) {
+													Ext.Msg.info('修改的用户为当前所在用户，需要重新登录！点击【确定】后请重新登录！', function () {
+														logout();
+													});
+												}
+											}
+											else {
+												Ext.Msg.info(obj.errMsg);
 											}
 										}
-										else {
-											Ext.Msg.info(obj.errMsg);
-										}
+									}
+								});
+							}
+							if (!User.isAdmin() && !User.isAdministrationManager()) {
+								if (account) {
+									if (User.getName() != account.get('name') || !needValidateCode) {
+										request();
+									}
+									else {
+										Ext.Ajax.request({
+											url: './libs/user.php?action=getValidateCode',
+											method: 'GET',
+											callback: function (opts, success, res) {
+												if (success) {
+													var obj = Ext.decode(res.responseText);
+													if (obj.status == 'successful') {
+														Ext.Msg.read(
+															'修改安全密码或者手机号需要短信验证码，'
+															+ '<br />如果手机已更改或缺失手机号码，'
+															+ '<br />请与管理员联系。'
+															+ '<br />在收到验证码后请在下方输入',
+															function (val) {
+																request(val);
+															});
+													}
+													else {
+														showMsg(obj.errMsg);
+													}
+												}
+											}
+										});
 									}
 								}
-							});
+								else {
+									request();
+								}
+							}
+							else {
+								request();
+							}
 						}
 						else {
 							showMsg('游客账号请选择项目！');

@@ -139,8 +139,10 @@
 		$profileImage = isset($_POST["profileImage"]) ? $_POST["profileImage"] : false;
 		$priority = isset($_POST["priority"]) ? $_POST["priority"] : '';
 		$priorityTitle = isset($_POST["priorityTitle"]) ? $_POST["priorityTitle"] : '';
+		$securePass = isset($_POST['securePass']) ? $_POST["securePass"] : false;
+		$phone = isset($_POST['phone']) ? $_POST["phone"] : false;
 		//自己修改自己的手机或者安全密码,需要重新获取短信验证码.管理员不需要.
-		if(!isAdminOrAdministrationManager() && $name == $_SESSION['name'] && ( isset($_POST['securePass']) || isset($_POST['phone']))){
+		if(!isAdminOrAdministrationManager() && $name == $_SESSION['name'] && ( $securePass || $phone )){
 			if(!isset($_POST['validateCode'])){
 				throw new Exception('修改安全验证码或者手机号时,必须输入手机短信验证码!');
 			}
@@ -154,7 +156,7 @@
 			'realname'=>$realname,
 			'level'=>$level,
 			'projectId'=>$projectId,
-			'phone'=>$phone, 'mail'=>$mail,  
+			'mail'=>$mail,  
 			'priority'=>$priority, 
 			'priorityTitle'=>$priorityTitle
 		);
@@ -163,6 +165,12 @@
 		}
 		if ($profileImage) {
 			$updateArr["profileImage"] = $profileImage;
+		}
+		if ($phone) {
+			$updateArr["phone"] = $phone;
+		}
+		if ($securePass) {
+			$updateArr["securePass"] = $securePass;
 		}
 		$mysql->DBUpdate('user',$updateArr,"`name`='?'",array($name));
 		return (array('status'=>'successful', 'errMsg' => ''));
