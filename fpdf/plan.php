@@ -21,7 +21,7 @@ $width = array();  //左侧三列宽度, 序号,项目,子项目
 $pagetype = isset($_REQUEST['page']) ? $_REQUEST['page'] : 'A4';
 array_push($width, isset($_REQUEST['c1']) ? isset($_REQUEST['c1']) : 5); //序号宽度
 array_push($width, isset($_REQUEST['c2']) ? isset($_REQUEST['c2']) : 40); //序号宽度
-array_push($width, isset($_REQUEST['c3']) ? isset($_REQUEST['c3']) : 45); //序号宽度
+array_push($width, isset($_REQUEST['c3']) ? isset($_REQUEST['c3']) : 50); //序号宽度
 $xuhaoLineHeight = ($titleLineHeight1  + $titleLineHeight2);  //序号总高度
 $leftNameWith = $width[0]+$width[1]+$width[2];   //左侧三列
 

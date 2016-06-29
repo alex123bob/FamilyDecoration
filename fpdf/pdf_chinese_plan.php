@@ -6,8 +6,8 @@ class PDF extends PDF_Chinese{
 	
 		global $name,$phone,$times,$address,$totalFee,$finishPercentage,$requiredFee,$cny,$start,$end; 
 		
-		$this->SetLeftMargin(15);
-		$this->SetRightMargin(15);
+		$this->SetLeftMargin(10);
+		$this->SetRightMargin(10);
 		//$this->SetTopMargin(15);
 		$this->SetAutoPageBreak(true,10);
 		//$this->SetTopMargin(5);
