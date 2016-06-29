@@ -229,6 +229,7 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 						text: '打印预览',
 						icon: 'resources/img/preview_plan.png',
 						name: 'button-previewPlan',
+						hidden: User.isGeneral() ? true : false,
 						disabled: true,
 						handler: function (){
 							var resourceObj = me.getRes(),
@@ -257,6 +258,7 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 						name: 'button-printPlan',
 						disabled: true,
 						xtype: 'splitbutton',
+						hidden: User.isGeneral() ? true : false,
 						printHandler: function (paperType){
 							var resourceObj = me.getRes(),
 								project = resourceObj.project;
