@@ -58,10 +58,12 @@ Ext.define('FamilyDecoration.view.Viewport', {
             }],
             listeners: {
                 itemclick: function (view, rec){
-                    var xtype;
+                    var xtype, lastXtype = Ext.util.Cookies.get('lastXtype');
                     if (rec && /-index/i.test(rec.get('cmp'))) {
                         xtype = rec.get('cmp');
-                        changeMainCt(xtype);
+                        if (xtype != lastXtype) {
+                            changeMainCt(xtype);
+                        }
                     }
                 }
             }
