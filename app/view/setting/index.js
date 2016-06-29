@@ -141,6 +141,7 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 				{
 					text: '添加账号',
 					icon: './resources/img/add4.png',
+					hidden: User.isAdmin() || User.isBusinessStaff() || User.isAdministrationManager() ? false : true,
 					handler: function (){
 						var win = Ext.create('FamilyDecoration.view.setting.AddAccount', {
 							treepanel: me.down('treepanel')
@@ -152,7 +153,7 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 				{
 					text: '修改账号',
 					icon: './resources/img/edit1.png',
-					hidden: User.isAdmin() || User.isBusinessStaff() || User.isAdministrationManager() ? false : true,
+					hidden: !User.isGeneral() ? false : true,
 					name: 'button-editaccount',
 					id: 'button-editaccount',
 					disabled: true,

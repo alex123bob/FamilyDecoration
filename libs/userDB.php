@@ -271,27 +271,51 @@
 	function getUserDepartments (){
 		global $mysql;
 		$level = $_SESSION["level"];
+		$res = array();
+		// market department. business department.
 		if (startWith($level,'004-')) {
-			$res[0] = array("department"=>"006-001");
+			array_push($res, array("department"=>"006-001"));
+			array_push($res, array("department"=>$level));
 		}
-		else {
+		// admin or administration manager
+		else if (startWith($level,'001-') || $level == '005-001'){
 			$groups = $mysql->DBGetAsOneArray("select DISTINCT `level` from `user` where `isDeleted` = 'false'");
 			for ($i = 0; $i < count ($groups); $i++) {
 				$tmp = explode("-", $groups[$i]);
 				$groups[$i] = $tmp[0];
 			}
 			$groups = array_merge(array_unique($groups));
-			$res = array();
 			for($i = 0; $i < count($groups); $i++) {
 				$res[$i] = array("department"=>$groups[$i].'-001');
 			}
+		}
+		// other people
+		else {
+			array_push($res, array("department"=>$level));
 		}
 		return $res;
 	}
 
 	function getUserListByDepartment ($department){
 		global $mysql;
-		$userList = $mysql->DBGetSomeRows("`user`", " user.*,p.projectName ", " left join project p on p.projectId = user.projectId where user.`level` like '%$department-%' and user.`isDeleted` = 'false' ");
+		$level = $_SESSION["level"];
+		$userName = $_SESSION["name"];
+		// admin members or administration manager
+		if (startWith($level, '001-') || $level == '005-001') {
+			$userList = $mysql->DBGetSomeRows("`user`", " user.*,p.projectName ", " left join project p on p.projectId = user.projectId where user.`level` like '%$department-%' and user.`isDeleted` = 'false' ");
+		}
+		// market people
+		else if (startWith($level, '004-')) {
+			if ($department == '006') {
+				$userList = $mysql->DBGetSomeRows("`user`", " user.*,p.projectName ", " left join project p on p.projectId = user.projectId where user.`level` like '%$department-%' and user.`isDeleted` = 'false' ");
+			}
+			else {
+				$userList = $mysql->DBGetSomeRows("`user`", " user.*,p.projectName ", " left join project p on p.projectId = user.projectId where user.`name` = '$userName' and user.`isDeleted` = 'false' ");
+			}
+		}
+		else {
+			$userList = $mysql->DBGetSomeRows("`user`", " user.*,p.projectName ", " left join project p on p.projectId = user.projectId where user.`name` = '$userName' and user.`isDeleted` = 'false' ");
+		}
 		for($i = 0; $i < count($userList); $i++) {
 			$userList[$i]["department"] = $userList[$i]["level"];
 		}

@@ -321,20 +321,20 @@
             else if (rec.get('cmp') == 'setting-parent') {
                 flag = User.isAdmin() || User.isBusinessStaff() || User.isAdministrationManager() ? true : false;
             }
+            else if (rec.get('cmp') == 'msg-index') {
+                flag = User.isAdmin() ? true : false;
+            }
             else if (rec.get('cmp') == 'basicitem-index') {
                 flag =  User.isAdmin() || User.isBudgetManager() || User.isBudgetStaff() || User.isFinanceManager() ? true : false;
             }
             else if (rec.get('cmp') == 'personnel-parent') {
-                flag = User.isAdmin() || User.isBusinessStaff() || User.isAdministrationManager() ? true : false;
+                flag = User.isGeneral() ? false : true;
             }
             else if (rec.get('cmp') == 'personnel-index') {
                 flag = User.isAdmin() || User.isAdministrationManager() || User.isAdministrationStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'setting-index') {
-                flag = User.isAdmin() || User.isBusinessStaff() || User.isAdministrationManager() ? true : false;
-            }
-            else if (rec.get('cmp') == 'msg-index') {
-                flag = User.isAdmin() ? true : false;
+                flag = User.isGeneral() ? false : true;
             }
             else if (rec.get('cmp') == 'mail-index') {
                 flag = User.isGeneral() ? false : true;
