@@ -105,6 +105,7 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
                                                 id: rec.getId()
                                             }, function () {
                                                 showMsg('删除成功！');
+                                                me.isDirty = true;
                                                 st.reload({
                                                     callback: function (recs, ope, success) {
                                                         if (success) {
@@ -112,7 +113,6 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
                                                             if (newRec) {
                                                                 view.getSelectionModel().select(newRec);
                                                                 view.focusRow(newRec, 200);
-                                                                me.isDirty = true;
                                                             }
                                                         }
                                                     }
