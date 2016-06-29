@@ -167,6 +167,11 @@ table.pros td{
   visibility: hidden;
 }
 
+.footnote {
+    font-size: 9px;
+    color: #009688;
+}
+
 /*html { 
   -webkit-filter: grayscale(100%); 
   -moz-filter: grayscale(100%); 

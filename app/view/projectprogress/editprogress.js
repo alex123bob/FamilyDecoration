@@ -74,6 +74,14 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
                                     if (e.value == e.originalValue) {
                                         return false;
                                     }
+                                    else if (me.isComment && rec.get('auditor') != User.getName()) {
+                                        showMsg('不允许编辑非本人填写的信息！');
+                                        return false;
+                                    }
+                                    else if (!me.isComment && rec.get('committer') != User.getName()) {
+                                        showMsg('不允许编辑非本人填写的信息！');
+                                        return false;
+                                    }
                                 }
                             }
                         }

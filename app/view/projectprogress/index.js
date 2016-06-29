@@ -923,94 +923,43 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                         var resObj = me.getRes();
                         resObj.progressGrid.initBtn();
                     },
-                    cellclick: function (table, td, cellIndex, rec, tr, rowIndex, e, eOpts) {
-                        // if (User.isAdmin() || User.isSupervisor()) {
-                        // if (4 == cellIndex) {
-                        //     var win = Ext.create('Ext.window.Window', {
-                        //         title: '添加监理意见',
-                        //         width: 500,
-                        //         height: 200,
-                        //         modal: true,
-                        //         layout: 'fit',
-                        //         items: [
-                        //             {
-                        //                 id: 'textarea-progresscommentForProjectProgress',
-                        //                 name: 'textarea-progresscommentForProjectProgress',
-                        //                 xtype: 'textarea',
-                        //                 value: rec.get('comments')
-                        //             }
-                        //         ],
-                        //         buttons: [{
-                        //             text: '添加',
-                        //             handler: function () {
-                        //                 var resObj = me.getRes(),
-                        //                     pro = resObj.pro,
-                        //                     textarea = Ext.getCmp('textarea-progresscommentForProjectProgress');
-                        //                 Ext.Ajax.request({
-                        //                     url: './libs/progress.php?action=editProgress',
-                        //                     method: 'POST',
-                        //                     params: {
-                        //                         id: rec.getId(),
-                        //                         comments: textarea.getValue()
-                        //                     },
-                        //                     callback: function (opts, success, res) {
-                        //                         if (success) {
-                        //                             var obj = Ext.decode(res.responseText),
-                        //                                 progressPanel = resObj.progressGrid;
-                        //                             if (obj.status == 'successful') {
-                        //                                 win.close();
-                        //                                 showMsg('监理意见添加成功！');
-                        //                                 progressPanel.refresh(pro);
-                        //                                 var title = '监理意见添加提醒',
-                        //                                     content = User.getRealName() + '为项目"' + pro.get('projectName') + '"添加监理意见，内容为:' + textarea.getValue();
-                        //                                 // send SMS
-                        //                                 Ext.Ajax.request({
-                        //                                     url: './libs/user.php?action=getuserphone',
-                        //                                     method: 'GET',
-                        //                                     params: {
-                        //                                         name: pro.get('captainName')
-                        //                                     },
-                        //                                     callback: function (opts, success, res) {
-                        //                                         if (success) {
-                        //                                             var obj = Ext.decode(res.responseText);
-                        //                                             if ('successful' == obj.status) {
-                        //                                                 sendSMS(User.getName(), pro.get('captainName'), obj['phone'], content);
-                        //                                             }
-                        //                                         }
-                        //                                     }
-                        //                                 });
-                        //                                 // send Email
-                        //                                 Ext.Ajax.request({
-                        //                                     url: './libs/user.php?action=view',
-                        //                                     method: 'GET',
-                        //                                     callback: function (opts, success, res) {
-                        //                                         if (success) {
-                        //                                             var arr = Ext.decode(res.responseText);
-                        //                                             for (var i = arr.length - 1; i >= 0; i--) {
-                        //                                                 var el = arr[i];
-                        //                                                 if (el.level == '001-001' || el.level == '001-002'
-                        //                                                     || el.level == '003-001' || el.name == pro.get('captainName')) {
-                        //                                                     sendMail(el.name, el.mail, title, content);
-                        //                                                 }
-                        //                                             }
-                        //                                         }
-                        //                                     }
-                        //                                 });
-                        //                             }
-                        //                         }
-                        //                     }
-                        //                 })
-                        //             }
-                        //         }, {
-                        //                 text: '取消',
-                        //                 handler: function () {
-                        //                     win.close();
-                        //                 }
-                        //             }]
-                        //     });
-                        //     win.show();
-                        // }
-                        // }
+                    afterrender: function (grid, opts) {
+                        /* we maybe need it in the future.
+                        var view = grid.getView();
+                        var tip = Ext.create('Ext.tip.ToolTip', {
+                            // The overall target element.
+                            target: view.el,
+                            // Each grid row causes its own separate show and hide.
+                            delegate: view.cellSelector,
+                            // Moving within the row should not hide the tip.
+                            trackMouse: true,
+                            // Render immediately so that tip.body can be referenced prior to the first show.
+                            renderTo: Ext.getBody(),
+                            listeners: {
+                                // Change content dynamically depending on which element triggered the show.
+                                beforeshow: function updateTipBody(tip) {
+                                    var gridColumns = view.getGridColumns();
+                                    var column = gridColumns[tip.triggerElement.cellIndex];
+                                    var rec = view.getRecord(tip.triggerElement.parentNode);
+                                    var val = rec.get(column.dataIndex);
+                                    if (val) {
+                                        if (column.dataIndex == 'practicalProgress') {
+                                            tip.update(val);
+                                        }
+                                        else if (column.dataIndex == 'supervisorComment') {
+                                            tip.update(val);
+                                        }
+                                        else {
+                                            return false;
+                                        }
+                                    }
+                                    else {
+                                        return false;
+                                    }
+                                }
+                            }
+                        });
+                        */
                     }
                 }
             }

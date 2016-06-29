@@ -41,6 +41,9 @@ Class ProjectProgressSvc extends BaseSvc{
 		//查工程实际进度
 		$progress = parent::get(array('projectId'=>$plan['projectId']));
 		$progress = $progress['data'];
+		// 添加committer的真实姓名
+		$userSvc = parent::getSvc('User');
+		$userSvc->appendRealName($progress,'committer');
 		//转为以工程计划planMaking 列名为key,value为进度条目数组的map
 		$progressByColumnName = array();
 		foreach ($progress as $key => &$value) {

@@ -48,7 +48,11 @@ Ext.define('FamilyDecoration.view.projectprogress.ProgressTable', {
 						var result = '';
 						if (val.length > 0) {
 							Ext.each(val, function (obj, index){
-								result += '<strong>' + (index + 1) + '.</strong>' + ' ' + obj['content'].replace(/\n/gi, '<br />') + '(' + obj['createTime'] + ')<br />';
+								result += '<strong>' + (index + 1) + '.</strong>' 
+									   + ' ' + obj['content'].replace(/\n/gi, '<br />') + '<br />' 
+									   + '<span class="footnote">(' + obj['createTime'] + ') ' 
+									   + obj['committerRealName'] + '</span>'
+									   + '<br />';
 							});
 							return result;
 						}
@@ -65,7 +69,11 @@ Ext.define('FamilyDecoration.view.projectprogress.ProgressTable', {
 						var result = '';
 						if (val.length > 0) {
 							Ext.each(val, function (obj, index){
-								result += '<strong>' + (index + 1) + '.</strong>' + ' ' + obj['content'].replace(/\n/gi, '<br />') + '(' + obj['createTime'] + ')<br />';
+								result += '<strong>' + (index + 1) + '.</strong>' 
+									   + ' ' + obj['content'].replace(/\n/gi, '<br />') + '<br />'
+									   + '<span class="footnote">(' + obj['createTime'] + ') ' 
+									   + obj['auditorRealName'] + '</span>'
+									   + '<br />';
 							});
 							return result;
 						}
