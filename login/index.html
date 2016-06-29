@@ -20,6 +20,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 		<!--//webfonts-->
 		<script type="text/javascript" src="../tools/jquery-1.11.1.min.js"></script>
 		<script type="text/javascript" src="../tools/sweetalert/dist/sweetalert.min.js"></script>
+		<script type="text/javascript" src="../tools/md5.min.js"></script>
 </head>
 <body>
 	
@@ -50,6 +51,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					</div>
 				<!-----//end-copyright---->
 	<script type="text/javascript">
+		var _PWDPREFIX = 'familydecoration-';
 		$(function (){
 			// function hideURLbar () {
 			// 	window.scrollTo(0,1);
@@ -70,7 +72,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					dataType: 'json',
 					data: {
 						name: name,
-						password: password
+						password: md5(_PWDPREFIX + password)
 					}
 				})
 				.done(function (res, status){

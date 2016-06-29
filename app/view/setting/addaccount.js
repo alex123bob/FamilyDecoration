@@ -6,8 +6,8 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 	autoScroll: true,
 	resizable: false,
 	modal: true,
-	width: 400,
-	height: 330,
+	width: 410,
+	height: 360,
 
 	title: '添加账号',
 
@@ -116,6 +116,8 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 					fieldLabel: '密码',
 					name: 'pwd',
 					allowBlank: false,
+					value: account ? account.get('password') : '',
+					readOnly: account ? true : false,
 					validator: function (val) {
 						var confirm = this.nextSibling(),
 							pwd = this;
@@ -133,6 +135,8 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 					fieldLabel: '确认密码',
 					name: 'confirm',
 					allowBlank: false,
+					value: account ? account.get('password') : '',
+					readOnly: account ? true : false,
 					validator: function (val) {
 						var pwd = this.previousSibling(),
 							confirm = this;
@@ -151,6 +155,13 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 					vtype: 'phone',
 					allowBlank: true,
 					value: account ? account.get('phone') : ''
+				},
+				{
+					fieldLabel: '安全密码',
+					name: 'securePass',
+					inputType: 'password',
+					readOnly: account ? true : false,
+					value: account ? account.get('securePass') : ''
 				},
 				{
 					fieldLabel: '邮箱地址',
@@ -274,12 +285,14 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 						align: 'stretch'
 					},
 					width: 300,
-					items: [{
-						xtype: 'textfield',
-						hideLabel: true,
-						width: 150,
-						readOnly: true
-					}, {
+					items: [
+						{
+							xtype: 'textfield',
+							hideLabel: true,
+							width: 150,
+							readOnly: true
+						},
+						{
 							xtype: 'button',
 							text: '浏览',
 							flex: 1,
@@ -290,118 +303,160 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 									height: 400,
 									title: '选择项目',
 									layout: 'fit',
-									items: [{
-										xtype: 'progress-projectlistbycaptain',
-										searchFilter: true,
-										listeners: {
-											itemclick: function (view, rec) {
-												if (rec.get('projectName')) {
-													return true;
+									items: [
+										{
+											xtype: 'progress-projectlistbycaptain',
+											searchFilter: true,
+											listeners: {
+												itemclick: function (view, rec) {
+													if (rec.get('projectName')) {
+														return true;
+													}
+													else {
+														return false;
+													}
+												}
+											}
+										}
+									],
+									buttons: [
+										{
+											text: '确定',
+											handler: function () {
+												var tree = win.down('treepanel'),
+													rec = tree.getSelectionModel().getSelection()[0];
+												if (!rec || !rec.get('projectName')) {
+													showMsg('请选择项目');
 												}
 												else {
-													return false;
+													var txt = browseBtn.previousSibling(),
+														hidden = browseBtn.nextSibling();
+													txt.setValue(rec.get('projectName'));
+													hidden.setValue(rec.getId());
+													win.close();
 												}
 											}
-										}
-									}],
-									buttons: [{
-										text: '确定',
-										handler: function () {
-											var tree = win.down('treepanel'),
-												rec = tree.getSelectionModel().getSelection()[0];
-											if (!rec || !rec.get('projectName')) {
-												showMsg('请选择项目');
-											}
-											else {
-												var txt = browseBtn.previousSibling(),
-													hidden = browseBtn.nextSibling();
-												txt.setValue(rec.get('projectName'));
-												hidden.setValue(rec.getId());
-												win.close();
-											}
-										}
-									}, {
+										},
+										{
 											text: '取消',
 											handler: function () {
 												win.close();
 											}
-										}]
+										}
+									]
 								});
 								win.show();
 							}
-						}, {
+						},
+						{
 							xtype: 'hidden',
 							id: 'hidden-projectId'
-						}]
+						}
+					]
 				}
 			]
 		}];
 
-		me.buttons = [{
-			text: '保存',
-			handler: function () {
-				var frm = me.down('form'),
-					container = Ext.getCmp('fieldcontainer-projectId'),
-					projectTxt = container.down('textfield');
-				if (frm.isValid()) {
-					if (container.isHidden() || (!container.isHidden() && projectTxt.getValue())) {
-						var data = frm.getValues(),
-							p = {
-								name: data.name,
-								password: data.pwd,
-								level: data.department + '-' + data.level,
-								realname: data.realname
-							};
-						if (!container.isHidden() && projectTxt.getValue()) {
-							Ext.apply(p, {
-								projectId: Ext.getCmp('hidden-projectId').getValue()
-							});
-						}
-						if (data.phone) {
-							Ext.apply(p, {
-								phone: data.phone
-							});
-						}
-						if (data.mail) {
-							Ext.apply(p, {
-								mail: data.mail
-							});
-						}
-						Ext.Ajax.request({
-							url: account ? './libs/user.php?action=modify' : './libs/user.php?action=register',
-							params: p,
-							method: 'POST',
-							callback: function (opts, success, res) {
-								if (success) {
-									var obj = Ext.decode(res.responseText);
-									if (obj.status == 'successful') {
-										account ? showMsg('编辑用户成功！') : showMsg('用户创建成功！');
-										me.treepanel.refresh();
-										me.close();
-										if (account && User.isCurrent(data.name)) {
-											Ext.Msg.info('修改的用户为当前所在用户，需要重新登录！点击【确定】后请重新登录！', function () {
-												logout();
-											});
+		me.buttons = [
+			{
+				text: '修改安全密码',
+				hidden: !account,
+				handler: function (){
+					var frm = me.down('form'),
+						securePass = frm.child('[name="securePass"]');
+					securePass.setValue('').setReadOnly(false);
+					securePass.allowBlank = false;
+					this.setVisible(false);
+				}
+			},
+			{
+				text: '修改密码',
+				hidden: !account,
+				handler: function () {
+					var frm = me.down('form'),
+						pwd = frm.child('[name="pwd"]'),
+						cfm = frm.child('[name="confirm"]');
+					pwd.setValue('').setReadOnly(false);
+					cfm.setValue('').setReadOnly(false);
+					this.setVisible(false);
+				}
+			},
+			{
+				text: '保存',
+				handler: function () {
+					var frm = me.down('form'),
+						container = Ext.getCmp('fieldcontainer-projectId'),
+						projectTxt = container.down('textfield');
+					if (frm.isValid()) {
+						if (container.isHidden() || (!container.isHidden() && projectTxt.getValue())) {
+							var data = frm.getValues(),
+								p = {
+									name: data.name,
+									level: data.department + '-' + data.level,
+									realname: data.realname
+								};
+							if (!frm.child('[name="pwd"]').readOnly) {
+								Ext.apply(p, {
+									password: md5(_PWDPREFIX + data.pwd)
+								});
+							}
+							if (!frm.child('[name="securePass"]').readOnly) {
+								Ext.apply(p, {
+									securePass: md5(_PWDPREFIX + data.securePass)
+								});
+							}
+							if (!container.isHidden() && projectTxt.getValue()) {
+								Ext.apply(p, {
+									projectId: Ext.getCmp('hidden-projectId').getValue()
+								});
+							}
+							if (data.phone) {
+								Ext.apply(p, {
+									phone: data.phone
+								});
+							}
+							if (data.mail) {
+								Ext.apply(p, {
+									mail: data.mail
+								});
+							}
+							Ext.Ajax.request({
+								url: account ? './libs/user.php?action=modify' : './libs/user.php?action=register',
+								params: p,
+								method: 'POST',
+								callback: function (opts, success, res) {
+									if (success) {
+										var obj = Ext.decode(res.responseText);
+										if (obj.status == 'successful') {
+											account ? showMsg('编辑用户成功！') : showMsg('用户创建成功！');
+											me.treepanel.refresh();
+											me.close();
+											if (account && User.isCurrent(data.name)) {
+												Ext.Msg.info('修改的用户为当前所在用户，需要重新登录！点击【确定】后请重新登录！', function () {
+													logout();
+												});
+											}
+										}
+										else {
+											Ext.Msg.info(obj.errMsg);
 										}
 									}
-									else {
-										Ext.Msg.info(obj.errMsg);
-									}
 								}
-							}
-						});
-					}
-					else {
-						showMsg('游客账号请选择项目！');
+							});
+						}
+						else {
+							showMsg('游客账号请选择项目！');
+						}
 					}
 				}
-			}
-		}, {
+			},
+			{
 				text: '取消',
 				handler: function () {
 					me.close();
 				}
-			}];
+			}
+		];
 
 		me.listeners = {
 			show: function (win) {

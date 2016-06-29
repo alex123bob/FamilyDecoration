@@ -26,12 +26,11 @@
 			$phone = isset($_POST["phone"]) ? $_POST["phone"] : '' ;
 			$mail = isset($_POST["mail"]) ? $_POST["mail"] : '' ;
 			$profileImage = isset($_POST["profileImage"]) ? $_POST["profileImage"] : '' ;
-			global $mysql, $prefix;
+			global $mysql;
 			$user = $mysql->DBGetOneRow("`user`", "*", "`name` = '$name'");
 			if($user){
 				throw new Exception('用户已经存在！');
 			}
-			$password = md5($prefix.$password);
 			$obj = array('name'=>$name,'realname'=>$realname,'password'=>$password,'level'=>$level,'projectId'=>$projectId,'phone'=>$phone, 'mail'=>$mail);
 			$mysql->DBInsertAsArray("`user`",$obj);
 			return (array('status'=>'successful', 'errMsg' => ''));
@@ -44,8 +43,7 @@
 	function login (){
 		$name = $_REQUEST["name"];
 		$password = $_REQUEST["password"];
-		global $mysql, $prefix;
-		$password = md5($prefix.$password);
+		global $mysql;
 		$user = $mysql->DBGetOneRow("`user`", "*", "`name` = '$name' and `isDeleted` = 'false' ");
 		if ($user["name"] == $name && $user["password"] == $password) {
 			$sessionId = session_id();
@@ -94,9 +92,7 @@
 		$oldpassword= $_POST['oldpassword'];
 		$newpassword= $_POST['newpassword'];
 		$level = $_POST["level"];
-		global $mysql, $prefix;
-		$oldpassword = md5($prefix.$oldpassword);
-		$newpassword = md5($prefix.$newpassword);
+		global $mysql;
 		$user = $mysql->DBGetOneRow("`user`", "*", "`name` = '$name'");
 		if ($user["name"] == $name) {
 			if ($user["password"] == $oldpassword) {
@@ -134,17 +130,17 @@
 	 */
 	function modify (){
 		$name = $_POST["name"];
-		$password = $_POST["password"];
+		$password = isset($_POST["password"]) ? $_POST["password"] : false;
 		$level = $_POST["level"];
 		$realname = $_POST["realname"];
 		$projectId = isset($_POST["projectId"]) ? $_POST["projectId"] : '';
 		$phone = isset($_POST["phone"]) ? $_POST["phone"] : '';
 		$mail = isset($_POST["mail"]) ? $_POST["mail"] : '';
-		$profileImage = isset($_POST["profileImage"]) ? $_POST["profileImage"] : '';
+		$profileImage = isset($_POST["profileImage"]) ? $_POST["profileImage"] : false;
 		$priority = isset($_POST["priority"]) ? $_POST["priority"] : '';
 		$priorityTitle = isset($_POST["priorityTitle"]) ? $_POST["priorityTitle"] : '';
 		//自己修改自己的手机或者安全密码,需要重新获取短信验证码.管理员不需要.
-		if($name == $_SESSION['name'] && ( isset($_POST['securePass']) || isset($_POST['phone']))){
+		if(!isAdminOrAdministrationManager() && $name == $_SESSION['name'] && ( isset($_POST['securePass']) || isset($_POST['phone']))){
 			if(!isset($_POST['validateCode'])){
 				throw new Exception('修改安全验证码或者手机号时,必须输入手机短信验证码!');
 			}
@@ -153,9 +149,22 @@
 			}
 			unset($_SESSION['user_validateCode']);
 		}
-		global $mysql, $prefix;
-		$password = md5($prefix.$password);
-		$mysql->DBUpdate('user',array('realname'=>$realname,'password'=>$password,'level'=>$level,'projectId'=>$projectId, 'phone'=>$phone, 'mail'=>$mail, 'profileImage'=>$profileImage, 'priority'=>$priority, 'priorityTitle'=>$priorityTitle),"`name`='?'",array($name));
+		global $mysql;
+		$updateArr = array(
+			'realname'=>$realname,
+			'level'=>$level,
+			'projectId'=>$projectId,
+			'phone'=>$phone, 'mail'=>$mail,  
+			'priority'=>$priority, 
+			'priorityTitle'=>$priorityTitle
+		);
+		if ($password) {
+			$updateArr['password'] = $password;
+		}
+		if ($profileImage) {
+			$updateArr["profileImage"] = $profileImage;
+		}
+		$mysql->DBUpdate('user',$updateArr,"`name`='?'",array($name));
 		return (array('status'=>'successful', 'errMsg' => ''));
 	}
 
@@ -163,7 +172,7 @@
 		$name = $_POST["name"];
 		$phone = $_POST["phone"];
 		//自己修改自己的手机或者安全密码,需要重新获取短信验证码.管理员不需要.
-		if($name == $_SESSION['name']){
+		if(!isAdminOrAdministrationManager() && $name == $_SESSION['name']){
 			if(!isset($_POST['validateCode'])){
 				throw new Exception('修改手机号时,必须输入手机短信验证码!');
 			}
@@ -326,6 +335,21 @@
 		global $mysql;
 		$arr = $mysql->DBGetSomeRows("`user`", "*" ,"where `level` like '001-%' and `isDeleted` = 'false' ");
 		return ($arr);
+	}
+
+	function isAdminOrAdministrationManager (){
+		$arr = getAdminMembers();
+		$name = $_SESSION["name"];
+		$level = $_SESSION["level"];
+		$flag = false;
+		for ($i=0; $i < count($arr); $i++) { 
+			$obj = $arr[$i];
+			if ($obj["name"] == $name) {
+				$flag = true;
+				break;
+			}
+		}
+		return $flag || $level == "005-001";
 	}
 
 	function getUserByName ($name){
