@@ -48,6 +48,7 @@ $end=$plan['endTime'];
 $pdf=new PDF('L','mm', $pagetype); //创建新的FPDF对象 
 $pdf->AddGBFont(); //设置中文字体 
 $pdf->Open(); //开始创建PDF 
+$pdf->SetFillColor(125);
 $pdf->AddPage(); //增加一页 
 $pdf->SetFont("GB",$GfontStyle,$GfontSize); //设置字体样式 
 
@@ -185,6 +186,7 @@ foreach($bigItems as $key => $bigItem) {
 		//输出日期填充
 		$alldaysdata = getdaysfill($item['startTime'],$item['endTime'],$daysInTotal);
 		for($smallCount = 0;$smallCount < $daysInTotal ;$smallCount++){
+
 			$pdf->Cell($singleDayWidth,$tmpheight*$item['linesNeed'],'','LBTR',0,'L',$alldaysdata[$smallCount]);
 		}
 		$pdf->ln();
