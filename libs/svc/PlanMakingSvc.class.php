@@ -150,12 +150,12 @@ Class PlanMakingSvc extends BaseSvc{
 		if(isset($users[$salesman]) && strlen($users[$salesman]['phone']) == 11 ){ // 11位有效手机号
 			$phoneNumber = $users[$salesman]['phone'];
 			echo "send  to $phoneNumber<br /> \n";
-			sendMsg($_SESSION['name'].'-ProjectProgressNotice',$_SESSION['name'],$phoneNumber,$text,null,'sendSMS');
+			sendMsg('工程进度主材预定提醒',$salesman,$phoneNumber,$text,null,'sendSMS');
 		}
 		if(isset($users[$designer]) && strlen($users[$designer]['phone']) == 11 ){ // 11位有效手机号
 			$phoneNumber = $users[$designer]['phone'];
 			echo "send $text to $phoneNumber<br /> \n";
-			sendMsg($_SESSION['name'].'-ProjectProgressNotice',$_SESSION['name'],$phoneNumber,$text,null,'sendSMS');
+			sendMsg('工程进度主材预定提醒',$designer,$phoneNumber,$text,null,'sendSMS');
 		}
 		if(isset($users[$salesman]) && contains($users[$salesman]['mail'],'@')){ // 有效邮箱
 			$mail = $users[$salesman]['mail'];
