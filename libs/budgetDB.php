@@ -1,4 +1,33 @@
 <?php
+
+	function insertSmallItemBefore($data){
+		global $mysql;
+		if (isset($data["isCustomized"])) {
+			$isExistedItemName = $mysql->DBGetAsMap("select * from basic_sub_item where subItemName = '?'", $data["itemName"]);
+			if (count($isExistedItemName) > 0) {
+				return array("status"=>"failing", 'errMsg'=>'已经存在小项名称，请重新填写空白项名称！');
+			}
+		}
+		$itemCode = $data['itemCode'];
+		$budgetId = $data['budgetId'];
+		$itemCodeFirstChar = substr($itemCode, 0,1);
+		$itemCodeIndex = substr($itemCode, 2);
+		$sql = "update budget_item set itemCode = concat(SUBSTRING(itemCode,1,1),'-',SUBSTRING(itemCode,3)+1) where budgetId = '".$budgetId."' and itemCode like '".$itemCodeFirstChar."%' and SUBSTRING(itemCode,3) > $itemCodeIndex";
+		$mysql->DBExecute($sql);
+
+		$fields = array('itemName','budgetId','itemUnit','workCategory','itemAmount','remark','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','manpowerCost', 'mainMaterialCost', 'basicItemId','basicSubItemId', 'isCustomized', 'lossPercent');
+		$obj = array('itemCode'=>$itemCode,'budgetItemId' => uniqid().str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT));
+		foreach($fields as $field){
+			if(isset($data[$field])){
+				$obj[$field] = $data[$field];
+			}
+		}
+		//损耗=（主材单价+辅料单价）*0.05
+		// $obj['lossPercent'] = ($obj['mainMaterialPrice']+$obj['auxiliaryMaterialPrice']) * 0.05;
+		$obj['lossPercent'] = $obj['lossPercent'];
+		$mysql->DBInsertAsArray("`budget_item`",$obj);
+		return array('status'=>'successful', 'errMsg' => '','itemCode'=>$itemCode);
+	}
 	//打折
 	function makeDiscount($data){
 		if(!isset($data['discount'])){

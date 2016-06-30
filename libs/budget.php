@@ -55,6 +55,8 @@
 		case "finishBudget":$res = finishBudget($_REQUEST['budgetId']);break;
 		//删除预算模板
 		case "deleteBudgetTemplate":$res = deleteBudgetTemplate($_REQUEST['budgetTemplateId']);break;
+		//在某一小项前添加小项
+		case "insertSmallItemBefore":$res = insertSmallItemBefore($_REQUEST);break;
 		default:
 			throw new Exception("unknown action:".$action);
 	}
