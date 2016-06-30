@@ -189,37 +189,30 @@
 		$itemCode = $item[0]['itemCode'];
 		if(strlen($itemCode) == 1){
 			if(in_array($itemCode,array('N','O','P','Q','R','S')))
-				throw new Exception("you cant delete ".$itemCode);
+				throw new Exception("不能删除$itemCode项");
 			//删除大项		
 			$mysql->DBUpdate("budget_item",array('isDeleted'=>true,'itemCode'=>'XXX','lastUpdateTime'=>'now()'),"`budgetId` = '?' and `itemCode` like '%?%' ",array($budgetId,$itemCode));
 			//重排序大项
-			$list = $mysql->DBGetAsOneArray("SELECT  distinct LEFT( itemCode, 1 ) as code FROM `budget_item` where `isDeleted` = 'false' and `budgetId` = '?'  and `itemCode` not in ('N','O','P','Q','R','S') and LEFT( itemCode, 1 ) > '?'",$budgetId,$itemCode);
-			foreach($list as $itemCode){
-				$newItemCode = chr(ord($itemCode)-1);
-				$res = $sql = "update  `budget_item` set `itemCode` = REPLACE(`itemCode`,'".$itemCode."','".$newItemCode."') where `isDeleted` = 'false' and `budgetId` = '".$budgetId."' and `itemCode` like '%".$itemCode."%' ";
-				$mysql->DBExecute($sql);
-			}
+			$sql = "update  `budget_item` set `lastUpdateTime`= now() ,`itemCode` = 
+			concat(char(ASCII((SUBSTRING(itemCode,1,1)))-1),SUBSTRING(itemCode,2))
+			where  SUBSTRING(itemCode,1,1) > '".$itemCode."' and SUBSTRING(itemCode,1,1) < 'N'
+			and `isDeleted` = 'false' and `budgetId` = '".$budgetId."';" ;
+			$mysql->DBExecute($sql);
 		}else{
 			//删除小项
 			$mysql->DBUpdate('budget_item',array('isDeleted'=>true,'itemCode'=>'XXX','lastUpdateTime'=>'now()'),"`budgetItemId` = '?' ",array($budgetItemId));
 			$code = substr($itemCode,0,1);
 			$index = intval(substr($itemCode,2));
-			//重排序小项
-			$sql = "SELECT budgetItemId,SUBSTRING(itemCode,3) as idx FROM  `budget_item` WHERE `isDeleted` = 'false' and `budgetId` = '?' and `itemCode` like '%?%' and SUBSTRING(itemCode,3) > ? ";
-			$list = $mysql->DBGetAsMap($sql,$budgetId,$code,$index);
-			foreach($list as $item){
-				$newidx = intval($item['idx']) - 1;
-				$mysql->DBUpdate('budget_item',array('itemCode'=>"$code-$newidx",'lastUpdateTime'=>'now()'),"`budgetItemId` = '?' ",array($item['budgetItemId']));
-			}
+			$sql = "update  `budget_item` set `lastUpdateTime`= now() ,`itemCode` = concat(SUBSTRING(itemCode,1,1),'-',SUBSTRING(itemCode,3)-1) where `isDeleted` = 'false' and `budgetId` = '".$budgetId."' and `itemCode` like '%".$code."%' and SUBSTRING(itemCode,3) > $index";
+			$mysql->DBExecute($sql);
 		}
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
-	function bulkDeleteSmallItems ($budgetItemIds){
-		$arr = explode(">>><<<", $budgetItemIds);
-		for ($i=0; $i < count($arr); $i++) { 
-			delItem($arr[$i]);
-		}
+	function bulkDeleteSmallItems($budgetItemIds){
+		$ids = "'".str_replace('>>><<<',"','",$budgetItemIds)."'";
+		$sql = "update `budget_item` set `lastUpdateTime`= now() ,`isDeleted`= 'true' where `budgetItemId` in ($ids)";
+		$mysql->DBExecute($sql);
 		return array("status"=>"successful", "errMsg"=>"");
 	}
 
@@ -278,26 +271,21 @@
 	}
 
 	// 预算完成，将对应project或者business的budgetFinished字段置为'true'
-	function finishBudget ($budgetId){
+	function finishBudget($budgetId){
 		global $mysql;
 		$arr = $mysql->DBGetAsMap("select * from `budget` WHERE `budgetId` = '$budgetId' ");
-		if (count($arr) > 0) {
-			if ($arr[0]["projectId"]) {
-				$projectId = $arr[0]["projectId"];
-				$mysql->DBUpdate("`project`", array("budgetFinished"=>'true'), "`projectId`='?'", array($projectId));
-				return array('status'=>'successful', 'errMsg' => '', 'projectId'=>$projectId);
-			}
-			else if ($arr[0]["businessId"]) {
-				$businessId = $arr[0]["businessId"];
-				$mysql->DBUpdate("`business`", array("budgetFinished"=>'true'), "`id`='?'", array($businessId));
-				return array('status'=>'successful', 'errMsg' => '', 'businessId'=>$businessId);
-			}
-			else {
-				return array('status'=>'failing', 'errMsg' => '没有找到预算对应的工程或者业务！');
-			}
-		}
-		else {
+		if (count($arr) < 1) 
 			return array('status'=>'failing', 'errMsg' => '没有找到对应预算！');
+		if ($arr[0]["projectId"]) {
+			$projectId = $arr[0]["projectId"];
+			$mysql->DBUpdate("`project`", array("budgetFinished"=>'true'), "`projectId`='?'", array($projectId));
+			return array('status'=>'successful', 'errMsg' => '', 'projectId'=>$projectId);
+		}else if($arr[0]["businessId"]) {
+			$businessId = $arr[0]["businessId"];
+			$mysql->DBUpdate("`business`", array("budgetFinished"=>'true'), "`id`='?'", array($businessId));
+			return array('status'=>'successful', 'errMsg' => '', 'businessId'=>$businessId);
+		}else {
+			return array('status'=>'failing', 'errMsg' => '没有找到预算对应的工程或者业务！');
 		}
 	}
 
@@ -320,8 +308,7 @@
 				}
 			}
 			return $res;
-		}
-		else {
+		}else {
 			return $arr;
 		}
 	}
