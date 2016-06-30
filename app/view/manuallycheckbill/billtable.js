@@ -279,6 +279,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								// editable: false,
 								name: 'projectProgress',
 								afterSubTpl: '%',
+								maskRe: /[\d\.]/,
 								// minValue: 0,
 								// maxValue: 100,
 								readOnly: previewMode ? true : false
