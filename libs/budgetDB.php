@@ -12,7 +12,7 @@
 		$budgetId = $data['budgetId'];
 		$itemCodeFirstChar = substr($itemCode, 0,1);
 		$itemCodeIndex = substr($itemCode, 2);
-		$sql = "update budget_item set itemCode = concat(SUBSTRING(itemCode,1,1),'-',SUBSTRING(itemCode,3)+1) where budgetId = '".$budgetId."' and itemCode like '".$itemCodeFirstChar."%' and SUBSTRING(itemCode,3) > $itemCodeIndex";
+		$sql = "update budget_item set itemCode = concat(SUBSTRING(itemCode,1,1),'-',SUBSTRING(itemCode,3)+1) where budgetId = '".$budgetId."' and itemCode like '".$itemCodeFirstChar."%' and SUBSTRING(itemCode,3) >= $itemCodeIndex";
 		$mysql->DBExecute($sql);
 
 		$fields = array('itemName','budgetId','itemUnit','workCategory','itemAmount','remark','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','manpowerCost', 'mainMaterialCost', 'basicItemId','basicSubItemId', 'isCustomized', 'lossPercent');
@@ -210,9 +210,15 @@
 	}
 
 	function bulkDeleteSmallItems($budgetItemIds){
+		$arr = explode(">>><<<", $budgetItemIds);
+		for ($i=0; $i < count($arr); $i++) { 
+			delItem($arr[$i]);
+		}
+		//需要重排序
+		/*global $mysql;
 		$ids = "'".str_replace('>>><<<',"','",$budgetItemIds)."'";
 		$sql = "update `budget_item` set `lastUpdateTime`= now() ,`isDeleted`= 'true' where `budgetItemId` in ($ids)";
-		$mysql->DBExecute($sql);
+		$mysql->DBExecute($sql);*/
 		return array("status"=>"successful", "errMsg"=>"");
 	}
 
