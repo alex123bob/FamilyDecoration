@@ -121,7 +121,7 @@
 		if(!isset($_SESSION['phone']) || strlen($_SESSION['phone']) != 11){
 			throw new Exception('您的手机号码不对,请联系管理员修改!');
 		}
-		sendMsg($_SESSION['realname'].'-BillStateChange',$_SESSION['name'],$_SESSION['phone'],'您的短信验证码是:'.$rand,null,'sendSMS');
+		sendMsg($_SESSION['realname'].'-AccountModification',$_SESSION['name'],$_SESSION['phone'],'您的短信验证码是:'.$rand,null,'sendSMS');
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 	/**

@@ -42,7 +42,7 @@ class StatementBillSvc extends BaseSvc
 		if($bill['status'] == 'paid')
 			throw new Exception("已付款,无法更改状态.");
 		$limit = $mysql->DBGetAsOneArray("select paramValue*10000 from system where id = 10 ");
-		if($limit >= $bill['claimAmount']){
+		if($limit <= $bill['totalFee']){
 			if(!isset($_SESSION['phone']) || strlen($_SESSION['phone']) != 11){
 				throw new Exception('手机号不对,请联系管理员修改!');
 			}
@@ -50,10 +50,10 @@ class StatementBillSvc extends BaseSvc
 			$rand = rand(1000,9999);
 			$_SESSION['validateCode'] = $rand;
 			include_once __ROOT__."/libs/msgLogDB.php";
-			sendMsg($_SESSION['name'].'-BillStateChange',$_SESSION['name'],$_SESSION['phone'],'您的短信验证码是:'.$rand,null,'sendSMS');
-			return "短信验证码";
+			sendMsg($_SESSION['realname'].'-BillStateChange',$_SESSION['name'],$_SESSION['phone'],'您的短信验证码是:'.$rand,null,'sendSMS');
+			return array('status'=>'successful', 'type' => 'sms', 'errMsg' => '', 'hint' => '本次操作需要提供短信验证码，<br />验证码已发送，请输入收到的验证码。<br />如果手机号更改或丢失而无法输入验证码，请联系管理员。');
 		}else{
-			return "安全密码验证";
+			return array('status'=>'successful', 'type' => 'securePass', 'errMsg' => '', 'hint' => '本次操作需要提供安全码，<br />请输入您当前账号的安全码进行下一步操作。<br />如果您未初始化安全码，请前往账户管理进行设置，或联系管理员。');
 		}
 	}
 	//检查是否通过短信验证码或者安全密码验证
@@ -69,7 +69,7 @@ class StatementBillSvc extends BaseSvc
 			unset($_SESSION['validateCode']);
 		}else{
 			//需要安全密码验证
-			$res = $mysql->DBGetAsMap("select * from user where name = ? and securePass = ? ",$_SESSION['name'],$q['validateCode']);
+			$res = $mysql->DBGetAsMap("select * from user where name = '?' and securePass = '?' ",$_SESSION['name'],$q['validateCode']);
 			if(count($res) < 1){
 				throw new Exception('安全密码验证失败!');
 			}
