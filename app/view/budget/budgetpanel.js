@@ -77,6 +77,8 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
     				addBlankBtn.disable();
     			}
     			if (rec.get('isCustomized') == 'true') {
+					addBlankBtn.enable();
+					addSmallBtn.enable();
     				editBlankItemBtn.enable();
     			}
     			else {
@@ -236,6 +238,16 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 
 										win.show();
 									}
+									// 空白项
+									else if (rec.get('isCustomized')) {
+										var win = Ext.create('FamilyDecoration.view.budget.AddExistedItem', {
+											grid: me.getComponent('gridpanel-budgetContent'),
+											budgetId: me.budgetId,
+											smallItem: rec
+										});
+
+										win.show();
+									}
 								}
 								else {
 									showMsg('请选择大项！');
@@ -264,6 +276,16 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 									}
 									// 小项
 									else if (!rec.get('basicItemId') && rec.get('basicSubItemId')) {
+										var win = Ext.create('FamilyDecoration.view.budget.AddBlankItem', {
+											grid: grid,
+											budgetId: me.budgetId,
+											smallItem: rec
+										});
+
+										win.show();
+									}
+									// 空白项
+									else if (rec.get('isCustomized')) {
 										var win = Ext.create('FamilyDecoration.view.budget.AddBlankItem', {
 											grid: grid,
 											budgetId: me.budgetId,
