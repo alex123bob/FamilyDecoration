@@ -121,7 +121,7 @@
 		if(!isset($_SESSION['phone']) || strlen($_SESSION['phone']) != 11){
 			throw new Exception('您的手机号码不对,请联系管理员修改!');
 		}
-		sendMsg($_SESSION['name'].'-BillStateChange',$_SESSION['name'],$_SESSION['phone'],'您的短信验证码是:'.$rand,null,'sendSMS');
+		sendMsg($_SESSION['realname'].'-BillStateChange',$_SESSION['name'],$_SESSION['phone'],'您的短信验证码是:'.$rand,null,'sendSMS');
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 	/**
@@ -137,7 +137,7 @@
 		$phone = isset($_POST["phone"]) ? $_POST["phone"] : '';
 		$mail = isset($_POST["mail"]) ? $_POST["mail"] : '';
 		$profileImage = isset($_POST["profileImage"]) ? $_POST["profileImage"] : false;
-		$priority = isset($_POST["priority"]) ? $_POST["priority"] : '';
+		$priority = isset($_POST["priority"]) ? $_POST["priority"] : false;
 		$priorityTitle = isset($_POST["priorityTitle"]) ? $_POST["priorityTitle"] : '';
 		$securePass = isset($_POST['securePass']) ? $_POST["securePass"] : false;
 		$phone = isset($_POST['phone']) ? $_POST["phone"] : false;
@@ -157,7 +157,6 @@
 			'level'=>$level,
 			'projectId'=>$projectId,
 			'mail'=>$mail,  
-			'priority'=>$priority, 
 			'priorityTitle'=>$priorityTitle
 		);
 		if ($password) {
@@ -165,6 +164,9 @@
 		}
 		if ($profileImage) {
 			$updateArr["profileImage"] = $profileImage;
+		}
+		if ($priority) {
+			$updateArr["priority"] = $priority;
 		}
 		if ($phone) {
 			$updateArr["phone"] = $phone;

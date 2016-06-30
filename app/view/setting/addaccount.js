@@ -460,14 +460,17 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 										if (success) {
 											var obj = Ext.decode(res.responseText);
 											if (obj.status == 'successful') {
-												account ? Ext.Msg.success('编辑用户成功！') : Ext.Msg.success('用户创建成功！');
+												account ? Ext.Msg.success('编辑用户成功！', function (){
+													if (account && User.isCurrent(data.name)) {
+														Ext.defer(function (){
+															Ext.Msg.info('修改的用户为当前所在用户，需要重新登录！点击【确定】后请重新登录！', function () {
+																logout();
+															});
+														}, 300);
+													}
+												}) : Ext.Msg.success('用户创建成功！');
 												me.treepanel.refresh();
 												me.close();
-												if (account && User.isCurrent(data.name)) {
-													Ext.Msg.info('修改的用户为当前所在用户，需要重新登录！点击【确定】后请重新登录！', function () {
-														logout();
-													});
-												}
 											}
 											else {
 												Ext.Msg.info(obj.errMsg);
@@ -493,7 +496,7 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 															'修改安全密码或者手机号需要短信验证码，'
 															+ '<br />如果手机已更改或缺失手机号码，'
 															+ '<br />请与管理员联系。'
-															+ '<br />在收到验证码后请在下方输入',
+															+ '<br /><font color="green"><strong>验证码已发送</strong></font>，在收到验证码后请在下方输入',
 															function (val) {
 																request(val);
 															});

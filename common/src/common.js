@@ -119,7 +119,11 @@ Ext.require('Ext.window.MessageBox', function () {
             });
         },
         success: function (msg, fn, scope){
-            return swal("成功", msg, "success", fn);
+            return swal({
+                title: '成功',
+                text: msg,
+                type: 'success'
+            }, fn);
         }
     });
 });
