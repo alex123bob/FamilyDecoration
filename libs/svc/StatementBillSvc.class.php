@@ -42,7 +42,7 @@ class StatementBillSvc extends BaseSvc
 		if($bill['status'] == 'paid')
 			throw new Exception("已付款,无法更改状态.");
 		$limit = $mysql->DBGetAsOneArray("select paramValue*10000 from system where id = 10 ");
-		if($limit <= $bill['totalFee']){
+		if($limit[0] <= $bill['totalFee']){
 			if(!isset($_SESSION['phone']) || strlen($_SESSION['phone']) != 11){
 				throw new Exception('手机号不对,请联系管理员修改!');
 			}
@@ -61,7 +61,7 @@ class StatementBillSvc extends BaseSvc
 		//目前所有状态转换需要校验,但是参数带过来,方便以后某些状态转换不需要校验,直接返回
 		global $mysql;
 		$limit = $mysql->DBGetAsOneArray("select paramValue*10000 from system where id = 10 ");
-		if($limit <= $bill['claimAmount']){
+		if($limit[0] <= $bill['totalFee']){
 			//需要短信验证
 			if($q['validateCode'] !=  $_SESSION['validateCode']){
 				throw new Exception('短信校验码错误!');
