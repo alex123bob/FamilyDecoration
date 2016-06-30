@@ -262,8 +262,15 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 
 										win.show();
 									}
-									else {
-										showMsg('选择项不是大项！');
+									// 小项
+									else if (!rec.get('basicItemId') && rec.get('basicSubItemId')) {
+										var win = Ext.create('FamilyDecoration.view.budget.AddBlankItem', {
+											grid: grid,
+											budgetId: me.budgetId,
+											smallItem: rec
+										});
+
+										win.show();
 									}
 								}
 								else {

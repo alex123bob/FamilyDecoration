@@ -14,6 +14,7 @@ Ext.define('FamilyDecoration.view.budget.AddBlankItem', {
 	grid: null, // 预算表格
 	budgetId: undefined, // 预算id
 	bigItem: undefined, // 添加到此大项下
+	smallItem: undefined, // 添加到此小项上
 
 	initComponent: function () {
 		var me = this;
@@ -30,12 +31,24 @@ Ext.define('FamilyDecoration.view.budget.AddBlankItem', {
 			handler: function (){
 				var frm = me.down('[name="formpanel-customizedFrm"]').getForm(),
 					params,
-					p;
+					p,
+					initialUrl;
+				if (me.rec) {
+					initialUrl = './libs/budget.php?action=editItem';
+				}
+				else {
+					if (me.bigItem) {
+						initialUrl = './libs/budget.php?action=addItem';
+					}
+					else if (me.smallItem) {
+						initialUrl = './libs/budget.php?action=insertSmallItemBefore';
+					}
+				}
 				if (frm.isValid()) {
 					params = frm.getFieldValues();
 					p = {
 						itemName: params['budgetItemName'],
-						itemCode: !me.rec ? me.bigItem.get('itemCode') : '',
+						itemCode: !me.rec ? (me.bigItem ? me.bigItem.get('itemCode') : me.smallItem.get('itemCode')) : '',
 						budgetId: me.budgetId,
 						itemUnit: params['budgetUnit'],
 						mainMaterialPrice: params['budgetMainMaterialPrice'],
@@ -57,7 +70,7 @@ Ext.define('FamilyDecoration.view.budget.AddBlankItem', {
 						delete p.itemCode;
 					}
 					Ext.Ajax.request({
-						url: me.rec ? './libs/budget.php?action=editItem' : './libs/budget.php?action=addItem',
+						url: initialUrl,
 						params: p,
 						method: 'POST',
 						callback: function (opts, success, res){
