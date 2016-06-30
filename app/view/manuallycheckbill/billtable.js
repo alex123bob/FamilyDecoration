@@ -96,10 +96,19 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 			var grid = me.down('grid'),
 				st = grid.getStore();
 			if (bill) {
-				st.load({
-					params: {
-						'billId': bill.getId()
+				st.setProxy({
+					url: './libs/api.php',
+					type: 'rest',
+					extraParams: {
+						billId: bill.getId(),
+						action: 'StatementBillItem.get'
 					},
+					reader: {
+						type: 'json',
+						root: 'data'
+					}
+				});
+				st.loadPage(1, {
 					callback: function (recs, ope, success){
 						if (typeof callback === 'function') {
 							callback(recs, ope, success);
@@ -135,16 +144,10 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 				!isRegularBill && claimAmountField.setValue(obj.totalFee);
 			});
 		};
-		
-		// there is no need to invoke this functionality coz we put all calculation in the back-end.
-		// once we click confirm button to add billItems, all items are written into database with attached billID.
-		// don't worry about this circumstance that user added items but give up the bill, 
-		// actually in that time, bill couldn't be found, therefore billItems will never get the chance to show up.
-		// me.addBillItem = function (rec){
-		// 	var grid = me.down('gridpanel'),
-		// 		st = grid.getStore();
-		// 	st.add(rec);
-		// };
+
+		var statementBillItemSt = Ext.create('FamilyDecoration.store.StatementBillItem', {
+			autoLoad: false
+		});
 
 		me.items = [
 			{
@@ -307,9 +310,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 				flex: 1,
 				width: '100%',
 				autoScroll: true,
-				store: Ext.create('FamilyDecoration.store.StatementBillItem', {
-					autoLoad: false
-				}),
+				store: statementBillItemSt,
 				// selType: previewMode ? 'row' 'cellmodel',
 				plugins: previewMode && !auditMode ? [] : [
 					Ext.create('Ext.grid.plugin.CellEditing', {
@@ -460,7 +461,15 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 					defaults: {
 						align: 'center'
 					}
-				}
+				},
+				dockedItems: [
+					{
+						xtype: 'pagingtoolbar',
+						store: statementBillItemSt,
+						dock: 'bottom',
+						displayInfo: true
+					}
+				]
 			}
 		];
 		
