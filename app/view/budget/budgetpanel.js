@@ -67,13 +67,15 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
     		}
     		else {
     			if (rec.get('basicSubItemId')) {
+					addBlankBtn.enable();
+					addSmallBtn.enable();
     				editSmallItemNameBtn.enable();
     			}
     			else {
     				editSmallItemNameBtn.disable();
+					addSmallBtn.disable();
+    				addBlankBtn.disable();
     			}
-    			addSmallBtn.disable();
-    			addBlankBtn.disable();
     			if (rec.get('isCustomized') == 'true') {
     				editBlankItemBtn.enable();
     			}
@@ -214,6 +216,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 								var grid = me.getComponent('gridpanel-budgetContent'),
 									rec = grid.getSelectionModel().getSelection()[0];
 								if (rec) {
+									// 大项
 									if (rec.get('basicItemId') && !rec.get('basicSubItemId')) {
 										var win = Ext.create('FamilyDecoration.view.budget.AddExistedItem', {
 											grid: me.getComponent('gridpanel-budgetContent'),
@@ -223,8 +226,15 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 
 										win.show();
 									}
-									else {
-										showMsg('选择项不是大项！');
+									// 小项
+									else if (!rec.get('basicItemId') && rec.get('basicSubItemId')) {
+										var win = Ext.create('FamilyDecoration.view.budget.AddExistedItem', {
+											grid: me.getComponent('gridpanel-budgetContent'),
+											budgetId: me.budgetId,
+											smallItem: rec
+										});
+
+										win.show();
 									}
 								}
 								else {

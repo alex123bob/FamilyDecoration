@@ -14,6 +14,7 @@ Ext.define('FamilyDecoration.view.budget.AddExistedItem', {
 	grid: null, // 预算表格
 	budgetId: undefined, // 预算id
 	bigItem: undefined, // 添加到此大项下
+	smallItem: undefined, // 添加到对应小项上方
 
 	initComponent: function () {
 		var me = this;
@@ -29,9 +30,9 @@ Ext.define('FamilyDecoration.view.budget.AddExistedItem', {
 
 				if (subRecs.length > 0) {
 					for (var i = 0; i < subRecs.length; i++) {
-						data.push({
+						var dataObj = {
 							itemName: subRecs[i].get('subItemName'),
-							itemCode: me.bigItem.get('itemCode'),
+							itemCode: me.bigItem ? me.bigItem.get('itemCode') : me.smallItem.get('itemCode'),
 							budgetId: me.budgetId,
 							basicSubItemId: subRecs[i].getId(),
 							itemUnit: subRecs[i].get('subItemUnit'),
@@ -44,11 +45,24 @@ Ext.define('FamilyDecoration.view.budget.AddExistedItem', {
 							manpowerCost: subRecs[i].get('manpowerCost'),
 							mainMaterialCost: subRecs[i].get('mainMaterialCost'),
 							workCategory: subRecs[i].get('workCategory')
-						});
+						};
+						if (me.bigItem) {
+							data.push(dataObj);
+						}
+						else if (me.smallItem) {
+							data.unshift(dataObj);
+						}
 					}
 					var index = 0,
 						errList = [],
-						resend = 0;
+						resend = 0,
+						initialUrl;
+					if (me.bigItem) {
+						initialUrl = './libs/budget.php?action=addItem';
+					}
+					else if (me.smallItem) {
+						initialUrl = './libs/budget.php?action=insertSmallItemBefore';
+					}
 					function add (url, index){
 						var p = data[index];
 						Ext.Ajax.request({
@@ -65,7 +79,7 @@ Ext.define('FamilyDecoration.view.budget.AddExistedItem', {
 										showMsg(obj.errMsg);
 									}
 									if (index < data.length - 1) {
-										add('./libs/budget.php?action=addItem', ++index);
+										add(url, ++index);
 									}
 									else {
 										if (errList.length > 0) {
@@ -75,7 +89,7 @@ Ext.define('FamilyDecoration.view.budget.AddExistedItem', {
 												console.log(errList);
 												data = errList;
 												errList = [];
-												add('./libs/budget.php?action=addItem', 0);
+												add(url, 0);
 											}
 											else {
 												showMsg('由于网络原因，已经重发' + resend + '次，还有若干项未能添加，请手动添加。建议切换至网络较好的地方进行操作');
@@ -157,7 +171,7 @@ Ext.define('FamilyDecoration.view.budget.AddExistedItem', {
 							}
 						})
 					}
-					add('./libs/budget.php?action=addItem', 0);
+					add(initialUrl, 0);
 				}
 				else {
 					showMsg('请选择项目！');
@@ -169,7 +183,7 @@ Ext.define('FamilyDecoration.view.budget.AddExistedItem', {
 				me.close();
 			}
 		}];
-
+		
 		var bsiSt = Ext.create('FamilyDecoration.store.BasicSubItem', {
 			proxy: {
 				type: 'rest',
@@ -178,7 +192,7 @@ Ext.define('FamilyDecoration.view.budget.AddExistedItem', {
 		            type: 'json'
 		        },
 		        extraParams: {
-		        	parentId: me.bigItem.get('basicItemId')
+		        	parentId: me.bigItem ? me.bigItem.get('basicItemId') : me.smallItem.get('parentId')
 		        }
 			},
 			autoLoad: true
