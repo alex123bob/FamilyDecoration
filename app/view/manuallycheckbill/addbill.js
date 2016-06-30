@@ -100,7 +100,20 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 				icon: 'resources/img/addsmallitem.png',
 				handler: function () {
 					var statementBasicSt = Ext.create('FamilyDecoration.store.StatementBasicItem', {
-						autoLoad: false
+						autoLoad: true,
+						proxy: {
+							type: 'rest',
+							url: './libs/api.php',
+							reader: {
+								type: 'json',
+								root: 'data',
+								totalProperty: 'total'
+							},
+							extraParams: {
+								action: 'StatementBasicItem.get',
+								professionType: me.professionType.get('value')
+							}
+						}
 					});
 					var win = Ext.create('Ext.window.Window', {
 						title: '项目',
@@ -137,6 +150,12 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 												paramName: 'billItemName'
 											}
 										]
+									},
+									{
+										xtype: 'pagingtoolbar',
+										store: statementBasicSt,
+										dock: 'bottom',
+										displayInfo: true
 									}
 								],
 								store: statementBasicSt,
@@ -145,16 +164,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 								},
 								selType: 'checkboxmodel',
 								// hideHeaders: true,
-								autoScroll: true,
-								listeners: {
-									afterrender: function (cmp, opts) {
-										cmp.getStore().load({
-											params: {
-												professionType: me.professionType.get('value')
-											}
-										});
-									}
-								}
+								autoScroll: true
 							}
 						],
 						buttons: [

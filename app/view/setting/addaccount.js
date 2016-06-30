@@ -2,152 +2,89 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 	extend: 'Ext.window.Window',
 	requires: ['Ext.form.field.ComboBox', 'FamilyDecoration.view.progress.ProjectListByCaptain'],
 	alias: 'widget.setting-addaccount',
-	
+
 	autoScroll: true,
 	resizable: false,
 	modal: true,
-	width: 400,
-	height: 330,
+	width: 420,
+	height: 410,
 
 	title: '添加账号',
 
 	treepanel: undefined,
 	account: undefined,
+	bodyPadding: 6,
 
-	initComponent: function (){
-		var me = this,
-			account = me.account,
-			levelSt;
-
-		if (User.isAdmin() || User.isAdministrationManager()) {
-			if (account) {
-				var data = [],
-					depa = account.get('level').split('-')[0];
-				if (depa == '001') {
-					data.push({
-						name: '总经理',
-						value: '001'
-					}, {
-						name: '副总经理',
-						value: '002'
-					});
-				}
-				else if (depa == '002') {
-					data.push({
-						name: '主管',
-						value: '001'
-					}, {
-						name: '设计师',
-						value: '002'
-					});
-				}
-				else if (depa == '003') {
-					data.push({
-						name: '主管',
-						value: '001'
-					}, {
-						name: '项目经理',
-						value: '002'
-					}, {
-						name: '监理',
-						value: '003'
-					});
-				}
-				else if (depa == '004') {
-					data.push({
-						name: '主管',
-						value: '001'
-					}, {
-						name: '业务员',
-						value: '002'
-					});
-				}
-				else if (depa == '005') {
-					data.push({
-						name: '主管',
-						value: '001'
-					}, {
-						name: '员工',
-						value: '002'
-					});
-				}
-				else if (depa == '006') {
-					data.push({
-						name: '游客',
-						value: '001'
-					});
-				}
-				else if (depa == '007') {
-					data.push({
-						name: '主管',
-						value: '001'
-					}, {
-						name: '员工',
-						value: '002'
-					});
-				}
-				else if (depa == '008') {
-					data.push({
-						name: '主管',
-						value: '001'
-					}, {
-						name: '会计',
-						value: '002'
-					}, {
-						name: '出纳',
-						value: '003'
-					}, {
-						name: '预算员',
-						value: '004'
-					}, {
-						name: '采购',
-						value: '005'
-					});
-				}
-				else if (depa == '009') {
-					data.push({
-						name: '主管',
-						value: '001'
-					}, {
-						name: '员工',
-						value: '002'
-					});
-				}
-				levelSt = Ext.create('Ext.data.Store', {
-					fields: ['name', 'value'],
-					proxy: {
-						type: 'memory'
-					},
-					data: data
+	getRoleData: function () {
+		var roleArr = User.role,
+			res = {};
+		for (var i = 0; i < roleArr.length; i++) {
+			var obj = roleArr[i],
+				val = obj.value,
+				depa = val.split('-')[0],
+				role = val.split('-')[1];
+			if (Ext.isArray(res[depa])) {
+				res[depa].push({
+					name: obj.name,
+					value: role
 				});
 			}
 			else {
-				levelSt = Ext.create('Ext.data.Store', {
-					fields: ['name', 'value'],
-					proxy: {
-						type: 'memory'
-					},
-					data: [{
-						name: '主管',
-						value: '001'
-					}, {
-						name: '设计师',
-						value: '002'
-					}]
-				});
+				res[depa] = [{
+					name: obj.name,
+					value: role
+				}];
 			}
 		}
-		else if (User.isBusinessStaff()) {
-			levelSt = Ext.create('Ext.data.Store', {
+		return res;
+	},
+
+	initComponent: function () {
+		var me = this,
+			account = me.account,
+			levelSt, isLevelFieldReadOnly = false;
+
+		function createLevelStByDepa(depaStr) {
+			if (!depaStr) {
+				depaStr = '002';
+			}
+			var data = me.getRoleData()[depaStr];
+			var levelSt = Ext.create('Ext.data.Store', {
 				fields: ['name', 'value'],
 				proxy: {
 					type: 'memory'
 				},
-				data: [{
-					name: '游客',
-					value: '001'
-				}]
+				data: data
 			});
+			return levelSt;
+		}
+
+		if (User.isAdmin() || User.isAdministrationManager()) {
+			if (account) {
+				levelSt = createLevelStByDepa(account.get('level').split('-')[0]);
+			}
+			else {
+				levelSt = createLevelStByDepa();
+			}
+			isLevelFieldReadOnly = false;
+		}
+		else if (User.isBusinessStaff()) {
+			if (account) {
+				levelSt = createLevelStByDepa(account.get('level').split('-')[0]);
+				isLevelFieldReadOnly = account.get('level').split('-')[0] != '006';
+			}
+			else {
+				levelSt = createLevelStByDepa('006');
+				isLevelFieldReadOnly = false;
+			}
+		}
+		else {
+			if (account) {
+				levelSt = createLevelStByDepa(account.get('level').split('-')[0]);
+			}
+			else {
+			}
+			isLevelFieldReadOnly = true;
 		}
 
 		me.title = account ? '编辑账号' : '添加账号';
@@ -159,379 +96,443 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 			defaults: {
 				width: 255
 			},
-			items: [{
-				fieldLabel: '用户名',
-				name: 'name',
-				regex: new RegExp('^(?!.*/)', 'ig'),
-				regexText: '用户名不能含有符号"/"',
-				allowBlank: false,
-				readOnly: account ? true : false,
-				value: account ? account.get('name') : ''
-			}, {
-				fieldLabel: '姓名',
-				name: 'realname',
-				allowBlank: false,
-				value: account ? account.get('realname') : ''
-			}, {
-				inputType: 'password',
-				fieldLabel: '密码',
-				name: 'pwd',
-				allowBlank: false,
-				validator: function (val){
-					var confirm = this.nextSibling(),
-						pwd = this;
+			items: [
+				{
+					fieldLabel: '用户名',
+					name: 'name',
+					regex: new RegExp('^(?!.*/)', 'ig'),
+					regexText: '用户名不能含有符号"/"',
+					allowBlank: false,
+					readOnly: account ? true : false,
+					value: account ? account.get('name') : ''
+				},
+				{
+					fieldLabel: '姓名',
+					name: 'realname',
+					allowBlank: false,
+					value: account ? account.get('realname') : ''
+				},
+				{
+					inputType: 'password',
+					fieldLabel: '密码',
+					name: 'pwd',
+					allowBlank: false,
+					value: account ? account.get('password') : '',
+					readOnly: account ? true : false,
+					validator: function (val) {
+						var confirm = this.nextSibling(),
+							pwd = this;
 
-					if (pwd.getValue() != confirm.getValue()) {
-						return '两次密码不一致';
+						if (pwd.getValue() != confirm.getValue()) {
+							return '两次密码不一致';
+						}
+						else {
+							return true;
+						}
 					}
-					else {
-						return true;
-					}
-				}
-			}, {
-				inputType: 'password',
-				fieldLabel: '确认密码',
-				name: 'confirm',
-				allowBlank: false,
-				validator: function (val){
-					var pwd = this.previousSibling(),
-						confirm =this;
+				},
+				{
+					inputType: 'password',
+					fieldLabel: '确认密码',
+					name: 'confirm',
+					allowBlank: false,
+					value: account ? account.get('password') : '',
+					readOnly: account ? true : false,
+					validator: function (val) {
+						var pwd = this.previousSibling(),
+							confirm = this;
 
-					if (pwd.getValue() != confirm.getValue()) {
-						return '两次密码不一致';
+						if (pwd.getValue() != confirm.getValue()) {
+							return '两次密码不一致';
+						}
+						else {
+							return true;
+						}
 					}
-					else {
-						return true;
+				},
+				{
+					fieldLabel: '手机号码',
+					name: 'phone',
+					vtype: 'phone',
+					allowBlank: true,
+					value: account ? account.get('phone') : '',
+					readOnly: account ? true : false
+				},
+				{
+					fieldLabel: '安全密码',
+					name: 'securePass',
+					inputType: 'password',
+					readOnly: account ? true : false,
+					value: account ? account.get('securePass') : ''
+				},
+				{
+					fieldLabel: '邮箱地址',
+					name: 'mail',
+					vtype: 'mail',
+					allowBlank: true,
+					value: account ? account.get('mail') : ''
+				},
+				{
+					xtype: 'combobox',
+					fieldLabel: '部门',
+					allowBlank: false,
+					editable: false,
+					readOnly: isLevelFieldReadOnly,
+					name: 'department',
+					displayField: 'name',
+					valueField: 'value',
+					value: account ? account.get('level').split('-')[0] : '',
+					store: Ext.create('Ext.data.Store', {
+						fields: [
+							{
+								name: 'name',
+								convert: function (v, rec) {
+									return User.renderDepartment(rec.raw.value);
+								}
+							},
+							{
+								name: 'value',
+								convert: function (v, rec) {
+									return rec.raw.value.split('-')[0];
+								}
+							}
+						],
+						proxy: {
+							type: 'memory'
+						},
+						data: User.role,
+						filters: [
+							function (item) {
+								if (User.isAdmin() || User.isAdministrationManager()) {
+									return true;
+								}
+								else if (User.isBusinessStaff()) {
+									if (account) {
+										return item.get('level') == account.get('level');
+									}
+									else {
+										return item.get('value') == '006';
+									}
+								}
+								else {
+									if (account) {
+										return item.get('level') == account.get('level');
+									}
+									else {
+										return false;
+									}
+								}
+							}
+						],
+						listeners: {
+							load: function (st, recs) {
+								var hits = {};
+								st.filterBy(function (record) {
+									var department = record.get('value');
+									if (hits[department]) {
+										return false;
+									}
+									else {
+										hits[department] = true;
+										return true;
+									}
+								});
+								delete st.snapshot;
+							}
+						}
+					}),
+					queryMode: 'local',
+					listeners: {
+						change: function (combo, newVal, oldVal) {
+							var levelCombo = combo.nextSibling(),
+								st = levelCombo.getStore(),
+								data = me.getRoleData()[newVal];
+
+							levelCombo.clearValue();
+							st.loadData(data);
+						}
 					}
-				}
-			}, {
-				fieldLabel: '手机号码',
-				name: 'phone',
-				vtype: 'phone',
-				allowBlank: true,
-				value: account ? account.get('phone') : ''
-			}, {
-				fieldLabel: '邮箱地址',
-				name: 'mail',
-				vtype: 'mail',
-				allowBlank: true,
-				value: account ? account.get('mail') : ''
-			}, {
-				xtype: 'combobox',
-				fieldLabel: '部门',
-				allowBlank: false,
-				editable: false,
-				name: 'department',
-				displayField: 'name',
-				valueField: 'value',
-				value: User.isAdmin() || User.isAdministrationManager() ? (account ? account.get('level').split('-')[0] : '002') : (User.isBusinessStaff() ? (account ? account.get('level').split('-')[0] : '006') : '006'),
-				store: Ext.create('Ext.data.Store', {
-					fields: [
+				},
+				{
+					xtype: 'combobox',
+					fieldLabel: '等级',
+					allowBlank: false,
+					editable: false,
+					name: 'level',
+					displayField: 'name',
+					valueField: 'value',
+					value: account ? account.get('level').split('-')[1] : '',
+					queryMode: 'local',
+					readOnly: isLevelFieldReadOnly,
+					store: levelSt,
+					listeners: {
+						change: function (combo, newVal, oldVal) {
+							if (newVal == '001' && combo.previousSibling().getValue() == '006') {
+								combo.nextSibling().show();
+							}
+							else {
+								combo.nextSibling().hide();
+							}
+						}
+					}
+				},
+				{
+					xtype: 'fieldcontainer',
+					fieldLabel: '项目名称',
+					name: 'projectId',
+					id: 'fieldcontainer-projectId',
+					hidden: true,
+					layout: {
+						type: 'hbox',
+						align: 'stretch'
+					},
+					width: 300,
+					items: [
 						{
-							name: 'name',
-							convert: function (v, rec){
-								return User.renderDepartment(rec.raw.value);
+							xtype: 'textfield',
+							hideLabel: true,
+							width: 150,
+							readOnly: true
+						},
+						{
+							xtype: 'button',
+							text: '浏览',
+							flex: 1,
+							handler: function () {
+								var browseBtn = this;
+								var win = Ext.create('Ext.window.Window', {
+									width: 500,
+									height: 400,
+									title: '选择项目',
+									layout: 'fit',
+									items: [
+										{
+											xtype: 'progress-projectlistbycaptain',
+											searchFilter: true,
+											listeners: {
+												itemclick: function (view, rec) {
+													if (rec.get('projectName')) {
+														return true;
+													}
+													else {
+														return false;
+													}
+												}
+											}
+										}
+									],
+									buttons: [
+										{
+											text: '确定',
+											handler: function () {
+												var tree = win.down('treepanel'),
+													rec = tree.getSelectionModel().getSelection()[0];
+												if (!rec || !rec.get('projectName')) {
+													showMsg('请选择项目');
+												}
+												else {
+													var txt = browseBtn.previousSibling(),
+														hidden = browseBtn.nextSibling();
+													txt.setValue(rec.get('projectName'));
+													hidden.setValue(rec.getId());
+													win.close();
+												}
+											}
+										},
+										{
+											text: '取消',
+											handler: function () {
+												win.close();
+											}
+										}
+									]
+								});
+								win.show();
 							}
 						},
 						{
-							name: 'value',
-							convert: function (v, rec){
-								return rec.raw.value.split('-')[0];
-							}
+							xtype: 'hidden',
+							id: 'hidden-projectId'
 						}
-					],
-					proxy: {
-						type: 'memory'
-					},
-					data: User.role,
-					filters: User.isBusinessStaff() ? [
-						// manager can not add an administrator account.
-						function (item){
-							return item.get('value') == '006';
-						}
-					] : [],
-					listeners: {
-						load: function (st, recs){
-							var hits = {};
-				            st.filterBy(function(record) {
-				                var department = record.get('value');
-				                if (hits[department]) {
-				                    return false;
-				                } 
-				                else {
-				                    hits[department] = true;
-				                    return true;
-				                }
-				            });
-				            delete st.snapshot;
-						}
-					}
-				}),
-				queryMode: 'local',
-				listeners: {
-					change: function (combo, newVal, oldVal) {
-						var levelCombo = combo.nextSibling(),	
-							st = levelCombo.getStore(),
-							data = [];
-
-						levelCombo.clearValue();
-
-						if (newVal == '001') {
-							data.push({
-								name: '总经理',
-								value: '001'
-							}, {
-								name: '副总经理',
-								value: '002'
-							});
-						}
-						else if (newVal == '002') {
-							data.push({
-								name: '主管',
-								value: '001'
-							}, {
-								name: '设计师',
-								value: '002'
-							});
-						}
-						else if (newVal == '003') {
-							data.push({
-								name: '主管',
-								value: '001'
-							}, {
-								name: '项目经理',
-								value: '002'
-							}, {
-								name: '监理',
-								value: '003'
-							});
-						}
-						else if (newVal == '004') {
-							data.push({
-								name: '主管',
-								value: '001'
-							}, {
-								name: '业务员',
-								value: '002'
-							});
-						}
-						else if (newVal == '005') {
-							data.push({
-								name: '主管',
-								value: '001'
-							}, {
-								name: '员工',
-								value: '002'
-							});
-						}
-						else if (newVal == '006') {
-							data.push({
-								name: '游客',
-								value: '001'
-							});
-						}
-						else if (newVal == '007') {
-							data.push({
-								name: '主管',
-								value: '001'
-							}, {
-								name: '员工',
-								value: '002'
-							});
-						}
-						else if (newVal == '008') {
-							data.push({
-								name: '主管',
-								value: '001'
-							}, {
-								name: '会计',
-								value: '002'
-							}, {
-								name: '出纳',
-								value: '003'
-							}, {
-								name: '预算员',
-								value: '004'
-							}, {
-								name: '采购',
-								value: '005'
-							});
-						}
-						else if (newVal == '009') {
-							data.push({
-								name: '主管',
-								value: '001'
-							}, {
-								name: '员工',
-								value: '002'
-							});
-						}
-
-						st.loadData(data);
-					}
+					]
 				}
-			}, {
-				xtype: 'combobox',
-				fieldLabel: '等级',
-				allowBlank: false,
-				editable: false,
-				name: 'level',
-				displayField: 'name',
-				valueField: 'value',
-				value: account ? account.get('level').split('-')[1] : '',
-				queryMode: 'local',
-				store: levelSt,
-				listeners: {
-					change: function (combo, newVal, oldVal) {
-						if (newVal == '001' && combo.previousSibling().getValue() == '006') {
-							combo.nextSibling().show();
+			]
+		}];
+
+		me.tbar = [
+			{
+				text: '修改手机',
+				hidden: !account,
+				icon: 'resources/img/phone.png',
+				handler: function () {
+					var frm = me.down('form'),
+						phone = frm.child('[name="phone"]');
+					phone.setValue('').setReadOnly(false);
+					phone.allowBlank = false;
+					this.setVisible(false);
+					this.nextSibling().hide();
+				}
+			},
+			{
+				text: '修改安全密码',
+				hidden: !account,
+				icon: 'resources/img/securepass.png',
+				handler: function () {
+					var frm = me.down('form'),
+						securePass = frm.child('[name="securePass"]');
+					securePass.setValue('').setReadOnly(false);
+					securePass.allowBlank = false;
+					this.setVisible(false);
+					this.previousSibling().hide();
+				}
+			},
+			{
+				text: '修改密码',
+				hidden: !account,
+				icon: 'resources/img/key.png',
+				handler: function () {
+					var frm = me.down('form'),
+						pwd = frm.child('[name="pwd"]'),
+						cfm = frm.child('[name="confirm"]');
+					pwd.setValue('').setReadOnly(false);
+					cfm.setValue('').setReadOnly(false);
+					this.setVisible(false);
+				}
+			}
+		];
+
+		me.buttons = [
+			{
+				text: '保存',
+				handler: function () {
+					var frm = me.down('form'),
+						container = Ext.getCmp('fieldcontainer-projectId'),
+						projectTxt = container.down('textfield'),
+						needValidateCode = false;
+					if (frm.isValid()) {
+						if (container.isHidden() || (!container.isHidden() && projectTxt.getValue())) {
+							var data = frm.getValues(),
+								p = {
+									name: data.name,
+									level: data.department + '-' + data.level,
+									realname: data.realname
+								};
+							if (!frm.child('[name="pwd"]').readOnly) {
+								Ext.apply(p, {
+									password: md5(_PWDPREFIX + data.pwd)
+								});
+							}
+							if (!frm.child('[name="securePass"]').readOnly) {
+								Ext.apply(p, {
+									securePass: md5(_PWDPREFIX + data.securePass)
+								});
+								needValidateCode = true;
+							}
+							if (!container.isHidden() && projectTxt.getValue()) {
+								Ext.apply(p, {
+									projectId: Ext.getCmp('hidden-projectId').getValue()
+								});
+							}
+							if (data.phone) {
+								if (!frm.child('[name="phone"]').readOnly) {
+									Ext.apply(p, {
+										phone: data.phone
+									});
+									needValidateCode = true;
+								}
+							}
+							if (data.mail) {
+								Ext.apply(p, {
+									mail: data.mail
+								});
+							}
+							function request(validateCode) {
+								if (validateCode) {
+									Ext.apply(p, {
+										validateCode: validateCode
+									});
+								}
+								Ext.Ajax.request({
+									url: account ? './libs/user.php?action=modify' : './libs/user.php?action=register',
+									params: p,
+									method: 'POST',
+									callback: function (opts, success, res) {
+										if (success) {
+											var obj = Ext.decode(res.responseText);
+											if (obj.status == 'successful') {
+												account ? Ext.Msg.success('编辑用户成功！', function (){
+													if (account && User.isCurrent(data.name)) {
+														Ext.defer(function (){
+															Ext.Msg.info('修改的用户为当前所在用户，需要重新登录！点击【确定】后请重新登录！', function () {
+																logout();
+															});
+														}, 300);
+													}
+												}) : Ext.Msg.success('用户创建成功！');
+												me.treepanel.refresh();
+												me.close();
+											}
+											else {
+												Ext.Msg.info(obj.errMsg);
+											}
+										}
+									}
+								});
+							}
+							if (!User.isAdmin() && !User.isAdministrationManager()) {
+								if (account) {
+									if (User.getName() != account.get('name') || !needValidateCode) {
+										request();
+									}
+									else {
+										Ext.Ajax.request({
+											url: './libs/user.php?action=getValidateCode',
+											method: 'GET',
+											callback: function (opts, success, res) {
+												if (success) {
+													var obj = Ext.decode(res.responseText);
+													if (obj.status == 'successful') {
+														Ext.Msg.read(
+															'修改安全密码或者手机号需要短信验证码，'
+															+ '<br />如果手机已更改或缺失手机号码，'
+															+ '<br />请与管理员联系。'
+															+ '<br /><font color="green"><strong>验证码已发送</strong></font>，在收到验证码后请在下方输入',
+															function (val) {
+																request(val);
+															});
+													}
+													else {
+														showMsg(obj.errMsg);
+													}
+												}
+											}
+										});
+									}
+								}
+								else {
+									request();
+								}
+							}
+							else {
+								request();
+							}
 						}
 						else {
-							combo.nextSibling().hide();
+							showMsg('游客账号请选择项目！');
 						}
 					}
 				}
-			}, {
-				xtype: 'fieldcontainer',
-				fieldLabel: '项目名称',
-				name: 'projectId',
-				id: 'fieldcontainer-projectId',
-				hidden: true,
-				layout: {
-			        type: 'hbox',
-			        align: 'stretch'
-			    },
-				width: 300,
-				items: [{
-					xtype: 'textfield',
-					hideLabel: true,
-					width: 150,
-					readOnly: true
-				}, {
-					xtype: 'button',
-					text: '浏览',
-					flex: 1,
-					handler: function (){
-						var browseBtn = this;
-						var win = Ext.create('Ext.window.Window', {
-							width: 500,
-							height: 400,
-							title: '选择项目',
-							layout: 'fit',
-							items: [{
-								xtype: 'progress-projectlistbycaptain',
-								searchFilter: true,
-								listeners: {
-									itemclick: function (view, rec){
-										if (rec.get('projectName')) {
-											return true;
-										}
-										else {
-											return false;
-										}
-									}
-								}
-							}],
-							buttons: [{
-								text: '确定',
-								handler: function (){
-									var tree = win.down('treepanel'),
-										rec = tree.getSelectionModel().getSelection()[0];
-									if (!rec || !rec.get('projectName')) {
-										showMsg('请选择项目');
-									}
-									else {
-										var txt =browseBtn.previousSibling(),
-											hidden = browseBtn.nextSibling();
-										txt.setValue(rec.get('projectName'));
-										hidden.setValue(rec.getId());
-										win.close();
-									}
-								}
-							}, {
-								text: '取消',
-								handler: function (){
-									win.close();
-								}
-							}]
-						});
-						win.show();
-					}
-				}, {
-					xtype: 'hidden',
-					id: 'hidden-projectId'
-				}]
-			}]
-		}];
-
-		me.buttons = [{
-			text: '保存',
-			handler: function (){
-				var frm = me.down('form'),
-					container = Ext.getCmp('fieldcontainer-projectId'),
-					projectTxt = container.down('textfield');
-				if (frm.isValid()) {
-					if (container.isHidden() || (!container.isHidden() && projectTxt.getValue())) {
-						var data = frm.getValues(),
-							p = {
-								name: data.name,
-								password: data.pwd,
-								level: data.department + '-' + data.level,
-								realname: data.realname
-							};
-						if (!container.isHidden() && projectTxt.getValue()) {
-							Ext.apply(p, {
-								projectId: Ext.getCmp('hidden-projectId').getValue()
-							});
-						}
-						if (data.phone) {
-							Ext.apply(p, {
-								phone: data.phone
-							});
-						}
-						if (data.mail) {
-							Ext.apply(p, {
-								mail: data.mail
-							});
-						}
-						Ext.Ajax.request({
-							url: account ? './libs/user.php?action=modify' : './libs/user.php?action=register',
-							params: p,
-							method: 'POST',
-							callback: function (opts, success, res){
-								if (success) {
-									var obj = Ext.decode(res.responseText);
-									if (obj.status == 'successful') {
-										account ? showMsg('编辑用户成功！') : showMsg('用户创建成功！');
-										me.treepanel.refresh();
-										me.close();
-										if (account && User.isCurrent(data.name)) {
-											Ext.Msg.info('修改的用户为当前所在用户，需要重新登录！点击【确定】后请重新登录！', function (){
-												logout();
-											});
-										}
-									}
-									else {
-										Ext.Msg.info(obj.errMsg);
-									}
-								}
-							}
-						});
-					}
-					else {
-						showMsg('游客账号请选择项目！');
-					}
+			},
+			{
+				text: '取消',
+				handler: function () {
+					me.close();
 				}
 			}
-		}, {
-			text: '取消',
-			handler: function (){
-				me.close();
-			}
-		}];
+		];
 
 		me.listeners = {
-			show: function (win){
+			show: function (win) {
 				if (account && account.get('level') == '006-001') {
 					var ct = Ext.getCmp('fieldcontainer-projectId'),
 						txt = ct.down('textfield'),

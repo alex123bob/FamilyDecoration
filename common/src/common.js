@@ -96,6 +96,34 @@ Ext.require('Ext.window.MessageBox', function () {
             // };
 
             // return this.show(cfg);
+        },
+        read: function (msg, fn, scope) {
+            return swal({
+                title: "提示",
+                text: msg,
+                type: "input",
+                html: true,
+                showCancelButton: true,
+                closeOnConfirm: false,
+                animation: "slide-from-top",
+                inputPlaceholder: "请输入"
+            }, function (inputValue) {
+                if (inputValue === false) {
+                    return false;
+                }
+                if (inputValue === "") {
+                    swal.showInputError("输入为空！");
+                    return false
+                }
+                fn(inputValue);
+            });
+        },
+        success: function (msg, fn, scope){
+            return swal({
+                title: '成功',
+                text: msg,
+                type: 'success'
+            }, fn);
         }
     });
 });
@@ -106,17 +134,17 @@ Ext.require('Ext.window.MessageBox', function () {
 //     });
 // });
 
-Ext.require('Ext.form.field.Date', function (){
+Ext.require('Ext.form.field.Date', function () {
     Ext.override(Ext.form.field.Date, {
         cleanBtn: false, // config parameter, if you need, just set it as true. then a clean button will pop up beside today button used to clean value in inputEl.
-        onTriggerClick: function (){
+        onTriggerClick: function () {
             var me = this;
             me.callParent(arguments);
             if (me.cleanBtn && me.picker.todayBtn.container.query('.datefield-clean-button').length <= 0) {
                 var btn = new Ext.Button({
                     text: '清空',
                     cls: 'datefield-clean-button',
-                    handler: function (){
+                    handler: function () {
                         me.setValue('');
                         me.triggerBlur(); // this is private functionality, not recommended. any better idea?
                     }
@@ -475,7 +503,7 @@ Ext.require('Ext.Ajax', function () {
 
             if (json.status == 'failing') {
                 if (!silent && showMgs) {
-                    Ext.defer(function (){
+                    Ext.defer(function () {
                         Ext.Msg.error(json);
                     }, 300);
                 }
@@ -504,26 +532,26 @@ Ext.require('Ext.Ajax', function () {
         }
         var status = response.status;
         if (status === 0) {
-            Ext.defer(function (){
+            Ext.defer(function () {
                 Ext.Msg.error('请求失败, 服务器没有响应。');
             }, 300);
             return;
         }
         else if (status === 403) {
-            Ext.defer(function (){
+            Ext.defer(function () {
                 Ext.Msg.error('您没有进行该操作的权限, 可能由以下原因造成:<br/>1. 用户未被授予该操作的权限<br/>2. 产品或功能未授权或授权已失效');
             }, 300);
             return;
         }
         else if (status === 404) {
-            Ext.defer(function (){
+            Ext.defer(function () {
                 Ext.Msg.error('您请求的页面不存在');
             }, 300);
             return;
         }
         else if (status === 401) {
             var obj = Ext.decode(response.responseText);
-            Ext.defer(function (){
+            Ext.defer(function () {
                 Ext.Msg.error(obj.errMsg, logoutWithoutCleanningSession);
             }, 300);
         }
@@ -531,7 +559,7 @@ Ext.require('Ext.Ajax', function () {
             // do nothing
         }
         else {
-            Ext.defer(function (){
+            Ext.defer(function () {
                 Ext.Msg.error(response.status + ':' + response.statusText);
             }, 300);
         }

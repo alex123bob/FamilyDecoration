@@ -280,20 +280,34 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								selModel = resourceObj.billList.getSelectionModel();
 							Ext.Msg.warning('递交后不可再进行修改单据，确定要递交单据吗？', function (btnId){
 								if ('yes' == btnId) {
-									ajaxUpdate('StatementBill.changeStatus', {
-										id: resourceObj.bill.getId(),
-										status: 'rdyck'
-									}, 'id', function (obj){
-										showMsg('递交成功!');
-										selModel.deselectAll();
-										st.reload({
-											callback: function (recs, ope, success){
-												if (success) {
-													selModel.select(index);
+									ajaxGet('StatementBill', 'getLimit', {
+										id: resourceObj.bill.getId()
+									}, function (obj){
+										Ext.defer(function (){
+											Ext.Msg.read(obj.hint, function (val){
+												if (obj.type == 'sms') {
 												}
-											}
-										});
-									}, true);
+												else if (obj.type == 'securePass') {
+													val = md5(_PWDPREFIX +  val);
+												}
+												ajaxUpdate('StatementBill.changeStatus', {
+													id: resourceObj.bill.getId(),
+													status: 'rdyck',
+													validateCode: val
+												}, ['id', 'validateCode'], function (obj){
+													Ext.Msg.success('递交成功！');
+													selModel.deselectAll();
+													st.reload({
+														callback: function (recs, ope, success){
+															if (success) {
+																selModel.select(index);
+															}
+														}
+													});
+												}, true);
+											});
+										}, 500);
+									});
 								}
 							});
 						}

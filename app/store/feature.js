@@ -307,7 +307,7 @@
                 flag = true;
             }
             else if (rec.get('cmp') == 'projectcategory-index') {
-                flag = true;
+                flag = User.isGeneral() ? false : true;
             }
             else if (rec.get('cmp') == 'plan-index') {
                 flag = true;
@@ -363,6 +363,9 @@
             else if (rec.get('cmp') == 'regionmgm-index') {
                 flag = User.isGeneral() ? false : true;
             }
+            else if (rec.get('cmp') == 'finance-parent') {
+                flag = User.isGeneral() ? false : true;
+            }
             else if (rec.get('cmp') == 'manuallycheckbill-index') {
                 flag = User.isAdmin() || User.isProjectManager() || User.isProjectStaff() ? true : false;
             }
@@ -371,6 +374,9 @@
             }
             else if (rec.get('cmp') == 'billaudit-index') {
                 flag = User.isAdmin() || User.isFinanceManager() || User.isFinanceStaff() ? true : false;
+            }
+            else if (rec.get('cmp') == 'planlabor-index') {
+                flag = User.isGeneral() ? false : true;
             }
             else {
                 flag = true;

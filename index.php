@@ -45,6 +45,7 @@
     ?>
     <script type="text/javascript">
         var DEBUG = <?php echo $isLocal ?> ? true : false;
+        var _PWDPREFIX = 'familydecoration-';
     </script>
 </head>
 <body>
@@ -703,5 +704,6 @@
     <script type="text/javascript" src="tools/title_notifier.js"></script>
     <script type="text/javascript" src="tools/dhtmlx/codebase/message.js"></script>
     <script type="text/javascript" src="tools/sweetalert/dist/sweetalert.min.js"></script>
+    <script type="text/javascript" src="tools/md5.min.js"></script>
 </body>
 </html>
