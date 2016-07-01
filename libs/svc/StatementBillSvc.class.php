@@ -123,7 +123,6 @@ class StatementBillSvc extends BaseSvc
 	public function noticeAfterStatusChange($q,$bill){
 		//递交审核和审核通过,付款发邮件,短信.
 		if($q['@status'] != 'rdyck' && $q['@status'] != 'chk' && $q['@status'] != 'paid'){
-			echo 'no need send';
 			return ;
 		}
 		global $mysql;
