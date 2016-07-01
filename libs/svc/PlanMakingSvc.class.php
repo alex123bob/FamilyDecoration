@@ -90,7 +90,7 @@ Class PlanMakingSvc extends BaseSvc{
 		global $TableMapping;
 		global $mysql;
 		//获取短信模板,及需要提前几天提醒的天数
-		$res = $mysql->DBGetAsOneArray('select paramValue from system where id = 9 or id = 10');
+		$res = $mysql->DBGetAsOneArray("select paramValue from system where paramName = 'msg_notice_time' or paramName = 'msg_notice' order by paramName asc;");
 		$msg = $res[0];
 		$days = $res[1];
 		if($days == null || $days == "")

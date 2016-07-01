@@ -41,7 +41,7 @@ class StatementBillSvc extends BaseSvc
 		$bill = $bills[0];
 		if($bill['status'] == 'paid')
 			throw new Exception("已付款,无法更改状态.");
-		$limit = $mysql->DBGetAsOneArray("select paramValue*10000 from system where id = 10 ");
+		$limit = $mysql->DBGetAsOneArray("select paramValue*10000 from system where paramName = 'msg_notice_value_limit' ");
 		if($limit[0] <= $bill['totalFee']){
 			if(!isset($_SESSION['phone']) || strlen($_SESSION['phone']) != 11){
 				throw new Exception('手机号不对,请联系管理员修改!');
@@ -51,16 +51,16 @@ class StatementBillSvc extends BaseSvc
 			$_SESSION['validateCode'] = $rand;
 			include_once __ROOT__."/libs/msgLogDB.php";
 			sendMsg($_SESSION['realname'].'-BillStateChange',$_SESSION['name'],$_SESSION['phone'],'您的短信验证码是:'.$rand,null,'sendSMS');
-			return array('status'=>'successful', 'type' => 'sms', 'errMsg' => '', 'hint' => '本次操作需要提供短信验证码，<br />验证码已发送，请输入收到的验证码。<br />如果手机号更改或丢失而无法输入验证码，请联系管理员。');
+			return array('status'=>'successful', 'type' => 'sms', 'errMsg' => '', 'hint' => '本次操作需要提供短信验证码，<br />验证码已发送到'.$_SESSION['phone'].'，请输入收到的验证码。<br />如果手机号更改或丢失而无法输入验证码，请联系管理员。');
 		}else{
-			return array('status'=>'successful', 'type' => 'securePass', 'errMsg' => '', 'hint' => '本次操作需要提供安全码，<br />请输入您当前账号的安全码进行下一步操作。<br />如果您未初始化安全码，请前往账户管理进行设置，或联系管理员。');
+			return array('status'=>'successful', 'type' => 'securePass', 'errMsg' => ''.$limit[0].' '.$bill['totalFee'], 'hint' => '本次操作需要提供安全码，<br />请输入您当前账号的安全码进行下一步操作。<br />如果您未初始化安全码，请前往账户管理进行设置，或联系管理员。');
 		}
 	}
 	//检查是否通过短信验证码或者安全密码验证
 	private function checkLimit($q,$bill,$statusChange){
 		//目前所有状态转换需要校验,但是参数带过来,方便以后某些状态转换不需要校验,直接返回
 		global $mysql;
-		$limit = $mysql->DBGetAsOneArray("select paramValue*10000 from system where id = 10 ");
+		$limit = $mysql->DBGetAsOneArray("select paramValue*10000 from system where paramName = 'msg_notice_value_limit' ");
 		if($limit[0] <= $bill['totalFee']){
 			//需要短信验证
 			if($q['validateCode'] !=  $_SESSION['validateCode']){
@@ -129,7 +129,7 @@ class StatementBillSvc extends BaseSvc
 		$newStatus = $q['@status'];
 		$newStatusCh = StatementBillSvc::$statusMapping[$newStatus];
 		//获取短信模板,及需要提前几天提醒的天数
-		$text = $mysql->DBGetAsOneArray('select paramValue from system where id = 12');
+		$text = $mysql->DBGetAsOneArray("select paramValue from system where paramName = 'msg_notice_bill_status_change'");
 		$text = $text[0];
 		//您好,{申请人}的财务订单{单号}已被{某人}变更文{现状态}!
 		$text = str_replace('{申请人}',$bill['payee'],$text);
@@ -142,7 +142,7 @@ class StatementBillSvc extends BaseSvc
 		//组装需要通知到的用户
 		$sql = "select name,realname,phone,mail,level from user where isDeleted = 'false' and (
 			level like '001-%' or level like '008-%' or level = '003-001' or name in (select captain from project where projectId = '?')
-			or name = '?' ) and mail like '%@%' and phone like '1%' ";
+			or name = '?' )";
 		$users = $mysql->DBGetAsMap($sql,$bill['projectId'],$_SESSION['name']);
 		//所有人都发邮件
 		//003-001:工程部总经理
@@ -151,15 +151,17 @@ class StatementBillSvc extends BaseSvc
 		//其他:当值项目经理
 		//发邮件
 		include_once __ROOT__."/libs/msgLogDB.php";
-		include_once __ROOT__."/libs/mailDB.php";
+		include_once __ROOT__."/libs/common_mail.php";
+		$mailAddresses = array();
+		$aliasNames = array();
 		foreach ($users as $user) {
-			try{
-				if(contains($user['mail'],'@')){ // 有效邮箱
-					$mail = $user['mail'];
-					sendEMail($mail, null, 'sys-notice@dqjczs.com', "财务单$newStatusCh", $text, null);
-					insert('sys-notice@dqjczs.com','sys-notice@dqjczs.com',$mail,$mail,"财务单$newStatusCh",$text);
-				}
-			}catch(Exception $e){}
+			if(contains($user['mail'],'@')){ // 有效邮箱
+				array_push($mailAddresses, $user['mail']);
+				array_push($aliasNames, $user['realname']);
+			}
+		}
+		if($mailAddresses!= ""){
+			sendEmail($mailAddresses, $aliasNames, 'sys-notice@dqjczs.com', "财务单$newStatusCh", $text, null);
 		}
 		//递交审核后发短信给工程部总经理，邮件给管理员
 		//审核通过后发邮件给财务部，发短信给当值项目经理和管理员
