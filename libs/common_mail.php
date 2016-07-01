@@ -30,10 +30,8 @@ function sendEmail ($recipient,$aliasNames='',$from = '佳诚装饰' ,$subject, 
 	$mail->FromName = (trim($from) == '佳诚装饰') ? '' : $from;
 	$mail->Timeout = 30;
 
-	if($recipient == null){
-		echo "recipient should not be null !<br />\n";
-		die();
-	}
+	if($recipient == null || $recipient == "")
+		throw new Exception("recipient should not be null !");
 
 	if(is_string($recipient) && contains($recipient,','))
 		$recipient = explode(',',$recipient);
