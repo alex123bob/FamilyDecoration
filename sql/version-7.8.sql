@@ -30,6 +30,6 @@ update `system` set `paramValue`='version-7.8' where `id`='4';
 
 insert into `system` ( `paramDesc`, `isDeleted`, `updateTime`, `paramName`, `createTime`, `paramValue`) values ( '主材订购提醒短信:您好,{项目}还有{天}就要开始了,请提前订购{主材}!', 'false', '2016-06-26 14:08:09', 'msg_notice', '2016-06-26 14:08:12', '您好,{项目}还有{几}天就要开始了,请提前订购{主材}!');
 insert into `system` ( `paramDesc`, `isDeleted`, `updateTime`, `paramName`, `createTime`, `paramValue`) values ( '主材订购提醒提前发送时间', 'false', '0000-00-00 00:00:00', 'msg_notice_time', '2016-06-26 14:09:54', '1,3,5');
-insert into `system` ( `paramDesc`, `isDeleted`, `updateTime`, `paramName`, `createTime`, `paramValue`) values ( '财务单据申请短信验证码金额阈值(万元)', 'false', '0000-00-00 00:00:00', 'msg_notice_time', '2016-06-26 14:09:54', '5');
+insert into `system` ( `paramDesc`, `isDeleted`, `updateTime`, `paramName`, `createTime`, `paramValue`) values ( '财务单据申请短信验证码金额阈值(万元)', 'false', '0000-00-00 00:00:00', 'msg_notice_value_limit', '2016-06-26 14:09:54', '5');
 
 alter table `user` add `securePass` varchar(250);
