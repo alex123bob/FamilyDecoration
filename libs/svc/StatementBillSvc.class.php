@@ -143,7 +143,7 @@ class StatementBillSvc extends BaseSvc
 		//组装需要通知到的用户
 		$sql = "select name,realname,phone,mail,level from user where isDeleted = 'false' and (
 			level like '001-%' or level like '008-%' or level = '003-001' or name in (select captain from project where projectId = '?')
-			or name in = '?' ) and mail like '%@%' and phone like '1%' ";
+			or name = '?' ) and mail like '%@%' and phone like '1%' ";
 		$users = $mysql->DBGetAsMap($sql,$bill['projectId'],$_SESSION['name']);
 		//所有人都发邮件
 		//003-001:工程部总经理
