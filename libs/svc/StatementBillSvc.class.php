@@ -103,100 +103,77 @@ class StatementBillSvc extends BaseSvc
 		$auditRecord['@newStatus'] = $q['@status'];
 		$auditRecord['@comments'] = isset($q['@comments']) ? $q['@comments'] : "没有评论";
 		$auditSvc->add($auditRecord);
-		$res = parent::update($q);
 		if($q['@status'] == "chk" || $q['@status'] == 'rbk'){
-			parent::update(array('id'=>$q['id'],'@checker'=>$_SESSION['name']));
+			$q['@checker'] = $_SESSION['name'];
 		}
 		if($q['@status'] == "paid") {
-			parent::update(array('id'=>$q['id'],'@checker'=>$_SESSION['name'],'@isPaid'=>'true'));
+			$q['@checker'] = $_SESSION['name'];
+			$q['@isPaid'] = true;
 		}
+		$res = parent::update($q);
 		//通知
 		try{
 			$this->noticeAfterStatusChange($q,$bill);
 		}catch(Exception $e){
 			//通知失败不能影响原有业务逻辑
 		}
-		
 		return $res;
 	}
 
 	public function noticeAfterStatusChange($q,$bill){
-		//递交审核和审核通过发邮件,短信.
+		//递交审核和审核通过,付款发邮件,短信.
 		if($q['@status'] != 'rdyck' && $q['@status'] != 'chk' && $q['@status'] != 'paid'){
+			echo 'no need send';
 			return ;
 		}
+		global $mysql;
 		$newStatus = $q['@status'];
-		$newStatusCh = StatementBillSvc::$billType[$newStatus];
+		$newStatusCh = StatementBillSvc::$statusMapping[$newStatus];
 		//获取短信模板,及需要提前几天提醒的天数
-		$text = $mysql->DBGetAsOneArray('select paramValue from system where id = 11');
+		$text = $mysql->DBGetAsOneArray('select paramValue from system where id = 12');
+		$text = $text[0];
 		//您好,{申请人}的财务订单{单号}已被{某人}变更文{现状态}!
 		$text = str_replace('{申请人}',$bill['payee'],$text);
 		$text = str_replace('{单号}',$bill['id'],$text);
-		$text = str_replace('{某人}',$_SESSION['realname'],$text);
+		$text = str_replace('{操作人}',$_SESSION['realname'],$text);
+		$text = str_replace('{项目}',$bill['projectName'],$text);
 		$text = str_replace('{现状态}',$newStatusCh,$text);
-		echo "$text<br />\n";
+		$text = str_replace('{申领金额}',$bill['claimAmount'],$text);
+		$text = str_replace('{总金额}',$bill['totalFee'],$text);
 		//组装需要通知到的用户
-		$emailRecievers = array();
-		$msgRecievers = array();
-		global $mysql;
-		$sql = "select name,realname,phone,mail from user where isDelete = false' and ";
-		$paramArray = array();
-		switch ($newStatus) {
-			case 'rdyck': //递交审核后发短信给工程部总经理，邮件给管理员
-				//003-001  工程部总经理  //001-% 管理员
-				$sql .= "level like '001-%' or level = '003-001' ";
-				break;
-			case 'chk'://审核通过后发邮件给财务部，发短信给当值项目经理和管理员
-				//008-% 财务   //001-% 管理员
-				$sql .= "level like '001-%' or level like '008-%' or level = '003-001' or name in (select caption from project where projectId = '?') ";
-				array_push($paramArray, $bill['projectId']);
-				break;
-			case 'paid'://付款后发邮件给当值项目经理和管理员
-				//001-% 管理员  // 项目经理
-				$sql .= "level like '001-%' or level = '003-001' or name in (select caption from project where projectId = '?') ";
-				array_push($paramArray, $bill['projectId']);
-				break;
-			default:
-				return;
-		}
-		$users = $mysql->DBGetAsMap($sql,$paramArray);
-		switch ($newStatus) {
-			case 'rdyck': //递交审核后发短信给工程部总经理，邮件给管理员
-				//003-001  工程部总经理  //001-% 管理员
-				$sql .= "level like '001-%' or level = '003-001' ";
-				break;
-			case 'chk'://审核通过后发邮件给财务部，发短信给当值项目经理和管理员
-				//008-% 财务   //001-% 管理员
-				$sql .= "level like '001-%' or level like '008-%' or level = '003-001' or name in (select caption from project where projectId = '?') ";
-				array_push($paramArray, $bill['projectId']);
-				break;
-			case 'paid'://付款后发邮件给当值项目经理和管理员
-				//001-% 管理员  // 项目经理
-				$sql .= "level like '001-%' or level = '003-001' or name in (select caption from project where projectId = '?') ";
-				array_push($paramArray, $bill['projectId']);
-				break;
-			default:
-				return;
-		}
+		$sql = "select name,realname,phone,mail,level from user where isDeleted = 'false' and (
+			level like '001-%' or level like '008-%' or level = '003-001' or name in (select captain from project where projectId = '?'))
+			and mail like '%@%' and phone like '1%' ";
+		$users = $mysql->DBGetAsMap($sql,$bill['projectId']);
+		//所有人都发邮件
+		//003-001:工程部总经理
+		//001-% :管理员
+		//008-% :财务
+		//其他:当值项目经理
 		//发邮件
 		include_once __ROOT__."/libs/msgLogDB.php";
 		include_once __ROOT__."/libs/mailDB.php";
-		foreach ($emailRecievers => $user) {
+		foreach ($users as $user) {
 			try{
 				if(contains($user['mail'],'@')){ // 有效邮箱
 					$mail = $user['mail'];
-					echo "send email $text to $mail<br /> \n";
-					sendEMail($mail, null, 'sys-notice@dqjczs.com', "[佳诚装饰]财务单$newStatusCh", $text, null);
-					insert('sys-notice@dqjczs.com','sys-notice@dqjczs.com',$mail,$mail,"[佳诚装饰]财务单$newStatusCh",$text);
+					sendEMail($mail, null, 'sys-notice@dqjczs.com', "财务单$newStatusCh", $text, null);
+					insert('sys-notice@dqjczs.com','sys-notice@dqjczs.com',$mail,$mail,"财务单$newStatusCh",$text);
 				}
-			}catch(Exception $e){
-				
-			}
-			
+			}catch(Exception $e){}
 		}
+		//递交审核后发短信给工程部总经理，邮件给管理员
+		//审核通过后发邮件给财务部，发短信给当值项目经理和管理员
+		//付款后发邮件给当值项目经理和管理员
 		//发短信通知
-		foreach ($msgRecievers  => $user) {
+		foreach ($users as $user) {
 			try{
+				if(startWith($user['level'],'008-')) //财务不用发短信
+					continue;
+				if($q['@status']=='rdyck' && !startWith($user['level'],'003-001')) //审核通过只给工程部总经理发短信
+					continue;
+				if($q['@status']=='chk' && startWith($user['level'],'003-001'))
+					continue;
 				if(strlen($user['phone']) == 11 ){ // 11位有效手机号
 					$phoneNumber = $user['phone'];
 					echo "send $text to $phoneNumber<br /> \n";

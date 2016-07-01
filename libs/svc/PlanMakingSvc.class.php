@@ -160,13 +160,13 @@ Class PlanMakingSvc extends BaseSvc{
 		if(isset($users[$salesman]) && contains($users[$salesman]['mail'],'@')){ // 有效邮箱
 			$mail = $users[$salesman]['mail'];
 			echo "send email $text to $mail<br /> \n";
-			sendEMail($mail, null, 'sys-notice@dqjczs.com', '[佳诚装饰]主材预定提醒', $text, null);
+			sendEMail($mail, null, 'sys-notice@dqjczs.com', '主材预定提醒', $text, null);
 			insert('sys-notice@dqjczs.com','sys-notice@dqjczs.com',$mail,$mail,'[佳诚装饰]主材预定提醒',$text);
 		}
 		if(isset($users[$designer]) && contains($users[$designer]['mail'],'@')){ // 有效邮箱
 			$mail = $users[$designer]['mail'];
 			echo "send email $text to $mail<br /> \n";
-			sendEMail($mail, null, 'sys-notice@dqjczs.com', '[佳诚装饰]主材预定提醒', $text, null);
+			sendEMail($mail, null, 'sys-notice@dqjczs.com', '主材预定提醒', $text, null);
 			insert('sys-notice@dqjczs.com','sys-notice@dqjczs.com',$mail,$mail,'[佳诚装饰]主材预定提醒',$text);
 		}
 	}
