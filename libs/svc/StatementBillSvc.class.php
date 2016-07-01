@@ -175,7 +175,6 @@ class StatementBillSvc extends BaseSvc
 					continue;
 				if(strlen($user['phone']) == 11 ){ // 11位有效手机号
 					$phoneNumber = $user['phone'];
-					echo "send $text to $phoneNumber<br /> \n";
 					sendMsg("财务单$newStatusCh",$user['name'],$phoneNumber,$text,null,'sendSMS');
 				}
 			}catch(Exception $e){
