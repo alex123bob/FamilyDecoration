@@ -103,7 +103,7 @@ Ext.define('FamilyDecoration.view.regionmgm.EditRegion', {
 								}, {
 										text: '取消',
 										handler: function () {
-
+											win.close();
 										}
 									}]
 							});
