@@ -19,7 +19,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 		var me = this;
 		// get all resources which used to be retrieved a lot of times. quite redundant before.
 		// now we just encapsulate it.
-		me.getRes = function (){
+		me.getRes = function () {
 			var projectGrid = Ext.getCmp('treepanel-projectNameForBillCheck'),
 				professionTypeGrid = Ext.getCmp('gridpanel-professionType'),
 				billList = Ext.getCmp('gridpanel-billList'),
@@ -36,7 +36,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 				billCt: billDetailPanel.ownerCt
 			}
 		};
-		
+
 		me.items = [
 			{
 				xtype: 'container',
@@ -132,7 +132,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 				flex: 2,
 				height: '100%',
 				title: '单据细目',
-				getButtons: function (){
+				getButtons: function () {
 					var panel = this;
 					return {
 						addBill: panel.query('[name="addBill"]')[0],
@@ -144,7 +144,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						deleteBill: Ext.getCmp('gridpanel-billList').getHeader().getComponent('deleteBill')
 					};
 				},
-				initBtn: function (rec){
+				initBtn: function (rec) {
 					var resourceObj = me.getRes(),
 						btnObj = this.getButtons();
 					for (var name in btnObj) {
@@ -158,9 +158,9 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 									btn.disable();
 								}
 								else if (rec && rec.get('status') == 'chk') {
-									if (name == 'deleteBill' 
-										&& (User.isAdmin() || User.isProjectManager()) ) {
-											btn.enable();
+									if (name == 'deleteBill'
+										&& (User.isAdmin() || User.isProjectManager())) {
+										btn.enable();
 									}
 									else {
 										btn.disable();
@@ -176,7 +176,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						}
 					}
 				},
-				addBillFunc: function (billType){
+				addBillFunc: function (billType) {
 					var resourceObj = me.getRes();
 					if (resourceObj.project && resourceObj.professionType) {
 						ajaxAdd('StatementBill', {
@@ -184,20 +184,20 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 							professionType: resourceObj.professionType.get('value'),
 							projectName: resourceObj.project.get('projectName'),
 							billType: billType
-						}, function (obj){
+						}, function (obj) {
 							var win = Ext.create('FamilyDecoration.view.manuallycheckbill.AddBill', {
 								project: resourceObj.project,
 								professionType: resourceObj.professionType,
-								
+
 								bill: Ext.create('FamilyDecoration.model.StatementBill', obj.data),
-								callbackAfterClose: function (){
+								callbackAfterClose: function () {
 									var resourceObj = me.getRes(),
 										professionTypeId = resourceObj.professionType.getId(),
 										professionTypeSelModel = resourceObj.professionTypeGrid.getSelectionModel(),
 										professionTypeSt = resourceObj.professionTypeSt;
 									professionTypeSelModel.deselectAll();
 									professionTypeSt.reload({
-										callback: function (recs, ope, success){
+										callback: function (recs, ope, success) {
 											if (success) {
 												professionTypeSelModel.select(professionTypeSt.getById(professionTypeId));
 											}
@@ -228,7 +228,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						icon: 'resources/img/prepay.png',
 						name: 'addPrePayBill',
 						disabled: true,
-						handler: function (){
+						handler: function () {
 							var resourceObj = me.getRes();
 							resourceObj.billCt.addBillFunc('ppd');
 						}
@@ -238,7 +238,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						name: 'editBill',
 						disabled: true,
 						icon: 'resources/img/editbill.png',
-						handler: function (){
+						handler: function () {
 							var resourceObj = me.getRes();
 							if (resourceObj.project && resourceObj.professionType) {
 								var win = Ext.create('FamilyDecoration.view.manuallycheckbill.AddBill', {
@@ -246,14 +246,14 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 									professionType: resourceObj.professionType,
 									isEdit: true,
 									bill: resourceObj.bill,
-									callbackAfterClose: function (){
+									callbackAfterClose: function () {
 										var resourceObj = me.getRes(),
 											professionTypeId = resourceObj.professionType.getId(),
 											professionTypeSelModel = resourceObj.professionTypeGrid.getSelectionModel(),
 											professionTypeSt = resourceObj.professionTypeSt;
 										professionTypeSelModel.deselectAll();
 										professionTypeSt.reload({
-											callback: function (recs, ope, success){
+											callback: function (recs, ope, success) {
 												if (success) {
 													professionTypeSelModel.select(professionTypeSt.getById(professionTypeId));
 												}
@@ -273,40 +273,59 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						name: 'submitBill',
 						disabled: true,
 						icon: 'resources/img/uploadbill.png',
-						handler: function (){
+						handler: function () {
 							var resourceObj = me.getRes(),
 								st = resourceObj.billList.getStore(),
 								index = st.indexOf(resourceObj.bill),
 								selModel = resourceObj.billList.getSelectionModel();
-							Ext.Msg.warning('递交后不可再进行修改单据，确定要递交单据吗？', function (btnId){
+							Ext.Msg.warning('递交后不可再进行修改单据，确定要递交单据吗？', function (btnId) {
 								if ('yes' == btnId) {
 									ajaxGet('StatementBill', 'getLimit', {
 										id: resourceObj.bill.getId()
-									}, function (obj){
-										Ext.defer(function (){
-											Ext.Msg.read(obj.hint, function (val){
-												if (obj.type == 'sms') {
-												}
-												else if (obj.type == 'securePass') {
-													val = md5(_PWDPREFIX +  val);
-												}
-												ajaxUpdate('StatementBill.changeStatus', {
-													id: resourceObj.bill.getId(),
-													status: 'rdyck',
-													validateCode: val
-												}, ['id', 'validateCode'], function (obj){
-													Ext.Msg.success('递交成功！');
-													selModel.deselectAll();
-													st.reload({
-														callback: function (recs, ope, success){
-															if (success) {
-																selModel.select(index);
-															}
+									}, function (obj) {
+										if (obj.type == 'checked') {
+											showMsg(obj.hint);
+											ajaxUpdate('StatementBill.changeStatus', {
+												id: resourceObj.bill.getId(),
+												status: 'rdyck'
+											}, ['id'], function (obj) {
+												Ext.Msg.success('递交成功！');
+												selModel.deselectAll();
+												st.reload({
+													callback: function (recs, ope, success) {
+														if (success) {
+															selModel.select(index);
 														}
-													});
-												}, true);
+													}
+												})
 											});
-										}, 500);
+										}
+										else {
+											Ext.defer(function () {
+												Ext.Msg.read(obj.hint, function (val) {
+													if (obj.type == 'sms') {
+													}
+													else if (obj.type == 'securePass') {
+														val = md5(_PWDPREFIX + val);
+													}
+													ajaxUpdate('StatementBill.changeStatus', {
+														id: resourceObj.bill.getId(),
+														status: 'rdyck',
+														validateCode: val
+													}, ['id', 'validateCode'], function (obj) {
+														Ext.Msg.success('递交成功！');
+														selModel.deselectAll();
+														st.reload({
+															callback: function (recs, ope, success) {
+																if (success) {
+																	selModel.select(index);
+																}
+															}
+														});
+													}, true);
+												});
+											}, 500);
+										}
 									});
 								}
 							});
@@ -317,11 +336,11 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						name: 'previewBill',
 						disabled: true,
 						icon: 'resources/img/previewbill.png',
-						handler: function (){
+						handler: function () {
 							var resourceObj = me.getRes(),
 								bill = resourceObj.bill;
 							if (bill) {
-								var win = window.open('./fpdf/statement_bill.php?id=' + bill.getId(),'打印','height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+								var win = window.open('./fpdf/statement_bill.php?id=' + bill.getId(), '打印', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
 							}
 							else {
 								showMsg('没有账单！');
@@ -333,11 +352,11 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						name: 'printBill',
 						disabled: true,
 						icon: 'resources/img/printbill.png',
-						handler: function (){
+						handler: function () {
 							var resourceObj = me.getRes(),
 								bill = resourceObj.bill;
 							if (bill) {
-								var win = window.open('./fpdf/statement_bill.php?id=' + bill.getId(),'打印','height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+								var win = window.open('./fpdf/statement_bill.php?id=' + bill.getId(), '打印', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
 								win.print();
 							}
 							else {
@@ -377,15 +396,15 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 										professionTypeSt = resourceObj.professionTypeSt,
 										professionTypeSelModel = resourceObj.professionTypeGrid.getSelectionModel();
 									if (resourceObj.bill) {
-										Ext.Msg.warning('确定要删除当前账单吗?', function (btnId){
+										Ext.Msg.warning('确定要删除当前账单吗?', function (btnId) {
 											if ('yes' == btnId) {
 												ajaxDel('StatementBill', {
 													id: resourceObj.bill.getId()
-												}, function (obj){
+												}, function (obj) {
 													showMsg('删除成功！');
 													professionTypeSelModel.deselectAll();
 													professionTypeSt.reload({
-														callback: function (recs, ope, success){
+														callback: function (recs, ope, success) {
 															if (success) {
 																professionTypeSelModel.select(professionTypeSt.getById(professionTypeId));
 															}
@@ -443,7 +462,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 										{
 											icon: 'resources/img/bill-history.png',
 											tooltip: '查看账单历史',
-											handler: function (grid, rowIndex,colIndex){
+											handler: function (grid, rowIndex, colIndex) {
 												var rec = grid.getStore().getAt(rowIndex);
 												var win = Ext.create('FamilyDecoration.view.manuallycheckbill.BillRecord', {
 													bill: rec
