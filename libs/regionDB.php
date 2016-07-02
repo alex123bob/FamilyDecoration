@@ -2,6 +2,7 @@
 	function addRegion($data){
 		$name = $data['name'];
 		$remark = $data['nameRemark'];
+		$openingTime = $data["openingTime"];
 		$regions = getRegionByName($name, isset($data["parentID"]));
 		if(count($regions) != 0){
 			throw new Exception("region with name:$name already exist!");
@@ -9,7 +10,8 @@
 		$obj = array(
 			"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
 			"name"=>$name,
-			"nameRemark"=>$remark
+			"nameRemark"=>$remark,
+			"openingTime"=>$openingTime
 		);
 		if(isset($data['parentID']))
 			$obj['parentID'] = $data['parentID'];
@@ -86,6 +88,8 @@
 			$obj['nameRemark'] = $data['nameRemark'];
 		if(isset($data['name']))
 			$obj['name'] = $data['name'];
+		if(isset($data['openingTime']))
+			$obj['openingTime'] = $data['openingTime'];
 		$mysql->DBUpdate('region',$obj,"`id` = '?' ",array($data["id"]));
 		return array('status'=>'successful', 'errMsg' => 'edit business ok');
 	}

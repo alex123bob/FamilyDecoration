@@ -285,13 +285,15 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 					}
 		        },
 				{
-					text: '创建时间',
+					text: '开盘时间',
 					flex: 1.1,
-					dataIndex: 'createTime',
+					dataIndex: 'openingTime',
 					renderer: function (val, meta, rec){
 						if (val) {
-							val = Ext.Date.parse(val, 'Y-m-d H:i:s');
 							return Ext.Date.format(val, 'Y-m-d');
+						}
+						else {
+							return '';
 						}
 					}
 				}
