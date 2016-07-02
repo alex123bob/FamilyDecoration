@@ -12,6 +12,8 @@ Ext.define('FamilyDecoration.model.PotentialBusiness', {
 		{name: 'status_third', type: 'string'},
 		{name: 'salesman', type: 'string'},
 		{name: 'salesmanName', type: 'string'},
+		{name: 'telemarketingStaff', type: 'string'},
+		{name: 'telemarketingStaffName', type: 'string'},
 		{name: 'createTime', type: 'string'},
 		{name: 'isDeleted', type: 'string'},
 		{name: 'lastUpdateTime', type: 'string'}
