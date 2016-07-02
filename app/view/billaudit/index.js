@@ -147,25 +147,39 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                                         ajaxGet('StatementBill', 'getLimit', {
                                             id: resourceObj.bill.getId()
                                         }, function (obj) {
-                                            Ext.defer(function () {
-                                                Ext.Msg.read(obj.hint, function (val) {
-                                                    if (obj.type == 'sms') {
-                                                    }
-                                                    else if (obj.type == 'securePass') {
-                                                        val = md5(_PWDPREFIX + val);
-                                                    }
-                                                    ajaxUpdate('StatementBill.changeStatus', {
-                                                        id: resourceObj.bill.getId(),
-                                                        status: 'rbk',
-                                                        comments: txt,
-                                                        validateCode: val
-                                                    }, ['id', 'validateCode'], function (obj) {
-                                                        Ext.Msg.success('账单已退回！');
-                                                        resourceObj.billList.getSelectionModel().deselectAll();
-                                                        resourceObj.billList.getStore().reload();
-                                                    }, true);
-                                                });
-                                            }, 500);
+                                            if (obj.type == 'checked') {
+                                                showMsg(obj.hint);
+                                                ajaxUpdate('StatementBill.changeStatus', {
+                                                    id: resourceObj.bill.getId(),
+                                                    status: 'rbk',
+                                                    comments: txt
+                                                }, ['id'], function (obj) {
+                                                    Ext.Msg.success('账单已退回!');
+                                                    resourceObj.billList.getSelectionModel().deselectAll();
+                                                    resourceObj.billList.getStore().reload();
+                                                }, true);
+                                            }
+                                            else {
+                                                Ext.defer(function () {
+                                                    Ext.Msg.read(obj.hint, function (val) {
+                                                        if (obj.type == 'sms') {
+                                                        }
+                                                        else if (obj.type == 'securePass') {
+                                                            val = md5(_PWDPREFIX + val);
+                                                        }
+                                                        ajaxUpdate('StatementBill.changeStatus', {
+                                                            id: resourceObj.bill.getId(),
+                                                            status: 'rbk',
+                                                            comments: txt,
+                                                            validateCode: val
+                                                        }, ['id', 'validateCode'], function (obj) {
+                                                            Ext.Msg.success('账单已退回！');
+                                                            resourceObj.billList.getSelectionModel().deselectAll();
+                                                            resourceObj.billList.getStore().reload();
+                                                        }, true);
+                                                    });
+                                                }, 500);
+                                            }
                                         });
                                     }
                                 }, window, false);
@@ -188,26 +202,41 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                                         ajaxGet('StatementBill', 'getLimit', {
                                             id: resourceObj.bill.getId()
                                         }, function (obj) {
-                                            Ext.defer(function () {
-                                                Ext.Msg.read(obj.hint, function (val) {
-                                                    if (obj.type == 'sms') {
-                                                    }
-                                                    else if (obj.type == 'securePass') {
-                                                        val = md5(_PWDPREFIX + val);
-                                                    }
-                                                    ajaxUpdate('StatementBill.changeStatus', {
-                                                        id: resourceObj.bill.getId(),
-                                                        status: 'chk',
-                                                        comments: resourceObj.bill.get('billName') + '置为通过',
-                                                        validateCode: val
-                                                    }, ['id', 'validateCode'], function (obj) {
-                                                        Ext.Msg.success('账单已置为通过！');
-                                                        resourceObj.billList.getSelectionModel().deselectAll();
-                                                        resourceObj.billList.getStore().reload();
-                                                        resourceObj.passedBillList.getStore().reload();
-                                                    }, true);
-                                                });
-                                            }, 500);
+                                            if (obj.type == 'checked') {
+                                                showMsg(obj.hint);
+                                                ajaxUpdate('StatementBill.changeStatus', {
+                                                    id: resourceObj.bill.getId(),
+                                                    status: 'chk',
+                                                    comments: resourceObj.bill.get('billName') + '置为通过'
+                                                }, ['id'], function (obj) {
+                                                    Ext.Msg.success('账单已置为通过！');
+                                                    resourceObj.billList.getSelectionModel().deselectAll();
+                                                    resourceObj.billList.getStore().reload();
+                                                    resourceObj.passedBillList.getStore().reload();
+                                                }, true);
+                                            }
+                                            else {
+                                                Ext.defer(function () {
+                                                    Ext.Msg.read(obj.hint, function (val) {
+                                                        if (obj.type == 'sms') {
+                                                        }
+                                                        else if (obj.type == 'securePass') {
+                                                            val = md5(_PWDPREFIX + val);
+                                                        }
+                                                        ajaxUpdate('StatementBill.changeStatus', {
+                                                            id: resourceObj.bill.getId(),
+                                                            status: 'chk',
+                                                            comments: resourceObj.bill.get('billName') + '置为通过',
+                                                            validateCode: val
+                                                        }, ['id', 'validateCode'], function (obj) {
+                                                            Ext.Msg.success('账单已置为通过！');
+                                                            resourceObj.billList.getSelectionModel().deselectAll();
+                                                            resourceObj.billList.getStore().reload();
+                                                            resourceObj.passedBillList.getStore().reload();
+                                                        }, true);
+                                                    });
+                                                }, 500);
+                                            }
                                         });
                                     }
                                 });
@@ -230,27 +259,43 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                                         ajaxGet('StatementBill', 'getLimit', {
                                             id: resourceObj.passedBill.getId()
                                         }, function (obj) {
-                                            Ext.defer(function () {
-                                                Ext.Msg.read(obj.hint, function (val) {
-                                                    if (obj.type == 'sms') {
-                                                    }
-                                                    else if (obj.type == 'securePass') {
-                                                        val = md5(_PWDPREFIX + val);
-                                                    }
-                                                    ajaxUpdate('StatementBill.changeStatus', {
-                                                        status: 'paid',
-                                                        id: resourceObj.passedBill.getId(),
-                                                        comments: resourceObj.passedBill.get('billName') + '已付款',
-                                                        validateCode: val
-                                                    }, ['id', 'validateCode'], function (obj) {
-                                                        Ext.Msg.success('已付款！');
-                                                        resourceObj.billList.getSelectionModel().deselectAll();
-                                                        resourceObj.billList.getStore().reload();
-                                                        resourceObj.passedBillList.getStore().reload();
-                                                        resourceObj.passedBillList.getSelectionModel().deselectAll();
-                                                    }, true);
-                                                });
-                                            }, 500);
+                                            if (obj.type == 'checked') {
+                                                showMsg(obj.hint);
+                                                ajaxUpdate('StatementBill.changeStatus', {
+                                                    status: 'paid',
+                                                    id: resourceObj.passedBill.getId(),
+                                                    comments: resourceObj.passedBill.get('billName') + '已付款',
+                                                }, ['id'], function (obj) {
+                                                    Ext.Msg.success('已付款！');
+                                                    resourceObj.billList.getSelectionModel().deselectAll();
+                                                    resourceObj.billList.getStore().reload();
+                                                    resourceObj.passedBillList.getStore().reload();
+                                                    resourceObj.passedBillList.getSelectionModel().deselectAll();
+                                                }, true);
+                                            }
+                                            else {
+                                                Ext.defer(function () {
+                                                    Ext.Msg.read(obj.hint, function (val) {
+                                                        if (obj.type == 'sms') {
+                                                        }
+                                                        else if (obj.type == 'securePass') {
+                                                            val = md5(_PWDPREFIX + val);
+                                                        }
+                                                        ajaxUpdate('StatementBill.changeStatus', {
+                                                            status: 'paid',
+                                                            id: resourceObj.passedBill.getId(),
+                                                            comments: resourceObj.passedBill.get('billName') + '已付款',
+                                                            validateCode: val
+                                                        }, ['id', 'validateCode'], function (obj) {
+                                                            Ext.Msg.success('已付款！');
+                                                            resourceObj.billList.getSelectionModel().deselectAll();
+                                                            resourceObj.billList.getStore().reload();
+                                                            resourceObj.passedBillList.getStore().reload();
+                                                            resourceObj.passedBillList.getSelectionModel().deselectAll();
+                                                        }, true);
+                                                    });
+                                                }, 500);
+                                            }
                                         });
                                     }
                                 }

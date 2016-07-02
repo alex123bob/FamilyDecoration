@@ -297,8 +297,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 															selModel.select(index);
 														}
 													}
-												})
-											});
+												});
+											}, true);
 										}
 										else {
 											Ext.defer(function () {
