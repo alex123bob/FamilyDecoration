@@ -53,7 +53,7 @@
 	}
 	
 	function editPotentialBusiness($data){
-		$fields = array('address','regionID','proprietor','phone','status','isDecorated','status_second','status_third','salesman','salesmanName');
+		$fields = array('address','regionID','proprietor','phone','status','isDecorated','status_second','status_third','salesman','salesmanName','telemarketingStaff','telemarketingStaffName');
 		$obj = array('lastUpdateTime'=>'now()');
 		foreach($fields as $field){
 			if(isset($data[$field]))
