@@ -41,6 +41,10 @@ class StatementBillSvc extends BaseSvc
 		$bill = $bills[0];
 		if($bill['status'] == 'paid')
 			throw new Exception("已付款,无法更改状态.");
+		if(isset($_SESSION['secureChecked']) && strtotime(date('Y-m-d H:i:s')) - $_SESSION['secureChecked'] < 60*60*2 ){
+ 			//两小时内不用重复校验.
+ 			return array('status'=>'successful','type' =>'checked','errMsg' => '','hint' => '您已校验过手机验证码,2小时内无需重复校验.');
+		}
 		$limit = $mysql->DBGetAsOneArray("select paramValue*10000 from system where paramName = 'msg_notice_value_limit' ");
 		if($limit[0] <= $bill['totalFee']){
 			if(!isset($_SESSION['phone']) || strlen($_SESSION['phone']) != 11){
@@ -59,6 +63,10 @@ class StatementBillSvc extends BaseSvc
 	//检查是否通过短信验证码或者安全密码验证
 	private function checkLimit($q,$bill,$statusChange){
 		//目前所有状态转换需要校验,但是参数带过来,方便以后某些状态转换不需要校验,直接返回
+		if(isset($_SESSION['secureChecked']) && strtotime(date('Y-m-d H:i:s')) - $_SESSION['secureChecked'] < 60*60*2 ){
+ 			//两小时内不用重复校验.
+ 			return;
+		}
 		global $mysql;
 		$limit = $mysql->DBGetAsOneArray("select paramValue*10000 from system where paramName = 'msg_notice_value_limit' ");
 		if($limit[0] <= $bill['totalFee']){
@@ -74,6 +82,7 @@ class StatementBillSvc extends BaseSvc
 				throw new Exception('安全密码验证失败!');
 			}
 		}
+		$_SESSION['secureChecked'] = strtotime(date('Y-m-d H:i:s'));  // 当前时间秒数
 	}
 
 
@@ -167,6 +176,7 @@ class StatementBillSvc extends BaseSvc
 		//审核通过后发邮件给财务部，发短信给当值项目经理和管理员
 		//付款后发邮件给当值项目经理和管理员
 		//发短信通知
+		$sentPhones = array();
 		foreach ($users as $user) {
 			try{
 				if(startWith($user['level'],'008-')) //财务不用发短信
@@ -175,8 +185,9 @@ class StatementBillSvc extends BaseSvc
 					continue;
 				if($q['@status']=='chk' && startWith($user['level'],'003-001'))
 					continue;
-				if(strlen($user['phone']) == 11 ){ // 11位有效手机号
+				if(strlen($user['phone']) == 11 && !in_array($user['phone'], $sentPhones)){ // 11位有效手机号
 					$phoneNumber = $user['phone'];
+					array_push($sentPhones, $user['phone']);
 					sendMsg("财务单$newStatusCh",$user['name'],$phoneNumber,$text,null,'sendSMS');
 				}
 			}catch(Exception $e){
