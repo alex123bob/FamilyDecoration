@@ -14,6 +14,8 @@
 			$obj['phone'] = $data['phone'];
 		if(isset($data['status']))
 			$obj['status'] = $data['status'];
+		if(isset($data['isDecorated']))
+			$obj['isDecorated'] = $data['isDecorated'];
 		if(isset($data['status_second']))
 			$obj['status_second'] = $data['status_second'];
 		if(isset($data['status_third']))
@@ -51,7 +53,7 @@
 	}
 	
 	function editPotentialBusiness($data){
-		$fields = array('address','regionID','proprietor','phone','status','status_second','status_third','salesman','salesmanName');
+		$fields = array('address','regionID','proprietor','phone','status','isDecorated','status_second','status_third','salesman','salesmanName');
 		$obj = array('lastUpdateTime'=>'now()');
 		foreach($fields as $field){
 			if(isset($data[$field]))

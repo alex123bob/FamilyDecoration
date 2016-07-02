@@ -528,6 +528,24 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 						flex: 0.8,
 						dataIndex: 'phone'
 			        },
+					{
+						text: '是否已装',
+						flex: 0.8,
+						dataIndex: 'isDecorated',
+						renderer: function (val, meta, rec){
+							if (val) {
+								if (val == 'false') {
+									return '否';
+								}
+								else if (val == 'true') {
+									return '是';
+								}
+							}
+							else {
+								return ''
+							}
+						}
+					},
 			        {
 			        	text: '状态1',
 						flex: 1.3,

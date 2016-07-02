@@ -16,9 +16,9 @@ Ext.define('FamilyDecoration.view.regionmgm.EditPotentialBusiness', {
 	// if true, only show the last textarea, only change status.
 	onlyStatusEdit: false,
 
-	initComponent: function (){
+	initComponent: function () {
 		var me = this;
-		
+
 		me.title = me.potentialBusiness ? (me.onlyStatusEdit ? '编辑状态' : '编辑') : '新建';
 
 		me.items = [{
@@ -26,90 +26,123 @@ Ext.define('FamilyDecoration.view.regionmgm.EditPotentialBusiness', {
 			defaultType: 'textfield',
 			layout: 'anchor',
 			defaults: {
-			    anchor: '100%',
-			    allowBlank: false
+				anchor: '100%',
+				allowBlank: false
 			},
-			items: [{
-				hidden: me.onlyStatusEdit,
-				fieldLabel: '地址',
-				name: 'address',
-				value: me.potentialBusiness ? me.potentialBusiness.get('address') : ''
-			}, {
-				hidden: me.onlyStatusEdit,
-				fieldLabel: '业主姓名',
-				name: 'proprietor',
-				value: me.potentialBusiness ? me.potentialBusiness.get('proprietor') : ''
-			}, {
-				hidden: me.onlyStatusEdit,
-				fieldLabel: '联系方式',
-				name: 'phone',
-				value: me.potentialBusiness ? me.potentialBusiness.get('phone') : ''
-			}, {
-				height: me.onlyStatusEdit ? 100 : 72,
-				xtype: 'textarea',
-				fieldLabel: '状态1',
-				name: 'status',
-				value: me.potentialBusiness ? me.potentialBusiness.get('status') : '',
-				allowBlank: true
-			}, {
-				height: me.onlyStatusEdit ? 100 : 72,
-				xtype: 'textarea',
-				fieldLabel: '状态2',
-				name: 'status_second',
-				value: me.potentialBusiness ? me.potentialBusiness.get('status_second') : '',
-				allowBlank: true
-			}, {
-				height: me.onlyStatusEdit ? 100 : 72,
-				xtype: 'textarea',
-				fieldLabel: '状态3',
-				name: 'status_third',
-				value: me.potentialBusiness ? me.potentialBusiness.get('status_third') : '',
-				allowBlank: true
-			}]
+			items: [
+				{
+					hidden: me.onlyStatusEdit,
+					fieldLabel: '地址',
+					name: 'address',
+					value: me.potentialBusiness ? me.potentialBusiness.get('address') : ''
+				},
+				{
+					hidden: me.onlyStatusEdit,
+					fieldLabel: '业主姓名',
+					name: 'proprietor',
+					value: me.potentialBusiness ? me.potentialBusiness.get('proprietor') : ''
+				},
+				{
+					hidden: me.onlyStatusEdit,
+					fieldLabel: '联系方式',
+					name: 'phone',
+					value: me.potentialBusiness ? me.potentialBusiness.get('phone') : ''
+				},
+				{
+					height: me.onlyStatusEdit ? 100 : 72,
+					xtype: 'textarea',
+					fieldLabel: '状态1',
+					name: 'status',
+					value: me.potentialBusiness ? me.potentialBusiness.get('status') : '',
+					allowBlank: true
+				},
+				{
+					height: me.onlyStatusEdit ? 100 : 72,
+					xtype: 'textarea',
+					fieldLabel: '状态2',
+					name: 'status_second',
+					value: me.potentialBusiness ? me.potentialBusiness.get('status_second') : '',
+					allowBlank: true
+				},
+				{
+					height: me.onlyStatusEdit ? 100 : 72,
+					xtype: 'textarea',
+					fieldLabel: '状态3',
+					name: 'status_third',
+					value: me.potentialBusiness ? me.potentialBusiness.get('status_third') : '',
+					allowBlank: true
+				},
+				{
+					xtype: 'fieldcontainer',
+					fieldLabel: '是否装修',
+					layout: 'hbox',
+					hidden: me.onlyStatusEdit,
+					defaultType: 'radiofield',
+					items: [
+						{
+							boxLabel: '是',
+							name: 'isDecorated',
+							inputValue: true,
+							flex: 1,
+							value: me.potentialBusiness ? (me.potentialBusiness.get('isDecorated') == 'true') : ''
+						},
+						{
+							boxLabel: '否',
+							name: 'isDecorated',
+							inputValue: false,
+							flex: 1,
+							value: me.potentialBusiness ? (me.potentialBusiness.get('isDecorated') == 'false') : ''
+						}
+					]
+				}
+			]
 		}];
 
-		me.buttons = [{
-			text: '确定',
-			handler: function (){
-				var frm = me.down('form');
-				if (frm.isValid()) {
-					var frmVals = frm.getValues();
-					Ext.apply(frmVals, {
-						regionID: me.region.getId(),
-						salesman: User.getRealName(),
-						salesmanName: User.getName()
-					});
-					if (me.potentialBusiness) {
+		me.buttons = [
+			{
+				text: '确定',
+				handler: function () {
+					var frm = me.down('form');
+					if (frm.isValid()) {
+						var frmVals = frm.getValues();
 						Ext.apply(frmVals, {
-							id: me.potentialBusiness.getId()
-						})
-					}
-					Ext.Ajax.request({
-						url: me.potentialBusiness ? './libs/business.php?action=editPotentialBusiness' : './libs/business.php?action=addPotentialBusiness',
-						method: 'POST',
-						params: frmVals,
-						callback: function (opts, success, res){
-							if (success) {
-								var obj = Ext.decode(res.responseText);
-								if (obj.status == 'successful') {
-									me.potentialBusiness ? showMsg('编辑成功！') : showMsg('添加成功！');
-									me.grid.refresh(me.region);
-									me.close();
-								}
-								else {
-									showMsg(obj.errMsg);
+							regionID: me.region.getId(),
+							salesman: User.getRealName(),
+							salesmanName: User.getName()
+						});
+						if (me.potentialBusiness) {
+							Ext.apply(frmVals, {
+								id: me.potentialBusiness.getId()
+							})
+						}
+						Ext.Ajax.request({
+							url: me.potentialBusiness ? './libs/business.php?action=editPotentialBusiness' : './libs/business.php?action=addPotentialBusiness',
+							method: 'POST',
+							params: frmVals,
+							callback: function (opts, success, res) {
+								if (success) {
+									var obj = Ext.decode(res.responseText);
+									if (obj.status == 'successful') {
+										me.potentialBusiness ? showMsg('编辑成功！') : showMsg('添加成功！');
+										me.grid.refresh(me.region);
+										me.close();
+									}
+									else {
+										showMsg(obj.errMsg);
+									}
 								}
 							}
-						}
-					})
+						})
+					}
+				}
+			},
+			{
+				text: '取消',
+				handler: function () {
+					me.close();
 				}
 			}
-		}, {
-			text: '取消',
-			handler: function () {
-				me.close();
-			}
-		}]
+		]
 
 		this.callParent();
 	}
