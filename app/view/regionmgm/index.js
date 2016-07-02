@@ -148,7 +148,7 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 			name: 'gridpanel-regionMgm',
 			title: '小区',
 			height: '100%',
-			flex: 1.2,
+			flex: 2.5,
 			autoScroll: true,
 			style: {
 				borderRightStyle: 'solid',
@@ -264,7 +264,7 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 			columns: [
 		        {
 		        	text: '小区地址',
-					flex: 1,
+					flex: 1.4,
 					dataIndex: 'name',
 					renderer: function (val, meta, rec){
 						var businessList = rec.raw.businessListInfo,
@@ -283,7 +283,18 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 						}
 						return val + str;
 					}
-		        }
+		        },
+				{
+					text: '创建时间',
+					flex: 1.1,
+					dataIndex: 'createTime',
+					renderer: function (val, meta, rec){
+						if (val) {
+							val = Ext.Date.parse(val, 'Y-m-d H:i:s');
+							return Ext.Date.format(val, 'Y-m-d');
+						}
+					}
+				}
 		    ],
 		    listeners: {
 		    	selectionchange: function (view, sels){
