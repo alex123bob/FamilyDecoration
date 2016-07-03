@@ -20,6 +20,7 @@ CREATE TABLE `potential_business_detail` (
   `committer` varchar(25) DEFAULT NULL,
   `isDeleted` varchar(5) DEFAULT NULL,
   `createTime` datetime DEFAULT NULL,
+  `updateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
