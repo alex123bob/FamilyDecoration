@@ -244,8 +244,9 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 					if (area) {
 						st.reload({
 							params: {
-								action: 'getRegionList',
-								parentID: area.getId()
+								action: 'getRegionList2',
+								parentID: area.getId(),
+								myselfOnly : !(User.isAdmin() || User.isBusinessManager() || User.isAdministrationManager())
 							},
 							callback: function (recs, ope, success) {
 								if (success) {
@@ -264,24 +265,12 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 				},
 				columns: [
 					{
-						text: '小区地址',
+						text: '小区(未装/总计)',
 						flex: 1.4,
 						dataIndex: 'name',
 						renderer: function (val, meta, rec) {
-							var businessList = rec.raw.businessListInfo,
-								count = 0, total = 0, str;
-							Ext.each(businessList, function (el, i) {
-								total++;
-								if (el.salesmanName == User.getName()) {
-									count++;
-								}
-							});
-							if (User.isAdmin() || User.isBusinessManager() || User.isAdministrationManager()) {
-								str = '[<strong><font color="blue">' + total + '</font></strong>]';
-							}
-							else {
-								str = '[<strong><font color="blue">' + count + '</font></strong>]';
-							}
+							var color = rec.raw.potentialBusinessNumber > 0 ? 'blue' : '';
+							var str = '[<strong><font color="'+color+'">' + rec.raw.potentialBusinessNumber+'/'+ rec.raw.totalBusinessNumber + '</font></strong>]';					
 							return val + str;
 						}
 					},
