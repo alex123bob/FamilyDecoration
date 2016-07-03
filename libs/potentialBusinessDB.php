@@ -63,7 +63,7 @@
 		$details = array();	
 		$potentailBusinessIds = join(",",$potentailBusinessIds);
 		if($potentailBusinessIds != ""){
-			$sql = "select d.potentialBusinessId,d.comments,d.committer,u.realName,d.createTime from potential_business_detail d left join user u on u.name = d.committer where d.isDeleted = 'false' and potentialBusinessId in ($potentailBusinessIds) ";
+			$sql = "select d.potentialBusinessId,d.comments,d.committer,u.realName as committerRealName,d.createTime from potential_business_detail d left join user u on u.name = d.committer where d.isDeleted = 'false' and potentialBusinessId in ($potentailBusinessIds) ";
 			$details = $mysql->DBGetAsMap($sql.' order by potentialBusinessId,d.id desc ',$params);
 		}
 		foreach($res as &$item){
@@ -75,7 +75,7 @@
 					if(!isset($item['lbs'])){
 						$item['lbs'] = $detail['comments'];
 						$item['lbc'] = $detail['committer'];
-						$item['lbcr'] = $detail['realName'];
+						$item['lbcr'] = $detail['committerRealName'];
 						$item['lbt'] = $detail['createTime'];
 					}
 				}
