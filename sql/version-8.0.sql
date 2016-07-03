@@ -8,6 +8,11 @@ ALTER TABLE `potential_business` ADD `distributeTime` TIMESTAMP NULL DEFAULT NUL
 
 update region set createTime = '2099-12-13' where id = '201508291441098100';
 
+update potential_business set status = REPLACE(comments,'\t','');
+update potential_business set status_second = REPLACE(comments,'\t','');
+update potential_business set status_third = REPLACE(comments,'\t','');
+
+
 CREATE TABLE `potential_business_detail` (
   `id` varchar(20) DEFAULT NULL,
   `potentialBusinessId` varchar(20) DEFAULT NULL,
