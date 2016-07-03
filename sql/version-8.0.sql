@@ -51,7 +51,7 @@ insert INTO `potential_business_detail` SELECT
 FROM
 	potential_business b
 WHERE
-	STATUS_SECOND IS NOT NULL and trim(STATUS_SECOND) != '' and trim(STATUS_SECOND) not like '%已装%' and trim(STATUS_SECOND);
+	STATUS_SECOND IS NOT NULL and trim(STATUS_SECOND) != '' and trim(STATUS_SECOND) not like '%已装%' and trim(STATUS_SECOND) not like '%未装%';
 	
 insert INTO `potential_business_detail` SELECT
 	CONVERT (id, UNSIGNED INTEGER) + 3,
@@ -68,7 +68,7 @@ insert INTO `potential_business_detail` SELECT
 FROM
 	potential_business b
 WHERE
-	STATUS_THIRD IS NOT NULL  and trim(STATUS_THIRD) != '' and trim(STATUS_THIRD) not like '%已装%' and trim(STATUS_THIRD);
+	STATUS_THIRD IS NOT NULL  and trim(STATUS_THIRD) != '' and trim(STATUS_THIRD) not like '%已装%' and trim(STATUS_THIRD)  not like '%未装%';
 
 update potential_business set isDecorated = 'true' where status like '%已装%' or status_second like '%已装%' or status_third like '%已装%';
 update potential_business set isDecorated = 'false' where status like '%未装%' or status_second like '%未装%' or status_third like '%未装%';
