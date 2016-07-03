@@ -60,7 +60,17 @@
 				$obj[$field] = $data[$field];
 		}
 		global $mysql;
-		$mysql->DBUpdate('potential_business',$obj,"`id` = '?' ",array($data["id"]));
+		$ids = explode(":", $data["id"]);
+		if (count($ids) > 0) {
+			for ($i=0; $i < count($ids); $i++) { 
+				$id = $ids[$i];
+				$mysql->DBUpdate('potential_business',$obj,"`id` = '?' ",array($id));
+			}
+		}
+		else {
+			$id = $ids[0];
+			$mysql->DBUpdate('potential_business',$obj,"`id` = '?' ",array($id));
+		}
 		return array('status'=>'successful', 'errMsg' => 'edit business ok');
 	}
 ?>

@@ -469,22 +469,17 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 							id: 'button-dispenseTelemarketingStaff',
 							name: 'button-dispenseTelemarketingStaff',
 							icon: './resources/img/giveout.png',
-							handler: function (){
+							handler: function () {
 								var regionGrid = Ext.getCmp('gridpanel-regionMgm'),
 									region = regionGrid.getSelectionModel().getSelection()[0],
 									grid = Ext.getCmp('gridpanel-buildingMgm'),
 									rec = grid.getSelectionModel().getSelection()[0];
 								if (region) {
-									if (rec) {
-										var win = Ext.create('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
-											region: region,
-											grid: grid,
-											potentialBusiness: rec
-										});
-									}
-									else {
-										showMsg('请选择编辑项目！');
-									}
+									var win = Ext.create('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
+										region: region,
+										grid: grid,
+										potentialBusiness: rec
+									});
 									win.show();
 								}
 								else {
@@ -493,6 +488,10 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 							}
 						}
 					],
+					selModel: {
+						mode: 'SINGLE',
+						allowDeselect: true
+					},
 					store: Ext.create('FamilyDecoration.store.PotentialBusiness', {
 						autoLoad: false,
 						filters: [
@@ -509,17 +508,17 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 					initBtn: function (rec) {
 						var editBtn = Ext.getCmp('button-editBuilding'),
 							editStatus = Ext.getCmp('button-editStatus'),
-							delBuilding = Ext.getCmp('button-deleteBuilding'),
-							dispenseTelemarketingStaff = Ext.getCmp('button-dispenseTelemarketingStaff');
+							delBuilding = Ext.getCmp('button-deleteBuilding');
 						editBtn.setDisabled(!rec);
 						editStatus.setDisabled(!rec);
 						delBuilding.setDisabled(!rec);
-						dispenseTelemarketingStaff.setDisabled(!rec);
 					},
 					refresh: function (region) {
 						var grid = this,
 							st = grid.getStore(),
-							rec = grid.getSelectionModel().getSelection()[0];
+							rec = grid.getSelectionModel().getSelection()[0],
+							dispenseTelemarketingStaff = Ext.getCmp('button-dispenseTelemarketingStaff');
+						dispenseTelemarketingStaff.setDisabled(!region);
 						if (region) {
 							st.reload({
 								params: {
@@ -540,84 +539,102 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 							st.removeAll();
 						}
 					},
-					columns: [
-						{
-							xtype: 'rownumberer'
+					columns: {
+						defaults: {
+							align: 'center'
 						},
-						//      {
-						//      	text: '序号',
-						// flex: 0.3,
-						// dataIndex: 'id'
-						//      },
-						{
-							text: '地址',
-							flex: 0.5,
-							dataIndex: 'address'
-						},
-						{
-							text: '业主',
-							flex: 0.5,
-							dataIndex: 'proprietor'
-						},
-						{
-							text: '电话',
-							flex: 0.8,
-							dataIndex: 'phone'
-						},
-						{
-							text: '已装',
-							flex: 0.5,
-							dataIndex: 'isDecorated',
-							renderer: function (val, meta, rec) {
-								if (val) {
-									if (val == 'false') {
-										return '否';
+						items: [
+							{
+								xtype: 'rownumberer'
+							},
+							//      {
+							//      	text: '序号',
+							// flex: 0.3,
+							// dataIndex: 'id'
+							//      },
+							{
+								text: '地址',
+								flex: 0.5,
+								dataIndex: 'address'
+							},
+							{
+								text: '业主',
+								flex: 0.5,
+								dataIndex: 'proprietor'
+							},
+							{
+								text: '电话',
+								flex: 0.8,
+								dataIndex: 'phone'
+							},
+							{
+								text: '已装',
+								flex: 0.5,
+								dataIndex: 'isDecorated',
+								renderer: function (val, meta, rec) {
+									if (val) {
+										if (val == 'false') {
+											return '否';
+										}
+										else if (val == 'true') {
+											return '是';
+										}
 									}
-									else if (val == 'true') {
-										return '是';
+									else {
+										return ''
 									}
 								}
-								else {
-									return ''
+							},
+							// {
+							// 	text: '状态1',
+							// 	flex: 1.3,
+							// 	dataIndex: 'status',
+							// 	renderer: function (val, meta, rec) {
+							// 		return val.replace(/\n|\r/gi, '<br />');
+							// 	}
+							// },
+							// {
+							// 	text: '状态2',
+							// 	flex: 1.3,
+							// 	dataIndex: 'status_second',
+							// 	renderer: function (val, meta, rec) {
+							// 		return val.replace(/\n|\r/gi, '<br />');
+							// 	}
+							// },
+							// {
+							// 	text: '状态3',
+							// 	flex: 1.3,
+							// 	dataIndex: 'status_third',
+							// 	renderer: function (val, meta, rec) {
+							// 		return val.replace(/\n|\r/gi, '<br />');
+							// 	}
+							// },
+							{
+								text: '扫楼人员',
+								flex: 0.8,
+								hidden: !User.isAdmin(),
+								dataIndex: 'salesman'
+							},
+							{
+								text: '电销人员',
+								flex: 0.8,
+								dataIndex: 'telemarketingStaff'
+							},
+							{
+								text: '扫楼时间',
+								flex: 0.8,
+								dataIndex: 'createTime',
+								renderer: function (val, meta, rec) {
+									if (val) {
+										return val.slice(0, val.indexOf(' '));
+									}
+									else {
+										return '';
+									}
 								}
 							}
-						},
-						{
-							text: '状态1',
-							flex: 1.3,
-							dataIndex: 'status',
-							renderer: function (val, meta, rec) {
-								return val.replace(/\n|\r/gi, '<br />');
-							}
-						},
-						{
-							text: '状态2',
-							flex: 1.3,
-							dataIndex: 'status_second',
-							renderer: function (val, meta, rec) {
-								return val.replace(/\n|\r/gi, '<br />');
-							}
-						},
-						{
-							text: '状态3',
-							flex: 1.3,
-							dataIndex: 'status_third',
-							renderer: function (val, meta, rec) {
-								return val.replace(/\n|\r/gi, '<br />');
-							}
-						},
-						{
-							text: '扫楼人员',
-							flex: 0.8,
-							hidden: !User.isAdmin(),
-							dataIndex: 'salesman'
-						},
-						{
-							text: '电销人员',
-							flex: 0.8,
-							dataIndex: 'telemarketingStaff'
-						}
-					],
+						]
+					},
 					listeners: {
 						selectionchange: function (view, sels) {
 							var rec = sels[0];

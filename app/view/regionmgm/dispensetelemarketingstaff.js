@@ -2,12 +2,14 @@ Ext.define('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
 	extend: 'Ext.window.Window',
 	alias: 'widget.regionmgm-dispensetelemarketingstaff',
 
-	requires: [],
+	requires: [
+		'FamilyDecoration.store.PotentialBusiness'
+	],
 
 	resizable: false,
 	modal: true,
-	width: 400,
-	height: 140,
+	width: 500,
+	height: 310,
 	autoScroll: true,
 
 	bodyPadding: 4,
@@ -16,6 +18,7 @@ Ext.define('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
 		width: 255
 	},
     title: '分配电销人员',
+	layout: 'vbox',
 
     region: undefined,
     grid: undefined,
@@ -24,11 +27,77 @@ Ext.define('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
 	initComponent: function () {
 		var me = this;
 
+		me.height = me.potentialBusiness ? 114 : 500;
+
 		me.items = [
+			me.potentialBusiness ? null : {
+				xtype: 'gridpanel',
+				width: '100%',
+				autoScroll: true,
+				flex: 15,
+				selType: 'checkboxmodel',
+				selModel: {
+					mode: 'SIMPLE'
+				},
+				store: Ext.create('FamilyDecoration.store.PotentialBusiness', {
+					autoLoad: true,
+					proxy: {
+						type: 'rest',
+						url: './libs/business.php?action=getAllPotentialBusiness',
+						reader: {
+							type: 'json'
+						},
+						extraParams: {
+							regionID: me.region.getId()
+						}
+					}
+				}),
+				columns: {
+					defaults: {
+						align: 'center'
+					},
+					items: [
+						{
+							text: '地址',
+							dataIndex: 'address',
+							flex: 1
+						},
+						{
+							text: '业主',
+							dataIndex: 'proprietor',
+							flex: 1
+						},
+						{
+							text: '电话',
+							dataIndex: 'phone',
+							flex: 1
+						},
+						{
+							text: '已装',
+							dataIndex: 'isDecorated',
+							flex: 1,
+							renderer: function (val, meta, rec) {
+								if (val) {
+									if (val == 'false') {
+										return '否';
+									}
+									else if (val == 'true') {
+										return '是';
+									}
+								}
+								else {
+									return ''
+								}
+							}
+						}
+					]
+				}
+			},
 			{
 				xtype: 'fieldcontainer',
 				layout: 'hbox',
 				width: '100%',
+				flex: 1,
 				items: [
 					{
 						id: 'textfield-telemarketingStaff',
@@ -40,7 +109,7 @@ Ext.define('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
 						width: 255,
 						height: '100%',
 						value: me.potentialBusiness ? me.potentialBusiness.get('telemarketingStaff') : ''
-					}, 
+					},
 					{
 						xtype: 'button',
 						text: '选择',
@@ -84,7 +153,7 @@ Ext.define('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
 							});
 							win.show();
 						}
-					}, 
+					},
 					{
 						xtype: 'hiddenfield',
 						hideLabel: true,
@@ -100,18 +169,34 @@ Ext.define('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
 			text: '确定',
 			handler: function () {
 				var telemarketingStaff = Ext.getCmp('textfield-telemarketingStaff'),
-					telemarketingStaffName = Ext.getCmp('hiddenfield-telemarketingStaffName');
+					telemarketingStaffName = Ext.getCmp('hiddenfield-telemarketingStaffName'),
+					businessGrid = !me.potentialBusiness ? me.down('grid') : undefined;
 				if (telemarketingStaff.isValid()) {
 					var p = {
 						telemarketingStaff: telemarketingStaff.getValue(),
 						telemarketingStaffName: telemarketingStaffName.getValue()
 					};
-					me.potentialBusiness && Ext.apply(p, {
-						id: me.potentialBusiness.getId()
-					});
+					if (me.potentialBusiness) {
+						Ext.apply(p, {
+							id: me.potentialBusiness.getId()
+						});
+					}
+					else {
+						var recs = businessGrid.getSelectionModel().getSelection();
+						if (recs.length <= 0) {
+							showMsg('请选择电销人员！');
+							return false;
+						}
+						Ext.each(recs, function (rec, index, arr){
+							arr[index] = rec.getId();
+						});
+						Ext.apply(p, {
+							id: recs.join(':')
+						});
+					}
 					Ext.Ajax.request({
 						method: 'POST',
-						url: me.potentialBusiness ? 'libs/business.php?action=editPotentialBusiness' : '',
+						url: 'libs/business.php?action=editPotentialBusiness',
 						params: p,
 						callback: function (opts, success, res) {
 							if (success) {
