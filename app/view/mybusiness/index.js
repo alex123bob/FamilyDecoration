@@ -109,11 +109,15 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 				}],
 				columns: [{
 					text: '时间',
-					flex: 0.7,
+					flex: 1,
 					dataIndex: 'createTime',
 					renderer: function (val, meta, rec){
-						var dt = new Date(val.replace(/-/ig, '/'));
-						return Ext.Date.format(dt, 'Y-m');
+						if (val) {
+							return val.slice(0, val.indexOf(' '));
+						}
+						else {
+							return '';
+						}
 					}
 				}, {
 					text: '小区名称',
