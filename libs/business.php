@@ -12,6 +12,10 @@
 		case "getRegionList":
 			$res = getRegionList($_REQUEST);
 			break;
+		//获取小区列表以及潜在客户数量
+		case "getRegionList2":
+			$res = getRegionList2($_REQUEST);
+			break;
 		//增加小区
 		case "addRegion":
 			$res = addRegion($_REQUEST);  
