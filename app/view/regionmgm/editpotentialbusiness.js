@@ -105,6 +105,10 @@ Ext.define('FamilyDecoration.view.regionmgm.EditPotentialBusiness', {
 					var frm = me.down('form');
 					if (frm.isValid()) {
 						var frmVals = frm.getValues();
+						if (!frmVals.isDecorated) {
+							Ext.Msg.error('必须要选择是否装修状态，否则无法添加或更改！');
+							return false;
+						}
 						Ext.apply(frmVals, {
 							regionID: me.region.getId(),
 							salesman: User.getRealName(),
