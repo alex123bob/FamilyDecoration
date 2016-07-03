@@ -34,7 +34,7 @@
 	//附带最新状态
 	function getAllPotentialBusiness($data){
 		$params = array();
-		$sql = "select r.*,g.name as rn from `potential_business` r left join region g on g.id = r.regionId and g.isDeleted = 'false' where r.isDeleted = 'false'  ";
+		$sql = "select r.*,g.name as rn from `potential_business` r left join region g on g.id = r.regionId and r.isDeleted = 'false' where g.isDeleted = 'false'  ";
 		$fields = array('regionID','status','status_second','status_third','salesman','salesmanName','telemarketingStaff','telemarketingStaffName');
 		foreach($fields as $field){
 			if(isset($data[$field])){
@@ -63,8 +63,8 @@
 		$details = array();	
 		$potentailBusinessIds = join(",",$potentailBusinessIds);
 		if($potentailBusinessIds != ""){
-			$sql = "select potentialBusinessId,comments,committer,createTime from potential_business_detail where isDeleted = 'false' and potentialBusinessId in ($potentailBusinessIds)";
-			$details = $mysql->DBGetAsMap($sql.' order by potentialBusinessId,id desc ',$params);
+			$sql = "select d.potentialBusinessId,d.comments,d.committer,u.realName,d.createTime from potential_business_detail d left join user u on u.name = d.committer where d.isDeleted = 'false' and potentialBusinessId in ($potentailBusinessIds) ";
+			$details = $mysql->DBGetAsMap($sql.' order by potentialBusinessId,d.id desc ',$params);
 		}
 		foreach($res as &$item){
 			$item['lbd'] = array();
@@ -75,6 +75,7 @@
 					if(!isset($item['lbd'])){
 						$item['lbs'] = $detail['comments'];
 						$item['lbc'] = $detail['committer'];
+						$item['lbcr'] = $detail['realName'];
 						$item['lbt'] = $detail['createTime'];
 					}
 				}
