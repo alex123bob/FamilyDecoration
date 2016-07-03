@@ -169,6 +169,10 @@
 		case "requestDeadBusiness":
 			$res = requestDeadBusiness($_REQUEST["businessId"], $_REQUEST["requestDeadBusinessReason"]);
 			break;
+		// 获取电销人员列表
+		case "getTeleMarketingStaffList":
+			$res = getTeleMarketingStaffList();
+			break;
 		default: 
 			throw new Exception("unknown action:".$action);
 	}

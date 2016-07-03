@@ -40,7 +40,8 @@ Ext.define('FamilyDecoration.Application', {
         'BillAudit',
         'PlanMaking',
         'ProjectProgress',
-        'PlanLabor'
+        'PlanLabor',
+        'TeleMarket'
     ],
 
     stores: [

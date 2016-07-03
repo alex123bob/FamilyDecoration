@@ -16,7 +16,8 @@ Ext.define('FamilyDecoration.model.PotentialBusiness', {
 		{name: 'telemarketingStaffName', type: 'string'},
 		{name: 'createTime', type: 'string'},
 		{name: 'isDeleted', type: 'string'},
-		{name: 'lastUpdateTime', type: 'string'}
+		{name: 'lastUpdateTime', type: 'string'},
+		{name: 'distributeTime', type: 'string'} // when is the current business distributed to a telemarke staff.
 	],
 	idProperty: 'id'
 });

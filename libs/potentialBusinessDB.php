@@ -34,7 +34,7 @@
 	function getAllPotentialBusiness($data){
 		$params = array();
 		$sql = "select r.* from `potential_business` r where isDeleted = 'false' ";
-		$fields = array('regionID','status','status_second','status_third','salesman','salesmanName');
+		$fields = array('regionID','status','status_second','status_third','salesman','salesmanName','telemarketingStaff','telemarketingStaffName');
 		foreach($fields as $field){
 			if(isset($data[$field])){
 				array_push($params,$data[$field]);
@@ -53,7 +53,7 @@
 	}
 	
 	function editPotentialBusiness($data){
-		$fields = array('address','regionID','proprietor','phone','status','isDecorated','status_second','status_third','salesman','salesmanName','telemarketingStaff','telemarketingStaffName');
+		$fields = array('address','regionID','proprietor','phone','status','isDecorated','status_second','status_third','salesman','salesmanName','telemarketingStaff','telemarketingStaffName','distributeTime');
 		$obj = array('lastUpdateTime'=>'now()');
 		foreach($fields as $field){
 			if(isset($data[$field]))
@@ -72,5 +72,11 @@
 			$mysql->DBUpdate('potential_business',$obj,"`id` = '?' ",array($id));
 		}
 		return array('status'=>'successful', 'errMsg' => 'edit business ok');
+	}
+
+	function getTeleMarketingStaffList(){
+		global $mysql;
+		$sql = "select distinct telemarketingStaffName, telemarketingStaff from `potential_business` where telemarketingStaffName IS NOT NULL and isDeleted = 'false' ";
+		return $mysql->DBGetAsMap($sql);
 	}
 ?>

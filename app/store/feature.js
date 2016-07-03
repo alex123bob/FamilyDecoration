@@ -20,6 +20,12 @@
                 icon: 'resources/img/business.png',
                 children: [
                     {
+                        name: '电销列表',
+                        cmp: 'telemarket-index',
+                        leaf: true,
+                        icon: 'resources/img/telemarket.png'
+                    },
+                    {
                         name: '我的业务',
                         cmp: 'mybusiness-index',
                         leaf: true,
@@ -346,6 +352,9 @@
                 flag = User.isAdmin() || User.isBudgetManager() || User.isFinanceManager() ? true : false;
             }
             else if (rec.get('cmp') == 'business-parent') {
+                flag = User.isGeneral() ? false : true;
+            }
+            else if (rec.get('cmp') == 'telemarket-index') {
                 flag = User.isGeneral() ? false : true;
             }
             else if (rec.get('cmp') == 'mybusiness-index') {

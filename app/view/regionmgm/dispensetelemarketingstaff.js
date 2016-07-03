@@ -174,7 +174,8 @@ Ext.define('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
 				if (telemarketingStaff.isValid()) {
 					var p = {
 						telemarketingStaff: telemarketingStaff.getValue(),
-						telemarketingStaffName: telemarketingStaffName.getValue()
+						telemarketingStaffName: telemarketingStaffName.getValue(),
+						distributeTime: Ext.Date.format(new Date(), 'Y-m-d H:i:s')
 					};
 					if (me.potentialBusiness) {
 						Ext.apply(p, {
