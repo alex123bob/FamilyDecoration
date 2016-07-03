@@ -72,7 +72,7 @@
 				if(isset($detail['potentialBusinessId']) && $detail['potentialBusinessId'] == $item['id']){
 					array_push($item['lbd'], $detail);
 					unset($detail['potentialBusinessId']);
-					if(!isset($item['lbd'])){
+					if(!isset($item['lbs'])){
 						$item['lbs'] = $detail['comments'];
 						$item['lbc'] = $detail['committer'];
 						$item['lbcr'] = $detail['realName'];
