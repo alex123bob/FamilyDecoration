@@ -33,11 +33,11 @@
 		//总数，不管装没装修的
 		$sql = "SELECT	IFNULL(p.num,0) as totalBusinessNumber,	r.* FROM `region` r 
 					LEFT JOIN (select count(*) as num,regionId  from potential_business where isDeleted = 'false' {myselfonly} group by regionId)
-				p ON r.id = p.regionId and r.parentID = '?'";
+				p ON r.id = p.regionId where r.parentID = '?'";
 		//潜在业务数，未装修的
 		$sql2 = "SELECT	IFNULL(p.num,0) as potentialBusinessNumber,	r.id FROM `region` r 
 					LEFT JOIN (select count(*) as num,regionId  from potential_business where isDeleted = 'false' {myselfonly} and (isDecorated is null or isDecorated = 'false') group by regionId)
-				p ON r.id = p.regionId and r.parentID = '?' ";
+				p ON r.id = p.regionId where r.parentID = '?' ";
 		if(isset($data['myselfOnly']) && ($data['myselfOnly'] === 'true' || $data['myselfOnly'] === true)){
 			$sql = str_replace("{myselfonly}", " and salesmanName = '".$_SESSION['name']."'", $sql);
 			$sql2 = str_replace("{myselfonly}", " and salesmanName = '".$_SESSION['name']."'", $sql2);
@@ -47,7 +47,7 @@
 		}
 		global $mysql;
 		$arr = $mysql->DBGetAsMap($sql.' order by totalBusinessNumber desc ',$params);
-		$arr2 = $mysql->DBGetAsMap($sql2.' order by r.createTime desc ',$params);
+		$arr2 = $mysql->DBGetAsMap($sql2.' order by r.createTime asc ',$params);
 		$pB = array();
 		foreach($arr2 as &$item){
 			$pB[$item['id']] = $item['potentialBusinessNumber'];
@@ -73,7 +73,7 @@
 			$sql = $sql." and r.parentID = -1 ";
 		}
 		global $mysql;
-		$arr = $mysql->DBGetAsMap($sql.' order by createTime desc ',$params);
+		$arr = $mysql->DBGetAsMap($sql.' order by createTime asc ',$params);
 		return $arr;
 	}
 	
