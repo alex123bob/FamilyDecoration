@@ -1,22 +1,22 @@
 Ext.define('FamilyDecoration.view.telemarket.TransferToBusiness', {
-	extend: 'Ext.window.Window',
-	alias: 'widget.telemarket-transfertobusiness',
-	requires: [
+    extend: 'Ext.window.Window',
+    alias: 'widget.telemarket-transfertobusiness',
+    requires: [
 
     ],
-	title: '转为业务',
-	width: 500,
-	height: 300,
-	bodyPadding: 10,
-	modal: true,
+    title: '转为业务',
+    width: 500,
+    height: 300,
+    bodyPadding: 10,
+    modal: true,
     layout: 'form',
     potentialBusiness: undefined,
     defaultType: 'textfield',
 
-	initComponent: function (){
-		var me = this;
+    initComponent: function () {
+        var me = this;
 
-		me.items = [
+        me.items = [
             {
                 fieldLabel: '客户姓名',
                 name: 'proprietor',
@@ -42,7 +42,8 @@ Ext.define('FamilyDecoration.view.telemarket.TransferToBusiness', {
                     {
                         xtype: 'textfield',
                         fieldLabel: '业务代表',
-                        name: 'telemarketingStaffName',
+                        name: 'telemarketingStaff',
+                        itemId: 'textfield-telemarketingStaff',
                         readOnly: true,
                         flex: 1,
                         value: me.potentialBusiness.get('telemarketingStaff')
@@ -51,9 +52,54 @@ Ext.define('FamilyDecoration.view.telemarket.TransferToBusiness', {
                         xtype: 'button',
                         text: '更改',
                         width: 40,
-                        handler: function (){
-                            
+                        handler: function () {
+                            var self = this;
+                            var win = Ext.create('Ext.window.Window', {
+                                width: 500,
+                                height: 300,
+                                layout: 'fit',
+                                title: '选择业务代表',
+                                modal: true,
+                                items: [{
+                                    xtype: 'checklog-memberlist',
+                                    fullList: true
+                                }],
+                                buttons: [
+                                    {
+                                        text: '确定',
+                                        handler: function () {
+                                            var list = win.down('checklog-memberlist'),
+                                                rec = list.getSelectionModel().getSelection()[0],
+                                                staffField = self.ownerCt.getComponent('textfield-telemarketingStaff'),
+                                                staffNameField = self.ownerCt.getComponent('textfield-telemarketingStaffName');
+
+                                            if (rec && rec.get('name')) {
+                                                staffField.setValue(rec.get('realname'));
+                                                staffNameField.setValue(rec.get('name'));
+                                                win.close();
+                                            }
+                                            else {
+                                                showMsg('请选择电销人员！');
+                                            }
+                                        }
+                                    },
+                                    {
+                                        text: '取消',
+                                        handler: function () {
+                                            win.close();
+                                        }
+                                    }
+                                ]
+                            });
+                            win.show();
                         }
+                    },
+                    {
+                        xtype: 'hiddenfield',
+						hideLabel: true,
+						name: 'telemarketingStaffName',
+                        itemId: 'textfield-telemarketingStaffName',
+                        value: me.potentialBusiness.get('telemarketingStaffName')
                     }
                 ]
             },
@@ -96,17 +142,17 @@ Ext.define('FamilyDecoration.view.telemarket.TransferToBusiness', {
             }
         ];
 
-		me.buttons = [{
-			text: '确定',
-			handler: function (){
-			}
-		}, {
-			text: '取消',
-			handler: function (){
-				me.close();
-			}
-		}]
+        me.buttons = [{
+            text: '确定',
+            handler: function () {
+            }
+        }, {
+                text: '取消',
+                handler: function () {
+                    me.close();
+                }
+            }]
 
-		me.callParent();
-	}
+        me.callParent();
+    }
 })

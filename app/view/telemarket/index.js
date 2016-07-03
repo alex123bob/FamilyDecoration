@@ -72,23 +72,73 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                 title: '分配名单',
                 flex: 9,
                 itemId: 'gridpanel-businessList',
+                getBtns: function (){
+                    var transferBtn = this.down('[name="button-transferToBusiness"]'),
+                        reminderBtn = this.down('[name="button-reminder"]'),
+                        editStatusBtn = this.down('[name="button-editStatus"]');
+                    return {
+                        transferBtn: transferBtn,
+                        reminderBtn: reminderBtn,
+                        editStatusBtn: editStatusBtn
+                    };
+                },
+                initBtn: function (){
+                    var btns = this.getBtns(),
+                        resObj = me.getRes();
+                    for (var name in btns) {
+                        if (btns.hasOwnProperty(name)) {
+                            var btn = btns[name];
+                            btn.setDisabled(!resObj.business);
+                        }
+                    }
+                },
                 tbar: [
                     {
                         text: '转为业务',
+                        name: 'button-transferToBusiness',
                         icon: 'resources/img/transfer1.png',
+                        disabled: true,
                         handler: function () {
                             var resObj = me.getRes();
-                            var win = Ext.create('FamilyDecoration.view.telemarket.TransferToBusiness', {
-                                potentialBusiness: resObj.business
-                            });
-                            win.show();
+                            if (resObj.business) {
+                                var win = Ext.create('FamilyDecoration.view.telemarket.TransferToBusiness', {
+                                    potentialBusiness: resObj.business
+                                });
+                                win.show();
+                            }
+                            else {
+                                showMsg('请选择条目！');
+                            }
                         }
                     },
                     {
                         text: '提醒功能',
+                        name: 'button-reminder',
                         icon: 'resources/img/alarm.png',
+                        disabled: true,
                         handler: function () {
-
+                            var resObj = me.getRes();
+                            if (resObj.business) {
+                                
+                            }
+                            else {
+                                showMsg('请选择条目！');
+                            }
+                        }
+                    },
+                    {
+                        text: '编辑状态',
+                        name: 'button-editStatus',
+                        icon: 'resources/img/edit_ink.png',
+                        disabled: true,
+                        handler: function (){
+                            var resObj = me.getRes();
+                            if (resObj.business) {
+                                
+                            }
+                            else {
+                                showMsg('请选择条目！');
+                            }
                         }
                     }
                 ],
@@ -160,6 +210,12 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                             }
                         }
                     ]
+                },
+                listeners: {
+                    selectionchange: function (){
+                        var resObj = me.getRes();
+                        resObj.businessList.initBtn();
+                    }
                 }
             }
         ];

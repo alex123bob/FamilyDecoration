@@ -531,10 +531,13 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 								renderer: function (val, meta, rec) {
 									if (val) {
 										if (val == 'false') {
-											return '否';
+											return '未装';
 										}
 										else if (val == 'true') {
-											return '是';
+											return '已装';
+										}
+										else if (val == 'no') {
+											return '不装';
 										}
 									}
 									else {

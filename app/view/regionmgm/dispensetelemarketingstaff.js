@@ -127,29 +127,32 @@ Ext.define('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
 									name: 'memberlist-telemarketingStaffList',
 									fullList: true
 								}],
-								buttons: [{
-									text: '确定',
-									handler: function () {
-										var list = Ext.getCmp('memberlist-telemarketingStaffList'),
-											rec = list.getSelectionModel().getSelection()[0],
-											salesmanShowField = Ext.getCmp('textfield-telemarketingStaff'),
-											salesmanValueField = Ext.getCmp('hiddenfield-telemarketingStaffName');
+								buttons: [
+									{
+										text: '确定',
+										handler: function () {
+											var list = Ext.getCmp('memberlist-telemarketingStaffList'),
+												rec = list.getSelectionModel().getSelection()[0],
+												salesmanShowField = Ext.getCmp('textfield-telemarketingStaff'),
+												salesmanValueField = Ext.getCmp('hiddenfield-telemarketingStaffName');
 
-										if (rec && rec.get('name')) {
-											salesmanShowField.setValue(rec.get('realname'));
-											salesmanValueField.setValue(rec.get('name'));
-											win.close();
+											if (rec && rec.get('name')) {
+												salesmanShowField.setValue(rec.get('realname'));
+												salesmanValueField.setValue(rec.get('name'));
+												win.close();
+											}
+											else {
+												showMsg('请选择电销人员！');
+											}
 										}
-										else {
-											showMsg('请选择电销人员！');
-										}
-									}
-								}, {
+									},
+									{
 										text: '取消',
 										handler: function () {
 											win.close();
 										}
-									}]
+									}
+								]
 							});
 							win.show();
 						}
@@ -188,7 +191,7 @@ Ext.define('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
 							showMsg('请选择电销人员！');
 							return false;
 						}
-						Ext.each(recs, function (rec, index, arr){
+						Ext.each(recs, function (rec, index, arr) {
 							arr[index] = rec.getId();
 						});
 						Ext.apply(p, {

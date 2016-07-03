@@ -6,7 +6,7 @@ Ext.define('FamilyDecoration.model.PotentialBusiness', {
 		{name: 'regionID', type: 'string'},
 		{name: 'proprietor', type: 'string'},
 		{name: 'phone', type: 'string'},
-		{name: 'isDecorated'},
+		{name: 'isDecorated'}, // true/false/no
 		{name: 'latestBusinessStatus', type: 'string'},
 		// {name: 'status', type: 'string'},
 		// {name: 'status_second', type: 'string'},

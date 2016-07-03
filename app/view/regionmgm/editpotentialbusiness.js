@@ -49,18 +49,25 @@ Ext.define('FamilyDecoration.view.regionmgm.EditPotentialBusiness', {
 					defaultType: 'radiofield',
 					items: [
 						{
-							boxLabel: '是',
+							boxLabel: '已装',
 							name: 'isDecorated',
-							inputValue: true,
+							inputValue: 'true',
 							flex: 1,
 							value: me.potentialBusiness ? (me.potentialBusiness.get('isDecorated') == 'true') : ''
 						},
 						{
-							boxLabel: '否',
+							boxLabel: '未装',
 							name: 'isDecorated',
-							inputValue: false,
+							inputValue: 'false',
 							flex: 1,
 							value: me.potentialBusiness ? (me.potentialBusiness.get('isDecorated') == 'false') : ''
+						},
+						{
+							boxLabel: '不装',
+							name: 'isDecorated',
+							inputValue: 'no',
+							flex: 1,
+							value: me.potentialBusiness ? (me.potentialBusiness.get('isDecorated') == 'no') : ''
 						}
 					]
 				}
