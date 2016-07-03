@@ -16,7 +16,9 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
 
     initComponent: function () {
         var me = this,
-            needList = User.isAdmin() || User.isBusinessManager();
+            needList = User.isAdmin() || User.isBusinessManager(),
+            potentialBusinessSt = Ext.create('FamilyDecoration.store.PotentialBusiness', {
+            });
 
         me.getRes = function () {
             var telemarketingStaffList = me.getComponent('gridpanel-telemarketingStaffList'),
@@ -73,7 +75,7 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                 title: '分配名单',
                 flex: 9,
                 itemId: 'gridpanel-businessList',
-                getBtns: function (){
+                getBtns: function () {
                     var transferBtn = this.down('[name="button-transferToBusiness"]'),
                         reminderBtn = this.down('[name="button-reminder"]'),
                         editStatusBtn = this.down('[name="button-editStatus"]');
@@ -83,7 +85,7 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                         editStatusBtn: editStatusBtn
                     };
                 },
-                initBtn: function (){
+                initBtn: function () {
                     var btns = this.getBtns(),
                         resObj = me.getRes();
                     for (var name in btns) {
@@ -120,7 +122,7 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                         handler: function () {
                             var resObj = me.getRes();
                             if (resObj.business) {
-                                
+
                             }
                             else {
                                 showMsg('请选择条目！');
@@ -132,11 +134,11 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                         name: 'button-editStatus',
                         icon: 'resources/img/edit_ink.png',
                         disabled: true,
-                        handler: function (){
+                        handler: function () {
                             var resObj = me.getRes();
                             if (resObj.business) {
                                 var win = Ext.create('FamilyDecoration.view.telemarket.EditStatus', {
-                                    
+
                                 });
                                 win.show();
                             }
@@ -156,18 +158,30 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                         name = User.getName();
                     }
                     if (name) {
-                        resObj.businessSt.load({
-                            params: {
+                        resObj.businessSt.setProxy({
+                            url: './libs/business.php?action=getAllPotentialBusiness',
+                            type: 'rest',
+                            extraParams: {
                                 telemarketingStaffName: name
+                            },
+                            reader: {
+                                type: 'json',
+                                root: 'data'
                             }
                         });
+                        resObj.businessSt.loadPage(1);
                     }
                     else {
                         resObj.businessSt.removeAll();
                     }
                 },
-                store: Ext.create('FamilyDecoration.store.PotentialBusiness', {
-                }),
+                dockedItems: [{
+                    xtype: 'pagingtoolbar',
+                    store: potentialBusinessSt,   // same store GridPanel is using
+                    dock: 'bottom',
+                    displayInfo: true
+                }],
+                store: potentialBusinessSt,
                 columns: {
                     defaults: {
                         align: 'center'
@@ -181,7 +195,7 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                             text: '地址',
                             flex: 0.5,
                             dataIndex: 'address',
-                            renderer: function (val, meta, rec){
+                            renderer: function (val, meta, rec) {
                                 if (val) {
                                     return rec.get('regionName') + ' ' + val;
                                 }
@@ -224,7 +238,7 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                     ]
                 },
                 listeners: {
-                    selectionchange: function (){
+                    selectionchange: function () {
                         var resObj = me.getRes();
                         resObj.businessList.initBtn();
                     }

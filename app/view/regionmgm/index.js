@@ -518,7 +518,8 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 						},
 						items: [
 							{
-								xtype: 'rownumberer'
+								xtype: 'rownumberer',
+								width: 30
 							},
 							//      {
 							//      	text: '序号',
