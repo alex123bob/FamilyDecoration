@@ -138,7 +138,8 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                             var resObj = me.getRes();
                             if (resObj.business) {
                                 var win = Ext.create('FamilyDecoration.view.telemarket.EditStatus', {
-                                    business: resObj.business
+                                    business: resObj.business,
+                                    grid: resObj.businessList
                                 });
                                 win.show();
                             }
@@ -216,7 +217,24 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                         },
                         {
                             text: '状态',
-                            flex: 0.8
+                            flex: 0.8,
+                            dataIndex: 'businessStatusDetail',
+                            renderer: function (val, meta, rec) {
+                                var result = '';
+                                if (val.length > 0) {
+                                    Ext.each(val, function (obj, index) {
+                                        result += '<strong>' + (index + 1) + '.</strong>'
+                                            + ' ' + obj['comments'].replace(/\n/gi, '<br />') + '<br />'
+                                            + '<span class="footnote">(' + obj['createTime'] + ') '
+                                            + obj['committerRealName'] + '</span>'
+                                            + '<br />';
+                                    });
+                                    return result;
+                                }
+                                else {
+                                    return '';
+                                }
+                            }
                         },
                         {
                             text: '提醒',

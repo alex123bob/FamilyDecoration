@@ -16,6 +16,7 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
     bodyPadding: 5,
     maximizable: true,
     business: undefined,
+    grid: undefined,
 
     layout: 'vbox',
 
@@ -39,6 +40,15 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
                 autoScroll: true,
                 cls: 'gridpanel-editstatus',
                 collapsible: true,
+                refresh: function (){
+                    var grid = this,
+                        st = grid.getStore();
+                    st.load({
+                        params: {
+                            potentialBusinessId: me.business.getId()
+                        }
+                    });
+                },
                 plugins: [
                     Ext.create('Ext.grid.plugin.CellEditing', {
                         clicksToEdit: 1,
@@ -49,7 +59,13 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
                                 e.record.commit();
                                 editor.completeEdit();
                                 if (e.field == 'comments') {
-                                    
+                                    ajaxUpdate('PotentialBusinessDetail', {
+                                        comments: e.record.get('comments'),
+                                        id: e.record.getId()
+                                    }, 'id', function (obj){
+                                        showMsg('更改成功！');
+                                        e.record.store.reload();
+                                    });
                                 }
 
                                 Ext.resumeLayouts();
@@ -83,6 +99,22 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
                                             var st = view.getStore(),
                                                 rec = st.getAt(rowIndex),
                                                 index = st.indexOf(rec);
+                                            ajaxDel('PotentialBusinessDetail', {
+                                                id: rec.getId()
+                                            }, function (obj){
+                                                showMsg('删除成功！');
+                                                st.reload({
+                                                    callback: function (recs, ope, success) {
+                                                        if (success) {
+                                                            var newRec = st.getAt(index);
+                                                            if (newRec) {
+                                                                view.getSelectionModel().select(newRec);
+                                                                view.focusRow(newRec, 200);
+                                                            }
+                                                        }
+                                                    }
+                                                })
+                                            });
                                         }
                                     });
                                 }
@@ -128,15 +160,17 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
                             function (obj){
                                 showMsg('添加成功！');
                                 me.close();
+                                me.grid.getStore().reload();
                             }
                         );
                     }
                 }
             },
             {
-                text: '取消',
+                text: '关闭',
                 handler: function () {
                     me.close();
+                    me.grid.getStore().reload();
                 }
             }
         ];

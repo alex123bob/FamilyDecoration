@@ -8,7 +8,7 @@ Ext.define('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
 
 	resizable: false,
 	modal: true,
-	width: 500,
+	width: 600,
 	height: 310,
 	autoScroll: true,
 
@@ -25,7 +25,22 @@ Ext.define('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
     potentialBusiness: undefined,
 
 	initComponent: function () {
-		var me = this;
+		var me = this,
+			st = Ext.create('FamilyDecoration.store.PotentialBusiness', {
+				autoLoad: true,
+				proxy: {
+					type: 'rest',
+					url: './libs/business.php?action=getAllPotentialBusiness',
+					reader: {
+						type: 'json',
+						root: 'data',
+						totalProperty: 'total'
+					},
+					extraParams: {
+						regionID: me.region.getId()
+					}
+				}
+			});
 
 		me.height = me.potentialBusiness ? 114 : 500;
 
@@ -39,19 +54,13 @@ Ext.define('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
 				selModel: {
 					mode: 'SIMPLE'
 				},
-				store: Ext.create('FamilyDecoration.store.PotentialBusiness', {
-					autoLoad: true,
-					proxy: {
-						type: 'rest',
-						url: './libs/business.php?action=getAllPotentialBusiness',
-						reader: {
-							type: 'json'
-						},
-						extraParams: {
-							regionID: me.region.getId()
-						}
-					}
-				}),
+				store: st,
+				dockedItems: [{
+					xtype: 'pagingtoolbar',
+					store: st,   // same store GridPanel is using
+					dock: 'bottom',
+					displayInfo: true
+				}],
 				columns: {
 					defaults: {
 						align: 'center'
@@ -211,7 +220,7 @@ Ext.define('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
 								if (obj.status == 'successful') {
                                     showMsg('分配成功！');
 									me.close();
-                                    me.grid.refresh(me.region);
+                                    me.grid.getStore().reload();
 								}
 							}
 						}

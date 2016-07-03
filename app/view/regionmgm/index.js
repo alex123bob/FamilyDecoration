@@ -521,11 +521,6 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 								xtype: 'rownumberer',
 								width: 30
 							},
-							//      {
-							//      	text: '序号',
-							// flex: 0.3,
-							// dataIndex: 'id'
-							//      },
 							{
 								text: '地址',
 								flex: 0.5,
@@ -543,7 +538,7 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 							},
 							{
 								text: '已装',
-								flex: 0.5,
+								flex: 0.4,
 								dataIndex: 'isDecorated',
 								renderer: function (val, meta, rec) {
 									if (val) {
@@ -564,18 +559,31 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 							},
 							{
 								text: '最新状态',
-								flex: 0.8,
-								dataIndex: 'latestBusinessStatus'
+								flex: 1.2,
+								dataIndex: 'latestBusinessStatus',
+								renderer: function (val, meta, rec) {
+									if (val) {
+										var result = '';
+										result += val.replace(/\n/gi, '<br />') + '<br />'
+											+ '<span class="footnote">(' + rec.get('latestBusinessTime') + ') '
+											+ rec.get('latestBusinessCommitterRealName') + '</span>'
+											+ '<br />';
+										return result;
+									}
+									else {
+										return '';
+									}
+								}
 							},
 							{
 								text: '扫楼人员',
-								flex: 0.8,
+								flex: 0.6,
 								hidden: !User.isAdmin(),
 								dataIndex: 'salesman'
 							},
 							{
 								text: '电销人员',
-								flex: 0.8,
+								flex: 0.6,
 								dataIndex: 'telemarketingStaff'
 							},
 							{
