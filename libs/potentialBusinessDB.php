@@ -58,7 +58,10 @@
 			}
 		}
 		global $mysql;
-		$res = $mysql->DBGetAsMap($sql.' order by r.createTime desc ',$params);
+		$count = $mysql->DBGetAsOneArray("select count(1) as count from ( $sql ) as temp",$params);
+		if($count[0] == 0)
+			return array('total'=>$count[0],'data'=>$res);
+		$res = $mysql->DBGetAsMap($sql.'  order by r.createTime desc limit '.$data['start'].",".$data['limit'],$params);
 		$potentailBusinessIds = array();
 		foreach($res as $item){
 			array_push($potentailBusinessIds, $item['id']);
@@ -69,19 +72,12 @@
 		if($potentailBusinessIds != ""){
 			$sql = "select potentialBusinessId,comments,committer,createTime from potential_business_detail where isDeleted = 'false' and potentialBusinessId in ($potentailBusinessIds)";
 			$details = $mysql->DBGetAsMap($sql.' order by createTime desc ',$params);
-		}		
+		}
 		foreach($res as &$item){
-			$item['lbd'] = array();
-			foreach ($details as &$detail) {
-				if(isset($detail['potentialBusinessId']) && $detail['potentialBusinessId'] == $item['id']){
-					array_push($item['lbd'], $detail);
-					unset($detail['potentialBusinessId']);
-				}
-			}
 			unset($item['reginId']);
 			unset($item['isDeleted']);
 		}
-		return $res;
+		return array('total'=>$count[0],'data'=>$res);
 	}
 	
 	function editPotentialBusiness($data){
