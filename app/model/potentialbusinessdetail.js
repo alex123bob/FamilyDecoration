@@ -5,6 +5,7 @@ Ext.define('FamilyDecoration.model.PotentialBusinessDetail', {
         {name: 'potentialBusinessId', type: 'string'},
         {name: 'comments', type: 'string'},
         {name: 'committer', type: 'string'},
+        {name: 'committerRealName', type: 'string'},
         {name: 'isDeleted', type: 'string'},
         {name: 'createTime', type: 'string'}
 	],

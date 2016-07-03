@@ -138,7 +138,7 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                             var resObj = me.getRes();
                             if (resObj.business) {
                                 var win = Ext.create('FamilyDecoration.view.telemarket.EditStatus', {
-
+                                    business: resObj.business
                                 });
                                 win.show();
                             }

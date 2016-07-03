@@ -15,6 +15,7 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
 
     bodyPadding: 5,
     maximizable: true,
+    business: undefined,
 
     layout: 'vbox',
 
@@ -48,22 +49,18 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
                                 e.record.commit();
                                 editor.completeEdit();
                                 if (e.field == 'comments') {
-
+                                    
                                 }
 
                                 Ext.resumeLayouts();
                             },
                             validateedit: function (editor, e, opts) {
                                 var rec = e.record;
-                                if (e.field == 'content') {
+                                if (e.field == 'comments') {
                                     if (e.value == e.originalValue) {
                                         return false;
                                     }
-                                    else if (me.isComment && rec.get('auditor') != User.getName()) {
-                                        showMsg('不允许编辑非本人填写的信息！');
-                                        return false;
-                                    }
-                                    else if (!me.isComment && rec.get('committer') != User.getName()) {
+                                    else if (rec.get('committer') != User.getName()) {
                                         showMsg('不允许编辑非本人填写的信息！');
                                         return false;
                                     }
@@ -107,11 +104,11 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
                     },
                     {
                         text: '编辑人',
-                        dataIndex: 'committer'
+                        dataIndex: 'committerRealName'
                     }
                 ],
                 store: Ext.create('FamilyDecoration.store.PotentialBusinessDetail', {
-
+                    
                 })
             }
         ];
@@ -123,9 +120,16 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
                     var txtarea = me.down('textarea');
                     if (txtarea.isValid()) {
                         var params = {
-                            itemId: me.progress.getId(),
-                            comments: txtarea.getValue()
+                            comments: txtarea.getValue(),
+                            committer: User.getName(),
+                            potentialBusinessId: me.business.getId()
                         };
+                        ajaxAdd('PotentialBusinessDetail', params, 
+                            function (obj){
+                                showMsg('添加成功！');
+                                me.close();
+                            }
+                        );
                     }
                 }
             },
@@ -135,7 +139,19 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
                     me.close();
                 }
             }
-        ]
+        ];
+
+        me.listeners = {
+            afterrender: function (win, opts){
+                var grid = win.down('grid'),
+                    st = grid.getStore();
+                st.load({
+                    params: {
+                        potentialBusinessId: win.business.getId()
+                    }
+                })
+            }
+        }
 
         this.callParent();
     }
