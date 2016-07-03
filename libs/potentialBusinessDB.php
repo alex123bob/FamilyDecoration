@@ -52,7 +52,7 @@
 		global $mysql;
 		$count = $mysql->DBGetAsOneArray("select count(1) as count from ( $sql ) as temp",$params);
 		if($count[0] == 0)
-			return array('total'=>$count[0],'data'=>$res);
+			return array('total'=>$count[0],'data'=>array());
 		$res = $mysql->DBGetAsMap($sql.'  order by r.createTime desc limit '.$data['start'].",".$data['limit'],$params);
 		$potentailBusinessIds = array();
 		foreach($res as $item){
