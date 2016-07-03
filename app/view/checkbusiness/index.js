@@ -28,10 +28,11 @@ Ext.define('FamilyDecoration.view.checkbusiness.Index', {
 				flex: 1,
 				renderer: function (val, meta, rec){
 					var num = rec.get('number'),
+					 	ALevelNumber = rec.get('ALevelNumber'),
 						numStr = '';
 
-						numStr = '<font style="color: ' + (num > 0 ? 'blue; text-shadow: #8F7 ' : 'white; text-shadow: black ') 
-								+ '0.1em 0.1em 0.2em;"><strong>[' + num + ']</strong></font>';
+						numStr = '<font style="color: ' + (ALevelNumber > 0 ? 'blue; text-shadow: #8F7 ' : 'white; text-shadow: black ') 
+								+ '0.1em 0.1em 0.2em;"><strong>[' + ALevelNumber + '/'+num+']</strong></font>';
 
 					if (parseInt(rec.get('apply'), 10) > 0) {
 						meta.style = 'background: #ffff00;';
@@ -46,7 +47,7 @@ Ext.define('FamilyDecoration.view.checkbusiness.Index', {
 				borderRightWidth: '1px'
 			},
 			store: Ext.create('Ext.data.Store', {
-				fields: ['salesman', 'salesmanName', 'number', 'apply'],
+				fields: ['salesman', 'salesmanName', 'number', 'apply','ALevelNumber'],
 				autoLoad: true,
 				filters: [function (item){
 					if (me.businessId || me.salesmanName) {
