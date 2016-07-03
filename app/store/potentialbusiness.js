@@ -6,7 +6,9 @@ Ext.define('FamilyDecoration.store.PotentialBusiness', {
 		type: 'rest',
     	url: './libs/business.php?action=getAllPotentialBusiness',
         reader: {
-            type: 'json'
+            type: 'json',
+			root: 'data',
+			totalProperty: 'total'
         }
 	}
 });

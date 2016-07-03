@@ -36,7 +36,7 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
                 width: '100%',
                 flex: 2,
                 autoScroll: true,
-                cls: 'gridpanel-editprogress',
+                cls: 'gridpanel-editstatus',
                 collapsible: true,
                 plugins: [
                     Ext.create('Ext.grid.plugin.CellEditing', {
@@ -47,15 +47,8 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
 
                                 e.record.commit();
                                 editor.completeEdit();
-                                if (e.field == 'content') {
-                                    ajaxUpdate(me.isComment ? 'ProjectProgressAudit' : 'ProjectProgress', {
-                                        content: e.record.get('content'),
-                                        id: e.record.getId(),
-                                    }, 'id', function (obj) {
-                                        showMsg('编辑成功！');
-                                        e.record.store.reload();
-                                        me.isDirty = true;
-                                    });
+                                if (e.field == 'comments') {
+
                                 }
 
                                 Ext.resumeLayouts();
@@ -88,28 +81,11 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
                                 icon: 'resources/img/delete_for_action_column.png',
                                 tooltip: '删除',
                                 handler: function (view, rowIndex, colIndex) {
-                                    Ext.Msg.warning('确定要删除当前' + (me.isComment ? '监理意见' : '工程进度') + '吗？', function (btnId) {
+                                    Ext.Msg.warning('确定要删除当前状态吗？', function (btnId) {
                                         if (btnId == 'yes') {
                                             var st = view.getStore(),
                                                 rec = st.getAt(rowIndex),
                                                 index = st.indexOf(rec);
-                                            ajaxDel(me.isComment ? 'ProjectProgressAudit' : 'ProjectProgress', {
-                                                id: rec.getId()
-                                            }, function () {
-                                                showMsg('删除成功！');
-                                                me.isDirty = true;
-                                                st.reload({
-                                                    callback: function (recs, ope, success) {
-                                                        if (success) {
-                                                            var newRec = st.getAt(index);
-                                                            if (newRec) {
-                                                                view.getSelectionModel().select(newRec);
-                                                                view.focusRow(newRec, 200);
-                                                            }
-                                                        }
-                                                    }
-                                                });
-                                            });
                                         }
                                     });
                                 }
@@ -135,7 +111,7 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
                     }
                 ],
                 store: Ext.create('FamilyDecoration.store.PotentialBusinessDetail', {
-                    
+
                 })
             }
         ];
@@ -148,46 +124,18 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
                     if (txtarea.isValid()) {
                         var params = {
                             itemId: me.progress.getId(),
-                            content: txtarea.getValue()
+                            comments: txtarea.getValue()
                         };
-                        ajaxAdd(me.isComment ? 'ProjectProgressAudit' : 'ProjectProgress',
-                            params,
-                            function (obj) {
-                                showMsg('添加成功！');
-                                me.progressGrid.refresh();
-                                me.close();
-                            });
-                    }
-                }
-            }, {
-                text: '取消',
-                handler: function () {
-                    me.close();
-                    if (me.isDirty) {
-                        me.progressGrid.refresh();
                     }
                 }
             },
             {
-                text: '添加图片',
-                hidden: true,
+                text: '取消',
                 handler: function () {
-                    var win = Ext.create('FamilyDecoration.view.chart.UploadForm', {
-                        url: './libs/upload_progress_pic.php',
-                        afterUpload: function (fp, o) {
-
-                        },
-                        beforeUpload: function () {
-                            // from an input element
-                            var input = $(':file').get(0);
-                            var filesToUpload = input.files;
-                            var file = filesToUpload[0];
-                        }
-                    });
-
-                    win.show();
+                    me.close();
                 }
-            }]
+            }
+        ]
 
         this.callParent();
     }

@@ -15,6 +15,20 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 	initComponent: function () {
 		var me = this;
 
+		var potentialBusinessSt = Ext.create('FamilyDecoration.store.PotentialBusiness', {
+			autoLoad: false,
+			filters: [
+				function (item) {
+					if (User.isAdmin() || User.isBusinessManager() || User.isAdministrationManager()) {
+						return true;
+					}
+					else {
+						return item.get('salesmanName') == User.getName();
+					}
+				}
+			]
+		});
+
 		me.items = [{
 			xtype: 'gridpanel',
 			flex: 1,
@@ -246,7 +260,7 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 							params: {
 								action: 'getRegionList2',
 								parentID: area.getId(),
-								myselfOnly : !(User.isAdmin() || User.isBusinessManager() || User.isAdministrationManager())
+								myselfOnly: !(User.isAdmin() || User.isBusinessManager() || User.isAdministrationManager())
 							},
 							callback: function (recs, ope, success) {
 								if (success) {
@@ -270,7 +284,7 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 						dataIndex: 'name',
 						renderer: function (val, meta, rec) {
 							var color = rec.raw.potentialBusinessNumber > 0 ? 'blue' : '';
-							var str = '[<strong><font color="'+color+'">' + rec.raw.potentialBusinessNumber+'/'+ rec.raw.totalBusinessNumber + '</font></strong>]';					
+							var str = '[<strong><font color="' + color + '">' + rec.raw.potentialBusinessNumber + '/' + rec.raw.totalBusinessNumber + '</font></strong>]';
 							return val + str;
 						}
 					},
@@ -451,19 +465,13 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 						mode: 'SINGLE',
 						allowDeselect: true
 					},
-					store: Ext.create('FamilyDecoration.store.PotentialBusiness', {
-						autoLoad: false,
-						filters: [
-							function (item) {
-								if (User.isAdmin() || User.isBusinessManager() || User.isAdministrationManager()) {
-									return true;
-								}
-								else {
-									return item.get('salesmanName') == User.getName();
-								}
-							}
-						]
-					}),
+					dockedItems: [{
+						xtype: 'pagingtoolbar',
+						store: potentialBusinessSt,   // same store GridPanel is using
+						dock: 'bottom',
+						displayInfo: true
+					}],
+					store: potentialBusinessSt,
 					initBtn: function (rec) {
 						var editBtn = Ext.getCmp('button-editBuilding'),
 							delBuilding = Ext.getCmp('button-deleteBuilding');
@@ -477,10 +485,18 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 							dispenseTelemarketingStaff = Ext.getCmp('button-dispenseTelemarketingStaff');
 						dispenseTelemarketingStaff.setDisabled(!region);
 						if (region) {
-							st.reload({
-								params: {
+							st.setProxy({
+								url: './libs/business.php?action=getAllPotentialBusiness',
+								type: 'rest',
+								extraParams: {
 									regionID: region.getId()
 								},
+								reader: {
+									type: 'json',
+									root: 'data'
+								}
+							});
+							st.loadPage(1, {
 								callback: function (recs, ope, success) {
 									if (success) {
 										grid.getSelectionModel().deselectAll();
