@@ -2,7 +2,8 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
     extend: 'Ext.container.Container',
     alias: 'widget.telemarket-index',
     requires: [
-        'FamilyDecoration.view.telemarket.TransferToBusiness'
+        'FamilyDecoration.view.telemarket.TransferToBusiness',
+        'FamilyDecoration.view.telemarket.EditStatus'
     ],
     layout: {
         type: 'hbox',
@@ -134,7 +135,10 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                         handler: function (){
                             var resObj = me.getRes();
                             if (resObj.business) {
-                                
+                                var win = Ext.create('FamilyDecoration.view.telemarket.EditStatus', {
+                                    
+                                });
+                                win.show();
                             }
                             else {
                                 showMsg('请选择条目！');
@@ -176,7 +180,15 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                         {
                             text: '地址',
                             flex: 0.5,
-                            dataIndex: 'address'
+                            dataIndex: 'address',
+                            renderer: function (val, meta, rec){
+                                if (val) {
+                                    return rec.get('regionName') + ' ' + val;
+                                }
+                                else {
+                                    return '';
+                                }
+                            }
                         },
                         {
                             text: '业主',
