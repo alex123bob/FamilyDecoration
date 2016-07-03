@@ -27,11 +27,12 @@ Ext.define('FamilyDecoration.view.checksignbusiness.Index', {
 				dataIndex: 'designer',
 				flex: 1,
 				renderer: function (val, meta, rec){
-					var num = rec.get('signedBusinesCount'),
+					var numALevel = rec.get('signedBusinesALevelCount'),
+						num = rec.get('signedBusinesAllCount'),
 						numStr = '';
 
-						numStr = '<font style="color: ' + (num > 0 ? 'blue; text-shadow: #8F7 ' : 'white; text-shadow: black ') 
-								+ '0.1em 0.1em 0.2em;"><strong>[' + num + ']</strong></font>',
+						numStr = '<font style="color: ' + (numALevel > 0 ? 'blue; text-shadow: #8F7 ' : 'white; text-shadow: black ') 
+								+ '0.1em 0.1em 0.2em;"><strong>[' + numALevel +'/'+num + ']</strong></font>',
 
 						resultStr = '';
 
@@ -54,7 +55,7 @@ Ext.define('FamilyDecoration.view.checksignbusiness.Index', {
 				borderRightWidth: '1px'
 			},
 			store: Ext.create('Ext.data.Store', {
-				fields: ['designer', 'designerName', 'signedBusinesCount', 'applyBudgetCount', 'applyTransferCount'],
+				fields: ['designer', 'designerName', 'signedBusinesALevelCount', 'signedBusinesAllCount','applyBudgetCount', 'applyTransferCount'],
 				autoLoad: true,
 				proxy: {
 					type: 'rest',

@@ -37,14 +37,17 @@
 	function getDesignerlist(){
 		global $mysql;
 		$res0 = $mysql->DBGetAsMap("select distinct designer,designerName from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and designer is not null ;");
-		//signedBusinesCount
-		$res1 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and applyDesigner = 2 and designer is not null group by designer;");
+		//signedBusinesAllcount
+		$res4 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and applyDesigner = 2 and designer is not null group by designer;");
+		//signedBusinesALevelCount
+		$res1 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and signBusinessLevel = 'A' and applyDesigner = 2 and designer is not null group by designer;");
 		//applyBudgetCount
 		$res2 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and applyBudget = 1 and designer is not null group by designer;");
 		//applyTransferCount
 		$res3 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and applyProjectTransference  = 1 and designer is not null group by designer;");
 
 		$signedBusinesCount = array();
+		$signedBusinesAllCount = array();
 		$applyBudgetCount = array();
 		$applyTransferCount = array();
 
@@ -57,11 +60,15 @@
 		foreach($res3 as $item){
 			$applyTransferCount[$item['designer']] = $item['number'];
 		}
+		foreach($res4 as $item){
+			$signedBusinesAllCount[$item['designer']] = $item['number'];
+		}
 
 		foreach($res0 as $key => $val){
-			$res0[$key]['signedBusinesCount'] = isset($signedBusinesCount[$val['designer']]) ? intval($signedBusinesCount[$val['designer']]) : 0;			
+			$res0[$key]['signedBusinesALevelCount'] = isset($signedBusinesCount[$val['designer']]) ? intval($signedBusinesCount[$val['designer']]) : 0;			
 			$res0[$key]['applyBudgetCount'] = isset($applyBudgetCount[$val['designer']]) ? intval($applyBudgetCount[$val['designer']]) : 0;			
 			$res0[$key]['applyTransferCount'] = isset($applyTransferCount[$val['designer']]) ? intval($applyTransferCount[$val['designer']]) : 0;			
+			$res0[$key]['signedBusinesAllCount'] = isset($signedBusinesAllCount[$val['designer']]) ? intval($signedBusinesAllCount[$val['designer']]) : 0;			
 		}
 		return $res0;
 	}
