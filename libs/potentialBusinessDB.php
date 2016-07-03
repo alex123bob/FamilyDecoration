@@ -34,15 +34,7 @@
 	//附带最新状态
 	function getAllPotentialBusiness($data){
 		$params = array();
-		$sql = "select d.comments as lbs,d.createTime as lbst,d.committer as lbsc,
-					r.*,g.name as rn from `potential_business` r 
-					left join region g on g.id = r.regionId and g.isDeleted = 'false' 
-					left join (
-						select * from potential_business_detail where id in ( 
-							select max(id) from potential_business_detail group by potentialBusinessId
-						)
-					) d on d.potentialBusinessId = r.id and d.isDeleted = 'false'
-					where r.isDeleted = 'false'  ";
+		$sql = "select r.*,g.name as rn from `potential_business` r left join region g on g.id = r.regionId and g.isDeleted = 'false' where r.isDeleted = 'false'  ";
 		$fields = array('regionID','status','status_second','status_third','salesman','salesmanName','telemarketingStaff','telemarketingStaffName');
 		foreach($fields as $field){
 			if(isset($data[$field])){
@@ -66,14 +58,27 @@
 		foreach($res as $item){
 			array_push($potentailBusinessIds, $item['id']);
 		}
+		//d.comments as lbs,d.createTime as lbst,d.committer as lbsc,
 		//获取详细
 		$details = array();	
 		$potentailBusinessIds = join(",",$potentailBusinessIds);
 		if($potentailBusinessIds != ""){
 			$sql = "select potentialBusinessId,comments,committer,createTime from potential_business_detail where isDeleted = 'false' and potentialBusinessId in ($potentailBusinessIds)";
-			$details = $mysql->DBGetAsMap($sql.' order by createTime desc ',$params);
+			$details = $mysql->DBGetAsMap($sql.' order by potentialBusinessId,id desc ',$params);
 		}
 		foreach($res as &$item){
+			$item['lbd'] = array();
+			foreach ($details as $detail) {
+				if(isset($detail['potentialBusinessId']) && $detail['potentialBusinessId'] == $item['id']){
+					array_push($item['lbd'], $detail);
+					unset($detail['potentialBusinessId']);
+					if(!isset($item['lbd'])){
+						$item['lbs'] = $detail['comments'];
+						$item['lbc'] = $detail['commiter'];
+						$item['lbt'] = $detail['createTime'];
+					}
+				}
+			}
 			unset($item['reginId']);
 			unset($item['isDeleted']);
 		}
