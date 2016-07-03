@@ -76,16 +76,26 @@
 		global $mysql;
 		// get list and number of business
 		$res1 = $mysql->DBGetAsMap("select distinct salesman,salesmanName, count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' group by salesman;");
+		// get list and number of A level business
+		$res3 = $mysql->DBGetAsMap("select distinct salesman,salesmanName, count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and level = 'A' group by salesman;");
 		// get list and number of business which require designer  
 		$res2 = $mysql->DBGetAsMap("select distinct salesman,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and applyDesigner = 1 group by salesman;");
 		// sort from map list to map     [{'salesman':aaa,'number':111},{'salesman':bbb,'number':222}...]  to [aaa:111,bbb:222]
 		$applyDesignerCount = array();
+		$ALevelBuisness = array();
 		foreach($res2 as $item){
 			$applyDesignerCount[$item['salesman']] = $item['number'];
+		}
+		foreach($res3 as $item){
+			$ALevelBuisness[$item['salesman']] = $item['number'];
 		}
 		// set $res1 with applyDesignerCount in $applyDesignerCount
 		foreach($res1 as $key => $val){
 			$res1[$key]['apply'] = isset($applyDesignerCount[$val['salesman']]) ? $applyDesignerCount[$val['salesman']] : 0;			
+		}
+		// set $res1 with applyDesignerCount in $applyDesignerCount
+		foreach($res1 as $key => $val){
+			$res1[$key]['ALevelNumber'] = isset($ALevelBuisness[$val['salesman']]) ? $ALevelBuisness[$val['salesman']] : 0;			
 		}
 		return $res1;
 	}
@@ -141,7 +151,7 @@
 		}
 		// put result in order according to level. from A to D.
 		// force NULL value rank the last
-		$sql .= " order by IF(ISNULL(`level`), 1, 0), `level`";
+		$sql .= " order by IF(ISNULL(`level`), 1, 0), `level` , id desc ";
 		return $mysql->DBGetAsMap($sql,$params);
 	}
 	
