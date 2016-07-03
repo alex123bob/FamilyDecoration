@@ -74,7 +74,7 @@
 					unset($detail['potentialBusinessId']);
 					if(!isset($item['lbd'])){
 						$item['lbs'] = $detail['comments'];
-						$item['lbc'] = $detail['commiter'];
+						$item['lbc'] = $detail['committer'];
 						$item['lbt'] = $detail['createTime'];
 					}
 				}
