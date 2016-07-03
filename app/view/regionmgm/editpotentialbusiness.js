@@ -5,7 +5,7 @@ Ext.define('FamilyDecoration.view.regionmgm.EditPotentialBusiness', {
 	resizable: false,
 	modal: true,
 	width: 500,
-	height: 440,
+	height: 280,
 	autoScroll: true,
 	bodyPadding: 10,
 
@@ -13,13 +13,10 @@ Ext.define('FamilyDecoration.view.regionmgm.EditPotentialBusiness', {
 	grid: null,
 	potentialBusiness: null,
 
-	// if true, only show the last textarea, only change status.
-	onlyStatusEdit: false,
-
 	initComponent: function () {
 		var me = this;
 
-		me.title = me.potentialBusiness ? (me.onlyStatusEdit ? '编辑状态' : '编辑') : '新建';
+		me.title = me.potentialBusiness ? '编辑' : '新建';
 
 		me.items = [{
 			xtype: 'form',
@@ -31,52 +28,24 @@ Ext.define('FamilyDecoration.view.regionmgm.EditPotentialBusiness', {
 			},
 			items: [
 				{
-					hidden: me.onlyStatusEdit,
 					fieldLabel: '地址',
 					name: 'address',
 					value: me.potentialBusiness ? me.potentialBusiness.get('address') : ''
 				},
 				{
-					hidden: me.onlyStatusEdit,
 					fieldLabel: '业主姓名',
 					name: 'proprietor',
 					value: me.potentialBusiness ? me.potentialBusiness.get('proprietor') : ''
 				},
 				{
-					hidden: me.onlyStatusEdit,
 					fieldLabel: '联系方式',
 					name: 'phone',
 					value: me.potentialBusiness ? me.potentialBusiness.get('phone') : ''
 				},
 				{
-					height: me.onlyStatusEdit ? 100 : 72,
-					xtype: 'textarea',
-					fieldLabel: '状态1',
-					name: 'status',
-					value: me.potentialBusiness ? me.potentialBusiness.get('status') : '',
-					allowBlank: true
-				},
-				{
-					height: me.onlyStatusEdit ? 100 : 72,
-					xtype: 'textarea',
-					fieldLabel: '状态2',
-					name: 'status_second',
-					value: me.potentialBusiness ? me.potentialBusiness.get('status_second') : '',
-					allowBlank: true
-				},
-				{
-					height: me.onlyStatusEdit ? 100 : 72,
-					xtype: 'textarea',
-					fieldLabel: '状态3',
-					name: 'status_third',
-					value: me.potentialBusiness ? me.potentialBusiness.get('status_third') : '',
-					allowBlank: true
-				},
-				{
 					xtype: 'fieldcontainer',
 					fieldLabel: '是否装修',
 					layout: 'hbox',
-					hidden: me.onlyStatusEdit,
 					defaultType: 'radiofield',
 					items: [
 						{
@@ -105,7 +74,7 @@ Ext.define('FamilyDecoration.view.regionmgm.EditPotentialBusiness', {
 					var frm = me.down('form');
 					if (frm.isValid()) {
 						var frmVals = frm.getValues();
-						if (!frmVals.isDecorated) {
+						if (frmVals.isDecorated === undefined) {
 							Ext.Msg.error('必须要选择是否装修状态，否则无法添加或更改！');
 							return false;
 						}

@@ -423,36 +423,6 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 							}
 						},
 						{
-							text: '修改状态',
-							disabled: true,
-							id: 'button-editStatus',
-							name: 'button-editStatus',
-							icon: './resources/img/edit1.png',
-							handler: function () {
-								var regionGrid = Ext.getCmp('gridpanel-regionMgm'),
-									region = regionGrid.getSelectionModel().getSelection()[0],
-									grid = Ext.getCmp('gridpanel-buildingMgm'),
-									rec = grid.getSelectionModel().getSelection()[0];
-								if (region) {
-									if (rec) {
-										var win = Ext.create('FamilyDecoration.view.regionmgm.EditPotentialBusiness', {
-											region: region,
-											grid: grid,
-											potentialBusiness: rec,
-											onlyStatusEdit: true
-										});
-									}
-									else {
-										showMsg('请选择编辑项目！');
-									}
-									win.show();
-								}
-								else {
-									showMsg('请选择小区！');
-								}
-							}
-						},
-						{
 							text: '分配电销人员',
 							disabled: true,
 							id: 'button-dispenseTelemarketingStaff',
@@ -496,10 +466,8 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 					}),
 					initBtn: function (rec) {
 						var editBtn = Ext.getCmp('button-editBuilding'),
-							editStatus = Ext.getCmp('button-editStatus'),
 							delBuilding = Ext.getCmp('button-deleteBuilding');
 						editBtn.setDisabled(!rec);
-						editStatus.setDisabled(!rec);
 						delBuilding.setDisabled(!rec);
 					},
 					refresh: function (region) {
@@ -574,30 +542,11 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 									}
 								}
 							},
-							// {
-							// 	text: '状态1',
-							// 	flex: 1.3,
-							// 	dataIndex: 'status',
-							// 	renderer: function (val, meta, rec) {
-							// 		return val.replace(/\n|\r/gi, '<br />');
-							// 	}
-							// },
-							// {
-							// 	text: '状态2',
-							// 	flex: 1.3,
-							// 	dataIndex: 'status_second',
-							// 	renderer: function (val, meta, rec) {
-							// 		return val.replace(/\n|\r/gi, '<br />');
-							// 	}
-							// },
-							// {
-							// 	text: '状态3',
-							// 	flex: 1.3,
-							// 	dataIndex: 'status_third',
-							// 	renderer: function (val, meta, rec) {
-							// 		return val.replace(/\n|\r/gi, '<br />');
-							// 	}
-							// },
+							{
+								text: '最新状态',
+								flex: 0.8,
+								dataIndex: 'latestBusinessStatus'
+							},
 							{
 								text: '扫楼人员',
 								flex: 0.8,

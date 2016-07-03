@@ -2,6 +2,7 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
     extend: 'Ext.container.Container',
     alias: 'widget.telemarket-index',
     requires: [
+        'FamilyDecoration.view.telemarket.TransferToBusiness'
     ],
     layout: {
         type: 'hbox',
@@ -61,7 +62,7 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                     autoLoad: true
                 }),
                 listeners: {
-                    selectionchange: function (selModel, sels, opts){
+                    selectionchange: function (selModel, sels, opts) {
                         var resObj = me.getRes();
                         resObj.businessList.refresh();
                     }
@@ -71,6 +72,26 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                 title: '分配名单',
                 flex: 9,
                 itemId: 'gridpanel-businessList',
+                tbar: [
+                    {
+                        text: '转为业务',
+                        icon: 'resources/img/transfer1.png',
+                        handler: function () {
+                            var resObj = me.getRes();
+                            var win = Ext.create('FamilyDecoration.view.telemarket.TransferToBusiness', {
+                                potentialBusiness: resObj.business
+                            });
+                            win.show();
+                        }
+                    },
+                    {
+                        text: '提醒功能',
+                        icon: 'resources/img/alarm.png',
+                        handler: function () {
+
+                        }
+                    }
+                ],
                 refresh: function () {
                     var resObj = me.getRes(),
                         name;
@@ -144,7 +165,7 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
         ];
 
         me.listeners = {
-            afterrender: function (cmp, opts){
+            afterrender: function (cmp, opts) {
                 var resObj = me.getRes();
                 if (!needList) {
                     resObj.businessList.refresh();
