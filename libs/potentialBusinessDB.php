@@ -22,7 +22,7 @@
 			$obj['status_third'] = $data['status_third'];
 		global $mysql;
 		$mysql->DBInsertAsArray("potential_business",$obj);
-		return array('status'=>'successful', 'errMsg' => '','regionId'=> $obj["id"]);
+		return array('status'=>'successful', 'errMsg' => '','regionID'=> $obj["id"]);
 	}
 
 	function deletePotentialBusiness($id){
@@ -31,10 +31,55 @@
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
+	function transferToBusiness ($id, $salesmanName, $source) {
+		global $mysql;
+		$potentialBusiness = $mysql->DBGetAsMap("select * from potential_business where `id` = '?' and isDeleted = 'false' ", array($id));
+		$potentialBusinessDetail = $mysql->DBGetAsMap("select * from potential_business_detail where `potentialBusinessId` = '?' and isDeleted = 'false' ORDER BY createTime DESC ", array($id));
+		$salesman = $mysql->DBGetAsMap("select realname from user where name = '?' and isDeleted = 'false' ", $salesmanName);
+		$salesman = $salesman[0]["realname"];
+		if (count($potentialBusiness) > 0) {
+			$businessItem = $potentialBusiness[0];
+			$obj = array(
+				"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
+				"updateTime"=>'now()'
+			);
+			$obj["regionId"] = $businessItem["regionID"];
+			$obj["customer"] = $businessItem["proprietor"];
+			$obj["custContact"] = $businessItem["phone"];
+			$obj["address"] = $businessItem["address"];
+			$obj["salesmanName"] = $salesmanName;
+			$obj["salesman"] = $salesman;
+			$obj["source"] = $source;
+			
+			// 将字段先置为true，表明当前潜在业务被转为了业务。
+			$mysql->DBUpdate('potential_business',array("isTransfered"=>"true"),"`id` = '?' ",array($id));
+			$mysql->DBInsertAsArray("business", $obj);
+
+			if (count($potentialBusinessDetail) > 0) {
+				for ($i=0; $i < count($potentialBusinessDetail); $i++) {
+					$detailItem = $potentialBusinessDetail[$i]; 
+					$detailObj = array(
+						"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
+						"businessId"=>$obj["id"],
+						"content"=>$detailItem["comments"],
+						"committer"=>$detailItem["committer"],
+						"createTime"=>$detailItem["createTime"]
+					);
+					$mysql->DBInsertAsArray("business_detail", $detailObj);
+				}
+			}
+
+			return array('status'=>'successful', 'errMsg' => '','businessId'=> $obj["id"]);
+		}
+		else {
+			throw new Exception("查不到对应扫楼业务！");
+		}
+	}
+
 	//附带最新状态
 	function getAllPotentialBusiness($data){
 		$params = array();
-		$sql = "select r.*,g.name as rn from `potential_business` r left join region g on g.id = r.regionId and r.isDeleted = 'false' where g.isDeleted = 'false'  ";
+		$sql = "select r.*,g.name as rn from `potential_business` r left join region g on g.id = r.regionID and r.isDeleted = 'false' and r.isTransfered = 'false'  where g.isDeleted = 'false'";
 		$fields = array('regionID','status','status_second','status_third','salesman','salesmanName','telemarketingStaff','telemarketingStaffName');
 		foreach($fields as $field){
 			if(isset($data[$field])){

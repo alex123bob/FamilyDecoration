@@ -10,6 +10,7 @@ Ext.define('FamilyDecoration.view.telemarket.TransferToBusiness', {
     bodyPadding: 10,
     modal: true,
     layout: 'form',
+    grid: undefined,
     potentialBusiness: undefined,
     defaultType: 'textfield',
 
@@ -96,8 +97,8 @@ Ext.define('FamilyDecoration.view.telemarket.TransferToBusiness', {
                     },
                     {
                         xtype: 'hiddenfield',
-						hideLabel: true,
-						name: 'telemarketingStaffName',
+                        hideLabel: true,
+                        name: 'telemarketingStaffName',
                         itemId: 'textfield-telemarketingStaffName',
                         value: me.potentialBusiness.get('telemarketingStaffName')
                     }
@@ -110,6 +111,8 @@ Ext.define('FamilyDecoration.view.telemarket.TransferToBusiness', {
                 displayField: 'value',
                 valueField: 'name',
                 editable: false,
+                value: 'telemarketing',
+                queryMode: 'local',
                 store: Ext.create('Ext.data.Store', {
                     fields: ['name', 'value'],
                     data: [
@@ -139,19 +142,56 @@ Ext.define('FamilyDecoration.view.telemarket.TransferToBusiness', {
                         }
                     ]
                 })
+            },
+            {
+                xtype: 'displayfield',
+                fieldLabel: '状态',
+                value: '所有状态将转换到业务详细中显示'
             }
         ];
 
-        me.buttons = [{
-            text: '确定',
-            handler: function () {
-            }
-        }, {
+        me.buttons = [
+            {
+                text: '确定',
+                handler: function () {
+                    var obj = {},
+                        telemarketingStaffName = me.down('[name="telemarketingStaffName"]'),
+                        source = me.down('[name="source"]');
+                    obj['salesmanName'] = telemarketingStaffName.getValue();
+                    obj['source'] = source.getRawValue();
+                    Ext.apply(obj, {
+                        id: me.potentialBusiness.getId()
+                    });
+                    Ext.Ajax.request({
+                        url: './libs/business.php?action=transferToBusiness',
+                        method: 'POST',
+                        params: obj,
+                        callback: function (opts, success, res){
+                            var obj = Ext.decode(res.responseText);
+                            if (obj.status == 'successful') {
+                                showMsg('转为业务成功！');
+                                me.close();
+                                me.grid.getStore().reload({
+                                    callback: function (recs, ope, success){
+                                        if (success) {
+                                            var selModel = me.grid.getSelectionModel();
+                                            selModel.deselectAll();
+                                            selModel.select(me.grid.getStore().indexOf(me.potentialBusiness));
+                                        }
+                                    }
+                                })
+                            }
+                        }
+                    });
+                }
+            },
+            {
                 text: '取消',
                 handler: function () {
                     me.close();
                 }
-            }]
+            }
+        ]
 
         me.callParent();
     }

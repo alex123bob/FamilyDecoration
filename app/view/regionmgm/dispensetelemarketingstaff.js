@@ -82,6 +82,11 @@ Ext.define('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
 							flex: 1
 						},
 						{
+							text: '电销人员',
+							dataIndex: 'telemarketingStaff',
+							flex: 1
+						},
+						{
 							text: '已装',
 							dataIndex: 'isDecorated',
 							flex: 1,
@@ -220,7 +225,17 @@ Ext.define('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
 								if (obj.status == 'successful') {
                                     showMsg('分配成功！');
 									me.close();
-                                    me.grid.getStore().reload();
+                                    me.grid.getStore().reload({
+										callback: function (recs, ope, success){
+											if (success) {
+												if (me.potentialBusiness) {
+													var selModel =  me.grid.getSelectionModel();
+													selModel.deselectAll();
+													selModel.select(me.grid.getStore().indexOf(me.potentialBusiness));
+												}
+											}
+										}
+									});
 								}
 							}
 						}

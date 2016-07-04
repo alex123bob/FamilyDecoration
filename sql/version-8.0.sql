@@ -83,4 +83,10 @@ alter table potential_business drop column `status`;
 alter table potential_business drop column `status_second`;
 alter table potential_business drop column `status_third`;
 
+# 2016-07-04 改动
+# 为potentialBusiness增加是否转为业务字段
+ALTER TABLE `potential_business` ADD `isTransfered` VARCHAR(5) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'false' COMMENT '是否已经专为业务' AFTER `isDeleted`;
+# 为business_detail表添加committer，因为potential_business里面有committer，在转换成业务的时候，为防止这种数据回头丢失，我们就将business_detail里面也加上这个字段，用不用以后再说，先留出来
+ALTER TABLE `business_detail` ADD `committer` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '编辑人，历史为空' ;
+
 update `system` set `paramValue`='version-8.0' where `id`='4';

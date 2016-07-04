@@ -105,6 +105,7 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                             var resObj = me.getRes();
                             if (resObj.business) {
                                 var win = Ext.create('FamilyDecoration.view.telemarket.TransferToBusiness', {
+                                    grid: resObj.businessList,
                                     potentialBusiness: resObj.business
                                 });
                                 win.show();
@@ -194,7 +195,7 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                         },
                         {
                             text: '地址',
-                            flex: 0.5,
+                            flex: 0.6,
                             dataIndex: 'address',
                             renderer: function (val, meta, rec) {
                                 if (val) {

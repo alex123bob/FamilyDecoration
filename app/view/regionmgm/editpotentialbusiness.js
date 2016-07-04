@@ -104,7 +104,17 @@ Ext.define('FamilyDecoration.view.regionmgm.EditPotentialBusiness', {
 									var obj = Ext.decode(res.responseText);
 									if (obj.status == 'successful') {
 										me.potentialBusiness ? showMsg('编辑成功！') : showMsg('添加成功！');
-										me.grid.refresh(me.region);
+										me.grid.getStore().reload({
+											callback: function (recs, ope, success){
+												if (success) {
+													if (me.potentialBusiness) {
+														var selModel =  me.grid.getSelectionModel();
+														selModel.deselectAll();
+														selModel.select(me.grid.getStore().indexOf(me.potentialBusiness));
+													}
+												}
+											}
+										});
 										me.close();
 									}
 									else {
