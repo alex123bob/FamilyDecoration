@@ -335,11 +335,11 @@
 					case "double":
 						$sql .= $value.",";
 						break;
-					case "NULL":
-						$sql .= "null,";
-						break;
 					case "string":
-						if(strtolower($value) == "now()"){
+						if(strtolower($value) == "null") {
+							$sql .= "null,";
+						}
+						else if(strtolower($value) == "now()"){
 							$sql .= "now(),";
 						}else{
 							$sql .= "'".myStrEscape($value)."',";
@@ -366,7 +366,6 @@
 						$value = ($value ? "true" : "false");
 						break;
 					case "integer":
-					case "NULL":
 					case "double":
 						break;
 					case "string":

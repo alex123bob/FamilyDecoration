@@ -31,8 +31,15 @@
 	}
 	function getBusinessByDesigner($post){
 		global $mysql;
-		// force NULL value rank the last
-		return $mysql->DBGetAsMap("select `b`.*, `r`.`name` from `business` `b` left join `region` `r` on `b`.`regionId` = `r`.`id` where  `b`.`designerName` = '?' and `b`.`isDeleted` = 'false' and `b`.`isFrozen` = 'false' and `b`.`isTransfered` = 'false' and `b`.`isDead` = 'false' order by IF( ISNULL(`b`.`signBusinessLevel`), 1, 0), `b`.`signBusinessLevel` DESC ",$post["designerName"]);
+		// isWaiting: default false, 传递为true表示查询当前designer的待转列表业务
+		if (isset($post["isWaiting"]) && $post["isWaiting"] == true) {
+			$waitingListSql = " and ds_lp = '-1' ";
+		}
+		else {
+			$waitingListSql = "";
+		}
+		// force NULL value to be ranked the last
+		return $mysql->DBGetAsMap("select `b`.*, `r`.`name` from `business` `b` left join `region` `r` on `b`.`regionId` = `r`.`id` where  `b`.`designerName` = '?' and `b`.`isDeleted` = 'false' and `b`.`isFrozen` = 'false' and `b`.`isTransfered` = 'false' and `b`.`isDead` = 'false' ".$waitingListSql." order by IF( ISNULL(`b`.`signBusinessLevel`), 1, 0), `b`.`signBusinessLevel` DESC ",$post["designerName"]);
 	}
 	function getDesignerlist(){
 		global $mysql;
@@ -140,7 +147,7 @@
 	
 	function getBusiness($data){
 		global $mysql;
-		$fields = array('regionId','address','isFrozen','requestDead','isDead','requestDeadBusinessReason','customer','custContact','salesman','salesmanName','designer','designerName','applyDesigner','level');
+		$fields = array('regionId','address','isFrozen','requestDead','isDead','requestDeadBusinessReason','customer','custContact','salesman','salesmanName','designer','designerName','applyDesigner','level','ds_lp','ds_fc','ds_bs','ds_bp');
 		$params = array();
 		$sql = "select `b`.*, `r`.name from `business` `b` left join `region` `r` on `b`.regionId = `r`.id where `b`.`isDeleted` = 'false' and b.isTransfered = 'false' ";
 		foreach($fields as $field){
@@ -202,7 +209,7 @@
 	function editBusiness($data){
 		global $mysql;
 		$id = $data["id"];
-		$fields = array("regionId","address","isFrozen",'requestDead','isDead','requestDeadBusinessReason',"isTransfered","updateTime","signTime","customer","custContact","salesman","source","salesmanName","designer","designerName","applyDesigner","applyProjectTransference","applyBudget");
+		$fields = array("regionId","address","isFrozen",'requestDead','isDead','requestDeadBusinessReason',"isTransfered","updateTime","signTime","customer","custContact","salesman","source","salesmanName","designer","designerName","applyDesigner","applyProjectTransference","applyBudget","ds_lp","ds_fc","ds_bs","ds_bp");
 		$obj = array();
 		foreach($fields as $field){
 			if(isset($data[$field]))

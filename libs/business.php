@@ -111,7 +111,19 @@
 			break;
 		//分配设计师
 		case "distributeDesigner":
-			$res = editBusiness(array( 'id'=>$_REQUEST['businessId'],'designer'=>$_REQUEST['designer'],'designerName'=>$_REQUEST['designerName'],'applyDesigner'=>2,'signTime'=>date('Y-m-d H:i:s')));
+			$res = editBusiness(
+				array(
+					'id'=>$_REQUEST['businessId'],
+					'designer'=>$_REQUEST['designer'],
+					'designerName'=>$_REQUEST['designerName'],
+					'applyDesigner'=>2,
+					'signTime'=>date('Y-m-d H:i:s'),
+					'ds_lp'=>-1,
+					'ds_fc'=>-1,
+					'ds_bs'=>-1,
+					'ds_bp'=>-1
+				)
+			);
 			break;
 		//获取设计师列表
 		case "getDesignerlist":
@@ -124,6 +136,21 @@
 		// 获取业务员列表，需要附带业务员对应申请废单和已经是废单数量
 		case "getSalesmanlistWithDeadBusinessNumber":
 			$res = getSalesmanlistWithDeadBusinessNumber();
+			break;
+		// 将当前业务退回
+		case "returnBusiness":
+			$res = editBusiness(
+				array(
+					'id'=>$_REQUEST["id"],
+					'applyDesigner'=>1,
+					'designerName'=>"NULL",
+					'designer'=>"NULL",
+					'ds_lp'=>"NULL",
+					'ds_fc'=>"NULL",
+					'ds_bs'=>"NULL",
+					'ds_bp'=>"NULL"
+				)
+			);
 			break;
 		//申请将业务转为工程
 		case "applyprojecttransference":

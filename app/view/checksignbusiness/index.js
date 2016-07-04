@@ -108,6 +108,7 @@ Ext.define('FamilyDecoration.view.checksignbusiness.Index', {
 						signbusinessCt.designStaff = null;
 					}
 					signbusinessCt.refreshDetailedAddress();
+					signbusinessCt.refreshWaitingList();
 				}
 			}
 		}, {

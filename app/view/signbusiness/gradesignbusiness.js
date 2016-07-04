@@ -35,7 +35,7 @@ Ext.define('FamilyDecoration.view.signbusiness.GradeSignBusiness', {
 		    displayField: 'name',
 		    valueField: 'name',
 		    value: rec.get('signBusinessLevel')
-		}],
+		}];
 
 		me.buttons = [{
 			text: '确定',
@@ -70,7 +70,7 @@ Ext.define('FamilyDecoration.view.signbusiness.GradeSignBusiness', {
 			handler: function () {
 				me.close();
 			}
-		}]
+		}];
 
 		this.callParent();
 	}
