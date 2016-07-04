@@ -18,6 +18,10 @@ Ext.define('FamilyDecoration.model.Business', {
 		{name: 'applyBudget', type: 'string'}, //  0初始化，1申请预算，2预算申请成功，
 		{name: 'regionName', type: 'string', mapping: 'name'}, // 小区名称
 		{name: 'requestDead', type: 'string'}, // 该业务是否申请废单，是为1，否为0
+		{name: 'ds_lp', type: 'string'}, // designStatus: Layout Plan 平面布局
+		{name: 'ds_fc', type: 'string'}, // designStatus: facade construction 立面施工
+		{name: 'ds_bs', type: 'string'}, // designStatus: building design sketch 效果图
+		{name: 'ds_bp', type: 'string'}, // designStatus: budget plan 预算 
 		{name: 'isDead', type: 'string'}, // 该业务是否已经是废单，是为true,否为false
 		{name: 'requestDeadBusinessReason', type: 'string'}, // 该业务申请废单的原因
 		{name: 'budgetFinished', type: 'string'}, // an indicator used for telling if the corresponding budget is finished or not

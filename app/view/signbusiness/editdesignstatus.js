@@ -22,8 +22,6 @@ Ext.define('FamilyDecoration.view.signbusiness.EditDesignStatus', {
 
     initComponent: function () {
         var me = this,
-            rec = me.business,
-            grid = me.waitingList,
             statusObj = {
                 ds_lp: '平面布局',
                 ds_fc: '立面施工',
@@ -58,7 +56,19 @@ Ext.define('FamilyDecoration.view.signbusiness.EditDesignStatus', {
 
         for (var key in statusObj) {
             if (statusObj.hasOwnProperty(key)) {
-                var name = statusObj[key];
+                var name = statusObj[key],
+                    start, end, period, done = false;
+                period = me.business.get(key);
+                if (period && period != -1) {
+                    if (period.indexOf('done') != -1) {
+                        done = true;
+                        period = period.slice(0, period.indexOf('done'));
+                    }
+                    start = Ext.Date.parse(period.split('~')[0], 'Y-m-d');
+                    end = Ext.Date.parse(period.split('~')[1], 'Y-m-d');
+                }
+                else {
+                }
                 itemArr.push(
                     {
                         xtype: 'fieldcontainer',
@@ -81,6 +91,8 @@ Ext.define('FamilyDecoration.view.signbusiness.EditDesignStatus', {
                                 name: 'startTime',
                                 editable: false,
                                 allowBlank: false,
+                                value: start,
+                                disabled: done,
                                 listeners: {
                                     change: function (field, newVal, oldVal, opts){
                                         var endFd = field.nextSibling();
@@ -93,6 +105,8 @@ Ext.define('FamilyDecoration.view.signbusiness.EditDesignStatus', {
                                 name: 'endTime',
                                 editable: false,
                                 allowBlank: false,
+                                value: end,
+                                disabled: done,
                                 listeners: {
                                     change: function (field, newVal, oldVal, opts){
                                         var startFd = field.previousSibling();
@@ -121,9 +135,14 @@ Ext.define('FamilyDecoration.view.signbusiness.EditDesignStatus', {
                                 startTime = dct.down('[name="startTime"]'),
                                 endTime = dct.down('[name="endTime"]');
                             if (startTime.isValid() && endTime.isValid()) {
-                                startTime = Ext.Date.format(startTime.getValue(), 'Y-m-d');
-                                endTime = Ext.Date.format(endTime.getValue(), 'Y-m-d');
-                                res[pro] = startTime + '~' + endTime;
+                                if (startTime.isDisabled() || endTime.isDisabled()) {
+
+                                }
+                                else {
+                                    startTime = Ext.Date.format(startTime.getValue(), 'Y-m-d');
+                                    endTime = Ext.Date.format(endTime.getValue(), 'Y-m-d');
+                                    res[pro] = startTime + '~' + endTime;
+                                }
                             }
                             else {
                                 isValid = false;
@@ -145,8 +164,13 @@ Ext.define('FamilyDecoration.view.signbusiness.EditDesignStatus', {
                             if (success) {
                                 var obj = Ext.decode(res.responseText);
                                 if ('successful' == obj.status) {
-                                    showMsg('接收成功！');
-                                    me.waitingList.refresh();
+                                    if (me.waitingList) {
+                                        showMsg('接收成功！');
+                                        me.waitingList.refresh();
+                                    }
+                                    else {
+                                        showMsg('修改成功!');
+                                    }
                                     me.detailedAddressGrid.refresh();
                                     me.close();
                                 }

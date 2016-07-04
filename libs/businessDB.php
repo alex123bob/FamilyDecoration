@@ -36,7 +36,7 @@
 			$waitingListSql = " and ds_lp = '-1' ";
 		}
 		else {
-			$waitingListSql = "";
+			$waitingListSql = "and (ds_lp != '-1' || ds_lp is null) ";
 		}
 		// force NULL value to be ranked the last
 		return $mysql->DBGetAsMap("select `b`.*, `r`.`name` from `business` `b` left join `region` `r` on `b`.`regionId` = `r`.`id` where  `b`.`designerName` = '?' and `b`.`isDeleted` = 'false' and `b`.`isFrozen` = 'false' and `b`.`isTransfered` = 'false' and `b`.`isDead` = 'false' ".$waitingListSql." order by IF( ISNULL(`b`.`signBusinessLevel`), 1, 0), `b`.`signBusinessLevel` DESC ",$post["designerName"]);

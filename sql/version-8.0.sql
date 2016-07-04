@@ -89,7 +89,7 @@ ALTER TABLE `potential_business` ADD `isTransfered` VARCHAR(5) CHARACTER SET utf
 # 为business_detail表添加committer，因为potential_business里面有committer，在转换成业务的时候，为防止这种数据回头丢失，我们就将business_detail里面也加上这个字段，用不用以后再说，先留出来
 ALTER TABLE `business_detail` ADD `committer` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '编辑人，历史为空' ;
 # 为business添加四个字段，用于签单业务接受前进行初始化的四个值
-ALTER TABLE `business` ADD `ds_lp` VARCHAR(21) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'layout plan平面布局' , ADD `ds_fc` VARCHAR(21) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'facade construction立面施工' , ADD `ds_bs` VARCHAR(21) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'building design sketch效果图' , ADD `ds_bp` VARCHAR(21) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'budget plan预算' ;
+ALTER TABLE `business` ADD `ds_lp` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'layout plan平面布局' , ADD `ds_fc` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'facade construction立面施工' , ADD `ds_bs` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'building design sketch效果图' , ADD `ds_bp` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'budget plan预算' ;
 
 
 update `system` set `paramValue`='version-8.0' where `id`='4';
