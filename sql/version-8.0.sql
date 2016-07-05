@@ -91,5 +91,12 @@ ALTER TABLE `business_detail` ADD `committer` VARCHAR(25) CHARACTER SET utf8 COL
 # 为business添加四个字段，用于签单业务接受前进行初始化的四个值
 ALTER TABLE `business` ADD `ds_lp` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'layout plan平面布局' , ADD `ds_fc` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'facade construction立面施工' , ADD `ds_bs` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'building design sketch效果图' , ADD `ds_bp` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'budget plan预算' ;
 
+# 2016-07-05 改动
+# 为所有的废单业务添加废单原因的目录
+ALTER TABLE `business` ADD `requestDeadBusinessTitle` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '废单目录' AFTER `budgetFinished`;
+# 将当前废单业务的废单原因目录全部归结为其他
+UPDATE business SET requestDeadBusinessTitle = '其它' WHERE isDeleted = 'false' AND isDead = 'true' AND isTransfered = 'false';
+# 将当前的所有死单转为废单
+UPDATE business SET isDead = 'true', requestDeadBusinessTitle = '其它', requestDeadBusinessReason = '来自死单' WHERE isDeleted = 'false' AND isTransfered = 'false' AND isFrozen = 'true'
 
 update `system` set `paramValue`='version-8.0' where `id`='4';

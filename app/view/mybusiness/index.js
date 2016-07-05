@@ -60,349 +60,509 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 				flex: 2,
 				layout: 'border',
 				margin: '0 1 0 0',
-				items: [{
-					autoScroll: true,
-					region: 'center',
-					hideHeaders: true,
-					style: {
-						borderRightStyle: 'solid',
-						borderRightWidth: '1px'
-					},
-					xtype: 'gridpanel',
-					title: '业务名称',
-					id: 'gridpanel-clientInfo',
-					name: 'gridpanel-clientInfo',
-					width: '100%',
-					tools: [
-						{
-							hidden: me.businessId || me.salesmanName ? true : (me.checkBusiness && User.isAdministrationManager() ? true : false),
-							type: 'gear',
-							disabled: true,
-							id: 'tool-frozeBusiness',
-							name: 'tool-frozeBusiness',
-							tooltip: '转为死单',
-							callback: function () {
-								var clientGrid = Ext.getCmp('gridpanel-clientInfo'),
-									rec = clientGrid.getSelectionModel().getSelection()[0],
-									fronzenGrid = Ext.getCmp('gridpanel-frozenBusiness');
-
-								Ext.Msg.warning('确定要将"' + rec.get('address') + '"转为死单吗？', function (id) {
-									if (id == 'yes') {
-										Ext.Ajax.request({
-											url: './libs/business.php?action=frozeBusiness&businessId=' + rec.getId(),
-											method: 'POST',
-											callback: function (opts, success, res) {
-												if (success) {
-													var obj = Ext.JSON.decode(res.responseText);
-													if (obj.status == 'successful') {
-														showMsg('转换成功！');
-														clientGrid.refresh();
-														fronzenGrid.refresh();
-													}
-													else {
-														showMsg(obj.errMsg);
-													}
-												}
-											}
-										});
-									}
-								});
-							}
-						}
-					],
-					columns: [
-						{
-							text: '时间',
-							flex: 1,
-							dataIndex: 'createTime',
-							renderer: function (val, meta, rec) {
-								if (val) {
-									return val.slice(0, val.indexOf(' '));
-								}
-								else {
-									return '';
-								}
-							}
+				items: [
+					{
+						autoScroll: true,
+						region: 'center',
+						hideHeaders: true,
+						style: {
+							borderRightStyle: 'solid',
+							borderRightWidth: '1px'
 						},
-						{
-							text: '小区名称',
-							flex: 1,
-							dataIndex: 'regionName',
-							renderer: function (val, meta, rec) {
-								return val;
-							}
-						},
-						{
-							text: '门牌号',
-							flex: 1,
-							dataIndex: 'address',
-							renderer: function (val, meta, rec) {
-								var level = rec.get('level');
-								if (level == 'A') {
-									meta.style = 'background: lightpink;';
-								}
-								else if (level == 'B') {
-									meta.style = 'background: lightgreen;';
-								}
-								else if (level == 'C') {
-									meta.style = 'background: cornsilk;';
-								}
-								else if (level == 'D') {
-									meta.style = 'background: sandybrown;';
-								}
-								else {
-
-								}
-								if (rec.get('applyDesigner') == 1) {
-									meta.style += 'color: #ffff00;';
-								}
-								if (level != '') {
-									val = val + '[<strong><font color="blue">' + level + '</font></strong>]';
-								}
-								return val;
-							}
-						}
-					],
-					store: businessSt,
-					dockedItems: [
-						{
-							dock: 'top',
-							xtype: 'toolbar',
-							items: [
-								{
-									xtype: 'searchfield',
-									flex: 1,
-									store: businessSt,
-									paramName: 'address'
-								}
-							]
-						}
-					],
-					initBtn: function (rec) {
-						var editBtn = Ext.getCmp('button-editClient'),
-							delBtn = Ext.getCmp('button-delClient'),
-							rankBtn = Ext.getCmp('button-categorization'),
-							gearBtn = Ext.getCmp('tool-frozeBusiness'),
-							applyDesignerBtn = Ext.getCmp('button-applyForDesigner'),
-							reminder = Ext.getCmp('button-checkBusinessRemind');
-
-						editBtn.setDisabled(!rec);
-						delBtn.setDisabled(!rec);
-						gearBtn.setDisabled(!rec);
-						rankBtn.setDisabled(!rec);
-						reminder.setDisabled(!rec);
-						if (rec && rec.get('applyDesigner') == 0) {
-							applyDesignerBtn.enable();
-						}
-						else {
-							applyDesignerBtn.disable();
-						}
-					},
-					refresh: function () {
-						var grid = this,
-							st = grid.getStore(),
-							rec = grid.getSelectionModel().getSelection()[0];
-						st.reload({
-							params: {
-								action: 'getBusiness',
-								salesmanName: me.businessStaff ? me.businessStaff.get('salesmanName') : User.getName(),
-								isFrozen: false,
-								isDead: 'false'
-							},
-							callback: function (recs, ope, success) {
-								if (success) {
-									grid.getSelectionModel().deselectAll();
-									if (rec) {
-										var index = st.indexOf(rec);
-										grid.getSelectionModel().select(index);
-									}
-								}
-							}
-						});
-					},
-					tbar: Ext.create('Ext.toolbar.Toolbar', {
-						enableOverflow: true,
-						items: [
+						xtype: 'gridpanel',
+						title: '业务名称',
+						id: 'gridpanel-clientInfo',
+						name: 'gridpanel-clientInfo',
+						width: '100%',
+						tools: [
 							{
-								text: '添加',
-								id: 'button-addClient',
-								name: 'button-addClient',
-								hidden: me.businessId || me.salesmanName ? false : (User.isAdministrationManager() && me.checkBusiness ? true : false),
-								icon: './resources/img/add.png',
-								handler: function () {
-									var win = Ext.create('FamilyDecoration.view.mybusiness.EditClient', {
-									});
-									win.show();
-								}
-							},
-							{
-								text: '修改',
-								id: 'button-editClient',
-								name: 'button-editClient',
-								hidden: me.businessId || me.salesmanName ? false : (User.isAdministrationManager() && me.checkBusiness ? true : false),
-								icon: './resources/img/edit2.png',
+								// hidden: me.businessId || me.salesmanName ? true : (me.checkBusiness && User.isAdministrationManager() ? true : false),
+								hidden: true, // now there is no need for this item
+								type: 'gear',
 								disabled: true,
-								handler: function () {
+								id: 'tool-frozeBusiness',
+								name: 'tool-frozeBusiness',
+								tooltip: '转为死单',
+								callback: function () {
 									var clientGrid = Ext.getCmp('gridpanel-clientInfo'),
-										client = clientGrid.getSelectionModel().getSelection()[0];
-									if (client) {
-										var win = Ext.create('FamilyDecoration.view.mybusiness.EditClient', {
-											client: client
-										});
-										win.show();
-									}
-									else {
-										showMsg('请选择业务！');
-									}
-								}
-							}
-						]
-					}),
-					bbar: Ext.create('Ext.toolbar.Toolbar', {
-						enableOverflow: true,
-						items: [
-							{
-								text: '删除',
-								hidden: !(User.isAdmin() || (User.isManager() && !User.isAdministrationManager()) || (!me.checkBusiness && User.isAdministrationManager())),
-								id: 'button-delClient',
-								name: 'button-delClient',
-								icon: './resources/img/delete.png',
-								disabled: true,
-								handler: function () {
-									Ext.Msg.warning('确定要删除当前客户信息吗？', function (id) {
-										var grid = Ext.getCmp('gridpanel-clientInfo'),
-											rec = grid.getSelectionModel().getSelection()[0];
+										rec = clientGrid.getSelectionModel().getSelection()[0],
+										fronzenGrid = Ext.getCmp('gridpanel-frozenBusiness');
+
+									Ext.Msg.warning('确定要将"' + rec.get('address') + '"转为死单吗？', function (id) {
 										if (id == 'yes') {
 											Ext.Ajax.request({
-												url: './libs/business.php?action=deleteBusiness',
+												url: './libs/business.php?action=frozeBusiness&businessId=' + rec.getId(),
 												method: 'POST',
-												params: {
-													id: rec.getId()
-												},
 												callback: function (opts, success, res) {
 													if (success) {
-														var obj = Ext.decode(res.responseText);
+														var obj = Ext.JSON.decode(res.responseText);
 														if (obj.status == 'successful') {
-															showMsg('删除成功！');
-															grid.refresh();
+															showMsg('转换成功！');
+															clientGrid.refresh();
+															fronzenGrid.refresh();
 														}
 														else {
 															showMsg(obj.errMsg);
 														}
 													}
 												}
-											})
+											});
 										}
 									});
 								}
+							}
+						],
+						columns: [
+							{
+								text: '时间',
+								flex: 1,
+								dataIndex: 'createTime',
+								renderer: function (val, meta, rec) {
+									if (val) {
+										return val.slice(0, val.indexOf(' '));
+									}
+									else {
+										return '';
+									}
+								}
 							},
 							{
-								text: '评级',
-								id: 'button-categorization',
-								name: 'button-categorization',
-								icon: './resources/img/category.png',
-								hidden: me.checkBusiness && User.isAdministrationManager() ? true : false,
-								disabled: true,
-								handler: function () {
-									var clientGrid = Ext.getCmp('gridpanel-clientInfo'),
-										rec = clientGrid.getSelectionModel().getSelection()[0],
-										fronzenGrid = Ext.getCmp('gridpanel-frozenBusiness');
-									var win = Ext.create('Ext.window.Window', {
-										width: 300,
-										height: 200,
-										padding: 10,
-										modal: true,
-										title: '客户类型评级',
-										items: [
-											{
-												xtype: 'combobox',
-												fieldLabel: '客户评级',
-												editable: false,
-												allowBlank: false,
-												store: Ext.create('Ext.data.Store', {
-													fields: ['name'],
-													data: [
-														{ name: 'A' },
-														{ name: 'B' },
-														{ name: 'C' },
-														{ name: 'D' }
-													]
-												}),
-												queryMode: 'local',
-												displayField: 'name',
-												valueField: 'name',
-												value: rec.get('level')
-											}
-										],
-										buttons: [
-											{
-												text: '确定',
-												handler: function () {
-													var combo = win.down('combobox');
-													if (combo.isValid()) {
-														Ext.Ajax.request({
-															url: './libs/business.php?action=clientRank',
-															method: 'POST',
-															params: {
-																level: combo.getValue(),
-																id: rec.getId()
-															},
-															callback: function (opts, success, res) {
-																if (success) {
-																	var obj = Ext.decode(res.responseText);
-																	if (obj.status == 'successful') {
-																		showMsg('评级成功！');
-																		clientGrid.refresh();
-																		fronzenGrid.refresh();
-																		win.close();
-																	}
-																	else {
-																		showMsg(obj.errMsg);
-																	}
-																}
-															}
-														})
-													}
-												}
-											},
-											{
-												text: '取消',
-												handler: function () {
-													win.close();
-												}
-											}
-										]
-									});
+								text: '小区名称',
+								flex: 1,
+								dataIndex: 'regionName',
+								renderer: function (val, meta, rec) {
+									return val;
+								}
+							},
+							{
+								text: '门牌号',
+								flex: 1,
+								dataIndex: 'address',
+								renderer: function (val, meta, rec) {
+									var level = rec.get('level');
+									if (level == 'A') {
+										meta.style = 'background: lightpink;';
+									}
+									else if (level == 'B') {
+										meta.style = 'background: lightgreen;';
+									}
+									else if (level == 'C') {
+										meta.style = 'background: cornsilk;';
+									}
+									else if (level == 'D') {
+										meta.style = 'background: sandybrown;';
+									}
+									else {
 
-									win.show();
+									}
+									if (rec.get('applyDesigner') == 1) {
+										meta.style += 'color: #ffff00;';
+									}
+									if (level != '') {
+										val = val + '[<strong><font color="blue">' + level + '</font></strong>]';
+									}
+									return val;
 								}
 							}
-						]
-					}),
-					listeners: {
-						itemclick: function (view, rec) {
+						],
+						store: businessSt,
+						dockedItems: [
+							{
+								dock: 'top',
+								xtype: 'toolbar',
+								items: [
+									{
+										xtype: 'searchfield',
+										flex: 1,
+										store: businessSt,
+										paramName: 'address'
+									}
+								]
+							}
+						],
+						initBtn: function (rec) {
+							var editBtn = Ext.getCmp('button-editClient'),
+								delBtn = Ext.getCmp('button-delClient'),
+								rankBtn = Ext.getCmp('button-categorization'),
+								requestDeadBusinessBtn = Ext.getCmp('button-requestDisableBusiness'),
+								gearBtn = Ext.getCmp('tool-frozeBusiness'),
+								applyDesignerBtn = Ext.getCmp('button-applyForDesigner'),
+								reminder = Ext.getCmp('button-checkBusinessRemind');
+
+							editBtn.setDisabled(!rec);
+							delBtn.setDisabled(!rec);
+							gearBtn.setDisabled(!rec);
+							rankBtn.setDisabled(!rec);
+							requestDeadBusinessBtn.setDisabled(!rec);
+							reminder.setDisabled(!rec);
+							if (rec && rec.get('applyDesigner') == 0) {
+								applyDesignerBtn.enable();
+							}
+							else {
+								applyDesignerBtn.disable();
+							}
 						},
-						selectionchange: function (selModel, sels, opts) {
-							var rec = sels[0],
-								grid = Ext.getCmp('gridpanel-clientInfo'),
-								detailGrid = Ext.getCmp('gridpanel-businessInfo'),
-								transferBtn = Ext.getCmp('button-transferToProject'),
-								distributeDesignerBtn = Ext.getCmp('button-distributeDesigner'),
-								designStatusGrid = Ext.ComponentQuery.query('[name="panel-designStatus"]')[0];
-							grid.initBtn(rec);
-							detailGrid.refresh(rec);
-							transferBtn.setDisabled(!rec);
-							distributeDesignerBtn.setDisabled(!rec);
-							designStatusGrid.refresh(rec);
+						refresh: function () {
+							var grid = this,
+								st = grid.getStore(),
+								rec = grid.getSelectionModel().getSelection()[0];
+							st.reload({
+								params: {
+									action: 'getBusiness',
+									salesmanName: me.businessStaff ? me.businessStaff.get('salesmanName') : User.getName(),
+									isFrozen: false,
+									isDead: 'false'
+								},
+								callback: function (recs, ope, success) {
+									if (success) {
+										grid.getSelectionModel().deselectAll();
+										if (rec) {
+											var index = st.indexOf(rec);
+											grid.getSelectionModel().select(index);
+										}
+									}
+								}
+							});
+						},
+						tbar: Ext.create('Ext.toolbar.Toolbar', {
+							enableOverflow: true,
+							items: [
+								{
+									text: '添加',
+									id: 'button-addClient',
+									name: 'button-addClient',
+									hidden: me.businessId || me.salesmanName ? false : (User.isAdministrationManager() && me.checkBusiness ? true : false),
+									icon: './resources/img/add.png',
+									handler: function () {
+										var win = Ext.create('FamilyDecoration.view.mybusiness.EditClient', {
+										});
+										win.show();
+									}
+								},
+								{
+									text: '修改',
+									id: 'button-editClient',
+									name: 'button-editClient',
+									hidden: me.businessId || me.salesmanName ? false : (User.isAdministrationManager() && me.checkBusiness ? true : false),
+									icon: './resources/img/edit2.png',
+									disabled: true,
+									handler: function () {
+										var clientGrid = Ext.getCmp('gridpanel-clientInfo'),
+											client = clientGrid.getSelectionModel().getSelection()[0];
+										if (client) {
+											var win = Ext.create('FamilyDecoration.view.mybusiness.EditClient', {
+												client: client
+											});
+											win.show();
+										}
+										else {
+											showMsg('请选择业务！');
+										}
+									}
+								}
+							]
+						}),
+						bbar: Ext.create('Ext.toolbar.Toolbar', {
+							enableOverflow: true,
+							items: [
+								{
+									text: '删除',
+									hidden: !(User.isAdmin() || (User.isManager() && !User.isAdministrationManager()) || (!me.checkBusiness && User.isAdministrationManager())),
+									id: 'button-delClient',
+									name: 'button-delClient',
+									icon: './resources/img/delete.png',
+									disabled: true,
+									handler: function () {
+										Ext.Msg.warning('确定要删除当前客户信息吗？', function (id) {
+											var grid = Ext.getCmp('gridpanel-clientInfo'),
+												rec = grid.getSelectionModel().getSelection()[0];
+											if (id == 'yes') {
+												Ext.Ajax.request({
+													url: './libs/business.php?action=deleteBusiness',
+													method: 'POST',
+													params: {
+														id: rec.getId()
+													},
+													callback: function (opts, success, res) {
+														if (success) {
+															var obj = Ext.decode(res.responseText);
+															if (obj.status == 'successful') {
+																showMsg('删除成功！');
+																grid.refresh();
+															}
+															else {
+																showMsg(obj.errMsg);
+															}
+														}
+													}
+												})
+											}
+										});
+									}
+								},
+								{
+									text: '评级',
+									id: 'button-categorization',
+									name: 'button-categorization',
+									icon: './resources/img/category.png',
+									hidden: me.checkBusiness && User.isAdministrationManager() ? true : false,
+									disabled: true,
+									handler: function () {
+										var clientGrid = Ext.getCmp('gridpanel-clientInfo'),
+											rec = clientGrid.getSelectionModel().getSelection()[0],
+											fronzenGrid = Ext.getCmp('gridpanel-frozenBusiness');
+										var win = Ext.create('Ext.window.Window', {
+											width: 300,
+											height: 200,
+											padding: 10,
+											modal: true,
+											title: '客户类型评级',
+											items: [
+												{
+													xtype: 'combobox',
+													fieldLabel: '客户评级',
+													editable: false,
+													allowBlank: false,
+													store: Ext.create('Ext.data.Store', {
+														fields: ['name'],
+														data: [
+															{ name: 'A' },
+															{ name: 'B' },
+															{ name: 'C' },
+															{ name: 'D' }
+														]
+													}),
+													queryMode: 'local',
+													displayField: 'name',
+													valueField: 'name',
+													value: rec.get('level')
+												}
+											],
+											buttons: [
+												{
+													text: '确定',
+													handler: function () {
+														var combo = win.down('combobox');
+														if (combo.isValid()) {
+															Ext.Ajax.request({
+																url: './libs/business.php?action=clientRank',
+																method: 'POST',
+																params: {
+																	level: combo.getValue(),
+																	id: rec.getId()
+																},
+																callback: function (opts, success, res) {
+																	if (success) {
+																		var obj = Ext.decode(res.responseText);
+																		if (obj.status == 'successful') {
+																			showMsg('评级成功！');
+																			clientGrid.refresh();
+																			fronzenGrid.refresh();
+																			win.close();
+																		}
+																		else {
+																			showMsg(obj.errMsg);
+																		}
+																	}
+																}
+															})
+														}
+													}
+												},
+												{
+													text: '取消',
+													handler: function () {
+														win.close();
+													}
+												}
+											]
+										});
+
+										win.show();
+									}
+								},
+								{
+									text: '申请废单',
+									id: 'button-requestDisableBusiness',
+									name: 'button-requestDisableBusiness',
+									icon: './resources/img/trashbin.png',
+									hidden: me.businessId || me.salesmanName ? false : (User.isAdministrationManager() && me.checkBusiness ? true : false),
+									disabled: true,
+									handler: function () {
+										var win = Ext.create('Ext.window.Window', {
+											title: '申请废单',
+											width: 500,
+											height: 200,
+											modal: true,
+											bodyPadding: 4,
+											layout: 'vbox',
+											items: [
+												{
+													name: 'requestDeadBusinessReason',
+													xtype: 'textarea',
+													emptyText: '输入废单详情',
+													fieldLabel: '详情',
+													autoScroll: true,
+													allowBlank: false,
+													flex: 3,
+													width: '100%'
+												},
+												{
+													name: 'requestDeadBusinessTitle',
+													xtype: 'combobox',
+													fieldLabel: '原因',
+													allowBlank: false,
+													editable: false,
+													displayField: 'value',
+													valueField: 'name',
+													flex: 1,
+													width: '100%',
+													store: Ext.create('Ext.data.Store', {
+														fields: ['name', 'value'],
+														data: [
+															{
+																name: 'highSpending',
+																value: '资金过高'
+															},
+															{
+																name: 'delayForSeveralYears',
+																value: '想放几年'
+															},
+															{
+																name: 'otherDecorated',
+																value: '找人装修'
+															},
+															{
+																name: 'guerrilla',
+																value: '游击队'
+															},
+															{
+																name: 'highQuotation',
+																value: '报价过高'
+															},
+															{
+																name: 'designProblem',
+																value: '设计问题'
+															},
+															{
+																name: 'other',
+																value: '其它'
+															}
+														]
+													})
+												}
+											],
+											buttons: [
+												{
+													text: '确定',
+													handler: function () {
+														var txtArea = win.down('[name="requestDeadBusinessReason"]'),
+															combobox = win.down('[name="requestDeadBusinessTitle"]'),
+															reason = txtArea.getValue(),
+															title = combobox.getRawValue(),
+															businessGrid = Ext.getCmp('gridpanel-clientInfo'),
+															rec = businessGrid.getSelectionModel().getSelection()[0];
+
+														if (rec) {
+															if (txtArea.isValid() && combobox.isValid()) {
+																Ext.Ajax.request({
+																	url: './libs/business.php?action=requestDeadBusiness',
+																	method: 'POST',
+																	params: {
+																		businessId: rec.getId(),
+																		requestDeadBusinessReason: reason,
+																		requestDeadBusinessTitle: title
+																	},
+																	callback: function (opts, success, res) {
+																		if (success) {
+																			var obj = Ext.decode(res.responseText);
+																			if ('successful' == obj.status) {
+																				win.close();
+																				showMsg('废单申请成功！');
+																				businessGrid.refresh();
+																				Ext.Ajax.request({
+																					url: './libs/user.php?action=view',
+																					method: 'GET',
+																					callback: function (opts, success, res) {
+																						if (success) {
+																							var userArr = Ext.decode(res.responseText),
+																								mailObjects = [],
+																								content = '', subject = '',
+																								business = rec.get('regionName') + ' ' + rec.get('address');
+																							for (var i = 0; i < userArr.length; i++) {
+																								var level = userArr[i].level;
+																								if (/^001-\d{3}$/i.test(level) || '004-001' == level) {
+																									mailObjects.push(userArr[i]);
+																								}
+																							}
+
+																							// request dead business announcement
+																							var content = User.getRealName() + '为业务[' + business + ']申请置为废单，\n原因为：' + title + '\n详情为: ' + reason,
+																								subject = '申请废单通知';
+																							for (i = 0; i < mailObjects.length; i++) {
+																								setTimeout((function (index) {
+																									return function () {
+																										sendMsg(User.getName(), mailObjects[index].name, content, 'requestDeadBusiness', rec.getId());
+																										sendMail(mailObjects[index].name, mailObjects[index].mail, subject, content);
+																									}
+																								})(i), 1000 * (i + 1));
+																							}
+																							// end of announcement
+																						}
+																					}
+																				});
+																			}
+																			else {
+																				showMsg(obj.errMsg);
+																			}
+																		}
+																	}
+																});
+															}
+														}
+														else {
+															showMsg('请选择业务!');
+														}
+													}
+												},
+												{
+													text: '取消',
+													handler: function () {
+														win.close();
+													}
+												}
+											]
+										});
+										win.show();
+									}
+								}
+							]
+						}),
+						listeners: {
+							itemclick: function (view, rec) {
+							},
+							selectionchange: function (selModel, sels, opts) {
+								var rec = sels[0],
+									grid = Ext.getCmp('gridpanel-clientInfo'),
+									detailGrid = Ext.getCmp('gridpanel-businessInfo'),
+									transferBtn = Ext.getCmp('button-transferToProject'),
+									distributeDesignerBtn = Ext.getCmp('button-distributeDesigner'),
+									designStatusGrid = Ext.ComponentQuery.query('[name="panel-designStatus"]')[0];
+								grid.initBtn(rec);
+								detailGrid.refresh(rec);
+								transferBtn.setDisabled(!rec);
+								distributeDesignerBtn.setDisabled(!rec);
+								designStatusGrid.refresh(rec);
+							}
 						}
-					}
-				},
+					},
 					{
 						autoScroll: true,
 						hideHeaders: true,
 						height: 200,
 						region: 'south',
-						hidden: me.businessId || me.salesmanName ? true : false,
+						// hidden: me.businessId || me.salesmanName ? true : false,
+						hidden: true, // cancel frozenBusiness category
 						style: {
 							borderRightStyle: 'solid',
 							borderRightWidth: '1px'
@@ -1061,7 +1221,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 										if (start.getTime() > Ext.Date.now()) {
 											txt.setFieldStyle('background: skyblue;');
 										}
-										else if (start.getTime() <= cur.getTime() && cur.getTime() <= end.getTime()){
+										else if (start.getTime() <= cur.getTime() && cur.getTime() <= end.getTime()) {
 											txt.setFieldStyle('background: orange;');
 										}
 										else if (end.getTime() < cur.getTime()) {
@@ -1071,14 +1231,14 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 									else if (status && status == -1) {
 										txt.setValue('未接收').setFieldStyle('background: skyblue;');
 									}
-									else if (!status){
+									else if (!status) {
 										txt.setValue('').setFieldStyle('background: white;');
 									}
 								}
 								else {
 									txt.setValue('').setFieldStyle('background: white;');
 								}
-								
+
 							}
 						},
 						items: [

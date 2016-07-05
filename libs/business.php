@@ -202,7 +202,7 @@
 			break;
 		// request dead business
 		case "requestDeadBusiness":
-			$res = requestDeadBusiness($_REQUEST["businessId"], $_REQUEST["requestDeadBusinessReason"]);
+			$res = requestDeadBusiness($_REQUEST["businessId"], $_REQUEST["requestDeadBusinessTitle"], $_REQUEST["requestDeadBusinessReason"]);
 			break;
 		// 获取电销人员列表
 		case "getTeleMarketingStaffList":

@@ -89,7 +89,17 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 							isWaiting: true,
 							designerName: me.checkSignBusiness ? (me.designStaff ? me.designStaff.get('designerName') : '') : User.getName()
 						}
-					}
+					},
+					filters: [
+						function (item) {
+							if (me.businessId || me.designer) {
+								return me.businessId == item.getId();
+							}
+							else {
+								return true;
+							}
+						}
+					]
 				}),
 				bbar: [
 					{
@@ -904,32 +914,84 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 										width: 500,
 										height: 200,
 										modal: true,
-										layout: 'fit',
+										bodyPadding: 4,
+										layout: 'vbox',
 										items: [
 											{
+												name: 'requestDeadBusinessReason',
 												xtype: 'textarea',
-												emptyText: '输入废单信息及原因',
+												emptyText: '输入废单详情',
+												fieldLabel: '详情',
 												autoScroll: true,
-												allowBlank: false
+												allowBlank: false,
+												flex: 3,
+												width: '100%'
+											},
+											{
+												name: 'requestDeadBusinessTitle',
+												xtype: 'combobox',
+												fieldLabel: '原因',
+												allowBlank: false,
+												editable: false,
+												displayField: 'value',
+												valueField: 'name',
+												flex: 1,
+												width: '100%',
+												store: Ext.create('Ext.data.Store', {
+													fields: ['name', 'value'],
+													data: [
+														{
+															name: 'highSpending',
+															value: '资金过高'
+														},
+														{
+															name: 'delayForSeveralYears',
+															value: '想放几年'
+														},
+														{
+															name: 'otherDecorated',
+															value: '找人装修'
+														},
+														{
+															name: 'guerrilla',
+															value: '游击队'
+														},
+														{
+															name: 'highQuotation',
+															value: '报价过高'
+														},
+														{
+															name: 'designProblem',
+															value: '设计问题'
+														},
+														{
+															name: 'other',
+															value: '其它'
+														}
+													]
+												})
 											}
 										],
 										buttons: [
 											{
 												text: '确定',
 												handler: function () {
-													var txtArea = win.down('textarea'),
+													var txtArea = win.down('[name="requestDeadBusinessReason"]'),
+														combobox = win.down('[name="requestDeadBusinessTitle"]'),
 														reason = txtArea.getValue(),
+														title = combobox.getRawValue(),
 														businessGrid = Ext.getCmp('gridpanel-detailedAddressForSignBusiness'),
 														rec = businessGrid.getSelectionModel().getSelection()[0];
 
 													if (rec) {
-														if (txtArea.isValid()) {
+														if (txtArea.isValid() && combobox.isValid()) {
 															Ext.Ajax.request({
 																url: './libs/business.php?action=requestDeadBusiness',
 																method: 'POST',
 																params: {
 																	businessId: rec.getId(),
-																	requestDeadBusinessReason: reason
+																	requestDeadBusinessReason: reason,
+																	requestDeadBusinessTitle: title
 																},
 																callback: function (opts, success, res) {
 																	if (success) {
@@ -955,7 +1017,7 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 																						}
 
 																						// request dead business announcement
-																						var content = User.getRealName() + '为业务[' + business + ']申请置为废单，\n原因为：' + reason,
+																						var content = User.getRealName() + '为业务[' + business + ']申请置为废单，\n原因为：' + title + '\n详情为: ' + reason,
 																							subject = '申请废单通知';
 																						for (i = 0; i < mailObjects.length; i++) {
 																							setTimeout((function (index) {

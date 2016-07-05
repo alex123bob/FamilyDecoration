@@ -22,7 +22,7 @@ Ext.define('FamilyDecoration.view.deadbusiness.Index', {
 			height: '100%',
 			id: 'gridpanel-businessStaffForDeadBusiness',
 			name: 'gridpanel-businessStaffForDeadBusiness',
-			flex: 2,
+			flex: 1,
 			columns: [{
 				text: '姓名',
 				dataIndex: 'salesman',
@@ -149,9 +149,14 @@ Ext.define('FamilyDecoration.view.deadbusiness.Index', {
 					dataIndex: 'designer'
 				},
 				{
-					text: '废单原因',
+					text: '废单详情',
 					flex: 1,
 					dataIndex: 'requestDeadBusinessReason'
+				},
+				{
+					text: '废单原因',
+					flex: 1,
+					dataIndex: 'requestDeadBusinessTitle'
 				},
 				{
 					xtype:'actioncolumn',

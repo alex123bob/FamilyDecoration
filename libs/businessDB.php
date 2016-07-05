@@ -147,7 +147,7 @@
 	
 	function getBusiness($data){
 		global $mysql;
-		$fields = array('regionId','address','isFrozen','requestDead','isDead','requestDeadBusinessReason','customer','custContact','salesman','salesmanName','designer','designerName','applyDesigner','level','ds_lp','ds_fc','ds_bs','ds_bp');
+		$fields = array('regionId','address','isFrozen','requestDead','isDead','requestDeadBusinessTitle','requestDeadBusinessReason','customer','custContact','salesman','salesmanName','designer','designerName','applyDesigner','level','ds_lp','ds_fc','ds_bs','ds_bp');
 		$params = array();
 		$sql = "select `b`.*, `r`.name from `business` `b` left join `region` `r` on `b`.regionId = `r`.id where `b`.`isDeleted` = 'false' and b.isTransfered = 'false' ";
 		foreach($fields as $field){
@@ -209,7 +209,7 @@
 	function editBusiness($data){
 		global $mysql;
 		$id = $data["id"];
-		$fields = array("regionId","address","isFrozen",'requestDead','isDead','requestDeadBusinessReason',"isTransfered","updateTime","signTime","customer","custContact","salesman","source","salesmanName","designer","designerName","applyDesigner","applyProjectTransference","applyBudget","ds_lp","ds_fc","ds_bs","ds_bp");
+		$fields = array("regionId","address","isFrozen",'requestDead','isDead','requestDeadBusinessTitle','requestDeadBusinessReason',"isTransfered","updateTime","signTime","customer","custContact","salesman","source","salesmanName","designer","designerName","applyDesigner","applyProjectTransference","applyBudget","ds_lp","ds_fc","ds_bs","ds_bp");
 		$obj = array();
 		foreach($fields as $field){
 			if(isset($data[$field]))
@@ -274,9 +274,9 @@
 		return array('status'=>'successful', 'errMsg'=> 'rank signed business successfully!');
 	}
 
-	function requestDeadBusiness ($businessId, $reason){
+	function requestDeadBusiness ($businessId, $title, $reason){
 		global $mysql;
-		$mysql->DBUpdate('business',array('requestDead'=>'1','requestDeadBusinessReason'=>$reason,'updateTime'=>'now()'),"`id`='?'",array($businessId));
+		$mysql->DBUpdate('business',array('requestDead'=>'1','requestDeadBusinessTitle'=>$title,'requestDeadBusinessReason'=>$reason,'updateTime'=>'now()'),"`id`='?'",array($businessId));
 		return array('status'=>'successful', 'errMsg'=> 'dead business has been requested!');
 	}
 ?>

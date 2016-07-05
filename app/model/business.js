@@ -23,6 +23,7 @@ Ext.define('FamilyDecoration.model.Business', {
 		{name: 'ds_bs', type: 'string'}, // designStatus: building design sketch 效果图
 		{name: 'ds_bp', type: 'string'}, // designStatus: budget plan 预算 
 		{name: 'isDead', type: 'string'}, // 该业务是否已经是废单，是为true,否为false
+		{name: 'requestDeadBusinessTitle', type: 'string'}, // 申请废单的目录
 		{name: 'requestDeadBusinessReason', type: 'string'}, // 该业务申请废单的原因
 		{name: 'budgetFinished', type: 'string'}, // an indicator used for telling if the corresponding budget is finished or not
 		{name: 'createTime', type: 'string'}
