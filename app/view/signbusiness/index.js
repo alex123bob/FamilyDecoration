@@ -376,7 +376,7 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 							action: 'getBusinessByDesigner',
 							designerName: me.checkSignBusiness ? (me.designStaff ? me.designStaff.get('designerName') : '') : User.getName()
 						},
-						callback: function (recs, ope, success){
+						callback: function (recs, ope, success) {
 							if (success) {
 								if (rec) {
 									selModel.deselectAll();
@@ -963,6 +963,18 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 														{
 															name: 'designProblem',
 															value: '设计问题'
+														},
+														{
+															name: 'initialProjectQuality',
+															value: '前期工程质量'
+														},
+														{
+															name: 'projectQuality',
+															value: '工程质量'
+														},
+														{
+															name: 'serviceAttitude',
+															value: '服务态度'
 														},
 														{
 															name: 'other',

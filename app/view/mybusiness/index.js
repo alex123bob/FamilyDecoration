@@ -445,6 +445,18 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 																value: '设计问题'
 															},
 															{
+																name: 'initialProjectQuality',
+																value: '前期工程质量'
+															},
+															{
+																name: 'projectQuality',
+																value: '工程质量'
+															},
+															{
+																name: 'serviceAttitude',
+																value: '服务态度'
+															},
+															{
 																name: 'other',
 																value: '其它'
 															}
