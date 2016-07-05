@@ -1098,7 +1098,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								}
 							},
 							{
-								text: '提醒',
+								text: '人员提醒',
 								id: 'button-checkBusinessRemind',
 								name: 'button-checkBusinessRemind',
 								icon: './resources/img/alarm.png',
@@ -1106,12 +1106,35 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								hidden: me.checkBusiness && !User.isAdministrationManager() ? false : true,
 								handler: function () {
 									var win = Ext.create('Ext.window.Window', {
-										title: '业务员提醒',
+										title: '当前业务对应人员提醒',
 										modal: true,
 										width: 500,
 										height: 300,
 										layout: 'vbox',
 										items: [
+											{
+												xtype: 'fieldcontainer',
+												fieldLabel: '人员选择',
+												defaultType: 'radiofield',
+												defaults: {
+													flex: 1
+												},
+												layout: 'hbox',
+												width: '100%',
+												items: [
+													{
+														boxLabel: '业务员',
+														name: 'type',
+														inputValue: 'salesman',
+														checked: true
+													},
+													{
+														boxLabel: '设计师',
+														name: 'type',
+														inputValue: 'designer'
+													}
+												]
+											},
 											{
 												flex: 7,
 												width: '100%',
@@ -1123,7 +1146,8 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 												xtype: 'checkbox',
 												width: '100%',
 												flex: 1,
-												boxLabel: '短信提醒'
+												boxLabel: '短信提醒',
+												name: 'checkbox-smsreminder'
 											}
 										],
 										buttons: [
@@ -1131,41 +1155,55 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 												text: '确定',
 												handler: function () {
 													var txtArea = win.down('textarea'),
-														chk = win.down('checkbox'),
+														salesmanRadio = win.query('radio')[0],
+														designerRadio = win.query('radio')[1],
+														chk = win.down('[name="checkbox-smsreminder"]'),
 														clientGrid = Ext.getCmp('gridpanel-clientInfo'),
 														rec = clientGrid.getSelectionModel().getSelection()[0],
 														content = '', subject = '',
-														business = rec.get('regionName') + ' ' + rec.get('address');
+														business = rec.get('regionName') + ' ' + rec.get('address'),
+														receiver;
 													if (txtArea.isValid()) {
 														if (rec) {
 															subject = '业务提醒[' + business + ']';
 															content = User.getRealName() + '对[' + business
 																+ ']发送业务提醒，提醒内容为：' + txtArea.getValue();
-															sendMsg(User.getName(), rec.get('salesmanName'), content, 'businessAlert', rec.getId());
-															Ext.Ajax.request({
-																url: './libs/user.php?action=view',
-																method: 'GET',
-																callback: function (opts, success, res) {
-																	if (success) {
-																		var arr = Ext.decode(res.responseText),
-																			mail = '', phone = '';
-																		for (var i = 0; i < arr.length; i++) {
-																			if (arr[i]['name'] == rec.get('salesmanName')) {
-																				mail = arr[i]['mail'];
-																				phone = arr[i]['phone'];
-																				break;
+															if (salesmanRadio.getValue()) {
+																receiver = rec.get(salesmanRadio.inputValue + 'Name');
+															}
+															else if (designerRadio.getValue()) {
+																receiver = rec.get(designerRadio.inputValue + 'Name');
+															}
+															if (receiver) {
+																sendMsg(User.getName(), receiver, content, 'businessAlert', rec.getId());
+																Ext.Ajax.request({
+																	url: './libs/user.php?action=view',
+																	method: 'GET',
+																	callback: function (opts, success, res) {
+																		if (success) {
+																			var arr = Ext.decode(res.responseText),
+																				mail = '', phone = '';
+																			for (var i = 0; i < arr.length; i++) {
+																				if (arr[i]['name'] == receiver) {
+																					mail = arr[i]['mail'];
+																					phone = arr[i]['phone'];
+																					break;
+																				}
 																			}
+																			sendMail(receiver, mail, subject, content);
+																			chk.getValue() && sendSMS(User.getName(), receiver, phone, content);
+																			showMsg('提醒成功！');
+																			win.close();
 																		}
-																		sendMail(rec.get('salesmanName'), mail, subject, content);
-																		chk.getValue() && sendSMS(User.getName(), rec.get('salesmanName'), phone, content);
-																		showMsg('提醒成功！');
-																		win.close();
 																	}
-																}
-															});
+																});
+															}
+															else {
+																showMsg('当前业务没有对应的提醒对象！');
+															}
 														}
 														else {
-															showMsg('当前业务没有业务员！');
+															showMsg('没有选中业务！');
 														}
 													}
 												}
