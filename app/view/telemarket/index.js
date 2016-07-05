@@ -225,12 +225,11 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                                 if (val.length > 0) {
                                     Ext.each(val, function (obj, index) {
                                         result += '<strong>' + (index + 1) + '.</strong>'
-                                            + ' ' + obj['comments'].replace(/\n/gi, '<br />') + '<br />'
-                                            + '<span class="footnote">(' + obj['createTime'] + ') '
-                                            + obj['committerRealName'] + '</span>'
-                                            + '<br />';
+                                            + ' ' + obj['comments'].replace(/\n/gi, '<br />')
+                                            + '<div class="footnote">' + obj['committerRealName'] + '('
+                                            + obj['createTime'] + ')</div>';
                                     });
-                                    return result;
+                                    return '<div style="text-align:left;">'+result+'</div>';
                                 }
                                 else {
                                     return '';
