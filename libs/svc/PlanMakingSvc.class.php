@@ -136,6 +136,78 @@ Class PlanMakingSvc extends BaseSvc{
 		return array('success'=>true);
 	}
 
+	public function designerAlarm(){
+		$day = date('Y-m-d', strtotime("+3 day"));
+		$sql1 = "select u.phone,u.mail,b.* from business b left join user u on b.designerName = u.name 
+					where ds_bp is not null and ds_bp not like '%done' and ds_bp like '%~%' and right(ds_bp,10) >= '$day';";
+		$sql2 = "select u.phone,u.mail,b.* from business b left join user u on b.designerName = u.name 
+					where ds_lp is not null and ds_lp not like '%done' and ds_lp like '%~%' and right(ds_lp,10) >= '$day';";
+		$sql3 = "select u.phone,u.mail,b.* from business b left join user u on b.designerName = u.name 
+					where ds_fc is not null and ds_fc not like '%done' and ds_fc like '%~%' and right(ds_fc,10) >= '$day';";
+		$sql4 = "select u.phone,u.mail,b.* from business b left join user u on b.designerName = u.name 
+					where ds_bs is not null and ds_bs not like '%done' and ds_bs like '%~%' and right(ds_bs,10) >= '$day';";
+		global $mysql;
+		$recievers1 = $mysql->DBGetAsMap($sql1);
+		$recievers2 = $mysql->DBGetAsMap($sql2);
+		$recievers3 = $mysql->DBGetAsMap($sql3);
+		$recievers4 = $mysql->DBGetAsMap($sql4);
+		$Users = array();
+		foreach ($recievers1 as &$busi) {
+			if(!isset($Users[$busi['designerName']]))
+				$Users[$busi['designerName']] = array('text'=>'');
+			$Users[$busi['designerName']]['text'] .= $busi['address'].'预算设计,';
+			$Users[$busi['designerName']]['phone'] = $busi['phone'];
+			$Users[$busi['designerName']]['mail'] = $busi['mail'];
+			$Users[$busi['designerName']]['name'] = $busi['designer'];
+		}
+		foreach ($recievers2 as &$busi) {
+			if(!isset($Users[$busi['designerName']]))
+				$Users[$busi['designerName']] = array('text'=>'');
+			$Users[$busi['designerName']]['text'] .= $busi['address'].'平面布局设计,';
+			$Users[$busi['designerName']]['phone'] = $busi['phone'];
+			$Users[$busi['designerName']]['mail'] = $busi['mail'];
+			$Users[$busi['designerName']]['name'] = $busi['designer'];
+		}
+		foreach ($recievers3 as &$busi) {
+			if(!isset($Users[$busi['designerName']]))
+				$Users[$busi['designerName']] = array('text'=>'');
+			$Users[$busi['designerName']]['text'] .= $busi['address'].'立面施工设计,';
+			$Users[$busi['designerName']]['phone'] = $busi['phone'];
+			$Users[$busi['designerName']]['mail'] = $busi['mail'];
+			$Users[$busi['designerName']]['name'] = $busi['designer'];
+		}
+		foreach ($recievers4 as &$busi) {
+			if(!isset($Users[$busi['designerName']]))
+				$Users[$busi['designerName']] = array('text'=>'');
+			$Users[$busi['designerName']]['text'] .= $busi['address'].'效果图设计,';
+			$Users[$busi['designerName']]['phone'] = $busi['phone'];
+			$Users[$busi['designerName']]['mail'] = $busi['mail'];
+			$Users[$busi['designerName']]['name'] = $busi['designer'];
+		}
+		//print_r($Users);
+		include_once __ROOT__."/libs/msgLogDB.php";
+		include_once __ROOT__."/libs/mailDB.php";
+		foreach ($Users as $key => $item) {
+			$text = "您的".$item['text'].'即将到截至日期！';
+			$mail = $item['mail'];
+			$phone = $item['phone'];
+			$name = $item['name'];
+			try{
+				echo "sending msg to $name($phone) : $text\n<br />";
+				sendMsg('设计师进度提醒',$name,$phone,$text,null,'sendSMS');
+			}catch(Exception $e){
+				var_dump($e);
+			}
+			try{
+				echo "sending mail to $name($mail) : $text\n<br />";
+				sendEMail($mail, null, 'sys-notice@dqjczs.com', '设计师进度提醒', $text, null);
+			}catch(Exception $e){
+				var_dump($e);
+			}
+		}
+		
+	}
+
 	//发短信,邮件
 	private function sendMsg($item,$text,$users){
 		//您好,{项目}还有{天}就要开始了,请提前订购{主材}!
