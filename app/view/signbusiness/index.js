@@ -476,16 +476,42 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 								businessDesigner.setValue('');
 							}
 						},
-						columns: [
-							{
-								text: '信息内容',
-								flex: 1,
-								dataIndex: 'content',
-								renderer: function (val, meta, rec) {
-									return val.replace(/\n/ig, '<br />');
+						columns: {
+							defaults: {
+								align: 'center'
+							},
+							items: [
+								{
+									text: '信息内容',
+									flex: 1,
+									dataIndex: 'content',
+									renderer: function (val, meta, rec) {
+										return val.replace(/\n/ig, '<br />');
+									}
+								},
+								{
+									text: '创建时间',
+									flex: 1,
+									dataIndex: 'createTime',
+									renderer: function (val, meta, rec) {
+										return val;
+									}
+								},
+								{
+									text: '经办人',
+									flex: 0.5,
+									dataIndex: 'committerRealName',
+									renderer: function (val, meta, rec) {
+										if (val) {
+											return val;
+										}
+										else {
+											return '';
+										}
+									}
 								}
-							}
-						],
+							]
+						},
 						store: Ext.create('FamilyDecoration.store.BusinessDetail', {
 							autoLoad: false
 						}),

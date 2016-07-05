@@ -8,6 +8,8 @@
 		    $res[$count]["id"] = $val["id"];
 		    $res[$count]["content"] = $val["content"];
 		    $res[$count]["createTime"] = $val["createTime"];
+			$res[$count]["committer"] = $val["committer"];
+			$res[$count]["committerRealName"] = getUserRealName($val["committer"])["realname"];
 		    $count ++;
         }
 		return $res;

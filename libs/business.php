@@ -1,5 +1,6 @@
 <?php
 	include_once "conn.php";
+	include_once "userDB.php";
 	include_once "businessDB.php";
 	include_once "potentialBusinessDB.php";
 	include_once "businessDetailDB.php";
