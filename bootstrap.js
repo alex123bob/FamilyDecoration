@@ -42,6 +42,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.Setting": "app/controller/setting.js",
   "FamilyDecoration.controller.SignBusiness": "app/controller/signbusiness.js",
   "FamilyDecoration.controller.TaskAssign": "app/controller/taskassign.js",
+  "FamilyDecoration.controller.TeleMarket": "app/controller/telemarket.js",
   "FamilyDecoration.controller.User": "app/controller/user.js",
   "FamilyDecoration.controller.Viewport": "app/controller/viewport.js",
   "FamilyDecoration.model.AnnouncementComment": "app/model/announcementcomment.js",
@@ -71,6 +72,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.model.PlanLabor": "app/model/planlabor.js",
   "FamilyDecoration.model.PlanMaking": "app/model/planmaking.js",
   "FamilyDecoration.model.PotentialBusiness": "app/model/potentialbusiness.js",
+  "FamilyDecoration.model.PotentialBusinessDetail": "app/model/potentialbusinessdetail.js",
   "FamilyDecoration.model.ProfessionType": "app/model/professiontype.js",
   "FamilyDecoration.model.Progress": "app/model/progress.js",
   "FamilyDecoration.model.Project": "app/model/project.js",
@@ -116,6 +118,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.store.PlanLabor": "app/store/planlabor.js",
   "FamilyDecoration.store.PlanMaking": "app/store/planmaking.js",
   "FamilyDecoration.store.PotentialBusiness": "app/store/potentialbusiness.js",
+  "FamilyDecoration.store.PotentialBusinessDetail": "app/store/potentialbusinessdetail.js",
   "FamilyDecoration.store.ProfessionType": "app/store/professiontype.js",
   "FamilyDecoration.store.Project": "app/store/project.js",
   "FamilyDecoration.store.ProjectCategory": "app/store/projectcategory.js",
@@ -214,6 +217,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.projectprogress.EditProgress": "app/view/projectprogress/editprogress.js",
   "FamilyDecoration.view.projectprogress.Index": "app/view/projectprogress/index.js",
   "FamilyDecoration.view.projectprogress.ProgressTable": "app/view/projectprogress/progresstable.js",
+  "FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff": "app/view/regionmgm/dispensetelemarketingstaff.js",
   "FamilyDecoration.view.regionmgm.EditArea": "app/view/regionmgm/editarea.js",
   "FamilyDecoration.view.regionmgm.EditClient": "app/view/regionmgm/editclient.js",
   "FamilyDecoration.view.regionmgm.EditPotentialBusiness": "app/view/regionmgm/editpotentialbusiness.js",
@@ -222,12 +226,17 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.setting.AddAccount": "app/view/setting/addaccount.js",
   "FamilyDecoration.view.setting.Index": "app/view/setting/index.js",
   "FamilyDecoration.view.setting.UserList": "app/view/setting/userlist.js",
+  "FamilyDecoration.view.signbusiness.ConfirmDesignStatus": "app/view/signbusiness/confirmdesignstatus.js",
   "FamilyDecoration.view.signbusiness.EditBusinessInfo": "app/view/signbusiness/editbusinessinfo.js",
+  "FamilyDecoration.view.signbusiness.EditDesignStatus": "app/view/signbusiness/editdesignstatus.js",
   "FamilyDecoration.view.signbusiness.GradeSignBusiness": "app/view/signbusiness/gradesignbusiness.js",
   "FamilyDecoration.view.signbusiness.Index": "app/view/signbusiness/index.js",
   "FamilyDecoration.view.taskassign.AssignTaskWin": "app/view/taskassign/assigntaskwin.js",
   "FamilyDecoration.view.taskassign.Index": "app/view/taskassign/index.js",
   "FamilyDecoration.view.taskassign.UserTaskList": "app/view/taskassign/usertasklist.js",
+  "FamilyDecoration.view.telemarket.EditStatus": "app/view/telemarket/editstatus.js",
+  "FamilyDecoration.view.telemarket.Index": "app/view/telemarket/index.js",
+  "FamilyDecoration.view.telemarket.TransferToBusiness": "app/view/telemarket/transfertobusiness.js",
   "FamilyDecoration.view.user.Index": "app/view/user/index.js"
 });
 Ext.ClassManager.addNameAlternateMappings({
@@ -1114,6 +1123,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.Setting": [],
   "FamilyDecoration.controller.SignBusiness": [],
   "FamilyDecoration.controller.TaskAssign": [],
+  "FamilyDecoration.controller.TeleMarket": [],
   "FamilyDecoration.controller.User": [],
   "FamilyDecoration.controller.Viewport": [],
   "FamilyDecoration.model.AnnouncementComment": [],
@@ -1143,6 +1153,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.model.PlanLabor": [],
   "FamilyDecoration.model.PlanMaking": [],
   "FamilyDecoration.model.PotentialBusiness": [],
+  "FamilyDecoration.model.PotentialBusinessDetail": [],
   "FamilyDecoration.model.ProfessionType": [],
   "FamilyDecoration.model.Progress": [],
   "FamilyDecoration.model.Project": [],
@@ -1188,6 +1199,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.store.PlanLabor": [],
   "FamilyDecoration.store.PlanMaking": [],
   "FamilyDecoration.store.PotentialBusiness": [],
+  "FamilyDecoration.store.PotentialBusinessDetail": [],
   "FamilyDecoration.store.ProfessionType": [],
   "FamilyDecoration.store.Project": [],
   "FamilyDecoration.store.ProjectCategory": [],
@@ -1286,6 +1298,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.projectprogress.EditProgress": [],
   "FamilyDecoration.view.projectprogress.Index": [],
   "FamilyDecoration.view.projectprogress.ProgressTable": [],
+  "FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff": [],
   "FamilyDecoration.view.regionmgm.EditArea": [],
   "FamilyDecoration.view.regionmgm.EditClient": [],
   "FamilyDecoration.view.regionmgm.EditPotentialBusiness": [],
@@ -1294,12 +1307,17 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.setting.AddAccount": [],
   "FamilyDecoration.view.setting.Index": [],
   "FamilyDecoration.view.setting.UserList": [],
+  "FamilyDecoration.view.signbusiness.ConfirmDesignStatus": [],
   "FamilyDecoration.view.signbusiness.EditBusinessInfo": [],
+  "FamilyDecoration.view.signbusiness.EditDesignStatus": [],
   "FamilyDecoration.view.signbusiness.GradeSignBusiness": [],
   "FamilyDecoration.view.signbusiness.Index": [],
   "FamilyDecoration.view.taskassign.AssignTaskWin": [],
   "FamilyDecoration.view.taskassign.Index": [],
   "FamilyDecoration.view.taskassign.UserTaskList": [],
+  "FamilyDecoration.view.telemarket.EditStatus": [],
+  "FamilyDecoration.view.telemarket.Index": [],
+  "FamilyDecoration.view.telemarket.TransferToBusiness": [],
   "FamilyDecoration.view.user.Index": []
 });
 Ext.ClassManager.addNameAliasMappings({
@@ -2352,6 +2370,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.Setting": [],
   "FamilyDecoration.controller.SignBusiness": [],
   "FamilyDecoration.controller.TaskAssign": [],
+  "FamilyDecoration.controller.TeleMarket": [],
   "FamilyDecoration.controller.User": [],
   "FamilyDecoration.controller.Viewport": [],
   "FamilyDecoration.model.AnnouncementComment": [],
@@ -2381,6 +2400,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.model.PlanLabor": [],
   "FamilyDecoration.model.PlanMaking": [],
   "FamilyDecoration.model.PotentialBusiness": [],
+  "FamilyDecoration.model.PotentialBusinessDetail": [],
   "FamilyDecoration.model.ProfessionType": [],
   "FamilyDecoration.model.Progress": [],
   "FamilyDecoration.model.Project": [],
@@ -2426,6 +2446,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.store.PlanLabor": [],
   "FamilyDecoration.store.PlanMaking": [],
   "FamilyDecoration.store.PotentialBusiness": [],
+  "FamilyDecoration.store.PotentialBusinessDetail": [],
   "FamilyDecoration.store.ProfessionType": [],
   "FamilyDecoration.store.Project": [],
   "FamilyDecoration.store.ProjectCategory": [],
@@ -2680,6 +2701,9 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.projectprogress.ProgressTable": [
     "widget.projectprogress-progresstable"
   ],
+  "FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff": [
+    "widget.regionmgm-dispensetelemarketingstaff"
+  ],
   "FamilyDecoration.view.regionmgm.EditArea": [
     "widget.regionmgm-editarea"
   ],
@@ -2704,8 +2728,14 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.setting.UserList": [
     "widget.setting-userlist"
   ],
+  "FamilyDecoration.view.signbusiness.ConfirmDesignStatus": [
+    "widget.signbusiness-confirmdesignstatus"
+  ],
   "FamilyDecoration.view.signbusiness.EditBusinessInfo": [
     "widget.signbusiness-editbusinessinfo"
+  ],
+  "FamilyDecoration.view.signbusiness.EditDesignStatus": [
+    "widget.signbusiness-editdesignstatus"
   ],
   "FamilyDecoration.view.signbusiness.GradeSignBusiness": [
     "widget.signbusiness-gradesignbusiness"
@@ -2721,6 +2751,15 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.taskassign.UserTaskList": [
     "widget.taskassign-usertasklist"
+  ],
+  "FamilyDecoration.view.telemarket.EditStatus": [
+    "widget.telemarket-editstatus"
+  ],
+  "FamilyDecoration.view.telemarket.Index": [
+    "widget.telemarket-index"
+  ],
+  "FamilyDecoration.view.telemarket.TransferToBusiness": [
+    "widget.telemarket-transfertobusiness"
   ],
   "FamilyDecoration.view.user.Index": [
     "widget.user-index"

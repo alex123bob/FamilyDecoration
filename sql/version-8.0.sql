@@ -36,6 +36,12 @@ insert INTO `potential_business_detail` SELECT
 	SUBSTR(id, 7, 2),' ',
 	SUBSTR(id, 9, 2),':',
 	SUBSTR(id, 11, 2),':',
+	SUBSTR(id, 13, 2)),
+	CONCAT(SUBSTR(id, 1, 4),'-',
+	SUBSTR(id, 5, 2),'-',
+	SUBSTR(id, 7, 2),' ',
+	SUBSTR(id, 9, 2),':',
+	SUBSTR(id, 11, 2),':',
 	SUBSTR(id, 13, 2))
 FROM
 	potential_business b
@@ -53,6 +59,12 @@ insert INTO `potential_business_detail` SELECT
 	SUBSTR(id, 7, 2),' ',
 	SUBSTR(id, 9, 2),':',
 	SUBSTR(id, 11, 2),':',
+	SUBSTR(id, 13, 2)),
+	CONCAT(SUBSTR(id, 1, 4),'-',
+	SUBSTR(id, 5, 2),'-',
+	SUBSTR(id, 7, 2),' ',
+	SUBSTR(id, 9, 2),':',
+	SUBSTR(id, 11, 2),':',
 	SUBSTR(id, 13, 2))
 FROM
 	potential_business b
@@ -65,6 +77,12 @@ insert INTO `potential_business_detail` SELECT
 	STATUS_THIRD,
 	salesmanName,
 	'false',
+	CONCAT(SUBSTR(id, 1, 4),'-',
+	SUBSTR(id, 5, 2),'-',
+	SUBSTR(id, 7, 2),' ',
+	SUBSTR(id, 9, 2),':',
+	SUBSTR(id, 11, 2),':',
+	SUBSTR(id, 13, 2)),
 	CONCAT(SUBSTR(id, 1, 4),'-',
 	SUBSTR(id, 5, 2),'-',
 	SUBSTR(id, 7, 2),' ',
