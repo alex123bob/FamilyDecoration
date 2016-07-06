@@ -8,6 +8,7 @@ Ext.define('FamilyDecoration.view.checkbusiness.Index', {
 		align: 'stretch'
 	},
 
+	// these two fields are used for prompt window message operation.
 	salesmanName: undefined,
 	businessId: undefined,
 

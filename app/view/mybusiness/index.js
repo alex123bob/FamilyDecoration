@@ -4,16 +4,19 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 	requires: ['FamilyDecoration.view.mybusiness.EditCommunity', 'FamilyDecoration.view.mybusiness.EditClient',
 		'FamilyDecoration.view.mybusiness.TransferToProject', 'FamilyDecoration.view.mybusiness.EditInfo',
 		'FamilyDecoration.store.Community', 'FamilyDecoration.store.Business', 'FamilyDecoration.store.BusinessDetail',
-		'FamilyDecoration.store.User', 'FamilyDecoration.view.mybusiness.IndividualReminder'],
+		'FamilyDecoration.store.User', 'FamilyDecoration.view.mybusiness.IndividualReminder',
+		'FamilyDecoration.view.mybusiness.DispatchCsStaff'],
 
 	autoScroll: true,
 	layout: {
 		type: 'hbox',
 		align: 'stretch'
 	},
+	// these two for checkbusiness module
 	checkBusiness: false,
 	businessStaff: null,
 
+	// these two for prompt window message operation.
 	salesmanName: undefined,
 	businessId: undefined,
 
@@ -183,6 +186,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						initBtn: function (rec) {
 							var editBtn = Ext.getCmp('button-editClient'),
 								delBtn = Ext.getCmp('button-delClient'),
+								dispatchCsBtn = Ext.getCmp('button-distributeCustomerServiceStaff'),
 								rankBtn = Ext.getCmp('button-categorization'),
 								requestDeadBusinessBtn = Ext.getCmp('button-requestDisableBusiness'),
 								gearBtn = Ext.getCmp('tool-frozeBusiness'),
@@ -192,6 +196,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 
 							editBtn.setDisabled(!rec);
 							delBtn.setDisabled(!rec);
+							dispatchCsBtn.setDisabled(!rec);
 							gearBtn.setDisabled(!rec);
 							rankBtn.setDisabled(!rec);
 							requestDeadBusinessBtn.setDisabled(!rec);
@@ -253,6 +258,28 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 											client = clientGrid.getSelectionModel().getSelection()[0];
 										if (client) {
 											var win = Ext.create('FamilyDecoration.view.mybusiness.EditClient', {
+												client: client
+											});
+											win.show();
+										}
+										else {
+											showMsg('请选择业务！');
+										}
+									}
+								},
+								{
+									text: '分配客服',
+									id: 'button-distributeCustomerServiceStaff',
+									name: 'button-distributeCustomerServiceStaff',
+									// hidden: me.businessId || me.salesmanName ? false : (me.checkBusiness ? (User.isAdministrationManager() ? true : false) : true),
+									hidden: true,
+									icon: './resources/img/customer_service.png',
+									disabled: true,
+									handler: function () {
+										var clientGrid = Ext.getCmp('gridpanel-clientInfo'),
+											client = clientGrid.getSelectionModel().getSelection()[0];
+										if (client) {
+											var win = Ext.create('FamilyDecoration.view.mybusiness.DispatchCsStaff', {
 												client: client
 											});
 											win.show();
