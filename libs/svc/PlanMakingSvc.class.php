@@ -161,7 +161,7 @@ Class PlanMakingSvc extends BaseSvc{
 			$Users[$busi['designerName']]['text'] .= $busi['regionName'].' '.$busi['address'].'预算设计,';
 			$Users[$busi['designerName']]['phone'] = $busi['phone'];
 			$Users[$busi['designerName']]['mail'] = $busi['mail'];
-			$Users[$busi['designerName']]['name'] = isset($busi['designer']) ? $busi['designer'] : isset($busi['designerName']);
+			$Users[$busi['designerName']]['name'] = isset($busi['designer']) ? $busi['designer'] : ($busi['designerName']);
 		}
 		foreach ($recievers2 as &$busi) {
 			if(!isset($Users[$busi['designerName']]))
@@ -169,7 +169,7 @@ Class PlanMakingSvc extends BaseSvc{
 			$Users[$busi['designerName']]['text'] .= $busi['regionName'].' '.$busi['address'].'平面布局设计,';
 			$Users[$busi['designerName']]['phone'] = $busi['phone'];
 			$Users[$busi['designerName']]['mail'] = $busi['mail'];
-			$Users[$busi['designerName']]['name'] = isset($busi['designer']) ? $busi['designer'] : isset($busi['designerName']);
+			$Users[$busi['designerName']]['name'] = isset($busi['designer']) ? $busi['designer'] : ($busi['designerName']);
 		}
 		foreach ($recievers3 as &$busi) {
 			if(!isset($Users[$busi['designerName']]))
@@ -177,7 +177,7 @@ Class PlanMakingSvc extends BaseSvc{
 			$Users[$busi['designerName']]['text'] .= $busi['regionName'].' '.$busi['address'].'立面施工设计,';
 			$Users[$busi['designerName']]['phone'] = $busi['phone'];
 			$Users[$busi['designerName']]['mail'] = $busi['mail'];
-			$Users[$busi['designerName']]['name'] = isset($busi['designer']) ? $busi['designer'] : isset($busi['designerName']);
+			$Users[$busi['designerName']]['name'] = isset($busi['designer']) ? $busi['designer'] : ($busi['designerName']);
 		}
 		foreach ($recievers4 as &$busi) {
 			if(!isset($Users[$busi['designerName']]))
@@ -185,7 +185,7 @@ Class PlanMakingSvc extends BaseSvc{
 			$Users[$busi['designerName']]['text'] .= $busi['regionName'].' '.$busi['address'].'效果图设计,';
 			$Users[$busi['designerName']]['phone'] = $busi['phone'];
 			$Users[$busi['designerName']]['mail'] = $busi['mail'];
-			$Users[$busi['designerName']]['name'] = isset($busi['designer']) ? $busi['designer'] : isset($busi['designerName']);
+			$Users[$busi['designerName']]['name'] = isset($busi['designer']) ? $busi['designer'] : ($busi['designerName']);
 		}
 		//print_r($Users);
 		include_once __ROOT__."/libs/msgLogDB.php";
