@@ -31,8 +31,19 @@
 	function sendMsg($sender,$reciever,$recieverPhone,$content,$sendtime){
 		global $mysql,$userAndPswd,$corpName,$apiUrl,$MsgErrorCode,$BlackListWords;
 		foreach($BlackListWords as $blackWord){
-			if(contains($content,$blackWord))
-				return array('status'=>'successful', 'errMsg' => "含有非法内容：".$blackWord);
+			if(contains($content,$blackWord)){
+				$obj = array(
+					"id" => date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
+					"sender"=>$sender,
+					"reciever"=>$reciever,
+					"recieverPhone"=>$recieverPhone,
+					"status"=>'error',
+					"result"=>"含有垃圾短信屏蔽关键字：".$blackWord,
+					"content"=>$content
+				);
+				$mysql->DBInsertAsArray('msg_log',$obj);
+				return array('status'=>'successful', 'errMsg' => "含有垃圾短信屏蔽关键字：".$blackWord);
+			}
 		}
 		$content = $corpName.$content;
 		$action = $sendtime == null ? "sendsms.action?" : "sendtimesms.action";
@@ -43,6 +54,16 @@
 		curl_setopt($ch, CURLOPT_BINARYTRANSFER, true) ; // 在启用 CURLOPT_RETURNTRANSFER 时候将获取数据返回
 		$res = curl_exec($ch);
 		if($res == false){
+			$obj = array(
+				"id" => date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
+				"sender"=>$sender,
+				"reciever"=>$reciever,
+				"recieverPhone"=>$recieverPhone,
+				"status"=>'error',
+				"result"=>"向短信提供商请求失败！",
+				"content"=>$content
+			);
+			$mysql->DBInsertAsArray('msg_log',$obj);
 			throw new Exception("向短信提供商请求失败！");
 		}else{
 			$error = getValue($res,"error");

@@ -129,6 +129,7 @@ Class PlanMakingSvc extends BaseSvc{
 			$users[$value['name']] = array('phone'=>$value['phone'],'mail'=>$value['mail']);
 		}
 		print_r($res);
+		echo '<br />';
 		echo "<br />\n";
 		foreach ($res as $key => $item) {
 			$this->sendMsg($item,$msg,$users);
@@ -147,6 +148,8 @@ Class PlanMakingSvc extends BaseSvc{
 		$sql4 = "select u.phone,u.mail,r.name as regionName,b.* from business b left join user u on b.designerName = u.name left join region r on b.regionId = r.id
 					where ds_bs is not null and ds_bs not like '%done' and ds_bs like '%~%' and right(ds_bs,10) = '$day' and b.isDead = 'false' and b.isDeleted = 'false' and b.isTransfered = 'false';";
 		global $mysql;
+		echo "designerAlarm";
+		echo "<br />$sql1<br /><br />$sql2<br /><br />$sql3<br /><br />$sql4<br />";
 		$recievers1 = $mysql->DBGetAsMap($sql1);
 		$recievers2 = $mysql->DBGetAsMap($sql2);
 		$recievers3 = $mysql->DBGetAsMap($sql3);
@@ -158,7 +161,7 @@ Class PlanMakingSvc extends BaseSvc{
 			$Users[$busi['designerName']]['text'] .= $busi['regionName'].' '.$busi['address'].'预算设计,';
 			$Users[$busi['designerName']]['phone'] = $busi['phone'];
 			$Users[$busi['designerName']]['mail'] = $busi['mail'];
-			$Users[$busi['designerName']]['name'] = $busi['designer'];
+			$Users[$busi['designerName']]['name'] = isset($busi['designer']) ? isset($busi['designer']) : isset($busi['designerName']);
 		}
 		foreach ($recievers2 as &$busi) {
 			if(!isset($Users[$busi['designerName']]))
@@ -166,7 +169,7 @@ Class PlanMakingSvc extends BaseSvc{
 			$Users[$busi['designerName']]['text'] .= $busi['regionName'].' '.$busi['address'].'平面布局设计,';
 			$Users[$busi['designerName']]['phone'] = $busi['phone'];
 			$Users[$busi['designerName']]['mail'] = $busi['mail'];
-			$Users[$busi['designerName']]['name'] = $busi['designer'];
+			$Users[$busi['designerName']]['name'] = isset($busi['designer']) ? isset($busi['designer']) : isset($busi['designerName']);
 		}
 		foreach ($recievers3 as &$busi) {
 			if(!isset($Users[$busi['designerName']]))
@@ -174,7 +177,7 @@ Class PlanMakingSvc extends BaseSvc{
 			$Users[$busi['designerName']]['text'] .= $busi['regionName'].' '.$busi['address'].'立面施工设计,';
 			$Users[$busi['designerName']]['phone'] = $busi['phone'];
 			$Users[$busi['designerName']]['mail'] = $busi['mail'];
-			$Users[$busi['designerName']]['name'] = $busi['designer'];
+			$Users[$busi['designerName']]['name'] = isset($busi['designer']) ? isset($busi['designer']) : isset($busi['designerName']);
 		}
 		foreach ($recievers4 as &$busi) {
 			if(!isset($Users[$busi['designerName']]))
@@ -182,7 +185,7 @@ Class PlanMakingSvc extends BaseSvc{
 			$Users[$busi['designerName']]['text'] .= $busi['regionName'].' '.$busi['address'].'效果图设计,';
 			$Users[$busi['designerName']]['phone'] = $busi['phone'];
 			$Users[$busi['designerName']]['mail'] = $busi['mail'];
-			$Users[$busi['designerName']]['name'] = $busi['designer'];
+			$Users[$busi['designerName']]['name'] = isset($busi['designer']) ? isset($busi['designer']) : isset($busi['designerName']);
 		}
 		//print_r($Users);
 		include_once __ROOT__."/libs/msgLogDB.php";
@@ -191,10 +194,11 @@ Class PlanMakingSvc extends BaseSvc{
 			$text = "您的".$item['text'].'即将到截至日期，您是否已经完成？加油哦！';
 			$mail = $item['mail'];
 			$phone = $item['phone'];
-			$name = $item['name'];
+			$name = isset($item['name']) ? $item['name'] : $phone;
 			try{
 				echo "sending msg to $name($phone) : $text\n<br />";
-				sendMsg('设计师进度提醒',$name,$phone,$text,null,'sendSMS');
+				print_r( sendMsg('设计师进度提醒',$name,$phone,$text,null,'sendSMS'));
+				echo "<br />";
 			}catch(Exception $e){
 				var_dump($e);
 			}
@@ -205,6 +209,7 @@ Class PlanMakingSvc extends BaseSvc{
 				var_dump($e);
 			}
 		}
+		echo '<br />over<br />';
 		
 	}
 
@@ -222,12 +227,14 @@ Class PlanMakingSvc extends BaseSvc{
 		if(isset($users[$salesman]) && strlen($users[$salesman]['phone']) == 11 ){ // 11位有效手机号
 			$phoneNumber = $users[$salesman]['phone'];
 			echo "send  to $phoneNumber<br /> \n";
-			sendMsg('工程进度主材预定提醒',$salesman,$phoneNumber,$text,null,'sendSMS');
+			print_r( sendMsg('工程进度主材预定提醒',$salesman,$phoneNumber,$text,null,'sendSMS'));
+			echo "<br />";
 		}
 		if(isset($users[$designer]) && strlen($users[$designer]['phone']) == 11 ){ // 11位有效手机号
 			$phoneNumber = $users[$designer]['phone'];
 			echo "send $text to $phoneNumber<br /> \n";
-			sendMsg('工程进度主材预定提醒',$designer,$phoneNumber,$text,null,'sendSMS');
+			print_r(sendMsg('工程进度主材预定提醒',$designer,$phoneNumber,$text,null,'sendSMS'));
+			echo "<br />";
 		}
 		if(isset($users[$salesman]) && contains($users[$salesman]['mail'],'@')){ // 有效邮箱
 			$mail = $users[$salesman]['mail'];
