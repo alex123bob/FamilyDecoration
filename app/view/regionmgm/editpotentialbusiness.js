@@ -70,6 +70,13 @@ Ext.define('FamilyDecoration.view.regionmgm.EditPotentialBusiness', {
 							value: me.potentialBusiness ? (me.potentialBusiness.get('isDecorated') == 'no') : ''
 						}
 					]
+				},
+				{
+					xtype: 'textarea',
+					fieldLabel: '扫楼状态',
+					name: 'initialStatus',
+					disabled: me.potentialBusiness,
+					hidden: me.potentialBusiness
 				}
 			]
 		}];
@@ -93,7 +100,9 @@ Ext.define('FamilyDecoration.view.regionmgm.EditPotentialBusiness', {
 						if (me.potentialBusiness) {
 							Ext.apply(frmVals, {
 								id: me.potentialBusiness.getId()
-							})
+							});
+							// there is no need to pass status when it is under edit mode.
+							delete frmVals.initialStatus;
 						}
 						Ext.Ajax.request({
 							url: me.potentialBusiness ? './libs/business.php?action=editPotentialBusiness' : './libs/business.php?action=addPotentialBusiness',

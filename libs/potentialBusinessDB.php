@@ -22,6 +22,17 @@
 			$obj['status_third'] = $data['status_third'];
 		global $mysql;
 		$mysql->DBInsertAsArray("potential_business",$obj);
+		if (isset($data["initialStatus"])) {
+			$detailObj = array(
+				"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
+				"potentialBusinessId"=>$obj['id'],
+				"comments"=>$data['initialStatus'],
+				"committer"=>$_SESSION["name"],
+				"isDeleted"=>'false',
+				"createTime"=>"now()"
+			);
+			$mysql->DBInsertAsArray("potential_business_detail",$detailObj);
+		}
 		return array('status'=>'successful', 'errMsg' => '','regionID'=> $obj["id"]);
 	}
 
@@ -127,6 +138,12 @@
 			}
 			unset($item['reginId']);
 			unset($item['isDeleted']);
+		}
+		// 获取提醒内容
+		$today = date("Y-m-d");
+		$sql = "select * from message where isRead = 'false' and isDeleted = 'false' and receiver = '?' and type = 'telemarket_individual_remind' and extraId = '?' and showTime is not null and DATE_FORMAT(`showTime`, '%Y-%m-%d') >= '$today' order by showTime ";
+		foreach($res as &$item){
+			$item["reminders"] = $mysql->DBGetAsMap($sql, $item["telemarketingStaffName"], $item["id"]);
 		}
 		return array('total'=>$count[0],'data'=>$res);
 	}

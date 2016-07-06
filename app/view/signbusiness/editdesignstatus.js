@@ -90,7 +90,7 @@ Ext.define('FamilyDecoration.view.signbusiness.EditDesignStatus', {
                                 xtype: 'datefield',
                                 name: 'startTime',
                                 editable: false,
-                                allowBlank: false,
+                                allowBlank: key != 'ds_lp',
                                 value: start,
                                 disabled: done,
                                 listeners: {
@@ -104,7 +104,7 @@ Ext.define('FamilyDecoration.view.signbusiness.EditDesignStatus', {
                                 xtype: 'datefield',
                                 name: 'endTime',
                                 editable: false,
-                                allowBlank: false,
+                                allowBlank: key != 'ds_lp',
                                 value: end,
                                 disabled: done,
                                 listeners: {
@@ -138,7 +138,7 @@ Ext.define('FamilyDecoration.view.signbusiness.EditDesignStatus', {
                                 if (startTime.isDisabled() || endTime.isDisabled()) {
 
                                 }
-                                else {
+                                else if (startTime.getValue() && endTime.getValue()){
                                     startTime = Ext.Date.format(startTime.getValue(), 'Y-m-d');
                                     endTime = Ext.Date.format(endTime.getValue(), 'Y-m-d');
                                     res[pro] = startTime + '~' + endTime;

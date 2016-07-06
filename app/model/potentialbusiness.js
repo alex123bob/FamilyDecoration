@@ -22,6 +22,9 @@ Ext.define('FamilyDecoration.model.PotentialBusiness', {
 		{name: 'salesmanName', type: 'string'},
 		{name: 'telemarketingStaff', type: 'string'},
 		{name: 'telemarketingStaffName', type: 'string'},
+		// array list of all reminding information
+		// find them by msg_extraId=id, msg_recipient=telemarketingStaffName, msg_type=telemarket_individual_remind
+		{name: 'reminders'},
 		{name: 'createTime', type: 'string'},
 		{name: 'isDeleted', type: 'string'},
 		{name: 'lastUpdateTime', type: 'string'},

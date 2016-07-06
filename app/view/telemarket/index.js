@@ -76,6 +76,7 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                 title: '分配名单',
                 flex: 9,
                 itemId: 'gridpanel-businessList',
+                cls: 'gridpanel-potentialBusinessList',
                 getBtns: function () {
                     var transferBtn = this.down('[name="button-transferToBusiness"]'),
                         reminderBtn = this.down('[name="button-reminder"]'),
@@ -165,7 +166,7 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                                     type: 'telemarket_individual_remind',
                                     extraId: resObj.business.getId(),
                                     afterClose: function (){
-                                        resObj.businessList.refresh();
+                                        resObj.businessList.getStore().reload();
                                     }
                                 });
                                 win.show();
@@ -290,7 +291,22 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                         },
                         {
                             text: '提醒',
-                            flex: 0.8
+                            flex: 0.8,
+                            dataIndex: 'reminders',
+                            renderer: function (val, meta, rec){
+                                var result = '';
+                                if (val) {
+                                    Ext.each(val, function (obj, index) {
+                                        result += '<strong>' + (index + 1) + '.</strong>'
+                                            + ' ' + obj['content'].replace(/\n/gi, '<br />')
+                                            + '<div class="footnote">' + obj['showTime'].slice(0, 10) + '</div>';
+                                    });
+                                    return '<div style="text-align:left;">' + result + '</div>';
+                                }
+                                else {
+                                    return '';
+                                }
+                            }
                         },
                         {
                             text: '分配时间',

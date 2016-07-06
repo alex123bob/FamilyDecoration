@@ -1251,7 +1251,7 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 										}
 									}
 									else if (status && status == -1) {
-										txt.setValue('未接收').setFieldStyle('background: skyblue;');
+										txt.setValue('未填写').setFieldStyle('background: skyblue;');
 									}
 									else if (!status) {
 										txt.setValue('').setFieldStyle('background: white;');
