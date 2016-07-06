@@ -424,7 +424,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 														data: [
 															{
 																name: 'highSpending',
-																value: '资金过高'
+																value: '资金问题'
 															},
 															{
 																name: 'delayForSeveralYears',
