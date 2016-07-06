@@ -16,6 +16,8 @@ Ext.define('FamilyDecoration.view.mybusiness.IndividualReminder', {
     sender: undefined,
     recipient: undefined,
     type: undefined,
+    extraId: undefined,
+    afterClose: Ext.emptyFn,
 
     initComponent: function () {
         var me = this;
@@ -48,11 +50,12 @@ Ext.define('FamilyDecoration.view.mybusiness.IndividualReminder', {
                             (me.recipient ? me.recipient : User.getName()),
                             txt.getValue(),
                             me.type ? me.type : undefined,
-                            undefined,
+                            me.extraId ? me.extraId : undefined,
                             Ext.Date.format(remindTime.getValue(), 'Y-m-d')
                         );
                         showMsg('添加提醒成功！');
                         me.close();
+                        me.afterClose();
                     }
                 }
             },

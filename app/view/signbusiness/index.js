@@ -7,7 +7,8 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 		'FamilyDecoration.view.signbusiness.EditBusinessInfo',
 		'FamilyDecoration.view.signbusiness.GradeSignBusiness',
 		'FamilyDecoration.store.User',
-		'FamilyDecoration.view.signbusiness.EditDesignStatus'
+		'FamilyDecoration.view.signbusiness.EditDesignStatus',
+		'FamilyDecoration.view.mybusiness.IndividualReminder'
 	],
 	layout: {
 		type: 'hbox',
@@ -393,7 +394,8 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 						checkBudgetBtn = Ext.getCmp('button-checkBudgetForSignBusiness'),
 						requestBtn = Ext.getCmp('button-requestDisableBusiness'),
 						editDesignStatusBtn = Ext.getCmp('button-editDesignStatus'),
-						confirmDesignStatusBtn = Ext.getCmp('button-confirmDesignStatus');
+						confirmDesignStatusBtn = Ext.getCmp('button-confirmDesignStatus'),
+						reminderBtn = Ext.getCmp('tool-individualReminder');
 
 					applyTransferBtn.setDisabled(!address);
 					transferProjectBtn.setDisabled(!address);
@@ -402,6 +404,7 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 					requestBtn.setDisabled(!address);
 					editDesignStatusBtn.setDisabled(!address);
 					confirmDesignStatusBtn.setDisabled(!address);
+					reminderBtn.setDisabled(!address);
 				},
 				listeners: {
 					selectionchange: function (view, sels) {
@@ -410,6 +413,7 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 							detailedAddressGrid = Ext.getCmp('gridpanel-detailedAddressForSignBusiness'),
 							designStatus = Ext.ComponentQuery.query('[name="panel-designStatus"]')[0];
 						infoGrid.refresh(rec);
+						infoGrid.appendRemindingInfo(rec);
 						detailedAddressGrid.initBtn(rec);
 						designStatus.refresh(rec);
 					}
@@ -436,6 +440,42 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 
 							editBtn.setDisabled(!rec);
 							delBtn.setDisabled(!rec);
+						},
+						appendRemindingInfo: function (rec) {
+							var title = '信息情况',
+								marquee = '<marquee scrollamount="6" onMouseOver="this.stop()" onMouseOut="this.start()"><font color="#cccccc;"><strong>信息中心:   ',
+								grid = this;
+							if (rec) {
+								Ext.Ajax.request({
+									url: './libs/message.php?action=get',
+									method: 'GET',
+									params: {
+										isReminding: true,
+										receiver: rec.get('designerName'),
+										isRead: false,
+										type: 'business_individual_remind',
+										extraId: rec.getId()
+									},
+									callback: function (opts, success, res) {
+										if (success) {
+											var obj = Ext.decode(res.responseText);
+											if (obj.length > 0) {
+												Ext.Array.each(obj, function (item, index) {
+													marquee += (index + 1) + '. ' + item.content + '  ';
+												});
+												marquee += '</strong></font></marquee>';
+												grid.setTitle(title + marquee);
+											}
+											else {
+												grid.setTitle(title);
+											}
+										}
+									}
+								});
+							}
+							else {
+								grid.setTitle(title);
+							}
 						},
 						refresh: function (client) {
 							var clientName = Ext.getCmp('textfield-clientNameOnTopForSignBusiness'),
@@ -1134,6 +1174,33 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 									}
 									else {
 										showMsg('请选择业务！');
+									}
+								}
+							}
+						],
+						tools: [
+							{
+								type: 'plus',
+								tooltip: '添加提醒',
+								id: 'tool-individualReminder',
+								name: 'tool-individualReminder',
+								disabled: true,
+								handler: function () {
+									var addressGrid = Ext.getCmp('gridpanel-detailedAddressForSignBusiness'),
+										rec = addressGrid.getSelectionModel().getSelection()[0];
+									if (rec) {
+										var win = Ext.create('FamilyDecoration.view.mybusiness.IndividualReminder', {
+											recipient: me.designStaff ? me.designStaff.get('designerName') : User.getName(),
+											type: 'business_individual_remind',
+											extraId: rec.getId(),
+											afterClose: function () {
+												addressGrid.refresh();
+											}
+										});
+										win.show();
+									}
+									else {
+										showMsg('请选择详细地址！');
 									}
 								}
 							}

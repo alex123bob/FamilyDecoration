@@ -96,6 +96,42 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                         }
                     }
                 },
+                appendRemindingInfo: function (rec) {
+                    var title = '信息情况',
+                        marquee = '<marquee scrollamount="6" onMouseOver="this.stop()" onMouseOut="this.start()"><font color="#cccccc;"><strong>信息中心:   ',
+                        grid = this;
+                    if (rec) {
+                        Ext.Ajax.request({
+                            url: './libs/message.php?action=get',
+                            method: 'GET',
+                            params: {
+                                isReminding: true,
+                                receiver: rec.get('telemarketingStaffName'),
+                                isRead: false,
+                                type: 'telemarket_individual_remind',
+                                extraId: rec.getId()
+                            },
+                            callback: function (opts, success, res) {
+                                if (success) {
+                                    var obj = Ext.decode(res.responseText);
+                                    if (obj.length > 0) {
+                                        Ext.Array.each(obj, function (item, index) {
+                                            marquee += (index + 1) + '. ' + item.content + '  ';
+                                        });
+                                        marquee += '</strong></font></marquee>';
+                                        grid.setTitle(title + marquee);
+                                    }
+                                    else {
+                                        grid.setTitle(title);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    else {
+                        grid.setTitle(title);
+                    }
+                },
                 tbar: [
                     {
                         text: '转为业务',
@@ -126,7 +162,11 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                             if (resObj.business) {
                                 var win = Ext.create('FamilyDecoration.view.mybusiness.IndividualReminder', {
                                     recipient: resObj.telemarketingStaff.get('telemarketingStaffName'),
-                                    type: 'telemarket_individual_remind'
+                                    type: 'telemarket_individual_remind',
+                                    extraId: resObj.business.getId(),
+                                    afterClose: function (){
+                                        resObj.businessList.refresh();
+                                    }
                                 });
                                 win.show();
                             }
@@ -176,7 +216,14 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                                 root: 'data'
                             }
                         });
-                        resObj.businessSt.loadPage(1);
+                        resObj.businessSt.loadPage(1, {
+                            callback: function (recs, ope, success){
+                                var business = resObj.business,
+                                    selModel = resObj.businessList.getSelectionModel();
+                                selModel.deselectAll();
+                                selModel.select(resObj.businessSt.indexOf(business));
+                            }
+                        });
                     }
                     else {
                         resObj.businessSt.removeAll();
@@ -234,7 +281,7 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                                             + '<div class="footnote">' + obj['committerRealName'] + '('
                                             + obj['createTime'] + ')</div>';
                                     });
-                                    return '<div style="text-align:left;">'+result+'</div>';
+                                    return '<div style="text-align:left;">' + result + '</div>';
                                 }
                                 else {
                                     return '';
@@ -264,6 +311,7 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                     selectionchange: function () {
                         var resObj = me.getRes();
                         resObj.businessList.initBtn();
+                        resObj.businessList.appendRemindingInfo(resObj.business);
                     }
                 }
             }

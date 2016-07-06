@@ -61,7 +61,13 @@
 			}
 		}
 		$today = date("Y-m-d");
-		$where .= " and (`showTime` IS NULL || DATE_FORMAT(`showTime`, '%Y-%m-%d') = '$today' ) ";
+		$isReminding = isset($data["isReminding"]) ? $data["isReminding"] : false;
+		if ($isReminding) {
+			$where .= " and `showTime` IS NOT NULL and DATE_FORMAT(`showTime`, '%Y-%m-%d') = '$today'";
+		}
+		else {
+			$where .= " and (`showTime` IS NULL or DATE_FORMAT(`showTime`, '%Y-%m-%d') = '$today' ) ";
+		}
 		$arr = $mysql->DBGetSomeRows($tableName, " * ", $where ,"order by `createTime` DESC");
 		$count = 0;
 		$res = array();

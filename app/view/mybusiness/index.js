@@ -708,6 +708,42 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 							borderRightStyle: 'solid',
 							borderRightWidth: '1px'
 						},
+						appendRemindingInfo: function (rec){
+							var title = '信息情况',
+								marquee = '<marquee scrollamount="6" onMouseOver="this.stop()" onMouseOut="this.start()"><font color="#cccccc;"><strong>信息中心:   ',
+								grid = this;
+							if (rec) {
+								Ext.Ajax.request({
+									url: './libs/message.php?action=get',
+									method: 'GET',
+									params: {
+										isReminding: true,
+										receiver: rec.get('salesmanName'),
+										isRead: false,
+										type: 'business_individual_remind',
+										extraId: rec.getId()
+									},
+									callback: function (opts, success, res){
+										if (success) {
+											var obj = Ext.decode(res.responseText);
+											if (obj.length > 0) {
+												Ext.Array.each(obj, function (item, index){
+													marquee += (index+1) + '. ' + item.content + '  ';
+												});
+												marquee += '</strong></font></marquee>';
+												grid.setTitle(title + marquee);
+											}
+											else {
+												grid.setTitle(title);
+											}
+										}
+									}
+								});
+							}
+							else {
+								grid.setTitle(title);
+							}
+						},
 						xtype: 'gridpanel',
 						id: 'gridpanel-businessInfo',
 						name: 'gridpanel-businessInfo',
@@ -745,6 +781,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 										}
 									}
 								});
+								grid.appendRemindingInfo(client);
 								clientName.setValue(client.get('customer'));
 								custContact.setValue(client.get('custContact'));
 								businessStaff.setValue(client.get('salesman'));
@@ -934,11 +971,22 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								disabled: true,
 								hidden: me.checkBusiness && User.isAdministrationManager() ? true : false,
 								handler: function (){
-									var win = Ext.create('FamilyDecoration.view.mybusiness.IndividualReminder', {
-										recipient: me.businessStaff ? me.businessStaff.get('salesmanName') : User.getName(),
-										type: 'business_individual_remind'
-									});
-									win.show();
+									var clientGrid = Ext.getCmp('gridpanel-clientInfo'),
+										client = clientGrid.getSelectionModel().getSelection()[0];
+									if (client) {
+										var win = Ext.create('FamilyDecoration.view.mybusiness.IndividualReminder', {
+											recipient: me.businessStaff ? me.businessStaff.get('salesmanName') : User.getName(),
+											type: 'business_individual_remind',
+											extraId: client.getId(),
+											afterClose: function (){
+												clientGrid.refresh();
+											}
+										});
+										win.show();
+									}
+									else {
+										showMsg('请先选择地址！');
+									}
 								}
 							},
 							{
