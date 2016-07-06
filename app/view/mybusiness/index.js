@@ -765,6 +765,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								{
 									text: '信息内容',
 									flex: 1,
+									align: 'left',
 									dataIndex: 'content',
 									renderer: function (val, meta, rec) {
 										return val.replace(/\n/ig, '<br />');
