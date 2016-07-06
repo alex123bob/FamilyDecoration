@@ -742,7 +742,8 @@ function requestChannel(receiver, content) {
 }
 
 // send message to make a record.
-function sendMsg(sender, receiver, content, type, extraId) {
+// hint: showTime is only needed when this message acts as a delayed information which is gonna be shown in dynamic reminder bar.
+function sendMsg(sender, receiver, content, type, extraId, showTime) {
     var p = {
         action: 'add',
         sender: sender,
@@ -758,6 +759,11 @@ function sendMsg(sender, receiver, content, type, extraId) {
         Ext.apply(p, {
             extraId: extraId
         });
+    }
+    if (showTime) {
+        Ext.apply(p, {
+            showTime: showTime
+        })
     }
     Ext.Ajax.request({
         url: './libs/message.php',

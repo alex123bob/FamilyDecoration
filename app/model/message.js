@@ -10,7 +10,8 @@ Ext.define('FamilyDecoration.model.Message', {
 		{name: 'extraId', type: 'string'},
 		{name: 'isDeleted', type: 'string'},
 		{name: 'isRead', type: 'string'},
-		{name: 'readTime', type: 'string'}
+		{name: 'readTime', type: 'string'},
+		{name: 'showTime', type: 'string'} // for delayed message which is supposed to show in one specific time
 	],
 	idProperty: 'id'
 });
