@@ -934,7 +934,8 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								hidden: me.checkBusiness && User.isAdministrationManager() ? true : false,
 								handler: function (){
 									var win = Ext.create('FamilyDecoration.view.mybusiness.IndividualReminder', {
-										
+										recipient: me.businessStaff ? me.businessStaff.get('salesmanName') : User.getName(),
+										type: 'business_individual_remind'
 									});
 									win.show();
 								}

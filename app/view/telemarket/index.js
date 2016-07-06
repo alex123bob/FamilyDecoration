@@ -3,7 +3,8 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
     alias: 'widget.telemarket-index',
     requires: [
         'FamilyDecoration.view.telemarket.TransferToBusiness',
-        'FamilyDecoration.view.telemarket.EditStatus'
+        'FamilyDecoration.view.telemarket.EditStatus',
+        'FamilyDecoration.view.mybusiness.IndividualReminder'
     ],
     layout: {
         type: 'hbox',
@@ -123,7 +124,11 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                         handler: function () {
                             var resObj = me.getRes();
                             if (resObj.business) {
-
+                                var win = Ext.create('FamilyDecoration.view.mybusiness.IndividualReminder', {
+                                    recipient: resObj.telemarketingStaff.get('telemarketingStaffName'),
+                                    type: 'telemarket_individual_remind'
+                                });
+                                win.show();
                             }
                             else {
                                 showMsg('请选择条目！');
