@@ -762,10 +762,12 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								custContact = Ext.getCmp('textfield-custContactOnTop'),
 								businessStaff = Ext.getCmp('textfield-businessStaffOnTop'),
 								businessSource = Ext.getCmp('textfield-businessSourceOnTop'),
-								businessDesigner = Ext.getCmp('textfield-businessDesignerOnTop');
+								businessDesigner = Ext.getCmp('textfield-businessDesignerOnTop'),
+								grid = this;
+							// show dynamic reminding information if there is one for corresponding salesman
+							grid.appendRemindingInfo(client);
 							if (client) {
-								var grid = this,
-									st = grid.getStore(),
+								var st = grid.getStore(),
 									rec = grid.getSelectionModel().getSelection()[0];
 								st.reload({
 									params: {
@@ -781,7 +783,6 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 										}
 									}
 								});
-								grid.appendRemindingInfo(client);
 								clientName.setValue(client.get('customer'));
 								custContact.setValue(client.get('custContact'));
 								businessStaff.setValue(client.get('salesman'));
