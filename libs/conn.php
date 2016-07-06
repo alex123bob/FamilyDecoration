@@ -28,6 +28,8 @@
 		&&
 		!strpos($_SERVER["REQUEST_URI"], "mode=application_request_url")
 		&&
+		!strpos($_SERVER["REQUEST_URI"], "api.php?action=PlanMaking.designerAlarm")
+		&&
 		!strpos($_SERVER["REQUEST_URI"], "api.php?action=PlanMaking.msgPreNotice")
 	){
 		checkUserOnlineUniqueness();
