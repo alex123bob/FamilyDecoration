@@ -485,6 +485,7 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 									text: '信息内容',
 									flex: 1,
 									dataIndex: 'content',
+									align: 'left',
 									renderer: function (val, meta, rec) {
 										return val.replace(/\n/ig, '<br />');
 									}

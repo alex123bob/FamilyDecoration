@@ -4,6 +4,7 @@
 		$receivers = explode(',',$receiver); 
 		$type = isset($data["type"]) ? $data["type"] : NULL;
 		$extraId = isset($data["extraId"]) ? $data["extraId"] : NULL;
+		$showTime = isset($data["showTime"]) ? $data["showTime"] : NULL;
 		global $mysql;
 		foreach($receivers as $re){
 			$obj = array(
@@ -12,7 +13,8 @@
 				"sender"=>$data["sender"],
 				"receiver"=>$re,
 				"type"=>$type,
-				"extraId"=>$extraId
+				"extraId"=>$extraId,
+				"showTime"=>$showTime
 			);
 			$mysql->DBInsertAsArray('message',$obj);
 		}
@@ -47,17 +49,19 @@
 	}
 	
 	function get($data){
-		$fields = array('id','content','createTime','sender','receiver','type','extraId','isDeleted','isRead','readTme');
+		$fields = array('id','content','createTime','sender','receiver','type','extraId','isDeleted','isRead','readTme','showTime');
 		$tableName = '`message`';
 		global $mysql;
 		$where = " where 1 = 1 ";
 		
-		$filters = array('sender','receiver','type','extraId','isRead','isDeleted','id');
+		$filters = array('sender','receiver','type','extraId','isRead','isDeleted','id','showTime');
 		foreach($filters as $filter){
 			if(isset($data[$filter])){
 				$where .= " and `$filter` = '".$data[$filter]."'";
 			}
 		}
+		$today = date("Y-m-d");
+		$where .= " and (`showTime` IS NULL || DATE_FORMAT(`showTime`, '%Y-%m-%d') = '$today' ) ";
 		$arr = $mysql->DBGetSomeRows($tableName, " * ", $where ,"order by `createTime` DESC");
 		$count = 0;
 		$res = array();

@@ -4,7 +4,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 	requires: ['FamilyDecoration.view.mybusiness.EditCommunity', 'FamilyDecoration.view.mybusiness.EditClient',
 		'FamilyDecoration.view.mybusiness.TransferToProject', 'FamilyDecoration.view.mybusiness.EditInfo',
 		'FamilyDecoration.store.Community', 'FamilyDecoration.store.Business', 'FamilyDecoration.store.BusinessDetail',
-		'FamilyDecoration.store.User'],
+		'FamilyDecoration.store.User', 'FamilyDecoration.view.mybusiness.IndividualReminder'],
 
 	autoScroll: true,
 	layout: {
@@ -187,13 +187,15 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								requestDeadBusinessBtn = Ext.getCmp('button-requestDisableBusiness'),
 								gearBtn = Ext.getCmp('tool-frozeBusiness'),
 								applyDesignerBtn = Ext.getCmp('button-applyForDesigner'),
-								reminder = Ext.getCmp('button-checkBusinessRemind');
+								reminder = Ext.getCmp('button-checkBusinessRemind'),
+								personalReminderBtn = Ext.getCmp('button-personalReminder');
 
 							editBtn.setDisabled(!rec);
 							delBtn.setDisabled(!rec);
 							gearBtn.setDisabled(!rec);
 							rankBtn.setDisabled(!rec);
 							requestDeadBusinessBtn.setDisabled(!rec);
+							personalReminderBtn.setDisabled(!rec);
 							reminder.setDisabled(!rec);
 							if (rec && rec.get('applyDesigner') == 0) {
 								applyDesignerBtn.enable();
@@ -763,6 +765,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								{
 									text: '信息内容',
 									flex: 1,
+									align: 'left',
 									dataIndex: 'content',
 									renderer: function (val, meta, rec) {
 										return val.replace(/\n/ig, '<br />');
@@ -921,6 +924,21 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 											})
 										}
 									});
+								}
+							},
+							{
+								text: '个人提醒',
+								id: 'button-personalReminder',
+								name: 'button-personalReminder',
+								icon: './resources/img/alarm_blue.png',
+								disabled: true,
+								hidden: me.checkBusiness && User.isAdministrationManager() ? true : false,
+								handler: function (){
+									var win = Ext.create('FamilyDecoration.view.mybusiness.IndividualReminder', {
+										recipient: me.businessStaff ? me.businessStaff.get('salesmanName') : User.getName(),
+										type: 'business_individual_remind'
+									});
+									win.show();
 								}
 							},
 							{

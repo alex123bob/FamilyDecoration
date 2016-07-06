@@ -295,12 +295,16 @@
 						$values .= $value.",";
 						break;
 					case "NULL":
-						$values .= " null ,";
+						$values .= $value." null,";
 						break;
 					case "string":
-						if(strtolower($value) == "now()"){
-							$values .= " now() ,";
-						}else{
+						if(strtolower($value) == "null") {
+							$values .= " null,";
+						}
+						else if(strtolower($value) == "now()"){
+							$values .= " now(),";
+						}
+						else{
 							$values .= " '".myStrEscape($value)."' ,";
 						}
 						break;
@@ -334,6 +338,9 @@
 						break;
 					case "double":
 						$sql .= $value.",";
+						break;
+					case "NULL":
+						$sql .= $value." null,";
 						break;
 					case "string":
 						if(strtolower($value) == "null") {
