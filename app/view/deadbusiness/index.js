@@ -246,7 +246,8 @@ Ext.define('FamilyDecoration.view.deadbusiness.Index', {
 						rec = grid.getSelectionModel().getSelection()[0],
 						approveBtn = Ext.getCmp('button-approveDeadBusiness'),
 						recoverBtn = Ext.getCmp('button-recoverDeadBusiness'),
-						editBtn = Ext.getCmp('button-editDeadBusiness');
+						editBtn = Ext.getCmp('button-editDeadBusiness'),
+						editReasonBtn = Ext.getCmp('button-editDeadReason');
 					if (rec) {
 						if (rec.get('requestDead') == '1') {
 							approveBtn.enable();
@@ -257,11 +258,13 @@ Ext.define('FamilyDecoration.view.deadbusiness.Index', {
 							recoverBtn.enable();
 						}
 						editBtn.enable();
+						editReasonBtn.enable();
 					}
 					else {
 						approveBtn.disable();
 						recoverBtn.disable();
 						editBtn.disable();
+						editReasonBtn.disable();
 					}
 				},
 				refresh: function (businessStaff) {
@@ -386,10 +389,10 @@ Ext.define('FamilyDecoration.view.deadbusiness.Index', {
 								win;
 							win = Ext.create('FamilyDecoration.view.deadbusiness.EditDeadBusiness', {
 								deadBusiness: rec,
-								afterCallback: function (){
+								afterCallback: function () {
 									var index = staffGrid.getStore().indexOf(staff);
 									staffGrid.getStore().reload({
-										callback: function (recs, ope, success){
+										callback: function (recs, ope, success) {
 											if (success) {
 												var selModel = staffGrid.getSelectionModel();
 												selModel.select(index);
@@ -397,6 +400,153 @@ Ext.define('FamilyDecoration.view.deadbusiness.Index', {
 										}
 									});
 								}
+							});
+							win.show();
+						}
+					},
+					{
+						text: '编辑废单原因',
+						name: 'button-editDeadReason',
+						id: 'button-editDeadReason',
+						icon: './resources/img/edit.png',
+						disabled: true,
+						handler: function () {
+							var grid = Ext.getCmp('gridpanel-deadbusinessinfo'),
+								staffGrid = Ext.getCmp('gridpanel-businessStaffForDeadBusiness'),
+								rec = grid.getSelectionModel().getSelection()[0],
+								staff = staffGrid.getSelectionModel().getSelection()[0];
+							var win = Ext.create('Ext.window.Window', {
+								title: '编辑废单原因',
+								width: 500,
+								height: 200,
+								modal: true,
+								bodyPadding: 4,
+								layout: 'vbox',
+								items: [
+									{
+										name: 'requestDeadBusinessReason',
+										xtype: 'textarea',
+										emptyText: '输入废单详情',
+										fieldLabel: '详情',
+										autoScroll: true,
+										allowBlank: false,
+										flex: 3,
+										width: '100%',
+										value: rec.get('requestDeadBusinessReason')
+									},
+									{
+										name: 'requestDeadBusinessTitle',
+										xtype: 'combobox',
+										fieldLabel: '原因',
+										allowBlank: false,
+										editable: false,
+										displayField: 'value',
+										valueField: 'name',
+										flex: 1,
+										width: '100%',
+										value: rec.get('requestDeadBusinessTitle'),
+										store: Ext.create('Ext.data.Store', {
+											fields: ['name', 'value'],
+											data: [
+												{
+													name: 'highSpending',
+													value: '资金问题'
+												},
+												{
+													name: 'delayForSeveralYears',
+													value: '想放几年'
+												},
+												{
+													name: 'otherDecorated',
+													value: '找人装修'
+												},
+												{
+													name: 'guerrilla',
+													value: '游击队'
+												},
+												{
+													name: 'highQuotation',
+													value: '报价过高'
+												},
+												{
+													name: 'designProblem',
+													value: '设计问题'
+												},
+												{
+													name: 'initialProjectQuality',
+													value: '前期工程质量'
+												},
+												{
+													name: 'projectQuality',
+													value: '工程质量'
+												},
+												{
+													name: 'serviceAttitude',
+													value: '服务态度'
+												},
+												{
+													name: 'other',
+													value: '其它'
+												}
+											]
+										})
+									}
+								],
+								buttons: [
+									{
+										text: '确定',
+										handler: function () {
+											var txtArea = win.down('[name="requestDeadBusinessReason"]'),
+												combobox = win.down('[name="requestDeadBusinessTitle"]'),
+												reason = txtArea.getValue(),
+												title = combobox.getRawValue();
+
+											if (rec) {
+												if (txtArea.isValid() && combobox.isValid()) {
+													Ext.Ajax.request({
+														url: './libs/business.php?action=editBusiness',
+														method: 'POST',
+														params: {
+															id: rec.getId(),
+															requestDeadBusinessReason: reason,
+															requestDeadBusinessTitle: title
+														},
+														callback: function (opts, success, res) {
+															if (success) {
+																var obj = Ext.decode(res.responseText);
+																if ('successful' == obj.status) {
+																	win.close();
+																	showMsg('编辑成功！');
+																	var index = staffGrid.getStore().indexOf(staff);
+																	staffGrid.getStore().reload({
+																		callback: function (recs, ope, success) {
+																			if (success) {
+																				var selModel = staffGrid.getSelectionModel();
+																				selModel.select(index);
+																			}
+																		}
+																	});
+																}
+																else {
+																	showMsg(obj.errMsg);
+																}
+															}
+														}
+													});
+												}
+											}
+											else {
+												showMsg('请选择业务!');
+											}
+										}
+									},
+									{
+										text: '取消',
+										handler: function () {
+											win.close();
+										}
+									}
+								]
 							});
 							win.show();
 						}
