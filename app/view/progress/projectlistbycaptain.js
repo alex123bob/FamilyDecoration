@@ -167,7 +167,8 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 	            		}
 
 	            		if (me.loadAll) {
-	            			me.expandAll(function (){
+							// shutdown this feature temporarily. data is huge. 
+	            			false && me.expandAll(function (){
 	            				var treePanel = me;
 	            				var rec = treePanel.getRootNode().findChild('projectId', me.projectId, true);
 								if (rec) {

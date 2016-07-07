@@ -108,8 +108,8 @@
 	}
 	function getSalesmanlistWithDeadBusinessNumber (){
 		global $mysql;
-		$requestDeadRes = $mysql->DBGetAsMap("select distinct salesman,salesmanName, count(*) as requestDeadNumber from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and requestDead = 1 group by salesman ");
-		$alreadyDeadRes = $mysql->DBGetAsMap("select distinct salesman,salesmanName, count(*) as alreadyDeadNumber from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'true'  group by salesman ");
+		$requestDeadRes = $mysql->DBGetAsMap("select distinct salesman,salesmanName, count(*) as requestDeadNumber from business where isDeleted = 'false' and isTransfered = 'false' and requestDead = 1 group by salesman ");
+		$alreadyDeadRes = $mysql->DBGetAsMap("select distinct salesman,salesmanName, count(*) as alreadyDeadNumber from business where isDeleted = 'false' and isTransfered = 'false' and isDead = 'true'  group by salesman ");
 		for ($i=0; $i < count($requestDeadRes); $i++) { 
 			$outerItem = $requestDeadRes[$i];
 			for ($j=0; $j < count($alreadyDeadRes); $j++) { 

@@ -170,6 +170,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.costanalysis.CostAnalysis": "app/view/costanalysis/costanalysis.js",
   "FamilyDecoration.view.costanalysis.Index": "app/view/costanalysis/index.js",
   "FamilyDecoration.view.costanalysis.TotalCost": "app/view/costanalysis/totalcost.js",
+  "FamilyDecoration.view.deadbusiness.EditDeadBusiness": "app/view/deadbusiness/editdeadbusiness.js",
   "FamilyDecoration.view.deadbusiness.Index": "app/view/deadbusiness/index.js",
   "FamilyDecoration.view.leave.Index": "app/view/leave/index.js",
   "FamilyDecoration.view.leaveapproval.Index": "app/view/leaveapproval/index.js",
@@ -1253,6 +1254,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.costanalysis.CostAnalysis": [],
   "FamilyDecoration.view.costanalysis.Index": [],
   "FamilyDecoration.view.costanalysis.TotalCost": [],
+  "FamilyDecoration.view.deadbusiness.EditDeadBusiness": [],
   "FamilyDecoration.view.deadbusiness.Index": [],
   "FamilyDecoration.view.leave.Index": [],
   "FamilyDecoration.view.leaveapproval.Index": [],
@@ -2563,6 +2565,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.costanalysis.TotalCost": [
     "widget.costanalysis-totalcost"
+  ],
+  "FamilyDecoration.view.deadbusiness.EditDeadBusiness": [
+    "widget.deadbusiness-editdeadbusiness"
   ],
   "FamilyDecoration.view.deadbusiness.Index": [
     "widget.deadbusiness-index"
