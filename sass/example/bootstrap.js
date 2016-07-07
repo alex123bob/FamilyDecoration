@@ -183,10 +183,12 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.manuallycheckbill.CustomizedBillItem": "../../app/view/manuallycheckbill/customizedbillitem.js",
   "FamilyDecoration.view.manuallycheckbill.Index": "../../app/view/manuallycheckbill/index.js",
   "FamilyDecoration.view.msg.Index": "../../app/view/msg/index.js",
+  "FamilyDecoration.view.mybusiness.DispatchCsStaff": "../../app/view/mybusiness/dispatchcsstaff.js",
   "FamilyDecoration.view.mybusiness.EditClient": "../../app/view/mybusiness/editclient.js",
   "FamilyDecoration.view.mybusiness.EditCommunity": "../../app/view/mybusiness/editcommunity.js",
   "FamilyDecoration.view.mybusiness.EditInfo": "../../app/view/mybusiness/editinfo.js",
   "FamilyDecoration.view.mybusiness.Index": "../../app/view/mybusiness/index.js",
+  "FamilyDecoration.view.mybusiness.IndividualReminder": "../../app/view/mybusiness/individualreminder.js",
   "FamilyDecoration.view.mybusiness.RegionList": "../../app/view/mybusiness/regionlist.js",
   "FamilyDecoration.view.mybusiness.TransferToProject": "../../app/view/mybusiness/transfertoproject.js",
   "FamilyDecoration.view.mylog.AskLeave": "../../app/view/mylog/askleave.js",
@@ -1264,10 +1266,12 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.manuallycheckbill.CustomizedBillItem": [],
   "FamilyDecoration.view.manuallycheckbill.Index": [],
   "FamilyDecoration.view.msg.Index": [],
+  "FamilyDecoration.view.mybusiness.DispatchCsStaff": [],
   "FamilyDecoration.view.mybusiness.EditClient": [],
   "FamilyDecoration.view.mybusiness.EditCommunity": [],
   "FamilyDecoration.view.mybusiness.EditInfo": [],
   "FamilyDecoration.view.mybusiness.Index": [],
+  "FamilyDecoration.view.mybusiness.IndividualReminder": [],
   "FamilyDecoration.view.mybusiness.RegionList": [],
   "FamilyDecoration.view.mybusiness.TransferToProject": [],
   "FamilyDecoration.view.mylog.AskLeave": [],
@@ -2599,6 +2603,9 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.msg.Index": [
     "widget.msg-index"
   ],
+  "FamilyDecoration.view.mybusiness.DispatchCsStaff": [
+    "widget.mybusiness-dispatchcsstaff"
+  ],
   "FamilyDecoration.view.mybusiness.EditClient": [
     "widget.mybusiness-editclient"
   ],
@@ -2610,6 +2617,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.mybusiness.Index": [
     "widget.mybusiness-index"
+  ],
+  "FamilyDecoration.view.mybusiness.IndividualReminder": [
+    "widget.mybusiness-individualreminder"
   ],
   "FamilyDecoration.view.mybusiness.RegionList": [
     "widget.mybusiness-regionlist"
