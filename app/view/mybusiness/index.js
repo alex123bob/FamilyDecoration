@@ -1227,7 +1227,8 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								name: 'button-checkBusinessRemind',
 								icon: './resources/img/alarm.png',
 								disabled: true,
-								hidden: me.checkBusiness && !User.isAdministrationManager() ? false : true,
+								// open it for all.
+								// hidden: me.checkBusiness && !User.isAdministrationManager() ? false : true,
 								handler: function () {
 									var win = Ext.create('Ext.window.Window', {
 										title: '当前业务对应人员提醒',
