@@ -96,7 +96,8 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                         returnBill: panel.query('[name="returnBill"]')[0],
                         auditPass: panel.query('[name="auditPass"]')[0],
                         financialPayment: panel.query('[name="financialPayment"]')[0],
-                        printBill: panel.query('[name="printBill"]')[0]
+                        printBill: panel.query('[name="printBill"]')[0],
+                        previewBill: panel.query('[name="previewBill"]')[0]
                     };
                 },
                 initBtn: function () {
@@ -127,7 +128,7 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                                     btnEl.disable();
                                 }
                             }
-                            else if (btnKey == 'printBill') {
+                            else if (btnKey == 'printBill' || btnKey == 'previewBill') {
                                 btnEl.setDisabled(!resourceObj.bill && !resourceObj.passedBill);
                             }
                         }
@@ -300,6 +301,22 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                                     }
                                 }
                             });
+                        }
+                    },
+                    {
+                        text: '预览单据',
+                        name: 'previewBill',
+                        disabled: true,
+                        icon: 'resources/img/preview.png',
+                        handler: function () {
+                            var resourceObj = me.getRes(),
+                                bill = resourceObj.bill || resourceObj.passedBill;
+                            if (bill) {
+                                var win = window.open('./fpdf/statement_bill.php?id=' + bill.getId(), '打印', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+                            }
+                            else {
+                                showMsg('没有账单！');
+                            }
                         }
                     },
                     {
