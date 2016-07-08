@@ -15,13 +15,17 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
         // get all resources which used to be retrieved a lot of times. quite redundant before.
         // now we just encapsulate it.
         me.getRes = function () {
-            var billList = Ext.getCmp('gridpanel-billListForAudit'),
+            var projectGrid = Ext.getCmp('treepanel-projectGridForBillAudit'),
+                project = projectGrid.getSelectionModel().getSelection()[0],
+                billList = Ext.getCmp('gridpanel-billListForAudit'),
                 bill = billList.getSelectionModel().getSelection()[0],
                 passedBillList = Ext.getCmp('gridpanel-passedBillListForAudit'),
                 passedBill = passedBillList.getSelectionModel().getSelection()[0],
                 billDetailCt = Ext.getCmp('billtable-billDetailForAudit');
 
             return {
+                projectGrid: projectGrid,
+                project: project,
                 billList: billList,
                 bill: bill,
                 passedBillList: passedBillList,
@@ -31,6 +35,48 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
         };
 
         me.items = [
+            {
+                xtype: 'progress-projectlistbycaptain',
+                flex: 1,
+                height: '100%',
+                id: 'treepanel-projectGridForBillAudit',
+                name: 'treepanel-projectGridForBillAudit',
+                needStatementBillCount: true,
+                title: '工程项目名称',
+                width: '100%',
+                style: {
+                    borderRightStyle: 'solid',
+                    borderRightWidth: '1px'
+                },
+                listeners: {
+                    itemclick: function (view, rec) {
+                        return rec.get('projectName') ? true : false;
+                    },
+                    selectionchange: function (selModel, sels, opts) {
+                        var pro = sels[0],
+                            resourceObj = me.getRes(),
+                            st = resourceObj.billList.getStore(),
+                            passedSt = resourceObj.passedBillList.getStore();
+                        if (pro && pro.get('projectName')) {
+                            resourceObj.billList.getSelectionModel().deselectAll();
+                            st.load({
+                                params: {
+                                    projectId: pro.getId()
+                                }
+                            });
+                            resourceObj.passedBillList.getSelectionModel().deselectAll();
+                            passedSt.load({
+                                params: {
+                                    projectId: pro.getId()
+                                }
+                            });
+                        }
+                        else if (!pro) {
+                            st.removeAll();
+                        }
+                    }
+                }
+            },
             {
                 xtype: 'container',
                 flex: 1,
@@ -84,7 +130,7 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                 xtype: 'manuallycheckbill-billtable',
                 id: 'billtable-billDetailForAudit',
                 name: 'billtable-billDetailForAudit',
-                flex: 5,
+                flex: 3,
                 title: '单据细目',
                 header: true,
                 height: '100%',

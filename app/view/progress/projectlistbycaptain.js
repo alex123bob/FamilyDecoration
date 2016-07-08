@@ -90,14 +90,29 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 	            		else {
 	            			if (node.get('projectName')) {
 	            				if ((me.projectId && me.projectId == node.getId()) || !me.projectId) {
+									var renderedTxt = node.get('projectName');
+									if (me.needStatementBillCount) {
+										if (!isNaN(parseInt(node.get('rdyckBillCount'), 10)) ) {
+											renderedTxt += '&nbsp;<font style="color: orange;"><strong>[' 
+														+ node.get('rdyckBillCount') 
+														+ ']</strong></font>'; 
+										}
+										if (!isNaN(parseInt(node.get('chkBillCount'), 10))) {
+											renderedTxt += '&nbsp;<font style="color: skyblue;"><strong>[' 
+														+ node.get('chkBillCount') 
+														+ ']</strong></font>';
+										}
+										if (!isNaN(parseInt(node.get('paidBillCount'), 10))) {
+											renderedTxt += '&nbsp;<font style="color: green;"><strong>[' 
+														+ node.get('paidBillCount') 
+														+ ']</strong></font>';
+										}
+									}
+									else {
+									}
 	            					node.set({
 		            					// text: node.get('projectName') + '(' + node.get('projectTime').split(' ')[0] + ')',
-		            					text: me.needStatementBillCount && parseInt(node.get('statementBillCount'), 10) > 0 ? 
-												(node.get('projectName') 
-													+ '&nbsp;<font style="color: orange;"><strong>' 
-													+ renderNumber(node.get('statementBillCount')) 
-													+ '</strong></font>') : 
-												node.get('projectName'),
+		            					text: renderedTxt,
 		            					leaf: true,
 		            					icon: './resources/img/project.png'
 		            				});

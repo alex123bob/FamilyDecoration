@@ -15,14 +15,19 @@ Ext.define('FamilyDecoration.view.billaudit.BillList', {
 		var me = this;
         
         var billSt = Ext.create('FamilyDecoration.store.StatementBill', {
-            autoLoad: false
-        });
-        
-        billSt.load({
-            params: {
-                action: 'StatementBill.getByStatus',
-                orderby: 'createTime DESC',
-                status: me.isPassedBillList ? 'chk,paid' : 'rdyck'
+            autoLoad: false,
+            proxy: {
+                type: 'rest',
+                url: './libs/api.php',
+                reader: {
+                    type: 'json',
+                    root: 'data'
+                },
+                extraParams: {
+                    action: 'StatementBill.getByStatus',
+                    orderBy: 'createTime DESC',
+                    status: me.isPassedBillList ? 'chk,paid' : 'rdyck'
+                }
             }
         });
         

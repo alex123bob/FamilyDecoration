@@ -151,8 +151,12 @@
 			$projectId = $project['projectId'];
 			$projects[$key]["budgets"] = $mysql->DBGetAsMap($sqlBudget, $projectId);
 			if ($needStatementBillCount == true) {
-				$count = $mysql->DBGetAsMap("select count(*) as statementBillCount from statement_bill where projectId = '?' and isDeleted = 'false'", $projectId);
-				$projects[$key]["statementBillCount"] = $count[0]["statementBillCount"];
+				$rdyckCount = $mysql->DBGetAsMap("select count(*) as rdyckBillCount from statement_bill where projectId = '?' and isDeleted = 'false' and status = 'rdyck' ", $projectId);
+				$projects[$key]["rdyckBillCount"] = $rdyckCount[0]["rdyckBillCount"];
+				$chkCount = $mysql->DBGetAsMap("select count(*) as chkBillCount from statement_bill where projectId = '?' and isDeleted = 'false' and status = 'chk' ", $projectId);
+				$projects[$key]["chkBillCount"] = $chkCount[0]["chkBillCount"];
+				$paidCount = $mysql->DBGetAsMap("select count(*) as paidBillCount from statement_bill where projectId = '?' and isDeleted = 'false' and status = 'paid' ", $projectId);
+				$projects[$key]["paidBillCount"] = $paidCount[0]["paidBillCount"];
 			}
 		}
 		return $projects;
