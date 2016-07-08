@@ -9,23 +9,25 @@ Ext.define('FamilyDecoration.view.mybusiness.EditInfo', {
 	infoObj: null,
 	layout: 'fit',
 
-	initComponent: function (){
+	initComponent: function () {
 		var me = this;
-		
+
 		me.title = me.infoObj ? '编辑信息' : '新建信息';
 
-		me.items = [{
-			id: 'textarea-infoContent',
-			name: 'textarea-infoContent',
-			xtype: 'textarea',
-			fieldLabel: '信息名称',
-			allowBlank: false,
-			value: me.infoObj ? me.infoObj.get('content') : ''
-		}];
+		me.items = [
+			{
+				id: 'textarea-infoContent',
+				name: 'textarea-infoContent',
+				xtype: 'textarea',
+				fieldLabel: '信息名称',
+				allowBlank: false,
+				value: me.infoObj ? me.infoObj.get('content') : ''
+			}
+		];
 
 		me.buttons = [{
 			text: '确定',
-			handler: function (){
+			handler: function () {
 				var clientGrid = Ext.getCmp('gridpanel-clientInfo'),
 					rec = clientGrid.getSelectionModel().getSelection()[0],
 					area = Ext.getCmp('textarea-infoContent'),
@@ -49,7 +51,7 @@ Ext.define('FamilyDecoration.view.mybusiness.EditInfo', {
 						method: 'POST',
 						url: me.infoObj ? 'libs/business.php?action=editBusinessDetail' : 'libs/business.php?action=addBusinessDetail',
 						params: p,
-						callback: function (opts, success, res){
+						callback: function (opts, success, res) {
 							if (success) {
 								var obj = Ext.decode(res.responseText),
 									infoGrid = Ext.getCmp('gridpanel-businessInfo');
@@ -64,11 +66,11 @@ Ext.define('FamilyDecoration.view.mybusiness.EditInfo', {
 				}
 			}
 		}, {
-			text: '取消',
-			handler: function () {
-				me.close();
-			}
-		}]
+				text: '取消',
+				handler: function () {
+					me.close();
+				}
+			}]
 
 		this.callParent();
 	}

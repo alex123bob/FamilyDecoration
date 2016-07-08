@@ -60,14 +60,13 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 		me.items = [
 			{
 				xtype: 'container',
-				flex: 2,
+				flex: 3,
 				layout: 'border',
 				margin: '0 1 0 0',
 				items: [
 					{
 						autoScroll: true,
 						region: 'center',
-						hideHeaders: true,
 						style: {
 							borderRightStyle: 'solid',
 							borderRightWidth: '1px'
@@ -139,10 +138,21 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 							},
 							{
 								text: '门牌号',
-								flex: 1,
+								flex: 0.7,
 								dataIndex: 'address',
 								renderer: function (val, meta, rec) {
-									var level = rec.get('level');
+									if (rec.get('applyDesigner') == 1) {
+										meta.style += 'color: #ffff00;';
+									}
+									return val;
+								}
+							},
+							{
+								text: '等级',
+								flex: 0.5,
+								dataIndex: 'level',
+								renderer: function (val, meta, rec){
+									var level = val;
 									if (level == 'A') {
 										meta.style = 'background: lightpink;';
 									}
@@ -158,11 +168,8 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 									else {
 
 									}
-									if (rec.get('applyDesigner') == 1) {
-										meta.style += 'color: #ffff00;';
-									}
 									if (level != '') {
-										val = val + '[<strong><font color="blue">' + level + '</font></strong>]';
+										val = '[<strong><font color="blue">' + level + '</font></strong>]';
 									}
 									return val;
 								}
