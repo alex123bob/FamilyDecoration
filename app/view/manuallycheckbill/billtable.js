@@ -70,7 +70,6 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 		}
 		
 		me.refreshForm = function (bill){
-			debugger
 			var form = me.down('form'),
 				title = me.down('[name="displayfield-budgetName"]'),
 				data, field;
