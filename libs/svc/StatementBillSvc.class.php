@@ -235,11 +235,15 @@ class StatementBillSvc extends BaseSvc
 	}
 
 	public function getByStatus($q){
-		if(contains($q['status'],',')){
-			$this->appendWhere  = " and status in ('".str_replace(",","','",$q['status'])."' ) ";
-			unset($q['status']);
-		}
-		return $this->get($q);
+		$sql = "select p.captain,p.captainName,b.* from statement_bill b 
+				left join project p on b.projectId = p.projectId and p.isDeleted = 'false' where b.isDeleted = 'false' and b.status = '?'";
+		$sqlCount = "select count(1) as cnt from ( $sql ) as temp ";
+		global $mysql;
+		$count = $mysql->DBGetAsOneArray($sqlCount,array($q['status']));
+		$limit = $this->parseLimitSql($q);
+		$orderBy = $this->parseOrderBySql($q);
+		$row = $mysql->DBGetAsMap($sql.$limit.$orderBy,array($q['status']));
+		return array('total'=>$count[0],'data'=>$row);
 	}
 
 	public function syncTotalFee($q){
