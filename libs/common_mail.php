@@ -17,16 +17,16 @@ function sendEmail ($recipient,$aliasNames='',$from = '佳诚装饰' ,$subject, 
 	// $mail->SMTPDebug = 2; // this is debug mode, if you need, open it and see detailed error info
 	$mail->SMTPDebug = 0; // non-debug mode
 	$mail->Debugoutput  = 'html';
-	$mail->Host = "smtp.sina.com";
+	$mail->Host = "smtp.qq.com";
 	$mail->Port = "465";  
 	$mail->SMTPSecure = "ssl";
 	$mail->SMTPAuth = true;
-	$mail->Username = "dqjczs@sina.com";
-	$mail->Password = "86676688";
+	$mail->Username = "674417307@qq.com";
+	$mail->Password = "qqNJ20";
 	$mail->Priority = 1;
 	$mail->Charset = 'utf-8';
 	$mail->Encoding = 'base64';
-	$mail->From = 'dqjczs@sina.com';
+	$mail->From = '674417307@qq.com';
 	$mail->FromName = (trim($from) == '佳诚装饰') ? '' : $from;
 	$mail->Timeout = 30;
 
