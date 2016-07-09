@@ -143,9 +143,9 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                             var btnEl = btns[btnKey];
                             if (btnKey == 'financialPayment') {
                                 if (resourceObj.passedBill) {
-                                    btnEl.setDisabled(!(resourceObj.passedBill.get('status') == 'chk'));
+                                    btn.enable();
                                 }
-                                else if (resourceObj.bill) {
+                                else if (resourceObj.paidBill || resourceObj.bill) {
                                     btnEl.disable();
                                 }
                                 else {
@@ -156,7 +156,7 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                                 if (resourceObj.bill) {
                                     btnEl.setDisabled(!(resourceObj.bill.get('status') == 'rdyck'));
                                 }
-                                else if (resourceObj.passedBill) {
+                                else if (resourceObj.passedBill || resourceObj.paidBill) {
                                     btnEl.disable();
                                 }
                                 else {
@@ -164,7 +164,7 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                                 }
                             }
                             else if (btnKey == 'printBill' || btnKey == 'previewBill') {
-                                btnEl.setDisabled(!resourceObj.bill && !resourceObj.passedBill);
+                                btnEl.setDisabled(!resourceObj.bill && !resourceObj.passedBill && !resourceObj.paidBill);
                             }
                         }
                     }
@@ -345,7 +345,7 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                         icon: 'resources/img/preview.png',
                         handler: function () {
                             var resourceObj = me.getRes(),
-                                bill = resourceObj.bill || resourceObj.passedBill;
+                                bill = resourceObj.bill || resourceObj.passedBill || resourceObj.paidBill;
                             if (bill) {
                                 var win = window.open('./fpdf/statement_bill.php?id=' + bill.getId(), '打印', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
                             }
@@ -361,7 +361,7 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                         icon: 'resources/img/print_finance.png',
                         handler: function () {
                             var resourceObj = me.getRes(),
-                                bill = resourceObj.bill || resourceObj.passedBill;
+                                bill = resourceObj.bill || resourceObj.passedBill || resourceObj.paidBill;
                             if (bill) {
                                 var win = window.open('./fpdf/statement_bill.php?id=' + bill.getId(), '打印', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
                                 win.print();
