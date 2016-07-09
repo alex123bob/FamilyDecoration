@@ -482,6 +482,7 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 								custContact = Ext.getCmp('textfield-custContactOnTopForSignBusiness'),
 								businessStaff = Ext.getCmp('textfield-businessStaffOnTopForSignBusiness'),
 								businessSource = Ext.getCmp('textfield-businessSourceOnTopForSignBusiness'),
+								businessHouseType = Ext.getCmp('textfield-businessHouseTypeOnTop'),
 								businessDesigner = Ext.getCmp('textfield-businessDesignerOnTopForSignBusiness');
 							if (client) {
 								var grid = this,
@@ -506,6 +507,11 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 								businessStaff.setValue(client.get('salesman'));
 								businessSource.setValue(client.get('source'));
 								businessDesigner.setValue(client.get('designer'));
+								var temp = client.get('houseType');
+								if(client.get('floorArea') != undefined && client.get('floorArea') != ""){
+									temp += "("+client.get('floorArea')+"平)";
+								}
+								businessHouseType.setValue(temp);
 							}
 							else {
 								this.getStore().removeAll();
@@ -513,6 +519,7 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 								custContact.setValue('');
 								businessStaff.setValue('');
 								businessSource.setValue('');
+								businessHouseType.setValue('');
 								businessDesigner.setValue('');
 							}
 						},
@@ -559,25 +566,25 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 						tbar: [
 							{
 								xtype: 'textfield',
-								labelWidth: 60,
+								labelWidth: 30,
 								width: 140,
 								readOnly: true,
 								id: 'textfield-clientNameOnTopForSignBusiness',
 								name: 'textfield-clientNameOnTopForSignBusiness',
-								fieldLabel: ' 客户姓名'
+								fieldLabel: ' 客户'
 							},
 							{
 								xtype: 'textfield',
-								labelWidth: 60,
+								labelWidth: 30,
 								width: 140,
 								readOnly: true,
 								id: 'textfield-custContactOnTopForSignBusiness',
 								name: 'textfield-custContactOnTopForSignBusiness',
-								fieldLabel: ' 联系方式'
+								fieldLabel: ' 电话'
 							},
 							{
 								xtype: 'textfield',
-								labelWidth: 60,
+								labelWidth: 45,
 								width: 140,
 								readOnly: true,
 								id: 'textfield-businessStaffOnTopForSignBusiness',
@@ -586,7 +593,7 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 							},
 							{
 								xtype: 'textfield',
-								labelWidth: 60,
+								labelWidth: 45,
 								width: 140,
 								readOnly: true,
 								id: 'textfield-businessDesignerOnTopForSignBusiness',
@@ -594,13 +601,22 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 								fieldLabel: '设计师'
 							},
 							{
+									xtype: 'textfield',
+									name: 'textfield-businessHouseTypeOnTop',
+									id: 'textfield-businessHouseTypeOnTop',
+									labelWidth: 0,
+									width: 150,
+									readOnly: true,
+									fieldLabel: ''
+							},
+							{
 								xtype: 'textfield',
-								labelWidth: 60,
+								labelWidth: 30,
 								width: 150,
 								readOnly: true,
 								id: 'textfield-businessSourceOnTopForSignBusiness',
 								name: 'textfield-businessSourceOnTopForSignBusiness',
-								fieldLabel: '业务来源'
+								fieldLabel: '来源'
 							}
 						],
 						bbar: [

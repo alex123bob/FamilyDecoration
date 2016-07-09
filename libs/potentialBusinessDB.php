@@ -42,7 +42,7 @@
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
-	function transferToBusiness ($id, $salesmanName, $source) {
+	function transferToBusiness ($id, $salesmanName, $source,$houseType,$floorArea) {
 		global $mysql;
 		$potentialBusiness = $mysql->DBGetAsMap("select * from potential_business where `id` = '?' and isDeleted = 'false' ", array($id));
 		$potentialBusinessDetail = $mysql->DBGetAsMap("select * from potential_business_detail where `potentialBusinessId` = '?' and isDeleted = 'false' ORDER BY createTime DESC ", array($id));
@@ -61,6 +61,8 @@
 			$obj["salesmanName"] = $salesmanName;
 			$obj["salesman"] = $salesman;
 			$obj["source"] = $source;
+			$obj["houseType"] = $houseType;
+			$obj["floorArea"] = $floorArea;
 			
 			// 将字段先置为true，表明当前潜在业务被转为了业务。
 			$mysql->DBUpdate('potential_business',array("isTransfered"=>"true"),"`id` = '?' ",array($id));

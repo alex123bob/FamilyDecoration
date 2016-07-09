@@ -195,7 +195,7 @@
 			break;
 		// 将潜在业务专为正式业务，需要潜在业务id，由于在转换过程中，业务员和来源是可变化的，所以应该前端传递，而不能读对应id的老数据
 		case "transferToBusiness":
-			$res = transferToBusiness($_REQUEST["id"], $_REQUEST["salesmanName"], $_REQUEST["source"]);
+			$res = transferToBusiness($_REQUEST["id"], $_REQUEST["salesmanName"], $_REQUEST["source"],$_REQUEST["houseType"],$_REQUEST["floorArea"]);
 			break;
 		//删除潜在业务，扫楼名单
 		case "deletePotentialBusiness":
