@@ -8,7 +8,7 @@ if(strpos($_SERVER["HTTP_USER_AGENT"],"Safari") && !strpos($_SERVER["HTTP_USER_A
 	$UserBrowserClient = 'default';
 }
 
-global $name,$phone,$times,$address,$totalFee,$captain,$finishPercentage,$requiredFee,$cny; 
+global $name,$phone,$times,$address,$totalFee,$captain,$finishPercentage,$requiredFee,$cny,$professionTypeName; 
 
 $lineHeight 	= 6;
 //È«¾Ö×ÖÌå
@@ -35,6 +35,7 @@ $times = $bill['payedTimes'];
 $address = str2GBK($bill['projectName']);
 $totalFee = $bill['totalFee'];
 $finishPercentage = str2GBK($bill['projectProgress']);
+$professionTypeName = str2GBK($bill['professionTypeName']);
 $requiredFee = $bill['claimAmount'];
 $cny = str2GBK(cny($requiredFee));
 
