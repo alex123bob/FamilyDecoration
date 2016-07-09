@@ -6,7 +6,7 @@ Ext.define('FamilyDecoration.view.telemarket.TransferToBusiness', {
     ],
     title: '转为业务',
     width: 500,
-    height: 300,
+    height: 320,
     bodyPadding: 10,
     modal: true,
     layout: 'form',
@@ -144,6 +144,38 @@ Ext.define('FamilyDecoration.view.telemarket.TransferToBusiness', {
                 })
             },
             {
+                fieldLabel: '面积(平方米)',
+                name: 'floorArea',
+                value: me.potentialBusiness.get('floorArea'),
+                maxValue: 999999,
+                xtype: 'numberfield',
+                minValue: 0
+            },
+            {
+                fieldLabel: '户型',
+                name: 'houseType',
+                xtype: 'combobox',
+                displayField: 'value',
+                valueField: 'name',
+                editable: false,
+                value: '',
+                queryMode: 'local',
+                store: Ext.create('Ext.data.Store', {
+                    fields: ['name', 'value'],
+                    data: [
+                        {name: '1室1厅1卫',value: '1室1厅1卫'},
+                        {name: '2室1厅1卫',value: '2室1厅1卫'},
+                        {name: '3室1厅1卫',value: '3室1厅1卫'},
+                        {name: '3室1厅2卫',value: '3室1厅2卫'},
+                        {name: '4室1厅1卫',value: '4室1厅1卫'},
+                        {name: '4室1厅2卫',value: '4室1厅2卫'},
+                        {name: '4室2厅2卫',value: '4室2厅2卫'},
+                        {name: '联排别墅',value: '联排别墅'},
+                        {name: '其他',value: '其他'}                       
+                    ]
+                })
+            },
+            {
                 xtype: 'displayfield',
                 fieldLabel: '状态',
                 value: '所有状态将转换到业务详细中显示'
@@ -156,9 +188,13 @@ Ext.define('FamilyDecoration.view.telemarket.TransferToBusiness', {
                 handler: function () {
                     var obj = {},
                         telemarketingStaffName = me.down('[name="telemarketingStaffName"]'),
-                        source = me.down('[name="source"]');
+                        source = me.down('[name="source"]'),
+                        houseType = me.down('[name="houseType"]'),
+                        floorArea = me.down('[name="floorArea"]');
                     obj['salesmanName'] = telemarketingStaffName.getValue();
                     obj['source'] = source.getRawValue();
+                    obj['houseType'] = houseType.getRawValue();
+                    obj['floorArea'] = floorArea.getRawValue();
                     Ext.apply(obj, {
                         id: me.potentialBusiness.getId()
                     });

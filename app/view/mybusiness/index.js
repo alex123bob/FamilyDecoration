@@ -797,6 +797,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								businessStaff = Ext.getCmp('textfield-businessStaffOnTop'),
 								businessSource = Ext.getCmp('textfield-businessSourceOnTop'),
 								businessDesigner = Ext.getCmp('textfield-businessDesignerOnTop'),
+								businessHouseType = Ext.getCmp('textfield-businessHouseTypeOnTop'),
 								grid = this;
 							// show dynamic reminding information if there is one for corresponding salesman
 							grid.appendRemindingInfo(client);
@@ -822,6 +823,11 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								businessStaff.setValue(client.get('salesman'));
 								businessSource.setValue(client.get('source'));
 								businessDesigner.setValue(client.get('designer'));
+								var temp = client.get('houseType');
+								if(client.get('floorArea') != undefined && client.get('floorArea') != ""){
+									temp += "("+client.get('floorArea')+"平)";
+								}
+								businessHouseType.setValue(temp);
 							}
 							else {
 								this.getStore().removeAll();
@@ -830,6 +836,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								businessStaff.setValue('');
 								businessSource.setValue('');
 								businessDesigner.setValue('');
+								businessHouseType.setValue('');
 							}
 						},
 						columns: {
@@ -879,25 +886,25 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 									xtype: 'textfield',
 									name: 'textfield-clientNameOnTop',
 									id: 'textfield-clientNameOnTop',
-									labelWidth: 60,
+									labelWidth: 30,
 									width: 140,
 									readOnly: true,
-									fieldLabel: ' 客户姓名'
+									fieldLabel: ' 客户'
 								},
 								{
 									xtype: 'textfield',
 									name: 'textfield-custContactOnTop',
 									id: 'textfield-custContactOnTop',
-									labelWidth: 60,
+									labelWidth: 30,
 									width: 140,
 									readOnly: true,
-									fieldLabel: ' 联系方式'
+									fieldLabel: ' 电话'
 								},
 								{
 									xtype: 'textfield',
 									name: 'textfield-businessStaffOnTop',
 									id: 'textfield-businessStaffOnTop',
-									labelWidth: 60,
+									labelWidth: 45,
 									width: 140,
 									readOnly: true,
 									fieldLabel: '业务员'
@@ -906,20 +913,28 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 									xtype: 'textfield',
 									name: 'textfield-businessDesignerOnTop',
 									id: 'textfield-businessDesignerOnTop',
-									labelWidth: 60,
+									labelWidth: 45,
 									width: 140,
 									readOnly: true,
 									fieldLabel: '设计师'
-								},
+								},							
 								{
+									xtype: 'textfield',
+									name: 'textfield-businessHouseTypeOnTop',
+									id: 'textfield-businessHouseTypeOnTop',
+									labelWidth: 0,
+									width: 150,
+									readOnly: true,
+									fieldLabel: ''
+								},{
 									xtype: 'textfield',
 									name: 'textfield-businessSourceOnTop',
 									id: 'textfield-businessSourceOnTop',
-									labelWidth: 60,
+									labelWidth: 0,
 									width: 150,
 									readOnly: true,
-									fieldLabel: '业务来源'
-								}
+									fieldLabel: ''
+								}							
 							]
 						}),
 						bbar: [

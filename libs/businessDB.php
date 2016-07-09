@@ -147,7 +147,7 @@
 	
 	function getBusiness($data){
 		global $mysql;
-		$fields = array('regionId','address','isFrozen','requestDead','isDead','requestDeadBusinessTitle','requestDeadBusinessReason','customer','custContact','salesman','salesmanName','designer','designerName','applyDesigner','level','ds_lp','ds_fc','ds_bs','ds_bp');
+		$fields = array('floorArea','houseType','regionId','address','isFrozen','requestDead','isDead','requestDeadBusinessTitle','requestDeadBusinessReason','customer','custContact','salesman','salesmanName','designer','designerName','applyDesigner','level','ds_lp','ds_fc','ds_bs','ds_bp');
 		$params = array();
 		$sql = "select `b`.*, `r`.name from `business` `b` left join `region` `r` on `b`.regionId = `r`.id where `b`.`isDeleted` = 'false' and b.isTransfered = 'false' ";
 		foreach($fields as $field){
