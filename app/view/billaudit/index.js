@@ -143,7 +143,7 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                             var btnEl = btns[btnKey];
                             if (btnKey == 'financialPayment') {
                                 if (resourceObj.passedBill) {
-                                    btn.enable();
+                                    btnEl.enable();
                                 }
                                 else if (resourceObj.paidBill || resourceObj.bill) {
                                     btnEl.disable();
