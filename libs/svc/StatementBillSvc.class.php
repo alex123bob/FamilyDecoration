@@ -197,6 +197,8 @@ class StatementBillSvc extends BaseSvc
 	}
 
 	public function get($q){
+		$this->appendSelect = ",tp.cname as professionTypeName ";
+		$this->appendJoin = "left join profession_type tp on tp.value = $this->tableName.professionType";
 		$data = parent::get($q);
 		foreach($data['data'] as $key => &$value){
 			$value['statusName'] = self::$statusMapping[$value['status']];
@@ -231,12 +233,15 @@ class StatementBillSvc extends BaseSvc
 				$item['prePaidFee'] = '';
 			}
 		}
+		$projectSvc = parent::getSvc('Project');
+		$projectSvc->appendCaptain($data['data']);
+		
 		return $data;
 	}
 
 	public function getByStatus($q){
-		$sql = "select p.captain,p.captainName,b.* from statement_bill b 
-				left join project p on b.projectId = p.projectId and p.isDeleted = 'false' where b.isDeleted = 'false' and b.status = '?' ";
+		$sql = "select pt.cname as professionTypeName,p.captain,p.captainName,b.* from statement_bill b 
+				left join project p on b.projectId = p.projectId and p.isDeleted = 'false' left join profession_type pt on pt.value = b.professionType where b.isDeleted = 'false' and b.status = '?' ";
 		if (isset($q["createTime"])) {
 			$sql .= " and b.createTime ".$q["createTime"];
 		}

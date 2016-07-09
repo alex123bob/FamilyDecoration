@@ -5,6 +5,8 @@ class BaseSvc{
 	public $tableName="";
 	public $fields = "";
 	public $appendWhere="";
+	public $appendSelect="";
+	public $appendJoin="";
 	/*
 	xxx=value 表示xxx字段严格匹配
 	_xxx=value 表示xxx字段 like 模糊匹配
@@ -49,12 +51,12 @@ class BaseSvc{
 		$sql = "select ";
 		$tableName = $tableName == "" ? $this->tableName : $tableName;
 		if(isset($q['_fields']) && $q['_fields'] != "" && trim($q['_fields']) != ""){
-			$sql .= $q['_fields'] ;
+			$sql .= "$tableName.".$q['_fields'] ;
 		}else{
-			$sql .= "*";
+			$sql .= "$tableName.*";
 		}
 
-		return $sql." from ".$tableName;
+		return $sql." $this->appendSelect from ".$tableName;
 	}
 
 	public function parseOrderBySql($q){
@@ -127,18 +129,19 @@ class BaseSvc{
 		$orderBy = "";
 		$limit = "";
 		$params = array();
-		$where = $this->parseWhereSql('',$q,$params);
+		$where = $this->parseWhereSql($this->tableName.'.',$q,$params);
 		$limit = $this->parseLimitSql($q);
 		$orderBy = $this->parseOrderBySql($q);	
 		$count = $mysql->DBGetAsOneArray("select count(1) as count from ".$this->tableName.$where.$this->appendWhere,$params);
 		if($onlyCount)
 			return array('status'=>'successful', 'count'=>$count[0],'errMsg' => '');
 		$select = $this->parseSelectSql($q);
+		$sql = $select.' '.$this->appendJoin.' '.$where.$this->appendWhere.$orderBy.$limit;
 		if(isset($q['debug'])){
-			echo $select.$where.$this->appendWhere.$orderBy.$limit;
+			echo $sql;
 			print_r($params);
 		}
-		$row = $mysql->DBGetAsMap($select.$where.$this->appendWhere.$orderBy.$limit,$params);
+		$row = $mysql->DBGetAsMap($sql,$params);
 		return array('total'=>$count[0],'data'=>$row);
 	}
 

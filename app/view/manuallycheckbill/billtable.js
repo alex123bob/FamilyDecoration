@@ -70,10 +70,13 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 		}
 		
 		me.refreshForm = function (bill){
+			debugger
 			var form = me.down('form'),
+				title = me.down('[name="displayfield-budgetName"]'),
 				data, field;
 			if (bill) {
 				data = bill.data;
+				title.setValue(me.getBillTitle(data.professionTypeName));
 				for (var pro in data) {
 					if (data.hasOwnProperty(pro)) {
 						field = form.query('[name="' + pro + '"]');
@@ -85,6 +88,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 				}
 			}
 			else {
+				title.setValue(me.getBillTitle());
 				field = form.query('textfield');
 				Ext.each(field, function (cmp, index, fld){
 					cmp.setValue('');
@@ -144,11 +148,13 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 				!isRegularBill && claimAmountField.setValue(obj.totalFee);
 			});
 		};
-
+		me.getBillTitle = function(str){
+			str = str === undefined ? "" : "("+str+")"
+			return '佳诚装饰<br />单项工程施工工程款领取审批单&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 12px;">公司联'+str+'</font>';
+		}	
 		var statementBillItemSt = Ext.create('FamilyDecoration.store.StatementBillItem', {
 			autoLoad: false
 		});
-
 		me.items = [
 			{
 				xtype: 'fieldcontainer',
@@ -167,7 +173,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 						xtype: 'displayfield',
 						margin: '0 0 0 20',
 						name: 'displayfield-budgetName',
-						value: '佳诚装饰<br />单项工程施工工程款领取审批单&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 12px;">公司联</font>',
+						id:'displayfield-budgetName',
+						value: me.getBillTitle(),
 						hideLabel: true,
 						fieldStyle: {
 							fontSize: '24px',
