@@ -237,13 +237,13 @@ class StatementBillSvc extends BaseSvc
 	public function getByStatus($q){
 		$sql = "select p.captain,p.captainName,b.* from statement_bill b 
 				left join project p on b.projectId = p.projectId and p.isDeleted = 'false' where b.isDeleted = 'false' and b.status = '?' ";
-		$sqlCount = "select count(1) as cnt from ( $sql ) as temp ";
 		if (isset($q["createTime"])) {
 			$sql .= " and b.createTime ".$q["createTime"];
 		}
 		if (isset($q["captain"])) {
-			$sql .= " and p.captain = '".$q["captain"]."'";
+			$sql .= " and p.captain like '%".$q["captain"]."%'";
 		}
+		$sqlCount = "select count(1) as cnt from ( $sql ) as temp ";
 		global $mysql;
 		$count = $mysql->DBGetAsOneArray($sqlCount,array($q['status']));
 		$limit = $this->parseLimitSql($q);
@@ -251,7 +251,7 @@ class StatementBillSvc extends BaseSvc
 		$row = $mysql->DBGetAsMap($sql.$limit.$orderBy,array($q['status']));
 		$userSvc = parent::getSvc('User');
 		$userSvc->appendRealName($row,'checker');
-		return array('total'=>$count[0],'data'=>$row);
+		return array('total'=>(int)$count[0],'data'=>$row);
 	}
 
 	public function syncTotalFee($q){
