@@ -213,6 +213,15 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								name: 'projectName',
 								readOnly: true,
 								value: me.project ? me.project.get('projectName') : ''
+							},
+							{
+								xtype: 'textfield',
+								fieldLabel: '项目经理',
+								flex: 1,
+								height: '100%',
+								name: 'captain',
+								readOnly: true,
+								value: me.project ? me.project.get('captain') : ''
 							}
 						]
 					},

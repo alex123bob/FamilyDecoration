@@ -8,7 +8,7 @@ if(strpos($_SERVER["HTTP_USER_AGENT"],"Safari") && !strpos($_SERVER["HTTP_USER_A
 	$UserBrowserClient = 'default';
 }
 
-global $name,$phone,$times,$address,$totalFee,$finishPercentage,$requiredFee,$cny; 
+global $name,$phone,$times,$address,$totalFee,$captain,$finishPercentage,$requiredFee,$cny; 
 
 $lineHeight 	= 6;
 //È«¾Ö×ÖÌå
@@ -22,12 +22,15 @@ include_once 'pdf_chinese_statement_bill.php';
 
 $billSvc = BaseSvc::getSvc('StatementBill');
 $billItemSvc = BaseSvc::getSvc('StatementBillItem');
+$projectSvc = BaseSvc::getSvc('Project');
 
 $bill = $billSvc->get($_REQUEST);
 
 $bill = $bill['data'][0];
 $name = str2GBK($bill['payee']);
 $phone = $bill['phoneNumber'];
+$projects = $projectSvc->get(array('projectId'=>$bill['projectId']));
+$captain = str2GBK($projects['data'][0]['captain']);
 $times = $bill['payedTimes'];
 $address = str2GBK($bill['projectName']);
 $totalFee = $bill['totalFee'];
