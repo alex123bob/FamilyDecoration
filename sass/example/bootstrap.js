@@ -141,6 +141,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.basicitem.Index": "../../app/view/basicitem/index.js",
   "FamilyDecoration.view.basicitem.SubItemTable": "../../app/view/basicitem/subitemtable.js",
   "FamilyDecoration.view.billaudit.BillList": "../../app/view/billaudit/billlist.js",
+  "FamilyDecoration.view.billaudit.DateFilter": "../../app/view/billaudit/datefilter.js",
   "FamilyDecoration.view.billaudit.Index": "../../app/view/billaudit/index.js",
   "FamilyDecoration.view.budget.AddBasicItem": "../../app/view/budget/addbasicitem.js",
   "FamilyDecoration.view.budget.AddBlankItem": "../../app/view/budget/addblankitem.js",
@@ -1225,6 +1226,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.basicitem.Index": [],
   "FamilyDecoration.view.basicitem.SubItemTable": [],
   "FamilyDecoration.view.billaudit.BillList": [],
+  "FamilyDecoration.view.billaudit.DateFilter": [],
   "FamilyDecoration.view.billaudit.Index": [],
   "FamilyDecoration.view.budget.AddBasicItem": [],
   "FamilyDecoration.view.budget.AddBlankItem": [],
@@ -2484,6 +2486,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.billaudit.BillList": [
     "widget.billaudit-billlist"
+  ],
+  "FamilyDecoration.view.billaudit.DateFilter": [
+    "widget.billaudit-datefilter"
   ],
   "FamilyDecoration.view.billaudit.Index": [
     "widget.billaudit-index"

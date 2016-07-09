@@ -37,7 +37,8 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
 
         me.items = [
             {
-                xtype: 'container',
+                xtype: 'panel',
+                title: '账单列表',
                 flex: 1,
                 layout: {
                     type: 'accordion',

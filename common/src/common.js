@@ -137,6 +137,7 @@ Ext.require('Ext.window.MessageBox', function () {
 Ext.require('Ext.form.field.Date', function () {
     Ext.override(Ext.form.field.Date, {
         cleanBtn: false, // config parameter, if you need, just set it as true. then a clean button will pop up beside today button used to clean value in inputEl.
+        cleanHandler: Ext.emptyFn,
         onTriggerClick: function () {
             var me = this;
             me.callParent(arguments);
@@ -147,6 +148,9 @@ Ext.require('Ext.form.field.Date', function () {
                     handler: function () {
                         me.setValue('');
                         me.triggerBlur(); // this is private functionality, not recommended. any better idea?
+                        if (typeof me.cleanHandler == 'function'){
+                            me.cleanHandler();
+                        }
                     }
                 });
                 btn.render(me.picker.todayBtn.container);

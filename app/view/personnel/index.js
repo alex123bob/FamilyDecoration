@@ -3,7 +3,8 @@ Ext.define('FamilyDecoration.view.personnel.Index', {
 	alias: 'widget.personnel-index',
 	requires: [
 		'FamilyDecoration.view.personnel.StatisticTree',
-		'FamilyDecoration.store.PersonnelIndividual'
+		'FamilyDecoration.store.PersonnelIndividual',
+		'FamilyDecoration.store.PersonnelProject'
 	],
 	layout: {
 		type: 'hbox',
@@ -285,8 +286,6 @@ Ext.define('FamilyDecoration.view.personnel.Index', {
 			    	}
 			    }
 			}, {
-				xtype: 'panel',
-				width: '100%',
 				flex: 1,
 				xtype: 'gridpanel',
 				title: '项目情况',

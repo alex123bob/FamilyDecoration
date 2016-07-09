@@ -3,7 +3,8 @@ Ext.define('FamilyDecoration.view.billaudit.BillList', {
     alias: 'widget.billaudit-billlist',
     requires: [
         'FamilyDecoration.store.StatementBill',
-        'FamilyDecoration.store.WorkCategory'
+        'FamilyDecoration.store.WorkCategory',
+        'FamilyDecoration.view.billaudit.DateFilter'
     ],
     hideHeaders: false,
     autoScroll: true,
@@ -21,7 +22,8 @@ Ext.define('FamilyDecoration.view.billaudit.BillList', {
                 url: './libs/api.php',
                 reader: {
                     type: 'json',
-                    root: 'data'
+                    root: 'data',
+                    totalProperty: 'total',
                 },
                 extraParams: {
                     action: 'StatementBill.getByStatus',
@@ -36,15 +38,54 @@ Ext.define('FamilyDecoration.view.billaudit.BillList', {
         me.dockedItems = [
             {
                 dock: 'top',
-                xtype: 'toolbar',
-                items: [
-                    {
-                        xtype: 'searchfield',
-                        flex: 1,
-                        store: billSt,
-                        paramName: 'billName'
+                xtype: 'billaudit-datefilter',
+                txtEmptyText: '项目经理',
+                txtParam: 'captain',
+                filterFn: function (obj){
+                    var p = {};
+                    if (obj.startTime && obj.endTime) {
+                        Ext.apply(p, {
+                            createTime: "between '" + Ext.Date.format(obj.startTime, 'Y-m-d 00:00:00') + "' and '" + Ext.Date.format(obj.endTime, 'Y-m-d 23:59:59') + "'"
+                        });
                     }
-                ]
+                    if (obj.captain) {
+                        Ext.apply(p, {
+                            captain: obj.captain
+                        });
+                    }
+                    billSt.setProxy({
+                        type: 'rest',
+                        url: './libs/api.php',
+                        reader: {
+                            type: 'json',
+                            root: 'data',
+                            totalProperty: 'total'
+                        },
+                        extraParams: Ext.apply(p, {
+                            action: 'StatementBill.getByStatus',
+                            orderBy: 'createTime DESC',
+                            status: me.billStatus ? me.billStatus : 'rdyck'
+                        })
+                    })
+                    billSt.loadPage(1);
+                },
+                clearFn: function (){
+                    billSt.setProxy({
+                        type: 'rest',
+                        url: './libs/api.php',
+                        reader: {
+                            type: 'json',
+                            root: 'data',
+                            totalProperty: 'total',
+                        },
+                        extraParams: {
+                            action: 'StatementBill.getByStatus',
+                            orderBy: 'createTime DESC',
+                            status: me.billStatus ? me.billStatus : 'rdyck'
+                        }
+                    });
+                    billSt.loadPage(1);
+                }
             },
             {
                 xtype: 'pagingtoolbar',
