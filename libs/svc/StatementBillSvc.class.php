@@ -243,6 +243,8 @@ class StatementBillSvc extends BaseSvc
 		$limit = $this->parseLimitSql($q);
 		$orderBy = $this->parseOrderBySql($q);
 		$row = $mysql->DBGetAsMap($sql.$limit.$orderBy,array($q['status']));
+		$userSvc = parent::getSvc('User');
+		$userSvc->appendRealName($row,'checker');
 		return array('total'=>$count[0],'data'=>$row);
 	}
 
