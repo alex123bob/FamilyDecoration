@@ -147,13 +147,18 @@
 	
 	function getBusiness($data){
 		global $mysql;
-		$fields = array('floorArea','houseType','regionId','address','isFrozen','requestDead','isDead','requestDeadBusinessTitle','requestDeadBusinessReason','customer','custContact','salesman','salesmanName','designer','designerName','applyDesigner','level','ds_lp','ds_fc','ds_bs','ds_bp');
+		$fields = array('floorArea','houseType','regionId','address','isFrozen','requestDead','isDead','requestDeadBusinessTitle','requestDeadBusinessReason','customer','custContact','salesman','salesmanName','designer','designerName','csStaff','csStaffName','applyDesigner','level','ds_lp','ds_fc','ds_bs','ds_bp');
 		$params = array();
 		$sql = "select `b`.*, `r`.name from `business` `b` left join `region` `r` on `b`.regionId = `r`.id where `b`.`isDeleted` = 'false' and b.isTransfered = 'false' ";
 		foreach($fields as $field){
 			if(isset($data[$field])){
 				array_push($params,$data[$field]);
-				$sql .= " and $field = '?' ";
+				if ($field == 'csStaff' || $field == 'csStaffName') {
+					$sql .= " or $field = '?' ";
+				}
+				else {
+					$sql .= " and $field = '?' ";
+				}
 			}				
 		}
 		// put result in order according to level. from A to D.
@@ -209,7 +214,7 @@
 	function editBusiness($data){
 		global $mysql;
 		$id = $data["id"];
-		$fields = array("regionId","address","isFrozen",'requestDead','isDead','requestDeadBusinessTitle','requestDeadBusinessReason',"isTransfered","updateTime","signTime","customer","custContact","salesman","source","salesmanName","designer","designerName","applyDesigner","applyProjectTransference","applyBudget","ds_lp","ds_fc","ds_bs","ds_bp");
+		$fields = array("regionId","address","isFrozen",'requestDead','isDead','requestDeadBusinessTitle','requestDeadBusinessReason',"isTransfered","updateTime","signTime","customer","custContact","salesman","source","salesmanName","csStaff","csStaffName","designer","designerName","applyDesigner","applyProjectTransference","applyBudget","ds_lp","ds_fc","ds_bs","ds_bp");
 		$obj = array();
 		foreach($fields as $field){
 			if(isset($data[$field]))

@@ -51,6 +51,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 				extraParams: {
 					action: 'getBusiness',
 					salesmanName: me.businessStaff ? me.businessStaff.get('salesmanName') : User.getName(),
+					csStaffName: me.businessStaff ? me.businessStaff.get('salesmanName') : User.getName(),
 					isFrozen: false,
 					isDead: 'false'
 				}
@@ -60,7 +61,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 		me.items = [
 			{
 				xtype: 'container',
-				flex: 3,
+				flex: 4,
 				layout: 'border',
 				margin: '0 1 0 0',
 				items: [
@@ -151,7 +152,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								text: '等级',
 								flex: 0.5,
 								dataIndex: 'level',
-								renderer: function (val, meta, rec){
+								renderer: function (val, meta, rec) {
 									var level = val;
 									if (level == 'A') {
 										meta.style = 'background: lightpink;';
@@ -172,6 +173,29 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 										val = '[<strong><font color="blue">' + level + '</font></strong>]';
 									}
 									return val;
+								}
+							},
+							{
+								text: '客服',
+								flex: 1,
+								dataIndex: 'csStaff',
+								renderer: function (val, meta, rec) {
+									if (val) {
+										if (me.checkBusiness) {
+											return val;
+										}
+										else {
+											if (rec.get('csStaffName') == User.getName() && rec.get('salesmanName') != User.getName()) {
+												return val + '<strong><font color="red">[客]</font></strong';
+											}
+											else {
+												return val;
+											}
+										}
+									}
+									else {
+										return '';
+									}
 								}
 							}
 						],
@@ -199,17 +223,30 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								gearBtn = Ext.getCmp('tool-frozeBusiness'),
 								applyDesignerBtn = Ext.getCmp('button-applyForDesigner'),
 								reminder = Ext.getCmp('button-checkBusinessRemind'),
-								personalReminderBtn = Ext.getCmp('button-personalReminder');
+								personalReminderBtn = Ext.getCmp('button-personalReminder'),
+								isCsOfCurrentBusiness;
 
-							editBtn.setDisabled(!rec);
-							delBtn.setDisabled(!rec);
-							dispatchCsBtn.setDisabled(!rec);
-							gearBtn.setDisabled(!rec);
-							rankBtn.setDisabled(!rec);
-							requestDeadBusinessBtn.setDisabled(!rec);
-							personalReminderBtn.setDisabled(!rec);
+							if (me.checkBusiness) {
+								isCsOfCurrentBusiness = false;
+							}
+							else {
+								if (rec.get('salesmanName') != User.getName() && rec.get('csStaffName') == User.getName()) {
+									isCsOfCurrentBusiness = true;
+								}
+								else {
+									isCsOfCurrentBusiness = false;
+								}
+							}
+
+							editBtn.setDisabled(!rec || isCsOfCurrentBusiness);
+							delBtn.setDisabled(!rec || isCsOfCurrentBusiness);
+							dispatchCsBtn.setDisabled(!rec || isCsOfCurrentBusiness);
+							gearBtn.setDisabled(!rec || isCsOfCurrentBusiness);
+							rankBtn.setDisabled(!rec || isCsOfCurrentBusiness);
+							requestDeadBusinessBtn.setDisabled(!rec || isCsOfCurrentBusiness);
+							personalReminderBtn.setDisabled(!rec || isCsOfCurrentBusiness);
 							reminder.setDisabled(!rec);
-							if (rec && rec.get('applyDesigner') == 0) {
+							if (rec && rec.get('applyDesigner') == 0 && !isCsOfCurrentBusiness) {
 								applyDesignerBtn.enable();
 							}
 							else {
@@ -224,6 +261,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								params: {
 									action: 'getBusiness',
 									salesmanName: me.businessStaff ? me.businessStaff.get('salesmanName') : User.getName(),
+									csStaffName: me.businessStaff ? me.businessStaff.get('salesmanName') : User.getName(),
 									isFrozen: false,
 									isDead: 'false'
 								},
@@ -278,8 +316,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 									text: '分配客服',
 									id: 'button-distributeCustomerServiceStaff',
 									name: 'button-distributeCustomerServiceStaff',
-									// hidden: me.businessId || me.salesmanName ? false : (me.checkBusiness ? (User.isAdministrationManager() ? true : false) : true),
-									hidden: true,
+									hidden: me.businessId || me.salesmanName ? false : (me.checkBusiness ? (User.isAdministrationManager() ? true : false) : true),
 									icon: './resources/img/customer_service.png',
 									disabled: true,
 									handler: function () {
@@ -287,7 +324,10 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 											client = clientGrid.getSelectionModel().getSelection()[0];
 										if (client) {
 											var win = Ext.create('FamilyDecoration.view.mybusiness.DispatchCsStaff', {
-												client: client
+												client: client,
+												afterCloseFn: function () {
+													clientGrid.getStore().reload();
+												}
 											});
 											win.show();
 										}
@@ -742,7 +782,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 							borderRightStyle: 'solid',
 							borderRightWidth: '1px'
 						},
-						appendRemindingInfo: function (rec){
+						appendRemindingInfo: function (rec) {
 							var title = '信息情况',
 								marquee = '<marquee scrollamount="6" onMouseOver="this.stop()" onMouseOut="this.start()"><font color="#cccccc;"><strong>信息中心:   ',
 								grid = this;
@@ -757,12 +797,12 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 										type: 'business_individual_remind',
 										extraId: rec.getId()
 									},
-									callback: function (opts, success, res){
+									callback: function (opts, success, res) {
 										if (success) {
 											var obj = Ext.decode(res.responseText);
 											if (obj.length > 0) {
-												Ext.Array.each(obj, function (item, index){
-													marquee += (index+1) + '. ' + item.content + '  ';
+												Ext.Array.each(obj, function (item, index) {
+													marquee += (index + 1) + '. ' + item.content + '  ';
 												});
 												marquee += '</strong></font></marquee>';
 												grid.setTitle(title + marquee);
@@ -786,10 +826,25 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						autoScroll: true,
 						initBtn: function (rec) {
 							var editBtn = Ext.getCmp('button-editBusinessInfo'),
-								delBtn = Ext.getCmp('button-delBusinessInfo');
+								delBtn = Ext.getCmp('button-delBusinessInfo'),
+								clientGrid = Ext.getCmp('gridpanel-clientInfo'),
+								client = clientGrid.getSelectionModel().getSelection()[0],
+								isCsOfCurrentBusiness;
+							
+							if (me.checkBusiness) {
+								isCsOfCurrentBusiness = false;
+							}
+							else {
+								if (client.get('salesmanName') != User.getName() && client.get('csStaffName') == User.getName()) {
+									isCsOfCurrentBusiness = true;
+								}
+								else {
+									isCsOfCurrentBusiness = false;
+								}
+							}
 
-							editBtn.setDisabled(!rec);
-							delBtn.setDisabled(!rec);
+							editBtn.setDisabled(!rec || isCsOfCurrentBusiness);
+							delBtn.setDisabled(!rec || isCsOfCurrentBusiness);
 						},
 						refresh: function (client) {
 							var clientName = Ext.getCmp('textfield-clientNameOnTop'),
@@ -824,8 +879,8 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								businessSource.setValue(client.get('source'));
 								businessDesigner.setValue(client.get('designer'));
 								var temp = client.get('houseType');
-								if(client.get('floorArea') != undefined && client.get('floorArea') != ""){
-									temp += "("+client.get('floorArea')+"平)";
+								if (client.get('floorArea') != undefined && client.get('floorArea') != "") {
+									temp += "(" + client.get('floorArea') + "平)";
 								}
 								businessHouseType.setValue(temp);
 							}
@@ -917,17 +972,16 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 									width: 140,
 									readOnly: true,
 									fieldLabel: '设计师'
-								},							
+								},
 								{
 									xtype: 'textfield',
 									name: 'textfield-businessHouseTypeOnTop',
 									id: 'textfield-businessHouseTypeOnTop',
-									// labelWidth: 45,
-									hideLabel: true,
+									labelWidth: 45,
 									width: 150,
 									readOnly: true,
 									fieldLabel: '户型'
-								},{
+								}, {
 									xtype: 'textfield',
 									name: 'textfield-businessSourceOnTop',
 									id: 'textfield-businessSourceOnTop',
@@ -935,7 +989,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 									width: 150,
 									readOnly: true,
 									fieldLabel: '来源'
-								}							
+								}
 							]
 						}),
 						bbar: [
@@ -1021,7 +1075,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								icon: './resources/img/alarm_blue.png',
 								disabled: true,
 								hidden: me.checkBusiness && User.isAdministrationManager() ? true : false,
-								handler: function (){
+								handler: function () {
 									var clientGrid = Ext.getCmp('gridpanel-clientInfo'),
 										client = clientGrid.getSelectionModel().getSelection()[0];
 									if (client) {
@@ -1029,7 +1083,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 											recipient: me.businessStaff ? me.businessStaff.get('salesmanName') : User.getName(),
 											type: 'business_individual_remind',
 											extraId: client.getId(),
-											afterClose: function (){
+											afterClose: function () {
 												clientGrid.refresh();
 											}
 										});

@@ -10,6 +10,8 @@ Ext.define('FamilyDecoration.model.Business', {
 		{name: 'salesmanName', type: 'string'}, // 业务员账号名
 		{name: 'designer', type: 'string'},  // 设计师真实姓名
 		{name: 'designerName', type: 'string'}, // 设计师账号名
+		{name: 'csStaffName', type: 'string'}, // 客服帐号名
+		{name: 'csStaff', type: 'string'}, // 客服真实姓名
 		{name: 'source', type: 'string'},
 		{name: 'level', type: 'string'}, // 我的业务的评级
 		{name: 'signBusinessLevel', type: 'string'}, // 签单业务的评级
