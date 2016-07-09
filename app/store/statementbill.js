@@ -9,7 +9,8 @@ Ext.define('FamilyDecoration.store.StatementBill', {
         // limitParam: false, //to remove param "limit"
         reader: {
             type: 'json',
-            root: 'data'
+            root: 'data',
+            totalProperty: 'total'
         },
         extraParams: {
             action: 'StatementBill.get',

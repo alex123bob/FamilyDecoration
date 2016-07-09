@@ -6,7 +6,8 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
         'FamilyDecoration.view.manuallycheckbill.BillTable',
         'FamilyDecoration.store.StatementBill',
         'Ext.ux.form.SearchField',
-        'FamilyDecoration.view.billaudit.BillList'
+        'FamilyDecoration.view.billaudit.BillList',
+        'Ext.layout.container.Accordion'
     ],
     layout: 'hbox',
 
@@ -15,72 +16,35 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
         // get all resources which used to be retrieved a lot of times. quite redundant before.
         // now we just encapsulate it.
         me.getRes = function () {
-            var projectGrid = Ext.getCmp('treepanel-projectGridForBillAudit'),
-                project = projectGrid.getSelectionModel().getSelection()[0],
-                billList = Ext.getCmp('gridpanel-billListForAudit'),
+            var billList = Ext.getCmp('gridpanel-billListForAudit'),
                 bill = billList.getSelectionModel().getSelection()[0],
                 passedBillList = Ext.getCmp('gridpanel-passedBillListForAudit'),
                 passedBill = passedBillList.getSelectionModel().getSelection()[0],
+                paidBillList = Ext.getCmp('gridpanel-paidBillListForAudit'),
+                paidBill = paidBillList.getSelectionModel().getSelection()[0],
                 billDetailCt = Ext.getCmp('billtable-billDetailForAudit');
 
             return {
-                projectGrid: projectGrid,
-                project: project,
                 billList: billList,
                 bill: bill,
                 passedBillList: passedBillList,
                 passedBill: passedBill,
+                paidBillList: paidBillList,
+                paidBill: paidBill,
                 billDetailCt: billDetailCt
             }
         };
 
         me.items = [
             {
-                xtype: 'progress-projectlistbycaptain',
-                flex: 1,
-                height: '100%',
-                id: 'treepanel-projectGridForBillAudit',
-                name: 'treepanel-projectGridForBillAudit',
-                needStatementBillCount: true,
-                title: '工程项目名称',
-                width: '100%',
-                style: {
-                    borderRightStyle: 'solid',
-                    borderRightWidth: '1px'
-                },
-                listeners: {
-                    itemclick: function (view, rec) {
-                        return rec.get('projectName') ? true : false;
-                    },
-                    selectionchange: function (selModel, sels, opts) {
-                        var pro = sels[0],
-                            resourceObj = me.getRes(),
-                            st = resourceObj.billList.getStore(),
-                            passedSt = resourceObj.passedBillList.getStore();
-                        if (pro && pro.get('projectName')) {
-                            resourceObj.billList.getSelectionModel().deselectAll();
-                            st.load({
-                                params: {
-                                    projectId: pro.getId()
-                                }
-                            });
-                            resourceObj.passedBillList.getSelectionModel().deselectAll();
-                            passedSt.load({
-                                params: {
-                                    projectId: pro.getId()
-                                }
-                            });
-                        }
-                        else if (!pro) {
-                            st.removeAll();
-                        }
-                    }
-                }
-            },
-            {
                 xtype: 'container',
                 flex: 1,
-                layout: 'vbox',
+                layout: {
+                    type: 'accordion',
+                    titleCollapse: true,
+                    animate: true,
+                    activeOnTop: true
+                },
                 height: '100%',
                 items: [
                     {
@@ -90,14 +54,16 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                             borderRightWidth: '1px'
                         },
                         xtype: 'billaudit-billlist',
+                        billStatus: 'rdyck',
                         id: 'gridpanel-billListForAudit',
                         name: 'gridpanel-billListForAudit',
-                        flex: 2,
-                        width: '100%',
                         selectionchangeEvent: function (selModel, sels, opts) {
                             var rec = sels[0],
                                 resourceObj = me.getRes();
-                            rec && resourceObj.passedBillList.getSelectionModel().deselectAll();
+                            if (rec) {
+                                resourceObj.passedBillList.getSelectionModel().deselectAll();
+                                resourceObj.paidBillList.getSelectionModel().deselectAll();
+                            }
                             resourceObj.billDetailCt.initBtn();
                             resourceObj.billDetailCt.bill = rec;
                             resourceObj.billDetailCt.refresh(rec);
@@ -112,13 +78,36 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                         xtype: 'billaudit-billlist',
                         id: 'gridpanel-passedBillListForAudit',
                         name: 'gridpanel-passedBillListForAudit',
-                        flex: 1,
-                        width: '100%',
-                        isPassedBillList: true,
+                        billStatus: 'chk',
                         selectionchangeEvent: function (selModel, sels, opts) {
                             var rec = sels[0],
                                 resourceObj = me.getRes();
-                            rec && resourceObj.billList.getSelectionModel().deselectAll();
+                            if (rec) {
+                                resourceObj.billList.getSelectionModel().deselectAll();
+                                resourceObj.paidBillList.getSelectionModel().deselectAll();
+                            }
+                            resourceObj.billDetailCt.initBtn();
+                            resourceObj.billDetailCt.bill = rec;
+                            resourceObj.billDetailCt.refresh(rec);
+                        }
+                    },
+                    {
+                        title: '已付款账单',
+                        style: {
+                            borderRightStyle: 'solid',
+                            borderRightWidth: '1px'
+                        },
+                        xtype: 'billaudit-billlist',
+                        id: 'gridpanel-paidBillListForAudit',
+                        name: 'gridpanel-paidBillListForAudit',
+                        billStatus: 'paid',
+                        selectionchangeEvent: function (selModel, sels, opts) {
+                            var rec = sels[0],
+                                resourceObj = me.getRes();
+                            if (rec) {
+                                resourceObj.billList.getSelectionModel().deselectAll();
+                                resourceObj.passedBillList.getSelectionModel().deselectAll();
+                            }
                             resourceObj.billDetailCt.initBtn();
                             resourceObj.billDetailCt.bill = rec;
                             resourceObj.billDetailCt.refresh(rec);
@@ -130,7 +119,7 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                 xtype: 'manuallycheckbill-billtable',
                 id: 'billtable-billDetailForAudit',
                 name: 'billtable-billDetailForAudit',
-                flex: 3,
+                flex: 2,
                 title: '单据细目',
                 header: true,
                 height: '100%',

@@ -37,11 +37,15 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 			}
 		};
 
+		var billListSt = Ext.create('FamilyDecoration.store.StatementBill', {
+			autoLoad: false
+		});
+
 		me.items = [
 			{
 				xtype: 'container',
 				layout: 'fit',
-				flex: 0.5,
+				flex: 1,
 				height: '100%',
 				items: [{
 					style: {
@@ -101,7 +105,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 					borderRightWidth: '1px'
 				},
 				hideHeaders: true,
-				flex: 0.2,
+				width: 80,
 				height: '100%',
 				listeners: {
 					selectionchange: function (selModel, sels, opts) {
@@ -111,10 +115,22 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						resourceObj.billList.getSelectionModel().deselectAll();
 						resourceObj.billCt.initBtn();
 						if (resourceObj.project && rec) {
-							blSt.load({
-								params: {
+							blSt.setProxy({
+								url: './libs/api.php',
+								type: 'rest',
+								extraParams: {
 									projectId: resourceObj.project.getId(),
-									professionType: rec.get('value')
+									professionType: rec.get('value'),
+									action: 'StatementBill.get'
+								},
+								reader: {
+									type: 'json',
+									root: 'data',
+									totalProperty: 'total'
+								}
+							});
+							blSt.loadPage(1, {
+								callback: function (recs, ope, success){
 								}
 							});
 						}
@@ -474,9 +490,15 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								align: 'center'
 							}
 						},
-						store: Ext.create('FamilyDecoration.store.StatementBill', {
-							autoLoad: false
-						}),
+						store: billListSt,
+						dockedItems: [
+							{
+								xtype: 'pagingtoolbar',
+								store: billListSt,
+								dock: 'bottom',
+								displayInfo: true
+							}
+						],
 						listeners: {
 							selectionchange: function (selModel, sels, opts) {
 								var rec = sels[0],

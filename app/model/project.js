@@ -25,6 +25,7 @@ Ext.define('FamilyDecoration.model.Project', {
         {name: 'budgetFinished', type: 'string'},
         
         // this is used in manuallyCheckBill module
+        {name: 'newBillCount', type: 'string'},
         {name: 'rdyckBillCount', type: 'string'},
         {name: 'chkBillCount', type: 'string'},
         {name: 'paidBillCount', type: 'string'}

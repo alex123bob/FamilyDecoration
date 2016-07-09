@@ -93,6 +93,11 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 								if ((me.projectId && me.projectId == node.getId()) || !me.projectId) {
 									var renderedTxt = node.get('projectName');
 									if (me.needStatementBillCount) {
+										if (!isNaN(parseInt(node.get('newBillCount'), 10))) {
+											renderedTxt += '&nbsp;<font style="color: pink;"><strong>['
+												+ node.get('newBillCount')
+												+ ']</strong></font>';
+										}
 										if (!isNaN(parseInt(node.get('rdyckBillCount'), 10))) {
 											renderedTxt += '&nbsp;<font style="color: orange;"><strong>['
 												+ node.get('rdyckBillCount')

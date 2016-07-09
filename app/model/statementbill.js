@@ -4,6 +4,8 @@ Ext.define('FamilyDecoration.model.StatementBill', {
 		'id',
 		{name: 'payee', type: 'string'},
 		{name: 'projectName', type: 'string'},
+		{name: 'captain', type: 'string'},
+		{name: 'captainName', type: 'string'},
 		{name: 'totalFee', type: 'float'},
 		{name: 'claimAmount', type: 'float'},
 		{name: 'payedTimes', type: 'int'},

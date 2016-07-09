@@ -1,21 +1,21 @@
 Ext.define('FamilyDecoration.view.billaudit.BillList', {
-	extend: 'Ext.grid.Panel',
-	alias: 'widget.billaudit-billlist',
-	requires: [
-		'FamilyDecoration.store.StatementBill',
+    extend: 'Ext.grid.Panel',
+    alias: 'widget.billaudit-billlist',
+    requires: [
+        'FamilyDecoration.store.StatementBill',
         'FamilyDecoration.store.WorkCategory'
-	],
-    hideHeaders: true,
+    ],
+    hideHeaders: false,
     autoScroll: true,
-    
-    isPassedBillList: false,
+
+    billStatus: undefined,
     selectionchangeEvent: Ext.emptyFn,
-    
-	initComponent: function (){
-		var me = this;
-        
+
+    initComponent: function () {
+        var me = this;
+
         var billSt = Ext.create('FamilyDecoration.store.StatementBill', {
-            autoLoad: false,
+            autoLoad: true,
             proxy: {
                 type: 'rest',
                 url: './libs/api.php',
@@ -26,29 +26,43 @@ Ext.define('FamilyDecoration.view.billaudit.BillList', {
                 extraParams: {
                     action: 'StatementBill.getByStatus',
                     orderBy: 'createTime DESC',
-                    status: me.isPassedBillList ? 'chk,paid' : 'rdyck'
+                    status: me.billStatus ? me.billStatus : 'rdyck'
                 }
             }
         });
-        
+
         me.store = billSt;
-		
-        me.dockedItems = [{
-            dock: 'top',
-            xtype: 'toolbar',
-            items: [{
-                xtype: 'searchfield',
-                flex: 1,
+
+        me.dockedItems = [
+            {
+                dock: 'top',
+                xtype: 'toolbar',
+                items: [
+                    {
+                        xtype: 'searchfield',
+                        flex: 1,
+                        store: billSt,
+                        paramName: 'billName'
+                    }
+                ]
+            },
+            {
+                xtype: 'pagingtoolbar',
                 store: billSt,
-                paramName: 'billName'
-            }]
-        }];
-        
+                dock: 'bottom',
+                displayInfo: true
+            }
+        ];
+
         me.columns = {
             items: [
                 {
                     text: '单名',
                     dataIndex: 'billName'
+                },
+                {
+                    text: '项目经理',
+                    dataIndex: 'captain'
                 }
             ],
             defaults: {
@@ -56,9 +70,9 @@ Ext.define('FamilyDecoration.view.billaudit.BillList', {
                 align: 'center'
             }
         };
-        
-		me.listeners = {
-			afterrender: function (grid, opts) {
+
+        me.listeners = {
+            afterrender: function (grid, opts) {
                 var view = grid.getView();
                 var tip = Ext.create('Ext.tip.ToolTip', {
                     // The overall target element.
@@ -91,11 +105,11 @@ Ext.define('FamilyDecoration.view.billaudit.BillList', {
                     }
                 });
             },
-            selectionchange: function (selModel, sels, opts){
+            selectionchange: function (selModel, sels, opts) {
                 me.selectionchangeEvent(selModel, sels, opts);
             }
-		};
+        };
 
-		me.callParent();
-	}
+        me.callParent();
+    }
 });
