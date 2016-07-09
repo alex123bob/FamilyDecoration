@@ -9,6 +9,7 @@ Ext.define('FamilyDecoration.view.mybusiness.DispatchCsStaff', {
     title: '分配客服',
 
 	client: undefined,
+    afterCloseFn: Ext.emptyFn,
 
 	initComponent: function (){
 		var me = this;
@@ -24,7 +25,35 @@ Ext.define('FamilyDecoration.view.mybusiness.DispatchCsStaff', {
             {
                 text: '确定',
                 handler: function (){
-
+                    var tree = me.down('treepanel'),
+                        node = tree.getSelectionModel().getSelection()[0];
+                    if (node.get('name')) {
+                        Ext.Ajax.request({
+                            url: './libs/business.php?action=editBusiness',
+                            method: 'POST',
+                            params: {
+                                id: me.client.getId(),
+                                csStaffName: node.get('name'),
+                                csStaff: node.get('realname')
+                            },
+                            callback: function (opts, success, res){
+                                if (success) {
+                                    var obj = Ext.decode(res.responseText);
+                                    if ('successful' == obj.status) {
+                                        showMsg('分配成功！');
+                                        me.close();
+                                        me.afterCloseFn();
+                                    }
+                                    else {
+                                        showMsg(obj.errMsg);
+                                    }
+                                }
+                            }
+                        })
+                    }
+                    else {
+                        showMsg('请选择要分配的客服人员！');
+                    }
                 }
             },
             {
