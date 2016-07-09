@@ -4,7 +4,7 @@
 
     autoLoad: true,
     root: {
-        expanded: true,
+        expanded: false,
         children: [
             { 
                 name: "公告栏信息",
@@ -14,7 +14,7 @@
             },
             {
                 name: "业务列表",
-                expanded: true,
+                expanded: false,
                 cmp: 'business-parent',
                 leaf: false,
                 icon: 'resources/img/business.png',
@@ -65,7 +65,7 @@
             },
             {
                 name: "工作日志", 
-                expanded: true, 
+                expanded: false, 
                 icon: 'resources/img/blog-parent.png',
                 cmp: 'logbook-parent',
                 children: [
@@ -109,7 +109,7 @@
             },
             {
                 name: "预算", 
-                expanded: true, 
+                expanded: false, 
                 icon: 'resources/img/budget-parent.png',
                 cmp: 'budget-parent',
                 children: [
@@ -141,7 +141,7 @@
             },
             {
                 name: "工程情况", 
-                expanded: true, 
+                expanded: false, 
                 cmp: 'project-parent',
                 icon: 'resources/img/project-parent.png',
                 children: [
@@ -191,7 +191,7 @@
             },
             {
                 name: '财务模块',
-                expanded: true,
+                expanded: false,
                 cmp: 'finance-parent',
                 icon: 'resources/img/finance-parent.png',
                 children: [
@@ -217,7 +217,7 @@
             },
             {
                 name: "应用设置", 
-                expanded: true,
+                expanded: false,
                 cmp: 'setting-parent', 
                 icon: 'resources/img/setting-parent.png',
                 children: [
@@ -231,7 +231,7 @@
             },
             {
                 name: '人事管理',
-                expanded: true,
+                expanded: false,
                 cmp: 'personnel-parent',
                 icon: 'resources/img/personnel.png',
                 children: [

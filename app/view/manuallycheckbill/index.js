@@ -56,9 +56,6 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 					name: 'treepanel-projectNameForBillCheck',
 					autoScroll: true,
 					listeners: {
-						itemclick: function (view, rec) {
-							return rec.get('projectName') ? true : false;
-						},
 						selectionchange: function (selModel, sels, opts) {
 							var pro = sels[0],
 								resourceObj = me.getRes(),

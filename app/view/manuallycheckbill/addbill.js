@@ -109,6 +109,10 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 								root: 'data',
 								totalProperty: 'total'
 							},
+							// there is no need to put page and limit parameters in store load configuration.
+							pageParam: false, //to remove param "page"
+							startParam: false, //to remove param "start"
+							limitParam: false, //to remove param "limit"
 							extraParams: {
 								action: 'StatementBasicItem.get',
 								professionType: me.professionType.get('value')
@@ -150,12 +154,6 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 												paramName: 'billItemName'
 											}
 										]
-									},
-									{
-										xtype: 'pagingtoolbar',
-										store: statementBasicSt,
-										dock: 'bottom',
-										displayInfo: true
 									}
 								],
 								store: statementBasicSt,

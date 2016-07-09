@@ -65,6 +65,9 @@ Ext.define('FamilyDecoration.view.Viewport', {
                             changeMainCt(xtype);
                         }
                     }
+                    else {
+                        view.toggle(rec);
+                    }
                 }
             }
         }, {

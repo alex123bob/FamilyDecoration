@@ -229,9 +229,6 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                         width: '100%',
                         autoScroll: true,
                         listeners: {
-                            itemclick: function (view, rec) {
-                                return rec.get('projectName') ? true : false;
-                            },
                             selectionchange: function (selModel, sels, opts) {
                                 var resObj = me.getRes();
                                 resObj.proPanel.refreshBtns();

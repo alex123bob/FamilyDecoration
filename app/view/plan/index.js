@@ -25,14 +25,6 @@ Ext.define('FamilyDecoration.view.plan.Index', {
 				loadAll: me.loadAll,
 				autoScroll: true,
 				listeners: {
-					itemclick: function (view, rec){
-						if (rec.get('projectName')) {
-							
-						}
-						else {
-							return false;
-						}
-					},
 					selectionchange: function (selModel, sels, opts){
 						var rec = sels[0],
 							addPlanBtn = Ext.getCmp('button-addplan'),

@@ -42,14 +42,6 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 					name: 'treepanel-projectNameForPlanMaking',
 					autoScroll: true,
 					listeners: {
-						itemclick: function (view, rec) {
-							if (rec.get('projectName')) {
-								return true;
-							}
-							else {
-								return false;
-							}
-						},
 						selectionchange: function (selModel, sels, opts) {
 							var rec = sels[0],
 								projectPlanPane = Ext.getCmp('panel-projectPlan'),

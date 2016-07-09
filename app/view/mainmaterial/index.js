@@ -24,14 +24,6 @@ Ext.define('FamilyDecoration.view.mainmaterial.Index', {
 				name: 'treepanel-projectNameForMainMaterial',
 				autoScroll: true,
 				listeners: {
-					itemclick: function (view, rec){
-						if (rec.get('projectName')) {
-							return true;
-						}
-						else {
-							return false;
-						}
-					},
 					selectionchange: function (selModel, sels, opts){
 						var rec = sels[0],
 							addPlanBtn = Ext.getCmp('button-addmaterial'),

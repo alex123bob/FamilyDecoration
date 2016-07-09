@@ -176,9 +176,6 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 				width: '100%',
 				autoScroll: true,
 				listeners: {
-					itemclick: function (view, rec){
-						return rec.get('projectName') ? true : false;
-					},
 					selectionchange: function (selModel, sels, opts){
 						var rec = sels[0],
 							delProjectBtn = Ext.getCmp('button-deleteProject'),

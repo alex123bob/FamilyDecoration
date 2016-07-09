@@ -308,17 +308,7 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 									items: [
 										{
 											xtype: 'progress-projectlistbycaptain',
-											searchFilter: true,
-											listeners: {
-												itemclick: function (view, rec) {
-													if (rec.get('projectName')) {
-														return true;
-													}
-													else {
-														return false;
-													}
-												}
-											}
+											searchFilter: true
 										}
 									],
 									buttons: [
