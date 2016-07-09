@@ -922,18 +922,19 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 									xtype: 'textfield',
 									name: 'textfield-businessHouseTypeOnTop',
 									id: 'textfield-businessHouseTypeOnTop',
-									labelWidth: 0,
+									// labelWidth: 45,
+									hideLabel: true,
 									width: 150,
 									readOnly: true,
-									fieldLabel: ''
+									fieldLabel: '户型'
 								},{
 									xtype: 'textfield',
 									name: 'textfield-businessSourceOnTop',
 									id: 'textfield-businessSourceOnTop',
-									labelWidth: 0,
+									labelWidth: 45,
 									width: 150,
 									readOnly: true,
-									fieldLabel: ''
+									fieldLabel: '来源'
 								}							
 							]
 						}),
