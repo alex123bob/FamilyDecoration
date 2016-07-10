@@ -308,6 +308,8 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                                                     resourceObj.billList.getStore().reload();
                                                     resourceObj.passedBillList.getStore().reload();
                                                     resourceObj.passedBillList.getSelectionModel().deselectAll();
+                                                    resourceObj.paidBillList.getSelectionModel().deselectAll();
+                                                    resourceObj.paidBillList.getStore().reload();
                                                 }, true);
                                             }
                                             else {
