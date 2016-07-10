@@ -61,7 +61,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 		me.items = [
 			{
 				xtype: 'container',
-				flex: 4,
+				flex: 3,
 				layout: 'border',
 				margin: '0 1 0 0',
 				items: [
@@ -118,7 +118,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						columns: [
 							{
 								text: '时间',
-								flex: 1,
+								flex: 0.3,
 								dataIndex: 'createTime',
 								renderer: function (val, meta, rec) {
 									if (val) {
@@ -131,7 +131,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 							},
 							{
 								text: '小区名称',
-								flex: 1,
+								flex: 0.4,
 								dataIndex: 'regionName',
 								renderer: function (val, meta, rec) {
 									return val;
@@ -139,7 +139,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 							},
 							{
 								text: '门牌号',
-								flex: 0.7,
+								flex: 0.3,
 								dataIndex: 'address',
 								renderer: function (val, meta, rec) {
 									if (rec.get('applyDesigner') == 1) {
@@ -150,7 +150,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 							},
 							{
 								text: '等级',
-								flex: 0.5,
+								flex: 0.3,
 								dataIndex: 'level',
 								renderer: function (val, meta, rec) {
 									var level = val;
@@ -177,7 +177,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 							},
 							{
 								text: '客服',
-								flex: 1,
+								flex: 0.3,
 								dataIndex: 'csStaff',
 								renderer: function (val, meta, rec) {
 									if (val) {
