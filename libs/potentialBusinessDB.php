@@ -174,7 +174,7 @@
 
 	function getTeleMarketingStaffList(){
 		global $mysql;
-		$sql = "select distinct telemarketingStaffName, telemarketingStaff from `potential_business` where telemarketingStaffName IS NOT NULL and isDeleted = 'false' ";
+		$sql = "select distinct telemarketingStaffName, telemarketingStaff from `potential_business` where telemarketingStaffName IS NOT NULL and telemarketingStaffName <> '' and isDeleted = 'false' ";
 		return $mysql->DBGetAsMap($sql);
 	}
 ?>
