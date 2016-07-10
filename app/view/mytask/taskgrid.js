@@ -6,15 +6,14 @@ Ext.define('FamilyDecoration.view.mytask.TaskGrid', {
 	],
 	autoScroll: true,
 	refresh: Ext.emptyFn,
+    taskId: undefined,
 
 	initComponent: function () {
 		var me = this;
 
 		me.columns = {
 			defaults: {
-				align: 'left',
-				sortable: false,
-				menuDisabled: true
+				align: 'center'
 			},
 			items: [
 				{
@@ -25,7 +24,15 @@ Ext.define('FamilyDecoration.view.mytask.TaskGrid', {
                 {
 					flex: 1,
 					text: '时间',
-					dataIndex: 'createTime'
+					dataIndex: 'createTime',
+                    renderer: function (val, meta, rec){
+                        if (val) {
+                            return val.slice(0, 10);
+                        }
+                        else {
+                            return '';
+                        }
+                    }
 				}
 			]
 		};
@@ -33,6 +40,16 @@ Ext.define('FamilyDecoration.view.mytask.TaskGrid', {
 		me.store = Ext.create('Ext.data.Store', {
             model: 'FamilyDecoration.model.TaskList',
 			autoLoad: false,
+            filters: [
+                function (item){
+                    if ( (me.taskId && item.getId() == me.taskId) || !me.taskId ) {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+            ],
             proxy: {
                 type: 'rest',
                 url: './libs/tasklist.php?action=getTaskListByUser',
