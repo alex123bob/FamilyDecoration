@@ -18,6 +18,7 @@
 		case "getTaskAssessmentByTaskListIdByUser":$res = getTaskAssessmentByTaskListIdByUser($_GET);break;
 		
 		case "getTaskListYearsByUser":$res = getTaskListYearsByUser($_GET['user']);break;
+		case "getTaskListByUser":$res = getTaskListByUser($_GET['user']);break;
 		case "getTaskListMonthsByUser":$res = getTaskListMonthsByUser($_GET["year"],$_GET['user']);break;
 		case "getTaskListByMonthByUser":$res = getTaskListByMonthByUser($_GET["year"],$_GET["month"],$_GET['user']);break;
 		default: throw new Exception("unknown action:".$action);

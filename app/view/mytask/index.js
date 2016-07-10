@@ -2,7 +2,7 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 	extend: 'Ext.container.Container',
 	alias: 'widget.mytask-index',
 	requires: [
-		'FamilyDecoration.view.mytask.TaskList', 'FamilyDecoration.view.mytask.SelfAssess',
+		'FamilyDecoration.view.mytask.TaskGrid', 'FamilyDecoration.view.mytask.SelfAssess',
 		'FamilyDecoration.view.mylog.AskLeave', 'FamilyDecoration.model.TaskSelfAssessment',
 		'FamilyDecoration.view.mytask.EditProcess'
 	],
@@ -21,66 +21,21 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 			width: 200,
 			margin: '0 1 0 0',
 			hidden: me.taskId ? true : false,
-			items: [{
-				xtype: 'mytask-tasklist',
-				taskId: me.taskId,
-				title: '任务查看',
-				id: 'treepanel-myTask',
-				name: 'treepanel-myTask',
-				isQuarter: true,
-				autoScroll: true,
-				refresh: function (){
-					var tree = this,
-						st = tree.getStore();
-					st.getProxy().extraParams = {
-						action: 'getTaskListYears'
-					};
-					st.getProxy().url = 'libs/tasklist.php';
-					st.load({
-						node: tree.getRootNode(),
-						callback: function (recs, ope, success){
-							if (success) {
-								tree.getSelectionModel().deselectAll();
-							}
-						}
-					});
-				},
-				listeners: {
-					itemclick: function (view, rec){
+			items: [
+				{
+					title: '任务查看',
+					xtype: 'mytask-taskgrid',
+					taskId: me.taskId,
+					refresh: function () {
+						this.getStore().load();
 					},
-					selectionchange: function (selModel, sels, opts){
-						var rec = sels[0],
-							taskContentPanel = Ext.getCmp('panel-taskContent'),
-							scrutinizeGrid = Ext.getCmp('gridpanel-myTaskScrutinizeContent'),
-							assessPanel = Ext.getCmp('panel-selfAssessment'),
-							processPanel = Ext.getCmp('panel-completeProcess'),
-							selfassessBtn = Ext.getCmp('button-selfassess'),
-							editProcessBtn = Ext.getCmp('button-editProcess');
-						if (rec && rec.get('taskName')) {
-							taskContentPanel.refresh(rec);
-							scrutinizeGrid.refresh(rec);
-							assessPanel.refresh(rec);
-							processPanel.refresh(rec);
-
-							selfassessBtn.enable();
-							editProcessBtn.enable();
+					listeners: {
+						selectionchange: function (selModel, sels, opts) {
+							
 						}
-						else {
-							taskContentPanel.refresh();
-							scrutinizeGrid.refresh();
-							assessPanel.refresh();
-							processPanel.refresh();
-
-							selfassessBtn.disable();
-							editProcessBtn.disable();
-						}
-					},
-					load: function (){
-						var treePanel = Ext.getCmp('treepanel-myTask');
-						treePanel.expandAll();
 					}
 				}
-			}]
+			]
 		}, {
 			region: 'center',
 			xtype: 'container',

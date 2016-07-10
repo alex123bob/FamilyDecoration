@@ -237,4 +237,10 @@
 		$mysql->DBUpdate('task_list',$obj,"`id` = '?' ",array($data["id"]));
 		return array('status'=>'successful', 'errMsg' => 'edit tasklist ok');
 	}
+
+	function getTaskListByUser($user){
+		global $mysql;
+		$res= $mysql->DBGetAsMap("select * from task_list where taskExecutor like '%-$user-%'");
+		return $res;
+	}
 ?>
