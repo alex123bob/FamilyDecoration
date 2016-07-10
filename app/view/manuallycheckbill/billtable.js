@@ -172,7 +172,6 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 						xtype: 'displayfield',
 						margin: '0 0 0 20',
 						name: 'displayfield-budgetName',
-						id:'displayfield-budgetName',
 						value: me.getBillTitle(),
 						hideLabel: true,
 						fieldStyle: {
