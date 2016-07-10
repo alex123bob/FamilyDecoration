@@ -123,6 +123,7 @@ Ext.define('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
 						fieldLabel: '电销人员',
 						allowBlank: false,
 						readOnly: true,
+						labelWidth:60,
 						width: 255,
 						height: '100%',
 						value: me.potentialBusiness ? me.potentialBusiness.get('telemarketingStaff') : ''
@@ -180,6 +181,21 @@ Ext.define('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
 						name: 'hiddenfield-telemarketingStaffName',
 						id: 'hiddenfield-telemarketingStaffName',
 						value: me.client ? me.client.get('telemarketingStaffName') : ''
+					},
+					{
+						id: 'textfield-telemarketingDeadline',
+						name: 'textfield-telemarketingDeadline',
+						xtype: 'datefield',
+						labelWidth:60,
+						flex: 0.3,
+						fieldLabel: '截止日期',
+						editable:false,
+						format : 'Y-m-d',//日期格式
+						minValue:new Date(),
+						allowBlank: false,
+						width: 255,
+						height: '100%',
+						value: me.potentialBusiness ? me.potentialBusiness.get('telemarketingDeadline') : ''
 					}
 				]
 			}
@@ -190,12 +206,14 @@ Ext.define('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
 			handler: function () {
 				var telemarketingStaff = Ext.getCmp('textfield-telemarketingStaff'),
 					telemarketingStaffName = Ext.getCmp('hiddenfield-telemarketingStaffName'),
+					telemarketingDeadline = Ext.getCmp('textfield-telemarketingDeadline'),
 					businessGrid = !me.potentialBusiness ? me.down('grid') : undefined;
 				if (telemarketingStaff.isValid()) {
 					var p = {
 						telemarketingStaff: telemarketingStaff.getValue(),
 						telemarketingStaffName: telemarketingStaffName.getValue(),
-						distributeTime: Ext.Date.format(new Date(), 'Y-m-d H:i:s')
+						distributeTime: Ext.Date.format(new Date(), 'Y-m-d H:i:s'),
+						telemarketingDeadline: Ext.Date.format(telemarketingDeadline.getValue(),'Y-m-d')
 					};
 					if (me.potentialBusiness) {
 						Ext.apply(p, {

@@ -138,6 +138,20 @@ Class PlanMakingSvc extends BaseSvc{
 	}
 
 	public function designerAlarm(){
+		global $mysql;
+		//电销超期回退
+		echo "电销超期回退<br />";
+		$date = date('Y-m-d');
+		$sql = "update potential_business set telemarketingStaff = '',telemarketingDeadline = '' , telemarketingStaffName = '' , lastUpdateTime = now() where telemarketingDeadline < '".$date."' and isImportant = 'false';";
+		echo "$sql<br />";
+		try{
+			$mysql->DBExecute($sql);
+			echo "ok<br />";
+		}catch(Exception $e){
+			var_dump($e);
+		}
+		//设计师提醒
+		echo "设计师提醒<br />";
 		$day = date('Y-m-d', strtotime("+2 day"));
 		$sql1 = "select u.phone,u.mail,r.name as regionName,b.* from business b left join user u on b.designerName = u.name left join region r on b.regionId = r.id
 					where ds_bp is not null and ds_bp not like '%done' and ds_bp like '%~%' and right(ds_bp,10) = '$day' and b.isDead = 'false' and b.isDeleted = 'false' and b.isTransfered = 'false';";
@@ -147,7 +161,6 @@ Class PlanMakingSvc extends BaseSvc{
 					where ds_fc is not null and ds_fc not like '%done' and ds_fc like '%~%' and right(ds_fc,10) = '$day' and b.isDead = 'false' and b.isDeleted = 'false' and b.isTransfered = 'false';";
 		$sql4 = "select u.phone,u.mail,r.name as regionName,b.* from business b left join user u on b.designerName = u.name left join region r on b.regionId = r.id
 					where ds_bs is not null and ds_bs not like '%done' and ds_bs like '%~%' and right(ds_bs,10) = '$day' and b.isDead = 'false' and b.isDeleted = 'false' and b.isTransfered = 'false';";
-		global $mysql;
 		echo "designerAlarm";
 		echo "<br />$sql1<br /><br />$sql2<br /><br />$sql3<br /><br />$sql4<br />";
 		$recievers1 = $mysql->DBGetAsMap($sql1);
@@ -253,6 +266,7 @@ Class PlanMakingSvc extends BaseSvc{
 	private function noticeOrder($column,$startDays){
 		global $TableMapping;
 		global $mysql;
+
 		//查询未结束的项目,并且主材没有在主材订购表中出现(没有订购主材的),并且小项开始时间还差n天的(n为系统配置的提醒时间),关联业务员,设计师
 		$sql = "select r.*,p.salesmanName as salesman,p.designerName as designer from (
 					select  TO_DAYS(SUBSTR($column,1,10))  - TO_DAYS(NOW()) as daysleft ,projectId,projectAddress as projectName from plan_making 

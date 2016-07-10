@@ -80,10 +80,16 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                 getBtns: function () {
                     var transferBtn = this.down('[name="button-transferToBusiness"]'),
                         reminderBtn = this.down('[name="button-reminder"]'),
+                        returnBackBtn = this.down('[name="button-returnBack"]'),
+                        cancelImportantCustBtn = this.down('[name="button-cancelImportantCust"]'),
+                        importantCustBtn  = this.down('[name="button-importantCust"]'),
                         editStatusBtn = this.down('[name="button-editStatus"]');
                     return {
                         transferBtn: transferBtn,
                         reminderBtn: reminderBtn,
+                        returnBackBtn: returnBackBtn,
+                        importantCustBtn: importantCustBtn,
+                        cancelImportantCustBtn: cancelImportantCustBtn,
                         editStatusBtn: editStatusBtn
                     };
                 },
@@ -95,6 +101,13 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                             var btn = btns[name];
                             btn.setDisabled(!resObj.business);
                         }
+                    }
+                    if(resObj.business && resObj.business.data && resObj.business.data.isImportant == "true"){
+                        btns.importantCustBtn.hide();
+                        btns.cancelImportantCustBtn.show();
+                    }else{
+                        btns.importantCustBtn.show();
+                        btns.cancelImportantCustBtn.hide();
                     }
                 },
                 appendRemindingInfo: function (rec) {
@@ -194,6 +207,81 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                                 showMsg('请选择条目！');
                             }
                         }
+                    },
+                    {
+                        text: '标记为重点客户',
+                        name: 'button-importantCust',
+                        icon: 'resources/img/group.png',
+                        disabled: true,
+                        handler: function () {
+                            var resObj = me.getRes();
+                            var btns = resObj.businessList.getBtns();
+                            Ext.Ajax.request({
+                                url: './libs/business.php?action=editPotentialBusiness',
+                                method: 'GET',
+                                params: {
+                                    id:resObj.business.data.id,
+                                    isImportant:'true'
+                                },
+                                callback: function (opts, success, res) {
+                                    if (success) {
+                                        resObj.businessList.getStore().reload();
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    {
+                        text: '取消重点客户标记',
+                        name: 'button-cancelImportantCust',
+                        icon: 'resources/img/group.png',
+                        disabled: true,
+                        handler: function () {
+                            var resObj = me.getRes();
+                            var btns = resObj.businessList.getBtns();
+                            Ext.Ajax.request({
+                                url: './libs/business.php?action=editPotentialBusiness',
+                                method: 'GET',
+                                params: {
+                                    id:resObj.business.data.id,
+                                    isImportant:'false'
+                                },
+                                callback: function (opts, success, res) {
+                                    if (success) {
+                                        resObj.businessList.getStore().reload();
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    {
+                        text: '转回',
+                        name: 'button-returnBack',
+                        icon: 'resources/img/bill-history.png',
+                        disabled: true,
+                        handler: function () {
+                            var resObj = me.getRes();
+                            var btns = resObj.businessList.getBtns();
+                            Ext.Msg.warning('确定要转回此电销业务么?', function (btnId) {
+                                if(btnId != 'yes')
+                                    return;
+                                Ext.Ajax.request({
+                                    url: './libs/business.php?action=editPotentialBusiness',
+                                    method: 'GET',
+                                    params: {
+                                        id:resObj.business.data.id,
+                                        telemarketingStaff:'',
+                                        telemarketingStaffName:'',
+                                        distributeTime:''
+                                    },
+                                    callback: function (opts, success, res) {
+                                        if (success) {
+                                            resObj.businessList.getStore().reload();
+                                        }
+                                    }
+                                });
+                            });
+                        }
                     }
                 ],
                 refresh: function () {
@@ -262,7 +350,10 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                         {
                             text: '业主',
                             flex: 0.5,
-                            dataIndex: 'proprietor'
+                            dataIndex: 'proprietor',
+                            renderer: function (val, meta, rec) {
+                                return rec.data.isImportant == 'true' ? val+"<font color='red'>★</font>":val;
+                            }
                         },
                         {
                             text: '电话',
@@ -320,6 +411,11 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                                     return '';
                                 }
                             }
+                        },
+                        {
+                            text: '截止日期',
+                            flex: 0.8,
+                            dataIndex: 'telemarketingDeadline'
                         }
                     ]
                 },

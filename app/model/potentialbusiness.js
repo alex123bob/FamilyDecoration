@@ -8,6 +8,8 @@ Ext.define('FamilyDecoration.model.PotentialBusiness', {
 		{name: 'proprietor', type: 'string'},
 		{name: 'phone', type: 'string'},
 		{name: 'isDecorated'}, // true/false/no
+		{name: 'isImportant'}, // true/false
+		{name: 'telemarketingDeadline'}, 
 
 		{name: 'latestBusinessStatus', mapping: 'lbs'},
 		{name: 'latestBusinessTime', mapping: 'lbt'},
