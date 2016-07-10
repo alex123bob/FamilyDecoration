@@ -288,7 +288,7 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                     var resObj = me.getRes(),
                         name;
                     if (needList) {
-                        name = resObj.telemarketingStaff.get('telemarketingStaffName');
+                        name = resObj.telemarketingStaff && resObj.telemarketingStaff.get('telemarketingStaffName');
                     }
                     else {
                         name = User.getName();

@@ -180,7 +180,7 @@ Ext.define('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
 						hideLabel: true,
 						name: 'hiddenfield-telemarketingStaffName',
 						id: 'hiddenfield-telemarketingStaffName',
-						value: me.client ? me.client.get('telemarketingStaffName') : ''
+						value: me.potentialBusiness ? me.potentialBusiness.get('telemarketingStaffName') : ''
 					},
 					{
 						id: 'textfield-telemarketingDeadline',

@@ -284,4 +284,19 @@
 		$mysql->DBUpdate('business',array('requestDead'=>'1','requestDeadBusinessTitle'=>$title,'requestDeadBusinessReason'=>$reason,'updateTime'=>'now()'),"`id`='?'",array($businessId));
 		return array('status'=>'successful', 'errMsg'=> 'dead business has been requested!');
 	}
+
+	function revertTelemarketingBusiness(){
+		global $mysql;
+		//电销超期回退
+		echo "电销超期回退<br />";
+		$date = date('Y-m-d');
+		$sql = "update potential_business set telemarketingStaff = '',telemarketingDeadline = '' , telemarketingStaffName = '' , lastUpdateTime = now() where telemarketingDeadline is not null and telemarketingDeadline < '".$date."' and isImportant = 'false';";
+		echo "$sql<br />";
+		try{
+			$mysql->DBExecute($sql);
+			echo "ok<br />";
+		}catch(Exception $e){
+			var_dump($e);
+		}
+	}
 ?>

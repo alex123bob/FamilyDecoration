@@ -209,6 +209,9 @@
 		case "getTeleMarketingStaffList":
 			$res = getTeleMarketingStaffList();
 			break;
+		case "revertTelemarketingBusiness":
+			$res = revertTelemarketingBusiness();
+			break;
 		default: 
 			throw new Exception("unknown action:".$action);
 	}

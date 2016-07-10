@@ -139,17 +139,6 @@ Class PlanMakingSvc extends BaseSvc{
 
 	public function designerAlarm(){
 		global $mysql;
-		//电销超期回退
-		echo "电销超期回退<br />";
-		$date = date('Y-m-d');
-		$sql = "update potential_business set telemarketingStaff = '',telemarketingDeadline = '' , telemarketingStaffName = '' , lastUpdateTime = now() where telemarketingDeadline < '".$date."' and isImportant = 'false';";
-		echo "$sql<br />";
-		try{
-			$mysql->DBExecute($sql);
-			echo "ok<br />";
-		}catch(Exception $e){
-			var_dump($e);
-		}
 		//设计师提醒
 		echo "设计师提醒<br />";
 		$day = date('Y-m-d', strtotime("+2 day"));
