@@ -19,7 +19,7 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 				xtype: 'container',
 				region: 'west',
 				layout: 'fit',
-				width: 200,
+				width: 260,
 				margin: '0 1 0 0',
 				hidden: me.taskId ? true : false,
 				items: [
@@ -27,8 +27,21 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 						title: '任务查看',
 						xtype: 'mytask-taskgrid',
 						taskId: me.taskId,
+						name: 'gridpanel-myTask',
+						id: 'gridpanel-myTask',
 						refresh: function () {
-							this.getStore().load();
+							var selModel = this.getSelectionModel(),
+								task = selModel.getSelection()[0],
+								st = this.getStore();
+							this.getStore().reload({
+								callback: function (recs, ope, success){
+									if (success) {
+										var index = st.indexOf(task);
+										selModel.deselectAll();
+										selModel.select(index);
+									}
+								}
+							})
 						},
 						listeners: {
 							selectionchange: function (selModel, sels, opts) {
@@ -36,11 +49,13 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 									taskScrutinize = Ext.getCmp('gridpanel-myTaskScrutinizeContent'),
 									selfAssessment = Ext.getCmp('panel-selfAssessment'),
 									taskComplete = Ext.getCmp('panel-completeProcess'),
+									ct = taskContent.ownerCt,
 									rec = sels[0];
 								taskContent.refresh(rec);
 								taskScrutinize.refresh(rec);
 								selfAssessment.refresh(rec);
 								taskComplete.refresh(rec);
+								ct.initBtn(rec);
 							}
 						}
 					}
@@ -50,6 +65,12 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 				region: 'center',
 				xtype: 'container',
 				layout: 'border',
+				initBtn: function (rec){
+					var selfAssessment = Ext.getCmp('button-selfassess'),
+						editProgress = Ext.getCmp('button-editProcess');
+					selfAssessment.setDisabled(!rec);
+					editProgress.setDisabled(!rec);
+				},
 				items: [
 					{
 						id: 'panel-taskContent',
@@ -140,49 +161,50 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 								height: '100%',
 								title: '自我评价',
 								autoScroll: true,
-								bbar: [{
-									text: '评价',
-									id: 'button-selfassess',
-									name: 'button-selfassess',
-									icon: './resources/img/assess.png',
-									header: false,
-									disabled: true,
-									handler: function () {
-										var taskTree = Ext.getCmp('treepanel-myTask'),
-											task = taskTree.getSelectionModel().getSelection()[0];
-										if (task && task.get('taskName')) {
-											Ext.Ajax.request({
-												url: './libs/tasklist.php?action=getTaskAssessmentByTaskListId',
-												method: 'GET',
-												params: {
-													taskListId: task.getId()
-												},
-												callback: function (opts, success, res) {
-													if (success) {
-														var obj = Ext.decode(res.responseText);
-														if (obj.length > 0) {
-															var assessment = Ext.create('FamilyDecoration.model.TaskSelfAssessment', obj[0]);
-															var win = Ext.create('FamilyDecoration.view.mytask.SelfAssess', {
-																task: task,
-																assessment: assessment
-															});
-															win.show();
-														}
-														else {
-															var win = Ext.create('FamilyDecoration.view.mytask.SelfAssess', {
-																task: task
-															});
-															win.show();
+								bbar: [
+									{
+										text: '评价',
+										id: 'button-selfassess',
+										name: 'button-selfassess',
+										icon: './resources/img/assess.png',
+										header: false,
+										disabled: true,
+										handler: function () {
+											var taskGrid = Ext.getCmp('gridpanel-myTask'),
+												task = taskGrid.getSelectionModel().getSelection()[0];
+											if (task && task.get('taskName')) {
+												Ext.Ajax.request({
+													url: './libs/tasklist.php?action=getTaskAssessmentByTaskListId',
+													method: 'GET',
+													params: {
+														taskListId: task.getId()
+													},
+													callback: function (opts, success, res) {
+														if (success) {
+															var obj = Ext.decode(res.responseText);
+															if (obj.length > 0) {
+																var assessment = Ext.create('FamilyDecoration.model.TaskSelfAssessment', obj[0]);
+																var win = Ext.create('FamilyDecoration.view.mytask.SelfAssess', {
+																	task: task,
+																	assessment: assessment
+																});
+																win.show();
+															}
+															else {
+																var win = Ext.create('FamilyDecoration.view.mytask.SelfAssess', {
+																	task: task
+																});
+																win.show();
+															}
 														}
 													}
-												}
-											});
-										}
-										else {
+												});
+											}
+											else {
 
+											}
 										}
 									}
-								}
 								],
 								refresh: function (rec) {
 									if (rec) {
@@ -275,8 +297,8 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 									name: 'button-editProcess',
 									disabled: true,
 									handler: function () {
-										var tree = Ext.getCmp('treepanel-myTask'),
-											task = tree.getSelectionModel().getSelection()[0];
+										var grid = Ext.getCmp('gridpanel-myTask'),
+											task = grid.getSelectionModel().getSelection()[0];
 										if (task) {
 											var win = Ext.create('FamilyDecoration.view.mytask.EditProcess', {
 												task: task

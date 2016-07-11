@@ -240,7 +240,7 @@
 
 	function getTaskListByUser($user){
 		global $mysql;
-		$res= $mysql->DBGetAsMap("select * from task_list where taskExecutor like '%-$user-%'");
+		$res= $mysql->DBGetAsMap("select t.*, u.realname as realName, u.phone, u.mail from task_list t left join `user` u on u.name = REPLACE(t.taskDispatcher,'-','') where t.taskExecutor like '%-$user-%' and t.isDeleted = 'false'");
 		return $res;
 	}
 ?>

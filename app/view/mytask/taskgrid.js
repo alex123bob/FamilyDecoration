@@ -33,7 +33,12 @@ Ext.define('FamilyDecoration.view.mytask.TaskGrid', {
                             return '';
                         }
                     }
-				}
+				},
+                {
+                    flex: 1,
+                    text: '分配人',
+                    dataIndex: 'realName'
+                }
 			]
 		};
 

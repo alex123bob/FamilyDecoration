@@ -94,7 +94,7 @@ Ext.define('FamilyDecoration.view.mytask.EditProcess', {
 												me.task.get('taskDispatcherMail'), User.getRealName() + '编辑了"任务进度"', content);
 											showMsg('任务进度编辑成功！');
 											me.close();
-											Ext.getCmp('treepanel-myTask').refresh();
+											Ext.getCmp('gridpanel-myTask').refresh();
 										}
 										else {
 											showMsg(obj.errMsg);
