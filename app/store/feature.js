@@ -92,18 +92,6 @@
                         cmp: 'taskassign-index',
                         leaf: true,
                         icon: 'resources/img/checktask.png'
-                    },
-                    {
-                        name: '请假',
-                        cmp: 'leave-index',
-                        leaf: true,
-                        icon: 'resources/img/leave.png'
-                    },
-                    {
-                        name: '请假批示',
-                        cmp: 'leaveapproval-index',
-                        leaf: true,
-                        icon: 'resources/img/approve.png'
                     }
                 ] 
             },
@@ -283,22 +271,6 @@
             }
             else if (rec.get('cmp') == 'taskassign-index') {
                 flag = User.isAdmin() || User.isManager() ? true : false;
-            }
-            else if (rec.get('cmp') == 'leave-index') {
-                if (DEBUG) {
-                    flag = User.isAdmin() || User.isManager() || User.isDesignStaff() || User.isProjectStaff() || User.isSupervisor() || User.isBusinessStaff() || User.isAdministrationStaff() || User.isPropagandaStaff() || User.isFinanceStaff() ? true : false;
-                }
-                else {
-                    flag = false;
-                }
-            }
-            else if (rec.get('cmp') == 'leaveapproval-index') {
-                if (DEBUG) {
-                    flag = User.isAdmin() || User.isManager() ? true : false;
-                }
-                else {
-                    flag = false;
-                }
             }
             else if (rec.get('cmp') == 'budget-parent') {
                 flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() || User.isBudgetManager() || User.isBudgetStaff() || User.isFinanceManager() ? true : false;

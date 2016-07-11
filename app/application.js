@@ -24,8 +24,6 @@ Ext.define('FamilyDecoration.Application', {
         'User',
         'MyTask',
         'CostAnalysis',
-        'Leave',
-        'LeaveApproval',
         'Msg',
         'Mail',
         'CheckBusiness',
