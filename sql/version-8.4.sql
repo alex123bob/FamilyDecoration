@@ -1,6 +1,7 @@
 CREATE TABLE `error_log` (
   `detail` text DEFAULT NULL,
   `user` varchar(500) DEFAULT NULL,
+  `url` varchar(200) DEFAULT NULL,
   `file` varchar(200) DEFAULT NULL,
   `line` varchar(20) DEFAULT NULL,
   `isDeleted` varchar(5) DEFAULT NULL,
