@@ -219,6 +219,10 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                     {
                         text: '总结日志',
                         flex: 1
+                    },
+                    {
+                        text: '评价',
+                        flex: 1
                     }
                 ];
             }
@@ -236,6 +240,10 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                     {
                         text: '总结日志',
                         flex: 1
+                    },
+                    {
+                        text: '评价',
+                        flex: 1
                     }
                 ];
             }
@@ -248,6 +256,8 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
             {
                 xtype: 'gridpanel',
                 flex: 9,
+                name: 'gridpanel-logContent',
+                itemId: 'gridpanel-logContent',
                 columns: {
                     defaults: {
                         flex: 1
@@ -261,6 +271,9 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                         },
                         {
                             text: '总结日志'
+                        },
+                        {
+                            text: '评价'
                         }
                     ]
                 },
