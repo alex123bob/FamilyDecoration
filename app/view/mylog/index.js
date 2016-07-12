@@ -241,6 +241,12 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 						title: '季度月份',
 						columns: [
 							{
+								text: '年份',
+								dataIndex: 'year',
+								flex: 1,
+								align: 'center'
+							},
+							{
 								text: '月份',
 								dataIndex: 'month',
 								flex: 1,
@@ -249,7 +255,7 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 						],
 						store: Ext.create('Ext.data.Store', {
 							autoLoad: true,
-							fields: ['month'],
+							fields: ['year', 'month'],
 							proxy: {
 								type: 'rest',
 								reader: {
