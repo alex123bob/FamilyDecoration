@@ -263,7 +263,31 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                             text: '总结日志'
                         }
                     ]
-                }
+                },
+                bbar: [
+                    {
+                        text: '个人计划',
+                        icon: 'resources/img/sheet.png',
+                        handler: function (){
+
+                        }
+                    },
+                    {
+                        text: '总结日志',
+                        icon: 'resources/img/summary.png',
+                        handler: function (){
+
+                        }
+                    },
+                    {
+                        text: '评价',
+                        hidden: !me.checkMode,
+                        icon: 'resources/img/comment-new.png',
+                        handler: function (){
+
+                        }
+                    }
+                ]
             }
         ];
 
