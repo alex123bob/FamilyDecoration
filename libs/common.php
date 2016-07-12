@@ -10,13 +10,34 @@
 		$result = array("status" => "failing","errMsg" =>"$errstr","file"=>$errorFile,"line"=>$errorLine);
 		try{
 			$errorLogSvc = BaseSvc::getSvc('ErrorLog');
-			$errorLogSvc->add(array('@file'=>$errorFile,'@line'=>$errorLine,'@detail'=>$errstr,'@user'=>isset($_SESSION['name']) ? $_SESSION['name'] : ''));
+			$errorLogSvc->add(array('@file'=>$errorFile,
+									'@line'=>$errorLine,
+									'@detail'=>$errstr,
+									'@user'=>isset($_SESSION['name']) ? $_SESSION['name'] : '',
+									'@url'=>"http://".$_SERVER["HTTP_HOST"] . ":" . $_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"],
+									'@ip'=>isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '',
+									'@refer'=>isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
+									'@useragent'=>isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''));
 		}catch(Exception $e){
 			var_dump($e);
 		}
 		echo json_encode($result);
 		die();
 	}
+	
+	function getClientIp(){
+		if(getenv('HTTP_CLIENT_IP')) { 
+			$onlineip = getenv('HTTP_CLIENT_IP');
+		}elseif(getenv('HTTP_X_FORWARDED_FOR')) { 
+			$onlineip = getenv('HTTP_X_FORWARDED_FOR');
+		}elseif(getenv('REMOTE_ADDR')) { 
+			$onlineip = getenv('REMOTE_ADDR');
+		} else { 
+			$onlineip = $_SERVER['REMOTE_ADDR'];
+		}
+		return $onlineip;
+	}
+ 
 	function ExceptionHandler($e){
 		$result = array("status" => "failing","errMsg" =>$e->getMessage(),"detail"=>$e->getTraceAsString());
 		echo json_encode($result);

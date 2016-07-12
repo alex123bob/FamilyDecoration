@@ -4,6 +4,9 @@ CREATE TABLE `error_log` (
   `url` varchar(200) DEFAULT NULL,
   `file` varchar(200) DEFAULT NULL,
   `line` varchar(20) DEFAULT NULL,
+  `ip` varchar(20) DEFAULT NULL,
+  `refer` varchar(20) DEFAULT NULL,
+  `useragent` varchar(500) DEFAULT NULL,
   `isDeleted` varchar(5) DEFAULT NULL,
   `createTime` datetime DEFAULT NULL,
   `updateTime` datetime DEFAULT NULL
