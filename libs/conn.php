@@ -31,6 +31,8 @@
 		!strpos($_SERVER["REQUEST_URI"], "api.php?action=PlanMaking.designerAlarm")
 		&&
 		!strpos($_SERVER["REQUEST_URI"], "api.php?action=PlanMaking.msgPreNotice")
+		&&
+		!strpos($_SERVER["REQUEST_URI"], "business.php?action=revertTelemarketingBusiness")
 	){
 		checkUserOnlineUniqueness();
 	}
