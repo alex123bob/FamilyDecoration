@@ -8,6 +8,12 @@
 		//print_r();
 		$errstr = str_replace("Undefined index:","缺少参数:",$errstr);
 		$result = array("status" => "failing","errMsg" =>"$errstr","file"=>$errorFile,"line"=>$errorLine);
+		try{
+			$errorLogSvc = BaseSvc::getSvc('ErrorLog');
+			$errorLogSvc->add(array('@file'=>$errorFile,'@line'=>$errorLine,'@detail'=>$errstr,'@user'=>isset($_SESSION['name']) ? $_SESSION['name'] : ''));
+		}catch(Exception $e){
+			var_dump($e);
+		}
 		echo json_encode($result);
 		die();
 	}

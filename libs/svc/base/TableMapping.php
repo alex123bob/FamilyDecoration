@@ -12,7 +12,8 @@
 		"user"=>array('name','phone','mail','projectId','realname','password','level','priority','profileImage','priorityTitle'),
 		"project_progress"=>array('id','columnName','projectId','content','committer'),
 		"project_progress_audit"=>array('id','columnName','projectId','content','auditor'),
-		"potential_business_detail"=>array('id','potentialBusinessId','comments','committer')
+		"potential_business_detail"=>array('id','potentialBusinessId','comments','committer'),
+		"error_log"=>array('user','detail','file','line')
 	);
 
 	foreach ($TableMapping as $key => &$value) {
