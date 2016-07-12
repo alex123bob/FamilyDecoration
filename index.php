@@ -59,7 +59,8 @@
         <?php
             if (preg_match('/001-\d{3}/', $_SESSION["level"])) {
                 // echo '<a href="javascript:void(0);" id="analysisChart">图表</a>'.
-                echo '<a href="javascript:void(0);" id="checkFeedback">反馈建议</a>';
+                echo '<a href="javascript:void(0);" id="checkFeedback">反馈建议</a>'
+                     .'<a href="javascript:void(0);" id="logAndException">错误日志</a>';
             }
         ?>
     </div>
@@ -676,6 +677,78 @@
                                 }
                             }
                         }],
+                        buttons: [{
+                            text: '关闭',
+                            handler: function (){
+                                win.close();
+                            }
+                        }]
+                    });
+
+                    win.show();
+                }
+            }
+        }
+        if (document.getElementById('logAndException')) {
+            document.getElementById('logAndException').onclick = function (){
+                if (Ext) {
+                    var win = Ext.create('Ext.window.Window', {
+                        title: '系统异常和错误',
+                        width: 700,
+                        height: 500,
+                        layout: 'fit',
+                        modal: true,
+                        maximizable: true,
+                        items: [
+                            {
+                                xtype: 'gridpanel',
+                                cls: 'gridpanel-errorandexception',
+                                store: Ext.create('Ext.data.Store', {
+                                    fields: ['detail', 'user', 'file', 'line', 'createTime', 'updateTime'],
+                                    proxy: {
+                                        type: 'rest',
+                                        url: './libs/api.php',
+                                        reader: {
+                                            type: 'json',
+                                            root: 'data',
+                                            totalProperty: 'total'
+                                        },
+                                        extraParams: {
+                                            action: 'ErrorLog.get'
+                                        }
+                                    },
+                                    autoLoad: true
+                                }),
+                                columns: {
+                                    defaults: {
+                                        flex: 1,
+                                        align: 'center'
+                                    },
+                                    items: [
+                                        {
+                                            text: '详细',
+                                            dataIndex: 'detail'
+                                        },
+                                        {
+                                            text: '用户',
+                                            dataIndex: 'user'
+                                        },
+                                        {
+                                            text: '文件',
+                                            dataIndex: 'file'
+                                        },
+                                        {
+                                            text: '行号',
+                                            dataIndex: 'line'
+                                        },
+                                        {
+                                            text: '时间',
+                                            dataIndex: 'createTime'
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
                         buttons: [{
                             text: '关闭',
                             handler: function (){
