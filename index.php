@@ -704,7 +704,7 @@
                                 xtype: 'gridpanel',
                                 cls: 'gridpanel-errorandexception',
                                 store: Ext.create('Ext.data.Store', {
-                                    fields: ['detail', 'user', 'file', 'line', 'createTime', 'updateTime'],
+                                    fields: ['detail', 'user', 'file', 'line', 'ip', 'refer', 'useragent', 'createTime', 'updateTime'],
                                     proxy: {
                                         type: 'rest',
                                         url: './libs/api.php',
@@ -740,6 +740,18 @@
                                         {
                                             text: '行号',
                                             dataIndex: 'line'
+                                        },
+                                        {
+                                            text: 'IP',
+                                            dataIndex: 'ip'
+                                        },
+                                        {
+                                            text: 'refer',
+                                            dataIndex: 'refer'
+                                        },
+                                        {
+                                            text: '设备',
+                                            dataIndex: 'useragent'
                                         },
                                         {
                                             text: '时间',
