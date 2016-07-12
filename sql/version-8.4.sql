@@ -5,7 +5,6 @@ CREATE TABLE `error_log` (
   `line` varchar(20) DEFAULT NULL,
   `isDeleted` varchar(5) DEFAULT NULL,
   `createTime` datetime DEFAULT NULL,
-  `updateTime` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `updateTime` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 update `system` set `paramValue`='version-8.4' where `id`='4';
