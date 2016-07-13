@@ -25,6 +25,45 @@ class LogListSvc extends BaseSvc
 		return $res;
 	}
 
+	private function getIndicatorMarket($user,$year,$month,$byMonth=false){
+		global $mysql;
+		$ym = '\''.$year.'-'.$month.'\'';
+
+		$sql = "select day,count(*) as num from (
+					select left(createTime,10) as day , potentialBusinessId  from potential_business_detail b 
+					where committer = '?' and left(createTime,6) = $ym group by potentialBusinessId,left(createTime,10) 
+				) as temp group by day";
+		if($byMonth) $sql = "select sum(num) as sum from ( $sql ) as temp";
+		$telemarketingData = $mysql->DBGetAsMap($sql,$user);
+
+		$sql = "select left(levelTime,10) as day,count(*) as num from business b 
+				where level = 'B' and salesmanName = '?' and left(levelTime,7) = $ym group by left(levelTime,10) ";
+		if($byMonth) $sql = "select sum(num) as sum  from ( $sql ) as temp";
+		$companyVisitData = $mysql->DBGetAsMap($sql,$user);
+
+		$sql = "select left(levelTime,10) as day,count(*) as num from business b 
+				where level = 'A' and salesmanName = '?' and left(levelTime,7) = $ym group by left(levelTime,10) ";
+		if($byMonth) $sql = "select sum(num) as sum  from ( $sql ) as temp";
+		$depositData = $mysql->DBGetAsMap($sql,$user);
+
+		$sql = "select left(createTime,10) as day,count(*) as num  from potential_business b 
+				where salesmanName = '?' and left(createTime,7) = $ym group by left(createTime,10) ";
+		if($byMonth) $sql = "select sum(num) as sum  from ( $sql ) as temp";
+		$buildingSwipingData = $mysql->DBGetAsMap($sql,$user);
+
+		return $byMonth ? array(
+			'telemarketingData'=>$telemarketingData[0]['sum'],
+			'companyVisitData'=>$companyVisitData[0]['sum'],
+			'depositData'=>$depositData[0]['sum'],
+			'buildingSwipingData'=>$buildingSwipingData[0]['sum']
+		): array(
+			'telemarketing'=>$telemarketingData,
+			'companyVisit'=>$companyVisitData,
+			'deposit'=>$depositData,
+			'buildingSwiping'=>$buildingSwipingData
+		);
+	}
+
 	public function getIndicator($q){
 		$name = $q['name'];
 		$year = $q['year'];
@@ -39,12 +78,7 @@ class LogListSvc extends BaseSvc
 					"deposit"=> "300", 
 					"buildingSwiping"=> "400"
 				),
-				"accomplishment" => array(
-					"telemarketing" => "99", 
-					"companyVisit" => "199", 
-					"deposit" => "299", 
-					"buildingSwiping" => "399"
-				)
+				"accomplishment" => $this->getIndicatorMarket($name,$year,$month,true)
 			);
 		if($mode == "design")
 			return array(

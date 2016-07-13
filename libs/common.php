@@ -7,7 +7,6 @@
 	function ErrorHandler($errno, $errstr,$errorFile,$errorLine){
 		//print_r();
 		$errstr = str_replace("Undefined index:","缺少参数:",$errstr);
-		$result = array("status" => "failing","errMsg" =>"$errstr","file"=>$errorFile,"line"=>$errorLine);
 		try{
 			$errorLogSvc = BaseSvc::getSvc('ErrorLog');
 			$errorLogSvc->add(array('@file'=>$errorFile,
@@ -21,10 +20,14 @@
 		}catch(Exception $e){
 			var_dump($e);
 		}
-		echo json_encode($result);
+		echo '{"status" => "failing","line"=>'.$errorLine.',"errMsg" =>"'.$errstr.'","file"=>'.$errorFile.'}';
 		die();
 	}
 	
+	function ExceptionHandler($e){
+		ErrorHandler(-1,$e->getTraceAsString(),$e->getMessage(),'');
+	}
+
 	function getClientIp(){
 		if(getenv('HTTP_CLIENT_IP')) { 
 			$onlineip = getenv('HTTP_CLIENT_IP');
@@ -36,12 +39,6 @@
 			$onlineip = $_SERVER['REMOTE_ADDR'];
 		}
 		return $onlineip;
-	}
- 
-	function ExceptionHandler($e){
-		$result = array("status" => "failing","errMsg" =>$e->getMessage(),"detail"=>$e->getTraceAsString());
-		echo json_encode($result);
-		die();
 	}
 	function startWith($str, $needle) {
         return strpos($str, $needle) === 0;
