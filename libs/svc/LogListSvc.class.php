@@ -6,21 +6,21 @@ class LogListSvc extends BaseSvc
 		$date2 = new DateTime('now - 1month');
 		$date3 = new DateTime('now - 2month');
 		return array(
-			array('y'=>(int)$date1->format('Y'),'m'=>$date1->format('m')),
-			array('y'=>(int)$date2->format('Y'),'m'=>$date2->format('m')),
-			array('y'=>(int)$date3->format('Y'),'m'=>$date3->format('m'))
+			array('y'=>(int)$date1->format('Y'),'m'=>$date1->format('m'),'f'=>0),
+			array('y'=>(int)$date2->format('Y'),'m'=>$date2->format('m'),'f'=>0),
+			array('y'=>(int)$date3->format('Y'),'m'=>$date3->format('m'),'f'=>0)
 		);
 	}
 
 	public function getOldMonths(){
-		$end = new DateTime('now -  3month');
+		$end = new DateTime('now - 2month');
 		$endY = $end->format('Y');
 		$endM = $end->format('m');
 		$res = array();
 		for ($y = 2015 ; $y < $endY ; $y++)
-			for ($m = 1 ; $m <= 12 ; $m++)
+			for ($m = 1 ; $m < 13 ; $m++)
 				array_push($res, array('y'=>$y,'m'=>$m));
-		for ($m = 1 ; $m <= $endM ; $m++)
+		for ($m = 1 ; $m < $endM ; $m++)
 			array_push($res, array('y'=>$endY,'m'=>$m));
 		return $res;
 	}
