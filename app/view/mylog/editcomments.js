@@ -1,14 +1,14 @@
-Ext.define('FamilyDecoration.view.mylog.SummarizedLog', {
+Ext.define('FamilyDecoration.view.mylog.EditComments', {
     extend: 'Ext.window.Window',
-    alias: 'widget.mylog-summarizedlog',
+    alias: 'widget.mylog-editcomments',
     requires: [
 
     ],
-    title: '总结日志',
+    title: '评价',
     modal: true,
     layout: 'fit',
-    width: 550,
-    height: 340,
+    width: 400,
+    height: 300,
     rec: null,
 
     initComponent: function () {
@@ -17,7 +17,7 @@ Ext.define('FamilyDecoration.view.mylog.SummarizedLog', {
         me.items = [
             {
                 xtype: 'textarea',
-                name: 'textarea-content',
+                name: 'textarea-comments',
                 autoScroll: true,
                 value: me.rec ? rec.get('') : ''
             }

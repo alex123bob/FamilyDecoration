@@ -8,7 +8,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
     },
     requires: [
         'FamilyDecoration.store.LogContent', 'FamilyDecoration.view.mylog.SelfPlan',
-        'FamilyDecoration.view.mylog.SummarizedLog'
+        'FamilyDecoration.view.mylog.SummarizedLog', 'FamilyDecoration.view.mylog.EditComments'
     ],
 
     renderMode: undefined, // market, design, undefined
@@ -384,6 +384,9 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                 flex: 9,
                 name: 'gridpanel-logContent',
                 itemId: 'gridpanel-logContent',
+                getRec: function (){
+                    return this.getSelectionModel().getSelection()[0];
+                },
                 columns: {
                     defaults: {
                         flex: 1,
@@ -416,8 +419,11 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                         disabled: true,
                         icon: 'resources/img/sheet.png',
                         handler: function () {
+                            var grid = me.down('gridpanel'),
+                                rec = grid.getRec();
+                            
                             var win = Ext.create('FamilyDecoration.view.mylog.SelfPlan', {
-
+                                rec: rec
                             });
 
                             win.show();
@@ -429,8 +435,10 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                         disabled: true,
                         icon: 'resources/img/summary.png',
                         handler: function () {
+                            var grid = me.down('gridpanel'),
+                                rec = grid.getRec();
                             var win = Ext.create('FamilyDecoration.view.mylog.SummarizedLog', {
-
+                                
                             });
                             win.show();
                         }
@@ -442,7 +450,12 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                         disabled: true,
                         icon: 'resources/img/comment-new.png',
                         handler: function () {
-
+                            var grid = me.down('gridpanel'),
+                                rec = grid.getRec();
+                            var win = Ext.create('FamilyDecoration.view.mylog.EditComments', {
+                                
+                            });
+                            win.show();
                         }
                     }
                 ],
