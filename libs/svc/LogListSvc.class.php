@@ -104,7 +104,7 @@ class LogListSvc extends BaseSvc
 				if(!isset($logsDayNumberMapping[$value['day']])){
 					$logsDayNumberMapping[$value['day']] = $value['content'];
 				}else{
-					$logsDayNumberMapping[$value['day']] = '<br>'.$value['content'];
+					$logsDayNumberMapping[$value['day']] .= '<br>'.$value['content'];
 				}
 			}
 		}
