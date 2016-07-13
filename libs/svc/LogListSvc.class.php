@@ -92,7 +92,7 @@ class LogListSvc extends BaseSvc
 		$logsDayNumberMapping = array();
 		$sumlogsDayNumberMapping = array();
 		$comlogsDayNumberMapping = array();
-		$sql = "select id,left(createTime,10) as day,content,logType from log_list where createTime > '?' and createTime < '?' and committer = '?'";
+		$sql = "select id,left(createTime,10) as day,isFinished,content,logType from log_list where createTime > '?' and createTime < '?' and committer = '?'";
 		global $mysql;
 		$logs = $mysql->DBGetAsMap($sql,$beginTime,$endTime,$user);
 		foreach ($logs as $value) {
@@ -102,9 +102,9 @@ class LogListSvc extends BaseSvc
 				$comlogsDayNumberMapping[$value['day']] = $value;
 			}else{
 				if(!isset($logsDayNumberMapping[$value['day']])){
-					$logsDayNumberMapping[$value['day']] = $value['content'];
+					$logsDayNumberMapping[$value['day']] = array();
 				}else{
-					$logsDayNumberMapping[$value['day']] .= '<br>'.$value['content'];
+					array_push($logsDayNumberMapping[$value['day']], $value);
 				}
 			}
 		}
@@ -113,7 +113,7 @@ class LogListSvc extends BaseSvc
 			$date = "$year-$month-".($i < 10 ? '0':'').$i;
 			$tele = isset($telemarketingDayNumberMappping[$date]) ? $telemarketingDayNumberMappping[$date] : 0;
 			$wip = isset($buildingSwipingDayNumberMappping[$date]) ? $buildingSwipingDayNumberMappping[$date] : 0;
-			$log = isset($logsDayNumberMapping[$date]) ? $logsDayNumberMapping[$date] : '';
+			$log = isset($logsDayNumberMapping[$date]) ? $logsDayNumberMapping[$date] : array();
 			$sl = isset($sumlogsDayNumberMapping[$date]) ? $sumlogsDayNumberMapping[$date]['content'] : '';
 			$sid = isset($sumlogsDayNumberMapping[$date]) ? $sumlogsDayNumberMapping[$date]['id'] : '';
 			$c = isset($comlogsDayNumberMapping[$date]) ? $comlogsDayNumberMapping[$date]['content'] : '';
