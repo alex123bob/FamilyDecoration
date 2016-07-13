@@ -14,5 +14,6 @@ insert into log_detail ( select id,createTime,isDeleted,1,logName as content ,1,
 
 alter table log_list rename to log_list_temp;
 alter table log_detail rename to log_list;
-
+delete from log_list where content = '' or trim(content) = '' or content is null;
+alter table log_list drop column logListId;
 update `system` set `paramValue`='version-8.5' where `id`='4';

@@ -101,9 +101,11 @@ class LogListSvc extends BaseSvc
 			}else if($value['logType'] == 2){
 				$comlogsDayNumberMapping[$value['day']] = $value;
 			}else{
-				if(!isset($logsDayNumberMapping[$value['day']]))
-					$logsDayNumberMapping[$value['day']] = array();
-				array_push($logsDayNumberMapping[$value['day']],$value);
+				if(!isset($logsDayNumberMapping[$value['day']])){
+					$logsDayNumberMapping[$value['day']] = $value['content'];
+				}else{
+					$logsDayNumberMapping[$value['day']] = '<br>'.$value['content'];
+				}
 			}
 		}
 		$res = array();
@@ -111,7 +113,7 @@ class LogListSvc extends BaseSvc
 			$date = "$year-$month-".($i < 10 ? '0':'').$i;
 			$tele = isset($telemarketingDayNumberMappping[$date]) ? $telemarketingDayNumberMappping[$date] : 0;
 			$wip = isset($buildingSwipingDayNumberMappping[$date]) ? $buildingSwipingDayNumberMappping[$date] : 0;
-			$log = isset($logsDayNumberMapping[$date]) ? $logsDayNumberMapping[$date] : array();
+			$log = isset($logsDayNumberMapping[$date]) ? $logsDayNumberMapping[$date] : '';
 			$sl = isset($sumlogsDayNumberMapping[$date]) ? $sumlogsDayNumberMapping[$date]['content'] : '';
 			$sid = isset($sumlogsDayNumberMapping[$date]) ? $sumlogsDayNumberMapping[$date]['id'] : '';
 			$c = isset($comlogsDayNumberMapping[$date]) ? $comlogsDayNumberMapping[$date]['content'] : '';
@@ -123,6 +125,8 @@ class LogListSvc extends BaseSvc
 				's'=>$log,//selfPlan
 				'sl'=>$sl,//summarizedLog
 				'sid'=>$sid,
+				'y'=>$year,
+				'm'=>$month,
 				'c'=>$c,//comments
 				'cid'=>$cid,
 				'dy'=>$i < 10 ? "0$i" : "$i"  //day
