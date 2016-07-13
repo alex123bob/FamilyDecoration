@@ -6,9 +6,9 @@ class LogListSvc extends BaseSvc
 		$date2 = new DateTime('now - 1month');
 		$date3 = new DateTime('now - 2month');
 		return array(
-			array('y'=>(int)$date1->format('Y'),'m'=>$date1->format('m'),'f'=>0),
-			array('y'=>(int)$date2->format('Y'),'m'=>$date2->format('m'),'f'=>0),
-			array('y'=>(int)$date3->format('Y'),'m'=>$date3->format('m'),'f'=>0)
+			array('y'=>$date1->format('Y'),'m'=>$date1->format('m'),'f'=>0),
+			array('y'=>$date2->format('Y'),'m'=>$date2->format('m'),'f'=>0),
+			array('y'=>$date3->format('Y'),'m'=>$date3->format('m'),'f'=>0)
 		);
 	}
 
@@ -19,14 +19,16 @@ class LogListSvc extends BaseSvc
 		$res = array();
 		for ($y = 2015 ; $y < $endY ; $y++)
 			for ($m = 1 ; $m < 13 ; $m++)
-				array_push($res, array('y'=>$y,'m'=>$m));
+				array_push($res, array('y'=>$y,'m'=>$m < 10 ? '0'.$m : $m));
 		for ($m = 1 ; $m < $endM ; $m++)
-			array_push($res, array('y'=>$endY,'m'=>$m));
+			array_push($res, array('y'=>$endY,'m'=>$m < 10 ? '0'.$m : $m));
 		return $res;
 	}
 
 	private function getIndicatorMarket($user,$year,$month,$byMonth=false){
 		global $mysql;
+		if(strlen($month) == 1) 
+			$month = '0'.$month;
 		$ym = '\''.$year.'-'.$month.'\'';
 
 		$sql = "select d,count(*) as num from (
@@ -65,14 +67,45 @@ class LogListSvc extends BaseSvc
 	}
 
 	public function getDetail($q){
-		$q['byDay'] = 'true';
-		return $this->getIndicator($q);
+		$month = $q['month'];
+		$year = $q['year'];
+		if(strlen($month) == 1) 
+			$month = '0'.$month;
+		$mode = isset($q['mode']) ? $q['mode'] : "none";  // market , design
+		if($mode == "market"){
+
+		}
+		$data = $this->getIndicatorMarket($q['name'],$year,$month,false);
+		$telemarketingDayNumberMappping = array();
+		$buildingSwipingDayNumberMappping = array();
+		foreach ($data['buildingSwiping'] as $item) {
+			$buildingSwipingDayNumberMappping[$item['d']] = $item['num'];
+		}
+		foreach ($data['telemarketing'] as $item) {
+			$telemarketingDayNumberMappping[$item['d']] = $item['num'];
+		}
+		//var_dump($buildingSwipingDayNumberMappping);
+		//var_dump($telemarketingDayNumberMappping);
+		$time = strtotime("$year-$month-01");
+		$days = date('t', $time);
+		$res = array();
+		for($i = 0;$i<=$days;$i++){
+			$date = "$year-$month-".($i < 10 ? '0':'').$i;
+			$tele = isset($telemarketingDayNumberMappping[$date]) ? $telemarketingDayNumberMappping[$date] : 0;
+			$wip = isset($buildingSwipingDayNumberMappping[$date]) ? $buildingSwipingDayNumberMappping[$date] : 0;
+			array_push($res, array(
+				'sp'=>'电销:xxx<br>扫楼:xxx',  //standardPlan
+				'pa'=>'电销:xxx<br>扫楼:xxx', //practicalAccomplishment
+				'd'=>"电销:$tele<br>扫楼:$wip",//difference
+				's'=>'xxx',//selfPlan
+				'sl'=>'xxx',//summarizedLog
+				'c'=>'xxx',//comments
+				'dy'=>$i < 10 ? "0$i" : "$i"  //day
+			));
+		}
+		return $res;
 	}
 	public function getIndicator($q){
-		$name = $q['name'];
-		$year = $q['year'];
-		$month = $q['month'];
-		$byDay = isset($q['byDay']) && $q['byDay'] == 'true';
 		$mode = isset($q['mode']) ? $q['mode'] : "none";  // market , design
 
 		if($mode == "market")
@@ -83,7 +116,7 @@ class LogListSvc extends BaseSvc
 					"deposit"=> "300", 
 					"buildingSwiping"=> "400"
 				),
-				"accomplishment" => $this->getIndicatorMarket($name,$year,$month,!$byDay)
+				"accomplishment" => $this->getIndicatorMarket($q['name'],$q['year'],$q['month'],true)
 			);
 		if($mode == "design")
 			return array(
