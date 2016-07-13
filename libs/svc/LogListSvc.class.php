@@ -14,13 +14,14 @@ class LogListSvc extends BaseSvc
 
 	public function getOldMonths(){
 		$end = new DateTime('now -  3month');
-		$end = $end->format('Y').$end->format('m');
+		$endY = $end->format('Y');
+		$endM = $end->format('m');
 		$res = array();
-		for($i = 201502 ; $i< $end ; $i++){
-			$y = (int)substr((string)$i,0,4);
-			$m = (int)substr((string)$i,4,6);
-			array_push($res, array('y'=>$y,'m'=>$m));
-		}
+		for ($y = 2015 ; $y < $endY ; $y++)
+			for ($m = 1 ; $m <= 12 ; $m++)
+				array_push($res, array('y'=>$y,'m'=>$m));
+		for ($m = 1 ; $m <= $endM ; $m++)
+			array_push($res, array('y'=>$endY,'m'=>$m));
 		return $res;
 	}
 
