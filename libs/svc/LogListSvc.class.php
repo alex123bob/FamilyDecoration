@@ -64,6 +64,10 @@ class LogListSvc extends BaseSvc
 		);
 	}
 
+	public function getDetail($q){
+		$q['byDay'] = 'true';
+		return getIndicator($q);
+	}
 	public function getIndicator($q){
 		$name = $q['name'];
 		$year = $q['year'];
