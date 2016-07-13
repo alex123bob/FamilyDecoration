@@ -209,37 +209,44 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                     {
                         text: '日期',
                         dataIndex: 'day',
-                        flex: 0.5
+                        flex: 0.5,
+                        align: 'left'
                     },
                     {
                         text: '规范计划',
                         flex: 1,
-                        dataIndex: 'standardPlan'
+                        dataIndex: 'standardPlan',
+                        align: 'left'
                     },
                     {
                         text: '完成情况',
                         flex: 1,
-                        dataIndex: 'practicalAccomplishment'
+                        dataIndex: 'practicalAccomplishment',
+                        align: 'left'
                     },
                     {
                         text: '相差',
                         flex: 1,
-                        dataIndex: 'difference'
+                        dataIndex: 'difference',
+                        align: 'left'
                     },
                     {
                         text: '个人计划',
                         flex: 1,
-                        dataIndex: 'selfPlan'
+                        dataIndex: 'selfPlan',
+                        align: 'left'
                     },
                     {
                         text: '总结日志',
                         flex: 1,
-                        dataIndex: 'summarizedLog'
+                        dataIndex: 'summarizedLog',
+                        align: 'left'
                     },
                     {
                         text: '评价',
                         flex: 1,
-                        dataIndex: 'comments'
+                        dataIndex: 'comments',
+                        align: 'left'
                     }
                 ];
             }
@@ -248,22 +255,26 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                     {
                         text: '日期',
                         dataIndex: 'day',
-                        flex: 0.5
+                        flex: 0.5,
+                        align: 'left'
                     },
                     {
                         text: '个人计划',
                         flex: 1,
-                        dataIndex: 'selfPlan'
+                        dataIndex: 'selfPlan',
+                        align: 'left'
                     },
                     {
                         text: '总结日志',
                         flex: 1,
-                        dataIndex: 'summarizedLog'
+                        dataIndex: 'summarizedLog',
+                        align: 'left'
                     },
                     {
                         text: '评价',
                         flex: 1,
-                        dataIndex: 'comments'
+                        dataIndex: 'comments',
+                        align: 'left'
                     }
                 ];
             }
@@ -386,7 +397,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                 columns: {
                     defaults: {
                         flex: 1,
-                        align: 'center'
+                        align: 'left'
                     },
                     items: [
                         {
