@@ -75,7 +75,8 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 							autoLoad: true,
 							fields: [
 								{name: 'year', type: 'string', mapping: 'y'},
-								{name: 'month', type: 'string', mapping: 'm'}
+								{name: 'month', type: 'string', mapping: 'm'},
+								{name: 'isFrozen', mapping: 'f'} // 0: not-frozen, 1: frozen
 							],
 							proxy: {
 								type: 'rest',
@@ -97,13 +98,14 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 						}
 					},
 					{
-						name: 'gridpanel-frozenMonths',
 						title: '封存日志',
+						name: 'gridpanel-frozenMonths',
 						store: Ext.create('Ext.data.Store', {
 							autoLoad: true,
 							fields: [
 								{name: 'year', type: 'string', mapping: 'y'},
-								{name: 'month', type: 'string', mapping: 'm'}
+								{name: 'month', type: 'string', mapping: 'm'},
+								{name: 'isFrozen', mapping: 'f'} // 0: not-frozen, 1: frozen
 							],
 							proxy: {
 								type: 'rest',

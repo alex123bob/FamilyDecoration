@@ -332,7 +332,17 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
             for (var key in btnObj) {
                 if (btnObj.hasOwnProperty(key)) {
                     var btn = btnObj[key];
-                    btn.setDisabled(!rec);
+                    if (rec) {
+                        if (rec.get('isFrozen') === 0) {
+                            btn.enable();
+                        }
+                        else {
+                            btn.disable();
+                        }
+                    }
+                    else {
+                        btn.disable();
+                    }
                 }
             }
         }
