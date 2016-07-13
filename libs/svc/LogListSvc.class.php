@@ -18,7 +18,7 @@ class LogListSvc extends BaseSvc
 		$month = $q['month'];
 		$mode = isset($q['mode']) ? $q['mode'] : "none";  // market , design
 
-		if($mode == "design")
+		if($mode == "market")
 			return array(
 				"plan" => array( 
 					"telemarketing"=> "100", 
@@ -32,7 +32,7 @@ class LogListSvc extends BaseSvc
 					"deposit" => "299", 
 					"buildingSwiping" => "399"
 				)
-			)
+			);
 		if($mode == "design")
 			return array(
 				"plan" => array( 
@@ -43,8 +43,8 @@ class LogListSvc extends BaseSvc
 					"signedBusinessNumber" => "99", 
 					"depositRate" => "399"
 				)
-			)
-		throw "unknow mode $mode!";
+			);
+		throw new Exception("unknow mode $mode!");
 	}
 }
 ?>
