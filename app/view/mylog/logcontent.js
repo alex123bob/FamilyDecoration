@@ -18,7 +18,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
     initComponent: function () {
         var me = this;
 
-        me.rerenderIndicatorCt = function (mode) {
+        function _rerenderIndicatorCt(mode) {
             var indicatorCt = null,
                 items = me.items.items;
             if (mode == 'market') {
@@ -191,7 +191,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
             Ext.resumeLayouts(true);
         }
 
-        me.rerenderGrid = function (mode) {
+        function _rerenderGrid(mode) {
             var items = me.items.items,
                 grid, cols,
                 st = Ext.create('FamilyDecoration.store.LogContent', {
@@ -272,7 +272,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
             Ext.resumeLayouts(true);
         }
 
-        function refreshIndicator(rec) {
+        function _refreshIndicator(rec) {
             var planCt, accomplishmentCt;
             
             if (me.renderMode == 'market') {
@@ -312,7 +312,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
             }
         }
 
-        function refreshGrid (rec){
+        function _refreshGrid (rec){
             var grid = me.getComponent('gridpanel-logContent'),
                 st = grid.getStore();
             if (rec) {
@@ -323,7 +323,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
             }
         }
 
-        function initBtn(rec){
+        function _initBtn(rec){
             var btnObj = {
                 selfPlan: me.down('[name="button-selfPlan"]'),
                 summarizedLog: me.down('[name="button-summarizedLog"]'),
@@ -347,12 +347,17 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
             }
         }
 
+        me.rerender = function (){
+            _rerenderGrid(me.renderMode);
+            _rerenderIndicatorCt(me.renderMode);
+        }
+
         me.refresh = function (rec) {
             if (me.renderMode == 'market' || me.renderMode == 'design') {
-                refreshIndicator(rec);
+                _refreshIndicator(rec);
             }
-            refreshGrid(rec);
-            initBtn(rec);
+            _refreshGrid(rec);
+            _initBtn(rec);
         }
 
         me.items = [
@@ -427,8 +432,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
         ];
 
         me.addListener('afterrender', function (cmp, opts) {
-            me.rerenderIndicatorCt(me.renderMode);
-            me.rerenderGrid(me.renderMode);
+            me.rerender(me.renderMode);
         })
 
         me.callParent();
