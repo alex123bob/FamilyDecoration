@@ -7,7 +7,8 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
         width: '100%'
     },
     requires: [
-        'FamilyDecoration.store.LogContent', 'FamilyDecoration.view.mylog.SelfPlan'
+        'FamilyDecoration.store.LogContent', 'FamilyDecoration.view.mylog.SelfPlan',
+        'FamilyDecoration.view.mylog.SummarizedLog'
     ],
 
     renderMode: undefined, // market, design, undefined
@@ -395,7 +396,10 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                         disabled: true,
                         icon: 'resources/img/summary.png',
                         handler: function () {
+                            var win = Ext.create('FamilyDecoration.view.mylog.SummarizedLog', {
 
+                            });
+                            win.show();
                         }
                     },
                     {

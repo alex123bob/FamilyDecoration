@@ -13,16 +13,18 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 		var me = this,
 			logContentRenderMode;
 
-		function getRes (){
+		function getRes() {
 			var logContentPane = me.down('mylog-logcontent'),
-				quarterPane = me.down('[name="gridpanel-quarterMonths"]');
+				quarterPane = me.down('[name="gridpanel-quarterMonths"]'),
+				frozenPane = me.down('[name="gridpanel-frozenMonths"]');
 
 			return {
 				quarterPane: quarterPane,
-				logContentPane: logContentPane
+				logContentPane: logContentPane,
+				frozenPane: frozenPane
 			};
 		}
-		
+
 		if (User.isBusinessManager() || User.isBusinessStaff()) {
 			logContentRenderMode = 'market';
 		}
@@ -44,31 +46,37 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 				},
 				width: 200,
 				margin: '0 1 0 0',
+				defaults: {
+					xtype: 'gridpanel',
+					flex: 1,
+					autoScroll: true,
+					width: '100%',
+					hideHeaders: true,
+					columns: [
+						{
+							text: '年份',
+							dataIndex: 'year',
+							flex: 1,
+							align: 'center'
+						},
+						{
+							text: '月份',
+							dataIndex: 'month',
+							flex: 1,
+							align: 'center'
+						}
+					]
+				},
 				items: [
 					{
-						xtype: 'gridpanel',
-						flex: 2,
-						autoScroll: true,
-						width: '100%',
 						title: '季度月份',
 						name: 'gridpanel-quarterMonths',
-						columns: [
-							{
-								text: '年份',
-								dataIndex: 'year',
-								flex: 1,
-								align: 'center'
-							},
-							{
-								text: '月份',
-								dataIndex: 'month',
-								flex: 1,
-								align: 'center'
-							}
-						],
 						store: Ext.create('Ext.data.Store', {
 							autoLoad: true,
-							fields: ['year', 'month'],
+							fields: [
+								{name: 'year', type: 'string', mapping: 'y'},
+								{name: 'month', type: 'string', mapping: 'm'}
+							],
 							proxy: {
 								type: 'rest',
 								reader: {
@@ -77,44 +85,42 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 								url: './libs/api.php?action=LogList.getMonths'
 							}
 						}),
-						hideHeaders: true,
 						listeners: {
-							selectionchange: function (selModel, sels, opts){
+							selectionchange: function (selModel, sels, opts) {
 								var rec = sels[0],
 									resObj = getRes();
+								if (rec) {
+									resObj.frozenPane.getSelectionModel().deselectAll();
+								}
 								resObj.logContentPane.refresh(rec);
 							}
 						}
 					},
 					{
-						hidden: me.logListId ? true : false,
-						xtype: 'mylog-loglist',
-						id: 'treepanel-frozenLogName',
-						name: 'treepanel-frozenLogName',
+						name: 'gridpanel-frozenMonths',
 						title: '封存日志',
-						flex: 2,
-						width: '100%',
-						autoScroll: true,
+						store: Ext.create('Ext.data.Store', {
+							autoLoad: true,
+							fields: [
+								{name: 'year', type: 'string', mapping: 'y'},
+								{name: 'month', type: 'string', mapping: 'm'}
+							],
+							proxy: {
+								type: 'rest',
+								reader: {
+									type: 'json'
+								},
+								url: './libs/api.php?action=LogList.getOldMonths'
+							}
+						}),
 						listeners: {
 							selectionchange: function (selModel, sels, opts) {
 								var rec = sels[0],
-									btnDelLog = Ext.getCmp('button-deleteLog'),
-									btnAddLogDetail = Ext.getCmp('button-addLogDetail'),
-									gridLogContent = Ext.getCmp('gridpanel-logDetail'),
-									tree = Ext.getCmp('treepanel-logName'),
-									scrutinizeGrid = Ext.getCmp('gridpanel-scrutinize'),
-									st = scrutinizeGrid.getStore();
-								gridLogContent.refresh(rec);
+									resObj = getRes();
 								if (rec) {
-									if (rec.get('logName')) {
-										st.reload({
-											params: {
-												logListId: rec.getId()
-											}
-										});
-									}
-									tree.getSelectionModel().deselectAll();
+									resObj.quarterPane.getSelectionModel().deselectAll();
 								}
+								resObj.logContentPane.refresh(rec);
 							}
 						}
 					}
