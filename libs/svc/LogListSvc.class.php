@@ -6,9 +6,9 @@ class LogListSvc extends BaseSvc
 		$date2 = new DateTime('now - 1month');
 		$date3 = new DateTime('now - 2month');
 		return array(
-			array('year'=>(int)$date1->format('Y'),'month'=>$date1->format('m')),
-			array('year'=>(int)$date2->format('Y'),'month'=>$date2->format('m')),
-			array('year'=>(int)$date3->format('Y'),'month'=>$date3->format('m'))
+			array('y'=>(int)$date1->format('Y'),'m'=>$date1->format('m')),
+			array('y'=>(int)$date2->format('Y'),'m'=>$date2->format('m')),
+			array('y'=>(int)$date3->format('Y'),'m'=>$date3->format('m'))
 		);
 	}
 
@@ -17,9 +17,9 @@ class LogListSvc extends BaseSvc
 		$end = $end->format('Y').$end->format('m');
 		$res = array();
 		for($i = 201502 ; $i< $end ; $i++){
-			$y = substr((string)$i,0,4);
-			$m = substr((string)$i,4,6);
-			array_push($res, array('year'=>$y,'month'=>$m));
+			$y = (int)substr((string)$i,0,4);
+			$m = (int)substr((string)$i,4,6);
+			array_push($res, array('y'=>$y,'m'=>$m));
 		}
 		return $res;
 	}
