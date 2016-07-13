@@ -29,24 +29,24 @@ class LogListSvc extends BaseSvc
 		global $mysql;
 		$ym = '\''.$year.'-'.$month.'\'';
 
-		$sql = "select day,count(*) as num from (
-					select left(createTime,10) as day , potentialBusinessId  from potential_business_detail b 
+		$sql = "select d,count(*) as num from (
+					select left(createTime,10) as d , potentialBusinessId  from potential_business_detail b 
 					where committer = '?' and left(createTime,6) = $ym group by potentialBusinessId,left(createTime,10) 
-				) as temp group by day";
+				) as temp group by d";
 		if($byMonth) $sql = "select sum(num) as sum from ( $sql ) as temp";
 		$telemarketingData = $mysql->DBGetAsMap($sql,$user);
 
-		$sql = "select left(levelTime,10) as day,count(*) as num from business b 
+		$sql = "select left(levelTime,10) as d,count(*) as num from business b 
 				where level = 'B' and salesmanName = '?' and left(levelTime,7) = $ym group by left(levelTime,10) ";
 		if($byMonth) $sql = "select sum(num) as sum  from ( $sql ) as temp";
 		$companyVisitData = $mysql->DBGetAsMap($sql,$user);
 
-		$sql = "select left(levelTime,10) as day,count(*) as num from business b 
+		$sql = "select left(levelTime,10) as d,count(*) as num from business b 
 				where level = 'A' and salesmanName = '?' and left(levelTime,7) = $ym group by left(levelTime,10) ";
 		if($byMonth) $sql = "select sum(num) as sum  from ( $sql ) as temp";
 		$depositData = $mysql->DBGetAsMap($sql,$user);
 
-		$sql = "select left(createTime,10) as day,count(*) as num  from potential_business b 
+		$sql = "select left(createTime,10) as d,count(*) as num  from potential_business b 
 				where salesmanName = '?' and left(createTime,7) = $ym group by left(createTime,10) ";
 		if($byMonth) $sql = "select sum(num) as sum  from ( $sql ) as temp";
 		$buildingSwipingData = $mysql->DBGetAsMap($sql,$user);
@@ -68,6 +68,7 @@ class LogListSvc extends BaseSvc
 		$name = $q['name'];
 		$year = $q['year'];
 		$month = $q['month'];
+		$byDay = isset($q['byDay']) && $q['byDay'] == 'true';
 		$mode = isset($q['mode']) ? $q['mode'] : "none";  // market , design
 
 		if($mode == "market")
@@ -78,7 +79,7 @@ class LogListSvc extends BaseSvc
 					"deposit"=> "300", 
 					"buildingSwiping"=> "400"
 				),
-				"accomplishment" => $this->getIndicatorMarket($name,$year,$month,true)
+				"accomplishment" => $this->getIndicatorMarket($name,$year,$month,!$byDay)
 			);
 		if($mode == "design")
 			return array(
