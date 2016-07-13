@@ -2,14 +2,26 @@
 class LogListSvc extends BaseSvc
 {
 	public function getMonths(){
-		$now = new DateTime('now');
-		$month = $now->format('m');
-		$year = $now->format('Y');
+		$date1 = new DateTime('now');
+		$date2 = new DateTime('now - 1month');
+		$date3 = new DateTime('now - 2month');
 		return array(
-			array('year'=>$month - 2 < 1 ? $year - 1 : (int)$year,'month'=>$month - 2 < 1 ? 12 : $month - 2 ),
-			array('year'=>$month - 1 < 1 ? $year - 1 : (int)$year,'month'=>$month - 1 < 1 ? 12 : $month - 1 ),
-			array('year'=>(int)$year,'month'=>(int)$month)
+			array('year'=>(int)$date1->format('Y'),'month'=>$date1->format('m')),
+			array('year'=>(int)$date2->format('Y'),'month'=>$date2->format('m')),
+			array('year'=>(int)$date3->format('Y'),'month'=>$date3->format('m'))
 		);
+	}
+
+	public function getOldMonths(){
+		$end = new DateTime('now -  3month');
+		$end = $end->format('Y').$end->format('m');
+		$res = array();
+		for($i = 201502 ; $i< $end ; $i++){
+			$y = substr((string)$i,0,4);
+			$m = substr((string)$i,4,6);
+			array_push($res, array('year'=>$y,'month'=>$m));
+		}
+		return $res;
 	}
 
 	public function getIndicator($q){
