@@ -52,10 +52,10 @@ class LogListSvc extends BaseSvc
 		$buildingSwipingData = $mysql->DBGetAsMap($sql,$user);
 
 		return $byMonth ? array(
-			'telemarketing'=>$telemarketingData[0]['sum'],
-			'companyVisit'=>$companyVisitData[0]['sum'],
-			'deposit'=>$depositData[0]['sum'],
-			'buildingSwiping'=>$buildingSwipingData[0]['sum']
+			'telemarketing'=>(int)$telemarketingData[0]['sum'],
+			'companyVisit'=>(int)$companyVisitData[0]['sum'],
+			'deposit'=>(int)$depositData[0]['sum'],
+			'buildingSwiping'=>(int)$buildingSwipingData[0]['sum']
 		): array(
 			'telemarketing'=>$telemarketingData,
 			'companyVisit'=>$companyVisitData,
