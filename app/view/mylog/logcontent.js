@@ -316,6 +316,23 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
             var grid = me.getComponent('gridpanel-logContent'),
                 st = grid.getStore();
             if (rec) {
+                st.setProxy({
+                    type: 'rest',
+                    url: './libs/api.php',
+                    reader: {
+                        type: 'json',
+                        root: 'data',
+                        totalProperty: 'total'
+                    },
+                    extraParams: {
+                        action: 'LogList.getDetail',
+                        name: me.checkMode ? me.staff.get('name') : User.getName(),
+                        year: rec.get('year'),
+                        month: rec.get('month'),
+                        mode: me.renderMode,
+                        byDay: true
+                    }
+                }); 
                 st.reload();
             }
             else {
