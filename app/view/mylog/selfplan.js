@@ -18,6 +18,7 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
         layout: 'hbox'
     },
     autoScroll: true,
+    initInfo: null,
 
     initComponent: function () {
         var me = this;

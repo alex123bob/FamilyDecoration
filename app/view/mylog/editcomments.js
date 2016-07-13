@@ -27,7 +27,7 @@ Ext.define('FamilyDecoration.view.mylog.EditComments', {
             {
                 text: '确定',
                 handler: function () {
-                    
+                    var txtArea = me.down('textarea');
                 }
             },
             {

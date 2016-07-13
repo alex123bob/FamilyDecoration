@@ -240,7 +240,15 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                         text: '总结日志',
                         flex: 1,
                         dataIndex: 'summarizedLog',
-                        align: 'left'
+                        align: 'left',
+                        renderer: function (val, meta, rec) {
+                            if (val) {
+                                return val.replace(/\n/gi, '<br />');
+                            }
+                            else {
+                                return val;
+                            }
+                        }
                     },
                     {
                         text: '评价',
@@ -268,7 +276,15 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                         text: '总结日志',
                         flex: 1,
                         dataIndex: 'summarizedLog',
-                        align: 'left'
+                        align: 'left',
+                        renderer: function (val, meta, rec) {
+                            if (val) {
+                                return val.replace(/\n/gi, '<br />');
+                            }
+                            else {
+                                return val;
+                            }
+                        }
                     },
                     {
                         text: '评价',
@@ -285,7 +301,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
 
         function _refreshIndicator(rec) {
             var planCt, accomplishmentCt;
-            
+
             if (me.renderMode == 'market') {
                 planCt = me.down('[name="fieldcontainer-marketPlan"]');
                 accomplishmentCt = me.down('[name="fieldcontainer-marketAccomplishment"]');
@@ -323,7 +339,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
             }
         }
 
-        function _refreshGrid (rec){
+        function _refreshGrid(rec) {
             var grid = me.getComponent('gridpanel-logContent'),
                 st = grid.getStore();
             if (rec) {
@@ -343,7 +359,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                         mode: me.renderMode,
                         byDay: true
                     }
-                }); 
+                });
                 st.reload();
             }
             else {
@@ -351,7 +367,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
             }
         }
 
-        function _initBtn(rec){
+        function _initBtn(rec) {
             var btnObj = {
                 selfPlan: me.down('[name="button-selfPlan"]'),
                 summarizedLog: me.down('[name="button-summarizedLog"]'),
@@ -366,7 +382,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
             }
         }
 
-        me.rerender = function (){
+        me.rerender = function () {
             _rerenderGrid(me.renderMode);
             _rerenderIndicatorCt(me.renderMode);
         }
@@ -384,7 +400,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                 flex: 9,
                 name: 'gridpanel-logContent',
                 itemId: 'gridpanel-logContent',
-                getRec: function (){
+                getRec: function () {
                     return this.getSelectionModel().getSelection()[0];
                 },
                 columns: {
@@ -404,7 +420,15 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                         },
                         {
                             text: '总结日志',
-                            dataIndex: 'summarizedLog'
+                            dataIndex: 'summarizedLog',
+                            renderer: function (val, meta, rec) {
+                                if (val) {
+                                    return val.replace(/\n/gi, '<br />');
+                                }
+                                else {
+                                    return val;
+                                }
+                            }
                         },
                         {
                             text: '评价',
@@ -421,9 +445,11 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                         handler: function () {
                             var grid = me.down('gridpanel'),
                                 rec = grid.getRec();
-                            
+
                             var win = Ext.create('FamilyDecoration.view.mylog.SelfPlan', {
-                                rec: rec
+                                initInfo: {
+                                    name: me.checkMode ? me.staff.get('name') : User.getName()
+                                }
                             });
 
                             win.show();
@@ -438,7 +464,10 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                             var grid = me.down('gridpanel'),
                                 rec = grid.getRec();
                             var win = Ext.create('FamilyDecoration.view.mylog.SummarizedLog', {
-                                
+                                rec: rec,
+                                afterEvent: function () {
+                                    grid.getStore().reload();
+                                }
                             });
                             win.show();
                         }
@@ -453,14 +482,14 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                             var grid = me.down('gridpanel'),
                                 rec = grid.getRec();
                             var win = Ext.create('FamilyDecoration.view.mylog.EditComments', {
-                                
+
                             });
                             win.show();
                         }
                     }
                 ],
                 listeners: {
-                    selectionchange: function (selModel, sels, opts){
+                    selectionchange: function (selModel, sels, opts) {
                         var rec = sels[0];
                         _initBtn(rec);
                     }
