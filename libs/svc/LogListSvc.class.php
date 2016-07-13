@@ -66,7 +66,7 @@ class LogListSvc extends BaseSvc
 
 	public function getDetail($q){
 		$q['byDay'] = 'true';
-		return getIndicator($q);
+		return $this->getIndicator($q);
 	}
 	public function getIndicator($q){
 		$name = $q['name'];
