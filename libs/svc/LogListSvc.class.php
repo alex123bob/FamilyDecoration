@@ -11,5 +11,26 @@ class LogListSvc extends BaseSvc
 			array('year'=>(int)$year,'month'=>(int)$month)
 		);
 	}
+
+	public function getIndicator($q){
+		$name = $q['name'];
+		$year = $q['year'];
+		$month = $q['month'];
+		$mode = $q['mode'];
+		return array(
+				"plan" => array( 
+					"telemarketing"=> "100", 
+					"companyVisit"=> "200", 
+					"deposit"=> "300", 
+					"buildingSwiping"=> "400"
+				),
+				"accomplishment" => array(
+					"telemarketing" => "99", 
+					"companyVisit" => "199", 
+					"deposit" => "299", 
+					"buildingSwiping" => "399"
+				)
+			);
+	}
 }
 ?>
