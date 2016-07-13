@@ -7,7 +7,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
         width: '100%'
     },
     requires: [
-        'FamilyDecoration.store.LogContent'
+        'FamilyDecoration.store.LogContent', 'FamilyDecoration.view.mylog.SelfPlan'
     ],
 
     renderMode: undefined, // market, design, undefined
@@ -212,27 +212,33 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                     },
                     {
                         text: '规范计划',
-                        flex: 1
+                        flex: 1,
+                        dataIndex: 'standardPlan'
                     },
                     {
                         text: '完成情况',
-                        flex: 1
+                        flex: 1,
+                        dataIndex: 'practicalAccomplishment'
                     },
                     {
                         text: '相差',
-                        flex: 1
+                        flex: 1,
+                        dataIndex: 'difference'
                     },
                     {
                         text: '个人计划',
-                        flex: 1
+                        flex: 1,
+                        dataIndex: 'selfPlan'
                     },
                     {
                         text: '总结日志',
-                        flex: 1
+                        flex: 1,
+                        dataIndex: 'summarizedLog'
                     },
                     {
                         text: '评价',
-                        flex: 1
+                        flex: 1,
+                        dataIndex: 'comments'
                     }
                 ];
             }
@@ -245,15 +251,18 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                     },
                     {
                         text: '个人计划',
-                        flex: 1
+                        flex: 1,
+                        dataIndex: 'selfPlan'
                     },
                     {
                         text: '总结日志',
-                        flex: 1
+                        flex: 1,
+                        dataIndex: 'summarizedLog'
                     },
                     {
                         text: '评价',
-                        flex: 1
+                        flex: 1,
+                        dataIndex: 'comments'
                     }
                 ];
             }
@@ -313,11 +322,26 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
             }
         }
 
+        function initBtn(rec){
+            var btnObj = {
+                selfPlan: me.down('[name="button-selfPlan"]'),
+                summarizedLog: me.down('[name="button-summarizedLog"]'),
+                comment: me.down('[name="button-comment"]')
+            };
+            for (var key in btnObj) {
+                if (btnObj.hasOwnProperty(key)) {
+                    var btn = btnObj[key];
+                    btn.setDisabled(!rec);
+                }
+            }
+        }
+
         me.refresh = function (rec) {
             if (me.renderMode == 'market' || me.renderMode == 'design') {
                 refreshIndicator(rec);
             }
             refreshGrid(rec);
+            initBtn(rec);
         }
 
         me.items = [
@@ -328,33 +352,47 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                 itemId: 'gridpanel-logContent',
                 columns: {
                     defaults: {
-                        flex: 1
+                        flex: 1,
+                        align: 'center'
                     },
                     items: [
                         {
-                            text: '日期'
+                            text: '日期',
+                            dataIndex: 'day',
+                            flex: 0.5
                         },
                         {
-                            text: '个人计划'
+                            text: '个人计划',
+                            dataIndex: 'selfPlan'
                         },
                         {
-                            text: '总结日志'
+                            text: '总结日志',
+                            dataIndex: 'summarizedLog'
                         },
                         {
-                            text: '评价'
+                            text: '评价',
+                            dataIndex: 'comments'
                         }
                     ]
                 },
                 bbar: [
                     {
                         text: '个人计划',
+                        name: 'button-selfPlan',
+                        disabled: true,
                         icon: 'resources/img/sheet.png',
                         handler: function () {
+                            var win = Ext.create('FamilyDecoration.view.mylog.SelfPlan', {
 
+                            });
+
+                            win.show();
                         }
                     },
                     {
                         text: '总结日志',
+                        name: 'button-summarizedLog',
+                        disabled: true,
                         icon: 'resources/img/summary.png',
                         handler: function () {
 
@@ -363,6 +401,8 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                     {
                         text: '评价',
                         hidden: !me.checkMode,
+                        name: 'button-comment',
+                        disabled: true,
                         icon: 'resources/img/comment-new.png',
                         handler: function () {
 

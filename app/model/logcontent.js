@@ -5,7 +5,7 @@ Ext.define('FamilyDecoration.model.LogContent', {
         {name: 'standardPlan', type: 'string'},
         {name: 'practicalAccomplishment', type: 'string'},
         {name: 'difference', type: 'string'},
-        {name: 'selfPlan', type: 'boolean'},
+        {name: 'selfPlan', type: 'string'},
         {name: 'summarizedLog', type: 'string'},
         {name: 'comments', type: 'string'},
         {name: 'year', type: 'string'},
