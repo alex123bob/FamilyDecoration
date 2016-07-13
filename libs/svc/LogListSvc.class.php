@@ -69,37 +69,62 @@ class LogListSvc extends BaseSvc
 	public function getDetail($q){
 		$month = $q['month'];
 		$year = $q['year'];
+		$user = $q['name'];
 		if(strlen($month) == 1) 
 			$month = '0'.$month;
 		$mode = isset($q['mode']) ? $q['mode'] : "none";  // market , design
-		if($mode == "market"){
-
-		}
-		$data = $this->getIndicatorMarket($q['name'],$year,$month,false);
 		$telemarketingDayNumberMappping = array();
 		$buildingSwipingDayNumberMappping = array();
-		foreach ($data['buildingSwiping'] as $item) {
-			$buildingSwipingDayNumberMappping[$item['d']] = $item['num'];
+		if($mode == "market"){
+			$data = $this->getIndicatorMarket($user,$year,$month,false);
+			foreach ($data['buildingSwiping'] as $item) {
+				$buildingSwipingDayNumberMappping[$item['d']] = $item['num'];
+			}
+			foreach ($data['telemarketing'] as $item) {
+				$telemarketingDayNumberMappping[$item['d']] = $item['num'];
+			}
 		}
-		foreach ($data['telemarketing'] as $item) {
-			$telemarketingDayNumberMappping[$item['d']] = $item['num'];
-		}
-		//var_dump($buildingSwipingDayNumberMappping);
-		//var_dump($telemarketingDayNumberMappping);
 		$time = strtotime("$year-$month-01");
 		$days = date('t', $time);
+		$beginTime = "$year-$month-01 00:00:00";
+		$endTime = "$year-$month-$days 00:00:00";
+		
+		$logsDayNumberMapping = array();
+		$sumlogsDayNumberMapping = array();
+		$comlogsDayNumberMapping = array();
+		$sql = "select id,left(createTime,10) as day,content,logType from log_list where createTime > '?' and createTime < '?' and committer = '?'";
+		global $mysql;
+		$logs = $mysql->DBGetAsMap($sql,$beginTime,$endTime,$user);
+		foreach ($logs as $value) {
+			if($value['logType'] == 1){
+				$sumlogsDayNumberMapping[$value['day']] = $value;
+			}else if($value['logType'] == 2){
+				$comlogsDayNumberMapping[$value['day']] = $value;
+			}else{
+				if(!isset($logsDayNumberMapping[$value['day']]))
+					$logsDayNumberMapping[$value['day']] = array();
+				array_push($logsDayNumberMapping[$value['day']],$value);
+			}
+		}
 		$res = array();
-		for($i = 0;$i<=$days;$i++){
+		for($i = 1;$i<=$days;$i++){
 			$date = "$year-$month-".($i < 10 ? '0':'').$i;
 			$tele = isset($telemarketingDayNumberMappping[$date]) ? $telemarketingDayNumberMappping[$date] : 0;
 			$wip = isset($buildingSwipingDayNumberMappping[$date]) ? $buildingSwipingDayNumberMappping[$date] : 0;
+			$log = isset($logsDayNumberMapping[$date]) ? $logsDayNumberMapping[$date] : array();
+			$sl = isset($sumlogsDayNumberMapping[$date]) ? $sumlogsDayNumberMapping[$date]['content'] : '';
+			$sid = isset($sumlogsDayNumberMapping[$date]) ? $sumlogsDayNumberMapping[$date]['id'] : '';
+			$c = isset($comlogsDayNumberMapping[$date]) ? $comlogsDayNumberMapping[$date]['content'] : '';
+			$cid = isset($comlogsDayNumberMapping[$date]) ? $comlogsDayNumberMapping[$date]['id'] : '';
 			array_push($res, array(
-				'sp'=>'电销:xxx<br>扫楼:xxx',  //standardPlan
-				'pa'=>'电销:xxx<br>扫楼:xxx', //practicalAccomplishment
-				'd'=>"电销:$tele<br>扫楼:$wip",//difference
-				's'=>'xxx',//selfPlan
-				'sl'=>'xxx',//summarizedLog
-				'c'=>'xxx',//comments
+				'sp'=>$mode == "market" ? '电销:xxx扫楼:xxx' : null,  //standardPlan
+				'pa'=>$mode == "market" ? $tele.'电 '.$wip.'扫' : null, //practicalAccomplishment
+				'd'=>$mode == "market" ? "电销:xxx扫楼:xxx" : null,//difference
+				's'=>$log,//selfPlan
+				'sl'=>$sl,//summarizedLog
+				'sid'=>$sid,
+				'c'=>$c,//comments
+				'cid'=>$cid,
 				'dy'=>$i < 10 ? "0$i" : "$i"  //day
 			));
 		}
