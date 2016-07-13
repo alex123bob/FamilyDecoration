@@ -2,13 +2,13 @@ Ext.define('FamilyDecoration.model.LogContent', {
 	extend: 'Ext.data.Model',
 	fields: [
         'id',
-        {name: 'standardPlan', type: 'string'},
-        {name: 'practicalAccomplishment', type: 'string'},
-        {name: 'difference', type: 'string'},
-        {name: 'selfPlan', type: 'string'},
-        {name: 'summarizedLog', type: 'string'},
-        {name: 'comments', type: 'string'},
-        {name: 'day', type: 'string', mapping: 'd'}
+        {name: 'standardPlan', type: 'string', mapping: 'sp'},
+        {name: 'practicalAccomplishment', type: 'string', mapping: 'pa'},
+        {name: 'difference', type: 'string', mapping: 'd'},
+        {name: 'selfPlan', type: 'string', mapping: 's'},
+        {name: 'summarizedLog', type: 'string', mapping: 'sl'},
+        {name: 'comments', type: 'string', mapping: 'c'},
+        {name: 'day', type: 'string', mapping: 'dy'}
     ],
     idProperty: 'id'
 });
