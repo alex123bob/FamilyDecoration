@@ -59,8 +59,15 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 					logContentRenderMode = undefined;
 				}
 			}
-			resObj.quarterPane.getStore().reload();
-			resObj.frozenPane.getStore().reload();
+
+			if (!me.checkMode || me.staff) {
+				resObj.quarterPane.getStore().reload();
+				resObj.frozenPane.getStore().reload();
+			}
+			else {
+				resObj.quarterPane.getStore().removeAll();
+				resObj.frozenPane.getStore().removeAll();
+			}
 
 			resObj.logContentPane.staff = me.staff;
 			resObj.logContentPane.renderMode = logContentRenderMode;
@@ -76,7 +83,7 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 					type: 'vbox',
 					align: 'center'
 				},
-				width: 200,
+				width: 150,
 				margin: '0 1 0 0',
 				defaults: {
 					xtype: 'gridpanel',
@@ -104,7 +111,7 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 						title: '季度月份',
 						name: 'gridpanel-quarterMonths',
 						store: Ext.create('Ext.data.Store', {
-							autoLoad: me.checkMode ? false : true,
+							autoLoad: false,
 							fields: [
 								{ name: 'year', type: 'string', mapping: 'y' },
 								{ name: 'month', type: 'string', mapping: 'm' },
@@ -134,7 +141,7 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 						flex: 2,
 						name: 'gridpanel-frozenMonths',
 						store: Ext.create('Ext.data.Store', {
-							autoLoad: me.checkMode ? false : true,
+							autoLoad: false,
 							fields: [
 								{ name: 'year', type: 'string', mapping: 'y' },
 								{ name: 'month', type: 'string', mapping: 'm' },
@@ -171,7 +178,7 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 		];
 
 		me.addListener('afterrender', function (cmp, opts){
-			me.setLogContentRenderMode();
+			!me.checkMode && me.setLogContentRenderMode();
 		});
 
 		this.callParent();

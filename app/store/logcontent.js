@@ -10,7 +10,7 @@ Ext.define('FamilyDecoration.store.LogContent', {
             totalProperty: 'total'
         },
         extraParams: {
-            action: 'LogList.get'
+            action: 'LogList.getDetail'
         }
     }
 });
