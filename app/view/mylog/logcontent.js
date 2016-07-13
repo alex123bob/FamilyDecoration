@@ -357,20 +357,11 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                 summarizedLog: me.down('[name="button-summarizedLog"]'),
                 comment: me.down('[name="button-comment"]')
             };
+
             for (var key in btnObj) {
                 if (btnObj.hasOwnProperty(key)) {
                     var btn = btnObj[key];
-                    if (rec) {
-                        if (rec.get('isFrozen') === 0) {
-                            btn.enable();
-                        }
-                        else {
-                            btn.disable();
-                        }
-                    }
-                    else {
-                        btn.disable();
-                    }
+                    btn.setDisabled(!rec);
                 }
             }
         }
@@ -385,7 +376,6 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                 _refreshIndicator(rec);
             }
             _refreshGrid(rec);
-            _initBtn(rec);
         }
 
         me.items = [
@@ -455,7 +445,13 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
 
                         }
                     }
-                ]
+                ],
+                listeners: {
+                    selectionchange: function (selModel, sels, opts){
+                        var rec = sels[0];
+                        _initBtn(rec);
+                    }
+                }
             }
         ];
 

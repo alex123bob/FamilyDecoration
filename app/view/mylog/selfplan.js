@@ -33,6 +33,7 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
                         text: 'X',
                         name: 'button-logItem',
                         margin: '0 2 0 0',
+                        hidden: rec ? !rec.isToday : false,
                         handler: function () {
                             var ct = this.ownerCt,
                                 nextCt = ct.nextSibling();
@@ -55,7 +56,8 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
                         flex: 1,
                         labelWidth: 20,
                         fieldLabel: (index + 1).toString(),
-                        value: rec ? rec.get('content') : ''
+                        readOnly: rec ? rec.isToday : false,
+                        value: rec ? rec.content : ''
                     },
                     {
                         xtype: 'checkboxfield',
@@ -66,7 +68,8 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
                     },
                     {
                         xtype: 'hiddenfield',
-                        name: 'hiddenfield-planId'
+                        name: 'hiddenfield-selfPlanId',
+                        value: rec ? rec.id : ''
                     }
                 ]
             };
@@ -99,6 +102,9 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
                 }
             }
         ];
+
+        me.addListener('afterrender', function (win, opts){
+        });
 
         this.callParent();
     }
