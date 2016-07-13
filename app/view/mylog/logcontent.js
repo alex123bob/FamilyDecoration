@@ -6,10 +6,13 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
     defaults: {
         width: '100%'
     },
-    requires: [],
+    requires: [
+        'FamilyDecoration.store.LogContent'
+    ],
 
-    renderMode: undefined, // market, designer, undefined
+    renderMode: undefined, // market, design, undefined
     checkMode: undefined,
+    staff: undefined, // staff record, only needed when in checking mode.
 
     initComponent: function () {
         var me = this;
@@ -36,7 +39,8 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                                 xtype: 'textfield',
                                 labelWidth: 32,
                                 width: 80,
-                                margin: '0 2 0 0'
+                                margin: '0 2 0 0',
+                                readOnly: true
                             },
                             items: [
                                 {
@@ -47,19 +51,19 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                                 },
                                 {
                                     fieldLabel: '电销',
-                                    name: 'textfield-telemarketing'
+                                    name: 'telemarketing'
                                 },
                                 {
                                     fieldLabel: '到店',
-                                    name: 'textfield-companyVisit'
+                                    name: 'companyVisit'
                                 },
                                 {
                                     fieldLabel: '定金',
-                                    name: 'textfield-deposit'
+                                    name: 'deposit'
                                 },
                                 {
                                     fieldLabel: '扫楼',
-                                    name: 'textfield-buildingSwiping'
+                                    name: 'buildingSwiping'
                                 }
                             ]
                         },
@@ -70,7 +74,8 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                                 xtype: 'textfield',
                                 labelWidth: 32,
                                 width: 80,
-                                margin: '0 4 0 0'
+                                margin: '0 4 0 0',
+                                readOnly: true
                             },
                             items: [
                                 {
@@ -81,26 +86,26 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                                 },
                                 {
                                     fieldLabel: '电销',
-                                    name: 'textfield-telemarketing'
+                                    name: 'telemarketing'
                                 },
                                 {
                                     fieldLabel: '到店',
-                                    name: 'textfield-companyVisit'
+                                    name: 'companyVisit'
                                 },
                                 {
                                     fieldLabel: '定金',
-                                    name: 'textfield-deposit'
+                                    name: 'deposit'
                                 },
                                 {
                                     fieldLabel: '扫楼',
-                                    name: 'textfield-buildingSwiping'
+                                    name: 'buildingSwiping'
                                 }
                             ]
                         }
                     ]
                 };
             }
-            else if (mode == 'designer') {
+            else if (mode == 'design') {
                 indicatorCt = {
                     xtype: 'container',
                     height: 24,
@@ -114,12 +119,13 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                     items: [
                         {
                             layout: 'hbox',
-                            name: 'fieldcontainer-designerPlan',
+                            name: 'fieldcontainer-designPlan',
                             defaults: {
                                 xtype: 'textfield',
                                 labelWidth: 45,
                                 width: 90,
-                                margin: '0 2 0 0'
+                                margin: '0 2 0 0',
+                                readOnly: true
                             },
                             items: [
                                 {
@@ -130,22 +136,23 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                                 },
                                 {
                                     fieldLabel: '签单额',
-                                    name: 'textfield-signedBusinessNumber'
+                                    name: 'signedBusinessNumber'
                                 },
                                 {
                                     fieldLabel: '定金率',
-                                    name: 'textfield-depositRate'
+                                    name: 'depositRate'
                                 }
                             ]
                         },
                         {
                             layout: 'hbox',
-                            name: 'fieldcontainer-designerAccomplishment',
+                            name: 'fieldcontainer-designAccomplishment',
                             defaults: {
                                 xtype: 'textfield',
                                 labelWidth: 45,
                                 width: 90,
-                                margin: '0 2 0 0'
+                                margin: '0 2 0 0',
+                                readOnly: true
                             },
                             items: [
                                 {
@@ -156,11 +163,11 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                                 },
                                 {
                                     fieldLabel: '签单额',
-                                    name: 'textfield-signedBusinessNumber'
+                                    name: 'signedBusinessNumber'
                                 },
                                 {
                                     fieldLabel: '定金率',
-                                    name: 'textfield-depositRate'
+                                    name: 'depositRate'
                                 }
                             ]
                         }
@@ -183,9 +190,12 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
             Ext.resumeLayouts(true);
         }
 
-        me.rerenderGrid = function (mode){
+        me.rerenderGrid = function (mode) {
             var items = me.items.items,
-                grid, cols;
+                grid, cols,
+                st = Ext.create('FamilyDecoration.store.LogContent', {
+                    autoLoad: false
+                });
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
                 if (item.xtype == 'gridpanel') {
@@ -248,8 +258,66 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                 ];
             }
             Ext.suspendLayouts();
-            grid.reconfigure(false, cols);
+            grid.reconfigure(st, cols);
             Ext.resumeLayouts(true);
+        }
+
+        function refreshIndicator(rec) {
+            var planCt, accomplishmentCt;
+            
+            if (me.renderMode == 'market') {
+                planCt = me.down('[name="fieldcontainer-marketPlan"]');
+                accomplishmentCt = me.down('[name="fieldcontainer-marketAccomplishment"]');
+            }
+            else if (me.renderMode == 'design') {
+                planCt = me.down('[name="fieldcontainer-designPlan"]');
+                accomplishmentCt = me.down('[name="fieldcontainer-designAccomplishment"]');
+            }
+
+            function goThroughData(obj) {
+                Ext.each(planCt.items.items, function (item, index, self) {
+                    if (item.xtype == 'textfield') {
+                        item.setValue(obj ? obj['plan'][item.name] : '');
+                    }
+                });
+                Ext.each(accomplishmentCt.items.items, function (item, index, self) {
+                    if (item.xtype == 'textfield') {
+                        item.setValue(obj ? obj['accomplishment'][item.name] : '');
+                    }
+                });
+            }
+
+            if (rec) {
+                ajaxGet('LogList', 'getIndicator', {
+                    name: me.checkMode ? me.staff.get('name') : User.getName(),
+                    year: rec.get('year'),
+                    month: rec.get('month'),
+                    mode: me.renderMode
+                }, function (obj) {
+                    goThroughData(obj);
+                })
+            }
+            else {
+                goThroughData();
+            }
+        }
+
+        function refreshGrid (rec){
+            var grid = me.getComponent('gridpanel-logContent'),
+                st = grid.getStore();
+            if (rec) {
+                st.reload();
+            }
+            else {
+                st.removeAll();
+            }
+        }
+
+        me.refresh = function (rec) {
+            if (me.renderMode == 'market' || me.renderMode == 'design') {
+                refreshIndicator(rec);
+            }
+            refreshGrid(rec);
         }
 
         me.items = [
@@ -281,14 +349,14 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                     {
                         text: '个人计划',
                         icon: 'resources/img/sheet.png',
-                        handler: function (){
+                        handler: function () {
 
                         }
                     },
                     {
                         text: '总结日志',
                         icon: 'resources/img/summary.png',
-                        handler: function (){
+                        handler: function () {
 
                         }
                     },
@@ -296,7 +364,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                         text: '评价',
                         hidden: !me.checkMode,
                         icon: 'resources/img/comment-new.png',
-                        handler: function (){
+                        handler: function () {
 
                         }
                     }
@@ -304,7 +372,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
             }
         ];
 
-        me.addListener('afterrender', function (cmp, opts){
+        me.addListener('afterrender', function (cmp, opts) {
             me.rerenderIndicatorCt(me.renderMode);
             me.rerenderGrid(me.renderMode);
         })
