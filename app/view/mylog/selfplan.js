@@ -35,7 +35,7 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
                         text: 'X',
                         name: 'button-logItem',
                         margin: '0 2 0 0',
-                        // hidden: rec ? !rec.isToday : false,
+                        hidden: rec.editable == '0',
                         handler: function () {
                             var btn = this,
                                 ct = btn.ownerCt,
@@ -53,20 +53,23 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
                         name: 'textfield-logItem',
                         flex: 1,
                         labelWidth: 20,
+                        allowBlank: false,
                         fieldLabel: (index + 1).toString(),
-                        // readOnly: rec ? rec.isToday : false,
+                        readOnly: rec.editable == '0',
                         value: rec ? rec.content : '',
                         listeners: {
                             blur: function (txt, ev, opts){
                                 var ct = txt.ownerCt,
                                     hiddenField = ct.items.items[3];
-                                ajaxUpdate('LogList', {
-                                    content: txt.getValue(),
-                                    id: hiddenField.getValue()
-                                }, 'id', function (obj){
-                                    showMsg('计划内容更新成功！');
-                                    _refreshCmp();
-                                });
+                                if (txt.isValid()) {
+                                    ajaxUpdate('LogList', {
+                                        content: txt.getValue(),
+                                        id: hiddenField.getValue()
+                                    }, 'id', function (obj){
+                                        showMsg('计划内容更新成功！');
+                                        _refreshCmp();
+                                    });
+                                }
                             }
                         }
                     },
@@ -143,8 +146,20 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
             {
                 text: '关闭',
                 handler: function () {
-                    me.close();
-                    me.afterClose();
+                    var ctArr = me.query('fieldcontainer'),
+                        flag = true;
+                    Ext.each(ctArr, function (ct, index, self){
+                        if (ct.down('textfield').isValid()) {
+                        }
+                        else {
+                            flag = false;
+                            return false;
+                        }
+                    });
+                    if (flag) {
+                        me.close();
+                        me.afterClose();
+                    }
                 }
             }
         ];
