@@ -115,9 +115,8 @@ class LogListSvc extends BaseSvc
 			}else{
 				if(!isset($logsDayNumberMapping[$value['day']])){
 					$logsDayNumberMapping[$value['day']] = array();
-				}else{
-					array_push($logsDayNumberMapping[$value['day']], $value);
 				}
+				array_push($logsDayNumberMapping[$value['day']], $value);
 			}
 		}
 		$res = array();
