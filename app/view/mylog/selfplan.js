@@ -84,7 +84,7 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
                 handler: function () {
                     ajaxAdd('LogList', {
                         committer: me.initInfo.staffName,
-                        createTime: Ext.Date.format(new Date(), 'Y-m-d H:i:s'),
+                        createTime: me.initInfo.rec.get('year') + '-' + me.initInfo.rec.get('month') + '-' + me.initInfo.rec.get('day'),
                         logType: 0
                     }, function (obj){
                         if (obj.status == 'successful') {
@@ -110,7 +110,7 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
         ];
 
         me.addListener('afterrender', function (win, opts){
-            
+            _refreshCmp();
         });
 
         this.callParent();
