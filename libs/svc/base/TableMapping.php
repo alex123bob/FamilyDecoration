@@ -13,7 +13,7 @@
 		"project_progress"=>array('id','columnName','projectId','content','committer'),
 		"project_progress_audit"=>array('id','columnName','projectId','content','auditor'),
 		"potential_business_detail"=>array('id','potentialBusinessId','comments','committer'),
-		"log_list"=>array('id','content','committer','logType'),
+		"log_list"=>array('id','content','committer','logType','isFinished'),
 		"error_log"=>array('user','detail','file','line','url','ip','refer','useragent')
 	);
 
