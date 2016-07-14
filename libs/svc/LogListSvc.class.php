@@ -97,13 +97,13 @@ class LogListSvc extends BaseSvc
 		$logsDayNumberMapping = array();
 		$sumlogsDayNumberMapping = array();
 		$comlogsDayNumberMapping = array();
-		$sql = "select id,left(createTime,10) as day,isFinished,content,logType from log_list where createTime > '?' and createTime < '?' and committer = '?'";
+		$sql = "select id,left(createTime,10) as day,isFinished,content,logType from log_list where createTime >= '?' and createTime <= '?' and committer = '?'";
 		global $mysql;
 		$logs = $mysql->DBGetAsMap($sql,$beginTime,$endTime,$user);
 		foreach ($logs as $value) {
-			if($value['logType'] == 1){
+			if((int)$value['logType'] == 1){
 				$sumlogsDayNumberMapping[$value['day']] = $value;
-			}else if($value['logType'] == 2){
+			}else if((int)$value['logType'] == 2){
 				$comlogsDayNumberMapping[$value['day']] = $value;
 			}else{
 				if(!isset($logsDayNumberMapping[$value['day']])){
