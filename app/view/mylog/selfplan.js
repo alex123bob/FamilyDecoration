@@ -18,7 +18,8 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
         layout: 'hbox'
     },
     autoScroll: true,
-    initInfo: null, // includes: staffName, rec(current selected item)
+    initInfo: null, // includes: staffName, rec(current selected item),
+    afterClose: Ext.emptyFn,
 
     initComponent: function () {
         var me = this;
@@ -34,7 +35,7 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
                         text: 'X',
                         name: 'button-logItem',
                         margin: '0 2 0 0',
-                        hidden: rec ? !rec.isToday : false,
+                        // hidden: rec ? !rec.isToday : false,
                         handler: function () {
                         }
                     },
@@ -64,6 +65,7 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
         }
 
         function _refreshCmp (){
+            me.removeAll();
             ajaxGet('LogList', false, {
                 committer: me.initInfo.staffName,
                 logType: 0,
@@ -102,9 +104,10 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
                 }
             },
             {
-                text: '取消',
+                text: '关闭',
                 handler: function () {
                     me.close();
+                    me.afterClose();
                 }
             }
         ];

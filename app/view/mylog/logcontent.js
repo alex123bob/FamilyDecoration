@@ -253,7 +253,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                         if (val.length > 0) {
                             Ext.each(val, function (item, index, self) {
                                 res += '<strong>' + (index + 1) + '.</strong>'
-                                    + ' ' + item['content'].replace(/\n/gi, '<br />')
+                                    + ' ' + (item['content'] ? item['content'].replace(/\n/gi, '<br />') : '')
                                     + item['isFinished'] + ' <br />'
                                     + '<span class="footnote">(' + item['day'] + ') '
                                     + '</span>'
@@ -457,6 +457,9 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                                 initInfo: {
                                     staffName: me.checkMode ? me.staff.get('name') : User.getName(),
                                     rec: rec
+                                },
+                                afterClose: function () {
+                                    grid.getStore().reload();
                                 }
                             });
 
