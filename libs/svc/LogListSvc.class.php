@@ -11,6 +11,13 @@ class LogListSvc extends BaseSvc
 			array('y'=>$date3->format('Y'),'m'=>$date3->format('m'),'f'=>0)
 		);
 	}
+
+	public function get($q){
+		$begin = $q['day'].' 00:00:00';
+		$end = $q['day'].' 23:59:59';
+		$this->appendWhere = " and createTime >= '$begin' and createTime <= '$end' ";
+		return parent::get($q);
+	}
 	
 	public function add($q){
 		$q['@id'] = $this->getUUID();
