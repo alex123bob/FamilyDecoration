@@ -37,6 +37,15 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
                         margin: '0 2 0 0',
                         // hidden: rec ? !rec.isToday : false,
                         handler: function () {
+                            var btn = this,
+                                ct = btn.ownerCt,
+                                hiddenField = ct.items.items[3];
+                            ajaxDel('LogList', {
+                                id: hiddenField.getValue()
+                            }, function (obj){
+                                showMsg('删除成功！');
+                                _refreshCmp();
+                            });
                         }
                     },
                     {
@@ -46,14 +55,42 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
                         labelWidth: 20,
                         fieldLabel: (index + 1).toString(),
                         // readOnly: rec ? rec.isToday : false,
-                        value: rec ? rec.content : ''
+                        value: rec ? rec.content : '',
+                        listeners: {
+                            blur: function (txt, ev, opts){
+                                var ct = txt.ownerCt,
+                                    hiddenField = ct.items.items[3];
+                                ajaxUpdate('LogList', {
+                                    content: txt.getValue(),
+                                    id: hiddenField.getValue()
+                                }, 'id', function (obj){
+                                    showMsg('计划内容更新成功！');
+                                    _refreshCmp();
+                                });
+                            }
+                        }
                     },
                     {
                         xtype: 'checkboxfield',
                         name: 'isFinished',
                         inputValue: false,
                         width: 40,
-                        margin: '0 0 0 2'
+                        margin: '0 0 0 2',
+                        value: rec.isFinished == '1' ? true : false,
+                        listeners: {
+                            change: function (chk, newVal, oldVal, opts){
+                                var chk = this,
+                                    ct = chk.ownerCt,
+                                    hiddenField = ct.items.items[3];
+                                ajaxUpdate('LogList', {
+                                    isFinished: newVal ? 1 : 0,
+                                    id: hiddenField.getValue()
+                                }, 'id', function (obj){
+                                    showMsg('计划状态更改成功！');
+                                    _refreshCmp();
+                                });
+                            }
+                        }
                     },
                     {
                         xtype: 'hiddenfield',

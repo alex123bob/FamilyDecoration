@@ -254,10 +254,8 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                             Ext.each(val, function (item, index, self) {
                                 res += '<strong>' + (index + 1) + '.</strong>'
                                     + ' ' + (item['content'] ? item['content'].replace(/\n/gi, '<br />') : '')
-                                    + item['isFinished'] + ' <br />'
-                                    + '<span class="footnote">(' + item['day'] + ') '
-                                    + '</span>'
-                                    + '<br />';
+                                    + ' '
+                                    + (item['isFinished'] == '1' ? '<font color="green">已完成</font>' : '<font color="red">未完成</font>') + ' <br />';
                             });
                         }
                         return res;
