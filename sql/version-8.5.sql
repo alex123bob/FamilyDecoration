@@ -3,7 +3,7 @@ update business set levelTime = createTime;
 
 
 alter table log_detail drop column logType;
-alter table log_detail add column logType varchar(1) comment '0:普通,1:总结,2:评价';
+alter table log_detail add column logType varchar(1) default 0 comment '0:普通,1:总结,2:评价';
 alter table log_detail add column updateTime timestamp;
 alter table log_detail add column committer varchar(200);
 alter table log_detail modify content text;
@@ -19,6 +19,6 @@ delete from log_list where content = '' or trim(content) = '' or content is null
 alter table log_list drop column logListId;
 drop table log_list_temp;
 
-alter table log_list add column evaluator varchar(200);
+alter table log_list add column  varchar(200);
 
 update `system` set `paramValue`='version-8.5' where `id`='4';
