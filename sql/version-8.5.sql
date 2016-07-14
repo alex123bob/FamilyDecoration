@@ -18,4 +18,7 @@ alter table log_detail rename to log_list;
 delete from log_list where content = '' or trim(content) = '' or content is null;
 alter table log_list drop column logListId;
 drop table log_list_temp;
+
+alter table log_list add column evaluator varchar(200);
+
 update `system` set `paramValue`='version-8.5' where `id`='4';

@@ -97,7 +97,7 @@ class LogListSvc extends BaseSvc
 		$logsDayNumberMapping = array();
 		$sumlogsDayNumberMapping = array();
 		$comlogsDayNumberMapping = array();
-		$sql = "select id,left(createTime,10) as day,isFinished,content,logType from log_list where createTime >= '?' and createTime <= '?' and committer = '?'";
+		$sql = "select id,evaluator,left(createTime,10) as day,isFinished,content,logType from log_list where createTime >= '?' and createTime <= '?' and committer = '?'";
 		global $mysql;
 		$logs = $mysql->DBGetAsMap($sql,$beginTime,$endTime,$user);
 		foreach ($logs as $value) {
@@ -123,6 +123,7 @@ class LogListSvc extends BaseSvc
 			$sid = isset($sumlogsDayNumberMapping[$date]) ? $sumlogsDayNumberMapping[$date]['id'] : '';
 			$c = isset($comlogsDayNumberMapping[$date]) ? $comlogsDayNumberMapping[$date]['content'] : '';
 			$cid = isset($comlogsDayNumberMapping[$date]) ? $comlogsDayNumberMapping[$date]['id'] : '';
+			$e = isset($comlogsDayNumberMapping[$date]) ? $comlogsDayNumberMapping[$date]['evaluator'] : '';
 			array_push($res, array(
 				'sp'=>$mode == "market" ? '电销:xxx扫楼:xxx' : null,  //standardPlan
 				'pa'=>$mode == "market" ? $tele.'电 '.$wip.'扫' : null, //practicalAccomplishment
@@ -133,7 +134,8 @@ class LogListSvc extends BaseSvc
 				'y'=>$year,
 				'm'=>$month,
 				'c'=>$c,//comments
-				'cid'=>$cid,
+				'cid'=>$cid,// comments id
+				'e'=>$e,//evaluator
 				'dy'=>$i < 10 ? "0$i" : "$i"  //day
 			));
 		}
