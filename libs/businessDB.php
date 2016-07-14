@@ -264,8 +264,10 @@
 	function clientRank($data) {
 		global $mysql;
 		$id = $data["id"];
+		$date = date('Y-m-d H:i:s');
 		$obj = array();
 		$obj['level'] = $data["level"];
+		$obj['levelTime'] = $date;
 		$mysql->DBUpdate('business',$obj,"`id`='?'",array($id));
 		return array('status'=>'successful', 'errMsg' => 'rank client successfully!');
 	}
