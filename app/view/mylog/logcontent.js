@@ -229,32 +229,6 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                         flex: 1,
                         dataIndex: 'difference',
                         align: 'left'
-                    },
-                    {
-                        text: '个人计划',
-                        flex: 1,
-                        dataIndex: 'selfPlan',
-                        align: 'left'
-                    },
-                    {
-                        text: '总结日志',
-                        flex: 1,
-                        dataIndex: 'summarizedLog',
-                        align: 'left',
-                        renderer: function (val, meta, rec) {
-                            if (val) {
-                                return val.replace(/\n/gi, '<br />');
-                            }
-                            else {
-                                return val;
-                            }
-                        }
-                    },
-                    {
-                        text: '评价',
-                        flex: 1,
-                        dataIndex: 'comments',
-                        align: 'left'
                     }
                 ];
             }
@@ -265,35 +239,59 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                         dataIndex: 'day',
                         flex: 0.5,
                         align: 'left'
-                    },
-                    {
-                        text: '个人计划',
-                        flex: 1,
-                        dataIndex: 'selfPlan',
-                        align: 'left'
-                    },
-                    {
-                        text: '总结日志',
-                        flex: 1,
-                        dataIndex: 'summarizedLog',
-                        align: 'left',
-                        renderer: function (val, meta, rec) {
-                            if (val) {
-                                return val.replace(/\n/gi, '<br />');
-                            }
-                            else {
-                                return val;
-                            }
-                        }
-                    },
-                    {
-                        text: '评价',
-                        flex: 1,
-                        dataIndex: 'comments',
-                        align: 'left'
                     }
                 ];
             }
+            cols.push(
+                {
+                    text: '个人计划',
+                    flex: 1,
+                    dataIndex: 'selfPlan',
+                    align: 'left',
+                    renderer: function (val, meta, rec) {
+                        var res = '';
+                        if (val.length > 0) {
+                            Ext.each(val, function (item, index, self) {
+                                res += '<strong>' + (index + 1) + '.</strong>'
+                                    + ' ' + item['content'].replace(/\n/gi, '<br />')
+                                    + item['isFinished'] + ' <br />'
+                                    + '<span class="footnote">(' + item['day'] + ') '
+                                    + '</span>'
+                                    + '<br />';
+                            });
+                        }
+                        return res;
+                    }
+                },
+                {
+                    text: '总结日志',
+                    flex: 1,
+                    dataIndex: 'summarizedLog',
+                    align: 'left',
+                    renderer: function (val, meta, rec) {
+                        if (val) {
+                            return val.replace(/\n/gi, '<br />');
+                        }
+                        else {
+                            return val;
+                        }
+                    }
+                },
+                {
+                    text: '评价',
+                    flex: 1,
+                    dataIndex: 'comments',
+                    align: 'left',
+                    renderer: function (val, meta, rec) {
+                        if (val) {
+                            return val.replace(/\n/gi, '<br />');
+                        }
+                        else {
+                            return val;
+                        }
+                    }
+                }
+            );
             Ext.suspendLayouts();
             grid.reconfigure(st, cols);
             Ext.resumeLayouts(true);
@@ -398,6 +396,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
             {
                 xtype: 'gridpanel',
                 flex: 9,
+                cls: 'gridpanel-logContent',
                 name: 'gridpanel-logContent',
                 itemId: 'gridpanel-logContent',
                 getRec: function () {
@@ -432,7 +431,15 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                         },
                         {
                             text: '评价',
-                            dataIndex: 'comments'
+                            dataIndex: 'comments',
+                            renderer: function (val, meta, rec) {
+                                if (val) {
+                                    return val.replace(/\n/gi, '<br />');
+                                }
+                                else {
+                                    return val;
+                                }
+                            }
                         }
                     ]
                 },
@@ -448,7 +455,8 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
 
                             var win = Ext.create('FamilyDecoration.view.mylog.SelfPlan', {
                                 initInfo: {
-                                    name: me.checkMode ? me.staff.get('name') : User.getName()
+                                    name: me.checkMode ? me.staff.get('name') : User.getName(),
+                                    rec: rec
                                 }
                             });
 
@@ -482,7 +490,10 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                             var grid = me.down('gridpanel'),
                                 rec = grid.getRec();
                             var win = Ext.create('FamilyDecoration.view.mylog.EditComments', {
-
+                                rec: rec,
+                                afterEvent: function () {
+                                    grid.getStore().reload();
+                                }
                             });
                             win.show();
                         }

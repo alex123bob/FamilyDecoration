@@ -10,6 +10,7 @@ Ext.define('FamilyDecoration.view.mylog.EditComments', {
     width: 400,
     height: 300,
     rec: null,
+    afterEvent: Ext.emptyFn,
 
     initComponent: function () {
         var me = this;
@@ -19,7 +20,7 @@ Ext.define('FamilyDecoration.view.mylog.EditComments', {
                 xtype: 'textarea',
                 name: 'textarea-comments',
                 autoScroll: true,
-                value: me.rec ? rec.get('') : ''
+                value: me.rec ? me.rec.get('comments') : ''
             }
         ];
 
@@ -28,6 +29,28 @@ Ext.define('FamilyDecoration.view.mylog.EditComments', {
                 text: '确定',
                 handler: function () {
                     var txtArea = me.down('textarea');
+                    if (me.rec && me.rec.get('commentsId')) {
+                        ajaxUpdate('LogList', {
+                            content: txtArea.getValue(),
+                            id: me.rec.get('commentsId')
+                        }, 'id', function (obj) {
+                            showMsg('修改成功！');
+                            me.close();
+                            me.afterEvent();
+                        })
+                    }
+                    else {
+                        ajaxAdd('LogList', {
+                            createTime: me.rec.get('year') + '-' + me.rec.get('month') + '-' + me.rec.get('day') + ' 00:00:00',
+                            content: txtArea.getValue(),
+                            logType: 2,
+                            committer: User.getName()
+                        }, function () {
+                            showMsg('添加成功!');
+                            me.close();
+                            me.afterEvent();
+                        });
+                    }
                 }
             },
             {
