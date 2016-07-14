@@ -105,6 +105,7 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
         ];
 
         me.addListener('afterrender', function (win, opts){
+            console.log(win.initInfo);
         });
 
         this.callParent();
