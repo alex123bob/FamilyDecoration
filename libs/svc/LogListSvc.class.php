@@ -11,6 +11,11 @@ class LogListSvc extends BaseSvc
 			array('y'=>$date3->format('Y'),'m'=>$date3->format('m'),'f'=>0)
 		);
 	}
+	
+	public function add($q){
+		$q['@id'] = $this->getUUID();
+		return parent::add($q);
+	}
 
 	public function getOldMonths(){
 		$end = new DateTime('now - 2month');
