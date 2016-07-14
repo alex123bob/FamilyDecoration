@@ -29,10 +29,10 @@ Ext.define('FamilyDecoration.view.mylog.SummarizedLog', {
                 text: '确定',
                 handler: function () {
                     var txtArea = me.down('textarea');
-                    if (me.rec && me.rec.get('cid')) {
+                    if (me.rec && me.rec.get('summarizedLogId')) {
                         ajaxUpdate('LogList', {
                             content: txtArea.getValue(),
-                            id: me.rec.getId()
+                            id: me.rec.get('summarizedLogId')
                         }, 'id', function (obj) {
                             showMsg('修改成功！');
                             me.close();

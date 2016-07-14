@@ -270,7 +270,21 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                         text: '个人计划',
                         flex: 1,
                         dataIndex: 'selfPlan',
-                        align: 'left'
+                        align: 'left',
+                        renderer: function (val, meta, rec) {
+                            var res = '';
+                            if (val.length > 0) {
+                                Ext.each(val, function (item, index, self) {
+                                    res += '<strong>' + (index + 1) + '.</strong>'
+                                        + ' ' + item['content'].replace(/\n/gi, '<br />')
+                                        + item['isFinished'] + ' <br />'
+                                        + '<span class="footnote">(' + item['day'] + ') '
+                                        + '</span>'
+                                        + '<br />';
+                                });
+                            }
+                            return res;
+                        }
                     },
                     {
                         text: '总结日志',
@@ -398,6 +412,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
             {
                 xtype: 'gridpanel',
                 flex: 9,
+                cls: 'gridpanel-logContent',
                 name: 'gridpanel-logContent',
                 itemId: 'gridpanel-logContent',
                 getRec: function () {

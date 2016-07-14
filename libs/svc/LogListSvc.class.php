@@ -160,5 +160,10 @@ class LogListSvc extends BaseSvc
 			);
 		throw new Exception("unknow mode $mode!");
 	}
+
+	public function add($q){
+		$q['@id'] = $this->getUUID();
+		return parent::add($q);
+	}
 }
 ?>
