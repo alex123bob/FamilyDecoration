@@ -20,5 +20,6 @@ alter table log_list drop column logListId;
 drop table log_list_temp;
 
 alter table log_list add column  varchar(200);
+set time_zone='+8:00';
 
 update `system` set `paramValue`='version-8.5' where `id`='4';
