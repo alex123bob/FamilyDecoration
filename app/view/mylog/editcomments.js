@@ -11,6 +11,7 @@ Ext.define('FamilyDecoration.view.mylog.EditComments', {
     height: 300,
     rec: null,
     afterEvent: Ext.emptyFn,
+    staffName: undefined,
 
     initComponent: function () {
         var me = this;
@@ -44,7 +45,8 @@ Ext.define('FamilyDecoration.view.mylog.EditComments', {
                             createTime: me.rec.get('year') + '-' + me.rec.get('month') + '-' + me.rec.get('day') + ' 00:00:00',
                             content: txtArea.getValue(),
                             logType: 2,
-                            committer: User.getName()
+                            committer: me.staffName,
+                            evaluator: User.getName()
                         }, function () {
                             showMsg('添加成功!');
                             me.close();

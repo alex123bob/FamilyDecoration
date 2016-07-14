@@ -18,7 +18,7 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
         layout: 'hbox'
     },
     autoScroll: true,
-    initInfo: null,
+    initInfo: null, // includes: staffName, rec(current selected item)
 
     initComponent: function () {
         var me = this;
@@ -36,19 +36,6 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
                         margin: '0 2 0 0',
                         hidden: rec ? !rec.isToday : false,
                         handler: function () {
-                            var ct = this.ownerCt,
-                                nextCt = ct.nextSibling();
-
-                            Ext.suspendLayouts();
-                            me.remove(ct);
-                            while (nextCt) {
-                                var logItemTxt = nextCt.down('[name="textfield-logItem"]'),
-                                    labelStr = logItemTxt.getFieldLabel(),
-                                    label = parseInt(labelStr, 10);
-                                logItemTxt.setFieldLabel((label - 1).toString());
-                                nextCt = nextCt.nextSibling();
-                            }
-                            Ext.resumeLayouts(true);
                         }
                     },
                     {
@@ -57,7 +44,7 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
                         flex: 1,
                         labelWidth: 20,
                         fieldLabel: (index + 1).toString(),
-                        readOnly: rec ? rec.isToday : false,
+                        // readOnly: rec ? rec.isToday : false,
                         value: rec ? rec.content : ''
                     },
                     {
@@ -76,23 +63,41 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
             };
         }
 
+        function _refreshCmp (){
+            ajaxGet('LogList', false, {
+                committer: me.initInfo.staffName,
+                logType: 0,
+                day: me.initInfo.rec.get('year') + '-' + me.initInfo.rec.get('month') + '-' + me.initInfo.rec.get('day')
+            }, function (obj){
+                var arr = obj.data;
+                Ext.each(arr, function (obj, index, self){
+                    me.insert(index, _generateCmp(index, obj));
+                });
+            });
+        }
+
         me.items = [];
 
         me.buttons = [
             {
                 text: '添加',
                 handler: function () {
-                    Ext.suspendLayouts();
+                    ajaxAdd('LogList', {
+                        committer: me.initInfo.staffName,
+                        createTime: Ext.Date.format(new Date(), 'Y-m-d H:i:s'),
+                        logType: 0
+                    }, function (obj){
+                        if (obj.status == 'successful') {
+                            showMsg('添加成功！');
+                            _refreshCmp();
+                        }
+                    });
+                    // Ext.suspendLayouts();
 
-                    var index = me.items.items.length;
-                    me.insert(index, _generateCmp(index));
+                    // var index = me.items.items.length;
+                    // me.insert(index, _generateCmp(index));
 
-                    Ext.resumeLayouts(true);
-                }
-            },
-            {
-                text: '确定',
-                handler: function () {
+                    // Ext.resumeLayouts(true);
 
                 }
             },
@@ -105,7 +110,7 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
         ];
 
         me.addListener('afterrender', function (win, opts){
-            console.log(win.initInfo);
+            
         });
 
         this.callParent();

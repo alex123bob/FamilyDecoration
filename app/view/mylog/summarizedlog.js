@@ -10,6 +10,7 @@ Ext.define('FamilyDecoration.view.mylog.SummarizedLog', {
     width: 550,
     height: 340,
     rec: null,
+    staffName: undefined,
     afterEvent: Ext.emptyFn,
 
     initComponent: function () {
@@ -44,7 +45,7 @@ Ext.define('FamilyDecoration.view.mylog.SummarizedLog', {
                             createTime: me.rec.get('year') + '-' + me.rec.get('month') + '-' + me.rec.get('day') + ' 00:00:00',
                             content: txtArea.getValue(),
                             logType: 1,
-                            committer: User.getName()
+                            committer: me.staffName
                         }, function () {
                             showMsg('添加成功!');
                             me.close();

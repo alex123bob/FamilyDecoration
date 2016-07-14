@@ -455,7 +455,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
 
                             var win = Ext.create('FamilyDecoration.view.mylog.SelfPlan', {
                                 initInfo: {
-                                    name: me.checkMode ? me.staff.get('name') : User.getName(),
+                                    staffName: me.checkMode ? me.staff.get('name') : User.getName(),
                                     rec: rec
                                 }
                             });
@@ -473,6 +473,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                                 rec = grid.getRec();
                             var win = Ext.create('FamilyDecoration.view.mylog.SummarizedLog', {
                                 rec: rec,
+                                staffName: me.checkMode ? me.staff.get('name') : User.getName(),
                                 afterEvent: function () {
                                     grid.getStore().reload();
                                 }
@@ -491,6 +492,7 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                                 rec = grid.getRec();
                             var win = Ext.create('FamilyDecoration.view.mylog.EditComments', {
                                 rec: rec,
+                                staffName: me.checkMode ? me.staff.get('name') : User.getName(),
                                 afterEvent: function () {
                                     grid.getStore().reload();
                                 }
