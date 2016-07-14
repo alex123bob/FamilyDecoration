@@ -7,7 +7,7 @@ alter table log_detail add column logType varchar(1) default 0 comment '0:普通
 alter table log_detail add column updateTime timestamp;
 alter table log_detail add column committer varchar(200);
 alter table log_detail modify content text;
-alter table log_detail add column isFinished varchar(1);
+alter table log_detail add column isFinished varchar(1) default 0 comment '0:未完成,1:完成';
 update log_detail set logType = '0';
 update log_detail d set committer = (select userName from log_list l where l.id = d.logListId);
 update log_detail set updateTime = createTime;

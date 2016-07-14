@@ -15,8 +15,14 @@ class LogListSvc extends BaseSvc
 	public function get($q){
 		$begin = $q['day'].' 00:00:00';
 		$end = $q['day'].' 23:59:59';
-		$this->appendWhere = " and createTime >= '$begin' and createTime <= '$end' ";
-		return parent::get($q);
+		$this->appendWhere = " and createTime >= '$begin' and createTime <= '$end' or  ( createTime < '$begin' and isFinished != '1' ) ";
+		$res = parent::get($q);
+		foreach ($res['data'] as &$item) {
+			unset($item['updateTime']);
+			unset($item['isDeleted']);
+			$item['editable'] = $item['createTime'] < $begin ? 1 : 0;
+		}
+		return $res; 
 	}
 	
 	public function add($q){
