@@ -189,8 +189,8 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                                                     if (success) {
                                                         var obj = Ext.JSON.decode(res.responseText);
                                                         if (obj.status == 'successful') {
-                                                            panel.getStore().load({
-                                                                node: resObj.pro.parentNode.parentNode
+                                                            resObj.proSt.load({
+                                                                node: resObj.pro.parentNode
                                                             });
                                                             resObj.proSelModel.deselectAll();
                                                             Ext.Ajax.request({

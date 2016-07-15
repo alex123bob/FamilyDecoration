@@ -138,7 +138,7 @@ Ext.define('FamilyDecoration.view.progress.Index', {
 											var obj = Ext.JSON.decode(res.responseText);
 											if (obj.status == 'successful') {
 												panel.getStore().load({
-													node: pro.parentNode.parentNode
+													node: pro.parentNode
 												});
 												panel.getSelectionModel().deselectAll();
 												Ext.Ajax.request({
