@@ -8,6 +8,7 @@ class StatementBillSvc extends BaseSvc
 			'rdyck->chk'=>1, //待审核->已审核
 			'rdyck->rbk'=>1, //待审核->打回
 			'rbk->rdyck'=>1, //打回->待审核
+			'chk->rdyck'=>1, //已审核->待审核  会计审核错了,回退到待审核状态
 			'chk->paid'=>1  //已审核->已付款
 		);
 	public function add($q){
