@@ -31,7 +31,7 @@
 	}
 	
 	function ExceptionHandler($e){
-		ErrorHandler(-1,$e->getTraceAsString(),$e->getMessage(),'');
+		ErrorHandler(-1,$e->getMessage(),$e->getTraceAsString(),'');
 	}
 
 	function getClientIp(){
