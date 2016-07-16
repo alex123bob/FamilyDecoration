@@ -98,6 +98,10 @@ Ext.define('FamilyDecoration.view.billaudit.BillList', {
         me.columns = {
             items: [
                 {
+                    text: '项目名称',
+                    dataIndex: 'projectName'  
+                },
+                {
                     text: '单名',
                     dataIndex: 'billName'
                 },
