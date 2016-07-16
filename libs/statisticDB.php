@@ -5,7 +5,7 @@
 		global $mysql;
         $res= array();
 
-		$whereSql = " where `name` in (select `userName` from `log_list`) ";
+		$whereSql = " where `name` in (select `committer` from `log_list`) ";
 		$orderBy = " ORDER BY `user`.`level` ASC ";
 		$arr = $mysql->DBGetSomeRows("`user`", " DISTINCT `level` ",$whereSql ,$orderBy);
 		foreach($arr as $key => $val) {
