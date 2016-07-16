@@ -20,7 +20,13 @@
 		}catch(Exception $e){
 			var_dump($e);
 		}
-		echo '{"status" => "failing","line"=>'.$errorLine.',"errMsg" =>"'.$errstr.'","file"=>'.$errorFile.'}';
+		$res = array(
+			'status'=>'failing',
+			'line'=>$errorLine,
+			'errMsg'=>$errstr,
+			'file'=>$errorFile
+			);
+		echo (json_encode($res));
 		die();
 	}
 	
