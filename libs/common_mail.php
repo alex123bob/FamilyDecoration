@@ -15,7 +15,7 @@ function sendEmail ($recipient,$aliasNames='',$from = '佳诚装饰' ,$subject, 
 	$mail = new PHPMailer();
 	$mail->IsSMTP();
 	// $mail->SMTPDebug = 2; // this is debug mode, if you need, open it and see detailed error info
-	$mail->SMTPDebug = 2; // non-debug mode
+	$mail->SMTPDebug = 0; // non-debug mode
 	$mail->Debugoutput  = 'html';
 	$mail->Host = "smtp.qq.com";
 	$mail->Port = "465";  
@@ -66,8 +66,8 @@ function sendEmail ($recipient,$aliasNames='',$from = '佳诚装饰' ,$subject, 
 	$mail->Body    = $body;
 	$mail->AltBody = "";
 	if(!$mail->send()) {
-		echo "Message could not be sent.<br />\n";
-		echo "Mailer Error: " . $mail->ErrorInfo."<br />\n";
+		// echo "Message could not be sent.<br />\n";
+		// echo "Mailer Error: " . $mail->ErrorInfo."<br />\n";
 	} else {
 		// echo "Message has been sent<br />\n";
 	}

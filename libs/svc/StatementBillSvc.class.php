@@ -185,6 +185,8 @@ class StatementBillSvc extends BaseSvc
 					continue;
 				if($q['@status']=='chk' && startWith($user['level'],'003-001'))
 					continue;
+				if(startWith($user['level'],'001-')) // 总经办不用发送短信
+					continue;
 				if(strlen($user['phone']) == 11 && !in_array($user['phone'], $sentPhones)){ // 11位有效手机号
 					$phoneNumber = $user['phone'];
 					array_push($sentPhones, $user['phone']);
