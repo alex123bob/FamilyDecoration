@@ -21,7 +21,7 @@ class LogListSvc extends BaseSvc
 		foreach ($res['data'] as &$item) {
 			unset($item['updateTime']);
 			unset($item['isDeleted']);
-			$item['editable'] = $item['createTime'] < $begin ? 1 : 0;
+			$item['editable'] = $item['createTime'] < $begin ? 0 : 1;
 		}
 		return $res; 
 	}
