@@ -94,7 +94,17 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
                 width: '100%',
                 emptyText: '项目名称',
                 name: 'projectName',
-                itemId: 'projectName'
+                itemId: 'projectName',
+                enableKeyEvents:true,
+                listeners : {
+                    keydown : function(field,e){
+                        console.log(e.keyCode);
+                        if(e.keyCode == 13){
+                            
+                            
+                        }
+                  }
+                }
             },
             {
                 xtype: 'fieldcontainer',
