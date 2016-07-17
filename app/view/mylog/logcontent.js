@@ -449,7 +449,10 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                         icon: 'resources/img/sheet.png',
                         handler: function () {
                             var grid = me.down('gridpanel'),
-                                rec = grid.getRec();
+                                st = grid.getStore(),
+                                selModel = grid.getSelectionModel(),
+                                rec = grid.getRec(),
+                                index = st.indexOf(rec);
 
                             var win = Ext.create('FamilyDecoration.view.mylog.SelfPlan', {
                                 initInfo: {
@@ -457,7 +460,14 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                                     rec: rec
                                 },
                                 afterClose: function () {
-                                    grid.getStore().reload();
+                                    st.reload({
+                                        callback: function (recs, ope, success){
+                                            if (success) {
+                                                selModel.deselectAll();
+                                                selModel.select(index);
+                                            }
+                                        }
+                                    });
                                 }
                             });
 
