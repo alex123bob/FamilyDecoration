@@ -111,7 +111,7 @@ class LogListSvc extends BaseSvc
 		$logsDayNumberMapping = array();
 		$sumlogsDayNumberMapping = array();
 		$comlogsDayNumberMapping = array();
-		$sql = "select id,evaluator,left(createTime,10) as day,isFinished,content,logType from log_list where createTime >= '?' and createTime <= '?' and committer = '?' and isDeleted = 'false' ";
+		$sql = "select id,evaluator,left(createTime,10) as day,isFinished,content,logType from log_list where createTime >= '?' and createTime <= '?' and committer = '?' and isDeleted = 'false' order by createTime asc ";
 		global $mysql;
 		$logs = $mysql->DBGetAsMap($sql,$beginTime,$endTime,$user);
 		foreach ($logs as $value) {
@@ -138,9 +138,9 @@ class LogListSvc extends BaseSvc
 			$cid = isset($comlogsDayNumberMapping[$date]) ? $comlogsDayNumberMapping[$date]['id'] : '';
 			$e = isset($comlogsDayNumberMapping[$date]) ? $comlogsDayNumberMapping[$date]['evaluator'] : '';
 			array_push($res, array(
-				'sp'=>$mode == "market" ? '电销:xxx扫楼:xxx' : null,  //standardPlan
+				'sp'=>$mode == "market" ? 'x电 x扫' : null,  //standardPlan
 				'pa'=>$mode == "market" ? $tele.'电 '.$wip.'扫' : null, //practicalAccomplishment
-				'd'=>$mode == "market" ? "电销:xxx扫楼:xxx" : null,//difference
+				'd'=>$mode == "market" ? "x电 x扫" : null,//difference
 				's'=>$log,//selfPlan
 				'sl'=>$sl,//summarizedLog
 				'sid'=>$sid,
