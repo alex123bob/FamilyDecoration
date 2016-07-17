@@ -53,6 +53,11 @@ Ext.define('FamilyDecoration.view.billaudit.BillList', {
                             captain: obj.captain
                         });
                     }
+                    if (obj.projectName) {
+                        Ext.apply(p, {
+                            projectName: obj.projectName
+                        });
+                    }
                     billSt.setProxy({
                         type: 'rest',
                         url: './libs/api.php',

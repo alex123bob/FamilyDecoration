@@ -251,6 +251,9 @@ class StatementBillSvc extends BaseSvc
 		if (isset($q["captain"])) {
 			$sql .= " and p.captain like '%".$q["captain"]."%'";
 		}
+		if (isset($q["projectName"])) {
+			$sql .= " and p.projectName like '%".$q["projectName"]."%'";
+		}
 		$sqlCount = "select count(1) as cnt from ( $sql ) as temp ";
 		global $mysql;
 		$count = $mysql->DBGetAsOneArray($sqlCount,array($q['status']));

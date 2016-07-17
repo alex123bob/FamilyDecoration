@@ -16,9 +16,11 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
         function getRes() {
             var startTime = me.getComponent('startTime'),
                 endTime = me.getComponent('endTime'),
+                projectName = me.getComponent('projectName'),
                 customTxt = me.down('fieldcontainer').getComponent('customTxt');
             return {
                 startTime: startTime,
+                projectName: projectName,
                 endTime: endTime,
                 customTxt: customTxt
             };
@@ -86,6 +88,15 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
                 }
             },
             {
+                xtype: 'textfield',
+                flex: 1,
+                editable: false,
+                width: '100%',
+                emptyText: '项目名称',
+                name: 'projectName',
+                itemId: 'projectName'
+            },
+            {
                 xtype: 'fieldcontainer',
                 layout: 'hbox',
                 width: '100%',
@@ -102,14 +113,14 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
                         text: '过滤',
                         handler: function (){
                             var resObj = getRes();
+                            var obj = {};
                             if (resObj.startTime.isValid() && resObj.endTime.isValid()) {
-                                var obj = {
-                                    startTime: resObj.startTime.getValue(),
-                                    endTime: resObj.endTime.getValue()
-                                };
-                                obj[me.txtParam] = resObj.customTxt.getValue();
-                                me.filterFn(obj);
+                                    obj.startTime = resObj.startTime.getValue(),
+                                    obj.endTime = resObj.endTime.getValue()
                             }
+                            obj[me.txtParam] = resObj.customTxt.getValue();
+                            obj.projectName = resObj.projectName.getValue();
+                            me.filterFn(obj);
                         }
                     },
                     {
