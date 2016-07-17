@@ -17,6 +17,7 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
         width: '100%',
         layout: 'hbox'
     },
+    closable: false,
     autoScroll: true,
     initInfo: null, // includes: staffName, rec(current selected item),
     afterClose: Ext.emptyFn,
@@ -35,7 +36,7 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
                         text: 'X',
                         name: 'button-logItem',
                         margin: '0 2 0 0',
-                        hidden: rec.editable == '0',
+                        hidden: rec ? (rec.editable == '0' ? true : false) : false,
                         handler: function () {
                             var btn = this,
                                 ct = btn.ownerCt,
@@ -55,7 +56,8 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
                         labelWidth: 20,
                         allowBlank: false,
                         fieldLabel: (index + 1).toString(),
-                        readOnly: rec.editable == '0',
+                        tabIndex: (index + 1),
+                        readOnly: rec ? (rec.editable == '0' ? true : false) : false,
                         value: rec ? rec.content : '',
                         listeners: {
                             blur: function (txt, ev, opts){
@@ -67,7 +69,7 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
                                         id: hiddenField.getValue()
                                     }, 'id', function (obj){
                                         showMsg('计划内容更新成功！');
-                                        _refreshCmp();
+                                        // _refreshCmp();
                                     });
                                 }
                             }
@@ -79,7 +81,7 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
                         inputValue: false,
                         width: 40,
                         margin: '0 0 0 2',
-                        value: rec.isFinished == '1' ? true : false,
+                        value: rec ? (rec.isFinished == '1' ? true : false) : false,
                         listeners: {
                             change: function (chk, newVal, oldVal, opts){
                                 var chk = this,
@@ -90,7 +92,7 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
                                     id: hiddenField.getValue()
                                 }, 'id', function (obj){
                                     showMsg('计划状态更改成功！');
-                                    _refreshCmp();
+                                    // _refreshCmp();
                                 });
                             }
                         }
@@ -99,6 +101,14 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
                         xtype: 'hiddenfield',
                         name: 'hiddenfield-selfPlanId',
                         value: rec ? rec.id : ''
+                    },
+                    {
+                        xtype: 'displayfield',
+                        hideLabel: true,
+                        name: 'displayfield-createTime',
+                        value: rec ? (rec.editable == '0' ? rec.createTime.slice(5,10) : '') : '',
+                        hidden: rec ? (rec.editable == '0' ? false : true) : true,
+                        width: 40
                     }
                 ]
             };
@@ -131,15 +141,15 @@ Ext.define('FamilyDecoration.view.mylog.SelfPlan', {
                     }, function (obj){
                         if (obj.status == 'successful') {
                             showMsg('添加成功！');
-                            _refreshCmp();
+                            // _refreshCmp();
+                            Ext.suspendLayouts();
+
+                            var index = me.items.items.length;
+                            me.insert(index, _generateCmp(index, obj.data));
+
+                            Ext.resumeLayouts(true);
                         }
                     });
-                    // Ext.suspendLayouts();
-
-                    // var index = me.items.items.length;
-                    // me.insert(index, _generateCmp(index));
-
-                    // Ext.resumeLayouts(true);
 
                 }
             },
