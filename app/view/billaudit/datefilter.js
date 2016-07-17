@@ -36,7 +36,7 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
                 itemId: 'startTime',
                 emptyText: '开始时间',
                 cleanBtn: true,
-                cleanHandler: function (){
+                cleanHandler: function () {
                     var resObj = getRes();
                     resObj.endTime.isValid();
                 },
@@ -66,7 +66,7 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
                 name: 'endTime',
                 itemId: 'endTime',
                 cleanBtn: true,
-                cleanHandler: function (){
+                cleanHandler: function () {
                     var resObj = getRes();
                     resObj.startTime.isValid();
                 },
@@ -95,15 +95,14 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
                 emptyText: '项目名称',
                 name: 'projectName',
                 itemId: 'projectName',
-                enableKeyEvents:true,
-                listeners : {
-                    keydown : function(field,e){
-                        console.log(e.keyCode);
-                        if(e.keyCode == 13){
-                            
-                            
+                enableKeyEvents: true,
+                listeners: {
+                    keydown: function (field, e) {
+                        if (e.keyCode == 13) {
+                            var fct = field.nextSibling();
+                            fct.getComponent('button-filter').handler();
                         }
-                  }
+                    }
                 }
             },
             {
@@ -121,11 +120,12 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
                     {
                         xtype: 'button',
                         text: '过滤',
-                        handler: function (){
+                        itemId: 'button-filter',
+                        handler: function () {
                             var resObj = getRes();
                             var obj = {};
                             if (resObj.startTime.isValid() && resObj.endTime.isValid()) {
-                                    obj.startTime = resObj.startTime.getValue(),
+                                obj.startTime = resObj.startTime.getValue(),
                                     obj.endTime = resObj.endTime.getValue()
                             }
                             obj[me.txtParam] = resObj.customTxt.getValue();
@@ -136,10 +136,12 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
                     {
                         xtype: 'button',
                         text: '清空',
-                        handler: function (){
+                        itemId: 'button-clean',
+                        handler: function () {
                             var resObj = getRes();
                             resObj.startTime.setValue('').clearInvalid();
                             resObj.endTime.setValue('').clearInvalid();
+                            resObj.projectName.setValue('');
                             resObj.customTxt.setValue('');
                             me.clearFn();
                         }
