@@ -198,7 +198,7 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                                             }
                                             else {
                                                 Ext.defer(function () {
-                                                    Ext.Msg.read(obj.hint, function (val) {
+                                                    Ext.Msg.password(obj.hint, function (val) {
                                                         if (obj.type == 'sms') {
                                                         }
                                                         else if (obj.type == 'securePass') {
@@ -254,7 +254,7 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                                             }
                                             else {
                                                 Ext.defer(function () {
-                                                    Ext.Msg.read(obj.hint, function (val) {
+                                                    Ext.Msg.password(obj.hint, function (val) {
                                                         if (obj.type == 'sms') {
                                                         }
                                                         else if (obj.type == 'securePass') {
@@ -314,7 +314,7 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                                             }
                                             else {
                                                 Ext.defer(function () {
-                                                    Ext.Msg.read(obj.hint, function (val) {
+                                                    Ext.Msg.password(obj.hint, function (val) {
                                                         if (obj.type == 'sms') {
                                                         }
                                                         else if (obj.type == 'securePass') {
