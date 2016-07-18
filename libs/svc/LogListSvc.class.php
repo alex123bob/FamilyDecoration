@@ -104,14 +104,13 @@ class LogListSvc extends BaseSvc
 			}
 		}
 		$time = strtotime("$year-$month-01");
-		$days = date('t', $time);
+		$days = date('d');
 		$beginTime = "$year-$month-01 00:00:00";
 		$endTime = "$year-$month-$days 00:00:00";
-		
 		$logsDayNumberMapping = array();
 		$sumlogsDayNumberMapping = array();
 		$comlogsDayNumberMapping = array();
-		$sql = "select id,evaluator,left(createTime,10) as day,isFinished,content,logType from log_list where createTime >= '?' and createTime <= '?' and committer = '?' and isDeleted = 'false' order by createTime asc ";
+		$sql = "select id,evaluator,left(createTime,10) as day,isFinished,content,logType from log_list where createTime >= '?' and createTime <= '?' and committer = '?' and isDeleted = 'false' ";
 		global $mysql;
 		$logs = $mysql->DBGetAsMap($sql,$beginTime,$endTime,$user);
 		foreach ($logs as $value) {
@@ -127,7 +126,7 @@ class LogListSvc extends BaseSvc
 			}
 		}
 		$res = array();
-		for($i = 1;$i<=$days;$i++){
+		for($i = $days;$i >= 1;$i--){
 			$date = "$year-$month-".($i < 10 ? '0':'').$i;
 			$tele = isset($telemarketingDayNumberMappping[$date]) ? $telemarketingDayNumberMappping[$date] : 0;
 			$wip = isset($buildingSwipingDayNumberMappping[$date]) ? $buildingSwipingDayNumberMappping[$date] : 0;
