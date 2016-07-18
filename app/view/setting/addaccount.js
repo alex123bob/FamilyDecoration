@@ -482,7 +482,7 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 												if (success) {
 													var obj = Ext.decode(res.responseText);
 													if (obj.status == 'successful') {
-														Ext.Msg.read(
+														Ext.Msg.password(
 															'修改安全密码或者手机号需要短信验证码，'
 															+ '<br />如果手机已更改或缺失手机号码，'
 															+ '<br />请与管理员联系。'

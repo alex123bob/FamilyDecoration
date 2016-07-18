@@ -118,6 +118,28 @@ Ext.require('Ext.window.MessageBox', function () {
                 fn(inputValue);
             });
         },
+        password: function (msg, fn, scope) {
+            return swal({
+                title: "提示",
+                text: msg,
+                type: "input",
+                html: true,
+                showCancelButton: true,
+                closeOnConfirm: false,
+                animation: "slide-from-top",
+                inputPlaceholder: "请输入",
+                inputType: 'password'
+            }, function (inputValue) {
+                if (inputValue === false) {
+                    return false;
+                }
+                if (inputValue === "") {
+                    swal.showInputError("输入为空！");
+                    return false
+                }
+                fn(inputValue);
+            });
+        },
         success: function (msg, fn, scope){
             return swal({
                 title: '成功',
