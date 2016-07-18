@@ -22,8 +22,6 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.CheckSignBusiness": "../../app/controller/checksignbusiness.js",
   "FamilyDecoration.controller.CostAnalysis": "../../app/controller/costanalysis.js",
   "FamilyDecoration.controller.DeadBusiness": "../../app/controller/deadbusiness.js",
-  "FamilyDecoration.controller.Leave": "../../app/controller/leave.js",
-  "FamilyDecoration.controller.LeaveApproval": "../../app/controller/leaveapproval.js",
   "FamilyDecoration.controller.Mail": "../../app/controller/mail.js",
   "FamilyDecoration.controller.MainMaterial": "../../app/controller/mainmaterial.js",
   "FamilyDecoration.controller.ManuallyCheckBill": "../../app/controller/manuallycheckbill.js",
@@ -59,6 +57,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.model.Community": "../../app/model/community.js",
   "FamilyDecoration.model.CostAnalysis": "../../app/model/costanalysis.js",
   "FamilyDecoration.model.Feature": "../../app/model/feature.js",
+  "FamilyDecoration.model.LogContent": "../../app/model/logcontent.js",
   "FamilyDecoration.model.LogList": "../../app/model/loglist.js",
   "FamilyDecoration.model.Mail": "../../app/model/mail.js",
   "FamilyDecoration.model.MainMaterial": "../../app/model/mainmaterial.js",
@@ -105,6 +104,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.store.Community": "../../app/store/community.js",
   "FamilyDecoration.store.CostAnalysis": "../../app/store/costanalysis.js",
   "FamilyDecoration.store.Feature": "../../app/store/feature.js",
+  "FamilyDecoration.store.LogContent": "../../app/store/logcontent.js",
   "FamilyDecoration.store.LogList": "../../app/store/loglist.js",
   "FamilyDecoration.store.Mail": "../../app/store/mail.js",
   "FamilyDecoration.store.MainMaterial": "../../app/store/mainmaterial.js",
@@ -173,8 +173,6 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.costanalysis.TotalCost": "../../app/view/costanalysis/totalcost.js",
   "FamilyDecoration.view.deadbusiness.EditDeadBusiness": "../../app/view/deadbusiness/editdeadbusiness.js",
   "FamilyDecoration.view.deadbusiness.Index": "../../app/view/deadbusiness/index.js",
-  "FamilyDecoration.view.leave.Index": "../../app/view/leave/index.js",
-  "FamilyDecoration.view.leaveapproval.Index": "../../app/view/leaveapproval/index.js",
   "FamilyDecoration.view.mail.Index": "../../app/view/mail/index.js",
   "FamilyDecoration.view.mail.NewMail": "../../app/view/mail/newmail.js",
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": "../../app/view/mainmaterial/editmainmaterial.js",
@@ -194,12 +192,17 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.mybusiness.RegionList": "../../app/view/mybusiness/regionlist.js",
   "FamilyDecoration.view.mybusiness.TransferToProject": "../../app/view/mybusiness/transfertoproject.js",
   "FamilyDecoration.view.mylog.AskLeave": "../../app/view/mylog/askleave.js",
+  "FamilyDecoration.view.mylog.EditComments": "../../app/view/mylog/editcomments.js",
   "FamilyDecoration.view.mylog.EditLogDetail": "../../app/view/mylog/editlogdetail.js",
   "FamilyDecoration.view.mylog.Index": "../../app/view/mylog/index.js",
+  "FamilyDecoration.view.mylog.LogContent": "../../app/view/mylog/logcontent.js",
   "FamilyDecoration.view.mylog.LogList": "../../app/view/mylog/loglist.js",
+  "FamilyDecoration.view.mylog.SelfPlan": "../../app/view/mylog/selfplan.js",
+  "FamilyDecoration.view.mylog.SummarizedLog": "../../app/view/mylog/summarizedlog.js",
   "FamilyDecoration.view.mytask.EditProcess": "../../app/view/mytask/editprocess.js",
   "FamilyDecoration.view.mytask.Index": "../../app/view/mytask/index.js",
   "FamilyDecoration.view.mytask.SelfAssess": "../../app/view/mytask/selfassess.js",
+  "FamilyDecoration.view.mytask.TaskGrid": "../../app/view/mytask/taskgrid.js",
   "FamilyDecoration.view.mytask.TaskList": "../../app/view/mytask/tasklist.js",
   "FamilyDecoration.view.personnel.Index": "../../app/view/personnel/index.js",
   "FamilyDecoration.view.personnel.StatisticTree": "../../app/view/personnel/statistictree.js",
@@ -1107,8 +1110,6 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.CheckSignBusiness": [],
   "FamilyDecoration.controller.CostAnalysis": [],
   "FamilyDecoration.controller.DeadBusiness": [],
-  "FamilyDecoration.controller.Leave": [],
-  "FamilyDecoration.controller.LeaveApproval": [],
   "FamilyDecoration.controller.Mail": [],
   "FamilyDecoration.controller.MainMaterial": [],
   "FamilyDecoration.controller.ManuallyCheckBill": [],
@@ -1144,6 +1145,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.model.Community": [],
   "FamilyDecoration.model.CostAnalysis": [],
   "FamilyDecoration.model.Feature": [],
+  "FamilyDecoration.model.LogContent": [],
   "FamilyDecoration.model.LogList": [],
   "FamilyDecoration.model.Mail": [],
   "FamilyDecoration.model.MainMaterial": [],
@@ -1190,6 +1192,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.store.Community": [],
   "FamilyDecoration.store.CostAnalysis": [],
   "FamilyDecoration.store.Feature": [],
+  "FamilyDecoration.store.LogContent": [],
   "FamilyDecoration.store.LogList": [],
   "FamilyDecoration.store.Mail": [],
   "FamilyDecoration.store.MainMaterial": [],
@@ -1258,8 +1261,6 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.costanalysis.TotalCost": [],
   "FamilyDecoration.view.deadbusiness.EditDeadBusiness": [],
   "FamilyDecoration.view.deadbusiness.Index": [],
-  "FamilyDecoration.view.leave.Index": [],
-  "FamilyDecoration.view.leaveapproval.Index": [],
   "FamilyDecoration.view.mail.Index": [],
   "FamilyDecoration.view.mail.NewMail": [],
   "FamilyDecoration.view.mainmaterial.EditMainMaterial": [],
@@ -1279,12 +1280,17 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.mybusiness.RegionList": [],
   "FamilyDecoration.view.mybusiness.TransferToProject": [],
   "FamilyDecoration.view.mylog.AskLeave": [],
+  "FamilyDecoration.view.mylog.EditComments": [],
   "FamilyDecoration.view.mylog.EditLogDetail": [],
   "FamilyDecoration.view.mylog.Index": [],
+  "FamilyDecoration.view.mylog.LogContent": [],
   "FamilyDecoration.view.mylog.LogList": [],
+  "FamilyDecoration.view.mylog.SelfPlan": [],
+  "FamilyDecoration.view.mylog.SummarizedLog": [],
   "FamilyDecoration.view.mytask.EditProcess": [],
   "FamilyDecoration.view.mytask.Index": [],
   "FamilyDecoration.view.mytask.SelfAssess": [],
+  "FamilyDecoration.view.mytask.TaskGrid": [],
   "FamilyDecoration.view.mytask.TaskList": [],
   "FamilyDecoration.view.personnel.Index": [],
   "FamilyDecoration.view.personnel.StatisticTree": [],
@@ -2358,8 +2364,6 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.CheckSignBusiness": [],
   "FamilyDecoration.controller.CostAnalysis": [],
   "FamilyDecoration.controller.DeadBusiness": [],
-  "FamilyDecoration.controller.Leave": [],
-  "FamilyDecoration.controller.LeaveApproval": [],
   "FamilyDecoration.controller.Mail": [],
   "FamilyDecoration.controller.MainMaterial": [],
   "FamilyDecoration.controller.ManuallyCheckBill": [],
@@ -2395,6 +2399,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.model.Community": [],
   "FamilyDecoration.model.CostAnalysis": [],
   "FamilyDecoration.model.Feature": [],
+  "FamilyDecoration.model.LogContent": [],
   "FamilyDecoration.model.LogList": [],
   "FamilyDecoration.model.Mail": [],
   "FamilyDecoration.model.MainMaterial": [],
@@ -2441,6 +2446,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.store.Community": [],
   "FamilyDecoration.store.CostAnalysis": [],
   "FamilyDecoration.store.Feature": [],
+  "FamilyDecoration.store.LogContent": [],
   "FamilyDecoration.store.LogList": [],
   "FamilyDecoration.store.Mail": [],
   "FamilyDecoration.store.MainMaterial": [],
@@ -2577,12 +2583,6 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.deadbusiness.Index": [
     "widget.deadbusiness-index"
   ],
-  "FamilyDecoration.view.leave.Index": [
-    "widget.leave-index"
-  ],
-  "FamilyDecoration.view.leaveapproval.Index": [
-    "widget.leaveapproval-index"
-  ],
   "FamilyDecoration.view.mail.Index": [
     "widget.mail-index"
   ],
@@ -2640,14 +2640,26 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.mylog.AskLeave": [
     "widget.mylog-askleave"
   ],
+  "FamilyDecoration.view.mylog.EditComments": [
+    "widget.mylog-editcomments"
+  ],
   "FamilyDecoration.view.mylog.EditLogDetail": [
     "widget.mylog-editlogdetail"
   ],
   "FamilyDecoration.view.mylog.Index": [
     "widget.mylog-index"
   ],
+  "FamilyDecoration.view.mylog.LogContent": [
+    "widget.mylog-logcontent"
+  ],
   "FamilyDecoration.view.mylog.LogList": [
     "widget.mylog-loglist"
+  ],
+  "FamilyDecoration.view.mylog.SelfPlan": [
+    "widget.mylog-selfplan"
+  ],
+  "FamilyDecoration.view.mylog.SummarizedLog": [
+    "widget.mylog-summarizedlog"
   ],
   "FamilyDecoration.view.mytask.EditProcess": [
     "widget.mytask-editprocess"
@@ -2657,6 +2669,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.mytask.SelfAssess": [
     "widget.mytask-selfassess"
+  ],
+  "FamilyDecoration.view.mytask.TaskGrid": [
+    "widget.mytask-taskgrid"
   ],
   "FamilyDecoration.view.mytask.TaskList": [
     "widget.mytask-tasklist"
