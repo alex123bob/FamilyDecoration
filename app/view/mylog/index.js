@@ -61,7 +61,19 @@ Ext.define('FamilyDecoration.view.mylog.Index', {
 			}
 
 			if (!me.checkMode || me.staff) {
-				resObj.quarterPane.getStore().reload();
+				resObj.quarterPane.getStore().reload({
+					callback: function (recs, ope, success){
+						if (success) {
+							for (var index = 0; index < recs.length; index++) {
+								var rec = recs[index];
+								if (rec.get('month') == (new Date().getMonth() + 1) ) {
+									resObj.quarterPane.getSelectionModel().select(rec);
+									break;
+								}
+							}
+						}
+					}
+				});
 				resObj.frozenPane.getStore().reload();
 			}
 			else {
