@@ -83,10 +83,19 @@ Ext.define('FamilyDecoration.view.budget.AddBlankItem', {
 											budgetId: me.budgetId
 										},
 										callback: function (recs, ope, success){
-											if (success && me.rec) {
-												var selModel = me.grid.getSelectionModel();
+											if (success) {
+												var selModel = me.grid.getSelectionModel(),
+													view = me.grid.getView();
 												selModel.deselectAll();
-												selModel.select(me.grid.getStore().getById(me.rec.getId()));
+												if (me.rec) {
+													selModel.select(me.grid.getStore().getById(me.rec.getId()));
+				            						view.focusRow(me.rec, 200);
+												}
+												else {
+													var budgetItemId = obj['budgetItemId'];
+													selModel.select(me.grid.getStore().getById(budgetItemId));
+													view.focusRow(budgetItemId, 200);
+												}
 											}
 										}
 									});

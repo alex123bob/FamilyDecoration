@@ -7,7 +7,8 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
         'FamilyDecoration.store.StatementBill',
         'Ext.ux.form.SearchField',
         'FamilyDecoration.view.billaudit.BillList',
-        'Ext.layout.container.Accordion'
+        'Ext.layout.container.Accordion',
+        'FamilyDecoration.view.manuallycheckbill.BillRecord'
     ],
     layout: 'hbox',
 
@@ -133,7 +134,8 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                         auditPass: panel.query('[name="auditPass"]')[0],
                         financialPayment: panel.query('[name="financialPayment"]')[0],
                         printBill: panel.query('[name="printBill"]')[0],
-                        previewBill: panel.query('[name="previewBill"]')[0]
+                        previewBill: panel.query('[name="previewBill"]')[0],
+                        billRecords: panel.query('[name="billRecords"]')[0]
                     };
                 },
                 initBtn: function () {
@@ -164,7 +166,7 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                                     btnEl.disable();
                                 }
                             }
-                            else if (btnKey == 'printBill' || btnKey == 'previewBill') {
+                            else if (btnKey == 'printBill' || btnKey == 'previewBill' || btnKey == 'billRecords') {
                                 btnEl.setDisabled(!resourceObj.bill && !resourceObj.passedBill && !resourceObj.paidBill);
                             }
                         }
@@ -368,6 +370,25 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                             if (bill) {
                                 var win = window.open('./fpdf/statement_bill.php?id=' + bill.getId(), '打印', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
                                 win.print();
+                            }
+                            else {
+                                showMsg('没有账单！');
+                            }
+                        }
+                    },
+                    {
+                        text: '账单记录',
+                        name: 'billRecords',
+                        disabled: true,
+                        icon: 'resources/img/bill_history.png',
+                        handler: function () {
+                            var resourceObj = me.getRes(),
+                                bill = resourceObj.bill || resourceObj.passedBill || resourceObj.paidBill;
+                            if (bill) {
+                                var win = Ext.create('FamilyDecoration.view.manuallycheckbill.BillRecord', {
+                                    bill: bill
+                                });
+                                win.show();
                             }
                             else {
                                 showMsg('没有账单！');

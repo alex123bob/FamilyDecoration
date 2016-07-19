@@ -26,7 +26,7 @@
 		// $obj['lossPercent'] = ($obj['mainMaterialPrice']+$obj['auxiliaryMaterialPrice']) * 0.05;
 		$obj['lossPercent'] = $obj['lossPercent'];
 		$mysql->DBInsertAsArray("`budget_item`",$obj);
-		return array('status'=>'successful', 'errMsg' => '','itemCode'=>$itemCode);
+		return array('status'=>'successful', 'errMsg' => '','itemCode'=>$itemCode,'budgetItemId'=>$obj["budgetItemId"]);
 	}
 	//打折
 	function makeDiscount($data){
@@ -117,7 +117,7 @@
 		// $obj['lossPercent'] = ($obj['mainMaterialPrice']+$obj['auxiliaryMaterialPrice']) * 0.05;
 		$obj['lossPercent'] = $obj['lossPercent'];
 		$mysql->DBInsertAsArray("`budget_item`",$obj);
-		return array('status'=>'successful', 'errMsg' => '','itemCode'=>$itemCode);
+		return array('status'=>'successful', 'errMsg' => '','itemCode'=>$itemCode, 'budgetItemId'=>$obj["budgetItemId"]);
 	}
 	//将小项上移一位
 	function moveItemUpward($post){
