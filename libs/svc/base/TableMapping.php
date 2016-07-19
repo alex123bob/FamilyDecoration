@@ -14,7 +14,9 @@
 		"project_progress_audit"=>array('id','columnName','projectId','content','auditor'),
 		"potential_business_detail"=>array('id','potentialBusinessId','comments','committer'),
 		"log_list"=>array('id','content','committer','logType','isFinished'),
-		"error_log"=>array('user','detail','file','line','url','ip','refer','useragent')
+		"error_log"=>array('user','detail','file','line','url','ip','refer','useragent'),
+		"salary"=>array('user','basicSalary','positionSalary','meritSalary','socialTax','balance','paid','paidTime','payee'),
+		"account"=>array('id','name','accountType')
 	);
 
 	foreach ($TableMapping as $key => &$value) {
