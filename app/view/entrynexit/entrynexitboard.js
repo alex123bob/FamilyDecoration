@@ -14,8 +14,27 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
 	initComponent: function () {
         var me = this;
 
+        function setTitle (rec) {
+            if (rec) {
+                me.setTitle(rec.get('value'));
+            }
+            else {
+                me.setTitle('&nbsp;');
+            }
+        }
+
+        me.refresh = function (rec){
+            setTitle(rec);
+            if (rec) {
+                
+            }
+            else {
+
+            }
+        }
+
         me.items = [
-            
+
         ];
 
         me.callParent();

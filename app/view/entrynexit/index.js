@@ -13,6 +13,21 @@ Ext.define('FamilyDecoration.view.entrynexit.Index', {
     initComponent: function () {
         var me = this;
 
+        function getRes (){
+            var expenseMenu = me.down('[name="gridpanel-expense"]'),
+                expenseSelModel = expenseMenu.getSelectionModel(),
+                incomeMenu = me.down('[name="gridpanel-income"]'),
+                incomeSelModel = incomeMenu.getSelectionModel(),
+                detailList = me.down('[name="gridpanel-entrynexit"]');
+            return {
+                expenseMenu: expenseMenu,
+                expenseSelModel: expenseSelModel,
+                incomeMenu: incomeMenu,
+                incomeSelModel: incomeSelModel,
+                detailList: detailList
+            };
+        }
+
         me.items = [
             {
                 xtype: 'container',
@@ -43,6 +58,7 @@ Ext.define('FamilyDecoration.view.entrynexit.Index', {
                 },
                 items: [
                     {
+                        name: 'gridpanel-expense',
                         title: '出账',
                         flex: 2,
                         store: Ext.create('Ext.data.Store', {
@@ -87,9 +103,20 @@ Ext.define('FamilyDecoration.view.entrynexit.Index', {
                                     type: 'json'
                                 }
                             }
-                        })
+                        }),
+                        listeners: {
+                            selectionchange: function (selModel, sels, opts){
+                                var rec = sels[0],
+                                    resObj = getRes();
+                                if (rec) {
+                                    resObj.incomeSelModel.deselectAll();
+                                }
+                                resObj.detailList.refresh(rec);
+                            }
+                        }
                     },
                     {
+                        name: 'gridpanel-income',
                         title: '入账',
                         store: Ext.create('Ext.data.Store', {
                             fields: ['name', 'value'],
@@ -118,14 +145,25 @@ Ext.define('FamilyDecoration.view.entrynexit.Index', {
                                 }
                             }
                         }),
-                        flex: 1
+                        flex: 1,
+                        listeners: {
+                            selectionchange: function (selModel, sels, opts){
+                                var rec = sels[0],
+                                    resObj = getRes();
+                                if (rec) {
+                                    resObj.expenseSelModel.deselectAll();
+                                }
+                                resObj.detailList.refresh(rec);
+                            }
+                        }
                     }
                 ]
             },
             {
                 xtype: 'entrynexit-entrynexitboard',
                 flex: 4,
-                height: '100%'
+                height: '100%',
+                name: 'gridpanel-entrynexit'
             }
         ];
 
