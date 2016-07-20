@@ -200,6 +200,12 @@
                         cmp: 'billaudit-index',
                         leaf: true,
                         icon: 'resources/img/audit.png'
+                    },
+                    {
+                        name: '出入账',
+                        cmp: 'entrynexit-index',
+                        leaf: true,
+                        icon: 'resources/img/entrynexit.png'
                     }
                 ]
             },
@@ -354,6 +360,9 @@
                 flag = User.isAdmin() ? true : false;
             }
             else if (rec.get('cmp') == 'billaudit-index') {
+                flag = User.isAdmin() || User.isFinanceManager() || User.isFinanceStaff() ? true : false;
+            }
+            else if (rec.get('cmp') == 'entrynexit-index') {
                 flag = User.isAdmin() || User.isFinanceManager() || User.isFinanceStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'planlabor-index') {
