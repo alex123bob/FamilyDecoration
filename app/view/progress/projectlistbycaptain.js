@@ -1,6 +1,10 @@
 Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 	extend: 'Ext.tree.Panel',
-	requires: ['Ext.tree.Panel', 'FamilyDecoration.view.progress.SearchFieldTree', 'FamilyDecoration.view.progress.TreeFilter'],
+	requires: [
+		'Ext.tree.Panel',
+		'FamilyDecoration.view.progress.SearchFieldTree', 
+		'FamilyDecoration.view.progress.TreeFilter'
+	],
 	alias: 'widget.progress-projectlistbycaptain',
 	isForChart: false,
 	isForAddCategory: false,
