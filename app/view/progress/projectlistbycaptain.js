@@ -2,8 +2,10 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 	extend: 'Ext.tree.Panel',
 	requires: [
 		'Ext.tree.Panel',
-		'FamilyDecoration.view.progress.SearchFieldTree', 
-		'FamilyDecoration.view.progress.TreeFilter'
+		'FamilyDecoration.model.Project',
+		// 'FamilyDecoration.view.progress.SearchFieldTree', 
+		// 'FamilyDecoration.view.progress.TreeFilter',
+		'FamilyDecoration.view.billaudit.DateFilter'
 	],
 	alias: 'widget.progress-projectlistbycaptain',
 	isForChart: false,
@@ -21,6 +23,117 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 		var me = this;
 
 		if (me.searchFilter && !me.projectId) {
+			me.dockedItems = [
+				{
+					dock: 'top',
+					xtype: 'billaudit-datefilter',
+					txtEmptyText: '项目经理',
+					txtParam: 'captain',
+					collapsible: true,
+					needTime: false,
+					needCustomTxt: false,
+					filterFn: function (obj) {
+						var ownerCt = this.ownerCt,
+							grid = ownerCt.getComponent('gridpanel-searchResult'),
+							st = grid.getStore();
+						st.load({
+							params: {
+								projectName: obj.projectName
+							},
+							callback: function (recs, ope, success){
+								if (success) {
+									grid.expand();
+								}
+							}
+						});
+					},
+					clearFn: function () {
+						var ownerCt = this.ownerCt,
+							grid = ownerCt.getComponent('gridpanel-searchResult'),
+							st = grid.getStore();
+						grid.collapse();
+						st.removeAll();
+					}
+				},
+				{
+					dock: 'bottom',
+					itemId: 'gridpanel-searchResult',
+					xtype: 'gridpanel',
+					width: '100%',
+					collapsible: true,
+					collapsed: true,
+					hideHeaders: true,
+					header: false,
+					height: 130,
+					autoScroll: true,
+					store: Ext.create('Ext.data.Store', {
+						model: 'FamilyDecoration.model.Project',
+						proxy: {
+							url: './libs/project.php',
+							type: 'rest',
+							reader: {
+								type: 'json'
+							},
+							extraParams: (function (){
+								var p = {
+									action: 'filterProjectByProjectName'
+								}
+								if (User.isProjectStaff()) {
+									Ext.apply(p, {
+										projectStaff: User.getName()
+									});
+								}
+								else if (User.isAdmin() || User.isProjectManager() || User.isSupervisor() || User.isAdministrationManager() || User.isFinanceManager() || User.isBudgetManager() || User.isBudgetStaff()) {
+								}
+								else {
+									Ext.apply(p, {
+										userName: User.getName()
+									});
+								}
+								return p;
+							})()
+						}
+					}),
+					columns: [
+						{
+							text: '项目名称',
+							dataIndex: 'projectName',
+							flex: 1
+						},
+						{
+							text: '项目经理',
+							dataIndex: 'captain',
+							flex: 1
+						}
+					],
+					listeners: {
+						selectionchange: function (grid, sels, opts){
+							var treepane = me,
+								rec = sels[0],
+								children = treepane.getRootNode().childNodes;
+							if (rec) {
+								Ext.each(children, function (node, index, arr){
+									if (node.get('captainName') == rec.get('captainName')) {
+										node.expand(false, function (recs){
+											Ext.each(recs, function (item, i, self){
+												if (item.get('projectName') == rec.get('projectName')) {
+													treepane.getSelectionModel().select(item);
+													Ext.defer(function (){
+														treepane.getView().focusNode(item);
+													}, 500);
+													return false;
+												}
+											});
+										});
+										return false;
+									}
+								});
+							}
+						}
+					}
+				}
+			];
+			/* close search feature since the tree is no longer loaded in the first time.
 			me.plugins = [{
 				ptype: 'treefilter',
 				allowParentFolders: true,
@@ -38,6 +151,7 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 					]
 				}
 			];
+			*/
 		}
 
 		Ext.apply(me, {
@@ -206,7 +320,7 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 			})
 		});
 
-		me.addListener('itemclick', function (view, rec){
+		me.addListener('itemclick', function (view, rec) {
 			if (!rec.get('projectName')) {
 				view.toggle(rec);
 				return false;

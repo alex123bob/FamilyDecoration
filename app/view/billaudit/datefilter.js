@@ -4,6 +4,8 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
     requires: [],
     layout: 'vbox',
 
+    needTime: true, // do we need start and end time component. default true
+    needCustomTxt: true, // do we need custom field. default true
     txtEmptyText: undefined,
     txtParam: undefined,
 
@@ -28,6 +30,7 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
 
         me.items = [
             {
+                hidden: !me.needTime,
                 xtype: 'datefield',
                 flex: 1,
                 editable: false,
@@ -58,6 +61,7 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
                 }
             },
             {
+                hidden: !me.needTime,
                 xtype: 'datefield',
                 flex: 1,
                 editable: false,
@@ -102,6 +106,12 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
                             var fct = field.nextSibling();
                             fct.getComponent('button-filter').handler();
                         }
+                    },
+                    change: function (field, newVal, oldVal, opts){
+                        if (newVal == '') {
+                            var fct = field.nextSibling();
+                            fct.getComponent('button-clean').handler();
+                        }
                     }
                 }
             },
@@ -109,6 +119,7 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
                 xtype: 'fieldcontainer',
                 layout: 'hbox',
                 width: '100%',
+                hidden: !me.needCustomTxt,
                 items: [
                     {
                         xtype: 'textfield',

@@ -75,6 +75,11 @@
 				$res = getProjectsByCaptainName($_REQUEST["captainName"]);
 			}
 			break;
+		case "filterProjectByProjectName":
+			$projectStaff = isset($_REQUEST["projectStaff"]) ? $_REQUEST["projectStaff"] : false;
+			$userName = isset($_REQUEST["userName"]) ? $_REQUEST["userName"] : false;
+			$res = filterProjectByProjectName($_REQUEST["projectName"], $projectStaff, $userName);
+			break;
 		default: 
 			throw new Exception("unknown action:".$action);
 	}

@@ -163,4 +163,22 @@
 		}
 		return $projects;
 	}
+	
+	// filter project via typing project in search above project tree
+	function filterProjectByProjectName ($projectName, $projectStaff, $userName){
+		global $mysql;
+		$sql = "select * from project where `projectName` like '%?%' and `isDeleted` = 'false' and `isFrozen` = 'false' ";
+		if ($projectStaff) {
+			$sql .= " and captainName = '?' ";
+			$projects = $mysql->DBGetAsMap($sql, $projectName, $projectStaff);
+		}
+		else if ($userName) {
+			$sql .= " and (`salesmanName` = '?' || `designerName` = '?') ";
+			$projects = $mysql->DBGetAsMap($sql, $projectName, $userName, $userName);
+		}
+		else {
+			$projects = $mysql->DBGetAsMap($sql, $projectName);
+		}
+		return $projects;
+	}
 ?>
