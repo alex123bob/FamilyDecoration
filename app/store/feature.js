@@ -64,6 +64,20 @@
                 ]
             },
             {
+                name: '决策',
+                expanded: false,
+                icon: 'resources/img/strategy.png',
+                cmp: 'strategy-parent',
+                children: [
+                    {
+                        name: '目标制定',
+                        cmp: 'targetsetting-index',
+                        leaf: true,
+                        icon: 'resources/img/target-setting.png'
+                    }
+                ]
+            },
+            {
                 name: "工作日志", 
                 expanded: false, 
                 icon: 'resources/img/blog-parent.png',

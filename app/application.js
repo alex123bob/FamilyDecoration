@@ -40,7 +40,8 @@ Ext.define('FamilyDecoration.Application', {
         'ProjectProgress',
         'PlanLabor',
         'TeleMarket',
-        'EntryNExit'
+        'EntryNExit',
+        'TargetSetting'
     ],
 
     stores: [
