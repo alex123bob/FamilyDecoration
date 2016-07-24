@@ -40,7 +40,7 @@ CREATE TABLE `supplier` (
   `updateTime` datetime DEFAULT null
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `supplierDetail` (
+CREATE TABLE `supplierMaterial` (
   `id` varchar(20) DEFAULT NULL,
   `supplierId` varchar(20) DEFAULT NULL comment '供应商Id',
   `professionType` varchar(5) DEFAULT NULL comment '供应种类，对应profession_type表value',
