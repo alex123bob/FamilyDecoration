@@ -24,6 +24,18 @@ class UserSvc extends BaseSvc
 		}
 	}
 
+	public static function getDepartementByLevel($level){
+		if(strpos($level, "001") === 0) return '总经办';
+		if(strpos($level, "002") === 0) return '设计部';
+		if(strpos($level, "003") === 0) return '工程部';
+		if(strpos($level, "004") === 0) return '市场部';
+		if(strpos($level, "005") === 0) return '人事行政部';
+		if(strpos($level, "006") === 0) return '游客';
+		if(strpos($level, "007") === 0) return '宣传部';
+		if(strpos($level, "008") === 0) return '财务部';
+		if(strpos($level, "009") === 0) return '预决算部';
+		return '非部门';
+	}
 }
 
 ?>

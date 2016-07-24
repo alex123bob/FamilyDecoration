@@ -178,6 +178,8 @@ class BaseSvc{
 		global $mysql;
 		$class = new ReflectionClass($svcName."Svc");
 		$fin = $class->newInstanceArgs();
+		if(!is_subclass_of($fin,'BaseSvc'))
+			return $fin;
 		return $fin->setTableName($svcName);
 	}
 }

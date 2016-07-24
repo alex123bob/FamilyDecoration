@@ -1,7 +1,7 @@
 <?php
 class StatementBillSvc extends BaseSvc
 {
-	public static $billType = array('ppd'=>'预付款','reg'=>'普通账单','qgd'=>'质量保证金');
+	public static $billType = array('ppd'=>'预付款','reg'=>'普通账单','qgd'=>'质量保证金','mtf'=>'材料付款','rbm'=>'报销','fdf'=>'财务部门费用','wlf'=>'福利','tax'=>'税');
 	public static $statusMapping = array('new'=>'未提交','rdyck'=>'待审核','chk'=>'已审核','rbk'=>'打回','paid'=>'已付款');
 	public static $statusChangingMapping = array(
 			'new->rdyck'=>1, //新创建->待审核
@@ -117,7 +117,7 @@ class StatementBillSvc extends BaseSvc
 			$q['@checker'] = $_SESSION['name'];
 		}
 		if($q['@status'] == "paid") {
-			$q['@checker'] = $_SESSION['name'];
+			$q['@payer'] = $_SESSION['name'];
 			$q['@isPaid'] = true;
 		}
 		$res = parent::update($q);
