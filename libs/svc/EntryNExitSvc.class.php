@@ -60,11 +60,11 @@ class EntryNExitSvc{
 					t.cname as c4,
 					totalFee as c5,
 					claimAmount as c6,
-					'TODO' as c7,
+					paidAmount as c7,
 					'TODO' as c8,
 					'TODO' as c9,
-					'TODO' as c10,
-					'TODO' as c11 from statement_bill b left join profession_type t on b.professionType = t.value where b.isDeleted = 'false' and b.isPaid = 'true';";
+					paidTime as c10,
+					payer as c11 from statement_bill b left join profession_type t on b.professionType = t.value where b.isDeleted = 'false' and b.isPaid = 'true';";
 		return $mysql->DBGetAsMap($sql);
 	}
 
