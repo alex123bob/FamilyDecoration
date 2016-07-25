@@ -1,5 +1,23 @@
 <?php
     include_once "./libs/login.php";
+    function curPageURL() {
+            $pageURL = 'http';
+            if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {
+            $pageURL .= "s";
+            }
+            $pageURL .= "://";
+            if ($_SERVER["SERVER_PORT"] != "80") {
+            $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+            } 
+            else {
+            $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+            }
+            return $pageURL;
+    }
+    $pageurl = curPageURL();
+    $isLocal = preg_match("/localhost/i", $pageurl, $arr);
+    if ($isLocal) {
+    }
 ?>
 
 <!DOCTYPE HTML>
@@ -23,26 +41,6 @@
     <script src="http://channel.sinaapp.com/api.js" type="text/javascript"></script>
     <!-- for Christmas effect -->
     <script src="tools/snow.min.js" type="text/javascript"></script>
-    <?php
-        function curPageURL() {
-             $pageURL = 'http';
-             if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {
-                $pageURL .= "s";
-             }
-             $pageURL .= "://";
-             if ($_SERVER["SERVER_PORT"] != "80") {
-              $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-             } 
-             else {
-              $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-             }
-             return $pageURL;
-        }
-        $pageurl = curPageURL();
-        $isLocal = preg_match("/localhost/i", $pageurl, $arr);
-        if ($isLocal) {
-        }
-    ?>
     <script type="text/javascript">
         var DEBUG = <?php echo $isLocal ?> ? true : false;
         var _PWDPREFIX = 'familydecoration-';

@@ -41,7 +41,8 @@ Ext.define('FamilyDecoration.Application', {
         'PlanLabor',
         'TeleMarket',
         'EntryNExit',
-        'TargetSetting'
+        'TargetSetting',
+        'PaymentRequest'
     ],
 
     stores: [

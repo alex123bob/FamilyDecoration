@@ -220,6 +220,11 @@
                         cmp: 'entrynexit-index',
                         leaf: true,
                         icon: 'resources/img/entrynexit.png'
+                    },
+                    {
+                        name: '付款申请',
+                        cmp: 'paymentrequest-index',
+                        leaf: true
                     }
                 ]
             },
