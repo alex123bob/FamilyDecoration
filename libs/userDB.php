@@ -341,6 +341,12 @@
 		return $userList;
 	}
 
+	function getFullUserListByDepartment ($department) {
+		global $mysql;
+		$userList = $mysql->DBGetAsMap("select `user`.*, p.projectName from `user` left join project p on p.projectId = user.projectId where `user`.`level` like '%?-%' and user.`isDeleted` = 'false' ", $department);
+		return $userList;
+	}
+
 	function getAdminMembers (){
 		global $mysql;
 		$arr = $mysql->DBGetSomeRows("`user`", "*" ,"where `level` like '001-%' and `isDeleted` = 'false' ");
@@ -364,7 +370,7 @@
 
 	function getUserByName ($name){
 		global $mysql;
-		$arr = $mysql->DBGetSomeRows("`user`", "*" ,"where `name` = '$name' ");
+		$arr = $mysql->DBGetSomeRows("`user`", "*" ,"where `name` = '$name' and `isDeleted` = 'false' ");
 		return ($arr);
 	}
 ?>

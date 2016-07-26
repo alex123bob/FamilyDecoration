@@ -224,7 +224,8 @@
                     {
                         name: '付款申请',
                         cmp: 'paymentrequest-index',
-                        leaf: true
+                        leaf: true,
+                        icon: 'resources/img/payment_request.png'
                     }
                 ]
             },

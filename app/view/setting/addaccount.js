@@ -1,6 +1,9 @@
 Ext.define('FamilyDecoration.view.setting.AddAccount', {
 	extend: 'Ext.window.Window',
-	requires: ['Ext.form.field.ComboBox', 'FamilyDecoration.view.progress.ProjectListByCaptain'],
+	requires: [
+		'Ext.form.field.ComboBox', 'FamilyDecoration.view.progress.ProjectListByCaptain',
+		'FamilyDecoration.view.setting.DepartmentCombo'
+	],
 	alias: 'widget.setting-addaccount',
 
 	autoScroll: true,
@@ -173,75 +176,33 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 					value: account ? account.get('mail') : ''
 				},
 				{
-					xtype: 'combobox',
+					xtype: 'setting-departmentcombo',
 					fieldLabel: '部门',
 					allowBlank: false,
-					editable: false,
 					readOnly: isLevelFieldReadOnly,
 					name: 'department',
-					displayField: 'name',
-					valueField: 'value',
 					value: account ? account.get('level').split('-')[0] : '',
-					store: Ext.create('Ext.data.Store', {
-						fields: [
-							{
-								name: 'name',
-								convert: function (v, rec) {
-									return User.renderDepartment(rec.raw.value);
-								}
-							},
-							{
-								name: 'value',
-								convert: function (v, rec) {
-									return rec.raw.value.split('-')[0];
-								}
+					filterFn: function (item) {
+						if (User.isAdmin() || User.isAdministrationManager()) {
+							return true;
+						}
+						else if (User.isBusinessStaff()) {
+							if (account) {
+								return item.get('level') == account.get('level');
 							}
-						],
-						proxy: {
-							type: 'memory'
-						},
-						data: User.role,
-						filters: [
-							function (item) {
-								if (User.isAdmin() || User.isAdministrationManager()) {
-									return true;
-								}
-								else if (User.isBusinessStaff()) {
-									if (account) {
-										return item.get('level') == account.get('level');
-									}
-									else {
-										return item.get('value') == '006';
-									}
-								}
-								else {
-									if (account) {
-										return item.get('level') == account.get('level');
-									}
-									else {
-										return false;
-									}
-								}
-							}
-						],
-						listeners: {
-							load: function (st, recs) {
-								var hits = {};
-								st.filterBy(function (record) {
-									var department = record.get('value');
-									if (hits[department]) {
-										return false;
-									}
-									else {
-										hits[department] = true;
-										return true;
-									}
-								});
-								delete st.snapshot;
+							else {
+								return item.get('value') == '006';
 							}
 						}
-					}),
-					queryMode: 'local',
+						else {
+							if (account) {
+								return item.get('level') == account.get('level');
+							}
+							else {
+								return false;
+							}
+						}
+					},
 					listeners: {
 						change: function (combo, newVal, oldVal) {
 							var levelCombo = combo.nextSibling(),
@@ -450,9 +411,9 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 										if (success) {
 											var obj = Ext.decode(res.responseText);
 											if (obj.status == 'successful') {
-												account ? Ext.Msg.success('编辑用户成功！', function (){
+												account ? Ext.Msg.success('编辑用户成功！', function () {
 													if (account && User.isCurrent(data.name)) {
-														Ext.defer(function (){
+														Ext.defer(function () {
 															Ext.Msg.info('修改的用户为当前所在用户，需要重新登录！点击【确定】后请重新登录！', function () {
 																logout();
 															});
