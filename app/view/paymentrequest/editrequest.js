@@ -2,7 +2,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditRequest', {
     extend: 'Ext.window.Window',
     alias: 'widget.paymentrequest-editrequest',
     requires: [
-
+        'FamilyDecoration.view.paymentrequest.EditBelongedItem'
     ],
     width: 500,
     height: 300,
@@ -24,7 +24,16 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditRequest', {
                 fieldLabel: '项目名称'
             },
             {
-                fieldLabel: '归属项目'
+                fieldLabel: '归属项目',
+                readOnly: true,
+                listeners: {
+                    focus: function (txt, ev, opts){
+                        var win = Ext.create('FamilyDecoration.view.paymentrequest.EditBelongedItem', {
+
+                        });
+                        win.show();
+                    }
+                }
             },
             {
                 fieldLabel: '申请金额'

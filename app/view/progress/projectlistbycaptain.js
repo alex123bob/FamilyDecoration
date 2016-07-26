@@ -36,16 +36,21 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 						var ownerCt = this.ownerCt,
 							grid = ownerCt.getComponent('gridpanel-searchResult'),
 							st = grid.getStore();
-						st.load({
-							params: {
-								projectName: obj.projectName
-							},
-							callback: function (recs, ope, success){
-								if (success) {
-									grid.expand();
+						if (obj.projectName) {
+							st.load({
+								params: {
+									projectName: obj.projectName
+								},
+								callback: function (recs, ope, success){
+									if (success) {
+										grid.expand();
+									}
 								}
-							}
-						});
+							});
+						}
+						else {
+							showMsg('没有要过滤的项目名称！');
+						}
 					},
 					clearFn: function () {
 						var ownerCt = this.ownerCt,
