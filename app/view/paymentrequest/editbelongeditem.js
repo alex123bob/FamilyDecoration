@@ -262,6 +262,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditBelongedItem', {
                                     case 'project':
                                         resObj.tree.setVisible(true);
                                         resObj.combobox.setVisible(false);
+                                        resObj.combobox.clearValue();
                                         if (resObj.project && resObj.project.get('projectName')) {
                                             st.add(
                                                 {
@@ -297,6 +298,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditBelongedItem', {
                                     case 'dailyPurchase':
                                         resObj.tree.setVisible(false);
                                         resObj.combobox.setVisible(false);
+                                        resObj.combobox.clearValue();
                                         st.add(
                                             {
                                                 name: '办公用品',
@@ -335,6 +337,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditBelongedItem', {
                             else {
                                 resObj.tree.setVisible(false);
                                 resObj.combobox.setVisible(false);
+                                resObj.combobox.clearValue();
                             }
                         }
                     }
