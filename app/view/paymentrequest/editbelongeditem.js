@@ -89,18 +89,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditBelongedItem', {
                     selectionchange: function (selMode, sels, opts) {
                         var rec = sels[0],
                             resObj = _getRes();
-                        if (rec) {
-                            resObj.detailedGrid.refresh();
-                            if (rec.get('value') == 'project') {
-                                
-                            }
-                            else {
-                                resObj.tree.setVisible(false);
-                            }
-                        }
-                        else {
-                            resObj.tree.setVisible(false);
-                        }
+                        resObj.detailedGrid.refresh();
                     }
                 }
             },
@@ -117,7 +106,14 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditBelongedItem', {
                         xtype: 'progress-projectlistbycaptain',
                         flex: 2,
                         searchFilter: true,
-                        hidden: true
+                        hidden: true,
+                        listeners: {
+                            selectionchange: function (selModel, sels, opts) {
+                                var node = sels[0],
+                                    resObj = _getRes();
+                                resObj.detailedGrid.refresh();
+                            }
+                        }
                     },
                     {
                         xtype: 'gridpanel',
@@ -155,7 +151,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditBelongedItem', {
                                     ]
                                 }),
                                 listeners: {
-                                    change: function (combo, newVal, oldVal, opts){
+                                    change: function (combo, newVal, oldVal, opts) {
                                         var resObj = _getRes();
                                         resObj.detailedSt.removeAll();
                                         switch (newVal) {
@@ -254,75 +250,91 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditBelongedItem', {
                         refresh: function () {
                             var resObj = _getRes(),
                                 st = this.getStore();
-                            resObj.detailedGrid.setTitle(resObj.bigItem.get('name'));
+                            if (resObj.bigItem) {
+                                resObj.detailedGrid.setTitle(resObj.bigItem.get('name'));
+                            }
+                            else {
+                                resObj.detailedGrid.setTitle('&nbsp;');
+                            }
                             st.removeAll();
-                            switch (resObj.bigItem.get('value')) {
-                                case 'project':
-                                    resObj.tree.setVisible(true);
-                                    resObj.combobox.setVisible(false);
-                                    st.add(
-                                        {
-                                            name: '材料采购',
-                                            value: 'materialOrder'
-                                        },
-                                        {
-                                            name: '开办费',
-                                            value: 'openFee'
-                                        },
-                                        {
-                                            name: '税金',
-                                            value: 'taxFee'
-                                        },
-                                        {
-                                            name: '管理费用',
-                                            value: 'managementFee'
-                                        },
-                                        {
-                                            name: '业务费',
-                                            value: 'businessFee'
-                                        },
-                                        {
-                                            name: '其他',
-                                            value: 'other'
+                            if (resObj.bigItem) {
+                                switch (resObj.bigItem.get('value')) {
+                                    case 'project':
+                                        resObj.tree.setVisible(true);
+                                        resObj.combobox.setVisible(false);
+                                        if (resObj.project && resObj.project.get('projectName')) {
+                                            st.add(
+                                                {
+                                                    name: '材料采购',
+                                                    value: 'materialOrder'
+                                                },
+                                                {
+                                                    name: '开办费',
+                                                    value: 'openFee'
+                                                },
+                                                {
+                                                    name: '税金',
+                                                    value: 'taxFee'
+                                                },
+                                                {
+                                                    name: '管理费用',
+                                                    value: 'managementFee'
+                                                },
+                                                {
+                                                    name: '业务费',
+                                                    value: 'businessFee'
+                                                },
+                                                {
+                                                    name: '其他',
+                                                    value: 'other'
+                                                }
+                                            );
                                         }
-                                    );
-                                    break;
-                                case 'dailyPurchase':
-                                    resObj.tree.setVisible(false);
-                                    resObj.combobox.setVisible(false);
-                                    st.add(
-                                        {
-                                            name: '办公用品',
-                                            value: 'officeAppliance'
-                                        },
-                                        {
-                                            name: '日常生活用品',
-                                            value: 'dailyArticles'
-                                        },
-                                        {
-                                            name: '办公设备及维护',
-                                            value: 'officeDeviceNMaintenance'
-                                        },
-                                        {
-                                            name: '耗材',
-                                            value: 'materialConsumption'
-                                        },
-                                        {
-                                            name: '员工就餐费',
-                                            value: 'staffDiningFee'
-                                        },
-                                        {
-                                            name: '其他',
-                                            value: 'other'
+                                        else {
+                                            st.removeAll();
                                         }
-                                    );
-                                    break;
-                                case 'internalManagementFee':
-                                    resObj.tree.setVisible(false);
-                                    resObj.combobox.setVisible(true);
-                                    break;
-                                default:
-                                    break;
+                                        break;
+                                    case 'dailyPurchase':
+                                        resObj.tree.setVisible(false);
+                                        resObj.combobox.setVisible(false);
+                                        st.add(
+                                            {
+                                                name: '办公用品',
+                                                value: 'officeAppliance'
+                                            },
+                                            {
+                                                name: '日常生活用品',
+                                                value: 'dailyArticles'
+                                            },
+                                            {
+                                                name: '办公设备及维护',
+                                                value: 'officeDeviceNMaintenance'
+                                            },
+                                            {
+                                                name: '耗材',
+                                                value: 'materialConsumption'
+                                            },
+                                            {
+                                                name: '员工就餐费',
+                                                value: 'staffDiningFee'
+                                            },
+                                            {
+                                                name: '其他',
+                                                value: 'other'
+                                            }
+                                        );
+                                        break;
+                                    case 'internalManagementFee':
+                                        resObj.tree.setVisible(false);
+                                        resObj.combobox.setVisible(true);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            else {
+                                resObj.tree.setVisible(false);
+                                resObj.combobox.setVisible(false);
                             }
                         }
                     }
