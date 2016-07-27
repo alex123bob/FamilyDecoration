@@ -74,7 +74,13 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditRequest', {
                 fieldLabel: '备注'
             },
             {
-                fieldLabel: '附件'
+                fieldLabel: '附件',
+                readOnly: true,
+                listeners: {
+                    focus: function (txt, ev, opts){
+                        console.log(txt);
+                    }
+                }
             }
         ];
 
