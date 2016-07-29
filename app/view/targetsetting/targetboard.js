@@ -13,10 +13,11 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
             {
                 xtype: 'combobox',
                 fieldLabel: '年',
-                labelWidth: 40,
+                labelWidth: 30,
                 editable: false,
                 displayField: 'name',
                 valueField: 'value',
+                value: new Date().getFullYear(),
                 store: Ext.create('Ext.data.Store', {
                     fields: ['name', 'value'],
                     proxy: {
@@ -25,7 +26,7 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                             type: 'json'
                         }
                     },
-                    data: (function (){
+                    data: (function () {
                         var start = 2014,
                             end = new Date().getFullYear(),
                             arr = [];
@@ -37,15 +38,49 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                         }
                         return arr;
                     })()
-                })
+                }),
+                listeners: {
+                    change: function (combo, newVal, oldVal, opts) {
+                        var d = new Date(),
+                            y = d.getFullYear(),
+                            m = d.getMonth() + 1,
+                            start = 1,
+                            end,
+                            data = [],
+                            mCombo = combo.nextSibling(),
+                            st = mCombo.getStore();
+                        mCombo.clearValue();
+                        if (newVal) {
+                            if (newVal == y) {
+                                end = m;
+                            }
+                            else {
+                                end = 12;
+                            }
+                            for (var i = start; i <= end; i++) {
+                                data.push(
+                                    {
+                                        name: i,
+                                        value: i
+                                    }
+                                );
+                            }
+                            st.loadData(data);
+                        }
+                        else {
+                            st.removeAll();
+                        }
+                    }
+                }
             },
             {
                 xtype: 'combobox',
                 fieldLabel: '月',
-                labelWidth: 40,
+                labelWidth: 30,
                 editable: false,
                 displayField: 'name',
                 valueField: 'value',
+                value: new Date().getMonth() + 1,
                 store: Ext.create('Ext.data.Store', {
                     fields: ['name', 'value'],
                     proxy: {
@@ -55,16 +90,18 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                         }
                     },
                     data: (function (){
-                        var start = 1,
-                            end = 12,
-                            arr = [];
-                        for (var i = start; i <= end; i++) {
-                            arr.push({
-                                name: i,
-                                value: i
-                            });
+                        var d = new Date(),
+                            m = d.getMonth() + 1,
+                            data = [];
+                        for (var i = 1; i <= m; i++) {
+                            data.push(
+                                {
+                                    name: i,
+                                    value: i
+                                }
+                            );
                         }
-                        return arr;
+                        return data;
                     })()
                 })
             }
@@ -87,7 +124,7 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                     columns: []
                 }
             ],
-            prefix = ['plan_', 'accomplishment_'];
+                prefix = ['plan_', 'accomplishment_'];
 
             function renderCol(prefix, depa) {
                 var arr = [];
