@@ -1,5 +1,5 @@
 <?php
-global $BILLTYPE,$STATUSMAPPING,$STATUSTRANSFER;
+global $BILLTYPE,$STATUSMAPPING,$STATUSTRANSFER,$ALL_STATUS;
 
 //账单类型
 $BILLTYPE = array('ppd'=>'预付款','reg'=>'工人工资','qgd'=>'质量保证金','mtf'=>'材料付款','rbm'=>'报销','fdf'=>'财务部门费用','wlf'=>'福利','tax'=>'税');
@@ -14,7 +14,14 @@ $STATUSMAPPING = array(
 	'fdf'=> array('new'=>'未提交','rdyck'=>'待财务审核','rdyck1'=>'待总经办审核','chk'=>'已审核','rbk'=>'打回','paid'=>'已付款'),
 	'wlf'=> array('new'=>'未提交','rdyck'=>'待财务审核','rdyck1'=>'待总经办审核','chk'=>'已审核','rbk'=>'打回','paid'=>'已付款'),
 	'tax'=> array('new'=>'未提交','rdyck'=>'待财务审核','rdyck1'=>'待总经办审核','chk'=>'已审核','rbk'=>'打回','paid'=>'已付款')
-	);
+);
+
+$ALL_STATUS = array();
+foreach ($STATUSMAPPING as $item) {
+	foreach ($item as $key => $val) {
+		$ALL_STATUS[$key] = $val;
+	}
+}
 
 //账单转换约束
 $STATUSTRANSFER = array();
