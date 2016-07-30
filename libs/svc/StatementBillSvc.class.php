@@ -5,14 +5,22 @@ class StatementBillSvc extends BaseSvc
 	public static $statusMapping='';
 	public static $statusChangingMapping='';
 
+	private function initBillTypes($billType = false){
+		global $STATUSMAPPING,$STATUSTRANSFER;
+		if($billType !== false){
+			$billType = isset($_REQUEST['billType']) ? $_REQUEST['billType'] : $billType;
+		}
+		if($billType!== false){
+        	self::$statusMapping = $STATUSMAPPING[$billType];
+        	self::$statusChangingMapping = $STATUSTRANSFER[$billType];
+		}
+	}
+
 	function __construct() {
 		require_once __ROOT__."/libs/svc/StatementBillStatusConfig.php";
-		global $BILLTYPE,$STATUSMAPPING,$STATUSTRANSFER;
-		if(isset($_REQUEST['billType'])){
-			self::$billType = $BILLTYPE[$_REQUEST['billType']];
-        	self::$statusMapping = $STATUSMAPPING[$_REQUEST['billType']];
-        	self::$statusChangingMapping = $STATUSTRANSFER[$_REQUEST['billType']];
-		}
+		global $BILLTYPE;
+		self::$billType = $BILLTYPE;
+		$this->initBillTypes();
 		if(isset($_REQUEST['@status']) && !isset(self::$statusMapping[$_REQUEST['@status']])){
 			throw new Exception("无效状态:".$_REQUEST['@status']);
 		}
@@ -202,7 +210,8 @@ class StatementBillSvc extends BaseSvc
 		}
 	}
 
-	public function get($q){
+	public function getLaborAndPrePaid($q){
+		$this->initBillTypes('reg'); //工人工资
 		$this->appendSelect = ",tp.cname as professionTypeName ";
 		$this->appendJoin = "left join profession_type tp on tp.value = $this->tableName.professionType";
 		$data = parent::get($q);
