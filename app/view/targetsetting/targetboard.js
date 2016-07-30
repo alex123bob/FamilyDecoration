@@ -18,6 +18,7 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                 displayField: 'name',
                 valueField: 'value',
                 value: new Date().getFullYear(),
+                queryMode: 'local',
                 store: Ext.create('Ext.data.Store', {
                     fields: ['name', 'value'],
                     proxy: {
@@ -81,6 +82,7 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                 displayField: 'name',
                 valueField: 'value',
                 value: new Date().getMonth() + 1,
+                queryMode: 'local',
                 store: Ext.create('Ext.data.Store', {
                     fields: ['name', 'value'],
                     proxy: {
