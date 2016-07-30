@@ -131,11 +131,11 @@ class EntryNExitSvc{
 					b.projectName as c2,
 					b.payee as c4,
 					b.phoneNumber as c3,
-					'TODO' as c5,
+					b.reimbursementReason as c5,
 					b.totalFee as c6,
 					b.claimAmount as c7,
 					b.paidAmount as c8,
-					'TODO' as c9,
+					b.claimAmount-b.paidAmount as c9,
 					'TODO' as c10,
 					b.paidTime as c11,
 					u.realName as c12 
@@ -174,7 +174,8 @@ class EntryNExitSvc{
 					l.projectName as c6,
 					l.amount as c7,
 					u2.realName as c8,
-					l.createTime as c9
+					l.createTime as c9,
+					l.status
 					from loan l 
 					left join user u on u.name = l.assignee 
 					left join user u2 on u2.name = l.dealer
