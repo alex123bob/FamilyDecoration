@@ -150,7 +150,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 		me.getBillTitle = function(str,billId){
 			str = str === undefined ? "" : "("+str+")";
 			billId = billId === undefined ? "" : "-"+billId;
-			return '佳诚装饰<br />单项工程施工工程款领取审批单&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 12px;">公司联'+billId+str+'</font>';
+			return '佳诚装饰<br />单项工程施工工程款领取审批单&nbsp;&nbsp;<span style="font-size: 12px;">公司联'+billId+str+'</font>';
 		}	
 		var statementBillItemSt = Ext.create('FamilyDecoration.store.StatementBillItem', {
 			autoLoad: false

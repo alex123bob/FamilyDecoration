@@ -142,7 +142,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 			},
 			{
 				xtype: 'panel',
-				flex: 2,
+				flex: 3,
 				height: '100%',
 				title: '单据细目',
 				getButtons: function () {
@@ -153,6 +153,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						editBill: panel.query('[name="editBill"]')[0],
 						submitBill: panel.query('[name="submitBill"]')[0],
 						firstCheckBill: panel.query('[name="firstCheckBill"]')[0],
+						returnBill: panel.query('[name="returnBill"]')[0],
 						previewBill: panel.query('[name="previewBill"]')[0],
 						printBill: panel.query('[name="printBill"]')[0],
 						deleteBill: Ext.getCmp('gridpanel-billList').getHeader().getComponent('deleteBill')
@@ -184,7 +185,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 									btn.setDisabled(!(resourceObj.project && resourceObj.professionType && resourceObj.bill));
 								}
 							}
-							else if (name == 'firstCheckBill') {
+							else if (name == 'firstCheckBill' || name == 'returnBill') {
 								if ((User.isBudgetManager() || User.isBudgetStaff() || User.isAdmin()) && rec && rec.get('status') == 'rdyck') {
 									btn.enable();
 								}
@@ -366,20 +367,24 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								index = st.indexOf(resourceObj.bill),
 								selModel = resourceObj.billList.getSelectionModel();
 							if (bill) {
-								ajaxUpdate('StatementBill.changeStatus', {
-									id: resourceObj.bill.getId(),
-									status: 'rdyck2'
-								}, ['id'], function (obj) {
-									Ext.Msg.success('一审通过');
-									selModel.deselectAll();
-									st.reload({
-										callback: function (recs, ope, success) {
-											if (success) {
-												selModel.select(index);
-											}
-										}
-									});
-								}, true);
+								Ext.Msg.warning('确定要将当前账单置为一审通过吗？', function (btnId) {
+									if ('yes' == btnId) {
+										ajaxUpdate('StatementBill.changeStatus', {
+											id: resourceObj.bill.getId(),
+											status: 'rdyck2'
+										}, ['id'], function (obj) {
+											Ext.Msg.success('一审通过');
+											selModel.deselectAll();
+											st.reload({
+												callback: function (recs, ope, success) {
+													if (success) {
+														selModel.select(index);
+													}
+												}
+											});
+										}, true);
+									}
+								});
 							}
 							else {
 								showMsg('请选择账单！');
@@ -399,20 +404,24 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								index = st.indexOf(resourceObj.bill),
 								selModel = resourceObj.billList.getSelectionModel();
 							if (bill) {
-								ajaxUpdate('StatementBill.changeStatus', {
-									id: resourceObj.bill.getId(),
-									status: 'new'
-								}, ['id'], function (obj) {
-									Ext.Msg.success('单据已退回，单据状态置为未提交！');
-									selModel.deselectAll();
-									st.reload({
-										callback: function (recs, ope, success) {
-											if (success) {
-												selModel.select(index);
-											}
-										}
-									});
-								}, true);
+								Ext.Msg.warning('确定要将当前账单退回到未提交状态吗？', function (btnId) {
+									if ('yes' == btnId) {
+										ajaxUpdate('StatementBill.changeStatus', {
+											id: resourceObj.bill.getId(),
+											status: 'new'
+										}, ['id'], function (obj) {
+											Ext.Msg.success('单据已退回，单据状态置为未提交！');
+											selModel.deselectAll();
+											st.reload({
+												callback: function (recs, ope, success) {
+													if (success) {
+														selModel.select(index);
+													}
+												}
+											});
+										}, true);
+									}
+								});
 							}
 							else {
 								showMsg('请选择账单！');
