@@ -17,7 +17,7 @@ class PDF extends PDF_Chinese{
 		$this->Text(80,15,'佳诚装饰');
 		$this->Text(80,22,'单项工程施工工程款领取审批单');
 		$this->SetFont('GB','',8); 
-		$this->Text(165,30,"公司联-$billId($professionTypeName)");
+		$this->Text(158,30,"公司联-$billId($professionTypeName)");
 		$this->Ln(5); //换行
 		$this->SetFont('GB','',10); 
 		$this->Text(35,40,'领款人:');

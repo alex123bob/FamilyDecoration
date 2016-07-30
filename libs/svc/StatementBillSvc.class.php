@@ -277,6 +277,8 @@ class StatementBillSvc extends BaseSvc
 		}
 		if (isset($q["billType"])) {
 			$sql .= " and b.billType = '".$q["billType"]."'";
+		}else{
+			$sql .= " and (b.billType = 'ppd' or b.billType = 'reg')";
 		}
 		$sqlCount = "select count(1) as cnt from ( $sql ) as temp ";
 		global $mysql;
