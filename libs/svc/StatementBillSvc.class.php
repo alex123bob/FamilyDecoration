@@ -124,7 +124,7 @@ class StatementBillSvc extends BaseSvc
 		$auditRecord['@operator'] = $_SESSION['name'];
 		$auditRecord['@billId'] = $q['id'];
 		$auditRecord['@orignalStatus'] = $bill['status'];
-		$auditRecord['@newStatus'] = $q['@status'];
+		$auditRecord['@newStatus'] = $targetStatus;
 		$auditRecord['@comments'] = isset($q['@comments']) ? $q['@comments'] : "无";
 		$auditRecord['@drt'] = $q['@status'];
 		$auditSvc = parent::getSvc('StatementBillAudit');
