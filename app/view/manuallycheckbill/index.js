@@ -307,7 +307,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 											showMsg(obj.hint);
 											ajaxUpdate('StatementBill.changeStatus', {
 												id: resourceObj.bill.getId(),
-												status: 'rdyck'
+												status: '+1'
 											}, ['id'], function (obj) {
 												Ext.Msg.success('递交成功！');
 												selModel.deselectAll();
@@ -330,7 +330,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 													}
 													ajaxUpdate('StatementBill.changeStatus', {
 														id: resourceObj.bill.getId(),
-														status: 'rdyck',
+														status: '+1',
 														validateCode: val
 													}, ['id', 'validateCode'], function (obj) {
 														Ext.Msg.success('递交成功！');
@@ -367,7 +367,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								function request(validateCode) {
 									var params = {
 										id: resourceObj.bill.getId(),
-										status: 'rdyck2'
+										status: '+1'
 									}, arr = ['id'];
 									if (validateCode) {
 										Ext.apply(params, {
@@ -435,7 +435,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 										function request(validateCode) {
 											var params = {
 												id: resourceObj.bill.getId(),
-												status: 'new'
+												status: '-1'
 											},
 											arr = ['id'];
 											if (validateCode) {
