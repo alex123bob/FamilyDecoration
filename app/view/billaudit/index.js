@@ -196,8 +196,13 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                                             }
                                             ajaxUpdate('StatementBill.changeStatus', params, arr, function (obj) {
                                                 Ext.Msg.success('账单已退回!');
-                                                resourceObj.billList.getSelectionModel().deselectAll();
+                                                if (status == 'rdyck2') {
+
+                                                }
+                                                // billList.getSelectionModel().deselectAll();
                                                 resourceObj.billList.getStore().reload();
+                                                resourceObj.passedBillList.getStore().reload();
+                                                resourceObj.paidBillList.getStore().reload();
                                             }, true);
                                         }
                                         ajaxGet('StatementBill', 'getLimit', {
@@ -253,9 +258,11 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                                                 arr.push('validateCode');
                                             }
                                             ajaxUpdate('StatementBill.changeStatus', params, arr, function (obj) {
-                                                Ext.Msg.success('账单已退回!');
-                                                resourceObj.billList.getSelectionModel().deselectAll();
+                                                Ext.Msg.success('账单审核通过!');
+                                                // resourceObj.billList.getSelectionModel().deselectAll();
                                                 resourceObj.billList.getStore().reload();
+                                                resourceObj.passedBillList.getStore().reload();
+                                                resourceObj.paidBillList.getStore().reload();
                                             }, true);
                                         }
                                         ajaxGet('StatementBill', 'getLimit', {
