@@ -222,6 +222,7 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 												+ node.get('newBillCount')
 												+ ']</strong></font>';
 										}
+										/*
 										if (!isNaN(parseInt(node.get('rdyckBillCount'), 10))) {
 											renderedTxt += '&nbsp;<font style="color: orange;"><strong>['
 												+ node.get('rdyckBillCount')
@@ -237,6 +238,7 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 												+ node.get('paidBillCount')
 												+ ']</strong></font>';
 										}
+										*/
 									}
 									else {
 									}
