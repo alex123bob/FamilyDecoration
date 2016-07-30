@@ -42,7 +42,8 @@ Ext.define('FamilyDecoration.Application', {
         'TeleMarket',
         'EntryNExit',
         'TargetSetting',
-        'PaymentRequest'
+        'PaymentRequest',
+        'Account'
     ],
 
     stores: [

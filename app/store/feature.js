@@ -226,6 +226,12 @@
                         cmp: 'paymentrequest-index',
                         leaf: true,
                         icon: 'resources/img/payment_request.png'
+                    },
+                    {
+                        name: '账户管理',
+                        cmp: 'account-index',
+                        leaf: true,
+                        icon: 'resources/img/account_management.png'
                     }
                 ]
             },
@@ -250,7 +256,7 @@
                 icon: 'resources/img/personnel.png',
                 children: [
                     {
-                        name: "账户管理",
+                        name: "帐号管理",
                         cmp: 'setting-index',
                         leaf: true,
                         icon: 'resources/img/account.png'

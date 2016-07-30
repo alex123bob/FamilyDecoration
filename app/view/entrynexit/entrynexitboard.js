@@ -14,6 +14,51 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
     initComponent: function () {
         var me = this;
 
+        me.tbar = [
+            {
+                xtype: 'button',
+                text: '付款',
+                itemId: 'button-pay',
+                hidden: true,
+                disabled: true,
+                handler: function () {
+
+                }
+            }
+        ];
+
+        function getTbar() {
+            var toolbar = me.down('toolbar');
+            return {
+                pay: toolbar.getComponent('button-pay')
+            };
+        }
+
+        function initTbar(rec) {
+            var tbarObj = getTbar();
+            function hideAllbtn (){
+                for (var key in tbarObj) {
+                    if (tbarObj.hasOwnProperty(key)) {
+                        var btn = tbarObj[key];
+                        btn.hide();
+                    }
+                }
+            }
+            if (rec) {
+                switch (rec.get('name')) {
+                    case 'workerSalary':
+                        tbarObj.pay.show();
+                        break;
+                    default:
+                        hideAllbtn();
+                        break;
+                }
+            }
+            else {
+                hideAllbtn();
+            }
+        }
+
         function setTitle(rec) {
             if (rec) {
                 me.setTitle(rec.get('value'));
@@ -21,6 +66,31 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             else {
                 me.setTitle('&nbsp;');
             }
+        }
+
+        function initDockedItem(rec) {
+            var dockedItems = [];
+            if (rec) {
+                switch (rec.get('name')) {
+                    case 'workerSalary':
+                        dockedItems.push(
+                            {
+                                xtype: 'toolbar',
+                                dock: 'top',
+                                items: [
+                                    {
+                                        text: '付款'
+                                    }
+                                ]
+                            }
+                        );
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            return dockedItems;
         }
 
         // dynamically generate columns according to entry and exit type
@@ -672,7 +742,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
         }
 
         function generateSt(rec) {
-            var fields = ['id', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9', 'c10', 'c11', 'c12', 'c13'],
+            var fields = ['c0', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9', 'c10', 'c11', 'c12', 'c13'],
                 st;
             if (rec) {
                 switch (rec.get('name')) {
@@ -737,6 +807,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
 
         me.refresh = function (rec) {
             setTitle(rec);
+            initTbar(rec);
             if (rec) {
                 var st = generateSt(rec);
                 me.reconfigure(st, generateCols(rec));
@@ -754,6 +825,20 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
         me.items = [
 
         ];
+
+        me.addListener(
+            {
+                selectionchange: function (selModel, sels, opts){
+                    var rec = sels[0];
+                    if (rec) {
+                        console.log(rec);
+                    }
+                    else {
+
+                    }
+                }
+            }
+        );
 
         me.callParent();
     }
