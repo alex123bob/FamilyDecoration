@@ -7,13 +7,15 @@ class StatementBillSvc extends BaseSvc
 
 	function __construct() {
 		require_once __ROOT__."/libs/svc/StatementBillStatusConfig.php";
-		global $billType,$statusMapping,$statusChangingMapping;
-        self::$billType = $billType;
-        self::$statusMapping = $statusMapping;
-        self::$statusChangingMapping = $statusChangingMapping;
-	}
-	public function getBillType(){
-		return self::$billType;
+		global $BILLTYPE,$STATUSMAPPING,$STATUSTRANSFER;
+		if(isset($_REQUEST['billType'])){
+			self::$billType = $BILLTYPE[$_REQUEST['billType']];
+        	self::$statusMapping = $STATUSMAPPING[$_REQUEST['billType']];
+        	self::$statusChangingMapping = $STATUSTRANSFER[$_REQUEST['billType']];
+		}
+		if(isset($_REQUEST['@status']) && !isset(self::$statusMapping[$_REQUEST['@status']])){
+			throw new Exception("无效状态:".$_REQUEST['@status']);
+		}
 	}
 
 	public function add($q){
@@ -25,9 +27,6 @@ class StatementBillSvc extends BaseSvc
 	}
 
 	public function update($q){
-		if(isset($q['@status']) && !isset(self::$statusMapping[$q['@status']])){
-			throw new Exception("无效状态:".$q['@status']);
-		}
 		if(isset($q['@billType']) && isset($q['@totalFee']) && $q['@billType'] == 'ppd'){
 			//预付款 总金额就是领取金额
 			$q['@claimAmount'] = $q['@totalFee'];
