@@ -31,6 +31,7 @@ class StatementBillSvc extends BaseSvc
 		$q['@creator'] = $_SESSION['name'];
 		$q['@status'] = 'new';
 		notNullCheck($q,'@billType','审批单类型不能为空!');
+		notNullCheck($q,'@payee','领款人不能为空!');
 		return parent::add($q);
 	}
 

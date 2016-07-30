@@ -46,7 +46,7 @@ class EntryNExitSvc{
 					'u.realName as c8,'.
 					'\'TODO\' as c9 '.
 					'from statement_bill b left join user u on u.name = b.payer '.
-					'where b.billType = \'fdf\' and b.isDeleted = \'false\' and b.status = \'paid\';';
+					'where b.billType = \'fdf\' and b.isDeleted = \'false\' and ( b.status = \'paid\' or b.status = \'chk\');';
 		$data = $mysql->DBGetAsMap($sql);
 		return $data;
 	}
@@ -61,10 +61,10 @@ class EntryNExitSvc{
 					totalFee as c5,
 					claimAmount as c6,
 					paidAmount as c7,
-					'TODO' as c8,
+					claimAmount-paidAmount as c8,
 					'TODO' as c9,
 					paidTime as c10,
-					payer as c11 from statement_bill b left join profession_type t on b.professionType = t.value where b.isDeleted = 'false' and b.status = 'paid';";
+					payer as c11 from statement_bill b left join profession_type t on b.professionType = t.value where b.isDeleted = 'false' and ( b.status = 'paid' or b.status = 'chk');";
 		return $mysql->DBGetAsMap($sql);
 	}
 
@@ -107,7 +107,7 @@ class EntryNExitSvc{
 					'b.paidTime as c11,'.
 					'u.realName as c12 '.
 					'from statement_bill b left join supplier s on b.supplierId = s.id '.
-					'left join user u on u.name = b.payer where b.billType = \'mtf\' and b.isDeleted = \'false\' and b.status = \'paid\';';
+					'left join user u on u.name = b.payer where b.billType = \'mtf\' and b.isDeleted = \'false\' and ( b.status = \'paid\' or b.status = \'chk\');';
 		$data = $mysql->DBGetAsMap($sql);
 		return $data;
 	}
@@ -125,7 +125,7 @@ class EntryNExitSvc{
 					'u.realName as c8,'.
 					'\'TODO\' as c9 '.
 					'from statement_bill b left join user u on u.name = b.payer '.
-					'where b.billType = \'rbm\' and b.isDeleted = \'false\' and b.status = \'paid\';';
+					'where b.billType = \'rbm\' and b.isDeleted = \'false\' and  ( b.status = \'paid\' or b.status = \'chk\');';
 		$data = $mysql->DBGetAsMap($sql);
 		return $data;
 	}
