@@ -44,10 +44,10 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillRecord', {
                             text: '新状态',
                             dataIndex: 'newStatusName',
                             renderer: function (val, meta, rec){
-                                if (rec.get('rdt') == '1') {
+                                if (rec.get('drt') == '1') {
                                     meta.style = 'background: lightgreen;';
                                 }
-                                else if (rec.get('rdt') == '-1') {
+                                else if (rec.get('drt') == '-1') {
                                     meta.style = 'background: pink;';
                                 }
                                 return val;
