@@ -3,16 +3,28 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
     alias: 'widget.entrynexit-entrynexitboard',
     title: '&nbsp;',
     requires: [
-
+        'FamilyDecoration.view.entrynexit.Payment'
     ],
     // viewConfig: {
     //     emptyText: '请选择条目进行加载',
     //     deferEmptyText: false
     // },
+    rec: null, // which item we choose in entry and exit left column
     columns: [],
 
     initComponent: function () {
         var me = this;
+
+        function _getRes (){
+            var selModel = me.getSelectionModel(),
+                st = me.getStore();
+            return {
+                category: me.rec,
+                selModel: selModel,
+                st: st,
+                item: selModel.getSelection()[0]
+            };
+        }
 
         me.tbar = [
             {
@@ -23,7 +35,12 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                 hidden: true,
                 disabled: true,
                 handler: function () {
-
+                    var resObj = _getRes();
+                    var win = Ext.create('FamilyDecoration.view.entrynexit.Payment', {
+                        category: resObj.category,
+                        item: resObj.item
+                    });
+                    win.show();
                 }
             },
             {
@@ -60,9 +77,19 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             if (rec) {
                 switch (rec.get('name')) {
                     case 'workerSalary':
+                    case 'staffSalary':
+                    case 'materialPayment':
+                    case 'reimbursementItems':
+                    case 'financialFee':
+                    case 'companyBonus':
+                    case 'tax':
+                    case 'qualityGuaranteeDeposit':
                         tbarObj.pay.show();
                         break;
+                    case 'designDeposit':
                     case 'projectFee':
+                    case 'other':
+                    case 'loan':
                         tbarObj.receive.show();
                         break;
                     default:
@@ -72,6 +99,44 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             }
             else {
                 hideAllbtn();
+            }
+        }
+
+        function refreshTbar (rec, item){
+            var tbarObj = getTbar();
+            function disableAllBtn() {
+                for (var key in tbarObj) {
+                    if (tbarObj.hasOwnProperty(key)) {
+                        var btn = tbarObj[key];
+                        btn.disable();
+                    }
+                }
+            }
+            if (rec && item) {
+                switch (rec.get('name')) {
+                    case 'workerSalary':
+                    case 'staffSalary':
+                    case 'materialPayment':
+                    case 'reimbursementItems':
+                    case 'financialFee':
+                    case 'companyBonus':
+                    case 'tax':
+                    case 'qualityGuaranteeDeposit':
+                        tbarObj.pay.setDisabled(item.get('status') == 'paid');
+                        break;
+                    case 'designDeposit':
+                    case 'projectFee':
+                    case 'other':
+                    case 'loan':
+                        tbarObj.receive.setDisabled(item.get('status') == 'paid');
+                        break;
+                    default:
+                        disableAllBtn();
+                        break;
+                }
+            }
+            else {
+                disableAllBtn();
             }
         }
 
@@ -711,7 +776,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                         fields = fields.slice(0, 8);
                         break;
                     case 'projectFee':
-                        fields = fields.slice(0, 14);
+                        fields = fields.slice(0, 10);
                         break;
                     case 'loan':
                         fields = fields.slice(0, 11);
@@ -723,6 +788,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                         fields = [];
                         break;
                 }
+                fields.push('status');
                 st = Ext.create('Ext.data.Store', {
                     fields: fields,
                     autoLoad: false,
@@ -743,6 +809,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
         }
 
         me.refresh = function (rec) {
+            me.rec = rec;
             setTitle(rec);
             initTbar(rec);
             if (rec) {
@@ -766,13 +833,8 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
         me.addListener(
             {
                 selectionchange: function (selModel, sels, opts) {
-                    var rec = sels[0];
-                    if (rec) {
-                        console.log(rec);
-                    }
-                    else {
-
-                    }
+                    var item = sels[0];
+                    refreshTbar(me.rec, item);
                 }
             }
         );
