@@ -2,6 +2,8 @@
 
 class EntryNExitSvc{
 	
+	//loan:贷款入账(loan表),financialFee:财务费用(贷款还账,loan表),staffSalary:员工工资(salary表)
+	//其他都是statement_bill 表
 	public function get($q){
 		switch($q['type']){
 			case 'companyBonus': return $this->companyBonus($q);
@@ -18,6 +20,10 @@ class EntryNExitSvc{
 			case 'other': return $this->other($q);
 			default:throw new Exception("unknown type: ".$q['type']);
 		}
+	}
+
+	public function pay($q){
+
 	}
 
 	private function companyBonus($q){
