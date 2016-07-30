@@ -17,7 +17,8 @@
 		"error_log"=>array('user','detail','file','line','url','ip','refer','useragent'),
 		"salary"=>array('user','basicSalary','positionSalary','meritSalary','socialTax','balance','paid','paidTime','payee'),
 		"account"=>array('id','name','accountType'),
-		"statement_bill_tag"=>array('id','tag','billId','committer','isDeleted','createTime','updateTime'));
+		"loan"=>array('id','relevantId','type','projectName','bankName','assignee','mobile','amount','dealer','dealTime','interest','period','loanTime','status'),
+		"statement_bill_tag"=>array('id','tag','billId','committer'));
 
 	foreach ($TableMapping as $key => &$value) {
 		array_push($value, 'createTime');
@@ -25,3 +26,6 @@
 		array_push($value, 'updateTime');
 	}
 ?>
+
+
+
