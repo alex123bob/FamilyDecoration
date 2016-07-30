@@ -264,6 +264,9 @@ class StatementBillSvc extends BaseSvc
 		if (isset($q["captain"])) {
 			$sql .= " and p.captain like '%".$q["captain"]."%'";
 		}
+		if (isset($q["id"])) {
+			$sql .= " and b.id like '%".$q["id"]."%'";
+		}
 		if (isset($q["projectName"])) {
 			$sql .= " and p.projectName like '%".$q["projectName"]."%'";
 		}
