@@ -6,15 +6,14 @@ class StatementBillAuditSvc extends BaseSvc
 		return parent::add($q);
 	}
 	public function get($q){
-		require_once __ROOT__."/libs/svc/StatementBillStatusConfig.php";
-		global $ALL_STATUS;
+		require_once __ROOT__."/libs/svc/StatementBillSvc.class.php";
 		$res = parent::get($q);
 		$billSvc = $this->getSvc('StatementBill');
 		foreach ($res['data'] as &$v) {
 			if(isset($v['orignalStatus']))
-				$v['orignalStatusName'] = $ALL_STATUS[$v['orignalStatus']];
+				$v['orignalStatusName'] = StatementBillSvc::$ALL_STATUS[$v['orignalStatus']];
 			if(isset($v['newStatus']))
-				$v['newStatusName'] = $ALL_STATUS[$v['newStatus']];
+				$v['newStatusName'] = StatementBillSvc::$ALL_STATUS[$v['newStatus']];
 		}
 		$u = $this->getSvc('User');
 		$u->appendRealName($res['data'],'operator');

@@ -1,33 +1,38 @@
 <?php
 class StatementBillSvc extends BaseSvc
 {
-	public static $billType='';
-	public static $statusMapping='';
-	public static $statusChangingMapping='';
+	//账单类型
+	public static $BILLTYPE = array('ppd'=>'预付款','reg'=>'工人工资','qgd'=>'质量保证金','mtf'=>'材料付款','rbm'=>'报销','fdf'=>'财务部门费用','wlf'=>'福利','tax'=>'税');
+	public static $ALL_STATUS = array('new'=>'未提交','rdyck'=>'待一审','rdyck2'=>'待二审','rdyck3'=>'待三审','rdyck4'=>'待终审','chk'=>'审核通过','paid'=>'已付款' );
 
-	private function initBillTypes($billType = false){
-		global $STATUSMAPPING,$STATUSTRANSFER,$ALL_STATUS;
-		if($billType !== false){
-			$billType = isset($_REQUEST['billType']) ? $_REQUEST['billType'] : $billType;
+	//账单状态变化
+	public static $STATUSMAPPING = array(
+		'ppd'=> array('new','rdyck','rdyck2','rdyck3','rdyck4','chk','paid'),
+		'reg'=> array('new','rdyck','rdyck2','rdyck3','rdyck4','chk','paid'),
+		'qgd'=> array('new','rdyck','rdyck2','rdyck3','rdyck4','chk','paid'),
+		'mtf'=> array('new','rdyck','rdyck2','rdyck3','rdyck4','chk','paid'),
+		'rbm'=> array('new','rdyck','rdyck2','rdyck3','rdyck4','chk','paid'),
+		'fdf'=> array('new','rdyck','rdyck2','rdyck3','rdyck4','chk','paid'),
+		'wlf'=> array('new','rdyck','rdyck2','rdyck3','rdyck4','chk','paid'),
+		'tax'=> array('new','rdyck','rdyck2','rdyck3','rdyck4','chk','paid')
+	);
+
+	public function getNextStatus($billType,$currentStatus){
+		$count = count(self::$STATUSMAPPING[$billType]);
+		for($i = 0;$i<$count;$i++) {
+			if(self::$STATUSMAPPING[$billType][$i] == $currentStatus && $i + 1 < $count)
+				return self::$STATUSMAPPING[$billType][$i+1];
 		}
-		if($billType!== false){
-        	$keys = $STATUSMAPPING[$billType];
-        	self::$statusMapping = array();
-        	foreach ($keys as $key) {
-        		self::$statusMapping[$key] = $ALL_STATUS[$key];
-        	}
-        	self::$statusChangingMapping = $STATUSTRANSFER[$billType];
-        	if(isset($_REQUEST['@status']) && !isset(self::$statusMapping[$_REQUEST['@status']])){
-				throw new Exception("无效状态:".$_REQUEST['@status']);
-			}
-		}
+		throw new Exception(self::$ALL_STATUS[$currentStatus].'账单不可操作！');
 	}
 
-	function __construct() {
-		require_once __ROOT__."/libs/svc/StatementBillStatusConfig.php";
-		global $BILLTYPE;
-		self::$billType = $BILLTYPE;
-		$this->initBillTypes();
+	public function getPreviusStatus($billType,$currentStatus){
+		$count = count(self::$STATUSMAPPING[$billType]);
+		for($i = 0;$i<$count;$i++) {
+			if(self::$STATUSMAPPING[$billType][$i] == $currentStatus && $i > 0)
+				return self::$STATUSMAPPING[$billType][$i-1];
+		}
+		throw new Exception(self::$ALL_STATUS[$currentStatus].'账单不可操作！');
 	}
 
 	public function add($q){
@@ -106,21 +111,13 @@ class StatementBillSvc extends BaseSvc
 	public function changeStatus($q){
 		$data = parent::get($q);
 		$bills = $data['data'];
-		$auditSvc = parent::getSvc('StatementBillAudit');
-		if(count($bills) > 1)
-			throw new Exception("查到多条记录:".count($bills));
-		if(count($bills) == 0)
-			throw new Exception("查不到记录");
+		if(count($bills) > 1) throw new Exception("查到".count($bills)."条记录");
+		if(count($bills) == 0) throw new Exception("查不到记录");
+		if($bills[0]['status'] == 'paid') throw new Exception("已付款,无法更改状态.");
+
 		$bill = $bills[0];
-		$this->initBillTypes($bill['billType']); //工人工资
-		if(!isset(self::$statusMapping[$q['@status']])){
-			throw new Exception("未知状态:".$q['@status']);
-		}
-		if($bill['status'] == 'paid')
-			throw new Exception("已付款,无法更改状态.");
-		$statusChange = $bill['status']."->".$q['@status'];
-		if(!isset(self::$statusChangingMapping[$statusChange]))
-			throw new Exception("不能由".self::$statusMapping[$bill['status']]."转为".self::$statusMapping[$q['@status']]);
+		$targetStatus = $q['@status'] == "1" ? $this->getNextStatus($bill['billType'],$bill['status']) : $this->getPreviusStatus($bill['billType'],$bill['status']);
+		// 1:forward -1:backward
 		//检查额度,检查安全密码,如果超过一定额度要检查短信
 		//$this->checkLimit($q,$bill,$statusChange);
 		$auditRecord = array();
@@ -129,7 +126,8 @@ class StatementBillSvc extends BaseSvc
 		$auditRecord['@orignalStatus'] = $bill['status'];
 		$auditRecord['@newStatus'] = $q['@status'];
 		$auditRecord['@comments'] = isset($q['@comments']) ? $q['@comments'] : "无";
-		$auditRecord['@drt'] = self::$statusChangingMapping[$statusChange];
+		$auditRecord['@drt'] = $q['@status'];
+		$auditSvc = parent::getSvc('StatementBillAudit');
 		$auditSvc->add($auditRecord);
 		if($q['@status'] == "chk"){
 			$q['@checker'] = $_SESSION['name'];
@@ -137,6 +135,7 @@ class StatementBillSvc extends BaseSvc
 		if($q['@status'] == "paid") {
 			$q['@payer'] = $_SESSION['name'];
 		}
+		$q['@status']=$targetStatus;
 		$res = parent::update($q);
 		//通知
 		try{
@@ -154,7 +153,7 @@ class StatementBillSvc extends BaseSvc
 		}
 		global $mysql;
 		$newStatus = $q['@status'];
-		$newStatusCh = StatementBillSvc::$statusMapping[$newStatus];
+		$newStatusCh = StatementBillSvc::$ALL_STATUS[$newStatus];
 		//获取短信模板,及需要提前几天提醒的天数
 		$text = $mysql->DBGetAsOneArray("select paramValue from system where paramName = 'msg_notice_bill_status_change'");
 		$text = $text[0];
@@ -217,12 +216,12 @@ class StatementBillSvc extends BaseSvc
 	}
 
 	public function getLaborAndPrePaid($q){
-		$this->initBillTypes('reg'); //工人工资
+		$q['billType'] = 'reg';
 		$this->appendSelect = ",tp.cname as professionTypeName ";
 		$this->appendJoin = "left join profession_type tp on tp.value = $this->tableName.professionType";
 		$data = parent::get($q);
 		foreach($data['data'] as $key => &$value){
-			$value['statusName'] = self::$statusMapping[$value['status']];
+			$value['statusName'] = self::$ALL_STATUS[$value['status']];
 		}
 		$userSvc = parent::getSvc('User');
 		$userSvc->appendRealName($data['data'],'checker');
