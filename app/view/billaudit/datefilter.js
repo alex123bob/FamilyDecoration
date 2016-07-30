@@ -5,6 +5,7 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
     layout: 'vbox',
 
     needTime: true, // do we need start and end time component. default true
+    needBillNumber: true, // do we need billnumber. default true. this is only used for billaudit panel
     needCustomTxt: true, // do we need custom field. default true
     txtEmptyText: undefined,
     txtParam: undefined,
@@ -120,6 +121,7 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
             {
                 xtype: 'textfield',
                 flex: 1,
+                hidden: !me.needBillNumber,
                 editable: false,
                 width: '100%',
                 emptyText: '账单号',

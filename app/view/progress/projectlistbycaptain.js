@@ -32,6 +32,7 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 					collapsible: true,
 					needTime: false,
 					needCustomTxt: false,
+					needBillNumber: false,
 					filterFn: function (obj) {
 						var ownerCt = this.ownerCt,
 							grid = ownerCt.getComponent('gridpanel-searchResult'),
