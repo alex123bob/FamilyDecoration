@@ -2,8 +2,8 @@
 class StatementBillSvc extends BaseSvc
 {
 	//账单类型
-	public static $BILLTYPE = array('ppd'=>'预付款','reg'=>'工人工资','qgd'=>'质量保证金','mtf'=>'材料付款','rbm'=>'报销','fdf'=>'财务部门费用','wlf'=>'福利','tax'=>'税');
-	public static $ALL_STATUS = array('new'=>'未提交','rdyck'=>'待一审','rdyck2'=>'待二审','rdyck3'=>'待三审','rdyck4'=>'待终审','chk'=>'审核通过','paid'=>'已付款' );
+	public static $BILLTYPE = array('ppd'=>'预付款','reg'=>'工人工资','dsdpst'=>'设计定金','qgd'=>'质量保证金','pjtf'=>'工程款','mtf'=>'材料付款','rbm'=>'报销','fdf'=>'财务部门费用','wlf'=>'福利','tax'=>'税','other'=>'其他');
+	public static $ALL_STATUS = array('new'=>'未提交','rdyck'=>'待一审','rdyck2'=>'待二审','rdyck3'=>'待三审','rdyck4'=>'待终审','chk'=>'审核通过','paid'=>'已付款','accepted'=>'已收款' );
 
 	//账单状态变化
 	public static $STATUSMAPPING = array(

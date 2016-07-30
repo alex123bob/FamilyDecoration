@@ -52,16 +52,18 @@ CREATE TABLE `supplierMaterial` (
 
 CREATE TABLE `loan` (
   `id` varchar(20) DEFAULT NULL,
+  `relevantId` varchar(20) DEFAULT NULL comment '贷款还账对应的贷款入账id',
+  `type` varchar(1) DEFAULT NULL comment '0 贷款入账，贷款还账',
   `projectName` varchar(200) DEFAULT NULL comment '项目名称',
   `bankName` varchar(500) DEFAULT NULL comment '银行',
   `assignee` varchar(500) DEFAULT NULL comment '交办人',
-  `mobile` varchar(50) DEFAULT NULL comment '交办人联系方式',
   `amount` varchar(50) DEFAULT NULL comment '收款金额',
-  `payee` varchar(50) DEFAULT NULL comment '收款人',
-  `receiveTime` datetime DEFAULT null comment '收款时间',
+  `dealer` varchar(50) DEFAULT NULL comment '收/付款人',
+  `dealTime` datetime DEFAULT null comment '收/付款时间',
   `interest` varchar(10) DEFAULT null comment '当前利率',
   `period` varchar(20) DEFAULT null comment '贷款期限',
-  `requestTime` datetime DEFAULT null comment '贷款时间',
+  `loanTime` datetime DEFAULT null comment '贷款时间',
+  `status` varchar(10) DEFAULT null comment '状态. accepted:已收款,arch:归档,paid:已出款',
   `isDeleted` varchar(5) DEFAULT 'false',
   `createTime` datetime DEFAULT null,
   `updateTime` datetime DEFAULT null
@@ -92,6 +94,6 @@ update statement_bill_audit set drt = '1' where orignalStatus = 'rdyck' and newS
 update statement_bill_audit set drt = '-1' where orignalStatus = 'rdyck' and newStatus = 'new' and drt is null;
 update statement_bill_audit set drt = '1' where orignalStatus = 'rdyck' and newStatus = 'rdyck2' and drt is null;
 update statement_bill_audit set drt = '-1' where orignalStatus = 'rdyck2' and newStatus = 'rdyck' and drt is null;
-
+alter table statement_bill add column descpt varchar(200) default null comment '备注'
 
 update `system` set `paramValue`='version-8.6' where `id`='4';
