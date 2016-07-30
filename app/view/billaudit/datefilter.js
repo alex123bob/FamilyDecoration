@@ -19,10 +19,12 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
             var startTime = me.getComponent('startTime'),
                 endTime = me.getComponent('endTime'),
                 projectName = me.getComponent('projectName'),
+                billId = me.getComponent('billId'),
                 customTxt = me.down('fieldcontainer').getComponent('customTxt');
             return {
                 startTime: startTime,
                 projectName: projectName,
+                billId: billId,
                 endTime: endTime,
                 customTxt: customTxt
             };
@@ -116,6 +118,30 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
                 }
             },
             {
+                xtype: 'textfield',
+                flex: 1,
+                editable: false,
+                width: '100%',
+                emptyText: '账单号',
+                name: 'billId',
+                itemId: 'billId',
+                enableKeyEvents: true,
+                listeners: {
+                    keydown: function (field, e) {
+                        if (e.keyCode == 13) {
+                            var fct = field.nextSibling();
+                            fct.getComponent('button-filter').handler();
+                        }
+                    },
+                    change: function (field, newVal, oldVal, opts){
+                        if (newVal == '') {
+                            var fct = field.nextSibling();
+                            fct.getComponent('button-clean').handler();
+                        }
+                    }
+                }
+            },
+            {
                 xtype: 'fieldcontainer',
                 layout: 'hbox',
                 width: '100%',
@@ -141,6 +167,7 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
                             }
                             obj[me.txtParam] = resObj.customTxt.getValue();
                             obj.projectName = resObj.projectName.getValue();
+                            obj.billId = resObj.billId.getValue();
                             me.filterFn(obj);
                         }
                     },
@@ -153,6 +180,7 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
                             resObj.startTime.setValue('').clearInvalid();
                             resObj.endTime.setValue('').clearInvalid();
                             resObj.projectName.setValue('');
+                            resObj.billId.setValue('');
                             resObj.customTxt.setValue('');
                             me.clearFn();
                         }
