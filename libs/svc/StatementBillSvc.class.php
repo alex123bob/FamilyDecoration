@@ -262,7 +262,7 @@ class StatementBillSvc extends BaseSvc
 
 	public function getByStatus($q){
 		$sql = "select pt.cname as professionTypeName,p.captain,p.captainName,b.* from statement_bill b 
-				left join project p on b.projectId = p.projectId and p.isDeleted = 'false' left join profession_type pt on pt.value = b.professionType where b.isDeleted = 'false' and b.status = '?' ";
+				left join project p on b.projectId = p.projectId and p.isDeleted = 'false' left join profession_type pt on pt.value = b.professionType where b.isDeleted = 'false' and b.status = '?' and (b.billType = 'ppd' or b.billType = 'reg') ";
 		if (isset($q["createTime"])) {
 			$sql .= " and b.createTime ".$q["createTime"];
 		}
