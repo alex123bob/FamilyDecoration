@@ -17,20 +17,11 @@ class StatementBillSvc extends BaseSvc
 		'tax'=> array('new','rdyck','rdyck2','rdyck3','rdyck4','chk','paid')
 	);
 
-	public function getNextStatus($billType,$currentStatus){
+	public function getStatusTransferChain($billType,$currentStatus,$offSet){
 		$count = count(self::$STATUSMAPPING[$billType]);
 		for($i = 0;$i<$count;$i++) {
-			if(self::$STATUSMAPPING[$billType][$i] == $currentStatus && $i + 1 < $count)
-				return self::$STATUSMAPPING[$billType][$i+1];
-		}
-		throw new Exception(self::$ALL_STATUS[$currentStatus].'账单不可操作！');
-	}
-
-	public function getPreviusStatus($billType,$currentStatus){
-		$count = count(self::$STATUSMAPPING[$billType]);
-		for($i = 0;$i<$count;$i++) {
-			if(self::$STATUSMAPPING[$billType][$i] == $currentStatus && $i > 0)
-				return self::$STATUSMAPPING[$billType][$i-1];
+			if(self::$STATUSMAPPING[$billType][$i] == $currentStatus && $i + $offSet < $count && $i + $offSet >= 0)
+				return self::$STATUSMAPPING[$billType][$i+$offSet];
 		}
 		throw new Exception(self::$ALL_STATUS[$currentStatus].'账单不可操作！');
 	}
@@ -116,7 +107,8 @@ class StatementBillSvc extends BaseSvc
 		if($bills[0]['status'] == 'paid') throw new Exception("已付款,无法更改状态.");
 
 		$bill = $bills[0];
-		$targetStatus = $q['@status'] == "1" ? $this->getNextStatus($bill['billType'],$bill['status']) : $this->getPreviusStatus($bill['billType'],$bill['status']);
+		$q['@status'] = (int)$q['@status'];
+		$targetStatus = $this->getStatusTransferChain($bill['billType'],$bill['status'],$q['@status']);
 		// 1:forward -1:backward
 		//检查额度,检查安全密码,如果超过一定额度要检查短信
 		//$this->checkLimit($q,$bill,$statusChange);
