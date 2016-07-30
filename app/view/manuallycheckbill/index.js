@@ -533,14 +533,9 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								{
 									flex: 1,
 									text: '是否付款',
-									dataIndex: 'isPaid',
+									dataIndex: 'status',
 									renderer: function (val, meta, rec) {
-										if ('true' == val) {
-											return '已付款';
-										}
-										else {
-											return '未付款';
-										}
+										return 'paid' == val ? '已付款' : '未付款';
 									}
 								},
 								{

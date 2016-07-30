@@ -20,7 +20,6 @@ Ext.define('FamilyDecoration.model.StatementBill', {
 		{name: 'statusName', type: 'string'}, // '新创建', '待审核', '已审核', '打回', '已付款'
 		{name: 'checker', type: 'string'},
 		{name: 'checkerRealName', type: 'string'},
-		{name: 'isPaid', type: 'string'},
 		// billType: ppd->prepaid deposit预付款,
 		// billType: reg->regular bill普通账单
 		// billType: qgd->quality guarantee deposit质量保证金
