@@ -105,13 +105,13 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
                 listeners: {
                     keydown: function (field, e) {
                         if (e.keyCode == 13) {
-                            var fct = field.nextSibling();
+                            var fct = field.nextSibling().nextSibling();
                             fct.getComponent('button-filter').handler();
                         }
                     },
                     change: function (field, newVal, oldVal, opts){
                         if (newVal == '') {
-                            var fct = field.nextSibling();
+                            var fct = field.nextSibling().nextSibling();
                             fct.getComponent('button-clean').handler();
                         }
                     }
