@@ -62,7 +62,23 @@ class EntryNExitSvc{
 
 
 	private function qualityGuaranteeDeposit($q){
-		return array();
+		global $mysql;
+		$sql = "select b.id as c0,
+					b.projectName as c1,
+					b.reimbursementReason as c2,
+					b.payee as c3,
+					b.payee as c4,
+					b.phoneNumber as c5,
+					b.totalFee as c6,
+					b.paidAmount as c7,
+					u.realName as c8,
+					b.paidTime as c9,
+					b.descpt as c10,
+					b.status
+					from statement_bill b left join user u on u.name = b.payer
+					where b.billType = 'qgd' and b.isDeleted = 'false' and ( b.status = 'paid' or b.status = 'chk');";
+		$data = $mysql->DBGetAsMap($sql);
+		return array('status'=>'successful','data'=>$data,'total'=>100);
 	}
 
 	private function workerSalary($q){
