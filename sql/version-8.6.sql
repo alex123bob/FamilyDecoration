@@ -86,4 +86,12 @@ alter table statement_bill drop column `isPaid`;
 alter table statement_bill modify status varchar(10);
 alter table statement_bill_audit add column drt varchar(10) comment '方向，1前进，-1打回';
 
+update statement_bill_audit set drt = '1' where orignalStatus = 'chk' and newStatus = 'paid' and drt is null;
+update statement_bill_audit set drt = '1' where orignalStatus = 'new' and newStatus = 'rdyck' and drt is null;
+update statement_bill_audit set drt = '1' where orignalStatus = 'rdyck' and newStatus = 'chk' and drt is null;
+update statement_bill_audit set drt = '-1' where orignalStatus = 'rdyck' and newStatus = 'new' and drt is null;
+update statement_bill_audit set drt = '1' where orignalStatus = 'rdyck' and newStatus = 'rdyck2' and drt is null;
+update statement_bill_audit set drt = '-1' where orignalStatus = 'rdyck2' and newStatus = 'rdyck' and drt is null;
+
+
 update `system` set `paramValue`='version-8.6' where `id`='4';
