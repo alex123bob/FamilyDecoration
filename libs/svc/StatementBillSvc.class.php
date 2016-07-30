@@ -13,6 +13,9 @@ class StatementBillSvc extends BaseSvc
 		if($billType!== false){
         	self::$statusMapping = $STATUSMAPPING[$billType];
         	self::$statusChangingMapping = $STATUSTRANSFER[$billType];
+        	if(isset($_REQUEST['@status']) && !isset(self::$statusMapping[$_REQUEST['@status']])){
+				throw new Exception("无效状态:".$_REQUEST['@status']);
+			}
 		}
 	}
 
@@ -21,9 +24,6 @@ class StatementBillSvc extends BaseSvc
 		global $BILLTYPE;
 		self::$billType = $BILLTYPE;
 		$this->initBillTypes();
-		if(isset($_REQUEST['@status']) && !isset(self::$statusMapping[$_REQUEST['@status']])){
-			throw new Exception("无效状态:".$_REQUEST['@status']);
-		}
 	}
 
 	public function add($q){
@@ -100,9 +100,6 @@ class StatementBillSvc extends BaseSvc
 
 
 	public function changeStatus($q){
-		if(!isset(self::$statusMapping[$q['@status']])){
-			throw new Exception("未知状态:".$q['@status']);
-		}
 		$data = parent::get($q);
 		$bills = $data['data'];
 		$auditSvc = parent::getSvc('StatementBillAudit');
@@ -111,6 +108,10 @@ class StatementBillSvc extends BaseSvc
 		if(count($bills) == 0)
 			throw new Exception("查不到记录");
 		$bill = $bills[0];
+		$this->initBillTypes($bill['billType']); //工人工资
+		if(!isset(self::$statusMapping[$q['@status']])){
+			throw new Exception("未知状态:".$q['@status']);
+		}
 		if($bill['status'] == 'paid')
 			throw new Exception("已付款,无法更改状态.");
 		$statusChange = $bill['status']."->".$q['@status'];
