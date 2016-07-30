@@ -169,10 +169,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								btn.setDisabled(!(resourceObj.project && resourceObj.professionType));
 							}
 							else if (name == 'editBill' || name == 'deleteBill' || name == 'submitBill') {
-								if (rec && (rec.get('status') == 'rdyck' || rec.get('status') == 'paid')) {
-									btn.disable();
-								}
-								else if (rec && rec.get('status') == 'chk') {
+								if (rec && (rec.get('status') != 'new')) {
 									if (name == 'deleteBill'
 										&& (User.isAdmin() || User.isProjectManager())) {
 										btn.enable();
@@ -367,22 +364,51 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								index = st.indexOf(resourceObj.bill),
 								selModel = resourceObj.billList.getSelectionModel();
 							if (bill) {
+								function request(validateCode) {
+									var params = {
+										id: resourceObj.bill.getId(),
+										status: 'rdyck2'
+									}, arr = ['id'];
+									if (validateCode) {
+										Ext.apply(params, {
+											validateCode: validateCode
+										});
+										arr.push('validateCode');
+									}
+									ajaxUpdate('StatementBill.changeStatus', params, arr, function (obj) {
+										Ext.Msg.success('一审通过');
+										selModel.deselectAll();
+										st.reload({
+											callback: function (recs, ope, success) {
+												if (success) {
+													selModel.select(index);
+												}
+											}
+										});
+									}, true);
+								}
 								Ext.Msg.warning('确定要将当前账单置为一审通过吗？', function (btnId) {
 									if ('yes' == btnId) {
-										ajaxUpdate('StatementBill.changeStatus', {
-											id: resourceObj.bill.getId(),
-											status: 'rdyck2'
-										}, ['id'], function (obj) {
-											Ext.Msg.success('一审通过');
-											selModel.deselectAll();
-											st.reload({
-												callback: function (recs, ope, success) {
-													if (success) {
-														selModel.select(index);
-													}
-												}
-											});
-										}, true);
+										ajaxGet('StatementBill', 'getLimit', {
+											id: resourceObj.bill.getId()
+										}, function (obj) {
+											if (obj.type == 'checked') {
+												showMsg(obj.hint);
+												request();
+											}
+											else {
+												Ext.defer(function () {
+													Ext.Msg.password(obj.hint, function (val) {
+														if (obj.type == 'sms') {
+														}
+														else if (obj.type == 'securePass') {
+															val = md5(_PWDPREFIX + val);
+														}
+														request(val);
+													});
+												}, 500);
+											}
+										});
 									}
 								});
 							}
@@ -406,20 +432,50 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 							if (bill) {
 								Ext.Msg.warning('确定要将当前账单退回到未提交状态吗？', function (btnId) {
 									if ('yes' == btnId) {
-										ajaxUpdate('StatementBill.changeStatus', {
-											id: resourceObj.bill.getId(),
-											status: 'new'
-										}, ['id'], function (obj) {
-											Ext.Msg.success('单据已退回，单据状态置为未提交！');
-											selModel.deselectAll();
-											st.reload({
-												callback: function (recs, ope, success) {
-													if (success) {
-														selModel.select(index);
+										function request(validateCode) {
+											var params = {
+												id: resourceObj.bill.getId(),
+												status: 'new'
+											},
+											arr = ['id'];
+											if (validateCode) {
+												Ext.apply(params, {
+													validateCode: validateCode
+												});
+												arr.push('validateCode');
+											}
+											ajaxUpdate('StatementBill.changeStatus', params, arr, function (obj) {
+												Ext.Msg.success('单据已退回，单据状态置为未提交！');
+												selModel.deselectAll();
+												st.reload({
+													callback: function (recs, ope, success) {
+														if (success) {
+															selModel.select(index);
+														}
 													}
-												}
-											});
-										}, true);
+												});
+											}, true);
+										}
+										ajaxGet('StatementBill', 'getLimit', {
+											id: resourceObj.bill.getId()
+										}, function (obj) {
+											if (obj.type == 'checked') {
+												showMsg(obj.hint);
+												request();
+											}
+											else {
+												Ext.defer(function () {
+													Ext.Msg.password(obj.hint, function (val) {
+														if (obj.type == 'sms') {
+														}
+														else if (obj.type == 'securePass') {
+															val = md5(_PWDPREFIX + val);
+														}
+														request(val);
+													});
+												}, 500);
+											}
+										});
 									}
 								});
 							}
