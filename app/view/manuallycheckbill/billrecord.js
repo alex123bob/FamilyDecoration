@@ -38,19 +38,22 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillRecord', {
                     items: [
                         {
                             text: '原状态',
-                            dataIndex: 'orignalStatusName'
+                            dataIndex: 'orignalStatusName',
+                            flex: 0.8
                         },
                         {
                             text: '新状态',
                             dataIndex: 'newStatusName',
+                            flex: 1.2,
                             renderer: function (val, meta, rec){
                                 if (rec.get('drt') == '1') {
                                     meta.style = 'background: lightgreen;';
-                                }
-                                else if (rec.get('drt') == '-1') {
+                                    return val;
+                                }else{
                                     meta.style = 'background: pink;';
+                                    return val+"(打回)";
                                 }
-                                return val;
+                               
                             }
                         },
                         {
@@ -66,11 +69,11 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillRecord', {
                         {
                             text: '时间',
                             dataIndex: 'createTime',
-                            flex: 2
+                            flex: 1.8
                         }
                     ],
                     defaults: {
-                        align: 'center',
+                        align: 'left',
                         flex: 1
                     }
                 }

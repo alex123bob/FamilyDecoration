@@ -24,7 +24,7 @@ $billSvc = BaseSvc::getSvc('StatementBill');
 $billItemSvc = BaseSvc::getSvc('StatementBillItem');
 $projectSvc = BaseSvc::getSvc('Project');
 
-$bill = $billSvc->get($_REQUEST);
+$bill = $billSvc->getLaborAndPrePaid($_REQUEST);
 
 $bill = $bill['data'][0];
 $billId = $bill['id'];
