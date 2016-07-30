@@ -374,7 +374,7 @@
                 flag = User.isGeneral() ? false : true;
             }
             else if (rec.get('cmp') == 'manuallycheckbill-index') {
-                flag = User.isAdmin() || User.isProjectManager() || User.isProjectStaff() ? true : false;
+                flag = User.isAdmin() || User.isProjectManager() || User.isProjectStaff() || User.isBudgetManager() || User.isBudgetStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'checkbillitem-index') {
                 flag = User.isAdmin() ? true : false;

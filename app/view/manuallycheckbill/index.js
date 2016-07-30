@@ -130,7 +130,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								}
 							});
 							blSt.loadPage(1, {
-								callback: function (recs, ope, success){
+								callback: function (recs, ope, success) {
 								}
 							});
 						}
@@ -152,6 +152,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						addPrePayBill: panel.query('[name="addPrePayBill"]')[0],
 						editBill: panel.query('[name="editBill"]')[0],
 						submitBill: panel.query('[name="submitBill"]')[0],
+						firstCheckBill: panel.query('[name="firstCheckBill"]')[0],
 						previewBill: panel.query('[name="previewBill"]')[0],
 						printBill: panel.query('[name="printBill"]')[0],
 						deleteBill: Ext.getCmp('gridpanel-billList').getHeader().getComponent('deleteBill')
@@ -181,6 +182,14 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								}
 								else {
 									btn.setDisabled(!(resourceObj.project && resourceObj.professionType && resourceObj.bill));
+								}
+							}
+							else if (name == 'firstCheckBill') {
+								if ((User.isBudgetManager() || User.isBudgetStaff() || User.isAdmin()) && rec && rec.get('status') == 'rdyck') {
+									btn.enable();
+								}
+								else {
+									btn.disable();
 								}
 							}
 							else {
@@ -342,6 +351,38 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 									});
 								}
 							});
+						}
+					},
+					{
+						text: '一审通过',
+						name: 'firstCheckBill',
+						disabled: true,
+						icon: 'resources/img/first_check.png',
+						handler: function () {
+							var resourceObj = me.getRes(),
+								bill = resourceObj.bill,
+								st = resourceObj.billList.getStore(),
+								index = st.indexOf(resourceObj.bill),
+								selModel = resourceObj.billList.getSelectionModel();
+							if (bill) {
+								ajaxUpdate('StatementBill.changeStatus', {
+									id: resourceObj.bill.getId(),
+									status: 'rdyck2'
+								}, ['id'], function (obj) {
+									Ext.Msg.success('一审通过');
+									selModel.deselectAll();
+									st.reload({
+										callback: function (recs, ope, success) {
+											if (success) {
+												selModel.select(index);
+											}
+										}
+									});
+								}, true);
+							}
+							else {
+								showMsg('请选择账单！');
+							}
 						}
 					},
 					{
