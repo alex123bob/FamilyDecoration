@@ -42,7 +42,16 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillRecord', {
                         },
                         {
                             text: '新状态',
-                            dataIndex: 'newStatusName'
+                            dataIndex: 'newStatusName',
+                            renderer: function (val, meta, rec){
+                                if (rec.get('rdt') == '1') {
+                                    meta.style = 'background: lightgreen;';
+                                }
+                                else if (rec.get('rdt') == '-1') {
+                                    meta.style = 'background: pink;';
+                                }
+                                return val;
+                            }
                         },
                         {
                             text: '评论',
