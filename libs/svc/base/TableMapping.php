@@ -16,8 +16,8 @@
 		"log_list"=>array('id','content','committer','logType','isFinished'),
 		"error_log"=>array('user','detail','file','line','url','ip','refer','useragent'),
 		"salary"=>array('user','basicSalary','positionSalary','meritSalary','socialTax','balance','paid','paidTime','payee'),
-		"account"=>array('id','name','accountType')
-	);
+		"account"=>array('id','name','accountType'),
+		"statement_bill_tag"=>array('id','tag','billId','committer','isDeleted','createTime','updateTime'));
 
 	foreach ($TableMapping as $key => &$value) {
 		array_push($value, 'createTime');

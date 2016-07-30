@@ -8,7 +8,7 @@ if(strpos($_SERVER["HTTP_USER_AGENT"],"Safari") && !strpos($_SERVER["HTTP_USER_A
 	$UserBrowserClient = 'default';
 }
 
-global $name,$phone,$times,$address,$totalFee,$captain,$finishPercentage,$requiredFee,$cny,$professionTypeName; 
+global $name,$phone,$times,$address,$totalFee,$captain,$finishPercentage,$requiredFee,$cny,$professionTypeName,$billId; 
 
 $lineHeight 	= 6;
 //È«¾Ö×ÖÌå
@@ -27,6 +27,7 @@ $projectSvc = BaseSvc::getSvc('Project');
 $bill = $billSvc->get($_REQUEST);
 
 $bill = $bill['data'][0];
+$billId = $bill['id'];
 $name = str2GBK($bill['payee']);
 $phone = $bill['phoneNumber'];
 $projects = $projectSvc->get(array('projectId'=>$bill['projectId']));

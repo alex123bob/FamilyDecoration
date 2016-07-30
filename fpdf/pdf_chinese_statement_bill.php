@@ -4,7 +4,7 @@ class PDF extends PDF_Chinese{
 	
 	function Header(){ //设置页眉 
 	
-		global $name,$phone,$times,$address,$captain,$totalFee,$finishPercentage,$requiredFee,$cny,$professionTypeName; 
+		global $name,$phone,$times,$address,$captain,$totalFee,$finishPercentage,$requiredFee,$cny,$professionTypeName,$billId; 
 		
 		$this->SetFont('GB','',13); 
 		$this->SetLeftMargin(15);
@@ -17,7 +17,7 @@ class PDF extends PDF_Chinese{
 		$this->Text(80,15,'佳诚装饰');
 		$this->Text(80,22,'单项工程施工工程款领取审批单');
 		$this->SetFont('GB','',8); 
-		$this->Text(185,30,'公司联('.$professionTypeName.')');
+		$this->Text(165,30,"公司联-$billId($professionTypeName)");
 		$this->Ln(5); //换行
 		$this->SetFont('GB','',10); 
 		$this->Text(35,40,'领款人:');

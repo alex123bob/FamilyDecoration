@@ -1,16 +1,21 @@
 <?php
 class StatementBillSvc extends BaseSvc
 {
-	public static $billType = array('ppd'=>'预付款','reg'=>'普通账单','qgd'=>'质量保证金','mtf'=>'材料付款','rbm'=>'报销','fdf'=>'财务部门费用','wlf'=>'福利','tax'=>'税');
-	public static $statusMapping = array('new'=>'未提交','rdyck'=>'待审核','chk'=>'已审核','rbk'=>'打回','paid'=>'已付款');
-	public static $statusChangingMapping = array(
-			'new->rdyck'=>1, //新创建->待审核
-			'rdyck->chk'=>1, //待审核->已审核
-			'rdyck->rbk'=>1, //待审核->打回
-			'rbk->rdyck'=>1, //打回->待审核
-			'chk->rdyck'=>1, //已审核->待审核  会计审核错了,回退到待审核状态
-			'chk->paid'=>1  //已审核->已付款
-		);
+	public static $billType='';
+	public static $statusMapping='';
+	public static $statusChangingMapping='';
+
+	function __construct() {
+		require_once __ROOT__."/libs/svc/StatementBillStatusConfig.php";
+		global $billType,$statusMapping,$statusChangingMapping;
+        self::$billType = $billType;
+        self::$statusMapping = $statusMapping;
+        self::$statusChangingMapping = $statusChangingMapping;
+	}
+	public function getBillType(){
+		return self::$billType;
+	}
+
 	public function add($q){
 		$q['@id'] = $this->getUUID();
 		$q['@creator'] = $_SESSION['name'];
@@ -253,6 +258,9 @@ class StatementBillSvc extends BaseSvc
 		}
 		if (isset($q["projectName"])) {
 			$sql .= " and p.projectName like '%".$q["projectName"]."%'";
+		}
+		if (isset($q["billType"])) {
+			$sql .= " and b.billType = '".$q["billType"]."'";
 		}
 		$sqlCount = "select count(1) as cnt from ( $sql ) as temp ";
 		global $mysql;
