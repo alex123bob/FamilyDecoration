@@ -82,4 +82,5 @@ CREATE TABLE `statement_bill_tag` (
 update statement_bill set status = 'new' where status = 'rbk';
 update statement_bill_audit set newStatus = 'new' where newStatus = 'rbk';
 update statement_bill_audit set orignalStatus = 'new' where orignalStatus = 'rbk';
+alter table statement_bill drop column `isPaid`;
 update `system` set `paramValue`='version-8.6' where `id`='4';
