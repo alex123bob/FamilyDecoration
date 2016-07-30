@@ -19,9 +19,21 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                 xtype: 'button',
                 text: '付款',
                 itemId: 'button-pay',
+                icon: 'resources/img/payment.png',
                 hidden: true,
                 disabled: true,
                 handler: function () {
+
+                }
+            },
+            {
+                xtype: 'button',
+                text: '收款',
+                itemId: 'button-receive',
+                icon: 'resources/img/money_collect.png',
+                hidden: true,
+                disabled: true,
+                handler: function (){
 
                 }
             }
@@ -30,13 +42,14 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
         function getTbar() {
             var toolbar = me.down('toolbar');
             return {
-                pay: toolbar.getComponent('button-pay')
+                pay: toolbar.getComponent('button-pay'),
+                receive: toolbar.getComponent('button-receive')
             };
         }
 
         function initTbar(rec) {
             var tbarObj = getTbar();
-            function hideAllbtn (){
+            function hideAllbtn() {
                 for (var key in tbarObj) {
                     if (tbarObj.hasOwnProperty(key)) {
                         var btn = tbarObj[key];
@@ -48,6 +61,9 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                 switch (rec.get('name')) {
                     case 'workerSalary':
                         tbarObj.pay.show();
+                        break;
+                    case 'projectFee':
+                        tbarObj.receive.show();
                         break;
                     default:
                         hideAllbtn();
@@ -66,31 +82,6 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             else {
                 me.setTitle('&nbsp;');
             }
-        }
-
-        function initDockedItem(rec) {
-            var dockedItems = [];
-            if (rec) {
-                switch (rec.get('name')) {
-                    case 'workerSalary':
-                        dockedItems.push(
-                            {
-                                xtype: 'toolbar',
-                                dock: 'top',
-                                items: [
-                                    {
-                                        text: '付款'
-                                    }
-                                ]
-                            }
-                        );
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-            return dockedItems;
         }
 
         // dynamically generate columns according to entry and exit type
@@ -560,72 +551,20 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                                     dataIndex: 'c5'
                                 },
                                 {
-                                    text: '首期款',
-                                    columns: [
-                                        {
-                                            text: '应交款',
-                                            dataIndex: 'c6',
-                                            flex: 0.5,
-                                            align: 'center'
-                                        },
-                                        {
-                                            text: '已交款',
-                                            dataIndex: 'c7',
-                                            flex: 0.5,
-                                            align: 'center'
-                                        }
-                                    ]
+                                    text: '应交款',
+                                    dataIndex: 'c6'
                                 },
                                 {
-                                    text: '二期款',
-                                    columns: [
-                                        {
-                                            text: '应交款',
-                                            dataIndex: 'c8',
-                                            flex: 0.5,
-                                            align: 'center'
-                                        },
-                                        {
-                                            text: '已交款',
-                                            dataIndex: 'c9',
-                                            flex: 0.5,
-                                            align: 'center'
-                                        }
-                                    ]
+                                    text: '已交款',
+                                    dataIndex: 'c7'
                                 },
                                 {
-                                    text: '三期款',
-                                    columns: [
-                                        {
-                                            text: '应交款',
-                                            dataIndex: 'c10',
-                                            flex: 0.5,
-                                            align: 'center'
-                                        },
-                                        {
-                                            text: '已交款',
-                                            dataIndex: 'c11',
-                                            flex: 0.5,
-                                            align: 'center'
-                                        }
-                                    ]
+                                    text: '款项',
+                                    dataIndex: 'c8'
                                 },
                                 {
-                                    text: '尾款',
-                                    columns: [
-                                        {
-                                            text: '应交款',
-                                            dataIndex: 'c12',
-                                            flex: 0.5,
-                                            align: 'center'
-                                        },
-                                        {
-                                            text: '已交款',
-                                            dataIndex: 'c13',
-                                            flex: 0.5,
-                                            align: 'center'
-                                        }
-                                    ]
+                                    text: '收款时间',
+                                    dataIndex: 'c9'
                                 }
                             ]
                         };
@@ -726,14 +665,12 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                         break;
                 }
                 Ext.Array.each(cols.items, function (item, index, arr) {
-                    if (rec.get('name') != 'projectFee') {
-                        var defaultConfig = cols.defaults;
-                        if (!item.flex) {
-                            item.flex = defaultConfig.flex;
-                        }
-                        if (!item.align) {
-                            item.align = defaultConfig.align;
-                        }
+                    var defaultConfig = cols.defaults;
+                    if (!item.flex) {
+                        item.flex = defaultConfig.flex;
+                    }
+                    if (!item.align) {
+                        item.align = defaultConfig.align;
                     }
                 });
                 cols = cols.items;
@@ -828,7 +765,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
 
         me.addListener(
             {
-                selectionchange: function (selModel, sels, opts){
+                selectionchange: function (selModel, sels, opts) {
                     var rec = sels[0];
                     if (rec) {
                         console.log(rec);
