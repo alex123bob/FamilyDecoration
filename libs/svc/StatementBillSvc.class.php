@@ -122,7 +122,6 @@ class StatementBillSvc extends BaseSvc
 		}
 		if($q['@status'] == "paid") {
 			$q['@payer'] = $_SESSION['name'];
-			$q['@isPaid'] = true;
 		}
 		$res = parent::update($q);
 		//通知
