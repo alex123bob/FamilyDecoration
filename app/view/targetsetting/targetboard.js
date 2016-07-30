@@ -9,6 +9,26 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
     initComponent: function () {
         var me = this;
 
+        me.plugins = [
+            Ext.create('Ext.grid.plugin.RowEditing', {
+                clicksToEdit: 1,
+                listeners: {
+                    beforeedit: function (editor, e){
+                        var rec = e.record;
+                    },
+                    edit: function (editor, e){
+                        var rec = e.record;
+                        Ext.suspendLayouts();
+
+                        Ext.resumeLayouts();
+                    },
+                    validateedit: function (editor, e, opts){
+                        var rec = e.record;
+                    }
+                }
+            })
+        ];
+
         me.tbar = [
             {
                 xtype: 'combobox',
@@ -91,7 +111,7 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                             type: 'json'
                         }
                     },
-                    data: (function (){
+                    data: (function () {
                         var d = new Date(),
                             m = d.getMonth() + 1,
                             data = [];
@@ -128,7 +148,7 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
             ],
                 prefix = ['plan_', 'accomplishment_'];
 
-            function renderCol(prefix, depa) {
+            function renderCol(prefix, depa, needEditor) {
                 var arr = [];
                 if (depa == 'marketDepartment') {
                     arr = [
@@ -137,28 +157,44 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                             align: 'center',
                             dataIndex: prefix + 'buildingSwiping',
                             flex: 1,
-                            width: 80
+                            width: 80,
+                            editor: needEditor ? null : {
+                                xtype: 'textfield',
+                                allowBlank: false
+                            }
                         },
                         {
                             text: '电销',
                             align: 'center',
                             dataIndex: prefix + 'telemarketing',
                             flex: 1,
-                            width: 80
+                            width: 80,
+                            editor: needEditor ? null : {
+                                xtype: 'textfield',
+                                allowBlank: false
+                            }
                         },
                         {
                             text: '到店',
                             align: 'center',
                             dataIndex: prefix + 'companyVisit',
                             flex: 1,
-                            width: 80
+                            width: 80,
+                            editor: needEditor ? null : {
+                                xtype: 'textfield',
+                                allowBlank: false
+                            }
                         },
                         {
                             text: '定金',
                             align: 'center',
                             dataIndex: prefix + 'deposist',
                             flex: 1,
-                            width: 80
+                            width: 80,
+                            editor: needEditor ? null : {
+                                xtype: 'textfield',
+                                allowBlank: false
+                            }
                         }
                     ];
                 }
@@ -169,14 +205,22 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                             align: 'center',
                             dataIndex: prefix + 'depositRate',
                             flex: 1,
-                            width: 160
+                            width: 160,
+                            editor: needEditor ? null : {
+                                xtype: 'textfield',
+                                allowBlank: false
+                            }
                         },
                         {
                             text: '签单额',
                             align: 'center',
                             dataIndex: prefix + 'signedBusinessNumber',
                             flex: 1,
-                            width: 160
+                            width: 160,
+                            editor: needEditor ? null : {
+                                xtype: 'textfield',
+                                allowBlank: false
+                            }
                         }
                     ];
                 }
@@ -186,8 +230,8 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                 return arr;
             }
 
-            cols[1].columns = renderCol(prefix[0], depa);
-            cols[2].columns = renderCol(prefix[1], depa);
+            cols[1].columns = renderCol(prefix[0], depa, true);
+            cols[2].columns = renderCol(prefix[1], depa, false);
 
             me.reconfigure(false, cols);
         };
