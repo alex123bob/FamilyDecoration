@@ -83,4 +83,7 @@ update statement_bill set status = 'new' where status = 'rbk';
 update statement_bill_audit set newStatus = 'new' where newStatus = 'rbk';
 update statement_bill_audit set orignalStatus = 'new' where orignalStatus = 'rbk';
 alter table statement_bill drop column `isPaid`;
+alter table statement_bill modify status varchar(10);
+alter table statement_bill_audit add column drt varchar(10) comment '方向，1前进，-1打回';
+
 update `system` set `paramValue`='version-8.6' where `id`='4';
