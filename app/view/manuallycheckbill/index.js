@@ -121,7 +121,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								extraParams: {
 									projectId: resourceObj.project.getId(),
 									professionType: rec.get('value'),
-									action: 'StatementBill.get'
+									action: 'StatementBill.getLaborAndPrePaid'
 								},
 								reader: {
 									type: 'json',
@@ -357,6 +357,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						text: '一审通过',
 						name: 'firstCheckBill',
 						disabled: true,
+						hidden: !(User.isAdmin() || User.isBudgetManager() || User.isBudgetStaff()),
 						icon: 'resources/img/first_check.png',
 						handler: function () {
 							var resourceObj = me.getRes(),
@@ -370,6 +371,39 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 									status: 'rdyck2'
 								}, ['id'], function (obj) {
 									Ext.Msg.success('一审通过');
+									selModel.deselectAll();
+									st.reload({
+										callback: function (recs, ope, success) {
+											if (success) {
+												selModel.select(index);
+											}
+										}
+									});
+								}, true);
+							}
+							else {
+								showMsg('请选择账单！');
+							}
+						}
+					},
+					{
+						text: '退回单据',
+						name: 'returnBill',
+						disabled: true,
+						hidden: !(User.isAdmin() || User.isBudgetManager() || User.isBudgetStaff()),
+						icon: 'resources/img/return_bill.png',
+						handler: function () {
+							var resourceObj = me.getRes(),
+								bill = resourceObj.bill,
+								st = resourceObj.billList.getStore(),
+								index = st.indexOf(resourceObj.bill),
+								selModel = resourceObj.billList.getSelectionModel();
+							if (bill) {
+								ajaxUpdate('StatementBill.changeStatus', {
+									id: resourceObj.bill.getId(),
+									status: 'new'
+								}, ['id'], function (obj) {
+									Ext.Msg.success('单据已退回，单据状态置为未提交！');
 									selModel.deselectAll();
 									st.reload({
 										callback: function (recs, ope, success) {
