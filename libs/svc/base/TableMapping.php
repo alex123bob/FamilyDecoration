@@ -5,7 +5,7 @@
 		"statement_bill"=>array('id','creator','billName','billValue','status','checker','billType','payee','projectId','projectName','phoneNumber','totalFee','claimAmount','payedTimes','projectProgress','professionType'),
 		"statement_bill_item"=>array('id','billId','serialNumber','billItemName','unit','amount','unitPrice','subtotal','referenceItems','professionType','checkedNumber'),
 		"statement_basic_item"=>array('id','serialNumber','billItemName','unit','amount','unitPrice','subtotal','referenceItems','professionType'),
-		"statement_bill_audit"=>array('id','billId','operator','orignalStatus','newStatus','comments'),
+		"statement_bill_audit"=>array('id','drt','billId','operator','orignalStatus','newStatus','comments'),
 		'project'=>array('projectId','projectName'),
 		'plan'=>array('id','projectId','projectAddress','startTime','endTime','custName','conCleaHeatDefine','bottomDig','toiletBalCheck','plumbElecCheck','knockWall','tileMarbleCabiDefine','waterElecCheck','waterElecConstruct','waterElecPhoto','tilerMateConstruct','tilerProCheck','woodMateCheck','woodProConstruct','woodProCheck','paintMateCheck','paintProConstruct','cabiInstall','toilKitchSuspend','paintProCheck','switchSocketInstall','lampSanitInstall','floorInstall','paintRepair','wallpaperPave','housekeepingClean','elecInstall','curtainFuniInstall'),
 		'plan_making'=>array('id','projectId','projectAddress','startTime','endTime','custName','c1','c2','c3','c4','c5','c6','c7','c8','c9','c10','c11','c12','c13','c14','c15','c16','c17','c18','c19','c20','c21','c22','c23','c24','c25','c26','c27','c28','c29','c30','c31','c32','c33','c34'),

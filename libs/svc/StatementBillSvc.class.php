@@ -6,12 +6,16 @@ class StatementBillSvc extends BaseSvc
 	public static $statusChangingMapping='';
 
 	private function initBillTypes($billType = false){
-		global $STATUSMAPPING,$STATUSTRANSFER;
+		global $STATUSMAPPING,$STATUSTRANSFER,$ALL_STATUS;
 		if($billType !== false){
 			$billType = isset($_REQUEST['billType']) ? $_REQUEST['billType'] : $billType;
 		}
 		if($billType!== false){
-        	self::$statusMapping = $STATUSMAPPING[$billType];
+        	$keys = $STATUSMAPPING[$billType];
+        	self::$statusMapping = array();
+        	foreach ($keys as $key) {
+        		self::$statusMapping[$key] = $ALL_STATUS[$key];
+        	}
         	self::$statusChangingMapping = $STATUSTRANSFER[$billType];
         	if(isset($_REQUEST['@status']) && !isset(self::$statusMapping[$_REQUEST['@status']])){
 				throw new Exception("无效状态:".$_REQUEST['@status']);
@@ -118,15 +122,16 @@ class StatementBillSvc extends BaseSvc
 		if(!isset(self::$statusChangingMapping[$statusChange]))
 			throw new Exception("不能由".self::$statusMapping[$bill['status']]."转为".self::$statusMapping[$q['@status']]);
 		//检查额度,检查安全密码,如果超过一定额度要检查短信
-		$this->checkLimit($q,$bill,$statusChange);
+		//$this->checkLimit($q,$bill,$statusChange);
 		$auditRecord = array();
 		$auditRecord['@operator'] = $_SESSION['name'];
 		$auditRecord['@billId'] = $q['id'];
 		$auditRecord['@orignalStatus'] = $bill['status'];
 		$auditRecord['@newStatus'] = $q['@status'];
-		$auditRecord['@comments'] = isset($q['@comments']) ? $q['@comments'] : "没有评论";
+		$auditRecord['@comments'] = isset($q['@comments']) ? $q['@comments'] : "无";
+		$auditRecord['@drt'] = self::$statusChangingMapping[$statusChange];
 		$auditSvc->add($auditRecord);
-		if($q['@status'] == "chk" || $q['@status'] == 'rbk'){
+		if($q['@status'] == "chk"){
 			$q['@checker'] = $_SESSION['name'];
 		}
 		if($q['@status'] == "paid") {
