@@ -8,7 +8,7 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
 
     layout: 'vbox',
     width: 500,
-    height: 300,
+    height: 350,
     modal: true,
     maximizable: true,
     bodyPadding: 5,
@@ -29,9 +29,7 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
                 defaults: {
                     xtype: 'displayfield'
                 },
-                items: [
-
-                ]
+                items: []
             },
             {
                 xtype: 'fieldset',
@@ -44,16 +42,55 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
                 },
                 items: [
                     {
+                        itemId: 'textfield-payFee',
                         fieldLabel: '付款金额',
                         xtype: 'textfield'
                     },
                     {
+                        itemId: 'combobox-payAccount',
                         fieldLabel: '付款账户',
                         xtype: 'combobox',
-                        displayfield: 'name',
-                        valuefield: 'value',
+                        editable: false,
+                        displayField: 'name',
+                        valueField: 'value',
                         store: Ext.create('Ext.data.Store', {
-                            fields: ['name', 'value']
+                            fields: ['name', 'value'],
+                            proxy: {
+                                type: 'rest',
+                                reader: {
+                                    type: 'json'
+                                }
+                            }
+                        })
+                    },
+                    {
+                        itemId: 'combobox-removeBalance',
+                        fieldLabel: '抹平余额',
+                        xtype: 'combobox',
+                        displayField: 'name',
+                        valueField: 'value',
+                        queryMode: 'local',
+                        editable: false,
+                        value: false,
+                        hidden: !(me.category.get('name') == 'workerSalary' || me.category.get('name') == 'qualityGuaranteeDeposit'),
+                        store: Ext.create('Ext.data.Store', {
+                            fields: ['name', 'value'],
+                            proxy: {
+                                type: 'memory',
+                                reader: {
+                                    type: 'json'
+                                }
+                            },
+                            data: [
+                                {
+                                    name: '是',
+                                    value: true
+                                },
+                                {
+                                    name: '否',
+                                    value: false
+                                }
+                            ]
                         })
                     }
                 ]
@@ -64,7 +101,7 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
             {
                 text: '确定',
                 handler: function () {
-                    
+
                 }
             },
             {
@@ -76,14 +113,14 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
         ];
 
         this.addListener({
-            show: function (win, opts){
+            show: function (win, opts) {
                 var headerSet = me.getComponent('fieldset-headerInfo');
                 ajaxGet('EntryNExit', 'getPayHeader', {
                     id: me.item.get('c0'),
                     type: me.category.get('name')
-                }, function (obj){
+                }, function (obj) {
                     if (obj.length > 0) {
-                        Ext.each(obj, function (item, index, arr){
+                        Ext.each(obj, function (item, index, arr) {
                             arr[index] = {
                                 fieldLabel: item['k'],
                                 value: item['v']
@@ -92,7 +129,7 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
                         headerSet.add(obj);
                     }
                     else {
-
+                        headerSet.removeAll();
                     }
                 });
             }
