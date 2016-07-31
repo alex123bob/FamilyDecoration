@@ -14,9 +14,26 @@ class AccountSvc extends BaseSvc
 	}
 
 	public function pay($q){
-		return array('status'=>'successful');
+		global $mysql;
+		$accountLog = parent::getSvc('AccountLog');
+		$accountId = $q['accountId'];
+		//开始事务
+		$mysql->begin();
+		//上行锁
+		$account = $mysql->DBGetAsMap("select * from account where id = '".$accountId."' for update;");
+		$account = $account[0];
+		//检查余额
+		$newBalance = (int)$account['balance'] - ((float)$q['@fee'])*1000;
+		if($newBalance < 0)
+			throw new Exception("余额不足！");
+		//更新记录
+		$accountLog->add(array('@accountId'=>$accountId,'@amount'=>$q['@fee'],'@type'=>'out','@refId'=>$q['id'],'@refType'=>$q['type'],'@balance'=>$newBalance));
+		//更新余额
+		$mysql->DBExecute("update account set balance = $newBalance where id = '".$accountId."';");
+		
+		$mysql->commit();
+		return array('status'=>'successful','d'=>$account);
 	}
-
 }
 
 ?>
