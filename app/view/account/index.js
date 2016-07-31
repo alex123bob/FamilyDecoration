@@ -195,6 +195,10 @@ Ext.define('FamilyDecoration.view.account.Index', {
                         {
                             text: '余额',
                             dataIndex: 'balance'
+                        },
+                        {
+                            text: '经办人',
+                            dataIndex: 'operatorRealName'
                         }
                     ]
                 },
