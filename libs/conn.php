@@ -8,7 +8,7 @@
 	date_default_timezone_set('Asia/Shanghai');
 	require_once "svc/base/TableMapping.php";
 	require_once "svc/base/BaseSvc.class.php";
-	include_once "mysql.class.php";
+	include_once "mysqli.class.php";
 	include_once "common.php";
 
 	if (defined("SAE_MYSQL_HOST_M")) {
