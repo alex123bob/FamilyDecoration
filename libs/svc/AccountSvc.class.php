@@ -9,6 +9,14 @@ class AccountSvc extends BaseSvc
 		return parent::add($qryParams);
 	}
 
+	public function get($q){
+		$res = parent::get($q);
+		foreach ($res['data'] as &$value) {
+			$value['accountType'] = self::$ACCOUNT_TYPE[$value['accountType']];
+		}
+		return $res;
+	}
+
 	public function getAccountType(){
 		return $ACCOUNT_TYPE;
 	}
