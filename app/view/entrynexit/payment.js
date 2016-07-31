@@ -26,6 +26,7 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
                 itemId: 'fieldset-headerInfo',
                 width: '100%',
                 flex: 1,
+                autoScroll: true,
                 defaults: {
                     xtype: 'displayfield'
                 },
