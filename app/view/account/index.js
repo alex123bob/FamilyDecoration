@@ -14,7 +14,10 @@ Ext.define('FamilyDecoration.view.account.Index', {
     },
 
     initComponent: function () {
-        var me = this;
+        var me = this,
+            accountLogSt = Ext.create('FamilyDecoration.store.AccountLog', {
+                autoLoad: false
+            });
 
         function _getRes() {
             var accountGrid = me.getComponent('gridpanel-account'),
@@ -68,7 +71,7 @@ Ext.define('FamilyDecoration.view.account.Index', {
                     autoLoad: true
                 }),
                 listeners: {
-                    selectionchange: function (selModel, sels, opts){
+                    selectionchange: function (selModel, sels, opts) {
                         var resObj = _getRes();
                         resObj.accountLogGrid.refresh();
                     }
@@ -78,7 +81,7 @@ Ext.define('FamilyDecoration.view.account.Index', {
                 title: '账户纪录',
                 flex: 4,
                 itemId: 'gridpanel-accountLog',
-                refresh: function (){
+                refresh: function () {
                     var resObj = _getRes();
 
                     resObj.filter.clean();
@@ -96,7 +99,7 @@ Ext.define('FamilyDecoration.view.account.Index', {
                                 orderBy: 'createTime DESC'
                             }
                         });
-                        resObj.accountLogSt.load();
+                        resObj.accountLogSt.loadPage(1);
                     }
                     else {
                         resObj.accountLogSt.removeAll();
@@ -129,7 +132,7 @@ Ext.define('FamilyDecoration.view.account.Index', {
                                         orderBy: 'createTime DESC'
                                     })
                                 })
-                                resObj.accountLogSt.load();
+                                resObj.accountLogSt.loadPage(1);
                             }
                             else {
                                 showMsg('请选择具体账户后再进行过滤！');
@@ -152,12 +155,18 @@ Ext.define('FamilyDecoration.view.account.Index', {
                                         orderBy: 'createTime DESC'
                                     }
                                 });
-                                resObj.accountLogSt.load();
+                                resObj.accountLogSt.loadPage(1);
                             }
                             else {
                                 showMsg('请选择具体账户后再进行过滤！');
                             }
                         }
+                    },
+                    {
+                        xtype: 'pagingtoolbar',
+                        store: accountLogSt,
+                        dock: 'bottom',
+                        displayInfo: true
                     }
                 ],
                 columns: {
@@ -173,7 +182,7 @@ Ext.define('FamilyDecoration.view.account.Index', {
                         {
                             text: '出账',
                             dataIndex: 'amount',
-                            renderer: function (val, meta, rec){
+                            renderer: function (val, meta, rec) {
                                 var res = '';
                                 if (rec.get('type') == 'out') {
                                     res = val;
@@ -184,7 +193,7 @@ Ext.define('FamilyDecoration.view.account.Index', {
                         {
                             text: '入账',
                             dataIndex: 'amount',
-                            renderer: function (val, meta, rec){
+                            renderer: function (val, meta, rec) {
                                 var res = '';
                                 if (rec.get('type') == 'in') {
                                     res = val;
@@ -202,9 +211,7 @@ Ext.define('FamilyDecoration.view.account.Index', {
                         }
                     ]
                 },
-                store: Ext.create('FamilyDecoration.store.AccountLog', {
-                    autoLoad: false
-                })
+                store: accountLogSt
             }
         ];
 
