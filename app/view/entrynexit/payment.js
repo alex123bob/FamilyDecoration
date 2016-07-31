@@ -116,7 +116,7 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
                             ajaxUpdate('Account.pay', {
                                 id: me.item.get('c0'),
                                 type: me.category.get('name'),
-                                accoundId: accountRec.getId(),
+                                accountId: accountRec.getId(),
                                 fee: fee.getValue()
                             }, ['id', 'accountId', 'type'], function (obj){
                                 
