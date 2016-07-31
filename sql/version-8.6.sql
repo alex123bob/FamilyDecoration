@@ -21,7 +21,7 @@ CREATE TABLE `salary` (
 CREATE TABLE `account` (
   `id` varchar(20) DEFAULT NULL,
   `name` varchar(200) DEFAULT NULL comment '账户名',
-  `balance` bigint DEFAULT 0 comment '余额',
+  `balance` bigint DEFAULT 0 comment '余额(分)',
   `accountType` varchar(5) DEFAULT 'CASH' comment '账户类型,CASH:现金,CYBER:网银账户,ALI:支付宝账户,OTHER:其他种类,WECHAT:微信',
   `isDeleted` varchar(5) DEFAULT 'false',
   `createTime` datetime DEFAULT null,
@@ -34,9 +34,11 @@ CREATE TABLE `account_log` (
   `accountId` varchar(20) not NULL comment '账户Id',
   `type` varchar(3) not null comment 'in/out 出入帐',
   `amount` bigint not null comment '金额',
+  `balance` bigint not null comment '操作后余额',
   `refId` varchar(20) not null comment '关联单据，工资单(salary)或者贷款单(loan)或者其他(statement_bill)单据Id，或-1(修改余额操作)',
-  `refType` varchar(5) not null comment '关联单据类型，sly:工资单(salary); loan:贷款单(loan);stb:其他(statement_bill)单据Id;edit:修改',
+  `refType` varchar(5) not null comment '关联单据类型，sly:工资单(salary); loan:贷款单(loan);stb:其他(statement_bill)单据Id;edit:修改,add:新加帐户',
   `operator` varchar(25) not null comment '操作人',
+  `isDeleted` varchar(5) DEFAULT 'false',
   `createTime` datetime DEFAULT null,
   `updateTime` datetime DEFAULT null,
   PRIMARY KEY (`id`)
