@@ -22,6 +22,9 @@ class EntryNExitSvc{
 		}
 	}
 
+	public function getpayheader($q){
+		return array('k'=>'xxx','v'=>'123');
+	}
 	public function pay($q){
 
 	}
