@@ -14,16 +14,32 @@ CREATE TABLE `salary` (
   `status` varchar(10) DEFAULT 'new' comment '状态，new:刚创建,paid:已付款'
   `smallChange` int(12) default 0 comment '零钱抹平,加或减凑整', 
   `createTime` datetime DEFAULT null,
-  `updateTime` datetime DEFAULT null
+  `updateTime` datetime DEFAULT null,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `account` (
   `id` varchar(20) DEFAULT NULL,
   `name` varchar(200) DEFAULT NULL comment '账户名',
-  `accountType` varchar(5) DEFAULT 'CASH' comment '账户类型,CASH:现金,CYBER:网银账户,ALI:支付宝账户,OTHER:其他种类',
+  `balance` bigint DEFAULT 0 comment '余额',
+  `accountType` varchar(5) DEFAULT 'CASH' comment '账户类型,CASH:现金,CYBER:网银账户,ALI:支付宝账户,OTHER:其他种类,WECHAT:微信',
   `isDeleted` varchar(5) DEFAULT 'false',
   `createTime` datetime DEFAULT null,
-  `updateTime` datetime DEFAULT null
+  `updateTime` datetime DEFAULT null,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `account_log` (
+  `id` varchar(20) not NULL,
+  `accountId` varchar(20) not NULL comment '账户Id',
+  `type` varchar(3) not null comment 'in/out 出入帐',
+  `amount` bigint not null comment '金额',
+  `refId` varchar(20) not null comment '关联单据，工资单(salary)或者贷款单(loan)或者其他(statement_bill)单据Id，或-1(修改余额操作)',
+  `refType` varchar(5) not null comment '关联单据类型，sly:工资单(salary); loan:贷款单(loan);stb:其他(statement_bill)单据Id;edit:修改',
+  `operator` varchar(25) not null comment '操作人',
+  `createTime` datetime DEFAULT null,
+  `updateTime` datetime DEFAULT null,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 alter table statement_bill add column supplierId varchar(20) comment '供应商id';
@@ -38,7 +54,8 @@ CREATE TABLE `supplier` (
   `name` varchar(200) DEFAULT NULL comment '供应商名',
   `isDeleted` varchar(5) DEFAULT 'false',
   `createTime` datetime DEFAULT null,
-  `updateTime` datetime DEFAULT null
+  `updateTime` datetime DEFAULT null,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `supplierMaterial` (
@@ -47,7 +64,8 @@ CREATE TABLE `supplierMaterial` (
   `professionType` varchar(5) DEFAULT NULL comment '供应种类，对应profession_type表value',
   `isDeleted` varchar(5) DEFAULT 'false',
   `createTime` datetime DEFAULT null,
-  `updateTime` datetime DEFAULT null
+  `updateTime` datetime DEFAULT null,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -67,7 +85,8 @@ CREATE TABLE `loan` (
   `status` varchar(10) DEFAULT null comment '状态. accepted:已收款,arch:归档,paid:已出款',
   `isDeleted` varchar(5) DEFAULT 'false',
   `createTime` datetime DEFAULT null,
-  `updateTime` datetime DEFAULT null
+  `updateTime` datetime DEFAULT null,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -78,7 +97,8 @@ CREATE TABLE `statement_bill_tag` (
   `committer` varchar(200) DEFAULT NULL comment '标记人',
   `isDeleted` varchar(5) DEFAULT 'false',
   `createTime` datetime DEFAULT null,
-  `updateTime` datetime DEFAULT null
+  `updateTime` datetime DEFAULT null,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -96,5 +116,6 @@ update statement_bill_audit set drt = '-1' where orignalStatus = 'rdyck' and new
 update statement_bill_audit set drt = '1' where orignalStatus = 'rdyck' and newStatus = 'rdyck2' and drt is null;
 update statement_bill_audit set drt = '-1' where orignalStatus = 'rdyck2' and newStatus = 'rdyck' and drt is null;
 alter table statement_bill add column descpt varchar(200) default null comment '备注'
+alter table announcement_comment modify id varchar(20);
 
 update `system` set `paramValue`='version-8.6' where `id`='4';
