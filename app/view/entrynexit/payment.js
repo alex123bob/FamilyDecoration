@@ -28,7 +28,11 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
                 flex: 1,
                 autoScroll: true,
                 defaults: {
-                    xtype: 'displayfield'
+                    xtype: 'displayfield',
+                    margin: '0 4 0 0',
+                    style: {
+                        float: 'left'
+                    }
                 },
                 items: []
             },
@@ -43,9 +47,10 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
                 },
                 items: [
                     {
-                        itemId: 'textfield-payFee',
+                        itemId: 'numberfield-payFee',
                         fieldLabel: '付款金额',
-                        xtype: 'textfield'
+                        xtype: 'numberfield',
+                        allowBlank: false
                     },
                     {
                         itemId: 'combobox-payAccount',
@@ -53,13 +58,19 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
                         xtype: 'combobox',
                         editable: false,
                         displayField: 'name',
-                        valueField: 'value',
+                        valueField: 'id',
                         store: Ext.create('Ext.data.Store', {
-                            fields: ['name', 'value'],
+                            fields: ['name', 'id', 'accountType', 'balance', 'isDeleted', 'updateTime'],
+                            autoLoad: true,
                             proxy: {
                                 type: 'rest',
+                                url: './libs/api.php',
+                                extraParams: {
+                                    action: 'account.get'
+                                },
                                 reader: {
-                                    type: 'json'
+                                    type: 'json',
+                                    root: 'data'
                                 }
                             }
                         })
@@ -102,7 +113,28 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
             {
                 text: '确定',
                 handler: function () {
-
+                    var fst = me.query('fieldset')[1],
+                        fee = fst.getComponent('numberfield-payFee'),
+                        account = fst.getComponent('combobox-payAccount'),
+                        enoughBalance = true,
+                        v = account.getValue();
+                        record = account.findRecord(account.valueField || account.displayField, v);
+                    enoughBalance = (fee.getValue() * 1000 - record.get('balance') <= 0) ? true : false;
+                    if (fee.isValid()) {
+                        if (enoughBalance) {
+                            ajaxUpdate('account.pay', {
+                                id: me.item.get('c0'),
+                                type: me.category.get('name'),
+                                accoundId: account.get('id'),
+                                fee: fee.getValue()
+                            }, ['id', 'accountId', 'type'], function (obj){
+                                
+                            }, true)
+                        }
+                        else {
+                            Ext.Msg.error('没有足够余额!');
+                        }
+                    }
                 }
             },
             {
@@ -124,7 +156,8 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
                         Ext.each(obj, function (item, index, arr) {
                             arr[index] = {
                                 fieldLabel: item['k'],
-                                value: item['v']
+                                value: item['v'],
+                                width: 200
                             }
                         });
                         headerSet.add(obj);
