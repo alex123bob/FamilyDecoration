@@ -3,7 +3,8 @@ Ext.define('FamilyDecoration.view.account.Index', {
     alias: 'widget.account-index',
     title: '账户管理',
     requires: [
-        'FamilyDecoration.store.Account'
+        'FamilyDecoration.store.Account',
+        'FamilyDecoration.store.AccountLog'
     ],
     layout: 'hbox',
     defaults: {

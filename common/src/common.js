@@ -471,6 +471,9 @@ Ext.require('Ext.Ajax', function () {
      * Fires before a network request is made to retrieve a data object.
      */
     Ext.Ajax.on('beforerequest', function (conn, opts, eopts) {
+        if (/#debug/gi.test(location.hash)) {
+            opts.url += '&debug';
+        }
         opts.silent = opts.silent || (opts.operation ? opts.operation.silent : false) ||
             (opts.proxy ? opts.proxy.silent : false);
         if (opts.silent === true && opts.automatic === true) {
