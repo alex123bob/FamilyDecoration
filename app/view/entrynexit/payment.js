@@ -49,7 +49,7 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
                 items: [
                     {
                         itemId: 'numberfield-payFee',
-                        fieldLabel: '付款金额',
+                        fieldLabel: '付款金额(元)',
                         xtype: 'numberfield',
                         allowBlank: false
                     },
@@ -111,7 +111,7 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
                         accountRec = account.findRecord(account.valueField || account.displayField, accountVal);
 
                     if (fee.isValid() && account.isValid()) {
-                        enoughBalance = (fee.getValue() * 1000 - accountRec.get('balance') <= 0) ? true : false;
+                        enoughBalance = (fee.getValue() * 1000 - parseInt(accountRec.get('balance'), 10) <= 0) ? true : false;
                         if (enoughBalance) {
                             ajaxUpdate('Account.pay', {
                                 id: me.item.get('c0'),
