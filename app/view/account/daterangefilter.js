@@ -42,6 +42,11 @@ Ext.define('FamilyDecoration.view.account.DateRangeFilter', {
                 name: 'startTime',
                 itemId: 'startTime',
                 emptyText: '开始时间',
+                cleanBtn: true,
+                cleanHandler: function () {
+                    var resObj = getRes();
+                    resObj.endTime.isValid();
+                },
                 validator: function (val) {
                     var resObj = getRes();
                     if (val && resObj.endTime.getValue()) {
@@ -81,6 +86,11 @@ Ext.define('FamilyDecoration.view.account.DateRangeFilter', {
                 emptyText: '结束时间',
                 name: 'endTime',
                 itemId: 'endTime',
+                cleanBtn: true,
+                cleanHandler: function () {
+                    var resObj = getRes();
+                    resObj.startTime.isValid();
+                },
                 validator: function (val) {
                     var resObj = getRes();
                     if (val && resObj.startTime.getValue()) {

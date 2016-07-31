@@ -119,7 +119,10 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
                                 accountId: accountRec.getId(),
                                 fee: fee.getValue()
                             }, ['id', 'accountId', 'type'], function (obj){
-                                
+                                if (obj.status == 'successful') {
+                                    showMsg('付款成功！');
+                                    me.close();
+                                }
                             }, true)
                         }
                         else {
