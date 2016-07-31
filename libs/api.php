@@ -15,8 +15,13 @@
 			break;				
 		}
 	}
+	if($res != null)
+		$res = array();
 	if(!$found)
 		throw new Exception("unknown action:".$action);
-	if($res != null)
-		echo (json_encode($res));
+	if(isset($_REQUEST['debug'])){
+		global $mysql;
+		$res['executedSqls'] = $mysql->executedSqls;
+	}
+	echo (json_encode($res));
 ?>

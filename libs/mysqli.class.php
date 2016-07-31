@@ -35,6 +35,7 @@
 
 		private $port;
 
+		public $executedSqls = array();
 		/*数据库编码*/
 		const GBK = "GBK";
 		const GB2312 = "gb2312";
@@ -128,6 +129,7 @@
 				throw new Exception($errorMsg);			
 				exit();
 			}
+			array_push($this->executedSqls,$this->dbSQL);
 		}
 
 		//不建议使用

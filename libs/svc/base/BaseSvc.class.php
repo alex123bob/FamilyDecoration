@@ -137,10 +137,6 @@ class BaseSvc{
 			return array('status'=>'successful', 'count'=>$count[0],'errMsg' => '');
 		$select = $this->parseSelectSql($q);
 		$sql = $select.' '.$this->appendJoin.' '.$where.$this->appendWhere.$orderBy.$limit;
-		if(isset($q['debug'])){
-			echo $sql;
-			print_r($params);
-		}
 		$row = $mysql->DBGetAsMap($sql,$params);
 		return array('total'=>$count[0],'data'=>$row);
 	}

@@ -31,9 +31,6 @@ class EntryNExitSvc{
 		}
 		return $res;
 	}
-	public function pay($q){
-		return array('status'=>'successful');
-	}
 
 	private function companyBonus($q){
 		global $mysql;

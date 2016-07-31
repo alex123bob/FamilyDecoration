@@ -13,6 +13,10 @@ class AccountSvc extends BaseSvc
 		return $ACCOUNT_TYPE;
 	}
 
+	public function pay($q){
+		return array('status'=>'successful');
+	}
+
 }
 
 ?>
