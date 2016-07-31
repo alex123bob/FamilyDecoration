@@ -32,6 +32,7 @@
 			$previousCommenter = $previousCommenter[0]["realname"];
 		}
 		$obj = array(
+			"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
 			"bulletinId" => $bulletinId,
 			"content" => $content,
 			"commenterName" => $commenterName,
@@ -45,7 +46,6 @@
 			$obj["previousCommenter"] = $previousCommenter;
 		}
 		$mysql->DBInsertAsArray("`announcement_comment`",$obj);
-		$id = $mysql->DBGetLastInsertId();
-		return array('status'=>'successful', 'errMsg' => '','id'=>$id);
+		return array('status'=>'successful', 'errMsg' => '','id'=>$obj['id']);
 	}
 ?>

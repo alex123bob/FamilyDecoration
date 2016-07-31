@@ -34,8 +34,7 @@
 
 	function deleteCategory (array $chart) {
 		global $mysql;
-		$condition = "`chartId` = '".$chart['chartId']."'";
-		$mysql->DBDelete("`chart`", $condition);
+		$mysql->DBExecute("delete from `chart` where chartId = '".$chart['chartId']."'");
 		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 

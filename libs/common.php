@@ -5,7 +5,6 @@
 	 */
 	
 	function ErrorHandler($errno, $errstr,$errorFile,$errorLine){
-		//print_r();
 		$errstr = str_replace("Undefined index:","缺少参数:",$errstr);
 		try{
 			$errorLogSvc = BaseSvc::getSvc('ErrorLog');
@@ -18,7 +17,7 @@
 									'@refer'=>isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
 									'@useragent'=>isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''));
 		}catch(Exception $e){
-			var_dump($e);
+			//var_dump($e);
 		}
 		$res = array(
 			'status'=>'failing',
@@ -116,25 +115,10 @@
 		global $mysql;
 		if(is_array($arg)){
 			foreach($arg as $key => $val){
-				//$val = str_replace("%","%25",$val);
-				//$val = str_replace("+","%2B",$val);
-				if (defined("SAE_MYSQL_HOST_M")) {
-					$val = mysql_real_escape_string($val);
-				}
-				else {
-					$val = mysqli_real_escape_string($mysql->DBGetConnection(), $val);
-				}
-				$arg[$key] = $val;
+				$arg[$key] = mysqli_real_escape_string($mysql->DBGetConnection(), $val);;
 			}
 		}else{
-			//$arg = str_replace("%","%25",$arg);
-			//$arg = str_replace("+","%2B",$arg);
-			if (defined("SAE_MYSQL_HOST_M")) {
-				$arg = mysql_real_escape_string($arg);
-			}
-			else {
-				$arg = mysqli_real_escape_string($mysql->DBGetConnection(), $arg);
-			}
+			$arg = mysqli_real_escape_string($mysql->DBGetConnection(), $arg);
 		}
 		return $arg;
 	}

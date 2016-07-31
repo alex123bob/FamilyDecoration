@@ -41,8 +41,7 @@
 	 */
 	function deleteBasicItem ($itemId){
 		global $mysql;
-		$condition = "`itemId` = '".$itemId."'";
-		$mysql->DBDelete("`basic_item`", $condition);
+		$mysql->DBExecute("delete from basic_item where itemId = '".$itemId."' ");
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 

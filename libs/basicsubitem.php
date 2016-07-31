@@ -38,15 +38,13 @@
 	 */
 	function deleteBasicSubItem ($itemId){
 		global $mysql;
-		$condition = "`subItemId` = '".$itemId."'";
-		$mysql->DBDelete("`basic_sub_item`", $condition);
+		$mysql->DBExecute("delete from basic_sub_item where subItemId = '".$itemId."'");
 		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 
 	function deleteBasicSubItemByParentId ($parentId){
 		global $mysql;
-		$condition = "`parentId` = '".$parentId."'";
-		$mysql->DBDelete("`basic_sub_item`", $condition);
+		$mysql->DBExecute("delete from basic_sub_item where parentId = '".$parentId."'");
 		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 

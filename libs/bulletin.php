@@ -79,7 +79,7 @@
 
 	function deleteBulletin ($id){
 		global $mysql;
-		$content = $mysql->DBDelete("`bulletin`", "`id` = $id");
+		$content = $mysql->DBExecute(" delete from `bulletin` where `id` = $id");
 		return json_encode(array('status'=>'successful', 'errMsg' => ''));
 	}
 

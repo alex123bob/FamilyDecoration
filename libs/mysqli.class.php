@@ -9,6 +9,8 @@
 */
 	class mysql
 	{
+		private $transitionCount = 0;  //事务计数
+
 		private $dbHost;            //数据库主机
 
 		private $dbUser;           //数据库用户名
@@ -31,6 +33,8 @@
 
 		private $dbEncode;        //进行数据库操作选择的编码
 
+		private $port;
+
 		/*数据库编码*/
 		const GBK = "GBK";
 		const GB2312 = "gb2312";
@@ -38,11 +42,12 @@
 		const UNICODE = "unicode";
 
 		//构造函数，初始化
-		public function __construct($hostValue = 'localhost',$userValue = 'root',$passwordValue, $dbValue='', $encodeValue=''){
+		public function __construct($hostValue = 'localhost',$userValue = 'root',$passwordValue, $dbValue='', $encodeValue='',$port = 3306){
 			$this->dbHost = $hostValue;
 			$this->dbUser = $userValue;
 			$this->dbPassword = $passwordValue;
 			$this->dbSelect = $dbValue;
+			$this->port = $port;
 			//编码的选择
 			if (strcasecmp($encodeValue,self::GBK) == 0)		//忽略大小写的比较
 				$this->dbEncode = self::GBK;
@@ -52,70 +57,76 @@
 				$this->dbEncode = self::UTF8;
 			if (strcasecmp($encodeValue,self::UNICODE) == 0)
 				$this->dbEncode = self::UNICODE;
-			$this->DBConnect();
+			$this->dbConn = mysqli_connect($this->dbHost,$this->dbUser,$this->dbPassword, $this->dbSelect,$this->port);		//打开一个到 MySQL 服务器的连接
+			if (!$this->dbConn)		//如果没有数据库连接的标志
+				throw new Exception("database connect error !");
+			mysqli_query($this->dbConn, "SET NAMES '".$this->dbEncode."'");			//连接数据库的编码方式，mysql_query表示发送一条mysql查询
 		}
 
 		public function DBGetConnection (){
 			return $this->dbConn;
 		}
 
-		//连接数据库函数
-		public function DBConnect(){
-			$this->dbConn = mysqli_connect($this->dbHost,$this->dbUser,$this->dbPassword, $this->dbSelect);		//打开一个到 MySQL 服务器的连接
-			if (!$this->dbConn)		//如果没有数据库连接的标志
-				throw new Exception("database connect error !");
-			// if (!mysql_select_db($this->dbSelect, $this->dbConn))	//选择连接的数据库，如果没有连接的数据库和连接标志
-			// 	throw new Exception("database open error !");
-			mysqli_query($this->dbConn, "SET NAMES '".$this->dbEncode."'");			//连接数据库的编码方式，mysql_query表示发送一条mysql查询
+		//开始事务
+		public function begin(){
+			if($this->transitionCount > 0){
+				$this->DBExecute("begin;");
+			}else{
+				$this->DBExecute("savepoint sp".$this->transitionCount);
+			}
+			$this->transitionCount ++;
+		}
+
+		//回滚事务
+		//参数isAll 是否回滚所有有嵌套事务
+		public function rollback($isAll = false){
+			if($this->transitionCount == 0)
+				throw new Exception("no transition!");
+			if($isAll || $this->transitionCount == 1){
+				$this->DBExecute("rollback;");
+				$this->transitionCount = 0;
+			}else{
+				$this->DBExecute("rollback to sp$this->transitionCount;");
+				$this->transitionCount --;
+			}
+		}
+
+		//提交事务，如果是嵌套事务，外层事务回滚，内层事务也将会被回滚
+		//参数isAll 是否提交所有嵌套事务
+		public function commit($isAll = false){
+			if($this->transitionCount == 0)
+				throw new Exception("no transition!");
+			if($isAll || $this->transitionCount == 1){
+				$this->DBExecute("commit;");
+				$this->transitionCount = 0;
+			}else{
+				$this->transitionCount --;
+			}
 		}
 
 		//执行数据库语句的基本方法，具体的操作都要调用该基本操作
 		public function DBExecute($sqlValue){
-			//先判断是否连接，如果没连接先连接
-			if (!$this->dbConn)
-				$this->DBConnect();
 			//将传递进来的SQL语句进行一个赋值
 			$this->dbSQL = $sqlValue;
 			//然后执行SQL语句
-			if (!$this->dbResult = mysqli_query($this->dbConn, $this->dbSQL))
-				$this->DBOutputErrorInfo();
-		}
-
-		//不建议使用
-		public function DBGetResult(){
-			return $this->dbResult;
-		}
-
-		//不建议使用
-		public function DBSimpleSelect($tableValue){
-			$partStr = "SELECT * FROM $tableValue";
-			$this->dbSQL = $partStr;
-			$this->DBExecute($this->dbSQL);
-		}
-
-
-		//不建议使用
-		public function DBGetTotalNumber()
-		{
-			$this->dbRows = mysqli_num_rows($this->dbResult);   		//获取结果中行的数目
-			return $this->dbRows;
-		}
-
-
-		//不建议使用
-		public function DBGetFirstRow($tableValue)
-		{
-			$partStr = "SELECT * FROM $tableValue";
-			$this->dbSQL = $partStr;
-			$this->DBExecute($this->dbSQL);
-			if (mysqli_num_rows($this->dbResult) > 0)
-			{
-				$partRows = mysqli_fetch_array($this->dbResult, MYSQLI_BOTH);		// 从结果集中取得一行作为关联数组，或数字数组，或二者兼有
-				return $partRows;
-			}
-			else
-			{
-				return false;
+			if (!$this->dbResult = mysqli_query($this->dbConn, $this->dbSQL)){
+				$errorMsg = mysql_error();
+				if($errorMsg == "")
+					$errorMsg = $this->dbConn->error." sql:".$this->dbSQL;
+				if(contains($errorMsg,'Duplicate entry')){
+					$ems = str_replace('Duplicate entry','已经存在',$errorMsg);
+					$ems = substr($ems,0,stripos($ems,' for key'));
+					throw new Exception($ems);
+				}
+				
+				$pathArray = parse_url($_SERVER['REQUEST_URI']);
+				$fileTemp = substr($pathArray['path'], (strrpos($pathArray['path'], "/")+1));
+				$fileName = "errors-on-".$fileTemp.".txt";
+				$inputStr = "【Error】 ".$this->dbSQL."\r\n";
+				$inputStr.= "【Time】  ".date("Y-m-d H:i:s")."\r\n";
+				$inputStr.= "【Meg】   $errorMsg\r\n\r\n";
+				throw new Exception($errorMsg);			
+				exit();
 			}
 		}
 
@@ -271,10 +282,6 @@
 			return array();
 		}
 
-		public function DBGetLastInsertId () {
-			return mysqli_insert_id($this->dbConn);
-		}
-
 		public function DBInsertAsArray($tableValue, $obj){		//表名，字段数组，内容数组
 			//foreach 实际上是HashTable实现的，按照添加顺序遍历，for才按索引
 			//http://www.nowamagic.net/academy/detail/1204411
@@ -395,57 +402,12 @@
 				return -1;
 			}
 		}
-		
-		//创建新的数据库
-		public function DBCreateDatabase($databaseValue){
-			$partStr = "CREATE DATABASE $databaseValue";
-			$this->dbSQL = $partStr;
-			$this->DBExecute($this->dbSQL);
-		}
-
-		//删除操作
-		public function DBDelete($tableValue, $conditionValue){
-			$partStr = "DELETE FROM $tableValue WHERE $conditionValue";
-			$this->dbSQL = $partStr;
-			$this->DBExecute($this->dbSQL);
-		}
 
 		//利用系统自带的call方法吸收错误的方法，参数$errorMethodValue错误的方法，参数$errorValue是错误的值
 		//该方法产生的错误的值是以数组的形式呈现出来的，所以打印错误的值的时候利用print_r()函数
 		public function __call($errorMethodValue, $errorValue){
 			echo "错误的方法是：".$errorMethodValue;
 			echo "错误的值是：".print_r($errorValue);
-		}
-
-		/**
-		 * 用于处理错误的信息进行一个输出
-		 */
-		 public function DBOutputErrorInfo() {
-			$errorMsg = mysql_error();
-			if($errorMsg == "")
-				$errorMsg = $this->dbConn->error." sql:".$this->dbSQL;
-			if(contains($errorMsg,'Duplicate entry')){
-				$ems = str_replace('Duplicate entry','已经存在',$errorMsg);
-				$ems = substr($ems,0,stripos($ems,' for key'));
-				throw new Exception($ems);
-			}
-			
-			$pathArray = parse_url($_SERVER['REQUEST_URI']);
-			$fileTemp = substr($pathArray['path'], (strrpos($pathArray['path'], "/")+1));
-			$fileName = "errors-on-".$fileTemp.".txt";
-			$inputStr = "【Error】 ".$this->dbSQL."\r\n";
-			$inputStr.= "【Time】  ".date("Y-m-d H:i:s")."\r\n";
-			$inputStr.= "【Meg】   $errorMsg\r\n\r\n";
-			if (defined("SAE_MYSQL_HOST_M")) {
-				$mysql = new mysql(SAE_MYSQL_HOST_M.':'.SAE_MYSQL_PORT, SAE_MYSQL_USER, SAE_MYSQL_PASS, SAE_MYSQL_DB, 'utf8');
-			}
-			throw new Exception($errorMsg);			
-			exit();
-		 }
-
-		//关闭操作
-		public function DBClose(){
-			mysql_close($this->dbConn);
 		}
 	}
 ?>
