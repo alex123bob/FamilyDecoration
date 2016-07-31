@@ -4,6 +4,7 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
     title: '付款',
 
     requires: [
+        'FamilyDecoration.store.Account'
     ],
 
     layout: 'vbox',
@@ -59,20 +60,9 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
                         editable: false,
                         displayField: 'name',
                         valueField: 'id',
-                        store: Ext.create('Ext.data.Store', {
-                            fields: ['name', 'id', 'accountType', 'balance', 'isDeleted', 'updateTime'],
-                            autoLoad: true,
-                            proxy: {
-                                type: 'rest',
-                                url: './libs/api.php',
-                                extraParams: {
-                                    action: 'account.get'
-                                },
-                                reader: {
-                                    type: 'json',
-                                    root: 'data'
-                                }
-                            }
+                        allowBlank: false,
+                        store: Ext.create('FamilyDecoration.store.Account', {
+                            autoLoad: true
                         })
                     },
                     {
@@ -117,15 +107,16 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
                         fee = fst.getComponent('numberfield-payFee'),
                         account = fst.getComponent('combobox-payAccount'),
                         enoughBalance = true,
-                        v = account.getValue();
-                        record = account.findRecord(account.valueField || account.displayField, v);
-                    enoughBalance = (fee.getValue() * 1000 - record.get('balance') <= 0) ? true : false;
-                    if (fee.isValid()) {
+                        accountVal = account.getValue(),
+                        accountRec = account.findRecord(account.valueField || account.displayField, accountVal);
+
+                    if (fee.isValid() && account.isValid()) {
+                        enoughBalance = (fee.getValue() * 1000 - accountRec.get('balance') <= 0) ? true : false;
                         if (enoughBalance) {
-                            ajaxUpdate('account.pay', {
+                            ajaxUpdate('Account.pay', {
                                 id: me.item.get('c0'),
                                 type: me.category.get('name'),
-                                accoundId: account.get('id'),
+                                accoundId: accountRec.getId(),
                                 fee: fee.getValue()
                             }, ['id', 'accountId', 'type'], function (obj){
                                 
