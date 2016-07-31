@@ -91,6 +91,7 @@ Ext.define('FamilyDecoration.view.account.Index', {
                                 root: 'data'
                             },
                             extraParams: {
+                                accountId: resObj.account.getId(),
                                 action: 'AccountLog.get',
                                 orderBy: 'createTime DESC'
                             }
@@ -112,7 +113,8 @@ Ext.define('FamilyDecoration.view.account.Index', {
                                 p = { accountId: resObj.account.getId() };
                                 if (obj.startTime && obj.endTime) {
                                     Ext.apply(p, {
-                                        createTime: "between '" + Ext.Date.format(obj.startTime, 'Y-m-d 00:00:00') + "' and '" + Ext.Date.format(obj.endTime, 'Y-m-d 23:59:59') + "'"
+                                        createTimeMin: Ext.Date.format(obj.startTime, 'Y-m-d 00:00:00'),
+                                        createTimeMax: Ext.Date.format(obj.endTime, 'Y-m-d 23:59:59')
                                     });
                                 }
                                 resObj.accountLogSt.setProxy({
@@ -170,11 +172,25 @@ Ext.define('FamilyDecoration.view.account.Index', {
                         },
                         {
                             text: '出账',
-                            dataIndex: 'amount'
+                            dataIndex: 'amount',
+                            renderer: function (val, meta, rec){
+                                var res = '';
+                                if (rec.get('type') == 'out') {
+                                    res = val;
+                                }
+                                return res;
+                            }
                         },
                         {
                             text: '入账',
-                            dataIndex: 'amount'
+                            dataIndex: 'amount',
+                            renderer: function (val, meta, rec){
+                                var res = '';
+                                if (rec.get('type') == 'in') {
+                                    res = val;
+                                }
+                                return res;
+                            }
                         },
                         {
                             text: '余额',
