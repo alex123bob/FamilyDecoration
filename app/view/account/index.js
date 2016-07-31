@@ -34,7 +34,8 @@ Ext.define('FamilyDecoration.view.account.Index', {
                 accountLogGrid: accountLogGrid,
                 accountLogSelModel: accountLogSelModel,
                 accountLog: accountLog,
-                accountLogSt: accountLogSt
+                accountLogSt: accountLogSt,
+                filter: accountLogGrid.down('account-daterangefilter')
             };
         }
 
@@ -65,12 +66,41 @@ Ext.define('FamilyDecoration.view.account.Index', {
                 },
                 store: Ext.create('FamilyDecoration.store.Account', {
                     autoLoad: true
-                })
+                }),
+                listeners: {
+                    selectionchange: function (selModel, sels, opts){
+                        var resObj = _getRes();
+                        resObj.accountLogGrid.refresh();
+                    }
+                }
             },
             {
                 title: '账户纪录',
                 flex: 4,
                 itemId: 'gridpanel-accountLog',
+                refresh: function (){
+                    var resObj = _getRes();
+
+                    resObj.filter.clean();
+                    if (resObj.account) {
+                        resObj.accountLogSt.setProxy({
+                            type: 'rest',
+                            url: './libs/api.php',
+                            reader: {
+                                type: 'json',
+                                root: 'data'
+                            },
+                            extraParams: {
+                                action: 'AccountLog.get',
+                                orderBy: 'createTime DESC'
+                            }
+                        });
+                        resObj.accountLogSt.load();
+                    }
+                    else {
+                        resObj.accountLogSt.removeAll();
+                    }
+                },
                 dockedItems: [
                     {
                         xtype: 'account-daterangefilter',
