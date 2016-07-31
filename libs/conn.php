@@ -6,7 +6,8 @@
 	if (!session_id()) session_start();
 	// error_reporting(E_ALL ^ E_DEPRECATED);
 	date_default_timezone_set('Asia/Shanghai');
-	
+	require_once "svc/base/TableMapping.php";
+	require_once "svc/base/BaseSvc.class.php";
 	if (defined("SAE_MYSQL_HOST_M")) {
 		include_once "mysql.class.php";
 	}
@@ -40,6 +41,4 @@
 	if (isset($_GET["action"]) && $_GET["action"] == "ga") {
 		ga($_POST);
 	}
-	require_once "svc/base/TableMapping.php";
-	require_once "svc/base/BaseSvc.class.php";
 ?>
