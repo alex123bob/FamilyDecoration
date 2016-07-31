@@ -6,6 +6,9 @@ class AccountLogSvc extends BaseSvc
 		$res = parent::get($q);
 		$svc = BaseSvc::getSvc('User');
 		$svc->appendRealName($res['data'],'operator');
+		foreach ($res['data'] as &$value) {
+			$value['balance'] = (int)$value['balance'] / 1000;
+		}
 		return $res;
 	}
 
@@ -17,7 +20,7 @@ class AccountLogSvc extends BaseSvc
 		notNullCheck($q,'@balance','余额不能为空!');
 		notNullCheck($q,'@refId','关联单据编号不能为空!');
 		notNullCheck($q,'@refType','关联单据类型不能为空!');
-		$q['operator'] = $_SESSION['name'];
+		$q['@operator'] = $_SESSION['name'];
 		return parent::add($q);
 	}
 
