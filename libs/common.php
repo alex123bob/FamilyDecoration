@@ -6,6 +6,11 @@
 	
 	function ErrorHandler($errno, $errstr,$errorFile,$errorLine){
 		$errstr = str_replace("Undefined index:","缺少参数:",$errstr);
+		global $mysql;
+		try{
+			if($mysql->isTransactions())
+				$mysql->rollback(true);
+		}catch(Exception $e){}
 		try{
 			$errorLogSvc = BaseSvc::getSvc('ErrorLog');
 			$errorLogSvc->add(array('@file'=>$errorFile,
@@ -25,6 +30,9 @@
 			'errMsg'=>$errstr,
 			'file'=>$errorFile
 			);
+		if(isset($_REQUEST['debug'])){
+			$res['executedSqls'] = $mysql->executedSqls;
+		}
 		echo (json_encode($res));
 		die();
 	}

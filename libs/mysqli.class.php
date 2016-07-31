@@ -63,19 +63,74 @@
 				throw new Exception("database connect error !");
 			mysqli_query($this->dbConn, "SET NAMES '".$this->dbEncode."'");			//连接数据库的编码方式，mysql_query表示发送一条mysql查询
 		}
+		/**
+		单事务：
+			$mysql->begin();
+			....
+			....
+			$mysql->commit(); or $mysql->rollback();
+		如果发生异常。 自动rollback; 不需要try catch rollback，除非业务上有逻辑判断需要rollback，否则一般不用显式调用rollback函数
 
+		嵌套事务：
+			内部事务开始方法，只创建还原点。
+			内部事务提交方法不做操作。防止破坏外部事务原子性
+			内部事务rollback只还原到还原点
+			内部事务异常,以下两种写法：
+			-----------------------------------------------------------------------			
+			$bSvc = BaseSvc:getSvc('BSvc');
+			$mysql->begin();
+			...
+			...
+			$bSvc->xxx();    //这种写法，内部报异常，会rollback外部事务。
+			...
+			...
+			$mysql->commit();
+			------------------------------------------------------------------------
+			$bSvc = BaseSvc:getSvc('BSvc');
+			$mysql->begin();
+			$outterTransactionLevel = $mysql->getTransactionLevel();
+			...
+			...
+			try{
+				$bSvc->xxx();   //内部异常，不想让它影响到外部事务。
+			}catch(Exception $e){
+				if($outterTransactionLevel < $mysql->getTransactionLevel()){
+					$mysql->rollback(); //说明内部有事务，要返回。cacth中只回滚bSvc中事务。
+				}else if($outterTransactionLevel == $mysql->getTransactionLevel()){
+					//说明内部没有事务。
+				}else{
+					//说明内部没多提交/回滚了事务。 有代码bug
+					throw new Exception("有bug！");
+				}				
+			}
+			...
+			...
+			$mysql->commit();
+			--------------------------------------------------------------------------
+			
+
+
+
+		**/
 		public function DBGetConnection (){
 			return $this->dbConn;
 		}
 
+		public function isTransactions(){
+			return $this->transitionCount > 0;
+		}
+
+		public function getTransactionLevel(){
+			return $this->transitionCount;
+		}
+
 		//开始事务
 		public function begin(){
-			if($this->transitionCount > 0){
+			if($this->transitionCount++ == 0){
 				$this->DBExecute("begin;");
 			}else{
 				$this->DBExecute("savepoint sp".$this->transitionCount);
 			}
-			$this->transitionCount ++;
 		}
 
 		//回滚事务
@@ -129,7 +184,7 @@
 				throw new Exception($errorMsg);			
 				exit();
 			}
-			array_push($this->executedSqls,$this->dbSQL);
+			array_push($this->executedSqls,"($this->transitionCount)$this->dbSQL");
 		}
 
 		//不建议使用

@@ -21,13 +21,30 @@ Class ErrorLogSvc extends BaseSvc{
 			$mysql->begin();
 			$this->add(array('@file'=>'2'));		
 				$mysql->begin();
-				$this->add(array('@file'=>'5'));
-				throw new Exception("内部出错");
 				$this->add(array('@file'=>'3'));
+				throw new Exception("内部出错");
+				$this->add(array('@file'=>'4'));
 				$mysql->commit();
-			$this->add(array('@file'=>'4'));
+			$this->add(array('@file'=>'5'));
 			$mysql->commit();
-		$this->add(array('@file'=>'5'));
+		$this->add(array('@file'=>'6'));
+	}
+
+	public function testWrap(){
+		$a = "aa";
+		$b="bb";
+		$svc = $this;
+		return $this->wrapp(function() use ($svc,$a,$b){
+			return $svc->doString($a,$b);
+		});
+	}
+
+	public function doString($a,$b){
+		return "$a xxxx $b";
+	}
+
+	public function wrapp($func){
+		return "dy-".$func();
 	}
 }
 ?>
