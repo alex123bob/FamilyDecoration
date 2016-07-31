@@ -5,6 +5,7 @@ class EntryNExitSvc{
 	//loan:贷款入账(loan表),financialFee:财务费用(贷款还账,loan表),staffSalary:员工工资(salary表)
 	//其他都是statement_bill 表
 	public function get($q){
+		//$pageNumber 
 		switch($q['type']){
 			case 'companyBonus': return $this->companyBonus($q);
 			case 'qualityGuaranteeDeposit': return $this->qualityGuaranteeDeposit($q);
@@ -23,7 +24,12 @@ class EntryNExitSvc{
 	}
 
 	public function getpayheader($q){
-		return array('k'=>'xxx','v'=>'123');
+		$i = rand(1,10);
+		$res = array();
+		for($a = 0;$a<$i;$a++){
+			array_push($res, array('k'=>'xxx','v'=>'123'));
+		}
+		return $res;
 	}
 	public function pay($q){
 
