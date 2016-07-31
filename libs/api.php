@@ -15,8 +15,8 @@
 			break;				
 		}
 	}
-	if($res != null)
-		$res = array();
+	if($res == null)
+		$res = array('status'=>'successful', 'errMsg' => '');
 	if(!$found)
 		throw new Exception("unknown action:".$action);
 	if(isset($_REQUEST['debug'])){
