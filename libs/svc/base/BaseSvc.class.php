@@ -71,6 +71,21 @@ class BaseSvc{
 		$whereSql = " where 1 = 1 ";
 		$hasWhere = false;
 		foreach ($TableMapping[$tableName] as $f) {
+			$comparator = "=";
+			if(isset($q[$f.'Max'])){
+				array_push($params, $q[$f.'Max']);
+				$whereSql = $whereSql." and $prefix`$f` <= '?' ";
+				$hasWhere = true;			}
+			if(isset($q[$f.'Min'])){
+				array_push($params, $q[$f.'Min']);
+				$whereSql = $whereSql." and $prefix`$f` >= '?' ";
+				$hasWhere = true;
+			}
+			if(isset($q[$f])){
+				array_push($params, $q[$f]);
+				$whereSql = $whereSql." and $prefix`$f` = '?' ";
+				$hasWhere = true;
+			}
 			if(isset($q[$f])){
 				array_push($params, $q[$f]);
 				$whereSql = $whereSql." and $prefix`$f` = '?' ";

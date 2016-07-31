@@ -25,7 +25,7 @@
 		$res = array('status'=>'successful', 'errMsg' => '');
 	if(!$found)
 		throw new Exception("unknown action:".$action);
-	if(isset($_REQUEST['debug']) && isset($res['status'])){
+	if(isset($_REQUEST['debug']) && (isset($res['status']) || isset($res['total']))){
 		$res['executedSqls'] = $mysql->executedSqls;
 	}
 	echo (json_encode($res));

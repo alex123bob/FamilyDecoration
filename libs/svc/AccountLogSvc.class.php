@@ -2,6 +2,13 @@
 class AccountLogSvc extends BaseSvc
 {
 
+	public function get($q){
+		$res = parent::get($q);
+		$svc = BaseSvc::getSvc('User');
+		$svc->appendRealName($res['data'],'operator');
+		return $res;
+	}
+
 	public function add($q){
 		$q['@id'] = $this->getUUID();
 		notNullCheck($q,'@accountId','账户编号不能为空!');
