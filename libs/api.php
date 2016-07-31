@@ -19,7 +19,7 @@
 		$res = array('status'=>'successful', 'errMsg' => '');
 	if(!$found)
 		throw new Exception("unknown action:".$action);
-	if(isset($_REQUEST['debug'])){
+	if(isset($_REQUEST['debug']) && isset($res['status']) && isset($res['errMsg'])){
 		global $mysql;
 		$res['executedSqls'] = $mysql->executedSqls;
 	}
