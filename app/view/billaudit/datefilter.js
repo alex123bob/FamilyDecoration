@@ -110,7 +110,7 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
                             fct.getComponent('button-filter').handler();
                         }
                     },
-                    change: function (field, newVal, oldVal, opts){
+                    change: function (field, newVal, oldVal, opts) {
                         if (newVal == '') {
                             var fct = field.nextSibling().nextSibling();
                             fct.getComponent('button-clean').handler();
@@ -135,7 +135,7 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
                             fct.getComponent('button-filter').handler();
                         }
                     },
-                    change: function (field, newVal, oldVal, opts){
+                    change: function (field, newVal, oldVal, opts) {
                         if (newVal == '') {
                             var fct = field.nextSibling();
                             fct.getComponent('button-clean').handler();
@@ -164,8 +164,8 @@ Ext.define('FamilyDecoration.view.billaudit.DateFilter', {
                             var resObj = getRes();
                             var obj = {};
                             if (resObj.startTime.isValid() && resObj.endTime.isValid()) {
-                                obj.startTime = resObj.startTime.getValue(),
-                                    obj.endTime = resObj.endTime.getValue()
+                                obj.startTime = resObj.startTime.getValue();
+                                obj.endTime = resObj.endTime.getValue();
                             }
                             obj[me.txtParam] = resObj.customTxt.getValue();
                             obj.projectName = resObj.projectName.getValue();
