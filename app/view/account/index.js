@@ -5,7 +5,8 @@ Ext.define('FamilyDecoration.view.account.Index', {
     requires: [
         'FamilyDecoration.store.Account',
         'FamilyDecoration.store.AccountLog',
-        'FamilyDecoration.view.account.DateRangeFilter'
+        'FamilyDecoration.view.account.DateRangeFilter',
+        'FamilyDecoration.view.account.EditAccount'
     ],
     layout: 'hbox',
     defaults: {
@@ -47,6 +48,19 @@ Ext.define('FamilyDecoration.view.account.Index', {
                 title: '账户',
                 flex: 1,
                 itemId: 'gridpanel-account',
+                getBtns: function (){
+                    return {
+                        add: this.down('[name="add"]'),
+                        edit: this.down('[name="edit"]'),
+                        del: this.down('[name="del"]'),
+                    };
+                },
+                initBtn: function (){
+                    var resObj = _getRes(),
+                        btns = this.getBtns();
+                    btns.edit.setDisabled(!resObj.account);
+                    btns.del.setDisabled(!resObj.account);
+                },
                 columns: {
                     defaults: {
                         flex: 1,
@@ -63,6 +77,55 @@ Ext.define('FamilyDecoration.view.account.Index', {
                         }
                     ]
                 },
+                bbar: [
+                    {
+                        xtype: 'button',
+                        text: '添加',
+                        name: 'add',
+                        icon: 'resources/img/add_plain.png',
+                        handler: function (){
+                            var resObj = _getRes();
+                            var win = Ext.create('FamilyDecoration.view.account.EditAccount', {
+                                callback: function (){
+                                    resObj.accountSt.reload();
+                                }
+                            });
+                            win.show();
+                        }
+                    },
+                    {
+                        xtype: 'button',
+                        text: '修改',
+                        disabled: true,
+                        name: 'edit',
+                        icon: 'resources/img/edit_plain.png',
+                        handler: function (){
+                            var resObj = _getRes();
+                            var win = Ext.create('FamilyDecoration.view.account.EditAccount', {
+                                account: resObj.account,
+                                callback: function (){
+                                    resObj.accountSt.reload({
+                                        callback: function (recs, ope, success){
+                                            if (success) {
+                                                var index = resObj.accountSt.indexOf(resObj.account);
+                                                resObj.accountSelModel.deselectAll();
+                                                resObj.accountSelModel.select(index);
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                            win.show();
+                        }
+                    },
+                    {
+                        xtype: 'button',
+                        text: '删除',
+                        name: 'del',
+                        disabled: true,
+                        icon: 'resources/img/delete_trash_bin.png'
+                    }
+                ],
                 style: {
                     borderRightStyle: 'solid',
                     borderRightWidth: '1px'
@@ -73,6 +136,7 @@ Ext.define('FamilyDecoration.view.account.Index', {
                 listeners: {
                     selectionchange: function (selModel, sels, opts) {
                         var resObj = _getRes();
+                        resObj.accountGrid.initBtn();
                         resObj.accountLogGrid.refresh();
                     }
                 }

@@ -22,7 +22,7 @@ CREATE TABLE `account` (
   `id` varchar(20) DEFAULT NULL,
   `name` varchar(200) DEFAULT NULL comment '账户名',
   `balance` bigint DEFAULT 0 comment '余额(分)',
-  `accountType` varchar(5) DEFAULT 'CASH' comment '账户类型,CASH:现金,CYBER:网银账户,ALI:支付宝账户,OTHER:其他种类,WECHAT:微信',
+  `accountType` varchar(10) DEFAULT 'CASH' comment '账户类型,CASH:现金,CYBER:网银账户,ALI:支付宝账户,OTHER:其他种类,WECHAT:微信',
   `isDeleted` varchar(5) DEFAULT 'false',
   `createTime` datetime DEFAULT null,
   `updateTime` datetime DEFAULT null,
