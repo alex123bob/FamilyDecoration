@@ -17,6 +17,8 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
     category: undefined,
     item: undefined,
 
+    callback: Ext.emptyFn,
+
     initComponent: function () {
         var me = this;
 
@@ -62,7 +64,16 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
                         valueField: 'id',
                         allowBlank: false,
                         store: Ext.create('FamilyDecoration.store.Account', {
-                            autoLoad: true
+                            autoLoad: true,
+                            listeners: {
+                                load: function (st, recs, success, opts){
+                                    Ext.each(recs, function (rec, index, arr){
+                                        rec.set({
+                                            name: rec.get('name') + ' (余额: ' + accDiv(rec.get('balance'), 1000) + ')'
+                                        })
+                                    });
+                                }
+                            }
                         })
                     },
                     {
@@ -121,6 +132,7 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
                             }, ['id', 'accountId', 'type'], function (obj){
                                 if (obj.status == 'successful') {
                                     showMsg('付款成功！');
+                                    me.callback();
                                     me.close();
                                 }
                             }, true)

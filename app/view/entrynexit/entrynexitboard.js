@@ -38,7 +38,10 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                     var resObj = _getRes();
                     var win = Ext.create('FamilyDecoration.view.entrynexit.Payment', {
                         category: resObj.category,
-                        item: resObj.item
+                        item: resObj.item,
+                        callback: function (){
+                            me.refresh(resObj.category);
+                        }
                     });
                     win.show();
                 }
@@ -55,6 +58,28 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                 }
             }
         ];
+
+        me.viewConfig = {
+            getRowClass: function (rec, rowIndex, rowParams, st){
+                var category = me.rec,
+                    cls = '';
+                switch (category.get('name')) {
+                    case 'workerSalary':
+                    case 'staffSalary':
+                    case 'materialPayment':
+                    case 'reimbursementItems':
+                    case 'financialFee':
+                    case 'companyBonus':
+                    case 'tax':
+                    case 'qualityGuaranteeDeposit':
+                        cls = rec.get('status') == 'paid' ? 'bill-paid' : 'bill-unpaid';
+                        break;
+                    default:
+                        break;
+                }
+                return cls;
+            }
+        }
 
         function getTbar() {
             var toolbar = me.down('toolbar');
