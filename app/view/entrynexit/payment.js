@@ -34,7 +34,7 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
                     xtype: 'displayfield',
                     margin: '0 4 0 0',
                     style: {
-                        float: 'left'
+                        'float': 'left'
                     }
                 },
                 items: []
