@@ -103,6 +103,18 @@ table.pros td{
     background-image: url("../img/multiple-receiver-mail.png");
 }
 
+/* entry and exit module class */
+
+.bill-paid {
+    background-color: lightyellow;
+}
+
+.bill-unpaid {
+    background-color: lightgreen;
+}
+
+/* end of entry and exit module class */
+
 @-webkit-keyframes blink {
     0% {
         opacity: 1;
