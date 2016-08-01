@@ -16,7 +16,7 @@
 		"log_list"=>array('id','content','committer','logType','isFinished'),
 		"error_log"=>array('user','detail','file','line','url','ip','refer','useragent'),
 		"salary"=>array('payee','basicSalary','positionSalary','meritSalary','socialTax','balance','amount','paidTime','payer','status'),
-		"account"=>array('id','name','accountType'),
+		"account"=>array('id','name','accountType','balance'),
 		"account_log"=>array('id','accountId','type','amount','balance','refId','refType','operator'),
 		"loan"=>array('id','relevantId','type','projectName','bankName','assignee','mobile','amount','dealer','dealTime','interest','period','loanTime','status'),
 		"statement_bill_tag"=>array('id','tag','billId','committer'));

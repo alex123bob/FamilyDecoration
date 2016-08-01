@@ -7,7 +7,7 @@
 	//$res = BaseSvc::getSvc($svcName)->service($action,$_REQUEST);
 	$svc = BaseSvc::getSvc($svcName);
 	$class = new ReflectionClass($svcName."Svc");
-	$res = $class->getMethod($action)->invokeArgs($svc,$_REQUEST);
+	$res = $class->getMethod($action)->invoke($svc,$_REQUEST);
 	if($res == null)
 		$res = array('status'=>'successful', 'errMsg' => '');
 	if(isset($_REQUEST['debug']) && (isset($res['status']) || isset($res['total']))){

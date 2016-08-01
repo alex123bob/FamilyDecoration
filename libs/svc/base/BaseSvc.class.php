@@ -112,6 +112,7 @@ class BaseSvc{
 		$tableName = $tableName == "" ? $this->tableName : $tableName;
 		$whereSql = " where 1 = 1 ";
 		$hasWhere = false;
+		//echo isset($q['id']);
 		foreach ($TableMapping[$tableName] as $f) {
 			if(isset($q[$f.'Max'])){
 				array_push($params, $q[$f.'Max']);
@@ -242,7 +243,7 @@ class BaseSvc{
 		if(is_subclass_of($fin,'BaseSvc')){
 			$fin->setTableName($svcName); 
 		}			
-		return  $fin;//new Proxy($fin);
+		return  $fin;
 	}
 }
 ?>
