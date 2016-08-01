@@ -23,7 +23,6 @@ class AccountSvc extends BaseSvc
 
 	public function pay($q){
 		global $mysql;
-		$accountLog = parent::getSvc('AccountLog');
 		$accountId = $q['accountId'];
 		//开始事务
 		$mysql->begin();
@@ -34,8 +33,33 @@ class AccountSvc extends BaseSvc
 		$newBalance = (int)$account['balance'] - ((float)$q['@fee'])*1000;
 		if($newBalance < 0)
 			throw new Exception("余额不足！");
+		$affect = 0;
+		//更新单据状态
+		switch($q['type']){
+			case 'companyBonus':
+			case 'qualityGuaranteeDeposit':
+			case 'workerSalary':
+			case 'materialPayment':
+			case 'reimbursementItems':
+			case 'tax':
+				$affect = parent::getSvc('StatementBill')->update(array('@paidAmount'=>$q['@fee'],'@status'=>'paid','id'=>$q['id'],'status'=>'chk'));
+				break;
+			case 'financialFee':
+				$affect = parent::getSvc('loan')->update(array('@paidAmount'=>$q['@fee'],'@status'=>'paid','id'=>$q['id'],'status'=>'new'));
+				break;
+			case 'staffSalary':
+				break;
+			//入账 case 'designDeposit': return $this->designDeposit($q);
+			//入账 case 'projectFee': return $this->projectFee($q);
+			//入账 case 'loan': return $this->loan($q);  //贷款入账
+			//入账 case 'other': return $this->other($q);
+			default:throw new Exception("unknown type: ".$q['type']);
+		}
+		if($affect !== 1)
+			throw new Exception("没有找到id为".$q['id']."的已审核账单，请确认订单存在并且已通过审核！");
+
 		//更新记录
-		$accountLog->add(array('@accountId'=>$accountId,'@amount'=>$q['@fee'],'@type'=>'out','@refId'=>$q['id'],'@refType'=>$q['type'],'@balance'=>$newBalance));
+		parent::getSvc('AccountLog')->add(array('@accountId'=>$accountId,'@amount'=>$q['@fee'],'@type'=>'out','@refId'=>$q['id'],'@refType'=>$q['type'],'@balance'=>$newBalance));
 		//更新余额
 		$mysql->DBExecute("update account set balance = $newBalance where id = '".$accountId."';");
 		

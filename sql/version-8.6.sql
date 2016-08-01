@@ -49,6 +49,7 @@ alter table statement_bill add column payer varchar(20) comment '付款人(出�
 alter table statement_bill add column paidAmount int(12) comment '实付金额';
 alter table statement_bill add column paidTime datetime comment '付款时间';
 alter table statement_bill add column reimbursementReason varchar(200) comment '报销事项';
+alter table statement_bill add column descpt varchar(200) comment '备注';
 ALTER TABLE statement_bill modify billType varchar(8)  comment 'ppd:预付款,reg:普通账单,qgd:质量保证金,mtf:材料付款,rbm:报销,fdf:财务部门费用,wlf:福利,tax:税';
 
 CREATE TABLE `supplier` (
@@ -84,7 +85,7 @@ CREATE TABLE `loan` (
   `interest` varchar(10) DEFAULT null comment '当前利率',
   `period` varchar(20) DEFAULT null comment '贷款期限',
   `loanTime` datetime DEFAULT null comment '贷款时间',
-  `status` varchar(10) DEFAULT null comment '状态. accepted:已收款,arch:归档,paid:已出款',
+  `status` varchar(10) DEFAULT null comment '状态. new:新创建,accepted:已收款,arch:归档,paid:已出款',
   `isDeleted` varchar(5) DEFAULT 'false',
   `createTime` datetime DEFAULT null,
   `updateTime` datetime DEFAULT null,

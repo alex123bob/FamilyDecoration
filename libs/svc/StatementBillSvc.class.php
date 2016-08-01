@@ -39,7 +39,15 @@ class StatementBillSvc extends BaseSvc
 			//预付款 总金额就是领取金额
 			$q['@claimAmount'] = $q['@totalFee'];
 		}
-		//   notNullCheck($q,'@payee','领款人不能为空!');
+		if($q['@status'] == 'paid'){
+			if(!isset($q['@payer']))
+				$q['@payer'] = $_SESSION['name'];
+			if(!isset($q['@paidTime']))
+				$q['@paidTime'] = 'now()';
+			notNullCheck($q,'@paidAmount','付款金额不能为空!');
+			if((int)$q['@paidAmount'] <= 0)
+				throw new Exception("付款金额错误！".$q['@fee']);
+		}
 		return parent::update($q);
 	}
 	//获取限制信息,是否需要短信验证码或者安全密码验证
