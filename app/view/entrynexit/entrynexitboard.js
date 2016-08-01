@@ -2,6 +2,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.entrynexit-entrynexitboard',
     title: '&nbsp;',
+    cls: 'gridpanel-entrynexitboard',
     requires: [
         'FamilyDecoration.view.entrynexit.Payment'
     ],
@@ -187,6 +188,10 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                             },
                             items: [
                                 {
+                                    text: '单号',
+                                    dataIndex: 'c0'
+                                },
+                                {
                                     text: '姓名',
                                     dataIndex: 'c1'
                                 },
@@ -241,6 +246,10 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                             },
                             items: [
                                 {
+                                    text: '单号',
+                                    dataIndex: 'c0'
+                                },
+                                {
                                     text: '部门',
                                     dataIndex: 'c1'
                                 },
@@ -294,6 +303,10 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                                 flex: 1
                             },
                             items: [
+                                {
+                                    text: '单号',
+                                    dataIndex: 'c0'
+                                },
                                 {
                                     text: '供应商',
                                     dataIndex: 'c1'
@@ -353,6 +366,10 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                             },
                             items: [
                                 {
+                                    text: '单号',
+                                    dataIndex: 'c0'
+                                },
+                                {
                                     text: '报销人',
                                     dataIndex: 'c1'
                                 },
@@ -398,6 +415,10 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                                 flex: 1
                             },
                             items: [
+                                {
+                                    text: '单号',
+                                    dataIndex: 'c0'
+                                },
                                 {
                                     text: '序号',
                                     dataIndex: 'c1'
@@ -445,6 +466,10 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                             },
                             items: [
                                 {
+                                    text: '单号',
+                                    dataIndex: 'c0'
+                                },
+                                {
                                     text: '项目名称',
                                     dataIndex: 'c1'
                                 },
@@ -490,6 +515,10 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                                 flex: 1
                             },
                             items: [
+                                {
+                                    text: '单号',
+                                    dataIndex: 'c0'
+                                },
                                 {
                                     text: '项目名称',
                                     dataIndex: 'c1'
@@ -540,6 +569,10 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                                 flex: 1
                             },
                             items: [
+                                {
+                                    text: '单号',
+                                    dataIndex: 'c0'
+                                },
                                 {
                                     text: '工程名称',
                                     dataIndex: 'c1'

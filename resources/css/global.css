@@ -64,7 +64,8 @@ table.pros td{
 .gridpanel-editprogress .x-grid-cell-inner, #gridpanel-detailedAddressForSignBusiness .x-grid-cell-inner,
 #gridpanel-buildingMgm .x-grid-cell-inner, .gridpanel-editstatus .x-grid-cell-inner,
 .gridpanel-waitingList .x-grid-cell-inner, .gridpanel-potentialBusinessList .x-grid-cell-inner,
-.gridpanel-errorandexception .x-grid-cell-inner, .gridpanel-logContent .x-grid-cell-inner {
+.gridpanel-errorandexception .x-grid-cell-inner, .gridpanel-logContent .x-grid-cell-inner,
+.gridpanel-entrynexitboard .x-grid-cell-inner {
   white-space: normal;
   word-wrap: break-word;
 }
