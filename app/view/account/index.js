@@ -123,7 +123,20 @@ Ext.define('FamilyDecoration.view.account.Index', {
                         text: '删除',
                         name: 'del',
                         disabled: true,
-                        icon: 'resources/img/delete_trash_bin.png'
+                        icon: 'resources/img/delete_trash_bin.png',
+                        handler: function (){
+                            var resObj = _getRes();
+                            Ext.Msg.warning('确定要删除选中账户吗?', function (btnId){
+                                if ('yes' == btnId) {
+                                    ajaxDel('Account', {
+                                        id: resObj.account.getId()
+                                    }, function (obj){
+                                        showMsg('删除成功！');
+                                        resObj.accountSt.reload();
+                                    });
+                                }
+                            });
+                        }
                     }
                 ],
                 style: {
