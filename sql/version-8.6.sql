@@ -11,7 +11,7 @@ CREATE TABLE `salary` (
   `paidTime` datetime DEFAULT null comment '付款时间',
   `payee` varchar(20) DEFAULT NULL comment '付款人',
   `certs` text DEFAULT NULL comment '凭证',
-  `status` varchar(10) DEFAULT 'new' comment '状态，new:刚创建,paid:已付款'
+  `status` varchar(10) DEFAULT 'new' comment '状态，new:刚创建,paid:已付款',
   `smallChange` int(12) default 0 comment '零钱抹平,加或减凑整', 
   `createTime` datetime DEFAULT null,
   `updateTime` datetime DEFAULT null,
