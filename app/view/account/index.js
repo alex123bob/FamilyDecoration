@@ -183,23 +183,19 @@ Ext.define('FamilyDecoration.view.account.Index', {
                             text: '出账',
                             dataIndex: 'amount',
                             renderer: function (val, meta, rec) {
-                                var res = '';
-                                if (rec.get('type') == 'out') {
-                                    res = val;
-                                }
-                                return res;
+                                return rec.get('type') == 'out' ? '-'+val : '';
                             }
                         },
                         {
                             text: '入账',
                             dataIndex: 'amount',
                             renderer: function (val, meta, rec) {
-                                var res = '';
-                                if (rec.get('type') == 'in') {
-                                    res = val;
-                                }
-                                return res;
+                                return rec.get('type') == 'in' ? '+'+val : '';
                             }
+                        },
+                        {
+                            text: '事由',
+                            dataIndex: 'refTypeCn'
                         },
                         {
                             text: '余额',

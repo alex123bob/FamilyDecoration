@@ -3,7 +3,6 @@
 	 * @desc Common operations including functions and operations.
 	 * @auth Diego & Alex
 	 */
-	
 	function ErrorHandler($errno, $errstr,$errorFile,$errorLine){
 		$errstr = str_replace("Undefined index:","缺少参数:",$errstr);
 		global $mysql;
