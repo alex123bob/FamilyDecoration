@@ -105,12 +105,12 @@ table.pros td{
 
 /* entry and exit module class */
 
-.bill-paid {
-    background-color: lightyellow;
+tr.bill-paid .x-grid-td {
+    /*background-color: lightyellow;*/
 }
 
-.bill-unpaid {
-    background-color: lightgreen;
+tr.bill-unpaid .x-grid-td {
+    background-color: lightblue;
 }
 
 /* end of entry and exit module class */
