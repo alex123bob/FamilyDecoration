@@ -18,7 +18,11 @@ class AccountSvc extends BaseSvc
 	}
 
 	public function getAccountType(){
-		return $ACCOUNT_TYPE;
+		$res = array();
+		foreach (self::$ACCOUNT_TYPE as $key => $value) {
+			array_push($res,array('k'=>$key,'v'=>$value));
+		}
+		return $res;
 	}
 
 	public function pay($q){
