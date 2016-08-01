@@ -2,12 +2,27 @@
 class AccountLogSvc extends BaseSvc
 {
 
+	private static $refType = array(
+		'companyBonus'=>'公司福利',
+		'qualityGuaranteeDeposit'=>'质保金',
+		'workerSalary'=>'工人工资',
+		'staffSalary'=>'员工工资',
+		'materialPayment'=>'主材订购费',
+		'reimbursementItems'=>'报销',
+		'tax'=>'税费',
+		'designDeposit'=>'设计定金',
+		'projectFee'=>'工程款',
+		'loan'=>'贷款入账',
+		'financialFee'=>'贷款出账',
+		'other'=>'其他');
+	
 	public function get($q){
 		$res = parent::get($q);
 		$svc = BaseSvc::getSvc('User');
 		$svc->appendRealName($res['data'],'operator');
 		foreach ($res['data'] as &$value) {
 			$value['balance'] = (int)$value['balance'] / 1000;
+			$value['refTypeCn'] = isset(self::$refType[$value['refType']]) ? self::$refType[$value['refType']] : '未知类型';
 		}
 		return $res;
 	}
