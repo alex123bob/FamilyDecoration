@@ -71,7 +71,7 @@
 			$mysql->commit(); or $mysql->rollback();
 		如果发生异常。 自动rollback; 不需要try catch rollback，除非业务上有逻辑判断需要rollback，否则一般不用显式调用rollback函数
 
-		嵌套事务：
+		嵌套事务： //咱不做支持
 			内部事务开始方法，只创建还原点。
 			内部事务提交方法不做操作。防止破坏外部事务原子性
 			内部事务rollback只还原到还原点
@@ -129,6 +129,7 @@
 			if($this->transitionCount++ == 0){
 				$this->DBExecute("begin;");
 			}else{
+				throw new Exception('暂不支持潜逃事务');
 				$this->DBExecute("savepoint sp".$this->transitionCount);
 			}
 		}
@@ -163,6 +164,7 @@
 		//执行数据库语句的基本方法，具体的操作都要调用该基本操作
 		public function DBExecute($sqlValue){
 			//将传递进来的SQL语句进行一个赋值
+			array_push($this->executedSqls,"($this->transitionCount)$sqlValue");
 			$this->dbSQL = $sqlValue;
 			//然后执行SQL语句
 			if (!$this->dbResult = mysqli_query($this->dbConn, $this->dbSQL)){
@@ -184,7 +186,7 @@
 				throw new Exception($errorMsg);			
 				exit();
 			}
-			array_push($this->executedSqls,"($this->transitionCount)$this->dbSQL");
+			
 		}
 
 		//不建议使用

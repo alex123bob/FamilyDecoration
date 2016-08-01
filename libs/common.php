@@ -7,8 +7,10 @@
 		$errstr = str_replace("Undefined index:","缺少参数:",$errstr);
 		global $mysql;
 		try{
-			if($mysql->isTransactions())
+			if($mysql->isTransactions()){
 				$mysql->rollback(true);
+
+			}	
 		}catch(Exception $e){}
 		try{
 			$errorLogSvc = BaseSvc::getSvc('ErrorLog');

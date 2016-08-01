@@ -43,6 +43,10 @@ Class ErrorLogSvc extends BaseSvc{
 		return "$a xxxx $b";
 	}
 
+	public function doString3(){
+		return "xxxx";
+	}
+
 	public function wrapp($func){
 		return "dy-".$func();
 	}

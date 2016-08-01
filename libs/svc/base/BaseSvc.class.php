@@ -1,12 +1,54 @@
 <?php
 
+Class Proxy extends BaseSvc{
+
+	private $proxyClass;
+	private $proxySvc;
+
+	public function __construct($svc){
+		$this->proxySvc = $svc;
+		$this->proxyClass = new ReflectionClass($svc);
+	}
+
+	public function service($methodName,$arg){
+		$class = new ReflectionClass($this);
+		$method = $this->proxyClass->getMethod($methodName);
+		$res = $method->invokeArgs($this->proxySvc,$arg);
+		/*
+		//处理事务  暂不做潜逃事务支持
+		$outterTransactionLevel = $mysql->getTransactionLevel();
+		try{
+			$res = $method->invokeArgs($this->proxySvc,$arg);
+		}catch(Exception $e){
+			if($outterTransactionLevel < $mysql->getTransactionLevel()){
+				$mysql->rollback(); //说明内部有事务，要返回。cacth中只回滚bSvc中事务。
+			}else if($outterTransactionLevel == $mysql->getTransactionLevel()){
+				//说明内部没有事务。
+			}else{
+				//说明内部没多提交/回滚了事务。 有代码bug
+				throw new Exception("有bug！");
+			}
+			throw $e;
+		}
+		if($outterTransactionLevel != $mysql->getTransactionLevel()){
+			throw new Exception("有bug！");
+		}*/
+		return $res;
+	}
+
+	public function __call($methodName,$arg){
+		return $this->service($methodName,$arg);
+	}
+}
+
 class BaseSvc{
 
 	public $tableName="";
-	public $fields = "";
+	public $fields = array();
 	public $appendWhere="";
 	public $appendSelect="";
 	public $appendJoin="";
+
 	/*
 	xxx=value 表示xxx字段严格匹配
 	_xxx=value 表示xxx字段 like 模糊匹配
@@ -197,9 +239,10 @@ class BaseSvc{
 		global $mysql;
 		$class = new ReflectionClass($svcName."Svc");
 		$fin = $class->newInstanceArgs();
-		if(!is_subclass_of($fin,'BaseSvc'))
-			return $fin;
-		return $fin->setTableName($svcName);
+		if(is_subclass_of($fin,'BaseSvc')){
+			$fin->setTableName($svcName); 
+		}			
+		return  $fin;//new Proxy($fin);
 	}
 }
 ?>
