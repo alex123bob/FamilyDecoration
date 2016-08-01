@@ -42,12 +42,13 @@ class AccountSvc extends BaseSvc
 			case 'materialPayment':
 			case 'reimbursementItems':
 			case 'tax':
-				$affect = parent::getSvc('StatementBill')->update(array('@paidAmount'=>$q['@fee'],'@status'=>'paid','id'=>$q['id'],'status'=>'chk'));
+				$affect = parent::getSvc('StatementBill')->update(array('@paidAmount'=>$q['@fee'],'@status'=>'paid','id'=>$q['id'],'status'=>'chk'))['affect'];
 				break;
 			case 'financialFee':
-				$affect = parent::getSvc('loan')->update(array('@paidAmount'=>$q['@fee'],'@status'=>'paid','id'=>$q['id'],'status'=>'new'));
+				$affect = parent::getSvc('loan')->update(array('@amount'=>$q['@fee'],'@status'=>'paid','id'=>$q['id'],'status'=>'!paid'))['affect'];
 				break;
 			case 'staffSalary':
+				$affect = parent::getSvc('salary')->update(array('@paid'=>$q['@fee'],'@status'=>'paid','id'=>$q['id'],'status'=>'chk'))['affect'];
 				break;
 			//入账 case 'designDeposit': return $this->designDeposit($q);
 			//入账 case 'projectFee': return $this->projectFee($q);

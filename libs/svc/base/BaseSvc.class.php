@@ -71,7 +71,6 @@ class BaseSvc{
 		$whereSql = " where 1 = 1 ";
 		$hasWhere = false;
 		foreach ($TableMapping[$tableName] as $f) {
-			$comparator = "=";
 			if(isset($q[$f.'Max'])){
 				array_push($params, $q[$f.'Max']);
 				$whereSql = $whereSql." and $prefix`$f` <= '?' ";
@@ -83,13 +82,26 @@ class BaseSvc{
 				$hasWhere = true;
 			}
 			if(isset($q[$f])){
-				array_push($params, $q[$f]);
-				$whereSql = $whereSql." and $prefix`$f` = '?' ";
+				$comparator = "=";
+				$value = $q[$f];
+				if(startWith($value,'!')){
+					$comparator = " != ";
+					$value = substr($value,1);
+				}
+				array_push($params, $value);
+				$whereSql = $whereSql." and $prefix`$f` $comparator '?' ";
 				$hasWhere = true;
 			}
 			if(isset($q["_".$f])){
-				array_push($params, $q['_'.$f]);
-				$whereSql = $whereSql." and $prefix`$f` like '%?%' ";
+				$comparator = "like";
+				$key = '_'.$f;
+				$value = $q[$key];
+				if(startWith($value,'!')){
+					$comparator = " not like ";
+					$value = substr($value,1);
+				}
+				array_push($params, $value);
+				$whereSql = $whereSql." and $prefix`$f` $comparator '%?%' ";
 				$hasWhere = true;
 			}
 		}

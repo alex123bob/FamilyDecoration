@@ -15,7 +15,7 @@
 		"potential_business_detail"=>array('id','potentialBusinessId','comments','committer'),
 		"log_list"=>array('id','content','committer','logType','isFinished'),
 		"error_log"=>array('user','detail','file','line','url','ip','refer','useragent'),
-		"salary"=>array('user','basicSalary','positionSalary','meritSalary','socialTax','balance','paid','paidTime','payee','status'),
+		"salary"=>array('payee','basicSalary','positionSalary','meritSalary','socialTax','balance','amount','paidTime','payer','status'),
 		"account"=>array('id','name','accountType'),
 		"account_log"=>array('id','accountId','type','amount','balance','refId','refType','operator'),
 		"loan"=>array('id','relevantId','type','projectName','bankName','assignee','mobile','amount','dealer','dealTime','interest','period','loanTime','status'),

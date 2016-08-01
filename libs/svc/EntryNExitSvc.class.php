@@ -123,11 +123,11 @@ class EntryNExitSvc{
 					s.meritSalary as c5,
 					s.socialTax as c6,
 					s.balance as c7,
-					s.paid as c8,
+					s.amount as c8,
 					'TODO' as c9,
 					s.paidTime as c10,
 					u2.realName as c11
-					from salary s left join user u on u.name = s.user left join user u2 on u2.name = s.payee where s.isDeleted = 'false';";
+					from salary s left join user u on u.name = s.payee left join user u2 on u2.name = s.payer where s.isDeleted = 'false' and status != 'arch';";
 		$data = $mysql->DBGetAsMap($sql);
 		$userSvc = BaseSvc::getSvc('User');
 		foreach ($data as &$item) {
@@ -192,7 +192,7 @@ class EntryNExitSvc{
 					left join user u on u.name = l.assignee 
 					left join user u2 on u2.name = l.dealer
 					left join loan l2 on l2.id = l.relevantId
- 					where l.isDeleted = 'false' and l.type = '1' and l.status = 'paid';";
+ 					where l.isDeleted = 'false' and l.type = '1' and l.status != 'arch';";
 		$data = $mysql->DBGetAsMap($sql);
 		return array('status'=>'successful','data'=>$data,'total'=>100);
 	}
@@ -211,7 +211,7 @@ class EntryNExitSvc{
 					l.period as c9 ,
 					l.loanTime as c10 
 					from loan l left join user u on u.name = l.assignee left join user u2 on u2.name = l.dealer
- 					where l.isDeleted = 'false' and l.type = '0' and l.status = 'accepted';";
+ 					where l.isDeleted = 'false' and l.type = '0' and l.status != 'arch';";
 		$data = $mysql->DBGetAsMap($sql);
 		return array('status'=>'successful','data'=>$data,'total'=>100);
 	}
