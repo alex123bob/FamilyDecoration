@@ -13,7 +13,7 @@ Ext.define('FamilyDecoration.view.account.EditAccount', {
 
     title: '编辑账号',
     width: 520,
-    height: 200,
+    height: 250,
     autoScroll: true,
     defaults: {
         allowBlank: false
@@ -28,11 +28,13 @@ Ext.define('FamilyDecoration.view.account.EditAccount', {
         function _getRes() {
             var accountName = me.getComponent('textfield-accountName'),
                 accountType = me.getComponent('combobox-accountType'),
-                accountBalance = me.getComponent('textfield-accountBalance');
+                accountBalance = me.getComponent('textfield-accountBalance'),
+                accountDesc = me.getComponent('textarea-accountDesc');
             return {
                 accountName: accountName,
                 accountType: accountType,
-                accountBalance: accountBalance
+                accountBalance: accountBalance,
+                accountDesc: accountDesc
             };
         }
 
@@ -78,6 +80,14 @@ Ext.define('FamilyDecoration.view.account.EditAccount', {
                 itemId: 'textfield-accountBalance',
                 xtype: 'numberfield',
                 value: me.account ? me.account.get('balance') : ''
+            },
+            {
+                fieldLabel: '备注',
+                hidden: !me.account,
+                name: 'desc',
+                itemId: 'textarea-accountDesc',
+                xtype: 'textarea',
+                value: me.account ? me.account.get('desc') : ''
             }
         ];
 
@@ -110,6 +120,7 @@ Ext.define('FamilyDecoration.view.account.EditAccount', {
                         });
                     }
                     else {
+                        delete params.desc;
                         ajaxAdd('Account', params, function (obj){
                             showMsg('添加成功！');
                             me.callback();
