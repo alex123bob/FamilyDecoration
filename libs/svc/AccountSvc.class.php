@@ -75,7 +75,7 @@ class AccountSvc extends BaseSvc
 		$account = $mysql->DBGetAsMap("select * from account where id = '".$accountId."' for update;");
 		$account = $account[0];
 		//检查余额
-		$newBalance = (float)$account['balance'] - ((float)$q['@fee']);
+		$newBalance = (double)$account['balance'] - ((double)$q['@fee']);
 		if($newBalance < 0)
 			throw new Exception("余额不足！");
 		$affect = 0;

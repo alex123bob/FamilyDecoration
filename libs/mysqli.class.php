@@ -355,10 +355,8 @@
 						$values .= " '".($value?"true":"false")."' ,";
 						break;
 					case "integer":
-						$values .= " ".$value." ,";
-						break;
 					case "double":
-						$values .= $value.",";
+						$values .= round($value,3).",";
 						break;
 					case "NULL":
 						$values .= $value." null,";
