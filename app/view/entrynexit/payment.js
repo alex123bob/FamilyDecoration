@@ -122,7 +122,7 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
                         accountRec = account.findRecord(account.valueField || account.displayField, accountVal);
 
                     if (fee.isValid() && account.isValid()) {
-                        enoughBalance = (fee.getValue() * 1000 - parseInt(accountRec.get('balance'), 10) <= 0) ? true : false;
+                        enoughBalance = ( fee.getValue() <= parseFloat(accountRec.get('balance')) ) ? true : false;
                         if (enoughBalance) {
                             ajaxUpdate('Account.pay', {
                                 id: me.item.get('c0'),
