@@ -43,7 +43,8 @@ Ext.define('FamilyDecoration.Application', {
         'EntryNExit',
         'TargetSetting',
         'PaymentRequest',
-        'Account'
+        'Account',
+        'MaterialRequest'
     ],
 
     stores: [

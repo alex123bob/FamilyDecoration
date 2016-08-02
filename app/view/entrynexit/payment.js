@@ -69,8 +69,8 @@ Ext.define('FamilyDecoration.view.entrynexit.Payment', {
                                 load: function (st, recs, success, opts){
                                     Ext.each(recs, function (rec, index, arr){
                                         rec.set({
-                                            name: rec.get('name') + ' (余额: ' + accDiv(rec.get('balance'), 1000) + ')'
-                                        })
+                                            name: rec.get('name') + ' (余额: ' + rec.get('balance') + ')'
+                                        });
                                     });
                                 }
                             }
