@@ -88,6 +88,7 @@ class AccountSvc extends BaseSvc
 			case 'reimbursementItems':
 			case 'tax':
 				$affect = parent::getSvc('StatementBill')->update(array('@paidAmount'=>$q['@fee'],'@status'=>'paid','id'=>$q['id'],'status'=>'chk'))['affect'];
+				parent::getSvc('StatementBillAudit')->add(array('@billId'=>$q['id'],'@newStatus'=>'paid','@orignalStatus'=>'chk','@drt'=>1));
 				break;
 			case 'financialFee':
 				$affect = parent::getSvc('loan')->update(array('@amount'=>$q['@fee'],'@status'=>'paid','id'=>$q['id'],'status'=>'!paid'))['affect'];
