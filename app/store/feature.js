@@ -178,6 +178,12 @@
                         icon: 'resources/img/order.png'
                     },
                     {
+                        name: '材料申购',
+                        cmp: 'materialrequest-index',
+                        leaf: true,
+                        icon: 'resources/img/material_request.png'
+                    },
+                    {
                         name: '工程目录',
                         cmp: 'projectcategory-index',
                         leaf: true,
