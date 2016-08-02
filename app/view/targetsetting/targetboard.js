@@ -29,9 +29,20 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
             })
         ];
 
+        function _getTimeObj (){
+            var toolbar = me.down('toolbar'),
+                year = toolbar.getComponent('combobox-year'),
+                month = toolbar.getComponent('combobox-month');
+            return {
+                year: year.getValue(),
+                month: month.getValue()
+            };
+        }
+
         me.tbar = [
             {
                 xtype: 'combobox',
+                itemId: 'combobox-year',
                 fieldLabel: '年',
                 labelWidth: 30,
                 editable: false,
@@ -61,6 +72,12 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                     })()
                 }),
                 listeners: {
+                    afterrender: function (combo, opts){
+                        var mCombo = combo.nextSibling(),
+                            m = new Date().getMonth() + 1;
+                        combo.fireEventArgs('change', [combo, combo.getValue()]);
+                        mCombo.setValue(m);
+                    },
                     change: function (combo, newVal, oldVal, opts) {
                         var d = new Date(),
                             y = d.getFullYear(),
@@ -86,6 +103,10 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                                     }
                                 );
                             }
+                            data.unshift({
+                                name: '请选择',
+                                value: null
+                            });
                             st.loadData(data);
                         }
                         else {
@@ -96,13 +117,14 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
             },
             {
                 xtype: 'combobox',
+                itemId: 'combobox-month',
                 fieldLabel: '月',
                 labelWidth: 30,
                 editable: false,
                 displayField: 'name',
                 valueField: 'value',
-                value: new Date().getMonth() + 1,
                 queryMode: 'local',
+                value: new Date().getMonth() + 1,
                 store: Ext.create('Ext.data.Store', {
                     fields: ['name', 'value'],
                     proxy: {
@@ -111,21 +133,13 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                             type: 'json'
                         }
                     },
-                    data: (function () {
-                        var d = new Date(),
-                            m = d.getMonth() + 1,
-                            data = [];
-                        for (var i = 1; i <= m; i++) {
-                            data.push(
-                                {
-                                    name: i,
-                                    value: i
-                                }
-                            );
-                        }
-                        return data;
-                    })()
-                })
+                    data: []
+                }),
+                listeners: {
+                    change: function (combo, newVal, oldVal, opts){
+                        console.log(_getTimeObj());
+                    }
+                }
             }
         ];
 
