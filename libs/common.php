@@ -270,7 +270,7 @@
         }  
     }
     function notNullCheck($d,$f,$msg =""){
-    	if(!isset($d[$f]) || $d[$f] == ""){
+    	if(!isset($d[$f]) || $d[$f] === ""){
     		if($msg == "")
     			$msg = $f." can not be empty";
     		throw new Exception($msg);
