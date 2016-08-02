@@ -71,25 +71,39 @@ class EntryNExitSvc{
 		return array('status'=>'successful','data'=>$data,'total'=>100);
 	}
 
-
+	private function chineseToUnicode($name){
+	    $name = iconv('UTF-8', 'UCS-2', $name);  
+	    $len = strlen($name);  
+	    $str = '';  
+	    for ($i = 0; $i < $len - 1; $i = $i + 2) {  
+	        $c = $name[$i];  
+	        $c2 = $name[$i + 1];  
+	        if (ord($c) > 0) {    // 两个字节的文字  
+	            $str .= ord($c).ord($c2);  
+	        } else  {  
+	            $str .= $c2;  
+	        }  
+	    }  
+	    return $str;
+	}
 
 	private function qualityGuaranteeDeposit($q){
 		global $mysql;
-		$sql = "select b.id as c0,
-					b.projectName as c1,
-					b.reimbursementReason as c2,
-					b.payee as c3,
-					b.payee as c4,
-					b.phoneNumber as c5,
-					b.totalFee as c6,
-					b.paidAmount as c7,
-					u.realName as c8,
-					b.paidTime as c9,
-					b.descpt as c10,
-					b.status
-					from statement_bill b left join user u on u.name = b.payer
-					where b.billType = 'qgd' and b.isDeleted = 'false' and ( b.status = 'paid' or b.status = 'chk');";
+		$sql = "SELECT	sum(IFNULL(totalFee, 0)) AS totalFee,
+						sum(IFNULL(paidAmount, 0)) AS paidAmount,
+						count(*) as billNumber,
+						projectId,
+						projectName as c1,
+						payee as c2,
+						max(phoneNumber) as c3,
+						professionType
+				FROM statement_bill WHERE isDeleted = 'false' AND (billType = 'reg' OR billType = 'ppd') AND (STATUS = 'paid' OR STATUS = 'chk')
+				GROUP BY projectId,	payee, professionType";
 		$data = $mysql->DBGetAsMap($sql);
+		foreach ($data as &$value) {
+			$value['c0'] = $value['professionType'].$value['projectId'].$this->chineseToUnicode($value['c2']);
+			$value['c4'] = $value['totalFee'] - $value['paidAmount'];
+ 		}
 		return array('status'=>'successful','data'=>$data,'total'=>100);
 	}
 
