@@ -13,29 +13,37 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
             Ext.create('Ext.grid.plugin.RowEditing', {
                 clicksToEdit: 1,
                 listeners: {
-                    beforeedit: function (editor, e){
+                    beforeedit: function (editor, e) {
                         var rec = e.record;
                     },
-                    edit: function (editor, e){
+                    edit: function (editor, e) {
                         var rec = e.record;
                         Ext.suspendLayouts();
 
                         Ext.resumeLayouts();
                     },
-                    validateedit: function (editor, e, opts){
+                    validateedit: function (editor, e, opts) {
                         var rec = e.record;
                     }
                 }
             })
         ];
 
-        function _getTimeObj (){
+        function _getRes (){
             var toolbar = me.down('toolbar'),
                 year = toolbar.getComponent('combobox-year'),
                 month = toolbar.getComponent('combobox-month');
             return {
-                year: year.getValue(),
-                month: month.getValue()
+                year: year,
+                month: month
+            };
+        }
+
+        function _getTimeObj() {
+            var resObj = _getRes();
+            return {
+                year: resObj.year.getValue(),
+                month: resObj.month.getValue()
             };
         }
 
@@ -72,12 +80,6 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                     })()
                 }),
                 listeners: {
-                    afterrender: function (combo, opts){
-                        var mCombo = combo.nextSibling(),
-                            m = new Date().getMonth() + 1;
-                        combo.fireEventArgs('change', [combo, combo.getValue()]);
-                        mCombo.setValue(m);
-                    },
                     change: function (combo, newVal, oldVal, opts) {
                         var d = new Date(),
                             y = d.getFullYear(),
@@ -124,7 +126,6 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                 displayField: 'name',
                 valueField: 'value',
                 queryMode: 'local',
-                value: new Date().getMonth() + 1,
                 store: Ext.create('Ext.data.Store', {
                     fields: ['name', 'value'],
                     proxy: {
@@ -136,7 +137,7 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                     data: []
                 }),
                 listeners: {
-                    change: function (combo, newVal, oldVal, opts){
+                    change: function (combo, newVal, oldVal, opts) {
                         console.log(_getTimeObj());
                     }
                 }
@@ -249,6 +250,17 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
 
             me.reconfigure(false, cols);
         };
+
+        me.addListener({
+            afterrender: function (grid, opts) {
+                var resObj = _getRes(),
+                    combo = resObj.year,
+                    mCombo = resObj.month,
+                    m = new Date().getMonth() + 1;
+                combo.fireEventArgs('change', [combo, combo.getValue()]);
+                mCombo.setValue(m);
+            }
+        })
 
         me.callParent();
     }
