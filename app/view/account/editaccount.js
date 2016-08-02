@@ -75,7 +75,7 @@ Ext.define('FamilyDecoration.view.account.EditAccount', {
                 value: me.account ? me.account.get('accountType') : ''
             },
             {
-                fieldLabel: '账户余额',
+                fieldLabel: '账户余额(元)',
                 name: 'balance',
                 itemId: 'textfield-accountBalance',
                 xtype: 'numberfield',

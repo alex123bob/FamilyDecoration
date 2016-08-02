@@ -275,7 +275,7 @@ Ext.define('FamilyDecoration.view.account.Index', {
                             dataIndex: 'refTypeCn'
                         },
                         {
-                            text: '余额',
+                            text: '余额(元)',
                             dataIndex: 'balance'
                         },
                         {
