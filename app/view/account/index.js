@@ -254,6 +254,7 @@ Ext.define('FamilyDecoration.view.account.Index', {
                     items: [
                         {
                             text: '日期',
+                            flex: 1.2,
                             dataIndex: 'createTime'
                         },
                         {
