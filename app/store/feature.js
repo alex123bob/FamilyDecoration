@@ -391,6 +391,9 @@
             else if (rec.get('cmp') == 'entrynexit-index') {
                 flag = User.isAdmin() || User.isFinanceManager() || User.isFinanceStaff() ? true : false;
             }
+            else if (rec.get('cmp') == 'account-index') {
+                flag = User.isAdmin() || User.isFinanceManager() ? true : false;
+            }
             else if (rec.get('cmp') == 'planlabor-index') {
                 flag = User.isGeneral() ? false : true;
             }
