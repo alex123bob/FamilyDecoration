@@ -281,6 +281,10 @@ Ext.define('FamilyDecoration.view.account.Index', {
                         {
                             text: '经办人',
                             dataIndex: 'operatorRealName'
+                        },
+                        {
+                            text: '修改记录',
+                            dataIndex: 'desc'
                         }
                     ]
                 },
