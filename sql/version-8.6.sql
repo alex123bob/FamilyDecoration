@@ -1,18 +1,18 @@
 CREATE TABLE `salary` (
   `id` varchar(20) DEFAULT NULL,
   `payee` varchar(20) DEFAULT NULL comment '收款人',
-  `basicSalary` int(12) DEFAULT 0 comment '基本工资(分)',
-  `positionSalary` int(12) DEFAULT 0 comment '岗位工资(分)',
-  `meritSalary` int(12) DEFAULT 0 comment '绩效工资(提成,分)',
-  `socialTax` int(12) DEFAULT 0 comment '社保(分)',
-  `balance` int(12) DEFAULT 0 comment '结算工资(分)',
-  `amount` int(12) DEFAULT 0 comment '实付(分)',
+  `basicSalary` double(16,2) DEFAULT 0 comment '基本工资(分)',
+  `positionSalary` double(16,2) DEFAULT 0 comment '岗位工资(分)',
+  `meritSalary` double(16,2) DEFAULT 0 comment '绩效工资(提成,分)',
+  `socialTax` double(16,2) DEFAULT 0 comment '社保(分)',
+  `balance` double(16,2) DEFAULT 0 comment '结算工资(分)',
+  `amount` double(16,2) DEFAULT 0 comment '实付(分)',
   `isDeleted` varchar(5) DEFAULT 'false',
   `paidTime` datetime DEFAULT null comment '付款时间',
   `payer` varchar(20) DEFAULT NULL comment '付款人',
   `certs` text DEFAULT NULL comment '凭证',
   `status` varchar(10) DEFAULT 'new' comment '状态，new:刚创建,paid:已付款',
-  `smallChange` int(12) default 0 comment '零钱抹平,加或减凑整', 
+  `smallChange` double(12,2) default 0 comment '零钱抹平,加或减凑整', 
   `createTime` datetime DEFAULT null,
   `updateTime` datetime DEFAULT null,
   PRIMARY KEY (`id`)
@@ -21,7 +21,7 @@ CREATE TABLE `salary` (
 CREATE TABLE `account` (
   `id` varchar(20) DEFAULT NULL,
   `name` varchar(200) DEFAULT NULL comment '账户名',
-  `balance` bigint DEFAULT 0 comment '余额(分)',
+  `balance` double(16,2) DEFAULT 0 comment '余额(分)',
   `accountType` varchar(10) DEFAULT 'CASH' comment '账户类型,CASH:现金,CYBER:网银账户,ALI:支付宝账户,OTHER:其他种类,WECHAT:微信',
   `isDeleted` varchar(5) DEFAULT 'false',
   `createTime` datetime DEFAULT null,
@@ -32,12 +32,13 @@ CREATE TABLE `account` (
 CREATE TABLE `account_log` (
   `id` varchar(20) not NULL,
   `accountId` varchar(20) not NULL comment '账户Id',
-  `type` varchar(3) not null comment 'in/out 出入帐',
-  `amount` bigint not null comment '金额',
-  `balance` bigint not null comment '操作后余额',
+  `type` varchar(3) not null comment 'in/out/no 出/入/修改帐',
+  `amount` double(16,2) not null comment '金额(分)',
+  `balance` double(16,2) not null comment '操作后余额(分)',
   `refId` varchar(20) not null comment '关联单据，工资单(salary)或者贷款单(loan)或者其他(statement_bill)单据Id，或-1(修改余额操作)',
   `refType` varchar(20) not null comment '关联单据类型，sly:工资单(salary); loan:贷款单(loan);stb:其他(statement_bill)单据Id;edit:修改,add:新加帐户',
   `operator` varchar(25) not null comment '操作人',
+  `desc` varchar(200) not null comment '修改说明',
   `isDeleted` varchar(5) DEFAULT 'false',
   `createTime` datetime DEFAULT null,
   `updateTime` datetime DEFAULT null,
@@ -46,7 +47,7 @@ CREATE TABLE `account_log` (
 
 alter table statement_bill add column supplierId varchar(20) comment '供应商id';
 alter table statement_bill add column payer varchar(20) comment '付款人(出纳)';
-alter table statement_bill add column paidAmount int(12) comment '实付金额';
+alter table statement_bill add column paidAmount double(16,2) comment '实付金额';
 alter table statement_bill add column paidTime datetime comment '付款时间';
 alter table statement_bill add column reimbursementReason varchar(200) comment '报销事项';
 alter table statement_bill add column descpt varchar(200) comment '备注';
@@ -118,7 +119,7 @@ update statement_bill_audit set drt = '1' where orignalStatus = 'rdyck' and newS
 update statement_bill_audit set drt = '-1' where orignalStatus = 'rdyck' and newStatus = 'new' and drt is null;
 update statement_bill_audit set drt = '1' where orignalStatus = 'rdyck' and newStatus = 'rdyck2' and drt is null;
 update statement_bill_audit set drt = '-1' where orignalStatus = 'rdyck2' and newStatus = 'rdyck' and drt is null;
-alter table statement_bill add column descpt varchar(200) default null comment '备注'
+alter table statement_bill add column descpt varchar(200) default null comment '备注';
 alter table announcement_comment modify id varchar(20);
 
 update `system` set `paramValue`='version-8.6' where `id`='4';

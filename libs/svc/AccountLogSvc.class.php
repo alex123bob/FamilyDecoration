@@ -14,6 +14,8 @@ class AccountLogSvc extends BaseSvc
 		'projectFee'=>'工程款',
 		'loan'=>'贷款入账',
 		'financialFee'=>'贷款出账',
+		'edit'=>'修改账户',
+		'add'=>'新增账户',
 		'other'=>'其他');
 	
 	public function get($q){
@@ -21,7 +23,6 @@ class AccountLogSvc extends BaseSvc
 		$svc = BaseSvc::getSvc('User');
 		$svc->appendRealName($res['data'],'operator');
 		foreach ($res['data'] as &$value) {
-			$value['balance'] = (int)$value['balance'] / 1000;
 			$value['refTypeCn'] = isset(self::$refType[$value['refType']]) ? self::$refType[$value['refType']] : '未知类型';
 		}
 		return $res;

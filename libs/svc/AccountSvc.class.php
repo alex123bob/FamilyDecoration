@@ -4,9 +4,25 @@ class AccountSvc extends BaseSvc
 
 	public static $ACCOUNT_TYPE = array('CASH'=>'现金','CYBER'=>'网银账户','ALI'=>'支付宝账户','OTHER'=>'其他种类','WECHAT'=>'微信');
 
-	public function add($qryParams){
-		$qryParams['@id'] = $this->getUUID();
-		return parent::add($qryParams);
+	public function del($q){
+		global $mysql;
+		$q['@isDeleted'] = 'true';
+		$q['@updateTime'] = 'now()';
+		$mysql->begin();
+		$res = parent::update($q);
+		parent::getSvc('AccountLog')->add(array('@accountId'=>$q['id'],'@amount'=>0,'@type'=>'del','@desc'=>'删除账户','@balance'=>0,'@refId'=>'-1','@refType'=>'del'));
+		$mysql->commit();
+		return $res;
+	}
+
+	public function add($q){
+		global $mysql;
+		$q['@id'] = $this->getUUID();
+		$mysql->begin();
+		$res = parent::add($q);
+		parent::getSvc('AccountLog')->add(array('@accountId'=>$q['@id'],'@amount'=>$q['@balance'],'@type'=>'add','@desc'=>'创建账户','@balance'=>$q['@balance'],'@refId'=>'-1','@refType'=>'add'));
+		$mysql->commit();
+		return $res;
 	}
 
 	public function get($q){
@@ -25,6 +41,31 @@ class AccountSvc extends BaseSvc
 		return $res;
 	}
 
+	public function update($q){
+		global $mysql;
+		//开始事务
+		$mysql->begin();
+		//更新记录
+		$account = $this->get(array('id'=>$q['id']));
+		$account = $account['data'][0];
+
+		$newBalance = ((float)$q['@balance']);
+		$cha = $newBalance - (float)$account['balance'];
+		$type = 'no';
+		if($cha > 0){
+			$type = 'in';
+		}else if($cha < 0){
+			$type = 'out';
+			$cha = 0 - $cha;
+		}else{
+			$type = 'no';
+		}
+		parent::getSvc('AccountLog')->add(array('@accountId'=>$q['id'],'@amount'=>$cha,'@type'=>$type,'@desc'=>$q['@desc'],'@balance'=>$q['@balance'],'@refId'=>'-1','@refType'=>'edit'));
+		$res = parent::update($q);
+		$mysql->commit();
+		return $res;
+	}
+
 	public function pay($q){
 		global $mysql;
 		$accountId = $q['accountId'];
@@ -34,7 +75,7 @@ class AccountSvc extends BaseSvc
 		$account = $mysql->DBGetAsMap("select * from account where id = '".$accountId."' for update;");
 		$account = $account[0];
 		//检查余额
-		$newBalance = (int)$account['balance'] - ((float)$q['@fee'])*1000;
+		$newBalance = (float)$account['balance'] - ((float)$q['@fee']);
 		if($newBalance < 0)
 			throw new Exception("余额不足！");
 		$affect = 0;
