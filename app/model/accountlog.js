@@ -10,6 +10,7 @@ Ext.define('FamilyDecoration.model.AccountLog', {
         {name: 'refTypeCn', type: 'string'}, // 关联单据类型中文
         {name: 'operator', type: 'string'},
         {name: 'operatorRealName', type: 'string'},
+        {name: 'desc', type: 'string'},
         'balance', // 操作后余额
         {name: 'isDeleted', type: 'string'},
         {name: 'createTime', type: 'string'},
