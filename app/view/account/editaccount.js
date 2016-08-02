@@ -84,6 +84,7 @@ Ext.define('FamilyDecoration.view.account.EditAccount', {
             {
                 fieldLabel: '备注',
                 hidden: !me.account,
+                disabled: !me.account,
                 name: 'desc',
                 itemId: 'textarea-accountDesc',
                 xtype: 'textarea',
