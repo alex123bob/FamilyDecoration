@@ -82,13 +82,12 @@ Ext.define('FamilyDecoration.view.account.EditAccount', {
                 value: me.account ? me.account.get('balance') : ''
             },
             {
-                fieldLabel: '备注',
+                fieldLabel: '修改说明',
                 hidden: !me.account,
                 disabled: !me.account,
                 name: 'desc',
                 itemId: 'textarea-accountDesc',
-                xtype: 'textarea',
-                value: me.account ? me.account.get('desc') : ''
+                xtype: 'textarea'
             }
         ];
 
