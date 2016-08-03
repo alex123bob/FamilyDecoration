@@ -220,24 +220,24 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             }
         }
 
+        me.columnMapping = {
+                'workerSalary':['单号:1:center','姓名','联系方式','工程名称','款项名称','核算工资','申领工资','实付','余额','凭证','付款时间','付款人'],
+                'staffSalary':['单号','部门','姓名','基本工资','岗位工资','绩效工资(提成)','社保','结算工资','实付','凭证','付款时间','付款人'],
+                'materialPayment':['单号','供应商','工程名称','联系方式','领款人','款项名称','核对价','申领款','实付','余款','凭证','付款时间','付款人'],
+                'reimbursementItems':['单号','报销人','报销项目','联系方式','报销金额','实付','凭证','付款时间','付款人','报销归属'],
+                'financialFee':['单号','序号','归属款项','贷款银行','交办人','本期利率','本期款项','付款','付款人','日期'],
+                'companyBonus':['单号','项目名称','款项归属','申请人','联系方式','申请金额','付款金额','付款人','付款日期','备注'],
+                'tax':['单号','项目名称','款项归属','申请人','领款人','联系方式','申请金额','付款金额','付款人','付款日期','备注'],
+                'qualityGuaranteeDeposit':['单号','工程名称','领款人','联系方式','应付金额','实付金额','付款日期','付款人','备注'],
+                'designDeposit':['单号','工程名称','业务员','设计师','客户姓名','联系方式','收款额','收款人'],
+                'projectFee':['单号','工程名称','项目经理','设计师','客户姓名','联系方式','应交款','已交款','款项','收款时间'],
+                'loan':['单号','项目名称','银行','交办人','联系方式','收款金额','收款人','收款时间','当前利率','期限','贷款时间'],
+                'other':['单号','项目名称','入账单位','交款人','联系方式','收款金额','收款人','收款时间','款项归属']
+        }
         // dynamically generate columns according to entry and exit type
         function generateCols(rec) {
-			var mapping = {
-				'workerSalary':['单号:1:center','姓名','联系方式','工程名称','款项名称','核算工资','申领工资','实付','余额','凭证','付款时间','付款人'],
-				'staffSalary':['单号','部门','姓名','基本工资','岗位工资','绩效工资(提成)','社保','结算工资','实付','凭证','付款时间','付款人'],
-				'materialPayment':['单号','供应商','工程名称','联系方式','领款人','款项名称','核对价','申领款','实付','余款','凭证','付款时间','付款人'],
-				'reimbursementItems':['单号','报销人','报销项目','联系方式','报销金额','实付','凭证','付款时间','付款人','报销归属'],
-				'financialFee':['单号','序号','归属款项','贷款银行','交办人','本期利率','本期款项','付款','付款人','日期'],
-				'companyBonus':['单号','项目名称','款项归属','申请人','联系方式','申请金额','付款金额','付款人','付款日期','备注'],
-				'tax':['单号','项目名称','款项归属','申请人','领款人','联系方式','申请金额','付款金额','付款人','付款日期','备注'],
-				'qualityGuaranteeDeposit':['单号','工程名称','领款人','联系方式','应付金额','实付金额','付款日期','付款人','备注'],
-				'designDeposit':['单号','工程名称','业务员','设计师','客户姓名','联系方式','收款额','收款人'],
-				'projectFee':['单号','工程名称','项目经理','设计师','客户姓名','联系方式','应交款','已交款','款项','收款时间'],
-				'loan':['单号','项目名称','银行','交办人','联系方式','收款金额','收款人','收款时间','当前利率','期限','贷款时间'],
-				'other':['单号','项目名称','入账单位','交款人','联系方式','收款金额','收款人','收款时间','款项归属']
-			}
             if (rec) {
-				var items = mapping[rec.get('name')];
+				var items = me.columnMapping[rec.get('name')];
 				var newItem = [];
 				for(var i = 0;i<items.length;i++){
 					var cfgs = items[i].split(':');
@@ -252,70 +252,29 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
         function generateSt(rec) {
             var fields = ['c0', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9', 'c10', 'c11', 'c12', 'c13'],
                 st;
-            if (rec) {
-                switch (rec.get('name')) {
-                    case 'workerSalary':
-                        fields = fields.slice(0, 12);
-                        break;
-                    case 'staffSalary':
-                        fields = fields.slice(0, 12);
-                        break;
-                    case 'materialPayment':
-                        fields = fields.slice(0, 13);
-                        break;
-                    case 'reimbursementItems':
-                        fields = fields.slice(0, 10);
-                        break;
-                    case 'financialFee':
-                        fields = fields.slice(0, 10);
-                        break;
-                    case 'companyBonus':
-                        fields = fields.slice(0, 10);
-                        break;
-                    case 'tax':
-                        fields = fields.slice(0, 11);
-                        break;
-                    case 'qualityGuaranteeDeposit':
-                        fields = fields.slice(0, 9);
-                        break;
-                    case 'designDeposit':
-                        fields = fields.slice(0, 8);
-                        break;
-                    case 'projectFee':
-                        fields = fields.slice(0, 10);
-                        break;
-                    case 'loan':
-                        fields = fields.slice(0, 11);
-                        break;
-                    case 'other':
-                        fields = fields.slice(0, 9);
-                        break;
-                    default:
-                        fields = [];
-                        break;
-                }
-                fields.push('status');
-                st = Ext.create('Ext.data.Store', {
-                    fields: fields,
-                    autoLoad: false,
-                    proxy: {
-                        url: 'libs/api.php',
-                        type: 'rest',
-                        reader: {
-                            type: 'json',
-                            root: 'data',
-                            totalProperty: 'total'
-                        },
-                        extraParams: {
-                            action: 'EntryNExit.get'
-                        }
-                    }
-                });
-                return st;
-            }
-            else {
+            if (!rec) {
                 return false;
             }
+            var legth = me.columnMapping[rec.get('name')].length;
+            fields = fields.slice(0, legth);
+            fields.push('status');
+            st = Ext.create('Ext.data.Store', {
+                fields: fields,
+                autoLoad: false,
+                proxy: {
+                    url: 'libs/api.php',
+                    type: 'rest',
+                    reader: {
+                        type: 'json',
+                        root: 'data',
+                        totalProperty: 'total'
+                    },
+                    extraParams: {
+                        action: 'EntryNExit.get'
+                    }
+                }
+            });
+            return st;
         }
 
         me.refresh = function (rec) {
