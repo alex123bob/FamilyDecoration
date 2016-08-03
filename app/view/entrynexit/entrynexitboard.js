@@ -199,12 +199,9 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
         }
 
         function refreshTbar(rec, item) {
-            debugger
             var tbarObj = getTbar();
             tbarObj.idSearch.setValue('').show();
             tbarObj.nameSearch.setValue('').show();
-            tbarObj.pay.hide();
-            tbarObj.receive.hide();
             if (!rec || !item) {
                 return;
             }
@@ -237,7 +234,6 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
         }
         // dynamically generate columns according to entry and exit type
         function generateCols(rec) {
-            debugger
             if (rec) {
 				var items = me.columnMapping[rec.get('name')];
 				var newItem = [];

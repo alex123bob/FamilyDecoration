@@ -15,16 +15,21 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
     initComponent: function () {
         var me = this;
 
-        me.refresh = function (user){
+        me.refresh = function (user) {
             var resObj = _getRes(),
                 requestProxy = resObj.requestSt.getProxy();
             me.user = user;
 
-            Ext.apply(requestProxy.extraParams, {
-                payee: user.get('name')
-            });
-            resObj.requestSt.setProxy(requestProxy);
-            resObj.requestSt.load();
+            if (user) {
+                Ext.apply(requestProxy.extraParams, {
+                    payee: user.get('name')
+                });
+                resObj.requestSt.setProxy(requestProxy);
+                resObj.requestSt.load();
+            }
+            else {
+                resObj.requestSt.removeAll();
+            }
         }
 
         function _getBtns() {
@@ -37,7 +42,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
             };
         }
 
-        function _getRes (){
+        function _getRes() {
             var requestGrid = me.down('[name="gridpanel-requestGrid"]'),
                 requestSelModel = requestGrid.getSelectionModel(),
                 request = requestSelModel.getSelection()[0],
@@ -56,7 +61,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
             }
         }
 
-        me.initBtn = function (user){
+        me.initBtn = function (user) {
             var btnObj = _getBtns(),
                 resObj = _getRes();
             for (var key in btnObj) {
