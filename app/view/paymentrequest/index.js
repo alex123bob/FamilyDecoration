@@ -104,6 +104,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.Index', {
                         var paymentListCt = me.down('paymentrequest-paymentlistct'),
                             requestUserGrid = me.down('[name="gridpanel-requestUser"]'),
                             user = requestUserGrid.getSelectionModel().getSelection()[0];
+                        paymentListCt.user = user;
                         paymentListCt.initBtn(user);
                     }
                 }

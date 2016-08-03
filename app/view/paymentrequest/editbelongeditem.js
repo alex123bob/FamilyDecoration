@@ -14,6 +14,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditBelongedItem', {
     defaults: {
         height: '100%'
     },
+    callback: Ext.emptyFn,
 
     initComponent: function () {
         var me = this;
@@ -349,7 +350,62 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditBelongedItem', {
             {
                 text: '确定',
                 handler: function () {
-
+                    var resObj = _getRes(),
+                        res = '',
+                        errorInfo;
+                    if (resObj.bigItem) {
+                        res += resObj.bigItem.get('name') + '-';
+                        switch (resObj.bigItem.get('value')) {
+                            case 'project':
+                                if (resObj.project && resObj.project.get('projectName')) {
+                                    res += resObj.project.get('projectName') + '-';
+                                    if (resObj.detailedItem) {
+                                        res += resObj.detailedItem.get('name');
+                                    }
+                                    else {
+                                        errorInfo = '请选择工程详细信息!';
+                                    }
+                                }
+                                else {
+                                    errorInfo = '请选择项目!';
+                                }
+                                break;
+                            case 'dailyPurchase':
+                                if (resObj.detailedItem) {
+                                    res += resObj.detailedItem.get('name');
+                                }
+                                else {
+                                    errorInfo = '请选择日常采购信息!';
+                                }
+                                break;
+                            case 'internalManagementFee':
+                                if (resObj.combobox.getValue()) {
+                                    res += resObj.combobox.getRawValue() + '-';
+                                    if (resObj.detailedItem) {
+                                        res += resObj.detailedItem.get('name');
+                                    }
+                                    else {
+                                        errorInfo = '请选择公司内部管理费用信息!';
+                                    }
+                                }
+                                else {
+                                    errorInfo = '请选择公司内部管理费用类别!';
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else {
+                        errorInfo = '请选择大类项目!';
+                    }
+                    if (errorInfo) {
+                        Ext.Msg.error(errorInfo);
+                    }
+                    else {
+                        me.callback(res);
+                        me.close();
+                    }
                 }
             },
             {

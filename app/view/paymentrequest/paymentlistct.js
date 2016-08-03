@@ -9,6 +9,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
         width: '100%',
         xtype: 'gridpanel'
     },
+    user: undefined,
 
     initComponent: function () {
         var me = this;
@@ -76,7 +77,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                         icon: 'resources/img/add_request.png',
                         handler: function () {
                             var win = Ext.create('FamilyDecoration.view.paymentrequest.EditRequest', {
-
+                                user: me.user
                             });
                             win.show();
                         }
