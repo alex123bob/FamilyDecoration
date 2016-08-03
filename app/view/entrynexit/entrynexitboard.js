@@ -45,8 +45,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                                 reader: {
                                     type: 'json',
                                     root: 'data',
-                                    totalProperty: 'total'
-                                },
+                                    totalProperty: 'total'},
                                 extraParams: {
                                     action: 'EntryNExit.get',
                                     type: resObj.category.get('name'),
@@ -84,8 +83,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                                 reader: {
                                     type: 'json',
                                     root: 'data',
-                                    totalProperty: 'total'
-                                },
+                                    totalProperty: 'total'},
                                 extraParams: {
                                     action: 'EntryNExit.get',
                                     type: resObj.category.get('name'),
@@ -172,6 +170,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             var toolbar = me.down('toolbar');
             return {
                 idSearch: toolbar.getComponent('textfield-id'),
+                nameSearch: toolbar.getComponent('textfield-payee'),
                 pay: toolbar.getComponent('button-pay'),
                 receive: toolbar.getComponent('button-receive')
             };
@@ -179,721 +178,77 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
 
         function initTbar(rec) {
             var tbarObj = getTbar();
-            function hideAllbtn() {
-                for (var key in tbarObj) {
-                    if (tbarObj.hasOwnProperty(key)) {
-                        var btn = tbarObj[key];
-                        btn.hide();
-                    }
-                }
+            tbarObj.idSearch.setValue('').show();
+            tbarObj.nameSearch.setValue('').show();
+            tbarObj.pay.hide();
+            tbarObj.receive.hide();
+            if (!rec ) {
+                return;
             }
-            if (rec) {
-                switch (rec.get('name')) {
-                    case 'workerSalary':
-                    case 'staffSalary':
-                    case 'materialPayment':
-                    case 'reimbursementItems':
-                    case 'financialFee':
-                    case 'companyBonus':
-                    case 'tax':
-                    case 'qualityGuaranteeDeposit':
-                        tbarObj.pay.show();
-                        tbarObj.idSearch.setValue('').show();
-                        break;
-                    case 'designDeposit':
-                    case 'projectFee':
-                    case 'other':
-                    case 'loan':
-                        tbarObj.receive.show();
-                        break;
-                    default:
-                        hideAllbtn();
-                        break;
-                }
-            }
-            else {
-                hideAllbtn();
+            switch (rec.get('name')){
+                case 'designDeposit':
+                case 'projectFee':
+                case 'other':
+                case 'loan':
+                    tbarObj.receive.hide();
+                    break;
+                default: 
+                    tbarObj.pay.show();
+                    break;
             }
         }
 
         function refreshTbar(rec, item) {
             var tbarObj = getTbar();
-            function disableAllBtn() {
-                for (var key in tbarObj) {
-                    if (tbarObj.hasOwnProperty(key)) {
-                        var btn = tbarObj[key];
-                        if (btn.xtype == 'button') {
-                            btn.disable();
-                        }
-                    }
-                }
+            tbarObj.idSearch.setValue('').show();
+            tbarObj.nameSearch.setValue('').show();
+            tbarObj.pay.hide();
+            tbarObj.receive.hide();
+            if (!rec || !item) {
+                return;
             }
-            if (rec && item) {
-                switch (rec.get('name')) {
-                    case 'workerSalary':
-                    case 'staffSalary':
-                    case 'materialPayment':
-                    case 'reimbursementItems':
-                    case 'financialFee':
-                    case 'companyBonus':
-                    case 'tax':
-                    case 'qualityGuaranteeDeposit':
-                        tbarObj.pay.setDisabled(item.get('status') == 'paid');
-                        break;
-                    case 'designDeposit':
-                    case 'projectFee':
-                    case 'other':
-                    case 'loan':
-                        tbarObj.receive.setDisabled(item.get('status') == 'paid');
-                        break;
-                    default:
-                        disableAllBtn();
-                        break;
-                }
-            }
-            else {
-                disableAllBtn();
-            }
-        }
-
-        function setTitle(rec) {
-            if (rec) {
-                me.setTitle(rec.get('value'));
-            }
-            else {
-                me.setTitle('&nbsp;');
+            switch (rec.get('name')) {
+                case 'designDeposit':
+                case 'projectFee':
+                case 'other':
+                case 'loan':
+                    tbarObj.receive.setDisabled(item.get('status') == 'paid');
+                    break;
+                default:
+                    tbarObj.pay.setDisabled(item.get('status') == 'paid');
+                    break;
             }
         }
 
         // dynamically generate columns according to entry and exit type
         function generateCols(rec) {
-            var cols = [];
+			var mapping = {
+				'workerSalary':['单号:1:center','姓名','联系方式','工程名称','款项名称','核算工资','申领工资','实付','余额','凭证','付款时间','付款人'],
+				'staffSalary':['单号','部门','姓名','基本工资','岗位工资','绩效工资(提成)','社保','结算工资','实付','凭证','付款时间','付款人'],
+				'materialPayment':['单号','供应商','工程名称','联系方式','领款人','款项名称','核对价','申领款','实付','余款','凭证','付款时间','付款人'],
+				'reimbursementItems':['单号','报销人','报销项目','联系方式','报销金额','实付','凭证','付款时间','付款人','报销归属'],
+				'financialFee':['单号','序号','归属款项','贷款银行','交办人','本期利率','本期款项','付款','付款人','日期'],
+				'companyBonus':['单号','项目名称','款项归属','申请人','联系方式','申请金额','付款金额','付款人','付款日期','备注'],
+				'tax':['单号','项目名称','款项归属','申请人','领款人','联系方式','申请金额','付款金额','付款人','付款日期','备注'],
+				'qualityGuaranteeDeposit':['单号','工程名称','领款人','联系方式','应付金额','实付金额','付款日期','付款人','备注'],
+				'designDeposit':['工程名称','业务员','设计师','客户姓名','联系方式','收款额','收款人'],
+				'projectFee':['工程名称','项目经理','设计师','客户姓名','联系方式','应交款','已交款','款项','收款时间'],
+				'loan':['项目名称','银行','交办人','联系方式','收款金额','收款人','收款时间','当前利率','期限','贷款时间'],
+				'other':['单号','项目名称','入账单位','交款人','联系方式','收款金额','收款人','收款时间','款项归属']
+			}
             if (rec) {
-                switch (rec.get('name')) {
-                    case 'workerSalary':
-                        cols = {
-                            defaults: {
-                                flex: 1,
-                                align: 'center'
-                            },
-                            items: [
-                                {
-                                    text: '单号',
-                                    dataIndex: 'c0'
-                                },
-                                {
-                                    text: '姓名',
-                                    dataIndex: 'c1'
-                                },
-                                {
-                                    text: '联系方式',
-                                    dataIndex: 'c2'
-                                },
-                                {
-                                    text: '工程名称',
-                                    dataIndex: 'c3'
-                                },
-                                {
-                                    text: '款项名称',
-                                    dataIndex: 'c4'
-                                },
-                                {
-                                    text: '核算工资',
-                                    dataIndex: 'c5'
-                                },
-                                {
-                                    text: '申领工资',
-                                    dataIndex: 'c6'
-                                },
-                                {
-                                    text: '实付',
-                                    dataIndex: 'c7'
-                                },
-                                {
-                                    text: '余额',
-                                    dataIndex: 'c8'
-                                },
-                                {
-                                    text: '凭证',
-                                    dataIndex: 'c9'
-                                },
-                                {
-                                    text: '付款时间',
-                                    dataIndex: 'c10'
-                                },
-                                {
-                                    text: '付款人',
-                                    dataIndex: 'c11'
-                                }
-                            ]
-                        };
-                        break;
-                    case 'staffSalary':
-                        cols = {
-                            defaults: {
-                                align: 'center',
-                                flex: 1
-                            },
-                            items: [
-                                {
-                                    text: '单号',
-                                    dataIndex: 'c0'
-                                },
-                                {
-                                    text: '部门',
-                                    dataIndex: 'c1'
-                                },
-                                {
-                                    text: '姓名',
-                                    dataIndex: 'c2'
-                                },
-                                {
-                                    text: '基本工资',
-                                    dataIndex: 'c3'
-                                },
-                                {
-                                    text: '岗位工资',
-                                    dataIndex: 'c4'
-                                },
-                                {
-                                    text: '绩效工资(提成)',
-                                    dataIndex: 'c5'
-                                },
-                                {
-                                    text: '社保',
-                                    dataIndex: 'c6'
-                                },
-                                {
-                                    text: '结算工资',
-                                    dataIndex: 'c7'
-                                },
-                                {
-                                    text: '实付',
-                                    dataIndex: 'c8'
-                                },
-                                {
-                                    text: '凭证',
-                                    dataIndex: 'c9'
-                                },
-                                {
-                                    text: '付款时间',
-                                    dataIndex: 'c10'
-                                },
-                                {
-                                    text: '付款人',
-                                    dataIndex: 'c11'
-                                }
-                            ]
-                        };
-                        break;
-                    case 'materialPayment':
-                        cols = {
-                            defaults: {
-                                align: 'center',
-                                flex: 1
-                            },
-                            items: [
-                                {
-                                    text: '单号',
-                                    dataIndex: 'c0'
-                                },
-                                {
-                                    text: '供应商',
-                                    dataIndex: 'c1'
-                                },
-                                {
-                                    text: '工程名称',
-                                    dataIndex: 'c2'
-                                },
-                                {
-                                    text: '联系方式',
-                                    dataIndex: 'c3'
-                                },
-                                {
-                                    text: '领款人',
-                                    dataIndex: 'c4'
-                                },
-                                {
-                                    text: '款项名称',
-                                    dataIndex: 'c5'
-                                },
-                                {
-                                    text: '核对价',
-                                    dataIndex: 'c6'
-                                },
-                                {
-                                    text: '申领款',
-                                    dataIndex: 'c7'
-                                },
-                                {
-                                    text: '实付',
-                                    dataIndex: 'c8'
-                                },
-                                {
-                                    text: '余款',
-                                    dataIndex: 'c9'
-                                },
-                                {
-                                    text: '凭证',
-                                    dataIndex: 'c10'
-                                },
-                                {
-                                    text: '付款时间',
-                                    dataIndex: 'c11'
-                                },
-                                {
-                                    text: '付款人',
-                                    dataIndex: 'c12'
-                                }
-                            ]
-                        };
-                        break;
-                    case 'reimbursementItems':
-                        cols = {
-                            defaults: {
-                                align: 'center',
-                                flex: 1
-                            },
-                            items: [
-                                {
-                                    text: '单号',
-                                    dataIndex: 'c0'
-                                },
-                                {
-                                    text: '报销人',
-                                    dataIndex: 'c1'
-                                },
-                                {
-                                    text: '报销项目',
-                                    dataIndex: 'c2'
-                                },
-                                {
-                                    text: '联系方式',
-                                    dataIndex: 'c3'
-                                },
-                                {
-                                    text: '报销金额',
-                                    dataIndex: 'c4'
-                                },
-                                {
-                                    text: '实付',
-                                    dataIndex: 'c5'
-                                },
-                                {
-                                    text: '凭证',
-                                    dataIndex: 'c6'
-                                },
-                                {
-                                    text: '付款时间',
-                                    dataIndex: 'c7'
-                                },
-                                {
-                                    text: '付款人',
-                                    dataIndex: 'c8'
-                                },
-                                {
-                                    text: '报销归属',
-                                    dataIndex: 'c9'
-                                }
-                            ]
-                        };
-                        break;
-                    case 'financialFee':
-                        cols = {
-                            defaults: {
-                                align: 'center',
-                                flex: 1
-                            },
-                            items: [
-                                {
-                                    text: '单号',
-                                    dataIndex: 'c0'
-                                },
-                                {
-                                    text: '序号',
-                                    dataIndex: 'c1'
-                                },
-                                {
-                                    text: '归属款项',
-                                    dataIndex: 'c2'
-                                },
-                                {
-                                    text: '贷款银行',
-                                    dataIndex: 'c3'
-                                },
-                                {
-                                    text: '交办人',
-                                    dataIndex: 'c4'
-                                },
-                                {
-                                    text: '本期利率',
-                                    dataIndex: 'c5'
-                                },
-                                {
-                                    text: '本期款项',
-                                    dataIndex: 'c6'
-                                },
-                                {
-                                    text: '付款',
-                                    dataIndex: 'c7'
-                                },
-                                {
-                                    text: '付款人',
-                                    dataIndex: 'c8'
-                                },
-                                {
-                                    text: '日期',
-                                    dataIndex: 'c9'
-                                }
-                            ]
-                        };
-                        break;
-                    case 'companyBonus':
-                        cols = {
-                            defaults: {
-                                align: 'center',
-                                flex: 1
-                            },
-                            items: [
-                                {
-                                    text: '单号',
-                                    dataIndex: 'c0'
-                                },
-                                {
-                                    text: '项目名称',
-                                    dataIndex: 'c1'
-                                },
-                                {
-                                    text: '款项归属',
-                                    dataIndex: 'c2'
-                                },
-                                {
-                                    text: '申请人',
-                                    dataIndex: 'c3'
-                                },
-                                {
-                                    text: '联系方式',
-                                    dataIndex: 'c4'
-                                },
-                                {
-                                    text: '申请金额',
-                                    dataIndex: 'c5'
-                                },
-                                {
-                                    text: '付款金额',
-                                    dataIndex: 'c6'
-                                },
-                                {
-                                    text: '付款人',
-                                    dataIndex: 'c7'
-                                },
-                                {
-                                    text: '付款日期',
-                                    dataIndex: 'c8'
-                                },
-                                {
-                                    text: '备注',
-                                    dataIndex: 'c9'
-                                }
-                            ]
-                        };
-                        break;
-                    case 'tax':
-                        cols = {
-                            defaults: {
-                                align: 'center',
-                                flex: 1
-                            },
-                            items: [
-                                {
-                                    text: '单号',
-                                    dataIndex: 'c0'
-                                },
-                                {
-                                    text: '项目名称',
-                                    dataIndex: 'c1'
-                                },
-                                {
-                                    text: '款项归属',
-                                    dataIndex: 'c2'
-                                },
-                                {
-                                    text: '申请人',
-                                    dataIndex: 'c3'
-                                },
-                                {
-                                    text: '领款人',
-                                    dataIndex: 'c4'
-                                },
-                                {
-                                    text: '联系方式',
-                                    dataIndex: 'c5'
-                                },
-                                {
-                                    text: '申请金额',
-                                    dataIndex: 'c6'
-                                },
-                                {
-                                    text: '付款金额',
-                                    dataIndex: 'c7'
-                                },
-                                {
-                                    text: '付款人',
-                                    dataIndex: 'c8'
-                                },
-                                {
-                                    text: '付款日期',
-                                    dataIndex: 'c9'
-                                },
-                                {
-                                    text: '备注',
-                                    dataIndex: 'c10'
-                                }
-                            ]
-                        };
-                        break;
-                    case 'qualityGuaranteeDeposit':
-                        cols = {
-                            defaults: {
-                                align: 'center',
-                                flex: 1
-                            },
-                            items: [
-                                {
-                                    text: '单号',
-                                    dataIndex: 'c0'
-                                },
-                                {
-                                    text: '工程名称',
-                                    dataIndex: 'c1'
-                                },
-                                {
-                                    text: '领款人',
-                                    dataIndex: 'c2'
-                                },
-                                {
-                                    text: '联系方式',
-                                    dataIndex: 'c3'
-                                },
-                                {
-                                    text: '应付金额',
-                                    dataIndex: 'c4'
-                                },
-                                {
-                                    text: '实付金额',
-                                    dataIndex: 'c5'
-                                },
-                                {
-                                    text: '付款日期',
-                                    dataIndex: 'c6'
-                                },
-                                {
-                                    text: '付款人',
-                                    dataIndex: 'c7'
-                                },
-                                {
-                                    text: '备注',
-                                    dataIndex: 'c8'
-                                }
-                            ]
-                        };
-                        break;
-                    case 'designDeposit':
-                        cols = {
-                            defaults: {
-                                align: 'center',
-                                flex: 1
-                            },
-                            items: [
-                                {
-                                    text: '工程名称',
-                                    dataIndex: 'c1'
-                                },
-                                {
-                                    text: '业务员',
-                                    dataIndex: 'c2'
-                                },
-                                {
-                                    text: '设计师',
-                                    dataIndex: 'c3'
-                                },
-                                {
-                                    text: '客户姓名',
-                                    dataIndex: 'c4'
-                                },
-                                {
-                                    text: '联系方式',
-                                    dataIndex: 'c5'
-                                },
-                                {
-                                    text: '收款额',
-                                    dataIndex: 'c6'
-                                },
-                                {
-                                    text: '收款人',
-                                    dataIndex: 'c7'
-                                }
-                            ]
-                        };
-                        break;
-                    case 'projectFee':
-                        cols = {
-                            defaults: {
-                                align: 'center',
-                                flex: 1
-                            },
-                            items: [
-                                {
-                                    text: '工程名称',
-                                    dataIndex: 'c1'
-                                },
-                                {
-                                    text: '项目经理',
-                                    dataIndex: 'c2'
-                                },
-                                {
-                                    text: '设计师',
-                                    dataIndex: 'c3'
-                                },
-                                {
-                                    text: '客户姓名',
-                                    dataIndex: 'c4'
-                                },
-                                {
-                                    text: '联系方式',
-                                    dataIndex: 'c5'
-                                },
-                                {
-                                    text: '应交款',
-                                    dataIndex: 'c6'
-                                },
-                                {
-                                    text: '已交款',
-                                    dataIndex: 'c7'
-                                },
-                                {
-                                    text: '款项',
-                                    dataIndex: 'c8'
-                                },
-                                {
-                                    text: '收款时间',
-                                    dataIndex: 'c9'
-                                }
-                            ]
-                        };
-                        break;
-                    case 'loan':
-                        cols = {
-                            defaults: {
-                                align: 'center',
-                                flex: 1
-                            },
-                            items: [
-                                {
-                                    text: '项目名称',
-                                    dataIndex: 'c1'
-                                },
-                                {
-                                    text: '银行',
-                                    dataIndex: 'c2'
-                                },
-                                {
-                                    text: '交办人',
-                                    dataIndex: 'c3'
-                                },
-                                {
-                                    text: '联系方式',
-                                    dataIndex: 'c4'
-                                },
-                                {
-                                    text: '收款金额',
-                                    dataIndex: 'c5'
-                                },
-                                {
-                                    text: '收款人',
-                                    dataIndex: 'c6'
-                                },
-                                {
-                                    text: '收款时间',
-                                    dataIndex: 'c7'
-                                },
-                                {
-                                    text: '当前利率',
-                                    dataIndex: 'c8'
-                                },
-                                {
-                                    text: '期限',
-                                    dataIndex: 'c9'
-                                },
-                                {
-                                    text: '贷款时间',
-                                    dataIndex: 'c10'
-                                }
-                            ]
-                        };
-                        break;
-                    case 'other':
-                        cols = {
-                            defaults: {
-                                align: 'center',
-                                flex: 1
-                            },
-                            items: [
-                                {
-                                    text: '单号',
-                                    dataIndex: 'c0'
-                                },
-                                {
-                                    text: '项目名称',
-                                    dataIndex: 'c1'
-                                },
-                                {
-                                    text: '入账单位',
-                                    dataIndex: 'c2'
-                                },
-                                {
-                                    text: '交款人',
-                                    dataIndex: 'c3'
-                                },
-                                {
-                                    text: '联系方式',
-                                    dataIndex: 'c4'
-                                },
-                                {
-                                    text: '收款金额',
-                                    dataIndex: 'c5'
-                                },
-                                {
-                                    text: '收款人',
-                                    dataIndex: 'c6'
-                                },
-                                {
-                                    text: '收款时间',
-                                    dataIndex: 'c7'
-                                },
-                                {
-                                    text: '款项归属',
-                                    dataIndex: 'c8'
-                                }
-                            ]
-                        };
-                        break;
-                    default:
-                        break;
-                }
-                Ext.Array.each(cols.items, function (item, index, arr) {
-                    var defaultConfig = cols.defaults;
-                    if (!item.flex) {
-                        item.flex = defaultConfig.flex;
-                    }
-                    if (!item.align) {
-                        item.align = defaultConfig.align;
-                    }
-                });
-                cols = cols.items;
-            }
-            return cols;
-        }
+				var items = mapping[rec.get('name')];
+				var newItem = [];
+				for(var i = 0;i<items.length;i++){
+					var cfgs = items[i].split(':');
+					newItem.push({ text: cfgs[0], dataIndex: 'c'+i,flex:cfgs[1]||1,align:cfgs[2]||'center'});
+				}
+				debugger
+				return newItem;
+			}else{
+				return [];
+			}
+		}
 
         function generateSt(rec) {
             var fields = ['c0', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9', 'c10', 'c11', 'c12', 'c13'],
@@ -967,7 +322,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
         me.refresh = function (rec) {
             var resObj = _getRes();
             me.rec = rec;
-            setTitle(rec);
+            me.setTitle(rec ? rec.get('value') : '&nbsp;' );
             initTbar(rec);
             if (rec) {
                 var st = generateSt(rec);
