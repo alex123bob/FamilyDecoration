@@ -231,9 +231,9 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
 				'companyBonus':['单号','项目名称','款项归属','申请人','联系方式','申请金额','付款金额','付款人','付款日期','备注'],
 				'tax':['单号','项目名称','款项归属','申请人','领款人','联系方式','申请金额','付款金额','付款人','付款日期','备注'],
 				'qualityGuaranteeDeposit':['单号','工程名称','领款人','联系方式','应付金额','实付金额','付款日期','付款人','备注'],
-				'designDeposit':['工程名称','业务员','设计师','客户姓名','联系方式','收款额','收款人'],
-				'projectFee':['工程名称','项目经理','设计师','客户姓名','联系方式','应交款','已交款','款项','收款时间'],
-				'loan':['项目名称','银行','交办人','联系方式','收款金额','收款人','收款时间','当前利率','期限','贷款时间'],
+				'designDeposit':['单号','工程名称','业务员','设计师','客户姓名','联系方式','收款额','收款人'],
+				'projectFee':['单号','工程名称','项目经理','设计师','客户姓名','联系方式','应交款','已交款','款项','收款时间'],
+				'loan':['单号','项目名称','银行','交办人','联系方式','收款金额','收款人','收款时间','当前利率','期限','贷款时间'],
 				'other':['单号','项目名称','入账单位','交款人','联系方式','收款金额','收款人','收款时间','款项归属']
 			}
             if (rec) {
@@ -241,7 +241,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
 				var newItem = [];
 				for(var i = 0;i<items.length;i++){
 					var cfgs = items[i].split(':');
-					newItem.push({ text: cfgs[0], dataIndex: 'c'+i,flex:parseInt(cfgs[1]||1),align:cfgs[2]||'center'});
+					newItem.push({ text: cfgs[0], dataIndex: 'c'+i,flex:parseInt(cfgs[1]||1),align:cfgs[2]||'left'});
 				}
 				return newItem;
 			}else{
