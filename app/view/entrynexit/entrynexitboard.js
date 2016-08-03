@@ -55,6 +55,15 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                             });
                             resObj.st.loadPage(1);
                         }
+                    },
+                    change: function (txt, newVal, oldVal, opts){
+                        var resObj = _getRes(),
+                            oldProxy = resObj.st.getProxy();
+                        if (newVal == '') {
+                            delete oldProxy.extraParams.c0;
+                            resObj.st.setProxy(oldProxy);
+                            resObj.st.loadPage(1);
+                        }
                     }
                 }
             },
