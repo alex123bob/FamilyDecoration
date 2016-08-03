@@ -3,7 +3,8 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
     alias: 'widget.paymentrequest-paymentlistct',
     layout: 'vbox',
     requires: [
-        'FamilyDecoration.view.paymentrequest.EditRequest'
+        'FamilyDecoration.view.paymentrequest.EditRequest',
+        'FamilyDecoration.store.StatementBill'
     ],
     defaults: {
         width: '100%',
@@ -13,6 +14,18 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
 
     initComponent: function () {
         var me = this;
+
+        me.refresh = function (user){
+            var resObj = _getRes(),
+                requestProxy = resObj.requestSt.getProxy();
+            me.user = user;
+
+            Ext.apply(requestProxy.extraParams, {
+                payee: user.get('name')
+            });
+            resObj.requestSt.setProxy(requestProxy);
+            resObj.requestSt.load();
+        }
 
         function _getBtns() {
             return {
@@ -28,12 +41,14 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
             var requestGrid = me.down('[name="gridpanel-requestGrid"]'),
                 requestSelModel = requestGrid.getSelectionModel(),
                 request = requestSelModel.getSelection()[0],
+                requestSt = requestGrid.getStore(),
                 historyGrid = me.down('[name="gridpanel-historyRecords"]'),
                 historySelModel = historyGrid.getSelectionModel(),
                 historyRec = historySelModel.getSelection()[0];
             return {
                 requestGrid: requestGrid,
                 requestSelModel: requestSelModel,
+                requestSt: requestSt,
                 request: request,
                 historyGrid: historyGrid,
                 historySelModel: historySelModel,
@@ -119,6 +134,9 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                         }
                     }
                 ],
+                store: Ext.create('FamilyDecoration.store.StatementBill', {
+                    autoLoad: false
+                }),
                 columns: {
                     defaults: {
                         flex: 1,
@@ -126,28 +144,36 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                     },
                     items: [
                         {
-                            text: '项目名称'
+                            text: '项目名称',
+                            dataIndex: 'projectName'
                         },
                         {
-                            text: '归属项目'
+                            text: '归属项目',
+                            dataIndex: 'reimbursementReason'
                         },
                         {
-                            text: '申请金额'
+                            text: '申请金额',
+                            dataIndex: 'claimAmount'
                         },
                         {
-                            text: '申请日期'
+                            text: '申请日期',
+                            dataIndex: 'createTime'
                         },
                         {
-                            text: '提交状态'
+                            text: '提交状态',
+                            dataIndex: 'status'
                         },
                         {
-                            text: '申请属性'
+                            text: '申请属性',
+                            dataIndex: 'billType'
                         },
                         {
-                            text: '备注'
+                            text: '备注',
+                            dataIndex: 'descpt'
                         },
                         {
-                            text: '附件'
+                            text: '附件',
+                            dataIndex: 'certs'
                         }
                     ]
                 }
