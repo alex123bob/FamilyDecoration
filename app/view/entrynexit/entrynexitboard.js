@@ -221,7 +221,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
         }
 
         me.columnMapping = {
-                'workerSalary':['单号:1:center','姓名','联系方式','工程名称','款项名称','核算工资','申领工资','实付','余额','凭证','付款时间','付款人'],
+                'workerSalary':['单号:1.5','姓名:0.5','联系方式','工程名称','款项名称:0.5','核算工资:0.5','申领工资:0.5','实付:0.5','余额:0.5','凭证:0.5','付款时间','付款人:0.8'],
                 'staffSalary':['单号','部门','姓名','基本工资','岗位工资','绩效工资(提成)','社保','结算工资','实付','凭证','付款时间','付款人'],
                 'materialPayment':['单号','供应商','工程名称','联系方式','领款人','款项名称','核对价','申领款','实付','余款','凭证','付款时间','付款人'],
                 'reimbursementItems':['单号','报销人','报销项目','联系方式','报销金额','实付','凭证','付款时间','付款人','报销归属'],
@@ -236,12 +236,13 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
         }
         // dynamically generate columns according to entry and exit type
         function generateCols(rec) {
+            debugger
             if (rec) {
 				var items = me.columnMapping[rec.get('name')];
 				var newItem = [];
 				for(var i = 0;i<items.length;i++){
 					var cfgs = items[i].split(':');
-					newItem.push({ text: cfgs[0], dataIndex: 'c'+i,flex:parseInt(cfgs[1]||1),align:cfgs[2]||'left'});
+					newItem.push({ text: cfgs[0], dataIndex: 'c'+i,flex:parseFloat(cfgs[1]||1),align:cfgs[2]||'left'});
 				}
 				return newItem;
 			}else{
