@@ -16,18 +16,48 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
     initComponent: function () {
         var me = this;
 
-        function _getRes (){
+        function _getRes() {
             var selModel = me.getSelectionModel(),
                 st = me.getStore();
             return {
                 category: me.rec,
                 selModel: selModel,
                 st: st,
-                item: selModel.getSelection()[0]
+                item: selModel.getSelection()[0],
+                pagingTool: me.down('pagingtoolbar')
             };
         }
 
         me.tbar = [
+            {
+                xtype: 'textfield',
+                emptyText: '查询单号',
+                itemId: 'textfield-id',
+                hidden: true,
+                enableKeyEvents: true,
+                listeners: {
+                    keydown: function (txt, ev, opts) {
+                        var resObj = _getRes();
+                        if (ev.keyCode == 13) {
+                            resObj.st.setProxy({
+                                type: 'rest',
+                                url: './libs/api.php',
+                                reader: {
+                                    type: 'json',
+                                    root: 'data',
+                                    totalProperty: 'total'
+                                },
+                                extraParams: {
+                                    action: 'EntryNExit.get',
+                                    type: resObj.category.get('name'),
+                                    c0: txt.getValue()
+                                }
+                            });
+                            resObj.st.loadPage(1);
+                        }
+                    }
+                }
+            },
             {
                 xtype: 'button',
                 text: '付款',
@@ -40,7 +70,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                     var win = Ext.create('FamilyDecoration.view.entrynexit.Payment', {
                         category: resObj.category,
                         item: resObj.item,
-                        callback: function (){
+                        callback: function () {
                             me.refresh(resObj.category);
                         }
                     });
@@ -54,14 +84,21 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                 icon: 'resources/img/money_collect.png',
                 hidden: true,
                 disabled: true,
-                handler: function (){
+                handler: function () {
 
                 }
             }
         ];
 
+        me.bbar = [
+            {
+                xtype: 'pagingtoolbar',
+                displayInfo: true
+            }
+        ];
+
         me.viewConfig = {
-            getRowClass: function (rec, rowIndex, rowParams, st){
+            getRowClass: function (rec, rowIndex, rowParams, st) {
                 var category = me.rec,
                     cls = '';
                 switch (category.get('name')) {
@@ -85,6 +122,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
         function getTbar() {
             var toolbar = me.down('toolbar');
             return {
+                idSearch: toolbar.getComponent('textfield-id'),
                 pay: toolbar.getComponent('button-pay'),
                 receive: toolbar.getComponent('button-receive')
             };
@@ -111,6 +149,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                     case 'tax':
                     case 'qualityGuaranteeDeposit':
                         tbarObj.pay.show();
+                        tbarObj.idSearch.setValue('').show();
                         break;
                     case 'designDeposit':
                     case 'projectFee':
@@ -128,13 +167,15 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             }
         }
 
-        function refreshTbar (rec, item){
+        function refreshTbar(rec, item) {
             var tbarObj = getTbar();
             function disableAllBtn() {
                 for (var key in tbarObj) {
                     if (tbarObj.hasOwnProperty(key)) {
                         var btn = tbarObj[key];
-                        btn.disable();
+                        if (btn.xtype == 'button') {
+                            btn.disable();
+                        }
                     }
                 }
             }
@@ -851,11 +892,15 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                     fields: fields,
                     autoLoad: false,
                     proxy: {
-                        url: 'libs/api.php?action=EntryNExit.get',
+                        url: 'libs/api.php',
                         type: 'rest',
                         reader: {
                             type: 'json',
-                            root: 'data'
+                            root: 'data',
+                            totalProperty: 'total'
+                        },
+                        extraParams: {
+                            action: 'EntryNExit.get'
                         }
                     }
                 });
@@ -867,17 +912,29 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
         }
 
         me.refresh = function (rec) {
+            var resObj = _getRes();
             me.rec = rec;
             setTitle(rec);
             initTbar(rec);
             if (rec) {
                 var st = generateSt(rec);
+                // bind current store to paging tool bar
+                resObj.pagingTool.bindStore(st);
                 me.reconfigure(st, generateCols(rec));
-                st.load({
-                    params: {
+                st.setProxy({
+                    type: 'rest',
+                    url: './libs/api.php',
+                    reader: {
+                        type: 'json',
+                        root: 'data',
+                        totalProperty: 'total'
+                    },
+                    extraParams: {
+                        action: 'EntryNExit.get',
                         type: rec.get('name')
                     }
                 });
+                st.loadPage(1);
             }
             else {
                 me.reconfigure(false, []);

@@ -202,7 +202,8 @@ Ext.define('FamilyDecoration.view.account.Index', {
                                     url: './libs/api.php',
                                     reader: {
                                         type: 'json',
-                                        root: 'data'
+                                        root: 'data',
+                                        totalProperty: 'total'
                                     },
                                     extraParams: Ext.apply(p, {
                                         action: 'AccountLog.get',
@@ -225,12 +226,13 @@ Ext.define('FamilyDecoration.view.account.Index', {
                                     url: './libs/api.php',
                                     reader: {
                                         type: 'json',
-                                        root: 'data'
+                                        root: 'data',
+                                        totalProperty: 'total'
                                     },
-                                    extraParams: {
+                                    extraParams: Ext.apply(p, {
                                         action: 'AccountLog.get',
                                         orderBy: 'createTime DESC'
-                                    }
+                                    })
                                 });
                                 resObj.accountLogSt.loadPage(1);
                             }
