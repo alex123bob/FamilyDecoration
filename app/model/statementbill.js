@@ -24,6 +24,7 @@ Ext.define('FamilyDecoration.model.StatementBill', {
 		// billType: reg->regular bill普通账单
 		// billType: qgd->quality guarantee deposit质量保证金
 		{name: 'billType', type: 'string'}, 
+		{name: 'billTypeName', type: 'string'},
 
 		// this three fields got from dynamically operation.
 		{name: 'hasPrePaidBill', type: 'string'},

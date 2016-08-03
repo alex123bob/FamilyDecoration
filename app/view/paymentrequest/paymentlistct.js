@@ -166,11 +166,11 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                         },
                         {
                             text: '提交状态',
-                            dataIndex: 'status'
+                            dataIndex: 'statusName'
                         },
                         {
                             text: '申请属性',
-                            dataIndex: 'billType'
+                            dataIndex: 'billTypeName'
                         },
                         {
                             text: '备注',
@@ -181,6 +181,11 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                             dataIndex: 'certs'
                         }
                     ]
+                },
+                listeners: {
+                    selectionchange: function (selModel, sels, opts){
+                        me.initBtn(me.user);
+                    }
                 }
             },
             {
