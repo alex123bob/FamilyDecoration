@@ -199,6 +199,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
         }
 
         function refreshTbar(rec, item) {
+            debugger
             var tbarObj = getTbar();
             tbarObj.idSearch.setValue('').show();
             tbarObj.nameSearch.setValue('').show();
@@ -212,10 +213,10 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                 case 'projectFee':
                 case 'other':
                 case 'loan':
-                    tbarObj.receive.setDisabled(item.get('status') == 'paid');
+                    tbarObj.receive.show().setDisabled(item.get('status') == 'paid');
                     break;
                 default:
-                    tbarObj.pay.setDisabled(item.get('status') == 'paid');
+                    tbarObj.pay.show().setDisabled(item.get('status') == 'paid');
                     break;
             }
         }
