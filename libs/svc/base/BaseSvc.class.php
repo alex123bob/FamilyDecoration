@@ -85,7 +85,7 @@ class BaseSvc{
 		return date("YmdHis").str_pad(microtime_float2(),4,0,STR_PAD_LEFT).str_pad(rand(0, 99), 2, rand(0, 9), STR_PAD_LEFT);
 	}
 
-	public function parseLimitSql($q){
+	public static function parseLimitSql($q){
 		return isset($q['limit']) && trim($q['limit']) != "" ? " limit ".$q['start'].",".$q['limit'] : "";
 	}
 

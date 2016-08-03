@@ -32,23 +32,32 @@ class EntryNExitSvc{
 		return $res;
 	}
 
+	public function parseData($sql,$q){
+		global $mysql;
+		$count = $mysql->DBGetAsOneArray("select count(*) as cnt from ( $sql ) as temp ")[0];
+		$data = $mysql->DBGetAsMap($sql.BaseSvc::parseLimitSql($q));
+		$res = array('status'=>'successful','data'=>$data,'total'=>$count);
+		return $res;
+	}
 	private function companyBonus($q){
 		global $mysql;
 		$sql = "select b.id as c0,
 					b.projectName as c1,
 					b.reimbursementReason as c2,
-					b.payee as c2,
-					b.phoneNumber as c3,
-					b.totalFee as c4,
-					b.paidAmount as c5,
-					u.realName as c6,
-					b.paidTime as c7,
-					b.descpt as c8,
+					b.payee as c3,
+					b.phoneNumber as c4,
+					b.totalFee as c5,
+					b.paidAmount as c6,
+					u.realName as c7,
+					b.paidTime as c8,
+					b.descpt as c9,
 					b.status
 					from statement_bill b left join user u on u.name = b.payer
-					where b.billType = 'wlf' and b.isDeleted = 'false' and ( b.status = 'paid' or b.status = 'chk');";
-		$data = $mysql->DBGetAsMap($sql);
-		return array('status'=>'successful','data'=>$data,'total'=>100);
+					where b.billType = 'wlf' and b.isDeleted = 'false' and ( b.status = 'paid' or b.status = 'chk')";
+		if(isset($q['c0'])){
+			$sql .= ' and b.id = \''.$q['c0'].'\'';
+		}
+		return $this->parseData($sql,$q);
 	}
 
 	private function tax($q){
@@ -66,9 +75,11 @@ class EntryNExitSvc{
 					b.descpt as c10,
 					b.status
 					from statement_bill b left join user u on u.name = b.payer
-					where b.billType = 'tax' and b.isDeleted = 'false' and ( b.status = 'paid' or b.status = 'chk');";
-		$data = $mysql->DBGetAsMap($sql);
-		return array('status'=>'successful','data'=>$data,'total'=>100);
+					where b.billType = 'tax' and b.isDeleted = 'false' and ( b.status = 'paid' or b.status = 'chk')";
+		if(isset($q['c0'])){
+			$sql .= ' and b.id = \''.$q['c0'].'\'';
+		}
+		return $this->parseData($sql,$q);
 	}
 
 	private function chineseToUnicode($name){
@@ -122,9 +133,11 @@ class EntryNExitSvc{
 					paidTime as c10,
 					b.status,
 					payer as c11 from statement_bill b left join profession_type t on b.professionType = t.value
-					where b.isDeleted = 'false' and (b.billType = 'reg' or b.billType = 'ppd') and ( b.status = 'paid' or b.status = 'chk');";
-		$data = $mysql->DBGetAsMap($sql);
-		return array('status'=>'successful','data'=>$data,'total'=>100);
+					where b.isDeleted = 'false' and (b.billType = 'reg' or b.billType = 'ppd') and ( b.status = 'paid' or b.status = 'chk')";
+		if(isset($q['c0'])){
+			$sql .= ' and b.id = \''.$q['c0'].'\'';
+		}
+		return $this->parseData($sql,$q);
 	}
 
 	private function staffSalary($q){
@@ -141,13 +154,16 @@ class EntryNExitSvc{
 					'TODO' as c9,
 					s.paidTime as c10,
 					u2.realName as c11
-					from salary s left join user u on u.name = s.payee left join user u2 on u2.name = s.payer where s.isDeleted = 'false' and status != 'arch';";
-		$data = $mysql->DBGetAsMap($sql);
+					from salary s left join user u on u.name = s.payee left join user u2 on u2.name = s.payer where s.isDeleted = 'false' and status != 'arch'";
+		if(isset($q['c0'])){
+			$sql .= ' and s.id = \''.$q['c0'].'\'';
+		}
+		$res = $this->parseData($sql,$q);
 		$userSvc = BaseSvc::getSvc('User');
-		foreach ($data as &$item) {
+		foreach ($res['data'] as &$item) {
 			$item['c1'] = $userSvc->getDepartementByLevel($item['c1']);
 		}
-		return array('status'=>'successful','data'=>$data,'total'=>100);
+		return $res;
 	}
 
 	private function materialPayment($q){
@@ -166,9 +182,11 @@ class EntryNExitSvc{
 					b.paidTime as c11,
 					u.realName as c12 
 					from statement_bill b left join supplier s on b.supplierId = s.id 
-					left join user u on u.name = b.payer where b.billType = 'mtf' and b.isDeleted = 'false' and ( b.status = 'paid' or b.status = 'chk');";
-		$data = $mysql->DBGetAsMap($sql);
-		return array('status'=>'successful','data'=>$data,'total'=>100);
+					left join user u on u.name = b.payer where b.billType = 'mtf' and b.isDeleted = 'false' and ( b.status = 'paid' or b.status = 'chk')";
+		if(isset($q['c0'])){
+			$sql .= ' and b.id = \''.$q['c0'].'\'';
+		}
+		return $this->parseData($sql,$q);
 	}
 
 	private function reimbursementItems($q){
@@ -184,9 +202,11 @@ class EntryNExitSvc{
 					u.realName as c8,
 					'TODO' as c9 
 					from statement_bill b left join user u on u.name = b.payer 
-					where b.billType = 'rbm' and b.isDeleted = 'false' and  ( b.status = 'paid' or b.status = 'chk');";
-		$data = $mysql->DBGetAsMap($sql);
-		return array('status'=>'successful','data'=>$data,'total'=>100);
+					where b.billType = 'rbm' and b.isDeleted = 'false' and  ( b.status = 'paid' or b.status = 'chk')";
+		if(isset($q['c0'])){
+			$sql .= ' and b.id = \''.$q['c0'].'\'';
+		}
+		return $this->parseData($sql,$q);
 	}
 	//贷款出账
 	private function financialFee($q){
@@ -206,9 +226,11 @@ class EntryNExitSvc{
 					left join user u on u.name = l.assignee 
 					left join user u2 on u2.name = l.dealer
 					left join loan l2 on l2.id = l.relevantId
- 					where l.isDeleted = 'false' and l.type = '1' and l.status != 'arch';";
-		$data = $mysql->DBGetAsMap($sql);
-		return array('status'=>'successful','data'=>$data,'total'=>100);
+ 					where l.isDeleted = 'false' and l.type = '1' and l.status != 'arch'";
+ 		if(isset($q['c0'])){
+			$sql .= ' and l.id = \''.$q['c0'].'\'';
+		}
+		return $this->parseData($sql,$q);
 	}
  	//贷款入账
 	private function loan($q){
@@ -225,9 +247,11 @@ class EntryNExitSvc{
 					l.period as c9 ,
 					l.loanTime as c10 
 					from loan l left join user u on u.name = l.assignee left join user u2 on u2.name = l.dealer
- 					where l.isDeleted = 'false' and l.type = '0' and l.status != 'arch';";
-		$data = $mysql->DBGetAsMap($sql);
-		return array('status'=>'successful','data'=>$data,'total'=>100);
+ 					where l.isDeleted = 'false' and l.type = '0' and l.status != 'arch'";
+ 		if(isset($q['c0'])){
+			$sql .= ' and l.id = \''.$q['c0'].'\'';
+		}
+		return $this->parseData($sql,$q);
 	}
 	//设计定金入账
 	private function designDeposit($q){
@@ -241,9 +265,11 @@ class EntryNExitSvc{
 					b.paidAmount as c6,
 					b.payer as c7
 					from statement_bill b left join user u on u.name = b.payer left join project p on p.projectId = b.projectId left join business bs on bs.id = p.businessId
-					where b.billType = 'dsdpst' and b.isDeleted = 'false' and  b.status = 'accepted';";
-		$data = $mysql->DBGetAsMap($sql);
-		return array('status'=>'successful','data'=>$data,'total'=>100);
+					where b.billType = 'dsdpst' and b.isDeleted = 'false' and  b.status = 'accepted'";
+		if(isset($q['c0'])){
+			$sql .= ' and b.id = \''.$q['c0'].'\'';
+		}
+		return $this->parseData($sql,$q);
 	}
  	//其他入账
  	private function other($q){
@@ -260,9 +286,11 @@ class EntryNExitSvc{
 					b.descpt as c8,
 					b.status
 					from statement_bill b left join user u on u.name = b.payer
-					where b.billType = 'other' and b.isDeleted = 'false' and b.status = 'accepted';";
-		$data = $mysql->DBGetAsMap($sql);
-		return array('status'=>'successful','data'=>$data,'total'=>100);
+					where b.billType = 'other' and b.isDeleted = 'false' and b.status = 'accepted'";
+		if(isset($q['c0'])){
+			$sql .= ' and b.id = \''.$q['c0'].'\'';
+		}
+		return $this->parseData($sql,$q);
 	}
 	//工程款入账
 	private function projectFee($q){
@@ -279,8 +307,10 @@ class EntryNExitSvc{
 					b.reimbursementReason as c8
 					from statement_bill b left join user u on u.name = b.payer left join project p on p.projectId = b.projectId left join business bs on bs.id = p.businessId
 					where b.billType = 'pjtf' and b.isDeleted = 'false' and b.status = 'accepted';";
-		$data = $mysql->DBGetAsMap($sql);
-		return array('status'=>'successful','data'=>$data,'total'=>100);
+		if(isset($q['c0'])){
+			$sql .= ' and b.id = \''.$q['c0'].'\'';
+		}
+		return $this->parseData($sql,$q);
 	}
 }
 

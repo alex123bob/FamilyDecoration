@@ -85,6 +85,7 @@ CREATE TABLE `loan` (
   `dealTime` datetime DEFAULT null comment '收/付款时间',
   `interest` varchar(10) DEFAULT null comment '当前利率',
   `period` varchar(20) DEFAULT null comment '贷款期限',
+  `certs` text DEFAULT NULL comment '凭证',
   `loanTime` datetime DEFAULT null comment '贷款时间',
   `status` varchar(10) DEFAULT null comment '状态. new:新创建,accepted:已收款,arch:归档,paid:已出款',
   `isDeleted` varchar(5) DEFAULT 'false',
@@ -111,6 +112,7 @@ update statement_bill_audit set newStatus = 'new' where newStatus = 'rbk';
 update statement_bill_audit set orignalStatus = 'new' where orignalStatus = 'rbk';
 alter table statement_bill drop column `isPaid`;
 alter table statement_bill modify status varchar(10);
+alter table statement_bill add column `certs` text DEFAULT NULL comment '凭证';
 alter table statement_bill_audit add column drt varchar(10) comment '方向，1前进，-1打回';
 
 update statement_bill_audit set drt = '1' where orignalStatus = 'chk' and newStatus = 'paid' and drt is null;
