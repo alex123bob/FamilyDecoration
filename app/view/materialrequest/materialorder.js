@@ -57,33 +57,29 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 						layout: 'hbox',
 						defaults: {
 							labelWidth: 70,
-							margin: '0 0 0 4'
+							margin: '0 0 0 4',
+							height: '100%'
 						},
 						items: [
 							{
 								xtype: 'textfield',
-								fieldLabel: '领款人',
+								fieldLabel: '供应商',
 								flex: 1,
-								height: '100%',
-								name: 'payee'
+								name: 'supplier'
 							},
 							{
 								xtype: 'textfield',
 								fieldLabel: '工程地址',
-								flex: 2,
-								height: '100%',
+								flex: 1,
 								name: 'projectName',
-								readOnly: true,
-								value: me.project ? me.project.get('projectName') : ''
+								readOnly: true
 							},
 							{
 								xtype: 'textfield',
 								fieldLabel: '项目经理',
 								flex: 1,
-								height: '100%',
 								name: 'captain',
-								readOnly: true,
-								value: me.project ? me.project.get('captain') : ''
+								readOnly: true
 							}
 						]
 					},
@@ -94,30 +90,29 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 						layout: 'hbox',
 						defaults: {
 							labelWidth: 70,
-							margin: '0 0 0 4'
+							margin: '0 0 0 4',
+							height: '100%'
 						},
 						items: [
 							{
 								xtype: 'textfield',
 								fieldLabel: '联系电话',
 								flex: 1,
-								height: '100%',
 								name: 'phoneNumber'
 							},
 							{
 								xtype: 'textfield',
 								fieldLabel: '总金额',
 								flex: 1,
-								height: '100%',
 								name: 'totalFee',
 								readOnly: true
 							},
 							{
 								xtype: 'textfield',
-								fieldLabel: '申领金额',
+								fieldLabel: '大写',
 								flex: 1,
-								height: '100%',
-								name: 'claimAmount'
+								name: 'totalFeeUppercase',
+								readOnly: true
 							}
 						]
 					},
@@ -128,48 +123,59 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 						layout: 'hbox',
 						defaults: {
 							labelWidth: 70,
-							margin: '0 0 0 4'
+							margin: '0 0 0 4',
+							height: '100%'
 						},
 						items: [
 							{
 								xtype: 'textfield',
-								fieldLabel: '领款次数',
+								fieldLabel: '申购次数',
 								flex: 1,
-								height: '100%',
-								name: 'payedTimes'
+								name: 'orderTimes'
 							},
 							{
 								xtype: 'textfield',
 								fieldLabel: '完成情况(%)',
 								labelWidth: 80,
 								flex: 2,
-								height: '100%',
-								// editable: false,
 								name: 'projectProgress',
 								afterSubTpl: '%',
-								maskRe: /[\d\.]/,
-								// minValue: 0,
-								// maxValue: 100
-							},
-							{
-								xtype: 'textfield',
-								fieldLabel: '剩余总金额',
-								flex: 1,
-								height: '100%',
-								name: 'remainingTotalFee',
-								readOnly: true
-							},
-							{
-								xtype: 'textfield',
-								fieldLabel: '预付款',
-								flex: 1,
-								height: '100%',
-								name: 'prePaidFee',
-								readOnly: true
+								maskRe: /[\d\.]/
 							}
 						]
 					},
 				]
+			},
+			{
+				xtype: 'gridpanel',
+				flex: 1,
+				autoScroll: true,
+				columns: {
+					defaults: {
+						align: 'center',
+						flex: 1
+					},
+					items: [
+						{
+							text: '材料名称'
+						},
+						{
+							text: '数量'
+						},
+						{
+							text: '单位'
+						},
+						{
+							text: '单价(元)'
+						},
+						{
+							text: '总价(元)'
+						},
+						{
+							text: '参考量'
+						}
+					]
+				}
 			}
         ];
 
