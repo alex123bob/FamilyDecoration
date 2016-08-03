@@ -19,8 +19,8 @@ class StatementBillSvc extends BaseSvc
 	public function get($q){
 		$res = parent::get($q);
 		foreach ($res['data'] as &$value) {
-			$value['status'] = self::$ALL_STATUS[$value['status']];
-			$value['billType'] = self::$BILLTYPE[$value['billType']];
+			$value['statusCn'] = self::$ALL_STATUS[$value['status']];
+			$value['billTypeCn'] = self::$BILLTYPE[$value['billType']];
 		}
 		return $res;
 	}
