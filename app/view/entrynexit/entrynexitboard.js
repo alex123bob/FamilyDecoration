@@ -202,6 +202,8 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             var tbarObj = getTbar();
             tbarObj.idSearch.setValue('').show();
             tbarObj.nameSearch.setValue('').show();
+            tbarObj.receive.setDisabled(true);
+            tbarObj.pay.setDisabled(true);
             if (!rec) {
                 return;
             }
