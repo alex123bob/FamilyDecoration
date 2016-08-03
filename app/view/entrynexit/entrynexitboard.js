@@ -190,7 +190,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                 case 'projectFee':
                 case 'other':
                 case 'loan':
-                    tbarObj.receive.hide();
+                    tbarObj.receive.show();
                     break;
                 default: 
                     tbarObj.pay.show();
@@ -202,7 +202,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             var tbarObj = getTbar();
             tbarObj.idSearch.setValue('').show();
             tbarObj.nameSearch.setValue('').show();
-            if (!rec || !item) {
+            if (!rec) {
                 return;
             }
             switch (rec.get('name')) {
@@ -210,10 +210,10 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                 case 'projectFee':
                 case 'other':
                 case 'loan':
-                    tbarObj.receive.show().setDisabled(item.get('status') == 'paid');
+                    tbarObj.receive.show().setDisabled(!item || item.get('status') == 'paid');
                     break;
                 default:
-                    tbarObj.pay.show().setDisabled(item.get('status') == 'paid');
+                    tbarObj.pay.show().setDisabled(!item || item.get('status') == 'paid');
                     break;
             }
         }
