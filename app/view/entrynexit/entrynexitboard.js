@@ -59,7 +59,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                     change: function (txt, newVal, oldVal, opts){
                         var resObj = _getRes(),
                             oldProxy = resObj.st.getProxy();
-                        if (newVal == '') {
+                        if (newVal == '' && resObj.category) {
                             delete oldProxy.extraParams.c0;
                             resObj.st.setProxy(oldProxy);
                             resObj.st.loadPage(1);
@@ -97,7 +97,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                     change: function (txt, newVal, oldVal, opts){
                         var resObj = _getRes(),
                             oldProxy = resObj.st.getProxy();
-                        if (newVal == '') {
+                        if (newVal == '' && resObj.category) {
                             delete oldProxy.extraParams.c0;
                             resObj.st.setProxy(oldProxy);
                             resObj.st.loadPage(1);
