@@ -33,7 +33,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                 xtype: 'textfield',
                 emptyText: '查询单号',
                 itemId: 'textfield-id',
-                hidden: true,
+                hidden: false,
                 enableKeyEvents: true,
                 listeners: {
                     keydown: function (txt, ev, opts) {
@@ -50,7 +50,47 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                                 extraParams: {
                                     action: 'EntryNExit.get',
                                     type: resObj.category.get('name'),
+                                    payee: txt.nextSibling().getValue(),
                                     c0: txt.getValue()
+                                }
+                            });
+                            resObj.st.loadPage(1);
+                        }
+                    },
+                    change: function (txt, newVal, oldVal, opts){
+                        var resObj = _getRes(),
+                            oldProxy = resObj.st.getProxy();
+                        if (newVal == '') {
+                            delete oldProxy.extraParams.c0;
+                            resObj.st.setProxy(oldProxy);
+                            resObj.st.loadPage(1);
+                        }
+                    }
+                }
+            },
+            {
+                xtype: 'textfield',
+                emptyText: '查询报销人',
+                itemId: 'textfield-payee',
+                hidden: false,
+                enableKeyEvents: true,
+                listeners: {
+                    keydown: function (txt, ev, opts) {
+                        var resObj = _getRes();
+                        if (ev.keyCode == 13) {
+                            resObj.st.setProxy({
+                                type: 'rest',
+                                url: './libs/api.php',
+                                reader: {
+                                    type: 'json',
+                                    root: 'data',
+                                    totalProperty: 'total'
+                                },
+                                extraParams: {
+                                    action: 'EntryNExit.get',
+                                    type: resObj.category.get('name'),
+                                    c0: txt.previousSibling().getValue(),
+                                    payee: txt.getValue()
                                 }
                             });
                             resObj.st.loadPage(1);
@@ -799,6 +839,10 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                                 flex: 1
                             },
                             items: [
+                                {
+                                    text: '单号',
+                                    dataIndex: 'c0'
+                                },
                                 {
                                     text: '项目名称',
                                     dataIndex: 'c1'
