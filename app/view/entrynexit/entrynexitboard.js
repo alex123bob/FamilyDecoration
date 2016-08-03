@@ -241,9 +241,8 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
 				var newItem = [];
 				for(var i = 0;i<items.length;i++){
 					var cfgs = items[i].split(':');
-					newItem.push({ text: cfgs[0], dataIndex: 'c'+i,flex:cfgs[1]||1,align:cfgs[2]||'center'});
+					newItem.push({ text: cfgs[0], dataIndex: 'c'+i,flex:parseInt(cfgs[1]||1),align:cfgs[2]||'center'});
 				}
-				debugger
 				return newItem;
 			}else{
 				return [];
