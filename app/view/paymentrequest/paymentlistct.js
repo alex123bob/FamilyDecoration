@@ -13,7 +13,10 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
     user: undefined,
 
     initComponent: function () {
-        var me = this;
+        var me = this,
+            requestSt = Ext.create('FamilyDecoration.store.StatementBill',{
+                autoLoad: false
+            });
 
         me.refresh = function (user) {
             var resObj = _getRes(),
@@ -25,7 +28,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                     payee: user.get('name')
                 });
                 resObj.requestSt.setProxy(requestProxy);
-                resObj.requestSt.load();
+                resObj.requestSt.loadPage(1);
             }
             else {
                 resObj.requestSt.removeAll();
@@ -97,7 +100,11 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                         icon: 'resources/img/add_request.png',
                         handler: function () {
                             var win = Ext.create('FamilyDecoration.view.paymentrequest.EditRequest', {
-                                user: me.user
+                                user: me.user,
+                                callback: function () {
+                                    var resObj = _getRes();
+                                    resObj.requestSt.reload();
+                                }
                             });
                             win.show();
                         }
@@ -108,7 +115,25 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                         disabled: true,
                         icon: 'resources/img/edit_request.png',
                         handler: function () {
-
+                            var resObj = _getRes();
+                            if (resObj.request) {
+                                var win = Ext.create('FamilyDecoration.view.paymentrequest.EditRequest', {
+                                    user: me.user,
+                                    request: resObj.request,
+                                    callback: function () {
+                                        resObj.requestSt.reload({
+                                            callback: function (recs, ope, success) {
+                                                if (success) {
+                                                    var index = resObj.requestSt.indexOf(resObj.request);
+                                                    resObj.requestSelModel.deselectAll();
+                                                    resObj.requestSelModel.select(index);
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+                                win.show();
+                            }
                         }
                     },
                     {
@@ -117,7 +142,22 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                         disabled: true,
                         icon: 'resources/img/delete_request.png',
                         handler: function () {
-
+                            var resObj = _getRes();
+                            if (resObj.request) {
+                                Ext.Msg.warning('确定要删除当前请求吗？', function (btnId) {
+                                    if ('yes' == btnId) {
+                                        ajaxDel('StatementBill', {
+                                            id: resObj.request.getId()
+                                        }, function (obj) {
+                                            showMsg('删除成功！');
+                                            resObj.requestSt.loadPage(1);
+                                        });
+                                    }
+                                });
+                            }
+                            else {
+                                showMsg('请选择请求！');
+                            }
                         }
                     },
                     {
@@ -139,9 +179,14 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                         }
                     }
                 ],
-                store: Ext.create('FamilyDecoration.store.StatementBill', {
-                    autoLoad: false
-                }),
+                bbar: [
+                    {
+                        xtype: 'pagingtoolbar',
+                        displayInfo: true,
+                        store: requestSt
+                    }
+                ],
+                store: requestSt,
                 columns: {
                     defaults: {
                         flex: 1,
@@ -183,7 +228,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                     ]
                 },
                 listeners: {
-                    selectionchange: function (selModel, sels, opts){
+                    selectionchange: function (selModel, sels, opts) {
                         me.initBtn(me.user);
                     }
                 }

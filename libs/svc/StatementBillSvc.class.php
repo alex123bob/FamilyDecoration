@@ -47,7 +47,7 @@ class StatementBillSvc extends BaseSvc
 			//预付款 总金额就是领取金额
 			$q['@claimAmount'] = $q['@totalFee'];
 		}
-		if($q['@status'] == 'paid'){
+		if(isset($q['$status']) && $q['@status'] == 'paid'){
 			if(!isset($q['@payer']))
 				$q['@payer'] = $_SESSION['name'];
 			if(!isset($q['@paidTime']))

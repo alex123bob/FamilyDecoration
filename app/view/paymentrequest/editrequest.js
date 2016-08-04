@@ -13,6 +13,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditRequest', {
 
     request: undefined,
     user: undefined,
+    callback: Ext.emptyFn,
 
     initComponent: function () {
         var me = this;
@@ -30,12 +31,14 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditRequest', {
                 items: [
                     {
                         fieldLabel: '项目名称',
-                        name: 'projectName'
+                        name: 'projectName',
+                        value: me.request ? me.request.get('projectName') : ''
                     },
                     {
                         fieldLabel: '归属项目',
                         name: 'reimbursementReason',
                         readOnly: true,
+                        value: me.request ? me.request.get('reimbursementReason') : '',
                         listeners: {
                             focus: function (txt, ev, opts) {
                                 var win = Ext.create('FamilyDecoration.view.paymentrequest.EditBelongedItem', {
@@ -50,14 +53,16 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditRequest', {
                     {
                         fieldLabel: '申请金额',
                         maskRe: /[\d\.\-]/,
-                        name: 'claimAmount'
+                        name: 'claimAmount',
+                        value: me.request ? me.request.get('claimAmount') : ''
                     },
                     {
                         fieldLabel: '申请日期',
                         xtype: 'datefield',
                         editable: false,
                         name: 'createTime',
-                        submitFormat: 'Y-m-d H:i:s'
+                        submitFormat: 'Y-m-d H:i:s',
+                        value: me.request ? me.request.get('createTime').slice(0, 10) : ''
                     },
                     {
                         fieldLabel: '申请属性',
@@ -67,6 +72,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditRequest', {
                         queryMode: 'local',
                         editable: false,
                         name: 'billType',
+                        value: me.request ? me.request.get('billType') : '',
                         store: Ext.create('Ext.data.Store', {
                             fields: ['name', 'value'],
                             data: [
@@ -91,13 +97,15 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditRequest', {
                     },
                     {
                         fieldLabel: '备注',
-                        name: 'descpt'
+                        name: 'descpt',
+                        value: me.request ? me.request.get('descpt') : ''
                     },
                     {
                         fieldLabel: '附件',
                         readOnly: true,
                         name: 'certs',
                         allowBlank: true,
+                        value: me.request ? me.request.get('certs') : '',
                         listeners: {
                             focus: function (txt, ev, opts) {
                                 console.log(txt);
@@ -117,11 +125,27 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditRequest', {
                     Ext.apply(obj, {
                         payee: me.user.get('name')
                     });
-                    if (frm.isValid()) {
-                        ajaxAdd('StatementBill', obj, function (obj){
-                            showMsg('申请成功！');
-                            me.close();
+                    if (me.request) {
+                        Ext.apply(obj, {
+                            id: me.request.getId(),
+                            status: me.request.get('status')
                         });
+                    }
+                    if (frm.isValid()) {
+                        if (me.request) {
+                            ajaxUpdate('StatementBill', obj, ['id'], function (obj){
+                                showMsg('更新成功！');
+                                me.close();
+                                me.callback();
+                            });
+                        }
+                        else {
+                            ajaxAdd('StatementBill', obj, function (obj) {
+                                showMsg('申请成功！');
+                                me.close();
+                                me.callback();
+                            });
+                        }
                     }
                 }
             },
