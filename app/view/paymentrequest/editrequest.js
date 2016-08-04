@@ -109,6 +109,24 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditRequest', {
                         listeners: {
                             focus: function (txt, ev, opts) {
                                 console.log(txt);
+                                var certUpload = Ext.create('FamilyDecoration.view.chart.UploadForm', {
+                                    title: '附件上传',
+                                    url: './libs/',
+                                    supportMult: false,
+                                    afterUpload: function (fp, o) {
+                                        var p = {},
+                                            content = '',
+                                            originalName = '',
+                                            details = o.result.details;
+
+                                        if (details[0]['success']) {
+                                            content = details[0]['file'];
+                                            originalName = details[0]['original_file_name'];
+                                            
+                                        }
+                                    }
+                                });
+                                certUpload.show();
                             }
                         }
                     }
@@ -133,7 +151,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditRequest', {
                     }
                     if (frm.isValid()) {
                         if (me.request) {
-                            ajaxUpdate('StatementBill', obj, ['id'], function (obj){
+                            ajaxUpdate('StatementBill', obj, ['id'], function (obj) {
                                 showMsg('更新成功！');
                                 me.close();
                                 me.callback();
