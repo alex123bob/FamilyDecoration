@@ -14,7 +14,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
 
     initComponent: function () {
         var me = this,
-            requestSt = Ext.create('FamilyDecoration.store.StatementBill',{
+            requestSt = Ext.create('FamilyDecoration.store.StatementBill', {
                 autoLoad: false
             });
 
@@ -76,9 +76,13 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                             break;
                         case "edit":
                         case "del":
+                            btn.setDisabled(!resObj.request || resObj.request.get('status') != 'new');
+                            break;
                         case "submit":
+                            btn.setDisabled(!resObj.request || resObj.request.get('status') != 'new');
+                            break;
                         case "pass":
-                            btn.setDisabled(!resObj.request);
+                            btn.setDisabled(!resObj.request || resObj.request.get('status') == 'new' || resObj.request.get('status') == 'chk' || resObj.request.get('status') == 'paid');
                             break;
                         default:
                             break;
@@ -92,6 +96,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                 title: '&nbsp;',
                 flex: 3,
                 name: 'gridpanel-requestGrid',
+                cls: 'gridpanel-requestGrid',
                 tbar: [
                     {
                         name: 'button-addRequest',
@@ -166,16 +171,73 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                         disabled: true,
                         icon: 'resources/img/submit_request.png',
                         handler: function () {
-
+                            this.nextSibling().changeStatus('确定要将当前申请进行递交吗？', '递交成功！');
                         }
                     },
                     {
                         name: 'button-passRequest',
                         text: '审核通过',
                         disabled: true,
+                        hidden: !User.isAdmin(),
                         icon: 'resources/img/pass_request.png',
+                        changeStatus: function (cfmMsg, successMsg) {
+                            var resObj = _getRes();
+                            if (resObj.request) {
+                                function request(validateCode) {
+                                    var params = {
+                                        id: resObj.request.getId(),
+                                        status: '+1'
+                                    }, arr = ['id'],
+                                        index = resObj.requestSt.indexOf(resObj.request);
+                                    if (validateCode) {
+                                        Ext.apply(params, {
+                                            validateCode: validateCode
+                                        });
+                                        arr.push('validateCode');
+                                    }
+                                    ajaxUpdate('StatementBill.changeStatus', params, arr, function (obj) {
+                                        Ext.Msg.success(successMsg);
+                                        resObj.requestSelModel.deselectAll();
+                                        resObj.requestSt.reload({
+                                            callback: function (recs, ope, success) {
+                                                if (success) {
+                                                    resObj.requestSelModel.select(index);
+                                                }
+                                            }
+                                        })
+                                    }, true);
+                                }
+                                Ext.Msg.warning(cfmMsg, function (btnId) {
+                                    if ('yes' == btnId) {
+                                        ajaxGet('StatementBill', 'getLimit', {
+                                            id: resObj.request.getId()
+                                        }, function (obj) {
+                                            if (obj.type == 'checked') {
+                                                showMsg(obj.hint);
+                                                request();
+                                            }
+                                            else {
+                                                Ext.defer(function () {
+                                                    Ext.Msg.password(obj.hint, function (val) {
+                                                        if (obj.type == 'sms') {
+                                                        }
+                                                        else if (obj.type == 'securePass') {
+                                                            val = md5(_PWDPREFIX + val);
+                                                        }
+                                                        request(val);
+                                                    });
+                                                }, 500);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                            else {
+                                showMsg('请选择申请！');
+                            }
+                        },
                         handler: function () {
-
+                            this.changeStatus('确定要将当前申请置为本级通过吗？', '审核通过！');
                         }
                     }
                 ],
@@ -237,6 +299,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                 title: '往年记录',
                 flex: 2,
                 name: 'gridpanel-historyRecords',
+                cls: 'gridpanel-historyGrid',
                 columns: {
                     defaults: {
                         flex: 1,
