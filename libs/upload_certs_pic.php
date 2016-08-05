@@ -60,9 +60,11 @@ function handleFiles($tmpNames,$names){
 		for ($i = 0; $i < count($names); $i++) {
 			$tName = $tmpNames[$i];
 			$oName = $names[$i];
-			array_push($base64Images,array('endFix'=>$ext_arr[$i],'content'=>base64_encode(file_get_contents($_FILES['photo']['tmp_name'][$i]))));
 			$file_new_name = date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT).".".$ext_arr[$i];
-			if (move_uploaded_file ($tName, $directory.$file_new_name)) {
+			if (move_uploaded_file ($tName,$directory.$file_new_name )) {
+				resize($directory.$file_new_name);
+				array_push($base64Images,array('endFix'=>$ext_arr[$i],'content'=>base64_encode(file_get_contents($directory.$file_new_name))));
+
 				array_push($result["details"], array(
 					"success" => true,
 					"msg" => "图片'$oName'上传成功！重命名为'$file_new_name'。",
@@ -86,9 +88,22 @@ function handleFiles($tmpNames,$names){
 		foreach ($base64Images as $image) {
 			$content .= '<img src="data:image/'.$image['endFix'].';base64,'.$image['content'].'"/>';
 		}
-		//echo $content;
-		//sendEmail($mailAddresses, $aliasNames, 'sys-notice@dqjczs.com', "[certs]凭证图片", $content, null);
+		sendEmail($mailAddresses, $aliasNames, 'sys-notice@dqjczs.com', "[certs]凭证图片", $content, null);
 	}
 	return $result;
+}
+
+
+function resize($path){
+	list($width, $height) = getimagesize($path);
+	$im=imagecreatefromjpeg($path); //参数是图片的存方路径
+	$scale = $width > $height ? 1920/$width : 1920/$height;
+	$newheight = $width > $height ? $height * $scale : 1920;
+	$newwidth = $width > $height ? 1920 : $height * $scale;
+	$newim = imagecreatetruecolor($newwidth,$newheight);//PHP系统函数
+	imagecopyresampled($newim,$im,0,0,0,0,$newwidth,$newheight,$width,$height);//PHP系统函数				
+	imagejpeg($newim,$path);
+	imagedestroy($im);
+	imagedestroy($newim);
 }
 ?>
