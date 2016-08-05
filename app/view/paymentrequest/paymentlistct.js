@@ -269,7 +269,11 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                         },
                         {
                             text: '申请日期',
-                            dataIndex: 'createTime'
+                            dataIndex: 'createTime',
+                            renderer: function (val, meta, rec){
+                                val = val ? val.slice(0, 10) : '';
+                                return val;
+                            }
                         },
                         {
                             text: '提交状态',
