@@ -10,6 +10,7 @@ Ext.define('FamilyDecoration.view.chart.UploadForm', {
 
 	url: undefined,
 	typeId: undefined,
+	typeArray: undefined, 
 	beforeUpload: Ext.emptyFn,
 	afterUpload: Ext.emptyFn,
 	supportMult: true, // whether this component supports multiple picture upload or not.
@@ -58,7 +59,7 @@ Ext.define('FamilyDecoration.view.chart.UploadForm', {
 				        delete this.duringFileSelect;
 				    },
 				    supportMultFn: function (){
-				    	var typeArray = ['image/*'];
+				    	var typeArray = me.typeArray ? me.typeArray : ['image/*'];
 						var fileDom = this.fileInputEl;
 						if (fileDom) {
 							fileDom.dom.setAttribute("multiple","multiple");
