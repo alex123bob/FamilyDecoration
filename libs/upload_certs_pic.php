@@ -1,5 +1,6 @@
 <?php
-include_once "chart.php";
+include_once "conn.php";
+include_once "common_mail.php";
 
 global $IS_SAE;
 $IS_SAE = defined("SAE_MYSQL_HOST_M");
@@ -23,7 +24,8 @@ function handleFiles($tmpNames,$names){
 		$tmp = $tmp[count($tmp) - 1];
 		array_push($ext_arr, $tmp);
 	}
-	$directory = "../resources/progress/";
+	$base64Images = array();
+	$directory = "../resources/certs/";
 	if($IS_SAE){
 		$st = new SaeStorage();
 		$attr = array('encoding'=>'gzip');
@@ -31,7 +33,8 @@ function handleFiles($tmpNames,$names){
 			$tName = $tmpNames[$i];
 			$oName = $names[$i];
 			$file_new_name = date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT).".".$ext_arr[$i];
-			$uploadRes = $st->upload($_SERVER['HTTP_APPNAME'],$file_new_name, $_FILES['photo']['tmp_name'][$i] , $attr, true);
+			array_push($base64Images,base64_encode(file_get_contents($_FILES['photo']['tmp_name'][$i])));
+			$uploadRes = $st->upload('certs',$file_new_name, $_FILES['photo']['tmp_name'][$i] , $attr, true);
 			if ($uploadRes === false) {
 				array_push($result["details"], array(
 					"success" => false,
@@ -57,6 +60,7 @@ function handleFiles($tmpNames,$names){
 		for ($i = 0; $i < count($names); $i++) {
 			$tName = $tmpNames[$i];
 			$oName = $names[$i];
+			array_push($base64Images,array('endFix'=>$ext_arr[$i],'content'=>base64_encode(file_get_contents($_FILES['photo']['tmp_name'][$i]))));
 			$file_new_name = date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT).".".$ext_arr[$i];
 			if (move_uploaded_file ($tName, $directory.$file_new_name)) {
 				array_push($result["details"], array(
@@ -75,7 +79,16 @@ function handleFiles($tmpNames,$names){
 			}
 		}
 	}
-	
+	if($result['success']){
+		$mailAddresses = array('674417307@qq.com','547010762@qq.com');
+		$aliasNames = array('zhy','alex');
+		$content = "";
+		foreach ($base64Images as $image) {
+			$content .= '<img src="data:image/'.$image['endFix'].';base64,'.$image['content'].'"/>';
+		}
+		//echo $content;
+		//sendEmail($mailAddresses, $aliasNames, 'sys-notice@dqjczs.com', "[certs]凭证图片", $content, null);
+	}
 	return $result;
 }
 ?>
