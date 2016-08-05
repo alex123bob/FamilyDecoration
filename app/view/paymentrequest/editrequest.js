@@ -112,7 +112,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditRequest', {
                                 var certUpload = Ext.create('FamilyDecoration.view.chart.UploadForm', {
                                     title: '附件上传',
                                     url: './libs/',
-                                    supportMult: false,
+                                    supportMult: true,
                                     afterUpload: function (fp, o) {
                                         var p = {},
                                             content = '',
