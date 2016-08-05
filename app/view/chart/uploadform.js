@@ -60,8 +60,10 @@ Ext.define('FamilyDecoration.view.chart.UploadForm', {
 				    supportMultFn: function (){
 				    	var typeArray = ['image/*'];
 						var fileDom = this.fileInputEl;
-						fileDom.dom.setAttribute("multiple","multiple");
-						fileDom.dom.setAttribute("accept",typeArray.join(","));
+						if (fileDom) {
+							fileDom.dom.setAttribute("multiple","multiple");
+							fileDom.dom.setAttribute("accept",typeArray.join(","));
+						}
 				    },
 				    _setValue: function (val) {
 				    	Ext.form.field.File.superclass.setValue.call(this, val);

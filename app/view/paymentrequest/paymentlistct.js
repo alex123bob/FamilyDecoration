@@ -285,7 +285,17 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                         },
                         {
                             text: '附件',
-                            dataIndex: 'certs'
+                            dataIndex: 'certs',
+                            renderer: function (val, meta, rec){
+                                var res = '';
+                                if (val) {
+                                    var arr = val.split(',');
+                                    Ext.each(arr, function (item, index, self){
+                                        res += '<a href="' + item + '">附件' + (index+1) + '</a>';
+                                    });
+                                }
+                                return res;
+                            }
                         }
                     ]
                 },

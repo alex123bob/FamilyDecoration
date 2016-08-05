@@ -104,7 +104,6 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditRequest', {
                         fieldLabel: '附件',
                         readOnly: true,
                         name: 'certs',
-                        allowBlank: true,
                         value: me.request ? me.request.get('certs') : '',
                         listeners: {
                             focus: function (txt, ev, opts) {
