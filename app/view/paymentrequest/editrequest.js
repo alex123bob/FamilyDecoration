@@ -116,13 +116,19 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditRequest', {
                                         var p = {},
                                             content = '',
                                             originalName = '',
-                                            details = o.result.details;
+                                            details = o.result.details,
+                                            flag = ',';
 
-                                        if (details[0]['success']) {
-                                            content = details[0]['file'];
-                                            originalName = details[0]['original_file_name'];
-                                            
-                                        }
+                                        Ext.each(details, function (obj, i, arr){
+                                            if (obj['success']) {
+                                                content += obj['file'] + flag;
+                                                originalName += obj['original_file_name'] + flag;
+                                            }
+                                        });
+                                        content = content.slice(0, parseInt('-' + flag.length, 10));
+                                        originalName = originalName.slice(0, parseInt('-' + flag.length, 10));
+                                        txt.setValue(content);
+                                        certUpload.close();
                                     }
                                 });
                                 certUpload.show();
