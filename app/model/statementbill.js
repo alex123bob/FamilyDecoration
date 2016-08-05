@@ -26,6 +26,8 @@ Ext.define('FamilyDecoration.model.StatementBill', {
 		{name: 'billType', type: 'string'}, 
 		{name: 'billTypeName', type: 'string'},
 
+		{name: 'certs', type: 'string'},
+
 		// this three fields got from dynamically operation.
 		{name: 'hasPrePaidBill', type: 'string'},
 		{name: 'remainingTotalFee', type: 'string'},

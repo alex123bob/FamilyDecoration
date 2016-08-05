@@ -269,7 +269,11 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                         },
                         {
                             text: '申请日期',
-                            dataIndex: 'createTime'
+                            dataIndex: 'createTime',
+                            renderer: function (val, meta, rec){
+                                val = val ? val.slice(0, 10) : '';
+                                return val;
+                            }
                         },
                         {
                             text: '提交状态',
@@ -285,7 +289,17 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                         },
                         {
                             text: '附件',
-                            dataIndex: 'certs'
+                            dataIndex: 'certs',
+                            renderer: function (val, meta, rec){
+                                var res = '';
+                                if (val) {
+                                    var arr = val.split(',');
+                                    Ext.each(arr, function (item, index, self){
+                                        res += '<a href="' + item + '">附件' + (index+1) + '</a>';
+                                    });
+                                }
+                                return res;
+                            }
                         }
                     ]
                 },
