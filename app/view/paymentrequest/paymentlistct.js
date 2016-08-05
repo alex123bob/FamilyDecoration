@@ -295,7 +295,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                                 if (val) {
                                     var arr = val.split(',');
                                     Ext.each(arr, function (item, index, self){
-                                        res += '<a href="' + item + '">附件' + (index+1) + '</a>';
+                                        res += '<a href="' + item.slice(1) + '">附件' + (index+1) + '</a>';
                                     });
                                 }
                                 return res;
