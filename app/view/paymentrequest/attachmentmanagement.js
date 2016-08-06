@@ -8,7 +8,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
         'FamilyDecoration.view.chart.UploadForm',
         'FamilyDecoration.store.AttachmentManagement'
     ],
-    width: 500,
+    width: 650,
     height: 350,
     maximizable: true,
 
@@ -40,6 +40,36 @@ Ext.define('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
                 selModel: {
                     type: 'SIMPLE'
                 },
+                plugins: [
+                    Ext.create('Ext.grid.plugin.CellEditing', {
+                        clicksToEdit: 1,
+                        listeners: {
+                            edit: function (editor, e) {
+                                Ext.suspendLayouts();
+
+                                e.record.commit();
+                                editor.completeEdit();
+                                if (e.field == 'desc') {
+                                    ajaxUpdate('UploadFiles', {
+                                        desc: e.record.get('desc'),
+                                        id: e.record.getId()
+                                    }, 'id', function (obj){
+                                        showMsg('更新成功！');
+                                        var grid = me.down('gridpanel');
+                                        grid.getStore().reload();
+                                    });
+                                }
+
+                                Ext.resumeLayouts();
+                            },
+                            validateedit: function (editor, e, opts) {
+                                var rec = e.record;
+                                if (e.field == 'desc') {
+                                }
+                            }
+                        }
+                    })
+                ],
                 columns: [
                     {
                         text: '名字',
@@ -50,7 +80,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
                     {
                         text: '时间',
                         dataIndex: 'createTime',
-                        flex: 1,
+                        flex: 2,
                         align: 'center'
                     },
                     {
@@ -82,17 +112,32 @@ Ext.define('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
                         text: '备注',
                         dataIndex: 'desc',
                         flex: 1,
+                        align: 'center',
+                        editor: {
+                            xtype: 'textfield'
+                        }
+                    },
+                    {
+                        text: '其他',
+                        dataIndex: 'other',
+                        flex: 1,
                         align: 'center'
                     }
                 ],
                 listeners: {
                     cellclick: function (view, td, cellIndex, rec, tr, rowIndex, e, opts) {
                         if (cellIndex == 4) {
+                            var arr = rec.get('other').split('x'),
+                                w, h;
+                            arr[0].trim();
+                            arr[1].trim();
+                            w = parseInt(arr[0], 10);
+                            h = parseInt(arr[1], 10);
                             var win = Ext.create('Ext.window.Window', {
                                 layout: 'fit',
                                 title: rec.get('name'),
-                                width: 400,
-                                height: 400,
+                                width: w,
+                                height: h,
                                 modal: true,
                                 autoScroll: true,
                                 maximizable: true,
@@ -104,6 +149,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
                                 ]
                             });
                             win.show();
+                            win.focus();
                         }
                     }
                 }
