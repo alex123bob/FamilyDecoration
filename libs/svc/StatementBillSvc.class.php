@@ -11,8 +11,8 @@ class StatementBillSvc extends BaseSvc
 		'reg'=> array('new','rdyck','rdyck2','rdyck3','rdyck4','chk','paid'),
 		'qgd'=> array('new','rdyck','rdyck2','rdyck3','rdyck4','chk','paid'),
 		'mtf'=> array('new','rdyck','rdyck2','rdyck3','rdyck4','chk','paid'),
-		'rbm'=> array('new','rdyck','rdyck2','rdyck3','rdyck4','chk','paid'),
-		'wlf'=> array('new','rdyck','rdyck2','rdyck3','rdyck4','chk','paid'),
+		'rbm'=> array('new','rdyck','chk','paid'),
+		'wlf'=> array('new','rdyck','chk','paid'),
 		'tax'=> array('new','rdyck','rdyck2','rdyck3','rdyck4','chk','paid')
 	);
 
@@ -39,7 +39,8 @@ class StatementBillSvc extends BaseSvc
 		$q['@status'] = 'new';
 		notNullCheck($q,'@billType','审批单类型不能为空!');
 		notNullCheck($q,'@payee','领款人不能为空!');
-		return parent::add($q);
+		$res = parent::add($q);
+		return $res;
 	}
 
 	public function update($q){

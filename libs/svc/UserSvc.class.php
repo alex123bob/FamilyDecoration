@@ -21,6 +21,8 @@ class UserSvc extends BaseSvc
 		foreach ($dataArray as $key => &$value) {
 			if(isset($value[$columnName]) && $value[$columnName] != "" && isset($namemapping[$value[$columnName]]))
 				$value[$columnName.'RealName'] = $namemapping[$value[$columnName]];
+			else
+				$value[$columnName.'RealName'] =$value[$columnName];
 		}
 	}
 
