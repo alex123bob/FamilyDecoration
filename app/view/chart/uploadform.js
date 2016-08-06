@@ -15,6 +15,7 @@ Ext.define('FamilyDecoration.view.chart.UploadForm', {
 	afterUpload: Ext.emptyFn,
 	backup: false, // whether to back up current data.
 	supportMult: true, // whether this component supports multiple picture upload or not.
+	extraParams: undefined, // is passed, apply it to the parameter submitted to server
 
 	initComponent: function (){
 		var me = this;
@@ -124,13 +125,13 @@ Ext.define('FamilyDecoration.view.chart.UploadForm', {
 							grid = Ext.getCmp('gridpanel-uploadForm'),
 							st = grid.getStore(),
 							arr = st.data.items,
-							p = {
-								desc: '' // todo
-							};
+							p;
 
 						me.typeId && Ext.apply(p, {
 							typeId: me.typeId
 						});
+
+						me.extraParams && Ext.apply(p, me.extraParams);
 
 						if (frm.isValid()) {
 							me.beforeUpload();

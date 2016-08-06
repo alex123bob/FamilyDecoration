@@ -88,6 +88,11 @@ Ext.define('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
                         typeArray: ['image/jpg', 'image/jpeg'],
                         url: './libs/upload_pic.php',
                         supportMult: true,
+                        extraParams: {
+                            refType: me.infoObj.refType,
+                            refId: me.infoObj.refId,
+                            desc: ''
+                        },
                         afterUpload: function (fp, o) {
                             // var p = {},
                             //     content = '',
