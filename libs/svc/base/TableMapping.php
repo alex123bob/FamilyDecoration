@@ -19,7 +19,7 @@
 		"account"=>array('id','name','accountType','balance'),
 		"account_log"=>array('id','accountId','type','amount','balance','refId','refType','operator','desc'),
 		"loan"=>array('id','relevantId','type','projectName','bankName','assignee','mobile','amount','dealer','dealTime','interest','period','loanTime','status'),
-		"upload_files"=>array('id','refType','refId','orignalName','path','size','type','desc','other','uploader'),
+		"upload_files"=>array('id','refType','refId','name','path','size','type','desc','other','uploader'),
 		"statement_bill_tag"=>array('id','tag','billId','committer'));
 
 	foreach ($TableMapping as $key => &$value) {
