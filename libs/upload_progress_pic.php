@@ -31,6 +31,7 @@ function handleFiles($tmpNames,$names){
 			$tName = $tmpNames[$i];
 			$oName = $names[$i];
 			$file_new_name = date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT).".".$ext_arr[$i];
+			resize_pic($_FILES['photo']['tmp_name'][$i]);
 			$uploadRes = $st->upload($_SERVER['HTTP_APPNAME'],$file_new_name, $_FILES['photo']['tmp_name'][$i] , $attr, true);
 			if ($uploadRes === false) {
 				array_push($result["details"], array(
@@ -59,6 +60,7 @@ function handleFiles($tmpNames,$names){
 			$oName = $names[$i];
 			$file_new_name = date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT).".".$ext_arr[$i];
 			if (move_uploaded_file ($tName, $directory.$file_new_name)) {
+				resize_pic($directory.$file_new_name);
 				array_push($result["details"], array(
 					"success" => true,
 					"msg" => "图片'$oName'上传成功！重命名为'$file_new_name'。",

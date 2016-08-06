@@ -11,14 +11,15 @@
 		}
 		global $mysql;
 		try{
-			if($mysql->isTransactions()){
+			if($mysql != null && $mysql->isTransactions()){
 				$mysql->rollback(true);
 
 			}	
 		}catch(Exception $e){}
 		try{
-			$errorLogSvc = BaseSvc::getSvc('ErrorLog');
-			$errorLogSvc->add(array('@file'=>$errorFile,
+			if($mysql != null){
+				$errorLogSvc = BaseSvc::getSvc('ErrorLog');
+				$errorLogSvc->add(array('@file'=>$errorFile,
 									'@line'=>$errorLine,
 									'@detail'=>$errstr,
 									'@user'=>isset($_SESSION['name']) ? $_SESSION['name'] : '',
@@ -26,6 +27,7 @@
 									'@ip'=>isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '',
 									'@refer'=>isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
 									'@useragent'=>isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''));
+			}			
 		}catch(Exception $e){
 			//var_dump($e);
 		}
@@ -294,4 +296,25 @@
 	$APPBASE = $_SERVER['DOCUMENT_ROOT'];
 	if(startWith($_SERVER['PHP_SELF'],'/fd/'))
 		$APPBASE = $APPBASE.'/fd';
+
+function resize_pic($path){
+	list($width, $height) = getimagesize($path);
+	if(endWith($path,'.jpg') || endWith($path,'.jpeg') || endWith($path,'.JPG') || endWith($path,'.JPEG')){
+		$im=imagecreatefromjpeg($path);
+		if($width<=1920 && $height <= 1920){
+			$newwidth = $width;
+			$newheight = $height;
+		}else{
+			$scale = $width > $height ? 1920/$width : 1920/$height;
+			$newheight = $width > $height ? $height * $scale : 1920;
+			$newwidth = $width > $height ? 1920 : $height * $scale;
+		}
+		$newim = imagecreatetruecolor($newwidth,$newheight);
+		imagecopyresampled($newim,$im,0,0,0,0,$newwidth,$newheight,$width,$height);
+		imagejpeg($newim,$path);
+		imagedestroy($im);
+		imagedestroy($newim);
+	}
+	return "$newwidth x $newheight";
+}
 ?>

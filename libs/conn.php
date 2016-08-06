@@ -12,7 +12,7 @@
 	include_once "common.php";
 
 	if (defined("SAE_MYSQL_HOST_M")) {
-		$mysql = new mysql(SAE_MYSQL_HOST_M.':'.SAE_MYSQL_PORT, SAE_MYSQL_USER, SAE_MYSQL_PASS, SAE_MYSQL_DB, 'utf8');
+		$mysql = new mysql(SAE_MYSQL_HOST_M, SAE_MYSQL_USER, SAE_MYSQL_PASS, SAE_MYSQL_DB, 'utf8',SAE_MYSQL_PORT);
 	} else {
 		$mysql = new mysql('127.0.0.1', 'root', '', 'familydecoration', 'utf8');
 	}

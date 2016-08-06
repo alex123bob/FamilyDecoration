@@ -139,7 +139,6 @@ update statement_bill_audit set drt = '1' where orignalStatus = 'rdyck' and newS
 update statement_bill_audit set drt = '-1' where orignalStatus = 'rdyck' and newStatus = 'new' and drt is null;
 update statement_bill_audit set drt = '1' where orignalStatus = 'rdyck' and newStatus = 'rdyck2' and drt is null;
 update statement_bill_audit set drt = '-1' where orignalStatus = 'rdyck2' and newStatus = 'rdyck' and drt is null;
-alter table statement_bill add column descpt varchar(200) default null comment '备注';
 alter table announcement_comment modify id varchar(20);
 
 update `system` set `paramValue`='version-8.6' where `id`='4';

@@ -29,18 +29,31 @@ function handleFiles($tmpNames,$names){
 		$st = new SaeStorage();
 		$attr = array('encoding'=>'gzip');
 		for ($i = 0; $i < count($names); $i++) {
+			$oName = $names[$i];
 			$file_new_name = date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT).".".$ext_arr[$i];
+			$fileSize = filesize($directory.$file_new_name);
 			array_push($base64Images,base64_encode(file_get_contents($_FILES['photo']['tmp_name'][$i])));
+			$widthAndHeight = resize_pic($_FILES['photo']['tmp_name'][$i]);
 			if(!$st->upload('certs',$file_new_name, $_FILES['photo']['tmp_name'][$i] , $attr, true)){
 				throw new Exception("文件".$names[$i]."上传失败！");
 			}
+			$uploadFilesSvc->add(array(
+					'@type'=>'img',
+					'@size'=>$fileSize,
+					'@path'=>$file_new_name,
+					'@other'=>$widthAndHeight,
+					'@orignalName'=>$oName,
+					'@refId'=>$_REQUEST['refId'],
+					'@desc'=>$_REQUEST['desc'],
+					'@refType'=>$_REQUEST['refType']
+			));
 		}		
 	}else{
 		if(!file_exists($directory) && !mkdir($directory))
 			throw new Exception("文件夹创建失败!".$directory);
 		for ($i = 0; $i < count($names); $i++) {
 			$tName = $tmpNames[$i];
-			$widthAndHeight = resize($tName);
+			$widthAndHeight = resize_pic($tName);
 			$oName = $names[$i];
 			$file_new_name = date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT).".".$ext_arr[$i];
 			if (!move_uploaded_file ($tName,$directory.$file_new_name )) {
@@ -68,25 +81,5 @@ function handleFiles($tmpNames,$names){
 		}
 		sendEmail($mailAddresses, $aliasNames, 'sys-notice@dqjczs.com', "[certs]凭证图片", $content, null);
 	}
-}
-
-
-function resize($path){
-	list($width, $height) = getimagesize($path);
-	$im=imagecreatefromjpeg($path);
-	if($width<=1920 && $height <= 1920){
-		$newwidth = $width;
-		$newheight = $height;
-	}else{
-		$scale = $width > $height ? 1920/$width : 1920/$height;
-		$newheight = $width > $height ? $height * $scale : 1920;
-		$newwidth = $width > $height ? 1920 : $height * $scale;
-	}
-	$newim = imagecreatetruecolor($newwidth,$newheight);
-	imagecopyresampled($newim,$im,0,0,0,0,$newwidth,$newheight,$width,$height);
-	imagejpeg($newim,$path);
-	imagedestroy($im);
-	imagedestroy($newim);
-	return "$newwidth x $newheight";
 }
 ?>
