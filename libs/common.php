@@ -7,7 +7,7 @@
 		$errstr = str_replace("Undefined index:","缺少参数:",$errstr);
 		$popupMsg = $errstr;
 		if(contains($errstr,'imagecreatefromjpeg')){
-			$popupMsg = "图片压缩失败，请确认上传图片为jpg格式<br />(直接把名字改成某某某.jpg是不行的哦)";
+			$popupMsg = "图片压缩失败，请确认上传图片为jpg格式\n(直接把名字改成某某某.jpg是不行的哦)";
 		}
 		global $mysql;
 		try{
