@@ -125,7 +125,7 @@ Ext.define('FamilyDecoration.view.chart.UploadForm', {
 							grid = Ext.getCmp('gridpanel-uploadForm'),
 							st = grid.getStore(),
 							arr = st.data.items,
-							p;
+							p = {};
 
 						me.typeId && Ext.apply(p, {
 							typeId: me.typeId
