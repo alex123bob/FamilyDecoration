@@ -4,7 +4,7 @@ Ext.define('FamilyDecoration.model.AttachmentManagement', {
 		'id',
         'refType', // 关联对象类型，可以定义为表名
         'refId',
-        'orignalName',
+        'name',
         'path',
         'size',
         'type',

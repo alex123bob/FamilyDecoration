@@ -10,14 +10,14 @@ Ext.define('FamilyDecoration.view.chart.UploadForm', {
 
 	url: undefined,
 	typeId: undefined,
-	typeArray: undefined, 
+	typeArray: undefined,
 	beforeUpload: Ext.emptyFn,
 	afterUpload: Ext.emptyFn,
 	backup: false, // whether to back up current data.
 	supportMult: true, // whether this component supports multiple picture upload or not.
 	extraParams: undefined, // is passed, apply it to the parameter submitted to server
 
-	initComponent: function (){
+	initComponent: function () {
 		var me = this;
 
 		var uploadSt = Ext.create('Ext.data.Store', {
@@ -43,39 +43,39 @@ Ext.define('FamilyDecoration.view.chart.UploadForm', {
 					buttonText: '选择',
 					anchor: '100%',
 					onFileChange: function (button, e, value) {
-				        this.duringFileSelect = true;
+						this.duringFileSelect = true;
 
-				        var me = this,
-				            upload = me.fileInputEl.dom,
-				            files = upload.files,
-				            names = [];
+						var me = this,
+							upload = me.fileInputEl.dom,
+							files = upload.files,
+							names = [];
 
-				        if (files) {
-				            for (var i = 0; i < files.length; i++)
-				                names.push(files[i].name);
-				            value = names.join(', ');
-				        }
+						if (files) {
+							for (var i = 0; i < files.length; i++)
+								names.push(files[i].name);
+							value = names.join(', ');
+						}
 
-				        Ext.form.field.File.superclass.setValue.call(this, value);
+						Ext.form.field.File.superclass.setValue.call(this, value);
 
-				        delete this.duringFileSelect;
-				    },
-				    supportMultFn: function (){
-				    	var typeArray = me.typeArray ? me.typeArray : ['image/*'];
+						delete this.duringFileSelect;
+					},
+					supportMultFn: function () {
+						var typeArray = me.typeArray ? me.typeArray : ['image/*'];
 						var fileDom = this.fileInputEl;
 						if (fileDom) {
-							fileDom.dom.setAttribute("multiple","multiple");
-							fileDom.dom.setAttribute("accept",typeArray.join(","));
+							fileDom.dom.setAttribute("multiple", "multiple");
+							fileDom.dom.setAttribute("accept", typeArray.join(","));
 						}
-				    },
-				    _setValue: function (val) {
-				    	Ext.form.field.File.superclass.setValue.call(this, val);
-				    },
+					},
+					_setValue: function (val) {
+						Ext.form.field.File.superclass.setValue.call(this, val);
+					},
 					listeners: {
-						afterrender: function(cmp) {
+						afterrender: function (cmp) {
 							me.supportMult && cmp.supportMultFn();
 						},
-						change: function (field, val, opts){
+						change: function (field, val, opts) {
 							var files = val.split(', '),
 								frm = Ext.getCmp('gridpanel-uploadForm'),
 								st = frm.getStore(),
@@ -93,33 +93,33 @@ Ext.define('FamilyDecoration.view.chart.UploadForm', {
 						}
 					}
 				}, {
-					xtype: 'grid',
-					header: false,
-					store: uploadSt,
-					maxHeight: 250,
-					autoScroll: true,
-					id: 'gridpanel-uploadForm',
-					name: 'gridpanel-uploadForm',
-					columns: [{
-						text: '名称',
-						dataIndex: 'fileName',
-						flex: 1,
-						draggable: false,
-						sortable: false,
-						menuDisabled: true
-					}, {
-						text: '状态',
-						dataIndex: 'uploadStatus',
-						flex: 1,
-						draggable: false,
-						sortable: false,
-						menuDisabled: true
-					}]
-				}],
+						xtype: 'grid',
+						header: false,
+						store: uploadSt,
+						maxHeight: 250,
+						autoScroll: true,
+						id: 'gridpanel-uploadForm',
+						name: 'gridpanel-uploadForm',
+						columns: [{
+							text: '名称',
+							dataIndex: 'fileName',
+							flex: 1,
+							draggable: false,
+							sortable: false,
+							menuDisabled: true
+						}, {
+								text: '状态',
+								dataIndex: 'uploadStatus',
+								flex: 1,
+								draggable: false,
+								sortable: false,
+								menuDisabled: true
+							}]
+					}],
 
 				buttons: [{
 					text: '上传',
-					handler: function (){
+					handler: function () {
 						var frm = this.up('form'),
 							files = frm.down('filefield'),
 							grid = Ext.getCmp('gridpanel-uploadForm'),
@@ -137,26 +137,28 @@ Ext.define('FamilyDecoration.view.chart.UploadForm', {
 							me.beforeUpload();
 							frm.submit({
 								clientValidation: true,
-								url: me.url + (me.backup ? (me.url.indexOf('?') == -1 ?  '?backup=true' : '&backup=true' ) : '' ),
+								url: me.url + (me.backup ? (me.url.indexOf('?') == -1 ? '?backup=true' : '&backup=true') : ''),
 								params: p,
 								waitMsg: '正在上传图片...',
-								success: function (fp, o){
+								success: function (fp, o) {
 									var data = o.result.details,
 										frm = Ext.getCmp('gridpanel-uploadForm'),
 										st = frm.getStore(),
 										res = [];
-									for (var i = 0; i < data.length; i++) {
-										res.push({
-											fileId: i,
-											fileName: data[i]['original_file_name'],
-											uploadStatus: data[i]['success'] ? '<font color="green">上传成功！</font>' : '<font color="red">上传失败！</font>'
-										})
+									if (data && data.length > 0) {
+										for (var i = 0; i < data.length; i++) {
+											res.push({
+												fileId: i,
+												fileName: data[i]['original_file_name'],
+												uploadStatus: data[i]['success'] ? '<font color="green">上传成功！</font>' : '<font color="red">上传失败！</font>'
+											})
+										}
+										st.loadData(res);
 									}
-									st.loadData(res);
 									me.afterUpload(fp, o);
 									me.supportMult && files.supportMultFn();
 								},
-								failure: function(form, action) {
+								failure: function (form, action) {
 									switch (action.failureType) {
 										case Ext.form.action.Action.CLIENT_INVALID:
 											Ext.Msg.alert('Failure', 'Form fields may not be submitted with invalid values');
