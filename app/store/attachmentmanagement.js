@@ -9,7 +9,7 @@ Ext.define('FamilyDecoration.store.AttachmentManagement', {
 			root: 'data'
 		},
 		extraParams: {
-			action: 'UploadFile.get'
+			action: 'UploadFiles.get'
 		}
     }
 });

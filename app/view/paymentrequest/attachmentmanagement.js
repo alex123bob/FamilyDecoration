@@ -32,7 +32,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
                         extraParams: {
                             refType: me.infoObj.refType,
                             refId: me.infoObj.refId,
-                            action: 'UploadFile.get'
+                            action: 'UploadFiles.get'
                         }
                     }
                 }),
