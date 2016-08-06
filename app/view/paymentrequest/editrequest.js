@@ -100,41 +100,6 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditRequest', {
                         name: 'descpt',
                         value: me.request ? me.request.get('descpt') : ''
                     }
-                    // {
-                    //     fieldLabel: '附件',
-                    //     readOnly: true,
-                    //     name: 'certs',
-                    //     value: me.request ? me.request.get('certs') : '',
-                    //     listeners: {
-                    //         focus: function (txt, ev, opts) {
-                    //             var certUpload = Ext.create('FamilyDecoration.view.chart.UploadForm', {
-                    //                 title: '附件上传',
-                    //                 typeArray: ['image/jpg', 'image/jpeg'],
-                    //                 url: './libs/upload_pic.php',
-                    //                 supportMult: true,
-                    //                 afterUpload: function (fp, o) {
-                    //                     var p = {},
-                    //                         content = '',
-                    //                         originalName = '',
-                    //                         details = o.result.details,
-                    //                         flag = ',';
-
-                    //                     Ext.each(details, function (obj, i, arr){
-                    //                         if (obj['success']) {
-                    //                             content += obj['file'] + flag;
-                    //                             originalName += obj['original_file_name'] + flag;
-                    //                         }
-                    //                     });
-                    //                     content = content.slice(0, parseInt('-' + flag.length, 10));
-                    //                     originalName = originalName.slice(0, parseInt('-' + flag.length, 10));
-                    //                     txt.setValue(content);
-                    //                     certUpload.close();
-                    //                 }
-                    //             });
-                    //             certUpload.show();
-                    //         }
-                    //     }
-                    // }
                 ]
             }
         ];
