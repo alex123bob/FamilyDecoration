@@ -4,7 +4,8 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
     layout: 'vbox',
     requires: [
         'FamilyDecoration.view.paymentrequest.EditRequest',
-        'FamilyDecoration.store.StatementBill'
+        'FamilyDecoration.store.StatementBill',
+        'FamilyDecoration.view.paymentrequest.AttachmentManagement'
     ],
     defaults: {
         width: '100%',
@@ -289,17 +290,24 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                         },
                         {
                             text: '附件',
-                            dataIndex: 'certs',
-                            renderer: function (val, meta, rec){
-                                var res = '';
-                                if (val) {
-                                    var arr = val.split(',');
-                                    Ext.each(arr, function (item, index, self){
-                                        res += '<a href="' + item.slice(1) + '" target="_blank">附件' + (index+1) + '</a>';
-                                    });
+                            xtype: 'actioncolumn',
+                            width: 50,
+                            items: [
+                                {
+                                    tooltip: '查看编辑附件',
+                                    icon: 'resources/img/attachment.png',
+                                    handler: function (grid, rowIndex, colIndex){
+                                        var rec = grid.getStore().getAt(rowIndex),
+                                            win = Ext.create('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
+                                                infoObj: {
+                                                    refType: 'statement_bill',
+                                                    refId: rec.getId()
+                                                }
+                                            });
+                                        win.show();
+                                    }
                                 }
-                                return res;
-                            }
+                            ]
                         }
                     ]
                 },

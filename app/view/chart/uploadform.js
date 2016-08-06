@@ -13,6 +13,7 @@ Ext.define('FamilyDecoration.view.chart.UploadForm', {
 	typeArray: undefined, 
 	beforeUpload: Ext.emptyFn,
 	afterUpload: Ext.emptyFn,
+	backup: false, // whether to back up current data.
 	supportMult: true, // whether this component supports multiple picture upload or not.
 
 	initComponent: function (){
@@ -133,7 +134,7 @@ Ext.define('FamilyDecoration.view.chart.UploadForm', {
 							me.beforeUpload();
 							frm.submit({
 								clientValidation: true,
-								url: me.url,
+								url: me.url + (me.backup ? (me.url.indexOf('?') == -1 ?  '?backup=true' : '&backup=true' ) : '' ),
 								params: p,
 								waitMsg: '正在上传图片...',
 								success: function (fp, o){

@@ -18,9 +18,9 @@ Ext.require('Ext.window.MessageBox', function () {
             // return this.show(cfg);
             return swal({
                 title: '提示',
-                text: msg,
+                text: msg.replace(/\n/gi, '<br />'),
                 type: 'info',
-                html: false,
+                html: true,
                 animation: 'slide-from-top',
                 confirmButtonText: '确定',
                 closeOnConfirm: true
@@ -43,9 +43,9 @@ Ext.require('Ext.window.MessageBox', function () {
             // return this.show(cfg);
             return swal({
                 title: '警告',
-                text: msg,
+                text: msg.replace(/\n/gi, '<br />'),
                 type: 'warning',
-                html: false,
+                html: true,
                 showCancelButton: true,
                 confirmButtonText: "是",
                 cancelButtonText: '否',
@@ -74,9 +74,9 @@ Ext.require('Ext.window.MessageBox', function () {
 
             return swal({
                 title: '错误',
-                text: text,
+                text: text.replace(/\n/gi, '<br />'),
                 type: 'error',
-                html: false,
+                html: true,
                 confirmButtonText: '确定',
                 closeOnConfirm: true
             }, function () {
@@ -100,9 +100,9 @@ Ext.require('Ext.window.MessageBox', function () {
         read: function (msg, fn, scope) {
             return swal({
                 title: "提示",
-                text: msg,
+                text: msg.replace(/\n/gi, '<br />'),
                 type: "input",
-                html: false,
+                html: true,
                 showCancelButton: true,
                 closeOnConfirm: false,
                 animation: "slide-from-top",
@@ -121,9 +121,9 @@ Ext.require('Ext.window.MessageBox', function () {
         password: function (msg, fn, scope) {
             return swal({
                 title: "提示",
-                text: msg,
+                text: msg.replace(/\n/gi, '<br />'),
                 type: "input",
-                html: false,
+                html: true,
                 showCancelButton: true,
                 closeOnConfirm: false,
                 animation: "slide-from-top",
@@ -143,8 +143,9 @@ Ext.require('Ext.window.MessageBox', function () {
         success: function (msg, fn, scope){
             return swal({
                 title: '成功',
-                text: msg,
-                type: 'success'
+                text: msg.replace(/\n/gi, '<br />'),
+                type: 'success',
+                html: true
             }, fn);
         }
     });
