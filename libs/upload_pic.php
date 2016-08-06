@@ -31,9 +31,9 @@ function handleFiles($tmpNames,$names){
 		for ($i = 0; $i < count($names); $i++) {
 			$oName = $names[$i];
 			$file_new_name = date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT).".".$ext_arr[$i];
-			$fileSize = filesize($directory.$file_new_name);
 			array_push($base64Images,base64_encode(file_get_contents($_FILES['photo']['tmp_name'][$i])));
-			$widthAndHeight = resize_pic($_FILES['photo']['tmp_name'][$i]);
+			$widthAndHeight = resize_pic($_FILES['photo']['tmp_name'][$i],$ext_arr[$i]);
+			$fileSize = filesize($_FILES['photo']['tmp_name'][$i]);
 			if(!$st->upload('certs',$file_new_name, $_FILES['photo']['tmp_name'][$i] , $attr, true)){
 				throw new Exception("文件".$names[$i]."上传失败！");
 			}
@@ -53,7 +53,7 @@ function handleFiles($tmpNames,$names){
 			throw new Exception("文件夹创建失败!".$directory);
 		for ($i = 0; $i < count($names); $i++) {
 			$tName = $tmpNames[$i];
-			$widthAndHeight = resize_pic($tName);
+			$widthAndHeight = resize_pic($tName,$ext_arr[$i]);
 			$oName = $names[$i];
 			$file_new_name = date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT).".".$ext_arr[$i];
 			if (!move_uploaded_file ($tName,$directory.$file_new_name )) {

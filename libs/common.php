@@ -297,24 +297,26 @@
 	if(startWith($_SERVER['PHP_SELF'],'/fd/'))
 		$APPBASE = $APPBASE.'/fd';
 
-function resize_pic($path){
+function resize_pic($path,$endFix){
+	$max = 1280;
 	list($width, $height) = getimagesize($path);
-	if(endWith($path,'.jpg') || endWith($path,'.jpeg') || endWith($path,'.JPG') || endWith($path,'.JPEG')){
-		$im=imagecreatefromjpeg($path);
-		if($width<=1920 && $height <= 1920){
-			$newwidth = $width;
-			$newheight = $height;
-		}else{
-			$scale = $width > $height ? 1920/$width : 1920/$height;
-			$newheight = $width > $height ? $height * $scale : 1920;
-			$newwidth = $width > $height ? 1920 : $height * $scale;
-		}
-		$newim = imagecreatetruecolor($newwidth,$newheight);
-		imagecopyresampled($newim,$im,0,0,0,0,$newwidth,$newheight,$width,$height);
-		imagejpeg($newim,$path);
-		imagedestroy($im);
-		imagedestroy($newim);
+	if(strtolower($endFix) !== "jpg" && strtolower($endFix) !== "jpeg"){
+		return "$width x $height";
 	}
+	$im=imagecreatefromjpeg($path);
+	if($width<=$max && $height <= $max){
+		$newwidth = $width;
+		$newheight = $height;
+	}else{
+		$scale = $width > $height ? $max/$width : $max/$height;
+		$newheight = $width > $height ? $height * $scale : $max;
+		$newwidth = $width > $height ? $max : $height * $scale;
+	}
+	$newim = imagecreatetruecolor($newwidth,$newheight);
+	imagecopyresampled($newim,$im,0,0,0,0,$newwidth,$newheight,$width,$height);
+	imagejpeg($newim,$path);
+	imagedestroy($im);
+	imagedestroy($newim);
 	return "$newwidth x $newheight";
 }
 ?>
