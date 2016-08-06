@@ -63,8 +63,19 @@ Ext.define('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
                         dataIndex: 'path',
                         flex: 1,
                         align: 'center'
+                    },
+                    {
+                        text: '备注',
+                        dataIndex: 'desc',
+                        flex: 1,
+                        align: 'center'
                     }
-                ]
+                ],
+                listeners: {
+                    cellclick: function (){
+
+                    }
+                }
             }
         ];
 
@@ -102,7 +113,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
             {
                 text: '删除',
                 handler: function () {
-
+                    var grid = me;
                 }
             }
         ]
