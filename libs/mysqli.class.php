@@ -351,6 +351,10 @@
 				$keys .= " `$key` ,";
 				$type = gettype($value);
 				switch($type){
+					case "array":
+
+						throw new Exception("array not supportted !:".$type." key:".$key);
+						break;
 					case "boolean":
 						$values .= " '".($value?"true":"false")."' ,";
 						break;
