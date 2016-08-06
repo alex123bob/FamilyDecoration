@@ -93,6 +93,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
                             // content = content.slice(0, parseInt('-' + flag.length, 10));
                             // originalName = originalName.slice(0, parseInt('-' + flag.length, 10));
                             certUpload.close();
+                            me.getStore().reload();
                         }
                     });
                     certUpload.show();
