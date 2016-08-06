@@ -10,6 +10,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
     ],
     width: 500,
     height: 350,
+    maximizable: true,
 
     infoObj: undefined, // refType, refId
 
@@ -125,6 +126,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
                         },
                         afterUpload: function (fp, o) {
                             certUpload.close();
+                            showMsg('上传成功！');
                             me.down('gridpanel').getStore().reload();
                         }
                     });
@@ -137,13 +139,22 @@ Ext.define('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
                     var grid = me.down('gridpanel'),
                         selModel = grid.getSelectionModel(),
                         recs = selModel.getSelection();
-                    for (var i = 0; i < recs.length; i++) {
-                        var rec = recs[i];
-                        ajaxDel('UploadFiles', {
-                            id: rec.getId()
-                        }, function (obj){
-                            grid.getStore().reload();
+                    if (recs.length > 0) {
+                        Ext.Msg.warning('确定要删除选中附件吗？', function (btnId) {
+                            if ('yes' == btnId) {
+                                for (var i = 0; i < recs.length; i++) {
+                                    var rec = recs[i];
+                                    ajaxDel('UploadFiles', {
+                                        id: rec.getId()
+                                    }, function (obj) {
+                                        grid.getStore().reload();
+                                    });
+                                }
+                            }
                         });
+                    }
+                    else {
+                        showMsg('请选择要删除的文件！');
                     }
                 }
             }
