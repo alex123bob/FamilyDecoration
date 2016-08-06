@@ -56,13 +56,26 @@ Ext.define('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
                         text: '大小',
                         dataIndex: 'size',
                         flex: 1,
-                        align: 'center'
+                        align: 'center',
+                        renderer: function (val, meta, rec) {
+                            if (val) {
+                                val = (val >> 10) + 'KB';
+                            }
+                            return val;
+                        }
                     },
                     {
                         text: '内容',
                         dataIndex: 'path',
                         flex: 1,
-                        align: 'center'
+                        align: 'center',
+                        renderer: function (val, meta, rec) {
+                            var img = '';
+                            if (val) {
+                                img = '<img width="20" height="20" src="' + val + '" />';
+                            }
+                            return img;
+                        }
                     },
                     {
                         text: '备注',
@@ -72,7 +85,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
                     }
                 ],
                 listeners: {
-                    cellclick: function (){
+                    cellclick: function () {
 
                     }
                 }
@@ -94,22 +107,8 @@ Ext.define('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
                             desc: ''
                         },
                         afterUpload: function (fp, o) {
-                            // var p = {},
-                            //     content = '',
-                            //     originalName = '',
-                            //     details = o.result.details,
-                            //     flag = ',';
-
-                            // Ext.each(details, function (obj, i, arr) {
-                            //     if (obj['success']) {
-                            //         content += obj['file'] + flag;
-                            //         originalName += obj['original_file_name'] + flag;
-                            //     }
-                            // });
-                            // content = content.slice(0, parseInt('-' + flag.length, 10));
-                            // originalName = originalName.slice(0, parseInt('-' + flag.length, 10));
                             certUpload.close();
-                            me.getStore().reload();
+                            me.down('gridpanel').getStore().reload();
                         }
                     });
                     certUpload.show();
