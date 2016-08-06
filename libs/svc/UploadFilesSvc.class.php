@@ -8,6 +8,15 @@ class UploadFilesSvc extends BaseSvc
 		'file'=>'文件',
 		'other'=>'其他');
 	
+	public function get($q){
+		$res = parent::get($q);
+		$prefix = defined("SAE_MYSQL_HOST_M") ? $_SERVER['HTTP_APPNAME'].'-certs.stor.sinaapp.com/' : str_replace("libs/api.php", "",$_SERVER['SCRIPT_NAME']).'resources/certs/';
+		foreach ($res['data'] as &$item) {
+			$item['path'] = $prefix.$item['path'];
+		}
+		return $res;
+	}
+
 	public function add($q){
 		$q['@id'] = $this->getUUID();
 		notNullCheck($q,'@type','文件类型不能为空!');

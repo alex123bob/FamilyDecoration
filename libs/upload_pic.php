@@ -63,7 +63,7 @@ function handleFiles($tmpNames,$names){
 			$uploadFilesSvc->add(array(
 					'@type'=>'img',
 					'@size'=>filesize($directory.$file_new_name),
-					'@path'=>$directory.$file_new_name,
+					'@path'=>$file_new_name,
 					'@other'=>$widthAndHeight,
 					'@orignalName'=>$oName,
 					'@refId'=>$_REQUEST['refId'],
