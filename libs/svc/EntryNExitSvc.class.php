@@ -138,7 +138,7 @@ class EntryNExitSvc{
 					'TODO' as c9,
 					paidTime as c10,
 					b.status,
-					payer as c11 from statement_bill b left join profession_type t on b.professionType = t.value
+					u.realName as c11 from statement_bill b left join profession_type t on b.professionType = t.value left join user u on u.name = b.payer 
 					where b.isDeleted = 'false' and (b.billType = 'reg' or b.billType = 'ppd') and ( b.status = 'paid' or b.status = 'chk')";
 		if(isset($q['c0']) && $q['c0'] != ""){
 			$sql .= ' and b.id like \'%'.$q['c0'].'%\'';
