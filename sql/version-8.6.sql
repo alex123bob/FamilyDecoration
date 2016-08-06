@@ -111,7 +111,7 @@ CREATE TABLE `upload_files` (
   `id` varchar(20) DEFAULT NULL,
   `refType` varchar(20) DEFAULT NULL comment '关联对象类型',
   `refId` varchar(20) DEFAULT NULL comment '关联对象id',
-  `orignalName` varchar(200) DEFAULT NULL comment '上传文件名',
+  `name` varchar(200) DEFAULT NULL comment '上传文件名',
   `path` varchar(200) DEFAULT NULL comment '存储路径',
   `size` varchar(20) DEFAULT NULL comment '文件大小',
   `type` varchar(10) DEFAULT NULL comment '文件类型：img:图片，file:文件，video:视频',
