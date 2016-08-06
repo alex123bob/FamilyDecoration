@@ -38,7 +38,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
                     }
                 }),
                 selModel: {
-                    type: 'SIMPLE'
+                    mode: 'SIMPLE'
                 },
                 plugins: [
                     Ext.create('Ext.grid.plugin.CellEditing', {
@@ -128,11 +128,14 @@ Ext.define('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
                     cellclick: function (view, td, cellIndex, rec, tr, rowIndex, e, opts) {
                         if (cellIndex == 4) {
                             var arr = rec.get('other').split('x'),
-                                w, h;
+                                w, h, portion;
                             arr[0].trim();
                             arr[1].trim();
                             w = parseInt(arr[0], 10);
                             h = parseInt(arr[1], 10);
+                            portion = w / h;
+                            w = 500;
+                            h = 500 / portion;
                             var win = Ext.create('Ext.window.Window', {
                                 layout: 'fit',
                                 title: rec.get('name'),
@@ -193,6 +196,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
                                     ajaxDel('UploadFiles', {
                                         id: rec.getId()
                                     }, function (obj) {
+                                        showMsg('删除成功！');
                                         grid.getStore().reload();
                                     });
                                 }
