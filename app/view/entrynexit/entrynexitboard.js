@@ -4,7 +4,8 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
     title: '&nbsp;',
     cls: 'gridpanel-entrynexitboard',
     requires: [
-        'FamilyDecoration.view.entrynexit.Payment'
+        'FamilyDecoration.view.entrynexit.Payment',
+        'FamilyDecoration.view.paymentrequest.AttachmentManagement'
     ],
     // viewConfig: {
     //     emptyText: '请选择条目进行加载',
@@ -221,10 +222,10 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
         }
 
         me.columnMapping = {
-                'workerSalary':           ['单号:1','姓名','联系方式:0.8','工程名称:0.8','款项名称','核算工资:0.8','申领工资:0.5','实付','余额','凭证','付款时间:1','付款人:0.8'],
-                'staffSalary':            ['单号:1','部门','姓名','基本工资','岗位工资','绩效工资(提成)','社保','结算工资','实付','凭证','付款时间','付款人'],
-                'materialPayment':        ['单号:1','供应商','工程名称:1','联系方式:0.8','领款人','款项名称','核对价','申领款','实付','余款','凭证','付款时间:0.8','付款人'],
-                'reimbursementItems':     ['单号:1','报销人','报销项目:1','联系方式:0.8','报销金额','实付','凭证','付款时间:1','付款人','报销归属:1.5'],
+                'workerSalary':           ['单号:1','姓名','联系方式:0.8','工程名称:0.8','款项名称','核算工资:0.8','申领工资:0.5','实付','余额','凭证:0.5:center:true','付款时间:1','付款人:0.8'],
+                'staffSalary':            ['单号:1','部门','姓名','基本工资','岗位工资','绩效工资(提成)','社保','结算工资','实付','凭证:0.5:center:true','付款时间','付款人'],
+                'materialPayment':        ['单号:1','供应商','工程名称:1','联系方式:0.8','领款人','款项名称','核对价','申领款','实付','余款','凭证:0.5:center:true','付款时间:0.8','付款人'],
+                'reimbursementItems':     ['单号:1','报销人','报销项目:1','联系方式:0.8','报销金额:0.8','实付','凭证:0.5:center:true','付款时间:1','付款人','报销归属:0.8'],
                 'financialFee':           ['单号:1','归属款项:1','贷款银行','交办人','本期利率','本期款项','付款','付款人','日期:1'],
                 'companyBonus':           ['单号:1','项目名称:1','款项归属','申请人','联系方式:0.8','申请金额','付款金额','付款人','付款日期:1','备注:1'],
                 'tax':                    ['单号:1','项目名称:1','款项归属','申请人','领款人','联系方式:0.8','申请金额','付款金额','付款人','付款日期:1','备注:1'],
@@ -241,8 +242,31 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
 				var newItem = [];
 				for(var i = 0;i<items.length;i++){
 					var cfgs = items[i].split(':');
-					newItem.push({ text: cfgs[0], dataIndex: 'c'+i,flex:parseFloat(cfgs[1]||0.5),align:cfgs[2]||'left'});
+					newItem.push({ text: cfgs[0], dataIndex: 'c'+i,flex:parseFloat(cfgs[1]||0.5),align:cfgs[2]||'left',hidden:cfgs[3]=='true'?true:false});
 				}
+                newItem.push(
+                    {
+                        width: 50,
+                        xtype: 'actioncolumn',
+                        text: '凭证',
+                        items: [
+                            {
+                                icon: 'resources/img/attachment.png',
+                                tooltip: '点击查看凭证',
+                                handler: function (grid, rowIndex, colIndex){
+                                    var rec = grid.getStore().getAt(rowIndex);
+                                        win = Ext.create('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
+                                                infoObj: {
+                                                    refType: 'statement_bill',
+                                                    refId: rec.get('c0')
+                                                }
+                                            });
+                                        win.show();
+                                }
+                            }
+                        ]
+                    }
+                )
 				return newItem;
 			}else{
 				return [];
