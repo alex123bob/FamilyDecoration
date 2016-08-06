@@ -107,6 +107,24 @@ CREATE TABLE `statement_bill_tag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+CREATE TABLE `upload_files` (
+  `id` varchar(20) DEFAULT NULL,
+  `refType` varchar(20) DEFAULT NULL comment '关联对象类型',
+  `refId` varchar(20) DEFAULT NULL comment '关联对象id',
+  `orignalName` varchar(200) DEFAULT NULL comment '上传文件名',
+  `path` varchar(200) DEFAULT NULL comment '存储路径',
+  `size` varchar(20) DEFAULT NULL comment '文件大小',
+  `type` varchar(10) DEFAULT NULL comment '文件类型：img:图片，file:文件，video:视频',
+  `desc` varchar(200) DEFAULT NULL comment '备注',
+  `other` varchar(200) DEFAULT NULL comment '其他，图片类型存放宽高，视频类型存放封面图片url，文本类型存放前200个字符做summary',
+  `uploader` varchar(20) DEFAULT NULL comment '上传人',
+  `isDeleted` varchar(5) DEFAULT 'false',
+  `createTime` datetime DEFAULT null  comment '上传时间',
+  `updateTime` datetime DEFAULT null,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 update statement_bill set status = 'new' where status = 'rbk';
 update statement_bill_audit set newStatus = 'new' where newStatus = 'rbk';
 update statement_bill_audit set orignalStatus = 'new' where orignalStatus = 'rbk';
