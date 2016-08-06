@@ -255,14 +255,14 @@ class EntryNExitSvc{
 		global $mysql;
 		$sql = "select b.id as c0,
 					u2.realName as c1,
-					b.reimbursementReason as c2,
+					b.projectName as c2,
 					u2.phone as c3,
 					b.claimAmount as c4,
 					b.paidAmount as c5,
 					'' as c6,
 					b.paidTime as c7,
 					u.realName as c8,
-					'TODO' as c9 
+					b.reimbursementReason as c9 
 					from statement_bill b left join user u on u.name = b.payer left join user u2 on u2.name = b.payee
 					where b.billType = 'rbm' and b.isDeleted = 'false' and  ( b.status = 'paid' or b.status = 'chk')";
 		if(isset($q['c0']) && $q['c0'] != ""){
