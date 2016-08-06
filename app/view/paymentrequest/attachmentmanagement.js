@@ -85,8 +85,25 @@ Ext.define('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
                     }
                 ],
                 listeners: {
-                    cellclick: function () {
-
+                    cellclick: function (view, td, cellIndex, rec, tr, rowIndex, e, opts) {
+                        if (cellIndex == 4) {
+                            var win = Ext.create('Ext.window.Window', {
+                                layout: 'fit',
+                                title: rec.get('name'),
+                                width: 400,
+                                height: 400,
+                                modal: true,
+                                autoScroll: true,
+                                maximizable: true,
+                                items: [
+                                    {
+                                        xtype: 'image',
+                                        src: rec.get('path')
+                                    }
+                                ]
+                            });
+                            win.show();
+                        }
                     }
                 }
             }
@@ -117,7 +134,17 @@ Ext.define('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
             {
                 text: '删除',
                 handler: function () {
-                    var grid = me;
+                    var grid = me.down('gridpanel'),
+                        selModel = grid.getSelectionModel(),
+                        recs = selModel.getSelection();
+                    for (var i = 0; i < recs.length; i++) {
+                        var rec = recs[i];
+                        ajaxDel('UploadFiles', {
+                            id: rec.getId()
+                        }, function (obj){
+                            grid.getStore().reload();
+                        });
+                    }
                 }
             }
         ]
