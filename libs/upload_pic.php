@@ -42,7 +42,7 @@ function handleFiles($tmpNames,$names){
 					'@size'=>$fileSize,
 					'@path'=>$file_new_name,
 					'@other'=>$widthAndHeight,
-					'@orignalName'=>$oName,
+					'@name'=>$oName,
 					'@refId'=>$_REQUEST['refId'],
 					'@desc'=>$_REQUEST['desc'],
 					'@refType'=>$_REQUEST['refType']
@@ -65,7 +65,7 @@ function handleFiles($tmpNames,$names){
 					'@size'=>filesize($directory.$file_new_name),
 					'@path'=>$file_new_name,
 					'@other'=>$widthAndHeight,
-					'@orignalName'=>$oName,
+					'@name'=>$oName,
 					'@refId'=>$_REQUEST['refId'],
 					'@desc'=>$_REQUEST['desc'],
 					'@refType'=>$_REQUEST['refType']

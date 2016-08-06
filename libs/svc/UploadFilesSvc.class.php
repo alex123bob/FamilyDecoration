@@ -10,7 +10,7 @@ class UploadFilesSvc extends BaseSvc
 	
 	public function get($q){
 		$res = parent::get($q);
-		$prefix = defined("SAE_MYSQL_HOST_M") ? $_SERVER['HTTP_APPNAME'].'-certs.stor.sinaapp.com/' : str_replace("libs/api.php", "",$_SERVER['SCRIPT_NAME']).'resources/certs/';
+		$prefix = defined("SAE_MYSQL_HOST_M") ? "http://".$_SERVER['HTTP_APPNAME'].'-certs.stor.sinaapp.com/' : str_replace("libs/api.php", "",$_SERVER['SCRIPT_NAME']).'resources/certs/';
 		foreach ($res['data'] as &$item) {
 			$item['path'] = $prefix.$item['path'];
 		}
@@ -24,7 +24,7 @@ class UploadFilesSvc extends BaseSvc
 		notNullCheck($q,'@path','存储路径不能为空!');
 		notNullCheck($q,'@refId','关联对象ID不能为空!');
 		notNullCheck($q,'@refType','关联对象不能为空!');
-		notNullCheck($q,'@orignalName','关联单据类型不能为空!');
+		notNullCheck($q,'@name','图片名称不能为空!');
 		$q['@uploader'] = $_SESSION['name'];
 		return parent::add($q);
 	}
