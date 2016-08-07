@@ -359,7 +359,7 @@ class StatementBillSvc extends BaseSvc
 				") p on p.projectId = t.projectId and p.payee = t.payee and t.professionType = p.professionType".
 				" left join statement_bill b ".
 				" on p.projectId = b.projectId and p.payee = b.payee and p.professionType = b.professionType and b.isDeleted = 'false' and b.payee is not null and b.billType = 'qgd'".
-				" left join project pro on b.projectId = pro.projectId where pro.captainName = '?' ";
+				" left join project pro on t.projectId = pro.projectId where pro.captainName = '?' ";
 		$count = $mysql->DBGetAsOneArray("select count(*) as cnt from ( $sql ) as temp ",$q['captainName'])[0];
 		$data = $mysql->DBGetAsMap($sql.BaseSvc::parseLimitSql($q),$q['captainName']);
 		foreach ($data as &$value) {
