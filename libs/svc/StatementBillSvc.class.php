@@ -361,7 +361,7 @@ class StatementBillSvc extends BaseSvc
 				" on p.projectId = b.projectId and p.payee = b.payee and p.professionType = b.professionType and b.isDeleted = 'false' and b.payee is not null and b.billType = 'qgd'".
 				" left join project pro on t.projectId = pro.projectId where pro.captainName = '?' ";
 		$count = $mysql->DBGetAsOneArray("select count(*) as cnt from ( $sql ) as temp ",$q['captainName'])[0];
-		$data = $mysql->DBGetAsMap($sql.BaseSvc::parseLimitSql($q),$q['captainName']);
+		$data = $count > 0 ? $mysql->DBGetAsMap($sql.BaseSvc::parseLimitSql($q),$q['captainName']) : array();
 		foreach ($data as &$value) {
 			$value['qgd'] = $value['total'] - $value['paid'];
 		}
