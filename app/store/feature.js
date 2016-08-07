@@ -242,7 +242,8 @@
                     {
                         name: '质保金管理',
                         cmp: 'qualityguaranteedepositmgm-index',
-                        leaf: true
+                        leaf: true,
+                        icon: 'resources/img/quality_guarantee_deposit.png'
                     }
                 ]
             },
