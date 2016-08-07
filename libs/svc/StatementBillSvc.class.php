@@ -327,7 +327,7 @@ class StatementBillSvc extends BaseSvc
 		$obj = array('billType'=>'qgd','projectId'=>$q['projectId'],'payee'=>$q['payee'],'professionType'=>$q['professionType']);
 		$qgd = parent::get($obj);
 		if($qgd['total'] == 0){
-			$array = $mysql->DBGetAsOneArray("select id from statment_bill where (billType = 'reg' or billType = 'ppd') and isDeleted = 'false' and status != 'paid' and status != 'arch' ");
+			$array = $mysql->DBGetAsOneArray("select id from statement_bill where (billType = 'reg' or billType = 'ppd') and isDeleted = 'false' and status != 'paid' and status != 'arch' ");
 			if(count($array) > 0){
 				throw new Exception("以下申请单还未走完全流程：".join('\n',$array));
 			}
@@ -358,9 +358,10 @@ class StatementBillSvc extends BaseSvc
 					" AND STATUS = 'paid' GROUP BY projectId,payee,professionType,projectName".
 				") p on p.projectId = t.projectId and p.payee = t.payee and t.professionType = p.professionType".
 				" left join statement_bill b ".
-				" on p.projectId = b.projectId and p.payee = b.payee and p.professionType = b.professionType and b.isDeleted = 'false' and b.payee is not null and b.billType = 'qgd'";
-		$count = $mysql->DBGetAsOneArray("select count(*) as cnt from ( $sql ) as temp ")[0];
-		$data = $mysql->DBGetAsMap($sql.BaseSvc::parseLimitSql($q));
+				" on p.projectId = b.projectId and p.payee = b.payee and p.professionType = b.professionType and b.isDeleted = 'false' and b.payee is not null and b.billType = 'qgd'".
+				" left join project pro on b.projectId = pro.projectId where pro.captainName = '?' ";
+		$count = $mysql->DBGetAsOneArray("select count(*) as cnt from ( $sql ) as temp ",$q['captainName'])[0];
+		$data = $mysql->DBGetAsMap($sql.BaseSvc::parseLimitSql($q),$q['captainName']);
 		foreach ($data as &$value) {
 			$value['qgd'] = $value['total'] - $value['paid'];
 		}
