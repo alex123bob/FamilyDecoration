@@ -20,6 +20,14 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
     initComponent: function () {
         var me = this;
 
+        function _getRes (){
+            return {
+                qgd: me.getComponent('numberfield-modifyQgd'),
+                deadline: me.getComponent('datefield-modifyDeadline'),
+                reason: me.getComponent('textarea-modifyReason')
+            };
+        }
+
         me.items = [
             {
                 xtype: 'fieldcontainer',
@@ -28,6 +36,7 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
                 defaults: {
                     xtype: 'displayfield',
                     margin: '0 8 0 0',
+                    width: 230,
                     style: {
                         'float': 'left'
                     }
@@ -81,14 +90,17 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
                 itemId: 'numberfield-modifyQgd',
                 fieldLabel: '调整质保金',
                 height: 28,
-                allowBlank: false
+                allowBlank: false,
+                value: me.qgd ? me.qgd.get('qgd') : ''
             },
             {
                 itemId: 'datefield-modifyDeadline',
                 xtype: 'datefield',
                 fieldLabel: '调整期限',
                 height: 25,
-                allowBlank: false
+                allowBlank: false,
+                editable: false,
+                submitFormat: 'Y-m-d H:i:s'
             },
             {
                 itemId: 'textarea-modifyReason',
@@ -103,7 +115,21 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
             {
                 text: '确定',
                 handler: function (){
-
+                    var resObj = _getRes(),
+                        res = {},
+                        flag = true;
+                    for (var key in resObj) {
+                        if (resObj.hasOwnProperty(key)) {
+                            var field = resObj[key];
+                            if (!field.isValid()){
+                                flag = false;
+                            }
+                            else {
+                                res[key] = (field.xtype == 'datefield' ? field.getSubmitValue() : field.getValue());
+                            }
+                        }
+                    }
+                    console.log(res);
                 }
             },
             {
