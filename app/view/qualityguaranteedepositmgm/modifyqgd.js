@@ -16,15 +16,16 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
     },
 
     qgd: undefined,
+    callback: Ext.emptyFn,
 
     initComponent: function () {
         var me = this;
 
-        function _getRes (){
+        function _getRes() {
             return {
                 qgd: me.getComponent('numberfield-modifyQgd'),
                 deadline: me.getComponent('datefield-modifyDeadline'),
-                reason: me.getComponent('textarea-modifyReason')
+                descpt: me.getComponent('textarea-modifyReason')
             };
         }
 
@@ -114,14 +115,14 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
         me.buttons = [
             {
                 text: '确定',
-                handler: function (){
+                handler: function () {
                     var resObj = _getRes(),
                         res = {},
                         flag = true;
                     for (var key in resObj) {
                         if (resObj.hasOwnProperty(key)) {
                             var field = resObj[key];
-                            if (!field.isValid()){
+                            if (!field.isValid()) {
                                 flag = false;
                             }
                             else {
@@ -129,12 +130,22 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
                             }
                         }
                     }
-                    console.log(res);
+                    if (flag) {
+                        Ext.apply(res, {
+                            projectId: me.qgd.get('projectId'),
+                            professionType: me.qgd.get('professionType'),
+                            payee: me.qgd.get('payee')
+                        });
+                        ajaxUpdate('StatementBill.modifyQgd', res, ['projectId', 'professionType', 'payee'], function (obj){
+                            me.callback();
+                            me.close();
+                        }, true);
+                    }
                 }
             },
             {
                 text: '取消',
-                handler: function (){
+                handler: function () {
                     me.close();
                 }
             }

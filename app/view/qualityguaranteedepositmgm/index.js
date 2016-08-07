@@ -152,7 +152,10 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                         handler: function () {
                             var resObj = _getRes();
                             var win = Ext.create('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
-                                qgd: resObj.qgd
+                                qgd: resObj.qgd,
+                                callback: function (){
+                                    resObj.qgdList.refresh();
+                                }
                             });
                             win.show();
                         }
@@ -196,7 +199,7 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                         },
                         {
                             text: '单据',
-                            dataIndex: ''
+                            dataIndex: 'number'
                         },
                         {
                             text: '总金额',
