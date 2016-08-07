@@ -346,7 +346,7 @@ class StatementBillSvc extends BaseSvc
 						"t.number,".
 						"IFNULL(t.total,0) as total,".
 						"IFNULL(p.paid,0) as paid,".
-						//"t.professionType,".
+						"t.professionType,".
 						"b.deadline as deadline".
 				" from (".
 					"SELECT count(*) as number,max(phoneNumber) as phone,sum(IFNULL(totalFee, 0)) AS total,projectId,payee,professionType,projectName".
