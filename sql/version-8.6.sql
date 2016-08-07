@@ -126,6 +126,20 @@ CREATE TABLE `upload_files` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `business_goal` (
+  `id` varchar(20) DEFAULT NULL,
+  `user` varchar(20) DEFAULT NULL comment '人员',
+  `c1` int(10) DEFAULT 0 comment '市场部：扫楼，设计部：定金率',
+  `c2` int(10) DEFAULT 0 comment '市场部：电销，设计部：签单额',
+  `c3` int(10) DEFAULT 0 comment '市场部：到店',
+  `c4` int(10) DEFAULT 0 comment '市场部：定金',
+  `targetMonth` datetime DEFAULT null  comment '目标月',
+  `isDeleted` varchar(5) DEFAULT 'false',
+  `createTime` datetime DEFAULT null  comment '创建时间',
+  `updateTime` datetime DEFAULT null,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 update statement_bill set status = 'new' where status = 'rbk';
 update statement_bill_audit set newStatus = 'new' where newStatus = 'rbk';
