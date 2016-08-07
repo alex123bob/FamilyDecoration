@@ -314,5 +314,37 @@ class StatementBillSvc extends BaseSvc
 		parent::update(array('id'=>$res['id'],'@totalFee' => $res['totalFee']));
 		return $res;
 	}
+
+	public function qualityGuaranteeDeposit($q){
+		global $mysql;
+		$sql = "select t.projectId,".
+						"b.billName,".
+						"t.payee,".
+						"t.projectName,".
+						"t.phone,".
+						"t.number,".
+						"IFNULL(t.total,0) as total,".
+						"IFNULL(p.paid,0) as paid,".
+						//"t.professionType,".
+						"b.descpt as deadline".
+				" from (".
+					"SELECT count(*) as number,max(phoneNumber) as phone,sum(IFNULL(totalFee, 0)) AS total,projectId,payee,professionType,projectName".
+					" FROM statement_bill WHERE isDeleted = 'false' AND (billType = 'reg' OR billType = 'ppd') and payee is not null".
+					" GROUP BY projectId,payee,professionType,projectName".
+				") t left join (".
+					"SELECT sum(IFNULL(paidAmount, 0)) AS paid,projectId,payee,professionType".
+					" FROM statement_bill WHERE isDeleted = 'false' AND (billType = 'reg' OR billType = 'ppd') and payee is not null".
+					" AND STATUS = 'paid' GROUP BY projectId,payee,professionType,projectName".
+				") p on p.projectId = t.projectId and p.payee = t.payee and t.professionType = p.professionType".
+				" left join statement_bill b ".
+				" on p.projectId = b.projectId and p.payee = b.payee and p.professionType = b.professionType and b.isDeleted = 'false' and b.payee is not null and b.billType = 'qgd'";
+		$count = $mysql->DBGetAsOneArray("select count(*) as cnt from ( $sql ) as temp ")[0];
+		$data = $mysql->DBGetAsMap($sql.BaseSvc::parseLimitSql($q));
+		foreach ($data as &$value) {
+			$value['qgd'] = $value['total'] - $value['paid'];
+		}
+		$res = array('status'=>'successful','data'=>$data,'total'=>$count);
+		return $res;
+	}
 }
 ?>
