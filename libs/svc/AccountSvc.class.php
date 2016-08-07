@@ -26,6 +26,9 @@ class AccountSvc extends BaseSvc
 	}
 
 	public function get($q){
+		if(!isset($q['orderby'])){
+			$q['orderby'] = 'createTime desc';
+		}
 		$res = parent::get($q);
 		foreach ($res['data'] as &$value) {
 			$value['accountType'] = self::$ACCOUNT_TYPE[$value['accountType']];
@@ -94,7 +97,7 @@ class AccountSvc extends BaseSvc
 				$affect = parent::getSvc('loan')->update(array('@amount'=>$q['@fee'],'@status'=>'paid','id'=>$q['id'],'status'=>'!paid'))['affect'];
 				break;
 			case 'staffSalary':
-				$affect = parent::getSvc('salary')->update(array('@paid'=>$q['@fee'],'@status'=>'paid','id'=>$q['id'],'status'=>'chk'))['affect'];
+				$affect = parent::getSvc('salary')->update(array('@amount'=>$q['@fee'],'@status'=>'paid','id'=>$q['id'],'status'=>'chk'))['affect'];
 				break;
 			//入账 case 'designDeposit': return $this->designDeposit($q);
 			//入账 case 'projectFee': return $this->projectFee($q);

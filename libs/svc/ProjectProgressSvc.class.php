@@ -29,7 +29,7 @@ Class ProjectProgressSvc extends BaseSvc{
 		//先查工程计划
 		$plan = $planSvc->get(array('projectId'=>$q['projectId']));
 		if(count($plan['data'])==0)
-			throw new Exception('工程'.$q['projectId'].'暂时没有计划表!');
+			return array('total'=>0,'data'=>array());
 		if(count($plan['data'])>1)
 			throw new Exception('找到多个projectId为'.$q['projectId'].'的项目!');
 		$plan = $plan['data'][0];

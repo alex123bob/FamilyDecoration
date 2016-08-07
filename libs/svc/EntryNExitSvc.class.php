@@ -98,7 +98,7 @@ class EntryNExitSvc{
 					u.realName as c7,
 					b.paidTime as c8,
 					b.descpt as c9,
-					b.status
+					b.status 
 					from statement_bill b left join user u on u.name = b.payer left join user u2 on u2.name = b.payee
 					where b.billType = 'wlf' and b.isDeleted = 'false' and ( b.status = 'paid' or b.status = 'chk')";
 		if(isset($q['c0']) && $q['c0'] != ""){
@@ -145,7 +145,8 @@ class EntryNExitSvc{
 						b.paidAmount as c5,
 						b.paidTime as c6,
 						u.realName as c7,
-						b.descpt as c8
+						b.descpt as c8,
+						b.status
 				FROM statement_bill b left join user u on u.name = b.payer WHERE b.isDeleted = 'false' AND b.billType = 'qgd'";
 		$data = $mysql->DBGetAsMap($sql);
 		foreach ($data as &$value) {
@@ -193,8 +194,9 @@ class EntryNExitSvc{
 					s.amount as c8,
 					'' as c9,
 					s.paidTime as c10,
-					u2.realName as c11
-					from salary s left join user u on u.name = s.payee left join user u2 on u2.name = s.payer where s.isDeleted = 'false' and status != 'arch'";
+					u2.realName as c11,
+					s.status
+					from salary s left join user u on u.name = s.payee left join user u2 on u2.name = s.payer where s.isDeleted = 'false' and ( s.status = 'paid' or s.status = 'chk')";
 		if(isset($q['c0']) && $q['c0'] != ""){
 			$sql .= ' and s.id like \'%'.$q['c0'].'%\'';
 		}
@@ -223,7 +225,8 @@ class EntryNExitSvc{
 					b.claimAmount-b.paidAmount as c9,
 					'' as c10,
 					b.paidTime as c11,
-					u.realName as c12 
+					u.realName as c12,
+					b.status
 					from statement_bill b left join supplier s on b.supplierId = s.id 
 					left join user u on u.name = b.payer where b.billType = 'mtf' and b.isDeleted = 'false' and ( b.status = 'paid' or b.status = 'chk')";
 		if(isset($q['c0']) && $q['c0'] != ""){
@@ -246,7 +249,8 @@ class EntryNExitSvc{
 					'' as c6,
 					b.paidTime as c7,
 					u.realName as c8,
-					b.reimbursementReason as c9 
+					b.reimbursementReason as c9,
+					b.status
 					from statement_bill b left join user u on u.name = b.payer left join user u2 on u2.name = b.payee
 					where b.billType = 'rbm' and b.isDeleted = 'false' and  ( b.status = 'paid' or b.status = 'chk')";
 		if(isset($q['c0']) && $q['c0'] != ""){
@@ -297,7 +301,8 @@ class EntryNExitSvc{
 					l.dealTime as c7,
 					l.interest as c8,
 					l.period as c9 ,
-					l.loanTime as c10 
+					l.loanTime as c10,
+					l.status
 					from loan l left join user u on u.name = l.assignee left join user u2 on u2.name = l.dealer
  					where l.isDeleted = 'false' and l.type = '0' and l.status != 'arch'";
  		if(isset($q['c0']) && $q['c0'] != ""){
@@ -318,7 +323,8 @@ class EntryNExitSvc{
 					bs.customer as c4,
 					bs.custContact as c5,
 					b.paidAmount as c6,
-					b.payer as c7
+					b.payer as c7,
+					b.status
 					from statement_bill b left join user u on u.name = b.payer left join project p on p.projectId = b.projectId left join business bs on bs.id = p.businessId
 					where b.billType = 'dsdpst' and b.isDeleted = 'false' and  b.status = 'accepted'";
 		if(isset($q['c0']) && $q['c0'] != ""){
@@ -365,7 +371,8 @@ class EntryNExitSvc{
 					b.totalFee as c6,
 					b.paidAmount as c7,
 					b.paidTime as c9,
-					b.reimbursementReason as c8
+					b.reimbursementReason as c8,
+					b.status
 					from statement_bill b left join user u on u.name = b.payer left join project p on p.projectId = b.projectId left join business bs on bs.id = p.businessId
 					where b.billType = 'pjtf' and b.isDeleted = 'false' and b.status = 'accepted'";
 		if(isset($q['c0']) && $q['c0'] != ""){

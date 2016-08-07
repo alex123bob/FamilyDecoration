@@ -6,6 +6,7 @@ class SalarySvc extends BaseSvc
 		return parent::add($qryParams);
 	}
 	public function update($q){
+		$id = $q['id'];
 		if($q['@status'] == 'paid'){
 			if(!isset($q['@payer']))
 				$q['@payer'] = $_SESSION['name'];
@@ -18,7 +19,7 @@ class SalarySvc extends BaseSvc
 		$this->appendWhere = ' and status != \'arch\'';
 		$res = parent::update($q);
 		if($res['affect'] == 0)
-			throw new Exception("更新失败，请查看编号$id是否存在，或已被归档！");
+			throw new Exception("更新失败，请查看编号为 $id 的工资单是否存在，或已被归档！");
 		return $res;
 	}
 }

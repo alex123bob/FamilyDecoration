@@ -19,6 +19,9 @@ class AccountLogSvc extends BaseSvc
 		'other'=>'其他');
 	
 	public function get($q){
+		if(!isset($q['orderby'])){
+			$q['orderby'] = 'createTime desc';
+		}
 		$res = parent::get($q);
 		$svc = BaseSvc::getSvc('User');
 		$svc->appendRealName($res['data'],'operator');

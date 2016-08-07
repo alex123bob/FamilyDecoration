@@ -38,14 +38,14 @@ class StatementBillSvc extends BaseSvc
 		$q['@creator'] = $_SESSION['name'];
 		$q['@status'] = 'new';
 		notNullCheck($q,'@billType','审批单类型不能为空!');
-		notNullCheck($q,'@payee','领款人不能为空!');
+		/*notNullCheck($q,'@payee','领款人不能为空!');
 		if($q['@billType'] == 'reg' || $q['@billType'] == 'ppd'){
 			$obj = array('billType'=>'qgd','projectId'=>$q['@projectId'],'payee'=>$q['@payee'],'professionType'=>$q['@professionType']);
 			$qgd = parent::get($obj);
 			if($qgd['total'] > 0){
 				throw new Exception('项目已经创建保证金，请勿再创建申请单。');
 			}
-		}
+		}*/
 		$res = parent::add($q);
 		return $res;
 	}
@@ -55,7 +55,7 @@ class StatementBillSvc extends BaseSvc
 			//预付款 总金额就是领取金额
 			$q['@claimAmount'] = $q['@totalFee'];
 		}
-		if(isset($q['$status']) && $q['@status'] == 'paid'){
+		if(isset($q['@status']) && $q['@status'] == 'paid'){
 			if(!isset($q['@payer']))
 				$q['@payer'] = $_SESSION['name'];
 			if(!isset($q['@paidTime']))
