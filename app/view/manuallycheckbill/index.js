@@ -198,39 +198,42 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 				},
 				addBillFunc: function (billType) {
 					var resourceObj = me.getRes();
-					if (resourceObj.project && resourceObj.professionType) {
-						ajaxAdd('StatementBill', {
-							projectId: resourceObj.project.getId(),
-							professionType: resourceObj.professionType.get('value'),
-							projectName: resourceObj.project.get('projectName'),
-							billType: billType
-						}, function (obj) {
-							var win = Ext.create('FamilyDecoration.view.manuallycheckbill.AddBill', {
-								project: resourceObj.project,
-								professionType: resourceObj.professionType,
+					Ext.Msg.read('请输入领款人', function (txt) {
+						if (resourceObj.project && resourceObj.professionType) {
+							ajaxAdd('StatementBill', {
+								payee: txt,
+								projectId: resourceObj.project.getId(),
+								professionType: resourceObj.professionType.get('value'),
+								projectName: resourceObj.project.get('projectName'),
+								billType: billType
+							}, function (obj) {
+								var win = Ext.create('FamilyDecoration.view.manuallycheckbill.AddBill', {
+									project: resourceObj.project,
+									professionType: resourceObj.professionType,
 
-								bill: Ext.create('FamilyDecoration.model.StatementBill', obj.data),
-								callbackAfterClose: function () {
-									var resourceObj = me.getRes(),
-										professionTypeId = resourceObj.professionType.getId(),
-										professionTypeSelModel = resourceObj.professionTypeGrid.getSelectionModel(),
-										professionTypeSt = resourceObj.professionTypeSt;
-									professionTypeSelModel.deselectAll();
-									professionTypeSt.reload({
-										callback: function (recs, ope, success) {
-											if (success) {
-												professionTypeSelModel.select(professionTypeSt.getById(professionTypeId));
+									bill: Ext.create('FamilyDecoration.model.StatementBill', obj.data),
+									callbackAfterClose: function () {
+										var resourceObj = me.getRes(),
+											professionTypeId = resourceObj.professionType.getId(),
+											professionTypeSelModel = resourceObj.professionTypeGrid.getSelectionModel(),
+											professionTypeSt = resourceObj.professionTypeSt;
+										professionTypeSelModel.deselectAll();
+										professionTypeSt.reload({
+											callback: function (recs, ope, success) {
+												if (success) {
+													professionTypeSelModel.select(professionTypeSt.getById(professionTypeId));
+												}
 											}
-										}
-									});
-								}
+										});
+									}
+								});
+								win.show();
 							});
-							win.show();
-						});
-					}
-					else {
-						showMsg('请选择项目和工种！');
-					}
+						}
+						else {
+							showMsg('请选择项目和工种！');
+						}
+					});
 				},
 				tbar: [
 					{
@@ -437,7 +440,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 												id: resourceObj.bill.getId(),
 												status: '-1'
 											},
-											arr = ['id'];
+												arr = ['id'];
 											if (validateCode) {
 												Ext.apply(params, {
 													validateCode: validateCode

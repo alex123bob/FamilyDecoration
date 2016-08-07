@@ -209,7 +209,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								flex: 1,
 								height: '100%',
 								name: 'payee',
-								readOnly: previewMode || me.isEdit ? true : false
+								readOnly: true,
+								value: me.bill ? me.bill.get('payee') : ''
 							},
 							{
 								xtype: 'textfield',
