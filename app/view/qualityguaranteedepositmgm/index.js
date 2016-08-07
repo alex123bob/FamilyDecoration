@@ -3,7 +3,8 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
     alias: 'widget.qualityguaranteedepositmgm-index',
     requires: [
         'FamilyDecoration.store.User',
-        'FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd'
+        'FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd',
+        'FamilyDecoration.store.StatementBill'
     ],
     layout: 'hbox',
     defaultType: 'gridpanel',
@@ -63,17 +64,18 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                 store: Ext.create('FamilyDecoration.store.User', {
                     autoLoad: true,
                     filters: [
-                        function (rec){
+                        function (rec) {
                             var level = rec.get('level');
                             return /^003-\d{3}$/gi.test(level);
                         }
                     ]
                 }),
                 listeners: {
-                    selectionchange: function (selModel, sels, opts){
+                    selectionchange: function (selModel, sels, opts) {
                         var rec = sels[0],
                             resObj = _getRes();
                         resObj.qgdList.initBtn();
+                        resObj.qgdList.refresh();
                     }
                 }
             },
@@ -81,7 +83,8 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                 flex: 5,
                 title: '质保金列表',
                 itemId: 'gridpanel-qgdList',
-                _getBtns: function (){
+                cls: 'gridpanel-qgdList',
+                _getBtns: function () {
                     return {
                         apply: this.down('[name="button-applyQgd"]'),
                         modify: this.down('[name="button-modifyQgd"]'),
@@ -89,23 +92,64 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                         pass: this.down('[name="button-passQgd"]')
                     }
                 },
-                initBtn: function (){
+                initBtn: function () {
                     var resObj = _getRes(),
                         btnObj = this._getBtns();
-                    btnObj.apply.setDisabled(!resObj.captain);
+                    for (var key in btnObj) {
+                        switch (key) {
+                            case 'apply':
+                                btnObj[key].setDisabled(!resObj.captain);
+                                break;
+                            case 'modify':
+                            case 'flat':
+                            case 'pass':
+                                btnObj[key].setDisabled(!resObj.captain || !resObj.qgd);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                 },
+                refresh: function () {
+                    var resObj = _getRes();
+                    if (resObj.captain) {
+                        resObj.qgdSt.setProxy({
+                            type: 'rest',
+                            reader: {
+                                type: 'json',
+                                root: 'data',
+                                totalProperty: 'total'
+                            },
+                            url: './libs/api.php',
+                            extraParams: {
+                                action: 'StatementBill.qualityGuaranteeDeposit',
+                                captainName: resObj.captain.get('name')
+                            }
+                        });
+                        resObj.qgdSt.loadPage(1);
+                    }
+                    else {
+                        resObj.qgdSt.removeAll();
+                    }
+                },
+                store: Ext.create('FamilyDecoration.store.StatementBill', {
+                    autoLoad: false
+                }),
                 tbar: [
                     {
                         xtype: 'button',
                         name: 'button-applyQgd',
                         text: '申付质保金',
+                        icon: 'resources/img/up.png',
                         disabled: true
                     },
                     {
                         xtype: 'button',
                         text: '调整质保金',
                         name: 'button-modifyQgd',
-                        handler: function (){
+                        icon: 'resources/img/modify1.png',
+                        disabled: true,
+                        handler: function () {
                             var resObj = _getRes();
                             var win = Ext.create('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
                                 qgd: resObj.qgd
@@ -116,12 +160,16 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                     {
                         xtype: 'button',
                         name: 'button-flatQgd',
-                        text: '抹平质保金'
+                        text: '抹平质保金',
+                        disabled: true,
+                        icon: 'resources/img/balance.png'
                     },
                     {
                         xtype: 'button',
                         name: 'button-passQgd',
-                        text: '审核通过'
+                        text: '审核通过',
+                        disabled: true,
+                        icon: 'resources/img/check.png'
                     }
                 ],
                 columns: {
@@ -152,25 +200,31 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                         },
                         {
                             text: '总金额',
-                            dataIndex: 'totalFee'
+                            dataIndex: 'total'
                         },
                         {
                             text: '已付金额',
-                            dataIndex: 'paidFee'
+                            dataIndex: 'paid'
                         },
                         {
                             text: '质保金',
-                            dataIndex: 'qgdFee'
+                            dataIndex: 'qgd'
                         },
                         {
                             text: '质保金期限',
-                            dataIndex: 'qgdDeadline'
+                            dataIndex: 'deadline'
                         },
                         {
                             text: '是否审核',
                             dataIndex: 'status'
                         }
                     ]
+                },
+                listeners: {
+                    selectionchange: function (selModel, sels, opts){
+                        var resObj = _getRes();
+                        resObj.qgdList.initBtn();
+                    }
                 }
             }
         ];

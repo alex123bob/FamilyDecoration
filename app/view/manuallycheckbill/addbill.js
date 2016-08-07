@@ -268,6 +268,10 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 				handler: function () {
 					var billTable = me.down('manuallycheckbill-billtable'),
 						result = billTable.getValues();
+					if (result.payee == '') {
+						Ext.Msg.error('领款人不能为空！');
+						return;
+					}
 					Ext.apply(result, {
 						id: me.bill.getId()
 					});

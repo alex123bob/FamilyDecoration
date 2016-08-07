@@ -37,60 +37,65 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
                     {
                         fieldLabel: '单据名称',
                         name: 'billName',
-                        value: 'this is a test info'
+                        value: me.qgd ? me.qgd.get('billName') : ''
                     },
                     {
                         fieldLabel: '领款人',
                         name: 'payee',
-                        value: 'this is a test info'
+                        value: me.qgd ? me.qgd.get('payee') : ''
                     },
                     {
                         fieldLabel: '工程地址',
                         name: 'projectName',
-                        value: 'this is a test info'
+                        value: me.qgd ? me.qgd.get('projectName') : ''
                     },
                     {
                         fieldLabel: '联系电话',
                         name: 'phoneNumber',
-                        value: 'this is a test info'
+                        value: me.qgd ? me.qgd.get('phoneNumber') : ''
                     },
                     {
                         fieldLabel: '总金额',
-                        name: 'totalFee',
-                        value: 'this is a test info'
+                        name: 'total',
+                        value: me.qgd ? me.qgd.get('total') : ''
                     },
                     {
                         fieldLabel: '已付金额',
-                        name: 'paidFee',
-                        value: 'this is a test info'
+                        name: 'paid',
+                        value: me.qgd ? me.qgd.get('paid') : ''
                     },
                     {
                         fieldLabel: '质保金',
-                        name: 'qgdFee',
-                        value: 'this is a test info'
+                        name: 'qgd',
+                        value: me.qgd ? me.qgd.get('qgd') : ''
                     },
                     {
                         fieldLabel: '质保金期限',
-                        name: 'qgdDeadline',
-                        value: 'this is a test info'
+                        name: 'deadline',
+                        value: me.qgd ? me.qgd.get('deadline') : ''
                     }
                 ]
             },
             {
-                itemId: 'textfield-modifyQgd',
+                xtype: 'numberfield',
+                itemId: 'numberfield-modifyQgd',
                 fieldLabel: '调整质保金',
-                height: 30
+                height: 28,
+                allowBlank: false
             },
             {
-                itemId: 'textfield-modifyDeadline',
+                itemId: 'datefield-modifyDeadline',
+                xtype: 'datefield',
                 fieldLabel: '调整期限',
-                height: 30
+                height: 25,
+                allowBlank: false
             },
             {
                 itemId: 'textarea-modifyReason',
                 xtype: 'textarea',
                 fieldLabel: '调整原因',
-                height: 100
+                height: 100,
+                allowBlank: false
             }
         ];
 
