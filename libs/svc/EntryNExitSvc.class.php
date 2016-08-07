@@ -135,34 +135,18 @@ class EntryNExitSvc{
 		return $this->parseData($sql,$q);
 	}
 
-	private function chineseToUnicode($name){
-	    $name = iconv('UTF-8', 'UCS-2', $name);  
-	    $len = strlen($name);  
-	    $str = '';  
-	    for ($i = 0; $i < $len - 1; $i = $i + 2) {  
-	        $c = $name[$i];  
-	        $c2 = $name[$i + 1];  
-	        if (ord($c) > 0) {    // 两个字节的文字  
-	            $str .= ord($c).ord($c2);  
-	        } else  {  
-	            $str .= $c2;  
-	        }  
-	    }  
-	    return $str;
-	}
-
 	private function qualityGuaranteeDeposit($q){
 		global $mysql;
-		$sql = "SELECT	sum(IFNULL(totalFee, 0)) AS totalFee,
-						sum(IFNULL(paidAmount, 0)) AS paidAmount,
-						count(*) as billNumber,
-						projectId,
-						projectName as c1,
-						payee as c2,
-						max(phoneNumber) as c3,
-						professionType
-				FROM statement_bill WHERE isDeleted = 'false' AND (billType = 'reg' OR billType = 'ppd') AND (STATUS = 'paid' OR STATUS = 'chk')
-				GROUP BY projectId,	payee, professionType";
+		$sql = "SELECT	b.id as c0,
+						b.projectName as c1,
+						b.payee as c2,
+						b.phoneNumber as c3,
+						b.totalFee as c4,
+						b.paidAmount as c5,
+						b.paidTime as c6,
+						u.realName as c7,
+						b.descpt as c8
+				FROM statement_bill b left join user u on u.name = b.payer WHERE b.isDeleted = 'false' AND b.billType = 'qgd'";
 		$data = $mysql->DBGetAsMap($sql);
 		foreach ($data as &$value) {
 			$value['c0'] = $value['professionType'].$value['projectId'].$this->chineseToUnicode($value['c2']);

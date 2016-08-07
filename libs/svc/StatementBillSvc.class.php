@@ -39,6 +39,13 @@ class StatementBillSvc extends BaseSvc
 		$q['@status'] = 'new';
 		notNullCheck($q,'@billType','审批单类型不能为空!');
 		notNullCheck($q,'@payee','领款人不能为空!');
+		if($q['@billType'] == 'reg' || $q['@billType'] == 'ppd'){
+			$obj = array('billType'=>'qgd','projectId'=>$q['@projectId'],'payee'=>$q['@payee'],'professionType'=>$q['@professionType']);
+			$qgd = parent::get($obj);
+			if($qgd['total'] > 0){
+				throw new Exception('项目已经创建保证金，请勿再创建申请单。');
+			}
+		}
 		$res = parent::add($q);
 		return $res;
 	}
@@ -315,6 +322,20 @@ class StatementBillSvc extends BaseSvc
 		return $res;
 	}
 
+	public function modifyQgd($q){
+		global $mysql;
+		$obj = array('billType'=>'qgd','projectId'=>$q['projectId'],'payee'=>$q['payee'],'professionType'=>$q['professionType']);
+		$qgd = parent::get($obj);
+		if($qgd['total'] == 0){
+			$array = $mysql->DBGetAsOneArray("select id from statment_bill where (billType = 'reg' or billType = 'ppd') and isDeleted = 'false' and status != 'paid' and status != 'arch' ");
+			if(count($array) > 0){
+				throw new Exception("以下申请单还未走完全流程：".join('\n',$array));
+			}
+			$this->add(array('@billType'=>'qgd','@projectId'=>$q['projectId'],'@payee'=>$q['payee'],'@professionType'=>$q['professionType']));
+		}
+		return parent::update($q);
+	}
+
 	public function qualityGuaranteeDeposit($q){
 		global $mysql;
 		$sql = "select t.projectId,".
@@ -326,7 +347,7 @@ class StatementBillSvc extends BaseSvc
 						"IFNULL(t.total,0) as total,".
 						"IFNULL(p.paid,0) as paid,".
 						//"t.professionType,".
-						"b.descpt as deadline".
+						"b.deadline as deadline".
 				" from (".
 					"SELECT count(*) as number,max(phoneNumber) as phone,sum(IFNULL(totalFee, 0)) AS total,projectId,payee,professionType,projectName".
 					" FROM statement_bill WHERE isDeleted = 'false' AND (billType = 'reg' OR billType = 'ppd') and payee is not null".
