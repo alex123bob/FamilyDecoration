@@ -52,6 +52,7 @@ alter table statement_bill add column paidAmount double(16,2) comment '实付金
 alter table statement_bill add column paidTime datetime comment '付款时间';
 alter table statement_bill add column reimbursementReason varchar(200) comment '报销事项';
 alter table statement_bill add column descpt varchar(200) comment '备注';
+alter table statement_bill add column deadline datetime comment '截止日期';
 ALTER TABLE statement_bill modify billType varchar(8)  comment 'ppd:预付款,reg:普通账单,qgd:质量保证金,mtf:材料付款,rbm:报销,fdf:财务部门费用,wlf:福利,tax:税';
 
 CREATE TABLE `supplier` (
@@ -141,5 +142,8 @@ update statement_bill_audit set drt = '-1' where orignalStatus = 'rdyck' and new
 update statement_bill_audit set drt = '1' where orignalStatus = 'rdyck' and newStatus = 'rdyck2' and drt is null;
 update statement_bill_audit set drt = '-1' where orignalStatus = 'rdyck2' and newStatus = 'rdyck' and drt is null;
 alter table announcement_comment modify id varchar(20);
+
+ALTER TABLE `upload_files` ADD INDEX(`refId`);
+ALTER TABLE `upload_files` ADD INDEX(`refType`);
 
 update `system` set `paramValue`='version-8.6' where `id`='4';
