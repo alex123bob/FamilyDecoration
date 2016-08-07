@@ -238,6 +238,11 @@
                         cmp: 'account-index',
                         leaf: true,
                         icon: 'resources/img/account_management.png'
+                    },
+                    {
+                        name: '质保金管理',
+                        cmp: 'qualityguaranteedepositmgm-index',
+                        leaf: true
                     }
                 ]
             },
@@ -398,6 +403,9 @@
                 flag = User.isAdmin() || User.isFinanceManager() || User.isFinanceStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'account-index') {
+                flag = User.isAdmin() || User.isFinanceManager() ? true : false;
+            }
+            else if (rec.get('cmp') == 'qualityguaranteedepositmgm-index') {
                 flag = User.isAdmin() || User.isFinanceManager() ? true : false;
             }
             else if (rec.get('cmp') == 'planlabor-index') {
