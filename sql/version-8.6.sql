@@ -133,7 +133,7 @@ CREATE TABLE `business_goal` (
   `c2` int(10) DEFAULT 0 comment '市场部：电销，设计部：签单额',
   `c3` int(10) DEFAULT 0 comment '市场部：到店',
   `c4` int(10) DEFAULT 0 comment '市场部：定金',
-  `targetMonth` datetime DEFAULT null  comment '目标月',
+  `targetMonth` varchar(7) DEFAULT null  comment '目标月,格式2016-06',
   `isDeleted` varchar(5) DEFAULT 'false',
   `createTime` datetime DEFAULT null  comment '创建时间',
   `updateTime` datetime DEFAULT null,
