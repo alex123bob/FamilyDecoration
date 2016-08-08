@@ -139,9 +139,12 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
                         }
                     }
                     if (flag) {
+                        debugger
                         Ext.apply(res, {
                             projectId: me.qgd.get('projectId'),
                             professionType: me.qgd.get('professionType'),
+                            phoneNumber: me.qgd.get('phoneNumber'),
+                            projectName: me.qgd.get('professionType'),
                             payee: me.qgd.get('payee')
                         });
                         ajaxUpdate('StatementBill.modifyQgd', res, ['projectId', 'professionType', 'payee'], function (obj){
