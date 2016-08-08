@@ -198,7 +198,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 				},
 				addBillFunc: function (billType) {
 					var resourceObj = me.getRes();
-					Ext.Msg.read('请输入领款人', function (txt) {
+					debugger
+					Ext.Msg.read('请输入领款人，一旦输入不可修改！', function (txt) {
 						if (resourceObj.project && resourceObj.professionType) {
 							ajaxAdd('StatementBill', {
 								payee: txt,
