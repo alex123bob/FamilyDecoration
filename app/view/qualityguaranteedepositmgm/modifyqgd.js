@@ -108,7 +108,7 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
                 editable: false,
                 submitFormat: 'Y-m-d',
                 format: 'Y-m-d',
-                value: me.qgd ?  new Date(me.qgd.get('deadline')) : new Date()
+                value: me.qgd && me.qgd.get('deadline') ?  new Date(me.qgd.get('deadline')) : ''
             },
             {
                 itemId: 'textarea-modifyReason',
