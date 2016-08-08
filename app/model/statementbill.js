@@ -32,6 +32,8 @@ Ext.define('FamilyDecoration.model.StatementBill', {
 		{name: 'hasPrePaidBill', type: 'string'},
 		{name: 'remainingTotalFee', type: 'string'},
 		{name: 'prePaidFee', type: 'string'},
+		{name: 'payer', type: 'string'},
+		{name: 'payerRealName', type: 'string'},
 		
 		{name: 'professionType', type: 'string'},
 		{name: 'professionTypeName', type: 'string'},

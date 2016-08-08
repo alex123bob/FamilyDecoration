@@ -24,8 +24,8 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
         function _getRes() {
             return {
                 qgd: me.getComponent('numberfield-modifyQgd'),
-                deadline: me.getComponent('datefield-modifyDeadline'),
-                descpt: me.getComponent('textarea-modifyReason')
+                descpt: me.getComponent('textarea-modifyReason'),
+                deadline: me.getComponent('datefield-modifyDeadline')
             };
         }
 
@@ -106,14 +106,17 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
                 height: 25,
                 allowBlank: false,
                 editable: false,
-                submitFormat: 'Y-m-d H:i:s'
+                submitFormat: 'Y-m-d',
+                format: 'Y-m-d',
+                value: me.qgd ?  new Date(me.qgd.get('deadline')) : new Date()
             },
             {
                 itemId: 'textarea-modifyReason',
                 xtype: 'textarea',
-                fieldLabel: '调整原因',
+                fieldLabel: '备注',
                 height: 100,
-                allowBlank: false
+                allowBlank: false,
+                value: me.qgd ? me.qgd.get('descpt') : ''
             }
         ];
 
@@ -142,6 +145,9 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
                             payee: me.qgd.get('payee')
                         });
                         ajaxUpdate('StatementBill.modifyQgd', res, ['projectId', 'professionType', 'payee'], function (obj){
+                            me.qgd.set('totalFee',res['qgd']);
+                            me.qgd.set('deadline',res['deadline']);
+                            me.qgd.set('descpt',res['descpt']);
                             me.callback();
                             me.close();
                         }, true);

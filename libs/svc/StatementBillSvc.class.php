@@ -22,8 +22,10 @@ class StatementBillSvc extends BaseSvc
 			$value['statusName'] = self::$ALL_STATUS[$value['status']];
 			$value['billTypeName'] = self::$BILLTYPE[$value['billType']];
 		}
+		BaseSvc::getSvc('User')->appendRealName($res['data'],'payer');
 		return $res;
 	}
+
 	public function getStatusTransferChain($billType,$currentStatus,$offSet){
 		$count = count(self::$STATUSMAPPING[$billType]);
 		for($i = 0;$i<$count;$i++) {
@@ -356,7 +358,8 @@ class StatementBillSvc extends BaseSvc
 						"t.professionType,".
 						"prof.cname as professionTypeName,".
 						"b.status,".
-						"b.deadline as deadline".
+						"b.descpt,".
+						"b.deadline".
 				" from (".
 					"SELECT count(*) as number,max(phoneNumber) as phoneNumber,sum(IFNULL(totalFee, 0)) AS total,projectId,payee,professionType,projectName".
 					" FROM statement_bill WHERE isDeleted = 'false' AND (billType = 'reg' OR billType = 'ppd') and payee is not null".

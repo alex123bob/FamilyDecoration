@@ -4,7 +4,8 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
     requires: [
         'FamilyDecoration.store.User',
         'FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd',
-        'FamilyDecoration.store.StatementBill'
+        'FamilyDecoration.store.StatementBill',
+        'FamilyDecoration.view.manuallycheckbill.CheckBillList'
     ],
     layout: 'hbox',
     defaultType: 'gridpanel',
@@ -94,7 +95,7 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                 initBtn: function () {
                     var resObj = _getRes(),
                         btnObj = this._getBtns();
-                        btnObj.apply.setDisabled(!(resObj.qgd && resObj.qgd.data.id != null && resObj.qgd.data.id != "")); //有id了说明已经实例化了，可以申付
+                        btnObj.apply.setDisabled(!(resObj.qgd && resObj.qgd.data.status == "new")); //有id了说明已经实例化了，可以申付
                         btnObj.modify.setDisabled(!(resObj.qgd && ( resObj.qgd.data.status === 'new' || resObj.qgd.data.status == '' || resObj.qgd.data.status == null))); //只有新创建或者未实例化的才能修改
                         btnObj.pass.setDisabled(!(resObj.qgd && ( resObj.qgd.data.status === 'rdyck'))); //只有提交了审核的才能审核                     
                 },
@@ -154,6 +155,7 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                         disabled: true,
                         handler: function () {
                             var resObj = _getRes();
+                            debugger
                             var win = Ext.create('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
                                 qgd: resObj.qgd,
                                 callback: function (){
@@ -209,9 +211,31 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                             dataIndex: 'phoneNumber'
                         },
                         {
-                            text: '单据',
-                            flex: 0.4,
-                            dataIndex: 'number'
+                            text: '单',
+                            flex: 0.2,
+                            dataIndex: 'number',
+                        },
+                        {
+                            xtype: 'actioncolumn',
+                            text: '据',
+                            flex: 0.2,
+                            items: [
+                                {
+                                    icon: 'resources/img/balance.png',
+                                    tooltip: '点击查看单据',
+                                    handler: function (grid, rowIndex, colIndex){
+                                        var rec = grid.getStore().getAt(rowIndex);
+                                        win = Ext.create('FamilyDecoration.view.manuallycheckbill.CheckBillList', {
+                                                    infoObj: {
+                                                        projectId: rec.data.projectId,
+                                                        professionType: rec.data.professionType,
+                                                        payee: rec.data.payee
+                                                    }
+                                                });
+                                        win.show();
+                                    }
+                                },
+                            ]
                         },
                         {
                             text: '总金额(元)',
