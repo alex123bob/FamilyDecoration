@@ -327,29 +327,38 @@ class StatementBillSvc extends BaseSvc
 		$obj = array('billType'=>'qgd','projectId'=>$q['projectId'],'payee'=>$q['payee'],'professionType'=>$q['professionType']);
 		$qgd = parent::get($obj);
 		if($qgd['total'] == 0){
-			$array = $mysql->DBGetAsOneArray("select id from statement_bill where (billType = 'reg' or billType = 'ppd') and isDeleted = 'false' and status != 'paid' and status != 'arch' ");
+			$sql = "select id from statement_bill where (billType = 'reg' or billType = 'ppd') and isDeleted = 'false'".
+					" and status != 'paid' and status != 'arch' and professionType = '?' and payee = '?'";
+			$array = $mysql->DBGetAsOneArray($sql,$q['payee'],$q['professionType']);
 			if(count($array) > 0){
 				throw new Exception("以下申请单还未走完全流程：".join('\n',$array));
 			}
 			$this->add(array('@billType'=>'qgd','@projectId'=>$q['projectId'],'@payee'=>$q['payee'],'@professionType'=>$q['professionType']));
+		}else if($qgd['total'] > 1){
+			throw new Exception('有数据错误！多条质保金记录！');
 		}
+		$q['@totalFee'] = $q['@qgd'];
+		$q['billType'] = 'qgd';
 		return parent::update($q);
 	}
 
 	public function qualityGuaranteeDeposit($q){
 		global $mysql;
-		$sql = "select t.projectId,".
+		$sql = "select b.id,t.projectId,".
 						"b.billName,".
 						"t.payee,".
 						"t.projectName,".
-						"t.phone,".
+						"t.phoneNumber,".
 						"t.number,".
+						"b.totalFee,". //质保金单子的totalFee就是质保金金额，有可能是抹平/调整后的
 						"IFNULL(t.total,0) as total,".
 						"IFNULL(p.paid,0) as paid,".
 						"t.professionType,".
+						"prof.cname as professionTypeName,".
+						"b.status,".
 						"b.deadline as deadline".
 				" from (".
-					"SELECT count(*) as number,max(phoneNumber) as phone,sum(IFNULL(totalFee, 0)) AS total,projectId,payee,professionType,projectName".
+					"SELECT count(*) as number,max(phoneNumber) as phoneNumber,sum(IFNULL(totalFee, 0)) AS total,projectId,payee,professionType,projectName".
 					" FROM statement_bill WHERE isDeleted = 'false' AND (billType = 'reg' OR billType = 'ppd') and payee is not null".
 					" GROUP BY projectId,payee,professionType,projectName".
 				") t left join (".
@@ -358,12 +367,15 @@ class StatementBillSvc extends BaseSvc
 					" AND STATUS = 'paid' GROUP BY projectId,payee,professionType,projectName".
 				") p on p.projectId = t.projectId and p.payee = t.payee and t.professionType = p.professionType".
 				" left join statement_bill b ".
-				" on p.projectId = b.projectId and p.payee = b.payee and p.professionType = b.professionType and b.isDeleted = 'false' and b.payee is not null and b.billType = 'qgd'".
-				" left join project pro on t.projectId = pro.projectId where pro.captainName = '?' ";
+				" on t.projectId = b.projectId and t.payee = b.payee and t.professionType = b.professionType and b.isDeleted = 'false' and b.payee is not null and b.billType = 'qgd'".
+				" left join project pro on t.projectId = pro.projectId".
+				" left join profession_type prof on prof.value = t.professionType where pro.captainName = '?' ";
 		$count = $mysql->DBGetAsOneArray("select count(*) as cnt from ( $sql ) as temp ",$q['captainName'])[0];
 		$data = $count > 0 ? $mysql->DBGetAsMap($sql.BaseSvc::parseLimitSql($q),$q['captainName']) : array();
 		foreach ($data as &$value) {
 			$value['qgd'] = $value['total'] - $value['paid'];
+			if($value['status'] != null)
+				$value['status'] = self::$ALL_STATUS[$value['status']];
 		}
 		$res = array('status'=>'successful','data'=>$data,'total'=>$count);
 		return $res;

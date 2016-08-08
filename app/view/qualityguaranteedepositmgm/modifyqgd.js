@@ -75,9 +75,14 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
                         value: me.qgd ? me.qgd.get('paid') : ''
                     },
                     {
-                        fieldLabel: '质保金',
+                        fieldLabel: '原质保金',
                         name: 'qgd',
                         value: me.qgd ? me.qgd.get('qgd') : ''
+                    },
+                    {
+                        fieldLabel: '调整后质保金',
+                        name: 'totalFee',
+                        value: me.qgd ? me.qgd.get('totalFee') : ''
                     },
                     {
                         fieldLabel: '质保金期限',
@@ -92,7 +97,7 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
                 fieldLabel: '调整质保金',
                 height: 28,
                 allowBlank: false,
-                value: me.qgd ? me.qgd.get('qgd') : ''
+                value: me.qgd ? me.qgd.get('totalFee') || me.qgd.get('qgd') : ''
             },
             {
                 itemId: 'datefield-modifyDeadline',

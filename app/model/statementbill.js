@@ -41,7 +41,7 @@ Ext.define('FamilyDecoration.model.StatementBill', {
 
 		// for qgd
 		{name: 'deadline', type: 'string'},
-		{name: 'qgd', type: 'string'},
+		{name: 'qgd', type: 'float'},
 		{name: 'paid', type: 'string'},
 		{name: 'total', type: 'string'},
 		{name: 'number', type: 'string'} // number of bills

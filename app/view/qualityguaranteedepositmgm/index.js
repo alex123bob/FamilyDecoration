@@ -88,7 +88,7 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                     return {
                         apply: this.down('[name="button-applyQgd"]'),
                         modify: this.down('[name="button-modifyQgd"]'),
-                        flat: this.down('[name="button-flatQgd"]'),
+                        //flat: this.down('[name="button-flatQgd"]'),
                         pass: this.down('[name="button-passQgd"]')
                     }
                 },
@@ -101,7 +101,7 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                                 btnObj[key].setDisabled(!resObj.captain);
                                 break;
                             case 'modify':
-                            case 'flat':
+                            //case 'flat':
                             case 'pass':
                                 btnObj[key].setDisabled(!resObj.captain || !resObj.qgd);
                                 break;
@@ -160,13 +160,13 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                             win.show();
                         }
                     },
-                    {
+                    /*{
                         xtype: 'button',
                         name: 'button-flatQgd',
                         text: '抹平质保金',
                         disabled: true,
                         icon: 'resources/img/balance.png'
-                    },
+                    },*/
                     {
                         xtype: 'button',
                         name: 'button-passQgd',
@@ -178,19 +178,27 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                 columns: {
                     defaults: {
                         flex: 1,
-                        align: 'center'
+                        align: 'left'
                     },
                     items: [
                         {
-                            text: '单据名称',
-                            dataIndex: 'billName'
+                            text: '单据号',
+                            flex: 1.5,
+                            dataIndex: 'id'
                         },
                         {
                             text: '领款人',
+                            flex: 0.5,
                             dataIndex: 'payee'
                         },
                         {
+                            text: '工种',
+                            flex: 0.5,
+                            dataIndex: 'professionTypeName'
+                        },
+                        {
                             text: '工程地址',
+                            flex: 1.5,
                             dataIndex: 'projectName'
                         },
                         {
@@ -199,26 +207,48 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                         },
                         {
                             text: '单据',
+                            flex: 0.4,
                             dataIndex: 'number'
                         },
                         {
-                            text: '总金额',
+                            text: '总金额(元)',
+                            flex: 0.8,
+                            align: 'right',
                             dataIndex: 'total'
                         },
                         {
-                            text: '已付金额',
+                            text: '已付(元)',
+                            flex: 0.8,
+                            align: 'right',
                             dataIndex: 'paid'
                         },
                         {
-                            text: '质保金',
+                            text: '质保金(元)',
+                            flex: 0.8,
+                            align: 'right',
                             dataIndex: 'qgd'
+                        },
+                        {
+                            text: '调整后(元)',
+                            flex: 0.8,
+                            align: 'right',
+                            dataIndex: 'totalFee',
+                            renderer: function (val, meta, rec){
+                                if(val == 0)
+                                    return 0;
+                                if(val == rec.data.qgd)
+                                    return val;
+                                var diff = (rec.data.qgd - val).toFixed(2);
+                                return val + "("+(diff > 0 ? '+' : '' )+diff.toString().replace(/0*$/gi,'').replace(/\.$/gi,'')+")";
+                            }
                         },
                         {
                             text: '质保金期限',
                             dataIndex: 'deadline'
                         },
                         {
-                            text: '是否审核',
+                            text: '状态',
+                            flex: 0.5,
                             dataIndex: 'status'
                         }
                     ]
