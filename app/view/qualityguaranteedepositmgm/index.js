@@ -264,7 +264,7 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                                     return 0;
                                 if(val == rec.data.qgd)
                                     return val;
-                                var diff = (rec.data.qgd - val).toFixed(2);
+                                var diff = (val-rec.data.qgd).toFixed(2);
                                 return val + "("+(diff > 0 ? '+' : '' )+diff.toString().replace(/0*$/gi,'').replace(/\.$/gi,'')+")";
                             }
                         },
