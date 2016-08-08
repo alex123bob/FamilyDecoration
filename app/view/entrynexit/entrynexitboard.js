@@ -5,6 +5,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
     cls: 'gridpanel-entrynexitboard',
     requires: [
         'FamilyDecoration.view.entrynexit.Payment',
+        'FamilyDecoration.view.entrynexit.Receivement',
         'FamilyDecoration.view.paymentrequest.AttachmentManagement'
     ],
     // viewConfig: {
@@ -46,7 +47,8 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                                 reader: {
                                     type: 'json',
                                     root: 'data',
-                                    totalProperty: 'total'},
+                                    totalProperty: 'total'
+                                },
                                 extraParams: {
                                     action: 'EntryNExit.get',
                                     type: resObj.category.get('name'),
@@ -57,7 +59,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                             resObj.st.loadPage(1);
                         }
                     },
-                    change: function (txt, newVal, oldVal, opts){
+                    change: function (txt, newVal, oldVal, opts) {
                         var resObj = _getRes(),
                             oldProxy = resObj.st.getProxy();
                         if (newVal == '' && resObj.category) {
@@ -84,7 +86,8 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                                 reader: {
                                     type: 'json',
                                     root: 'data',
-                                    totalProperty: 'total'},
+                                    totalProperty: 'total'
+                                },
                                 extraParams: {
                                     action: 'EntryNExit.get',
                                     type: resObj.category.get('name'),
@@ -95,7 +98,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                             resObj.st.loadPage(1);
                         }
                     },
-                    change: function (txt, newVal, oldVal, opts){
+                    change: function (txt, newVal, oldVal, opts) {
                         var resObj = _getRes(),
                             oldProxy = resObj.st.getProxy();
                         if (newVal == '' && resObj.category) {
@@ -133,7 +136,15 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                 hidden: true,
                 disabled: true,
                 handler: function () {
-
+                    var resObj = _getRes();
+                    var win = Ext.create('FamilyDecoration.view.entrynexit.Receivement', {
+                        category: resObj.category,
+                        item: resObj.item,
+                        callback: function () {
+                            me.refresh(resObj.category);
+                        }
+                    });
+                    win.show();
                 }
             }
         ];
@@ -183,17 +194,17 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             tbarObj.nameSearch.setValue('').show();
             tbarObj.pay.hide();
             tbarObj.receive.hide();
-            if (!rec ) {
+            if (!rec) {
                 return;
             }
-            switch (rec.get('name')){
+            switch (rec.get('name')) {
                 case 'designDeposit':
                 case 'projectFee':
                 case 'other':
                 case 'loan':
                     tbarObj.receive.show();
                     break;
-                default: 
+                default:
                     tbarObj.pay.show();
                     break;
             }
@@ -222,28 +233,28 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
         }
 
         me.columnMapping = {
-                'workerSalary':           ['单号:1','姓名','联系方式:0.8','工程名称:0.8','款项名称','核算工资:0.8','申领工资:0.8','实付','余额','凭证:0.5:center:true','付款时间:0.8','付款人:0.8'],
-                'staffSalary':            ['单号:1','部门','姓名','基本工资:0.7','岗位工资:0.7','绩效工资(提成):0.8','社保','结算工资:0.8','实付','凭证:0.5:center:true','付款时间:0.7','付款人:0.6'],
-                'materialPayment':        ['单号:0.7','供应商:0.6','工程名称:0.7','联系方式:0.7','领款人:0.6','款项名称:0.7','核对价:0.6','申领款:0.6','实付','余款','凭证:0.5:center:true','付款时间:0.8','付款人:0.6'],
-                'reimbursementItems':     ['单号:1','报销人:0.6','报销项目:0.7','联系方式:0.7','报销金额:0.7','实付','凭证:0.5:center:true','付款时间:0.7','付款人:0.6','报销归属:0.8'],
-                'financialFee':           ['单号:1','归属款项:0.8','贷款银行:0.8','交办人:0.7','本期利率:0.8','本期款项:0.8','付款','付款人:0.7','日期'],
-                'companyBonus':           ['单号:1','项目名称:0.8','款项归属:0.8','申请人:0.7','联系方式:0.8','申请金额:0.8','付款金额:0.8','付款人:0.7','付款日期:0.8','备注'],
-                'tax':                    ['单号:1','项目名称:0.8','款项归属:0.8','申请人:0.7','领款人:0.7','联系方式:0.8','申请金额:0.8','付款金额:0.8','付款人:0.7','付款日期:0.8','备注'],
-                'qualityGuaranteeDeposit':['单号:1','工程名称:0.8','领款人:0.7','联系方式:0.8','应付金额:0.8','实付金额:0.8','付款日期:0.8','付款人:0.7','备注'],
-                'designDeposit':          ['单号:1','工程名称:0.8','业务员:0.7','设计师:0.7','客户姓名:0.8','联系方式:0.8','收款额:0.7','收款人:0.7'],
-                'projectFee':             ['单号:1','工程名称:0.8','项目经理:0.8','设计师:0.7','客户姓名:0.8','联系方式:0.8','应交款:0.7','已交款:0.7','款项','收款时间:0.8'],
-                'loan':                   ['单号:1','项目名称:0.8','银行','交办人:0.7','联系方式:0.8','收款金额:0.8','收款人:0.7','收款时间:0.8','当前利率:0.8','期限','贷款时间:0.8'],
-                'other':                  ['单号:1','项目名称:0.8','入账单位:0.8','交款人:0.7','联系方式:0.8','收款金额:0.8','收款人:0.7','收款时间:0.8','款项归属:0.8']
+            'workerSalary': ['单号:1', '姓名', '联系方式:0.8', '工程名称:0.8', '款项名称', '核算工资:0.8', '申领工资:0.8', '实付', '余额', '凭证:0.5:center:true', '付款时间:0.8', '付款人:0.8'],
+            'staffSalary': ['单号:1', '部门', '姓名', '基本工资:0.7', '岗位工资:0.7', '绩效工资(提成):0.8', '社保', '结算工资:0.8', '实付', '凭证:0.5:center:true', '付款时间:0.7', '付款人:0.6'],
+            'materialPayment': ['单号:0.7', '供应商:0.6', '工程名称:0.7', '联系方式:0.7', '领款人:0.6', '款项名称:0.7', '核对价:0.6', '申领款:0.6', '实付', '余款', '凭证:0.5:center:true', '付款时间:0.8', '付款人:0.6'],
+            'reimbursementItems': ['单号:1', '报销人:0.6', '报销项目:0.7', '联系方式:0.7', '报销金额:0.7', '实付', '凭证:0.5:center:true', '付款时间:0.7', '付款人:0.6', '报销归属:0.8'],
+            'financialFee': ['单号:1', '归属款项:0.8', '贷款银行:0.8', '交办人:0.7', '本期利率:0.8', '本期款项:0.8', '付款', '付款人:0.7', '日期'],
+            'companyBonus': ['单号:1', '项目名称:0.8', '款项归属:0.8', '申请人:0.7', '联系方式:0.8', '申请金额:0.8', '付款金额:0.8', '付款人:0.7', '付款日期:0.8', '备注'],
+            'tax': ['单号:1', '项目名称:0.8', '款项归属:0.8', '申请人:0.7', '领款人:0.7', '联系方式:0.8', '申请金额:0.8', '付款金额:0.8', '付款人:0.7', '付款日期:0.8', '备注'],
+            'qualityGuaranteeDeposit': ['单号:1', '工程名称:0.8', '领款人:0.7', '联系方式:0.8', '应付金额:0.8', '实付金额:0.8', '付款日期:0.8', '付款人:0.7', '备注'],
+            'designDeposit': ['单号:1', '工程名称:0.8', '业务员:0.7', '设计师:0.7', '客户姓名:0.8', '联系方式:0.8', '收款额:0.7', '收款人:0.7'],
+            'projectFee': ['单号:1', '工程名称:0.8', '项目经理:0.8', '设计师:0.7', '客户姓名:0.8', '联系方式:0.8', '应交款:0.7', '已交款:0.7', '款项', '收款时间:0.8'],
+            'loan': ['单号:1', '项目名称:0.8', '银行', '交办人:0.7', '联系方式:0.8', '收款金额:0.8', '收款人:0.7', '收款时间:0.8', '当前利率:0.8', '期限', '贷款时间:0.8'],
+            'other': ['单号:1', '项目名称:0.8', '入账单位:0.8', '交款人:0.7', '联系方式:0.8', '收款金额:0.8', '收款人:0.7', '收款时间:0.8', '款项归属:0.8']
         }
         // dynamically generate columns according to entry and exit type
         function generateCols(rec) {
             if (rec) {
-				var items = me.columnMapping[rec.get('name')];
-				var newItem = [];
-				for(var i = 0;i<items.length;i++){
-					var cfgs = items[i].split(':');
-					newItem.push({ text: cfgs[0], dataIndex: 'c'+i,flex:parseFloat(cfgs[1]||0.5),align:cfgs[2]||'left',hidden:cfgs[3]=='true'?true:false});
-				}
+                var items = me.columnMapping[rec.get('name')];
+                var newItem = [];
+                for (var i = 0; i < items.length; i++) {
+                    var cfgs = items[i].split(':');
+                    newItem.push({ text: cfgs[0], dataIndex: 'c' + i, flex: parseFloat(cfgs[1] || 0.5), align: cfgs[2] || 'left', hidden: cfgs[3] == 'true' ? true : false });
+                }
                 newItem.push(
                     {
                         width: 50,
@@ -253,25 +264,25 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                             {
                                 icon: 'resources/img/attachment.png',
                                 tooltip: '点击查看凭证',
-                                handler: function (grid, rowIndex, colIndex){
+                                handler: function (grid, rowIndex, colIndex) {
                                     var rec = grid.getStore().getAt(rowIndex);
-                                        win = Ext.create('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
-                                                infoObj: {
-                                                    refType: 'statement_bill',
-                                                    refId: rec.get('c0')
-                                                }
-                                            });
-                                        win.show();
+                                    win = Ext.create('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
+                                        infoObj: {
+                                            refType: 'statement_bill',
+                                            refId: rec.get('c0')
+                                        }
+                                    });
+                                    win.show();
                                 }
                             }
                         ]
                     }
                 )
-				return newItem;
-			}else{
-				return [];
-			}
-		}
+                return newItem;
+            } else {
+                return [];
+            }
+        }
 
         function generateSt(rec) {
             var fields = ['c0', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9', 'c10', 'c11', 'c12', 'c13'],
@@ -304,7 +315,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
         me.refresh = function (rec) {
             var resObj = _getRes();
             me.rec = rec;
-            me.setTitle(rec ? rec.get('value') : '&nbsp;' );
+            me.setTitle(rec ? rec.get('value') : '&nbsp;');
             initTbar(rec);
             if (rec) {
                 var st = generateSt(rec);

@@ -104,7 +104,7 @@ Ext.require('Ext.window.MessageBox', function () {
                 type: "input",
                 html: true,
                 showCancelButton: true,
-                closeOnConfirm: true,
+                closeOnConfirm: false,
                 animation: "slide-from-top",
                 inputPlaceholder: "请输入"
             }, function (inputValue) {
