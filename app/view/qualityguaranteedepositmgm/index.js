@@ -15,7 +15,6 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
 
     initComponent: function () {
         var me = this;
-
         function _getRes() {
             var captainList = me.getComponent('gridpanel-projectCaptainList'),
                 captainSelModel = captainList.getSelectionModel(),
@@ -95,20 +94,9 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                 initBtn: function () {
                     var resObj = _getRes(),
                         btnObj = this._getBtns();
-                    for (var key in btnObj) {
-                        switch (key) {
-                            case 'apply':
-                                btnObj[key].setDisabled(!resObj.captain);
-                                break;
-                            case 'modify':
-                            //case 'flat':
-                            case 'pass':
-                                btnObj[key].setDisabled(!resObj.captain || !resObj.qgd);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
+                        btnObj.apply.setDisabled(!(resObj.qgd && resObj.qgd.data.id != null && resObj.qgd.data.id != "")); //有id了说明已经实例化了，可以申付
+                        btnObj.modify.setDisabled(!(resObj.qgd && ( resObj.qgd.data.status === 'new' || resObj.qgd.data.status == '' || resObj.qgd.data.status == null))); //只有新创建或者未实例化的才能修改
+                        btnObj.pass.setDisabled(!(resObj.qgd && ( resObj.qgd.data.status === 'rdyck'))); //只有提交了审核的才能审核                     
                 },
                 refresh: function () {
                     var resObj = _getRes();
@@ -141,7 +129,22 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                         name: 'button-applyQgd',
                         text: '申付质保金',
                         icon: 'resources/img/up.png',
-                        disabled: true
+                        disabled: true,
+                        handler: function () {
+                            var resObj = _getRes();
+                            Ext.Msg.warning('递交后不可再进行修改单据，确定要递交单据吗？', function (btnId) {
+                                if ('yes' !== btnId) {
+                                    return;
+                                }
+                                ajaxUpdate('StatementBill.changeStatus', {
+                                            id: resObj.qgd.data.id,
+                                            status: '+1'
+                                        }, ['id'], function (obj) {
+                                            Ext.Msg.success('递交成功！');
+                                            resObj.qgdList.refresh();
+                                        }, true);
+                                });
+                        }
                     },
                     {
                         xtype: 'button',
@@ -249,7 +252,7 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                         {
                             text: '状态',
                             flex: 0.5,
-                            dataIndex: 'status'
+                            dataIndex: 'statusName'
                         }
                     ]
                 },

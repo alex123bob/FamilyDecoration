@@ -3,17 +3,17 @@ class StatementBillSvc extends BaseSvc
 {
 	//账单类型  dsdpst:设计定金，pjtf:工程款，贷款(loan表)，other:其他四个是入账。其他都是出账
 	public static $BILLTYPE = array('ppd'=>'预付款','reg'=>'工人工资','dsdpst'=>'设计定金','qgd'=>'质量保证金','pjtf'=>'工程款','mtf'=>'材料付款','rbm'=>'报销','wlf'=>'福利','tax'=>'公司税务','other'=>'其他');
-	public static $ALL_STATUS = array('new'=>'未提交','rdyck'=>'待一审','rdyck2'=>'待二审','rdyck3'=>'待三审','rdyck4'=>'待终审','chk'=>'审核通过','paid'=>'已付款','accepted'=>'已收款','arch'=>'已归档');
+	public static $ALL_STATUS = array('new'=>'未提交','rdyck'=>'待审核','rdyck1'=>'待一审','rdyck2'=>'待二审','rdyck3'=>'待三审','rdyck4'=>'待终审','chk'=>'审核通过','paid'=>'已付款','accepted'=>'已收款','arch'=>'已归档');
 
 	//账单状态变化
 	public static $STATUSMAPPING = array(
-		'ppd'=> array('new','rdyck','rdyck2','rdyck3','rdyck4','chk','paid'),
-		'reg'=> array('new','rdyck','rdyck2','rdyck3','rdyck4','chk','paid'),
-		'qgd'=> array('new','rdyck','rdyck2','rdyck3','rdyck4','chk','paid'),
-		'mtf'=> array('new','rdyck','rdyck2','rdyck3','rdyck4','chk','paid'),
+		'ppd'=> array('new','rdyck1','rdyck2','rdyck3','rdyck4','chk','paid'),
+		'reg'=> array('new','rdyck1','rdyck2','rdyck3','rdyck4','chk','paid'),
+		'qgd'=> array('new','rdyck','chk','paid'),
+		'mtf'=> array('new','rdyck1','rdyck2','rdyck3','rdyck4','chk','paid'),
 		'rbm'=> array('new','rdyck','chk','paid'),
 		'wlf'=> array('new','rdyck','chk','paid'),
-		'tax'=> array('new','rdyck','rdyck2','rdyck3','rdyck4','chk','paid')
+		'tax'=> array('new','rdyck1','rdyck2','rdyck3','rdyck4','chk','paid')
 	);
 
 	public function get($q){
@@ -329,9 +329,9 @@ class StatementBillSvc extends BaseSvc
 		if($qgd['total'] == 0){
 			$sql = "select id from statement_bill where (billType = 'reg' or billType = 'ppd') and isDeleted = 'false'".
 					" and status != 'paid' and status != 'arch' and professionType = '?' and payee = '?'";
-			$array = $mysql->DBGetAsOneArray($sql,$q['payee'],$q['professionType']);
+			$array = $mysql->DBGetAsOneArray($sql,$q['professionType'],$q['payee']);
 			if(count($array) > 0){
-				throw new Exception("以下申请单还未走完全流程：".join('\n',$array));
+				throw new Exception("以下".(count($array))."个申请单还未走完全流程：\n".join('\n',$array));
 			}
 			$this->add(array('@billType'=>'qgd','@projectId'=>$q['projectId'],'@payee'=>$q['payee'],'@professionType'=>$q['professionType']));
 		}else if($qgd['total'] > 1){
@@ -375,7 +375,7 @@ class StatementBillSvc extends BaseSvc
 		foreach ($data as &$value) {
 			$value['qgd'] = $value['total'] - $value['paid'];
 			if($value['status'] != null)
-				$value['status'] = self::$ALL_STATUS[$value['status']];
+				$value['statusName'] = self::$ALL_STATUS[$value['status']];
 		}
 		$res = array('status'=>'successful','data'=>$data,'total'=>$count);
 		return $res;
