@@ -44,6 +44,17 @@ class LogListSvc extends BaseSvc
 		return $res;
 	}
 
+	private function getIndicatorDesign($user,$year,$month){
+		global $mysql;
+		if(strlen($month) == 1) 
+			$month = '0'.$month;
+		$sql = "select count(*) from business where designerName = '?' and left(signTime,7) = '?'"; 
+		$signedBusinessData = $mysql->DBGetAsOneArray($sql,$user,"$year-$month");
+		return array(
+			'signedBusinessNumber'=>(int)$signedBusinessData[0],
+			'depositRate'=>(int)$signedBusinessData[0]
+		);
+	}
 	private function getIndicatorMarket($user,$year,$month,$byMonth=false){
 		global $mysql;
 		if(strlen($month) == 1) 
@@ -86,6 +97,7 @@ class LogListSvc extends BaseSvc
 	}
 
 	public function getDetail($q){
+		global $mysql;
 		$month = $q['month'];
 		$year = $q['year'];
 		$user = $q['name'];
@@ -94,8 +106,24 @@ class LogListSvc extends BaseSvc
 		$mode = isset($q['mode']) ? $q['mode'] : "none";  // market , design
 		$telemarketingDayNumberMappping = array();
 		$buildingSwipingDayNumberMappping = array();
+		$plan = array('buildingSwiping'=>array(),'buildingSwiping'=>array());
 		if($mode == "market"){
 			$data = $this->getIndicatorMarket($user,$year,$month,false);
+			$temp = $mysql->DBGetAsMap("select c1 as buildingSwiping,c2 as telemarketing from business_goal where targetMonth = '?' and user = '?' ","$year-$month",$user);
+			$days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+			if(count($temp) > 0){
+				$planBwip = (int)$temp[0]['buildingSwiping'];
+				$planTele = (int)$temp[0]['telemarketing'];
+				$planBwipEveryDay = (int)($planBwip/$days);
+				$planTeleEveryDay = (int)($planTele/$days);
+				$planBwipLeft = $planBwip%$days;
+				$planTeleLeft = $planTele%$days;
+				for($i = 1;$i <= $days ;$i++){
+					$date = "$year-$month-".($i < 10 ? '0':'').$i;
+					$plan['buildingSwiping'][$date] = $planBwipEveryDay + ($i <= $planBwipLeft ? 1 : 0);
+					$plan['telemarketing'][$date] = $planTeleEveryDay + ($i <= $planTeleLeft ? 1 : 0);
+				}
+			}
 			foreach ($data['buildingSwiping'] as $item) {
 				$buildingSwipingDayNumberMappping[$item['d']] = $item['num'];
 			}
@@ -111,7 +139,6 @@ class LogListSvc extends BaseSvc
 		$sumlogsDayNumberMapping = array();
 		$comlogsDayNumberMapping = array();
 		$sql = "select id,evaluator,left(createTime,10) as day,isFinished,content,logType from log_list where createTime >= '?' and createTime <= '?' and committer = '?' and isDeleted = 'false' ";
-		global $mysql;
 		$logs = $mysql->DBGetAsMap($sql,$beginTime,$endTime,$user);
 		foreach ($logs as $value) {
 			if((int)$value['logType'] == 1){
@@ -136,10 +163,12 @@ class LogListSvc extends BaseSvc
 			$c = isset($comlogsDayNumberMapping[$date]) ? $comlogsDayNumberMapping[$date]['content'] : '';
 			$cid = isset($comlogsDayNumberMapping[$date]) ? $comlogsDayNumberMapping[$date]['id'] : '';
 			$e = isset($comlogsDayNumberMapping[$date]) ? $comlogsDayNumberMapping[$date]['evaluator'] : '';
+			$planTel = isset($plan['telemarketing'][$date]) ? $plan['telemarketing'][$date] : '';
+			$planWip = isset($plan['buildingSwiping'][$date]) ? $plan['buildingSwiping'][$date] : '';
 			array_push($res, array(
-				'sp'=>$mode == "market" ? 'x电 x扫' : null,  //standardPlan
+				'sp'=>$mode == "market" ? $planTel.'电 '.$planWip.'扫' : null,  //standardPlan
 				'pa'=>$mode == "market" ? $tele.'电 '.$wip.'扫' : null, //practicalAccomplishment
-				'd'=>$mode == "market" ? "x电 x扫" : null,//difference
+				'd'=>$mode == "market" ? ($planTel-$tele)."电 ".($planWip-$wip)."扫" : null,//difference
 				's'=>$log,//selfPlan
 				'sl'=>$sl,//summarizedLog
 				'sid'=>$sid,
@@ -154,29 +183,24 @@ class LogListSvc extends BaseSvc
 		return $res;
 	}
 	public function getIndicator($q){
+		global $mysql;
 		$mode = isset($q['mode']) ? $q['mode'] : "none";  // market , design
 
-		if($mode == "market")
+		if($mode == "market"){
+			$plan = $mysql->DBGetAsMap("select c1 as buildingSwiping,c2 as telemarketing,c3 as companyVisit,c4 as deposit from business_goal where targetMonth = '?' and user = '?' ",$q['year'].'-'.$q['month'],$q['name']);
 			return array(
-				"plan" => array( 
-					"telemarketing"=> "100", 
-					"companyVisit"=> "200", 
-					"deposit"=> "300", 
-					"buildingSwiping"=> "400"
-				),
+				"plan" => count($plan) > 0 ? $plan[0] : (object)array(),
 				"accomplishment" => $this->getIndicatorMarket($q['name'],$q['year'],$q['month'],true)
 			);
-		if($mode == "design")
+		}
+			
+		if($mode == "design"){
+			$plan = $mysql->DBGetAsMap("select c1 as depositRate,c2 as signedBusinessNumber from business_goal where targetMonth = '?' and user = '?' ",$q['year'].'-'.$q['month'],$q['name']);
 			return array(
-				"plan" => array( 
-					"signedBusinessNumber"=> "100", 
-					"depositRate"=> "200"
-				),
-				"accomplishment" => array(
-					"signedBusinessNumber" => "99", 
-					"depositRate" => "399"
-				)
+				"plan" => count($plan) > 0 ? $plan[0] : (object)array(),
+				"accomplishment" => $this->getIndicatorDesign($q['name'],$q['year'],$q['month'])
 			);
+		}
 		throw new Exception("unknow mode $mode!");
 	}
 
