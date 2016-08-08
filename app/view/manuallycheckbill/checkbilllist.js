@@ -19,6 +19,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.CheckBillList', {
         me.items = [
             {
                 xtype: 'gridpanel',
+                selType: 'rowmodel',
                 selModel: {
                     mode: 'SINGLE'
                 },
@@ -40,9 +41,6 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.CheckBillList', {
                         }
                     }
                 }),
-                selModel: {
-                    mode: 'SIMPLE'
-                },
                 columns: [
                     {
                         text: '单号',

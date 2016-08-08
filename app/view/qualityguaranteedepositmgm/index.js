@@ -155,7 +155,6 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                         disabled: true,
                         handler: function () {
                             var resObj = _getRes();
-                            debugger
                             var win = Ext.create('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
                                 qgd: resObj.qgd,
                                 callback: function (){

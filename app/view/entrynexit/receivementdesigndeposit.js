@@ -1,4 +1,4 @@
-Ext.define('FamilyDecoration.view.entrynexit.Receivement', {
+Ext.define('FamilyDecoration.view.entrynexit.ReceivementDesignDeposit', {
     extend: 'Ext.window.Window',
     alias: 'widget.entrynexit-receivement',
     title: '付款',

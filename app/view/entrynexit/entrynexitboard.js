@@ -5,7 +5,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
     cls: 'gridpanel-entrynexitboard',
     requires: [
         'FamilyDecoration.view.entrynexit.Payment',
-        'FamilyDecoration.view.entrynexit.Receivement',
+        'FamilyDecoration.view.entrynexit.ReceivementDesignDeposit',
         'FamilyDecoration.view.paymentrequest.AttachmentManagement'
     ],
     // viewConfig: {
