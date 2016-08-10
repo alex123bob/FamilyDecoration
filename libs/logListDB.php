@@ -2,13 +2,12 @@
 	function deleteLogList($logListId){
 		global $mysql;
 		$mysql->DBUpdate("log_list",array('isDeleted'=>true),"`id` = '?' ",array($logListId));
-		$mysql->DBUpdate("log_detail",array('isDeleted'=>true),"`logListId` = '?' ",array($logListId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
 	function deleteLogDetail($logDetailId){
 		global $mysql;
-		$mysql->DBUpdate("log_detail",array('isDeleted'=>true),"`id` = '?' ",array($logDetailId));
+		// 方法已经失效，前端可能还在掉。
 		return array('status'=>'successful', 'errMsg' => 'delete LogDetail Ok');
 	}
 	
@@ -32,21 +31,14 @@
 			"content"=>$post["content"]
 		);
 		global $mysql;
-		$mysql->DBInsertAsArray("`log_detail`",$obj);
+		// 方法已经失效，前端可能还在掉。
 		return array('status'=>'successful', 'errMsg' => 'add logDetail OK', 'id' => $obj["id"]);
 	}
 
 	function getLogDetailsByLogListId($logListId){
 		global $mysql;
+		// 方法已经失效，前端可能还在掉。
         $res= array();
-        $condition = " where isDeleted = 'false' and logListId = '$logListId' ";
-        $orderBy = " order by createTime DESC ";
-		$arr = $mysql->DBGetSomeRows("`log_detail`", " * ",$condition,$orderBy);
-		$count = 0;
-		foreach($arr as $key => $val) {
-		    $res[$count] = array("id"=>$val["id"],"createTime"=>$val["createTime"],"content"=>$val["content"],"logType"=>$val["logType"]);
-		    $count ++;
-        }
 		return $res;
 	}
 
@@ -200,7 +192,7 @@
 
 	function editLogDetail($data){
 		global $mysql;
-		$mysql->DBUpdate("log_detail",array('content'=>$data["content"], 'logType'=>$data["logType"]),"`id` = '?' ",array($data["id"]));
+		// 方法已经失效，前端可能还在掉。
 		return array('status'=>'successful', 'errMsg' => 'edit logdetail ok');
 	}
 
@@ -278,8 +270,7 @@
 
 	function getUserNameAndLogListIdByLogDetailId ($logDetailId){
 		global $mysql;
-		$condition = "left join `log_list` on `log_list`.`id` = `log_detail`.`logListId` where `log_detail`.`isDeleted` = 'false' && `log_detail`.`id` = '$logDetailId' ";
-		$arr = $mysql->DBGetSomeRows("`log_detail`", "`log_detail`.*, `log_list`.`userName`", $condition);
-		return $arr;
+		// 方法已经失效，前端可能还在掉。
+		return array();
 	}
 ?>
