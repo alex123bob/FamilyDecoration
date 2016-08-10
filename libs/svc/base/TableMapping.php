@@ -30,6 +30,3 @@
 		array_push($value, 'updateTime');
 	}
 ?>
-
-
-
