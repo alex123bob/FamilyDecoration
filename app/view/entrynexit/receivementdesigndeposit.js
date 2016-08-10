@@ -179,23 +179,28 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementDesignDeposit', {
                 text: '确定',
                 handler: function () {
                     var headerFst = me.getComponent('fieldset-headerInfo'),
+                        businessId = headerFst.down('[name="businessId"]'),
                         fst = me.query('fieldset')[1],
                         fee = fst.getComponent('numberfield-receiveFee'),
+                        receiveWay = fst.getComponent('combobox-receiveWay'),
                         account = fst.getComponent('combobox-receiveAccount'),
-                        businessId = headerFst.down('[name="businessId"]');
+                        accountVal = account.getValue(),
+                        accountRec = account.findRecord(account.valueField || account.displayField, accountVal);
 
-                    ajaxUpdate('Account.receipt', {
+                    ajaxAdd('Account.receipt', {
+                        billType: 'dsdpst',
                         businessId: businessId.getValue(),
-                        type: me.category.get('name'),
+                        receiver: User.getName(),
                         accountId: accountRec.getId(),
-                        fee: fee.getValue()
-                    }, ['id', 'accountId', 'type'], function (obj) {
+                        receiveAmount: fee.getValue(),
+                        receiveWay: receiveWay.getValue()
+                    }, function (obj) {
                         if (obj.status == 'successful') {
                             showMsg('付款成功！');
                             me.callback();
                             me.close();
                         }
-                    }, true)
+                    }, Ext.emptyFn, true);
                 }
             },
             {

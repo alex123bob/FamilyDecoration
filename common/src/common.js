@@ -260,10 +260,15 @@ function ajaxUpdate(className, params, conditionParams, callback, isCustomAction
     }
 }
 
-function ajaxAdd(className, params, callback, errorHandler) {
-    function add(className, p) {
+function ajaxAdd(className, params, callback, errorHandler, isCustomAction) {
+    function add(className, p, isCustomAction) {
         if (p && !Ext.Object.isEmpty(p)) {
-            var url = './libs/api.php?action=' + className + '.add';
+            if (isCustomAction == true) {
+                var url = './libs/api.php?action=' + className;
+            }
+            else {
+                var url = './libs/api.php?action=' + className + '.add';
+            }
             var params = {};
             for (var pro in p) {
                 if (p.hasOwnProperty(pro)) {
@@ -296,7 +301,7 @@ function ajaxAdd(className, params, callback, errorHandler) {
         }
     }
     if (Ext.isObject(params)) {
-        add(className, params);
+        add(className, params, isCustomAction);
     }
     else {
         showMsg('参数不正确！');

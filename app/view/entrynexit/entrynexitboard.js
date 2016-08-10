@@ -122,7 +122,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                         category: resObj.category,
                         item: resObj.item,
                         callback: function () {
-                            me.refresh(resObj.category,false);
+                            me.refresh(resObj.category, false);
                         }
                     });
                     win.show();
@@ -136,14 +136,26 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                 hidden: true,
                 handler: function () {
                     var resObj = _getRes();
-                    var win = Ext.create('FamilyDecoration.view.entrynexit.ReceivementDesignDeposit', {
-                        category: resObj.category,
-                        item: resObj.item,
-                        callback: function () {
-                            me.refresh(resObj.category,false);
-                        }
-                    });
-                    win.show();
+                    switch (resObj.category.get('name')) {
+                        case 'designDeposit':
+                            var win = Ext.create('FamilyDecoration.view.entrynexit.ReceivementDesignDeposit', {
+                                category: resObj.category,
+                                item: resObj.item,
+                                callback: function () {
+                                    me.refresh(resObj.category, false);
+                                }
+                            });
+                            win.show();
+                            break;
+                        case 'projectFee':
+                            var win = Ext.create('Ext.window.Window', {
+
+                            });
+                            win.show();
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         ];
@@ -187,9 +199,9 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             };
         }
 
-        function initTbar(rec,isClear) {
+        function initTbar(rec, isClear) {
             var tbarObj = getTbar();
-            if(isClear !== false){
+            if (isClear !== false) {
                 tbarObj.idSearch.setValue('');
                 tbarObj.nameSearch.setValue('');
             }
@@ -213,14 +225,14 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             }
         }
 
-        function refreshTbar(rec, item,isClear) {
+        function refreshTbar(rec, item, isClear) {
             var tbarObj = getTbar();
-            if(isClear !== false){
+            if (isClear !== false) {
                 tbarObj.idSearch.setValue('');
                 tbarObj.nameSearch.setValue('');
-            }      
+            }
             tbarObj.idSearch.show();
-            tbarObj.nameSearch.show();      
+            tbarObj.nameSearch.show();
             // tbarObj.receive.setDisabled(true);
             tbarObj.pay.setDisabled(true);
             if (!rec) {
@@ -319,11 +331,11 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             return st;
         }
 
-        me.refresh = function (rec,isClear) {
+        me.refresh = function (rec, isClear) {
             var resObj = _getRes();
             me.rec = rec;
             me.setTitle(rec ? rec.get('value') : '&nbsp;');
-            initTbar(rec,isClear);
+            initTbar(rec, isClear);
             if (rec) {
                 var id = me.down('toolbar').getComponent('textfield-id').getValue();
                 var name = me.down('toolbar').getComponent('textfield-payee').getValue();
@@ -335,18 +347,18 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                     action: 'EntryNExit.get',
                     type: rec.get('name')
                 }
-                if(id && id != "")
+                if (id && id != "")
                     extraParams.c0 = id;
-                if(name && name != "")
+                if (name && name != "")
                     extraParams.payee = name;
 
                 st.setProxy({
                     type: 'rest',
                     url: './libs/api.php',
-                    reader: { type: 'json', root: 'data', totalProperty: 'total'},
+                    reader: { type: 'json', root: 'data', totalProperty: 'total' },
                     extraParams: extraParams
                 });
-                
+
 
                 st.loadPage(1);
             }
@@ -363,7 +375,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             {
                 selectionchange: function (selModel, sels, opts) {
                     var item = sels[0];
-                    refreshTbar(me.rec, item,false);
+                    refreshTbar(me.rec, item, false);
                 }
             }
         );
