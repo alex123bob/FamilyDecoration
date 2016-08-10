@@ -281,7 +281,9 @@ class StatementBillSvc extends BaseSvc
 		$this->appendSelect = ",tp.cname as professionTypeName ";
 		$this->appendJoin = "left join profession_type tp on tp.value = $this->tableName.professionType";
 		$data2 = parent::get($q);
-		$data = array_merge($data,$data2);
+		foreach ($data2['data'] as $key => $value) {
+			array_push($data, $value);
+		}
 		return $data;
 	}
 
