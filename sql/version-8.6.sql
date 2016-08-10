@@ -147,6 +147,7 @@ update statement_bill_audit set orignalStatus = 'new' where orignalStatus = 'rbk
 alter table statement_bill drop column `isPaid`;
 alter table statement_bill modify status varchar(10);
 alter table statement_bill add column `certs` text DEFAULT NULL comment '凭证';
+alter table statement_bill add column `businessId` varchar(20) DEFAULT NULL comment '业务ID';
 alter table statement_bill_audit add column drt varchar(10) comment '方向，1前进，-1打回';
 
 update statement_bill_audit set drt = '1' where orignalStatus = 'chk' and newStatus = 'paid' and drt is null;

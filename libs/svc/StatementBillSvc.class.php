@@ -335,7 +335,7 @@ class StatementBillSvc extends BaseSvc
 			if(count($array) > 0){
 				throw new Exception("以下".(count($array))."个申请单还未走完全流程：\n".join('\n',$array));
 			}
-			$this->add(array('@billType'=>'qgd','@projectId'=>$q['projectId'],'@payee'=>$q['payee'],'@professionType'=>$q['professionType']));
+			$this->add(array('@billType'=>'qgd','@projectId'=>$q['projectId'],'@projectName'=>$q['projectName'],'@phoneNumber'=>$q['phoneNumber'],'@payee'=>$q['payee'],'@professionType'=>$q['professionType']));
 		}else if($qgd['total'] > 1){
 			throw new Exception('有数据错误！多条质保金记录！');
 		}

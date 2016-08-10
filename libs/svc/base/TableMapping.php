@@ -2,7 +2,7 @@
 	//createTime,updateTime,isDeleted 不用写
 	$TableMapping = array(
 		"profession_type"=>array('id','name','value','cname'),
-		"statement_bill"=>array('id','deadline','creator','billName','billValue','status','checker','billType','payee','payer','projectId','projectName','phoneNumber','totalFee','claimAmount','payedTimes','paidAmount','paidTime','projectProgress','descpt','certs','reimbursementReason','professionType'),
+		"statement_bill"=>array('id','businessId','deadline','creator','billName','billValue','status','checker','billType','payee','payer','projectId','projectName','phoneNumber','totalFee','claimAmount','payedTimes','paidAmount','paidTime','projectProgress','descpt','certs','reimbursementReason','professionType'),
 		"statement_bill_item"=>array('id','billId','serialNumber','billItemName','unit','amount','unitPrice','subtotal','referenceItems','professionType','checkedNumber'),
 		"statement_basic_item"=>array('id','serialNumber','billItemName','unit','amount','unitPrice','subtotal','referenceItems','professionType'),
 		"statement_bill_audit"=>array('id','drt','billId','operator','orignalStatus','newStatus','comments'),

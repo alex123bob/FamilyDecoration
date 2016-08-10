@@ -148,12 +148,8 @@ class EntryNExitSvc{
 						b.descpt as c8,
 						b.status
 				FROM statement_bill b left join user u on u.name = b.payer WHERE b.isDeleted = 'false' AND b.billType = 'qgd'";
-		$data = $mysql->DBGetAsMap($sql);
-		foreach ($data as &$value) {
-			$value['c0'] = $value['professionType'].$value['projectId'].$this->chineseToUnicode($value['c2']);
-			$value['c4'] = $value['totalFee'] - $value['paidAmount'];
- 		}
-		return array('status'=>'successful','data'=>$data,'total'=>100);
+		$res = $this->parseData($sql,$q);
+		return $res;
 	}
 
 	private function workerSalary($q){
@@ -178,7 +174,11 @@ class EntryNExitSvc{
 		if(isset($q['payee']) && $q['payee'] != ""){
 			$sql .= ' and b.payee like \'%'.$q['payee'].'%\'';
 		}
-		return $this->parseData($sql,$q);
+		$res = $this->parseData($sql,$q);
+		foreach ($res['data'] as &$item) {
+			$item['c8'] = round($item['c8'],2);
+		}
+		return $res;
 	}
 
 	private function staffSalary($q){

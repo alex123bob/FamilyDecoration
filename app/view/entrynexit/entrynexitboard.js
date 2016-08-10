@@ -122,7 +122,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                         category: resObj.category,
                         item: resObj.item,
                         callback: function () {
-                            me.refresh(resObj.category);
+                            me.refresh(resObj.category,false);
                         }
                     });
                     win.show();
@@ -140,7 +140,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                         category: resObj.category,
                         item: resObj.item,
                         callback: function () {
-                            me.refresh(resObj.category);
+                            me.refresh(resObj.category,false);
                         }
                     });
                     win.show();
@@ -187,10 +187,14 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             };
         }
 
-        function initTbar(rec) {
+        function initTbar(rec,isClear) {
             var tbarObj = getTbar();
-            tbarObj.idSearch.setValue('').show();
-            tbarObj.nameSearch.setValue('').show();
+            if(isClear !== false){
+                tbarObj.idSearch.setValue('');
+                tbarObj.nameSearch.setValue('');
+            }
+            tbarObj.idSearch.show();
+            tbarObj.nameSearch.show();
             tbarObj.pay.hide();
             tbarObj.receive.hide();
             if (!rec) {
@@ -209,10 +213,14 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             }
         }
 
-        function refreshTbar(rec, item) {
+        function refreshTbar(rec, item,isClear) {
             var tbarObj = getTbar();
-            tbarObj.idSearch.setValue('').show();
-            tbarObj.nameSearch.setValue('').show();
+            if(isClear !== false){
+                tbarObj.idSearch.setValue('');
+                tbarObj.nameSearch.setValue('');
+            }      
+            tbarObj.idSearch.show();
+            tbarObj.nameSearch.show();      
             // tbarObj.receive.setDisabled(true);
             tbarObj.pay.setDisabled(true);
             if (!rec) {
@@ -311,29 +319,35 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             return st;
         }
 
-        me.refresh = function (rec) {
+        me.refresh = function (rec,isClear) {
             var resObj = _getRes();
             me.rec = rec;
             me.setTitle(rec ? rec.get('value') : '&nbsp;');
-            initTbar(rec);
+            initTbar(rec,isClear);
             if (rec) {
+                var id = me.down('toolbar').getComponent('textfield-id').getValue();
+                var name = me.down('toolbar').getComponent('textfield-payee').getValue();
                 var st = generateSt(rec);
                 // bind current store to paging tool bar
                 resObj.pagingTool.bindStore(st);
                 me.reconfigure(st, generateCols(rec));
+                var extraParams = {
+                    action: 'EntryNExit.get',
+                    type: rec.get('name')
+                }
+                if(id && id != "")
+                    extraParams.c0 = id;
+                if(name && name != "")
+                    extraParams.payee = name;
+
                 st.setProxy({
                     type: 'rest',
                     url: './libs/api.php',
-                    reader: {
-                        type: 'json',
-                        root: 'data',
-                        totalProperty: 'total'
-                    },
-                    extraParams: {
-                        action: 'EntryNExit.get',
-                        type: rec.get('name')
-                    }
+                    reader: { type: 'json', root: 'data', totalProperty: 'total'},
+                    extraParams: extraParams
                 });
+                
+
                 st.loadPage(1);
             }
             else {
@@ -349,7 +363,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             {
                 selectionchange: function (selModel, sels, opts) {
                     var item = sels[0];
-                    refreshTbar(me.rec, item);
+                    refreshTbar(me.rec, item,false);
                 }
             }
         );

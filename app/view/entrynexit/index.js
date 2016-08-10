@@ -111,7 +111,7 @@ Ext.define('FamilyDecoration.view.entrynexit.Index', {
                                 if (rec) {
                                     resObj.incomeSelModel.deselectAll();
                                 }
-                                resObj.detailList.refresh(rec);
+                                resObj.detailList.refresh(rec,true);
                             }
                         }
                     },
@@ -153,7 +153,7 @@ Ext.define('FamilyDecoration.view.entrynexit.Index', {
                                 if (rec) {
                                     resObj.expenseSelModel.deselectAll();
                                 }
-                                resObj.detailList.refresh(rec);
+                                resObj.detailList.refresh(rec,true);
                             }
                         }
                     }

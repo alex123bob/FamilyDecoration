@@ -7,7 +7,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.CheckBillList', {
     requires: [
         'FamilyDecoration.store.StatementBill'
     ],
-    width: 650,
+    width: 850,
     height: 350,
     maximizable: true,
 
@@ -48,52 +48,52 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.CheckBillList', {
                         flex: 1.5,
                         align: 'center'
                     },
-                    {
+                   /* {
                         text: '名字',
                         dataIndex: 'billName',
                         flex: 1,
                         align: 'left'
-                    },
+                    },*/
                     {
                         text: '总金额',
                         dataIndex: 'totalFee',
-                        flex: 1,
+                        flex: 0.5,
                         align: 'left'
                     },
                     {
                         text: '申领金额',
                         dataIndex: 'claimAmount',
-                        flex: 1,
+                        flex: 0.5,
                         align: 'left'
                     },
                     {
                         text: '实付',
                         dataIndex: 'paidAmount',
-                        flex: 1,
+                        flex: 0.5,
                         align: 'left'
                     },
                     {
                         text: '付款时间',
                         dataIndex: 'paidTime',
-                        flex: 1,
+                        flex: 1.5,
                         align: 'left'
                     },
                     {
                         text: '付款人',
                         dataIndex: 'payerRealName',
-                        flex: 1,
+                        flex: 0.8,
                         align: 'left'
                     },
                     {
                         text: '状态',
                         dataIndex: 'statusName',
-                        flex: 1,
+                        flex: 0.8,
                         align: 'center'
                     },
                     {
                         text: '创建时间',
                         dataIndex: 'createTime',
-                        flex: 2,
+                        flex: 1.5,
                         align: 'center'
                     }                    
                 ],
