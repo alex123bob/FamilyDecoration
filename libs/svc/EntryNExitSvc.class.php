@@ -298,7 +298,7 @@ class EntryNExitSvc{
 					u.phone as c4,
 					l.amount as c5,
 					u2.realName as c6,
-					l.dealTime as c7,
+					l.createTime as c7,
 					l.interest as c8,
 					l.period as c9 ,
 					l.loanTime as c10,
@@ -346,15 +346,14 @@ class EntryNExitSvc{
 		$sql = "select b.id as c0,
 					b.projectName as c1,
 					b.reimbursementReason as c2,
-					b.payee as c3,
-					b.phoneNumber as c4,
-					b.totalFee as c5,
-					b.paidAmount as c6,
-					u.realName as c7,
-					b.paidTime as c8,
-					b.descpt as c9,
+					u2.realName as c3,
+					u2.phone as c4,
+					b.paidAmount as c5,
+					u.realName as c6,
+					b.paidTime as c7,
+					b.descpt as c8,
 					b.status
-					from statement_bill b left join user u on u.name = b.payer
+					from statement_bill b left join user u on u.name = b.payer left join user u2 on u2.name = b.payee
 					where b.billType = 'other' and b.isDeleted = 'false' and b.status = 'accepted'";
 		if(isset($q['c0']) && $q['c0'] != ""){
 			$sql .= ' and b.id like \'%'.$q['c0'].'%\'';
