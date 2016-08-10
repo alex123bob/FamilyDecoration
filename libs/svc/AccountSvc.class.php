@@ -69,6 +69,10 @@ class AccountSvc extends BaseSvc
 		return $res;
 	}
 
+	public function receipt($q){
+		return array('status'=>'successful');
+	}
+
 	public function pay($q){
 		global $mysql;
 		$accountId = $q['accountId'];
