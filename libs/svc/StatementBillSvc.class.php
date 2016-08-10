@@ -41,14 +41,14 @@ class StatementBillSvc extends BaseSvc
 		if(!isset($q['@status']))
 			$q['@status'] = 'new';
 		notNullCheck($q,'@billType','审批单类型不能为空!');
-		/*notNullCheck($q,'@payee','领款人不能为空!');
+		notNullCheck($q,'@payee','领款人不能为空!');
 		if($q['@billType'] == 'reg' || $q['@billType'] == 'ppd'){
 			$obj = array('billType'=>'qgd','projectId'=>$q['@projectId'],'payee'=>$q['@payee'],'professionType'=>$q['@professionType']);
 			$qgd = parent::get($obj);
 			if($qgd['total'] > 0){
 				throw new Exception('项目已经创建保证金，请勿再创建申请单。');
 			}
-		}*/
+		}
 		$res = parent::add($q);
 		return $res;
 	}
@@ -360,8 +360,8 @@ class StatementBillSvc extends BaseSvc
 						"prof.cname as professionTypeName,".
 						"b.status,".
 						"b.descpt,".
-						"b.deadline".
-				" from (".
+						"b.deadline";
+		$where = " from (".
 					"SELECT count(*) as number,max(phoneNumber) as phoneNumber,sum(IFNULL(totalFee, 0)) AS total,projectId,payee,professionType,projectName".
 					" FROM statement_bill WHERE isDeleted = 'false' AND (billType = 'reg' OR billType = 'ppd') and payee is not null".
 					" GROUP BY projectId,payee,professionType,projectName".
@@ -374,8 +374,8 @@ class StatementBillSvc extends BaseSvc
 				" on t.projectId = b.projectId and t.payee = b.payee and t.professionType = b.professionType and b.isDeleted = 'false' and b.payee is not null and b.billType = 'qgd'".
 				" left join project pro on t.projectId = pro.projectId".
 				" left join profession_type prof on prof.value = t.professionType where pro.captainName = '?' ";
-		$count = $mysql->DBGetAsOneArray("select count(*) as cnt from ( $sql ) as temp ",$q['captainName'])[0];
-		$data = $count > 0 ? $mysql->DBGetAsMap($sql.BaseSvc::parseLimitSql($q),$q['captainName']) : array();
+		$count = $mysql->DBGetAsOneArray("select count(*) ".$where,$q['captainName'])[0];
+		$data = $count > 0 ? $mysql->DBGetAsMap($sql.BaseSvc::parseLimitSql($q.$where),$q['captainName']) : array();
 		foreach ($data as &$value) {
 			$value['qgd'] = $value['total'] - $value['paid'];
 			if($value['status'] != null)
