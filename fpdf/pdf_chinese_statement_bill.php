@@ -67,13 +67,7 @@ class PDF extends PDF_Chinese{
 				$thisLineFontStyle = $fontStyles[$c];
 			}
 			$this->SetFont('GB',$thisLineFontStyle,$thisLineFontSize);
-			//echo $c;
-			if(is_array($txts) && !isset($txts[$c])){
-				var_dump($txt);
-				//echo "eee";
-				//exit;
-			}
-			$txt = is_array($txts) ? (isset($txts[$c]) ? $txts[$c] :'TODO'): $txts;
+			$txt = is_array($txts) ? $txts[$c] : $txts;
 			$txt = ($txt === null || $txt === "NULL")? "" : $txt;
 			$w = is_array($widths) ? $widths[$c] : $widths;
 			// 计算需要几行 .
