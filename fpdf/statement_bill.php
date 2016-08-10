@@ -51,7 +51,7 @@ $pdf->SetFont("GB",$GfontStyle,$GfontSize); //设置字体样式
 $pdf->AliasNbPages("__totalPage__");
 $titles = array('序号','项目','单位','数量','单价(元)','小计(元)');
 $widths = array(10,35,35,35,35,35);
-$pdf->writeCellLine($widths,$titles,'LTBR','','C',$times=6,$fontSizes=10,$fontStyles = array());
+$pdf->writeCellLine($widths,$titles,'LTBR','','C',6,10,$fontStyles = array());
 $totalBillCount = 0;
 foreach($billItems as $value) {
 	$data = array();
@@ -62,12 +62,12 @@ foreach($billItems as $value) {
 	$data[4] = $value['unitPrice'];
 	$data[5] = $value['subtotal'];
 	$totalBillCount += $value['subtotal'];
-	$pdf->writeCellLine($widths,$data,'LTBR','','C',$times=6,$fontSizes=10,$fontStyles = array());
+	$pdf->writeCellLine($widths,$data,'LTBR','','C',6,10,$fontStyles = array());
 }
 global $lineHeight;
 $before = $lineHeight;
 $lineHeight = 12;
-$pdf->writeCellLine($widths,array('','合计','','','',$totalBillCount),'LTBR','','C',$times=6,$fontSizes=10,$fontStyles = array());
+$pdf->writeCellLine($widths,array('','合计','','','',$totalBillCount),'LTBR','','C',6,10,$fontStyles = array());
 $lineHeight = $before;
 
 $pdf->Cell(10,5,'','L','','L');
@@ -89,24 +89,9 @@ $pdf->ln();
 $pdf->Cell(10,5,'','LB','','L');
 $pdf->Cell(175,5,'','RB','','L');
 
-/*
-$borderT = array('LT','T','T','T','T','RT');
-$borderM = array('L','','','','','R');
-$borderM = array('L','','','','','R');
-$borderB = array('LB','B','B','B','B','RB');
-$pdf->writeCellLine($widths,'',$borderT,'','C',$times=6,$fontSizes=10,$fontStyles = array());
-$data = array('','大写金额:'.str2GBK(cny($totalBillCount)),'','','领款人(签字):','');
-$margin=array('R','L','','','R','L');
-$pdf->writeCellLine($widths,$data,$borderM,'',$margin,$times=6,$fontSizes=10,$fontStyles = array());
-$data = array('','','','','年','    月    日');
-$margin=array('R','L','','','R','L');
-$pdf->writeCellLine($widths,$data,$borderM,'',$margin,$times=6,$fontSizes=10,$fontStyles = array());
-$pdf->writeCellLine($widths,'',$borderB,'','C',$times=6,$fontSizes=10,$fontStyles = array());
-*/
 
 $pdf->Ln();
 $pdf->Cell(11,21,"");
-//$pdf->Cell(200,$titleHeightPosition,'    注： 1、 本报价单为合同附件， 具有同等法律效力， 业主签字后生效。');
 $pdf->Ln();
 $pdf->Output($address.".pdf", $action == "view" ? "I" : "D" );
 

@@ -51,7 +51,7 @@ class PDF extends PDF_Chinese{
 		//$this->Cell(220,10,date("Y-m-d"),0,0,'R'); 
 	}
 	// 输出一行表格
-	function writeCellLine($widths,$txts,$borders,$positions,$aligns,$times=14,$fontSizes=10,$fontStyles = array()){
+	function writeCellLine($widths,$txts,$borders,$positions,$aligns,$times=6,$fontSizes=10,$fontStyles = array()){
 		global $lineHeight;
 		$c = 0;
 		$thisLineHeight = $lineHeight;
@@ -67,7 +67,13 @@ class PDF extends PDF_Chinese{
 				$thisLineFontStyle = $fontStyles[$c];
 			}
 			$this->SetFont('GB',$thisLineFontStyle,$thisLineFontSize);
-			$txt = is_array($txts) ? $txts[$c] : $txts;
+			//echo $c;
+			if(is_array($txts) && !isset($txts[$c])){
+				var_dump($txt);
+				//echo "eee";
+				//exit;
+			}
+			$txt = is_array($txts) ? (isset($txts[$c]) ? $txts[$c] :'TODO'): $txts;
 			$txt = ($txt === null || $txt === "NULL")? "" : $txt;
 			$w = is_array($widths) ? $widths[$c] : $widths;
 			// 计算需要几行 .
