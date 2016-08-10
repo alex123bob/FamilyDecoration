@@ -419,8 +419,8 @@ class EntryNExitSvc{
 			switch ($value['c9']) {
 				case '首期':$percentage = 0.2;break;
 				case '二期':$percentage = 0.3;break;
-				case '三期':$percentage = 0.2;break;
-				case '尾期':$percentage = 0.3;break;
+				case '三期':$percentage = 0.3;break;
+				case '尾期':$percentage = 0.2;break;
 			}
 			$value['c7'] = round($totalFee*$percentage,2)." (".($percentage*100)."%)";
 			unset($value['projectId']);
