@@ -80,9 +80,15 @@
 		return $res0;
 	}
 	
+	function getBusinessLevelBAndC($q){
+		global $mysql;
+		$sql = "select `b`.*, `r`.name from `business` `b` left join `region` `r` on `b`.regionId = `r`.id where `b`.`isDeleted` = 'false' and b.salesmanName = '?' order by level desc ";
+		return $mysql->DBGetAsMap($sql,$q['salesmanName']);
+	}
+	
 	function getSalesmanlistWidthLevelBAndC(){
 		global $mysql;
-		return $mysql->DBGetAsMap("select distinct salesman,salesmanName,count(*) as number from business where isDeleted = 'false' and ( level = 'B' or level = 'C') group by salesman,salesmanName;");
+		return $mysql->DBGetAsMap("select distinct salesman,salesmanName,count(*) as number from business where isDeleted = 'false' group by salesman,salesmanName  order by level desc ;");
 	}
 	
 	function getSalesmanlist(){
@@ -151,11 +157,6 @@
 		return $mysql->DBGetAsMap("select * from business where id = '?' and `isDeleted` = 'false' ",$businessId);
 	}
 	
-	function getBusinessLevelBAndC($q){
-		global $mysql;
-		$sql = "select `b`.*, `r`.name from `business` `b` left join `region` `r` on `b`.regionId = `r`.id where `b`.`isDeleted` = 'false' and (b.level = 'C' or b.level = 'B') and b.salesmanName = '?'";
-		return $mysql->DBGetAsMap($sql,$q['salesmanName']);
-	}
 	function getBusiness($data){
 		global $mysql;
 		$fields = array('floorArea','houseType','regionId','address','isFrozen','requestDead','isDead','requestDeadBusinessTitle','requestDeadBusinessReason','customer','custContact','salesman','salesmanName','designer','designerName','csStaff','csStaffName','applyDesigner','level','ds_lp','ds_fc','ds_bs','ds_bp');

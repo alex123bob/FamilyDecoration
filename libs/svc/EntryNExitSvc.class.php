@@ -318,14 +318,19 @@ class EntryNExitSvc{
 		global $mysql;
 		$sql = "select b.id as c0,
 					p.projectName as c1,
-					bs.salesman as c2,
-					bs.designer as c3,
-					bs.customer as c4,
-					bs.custContact as c5,
-					b.paidAmount as c6,
-					b.payer as c7,
+					CONCAT(r.name,' ',bs.address) as c2,
+					bs.salesman as c3,
+					bs.designer as c4,
+					bs.customer as c5,
+					bs.custContact as c6,
+					b.paidAmount as c7,
+					b.payer as c8,
 					b.status
-					from statement_bill b left join user u on u.name = b.payer left join business bs on bs.id = b.businessId left join project p on p.businessId = bs.id 
+					from statement_bill b 
+						left join user u on u.name = b.payer 
+						left join business bs on bs.id = b.businessId 
+						left join project p on p.businessId = bs.id 
+						left join region r on r.id = bs.regionId 
 					where b.billType = 'dsdpst' and b.isDeleted = 'false' and  b.status = 'accepted'";
 		if(isset($q['c0']) && $q['c0'] != ""){
 			$sql .= ' and b.id like \'%'.$q['c0'].'%\'';
