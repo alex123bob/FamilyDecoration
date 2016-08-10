@@ -396,6 +396,9 @@ class EntryNExitSvc{
 				array_push($projectIds, $value['projectId']);
 		}
 		$projectIds = join($projectIds,",");
+		if($projectIds == null || $projectIds == ""){
+			return $res;
+		}
 		$sql = "select projectId,sum(totalFee) as totalFee from budget where  status != 1 and isDeleted = 'false' and projectId in ( $projectIds ) group by projectId ";
 		$data = $projectTotalFee = $mysql->DBGetAsMap($sql);
 		$projectIdBugetFeeMap = array();
