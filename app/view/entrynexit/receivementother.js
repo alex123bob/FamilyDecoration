@@ -45,25 +45,28 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementOther', {
                         allowBlank: false
                     },
                     {
-                        xtype: 'displayfield',
+                        xtype: 'textfield',
                         name: 'payUnit',
                         fieldLabel: '交款单位',
                         margin: '4 8 0 0',
-                        width: 200
+                        width: 200,
+                        allowBlank: false
                     },
                     {
-                        xtype: 'displayfield',
+                        xtype: 'textfield',
                         name: 'payer',
                         fieldLabel: '交款人',
                         margin: '4 0 0 0',
-                        width: 200
+                        width: 200,
+                        allowBlank: false
                     },
                     {
-                        xtype: 'displayfield',
+                        xtype: 'textfield',
                         name: 'contact',
                         fieldLabel: '联系方式',
                         margin: '4 8 0 0',
-                        width: 200
+                        width: 200,
+                        allowBlank: false
                     }
                 ]
             },
@@ -154,22 +157,26 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementOther', {
                 handler: function () {
                     var headerFst = me.getComponent('fieldset-headerInfo'),
                         projectName = headerFst.down('[name="projectName"]'),
-                        businessId = headerFst.down('[name="businessId"]'),
+                        payUnit = headerFst.down('[name="payUnit"]'),
+                        payer = headerFst.down('[name="payer"]'),
+                        contact = headerFst.down('[name="contact"]'),
                         fst = me.query('fieldset')[1],
                         fee = fst.getComponent('numberfield-receiveFee'),
                         receiveWay = fst.getComponent('combobox-receiveWay'),
                         account = fst.getComponent('combobox-receiveAccount'),
+                        receiveRemark = fst.getComponent('textfield-receiveRemark'),
                         accountVal = account.getValue(),
                         accountRec = account.findRecord(account.valueField || account.displayField, accountVal);
 
-                    if (projectName.isValid() && fee.isValid() && receiveWay.isValid() && account.isValid()) {
+                    if (projectName.isValid() && payUnit.isValid() && payer.isValid() && contact.isValid() && fee.isValid() && receiveWay.isValid() && account.isValid() && receiveRemark.isValid()) {
                         ajaxAdd('Account.receipt', {
                             billType: 'dsdpst',
                             businessId: businessId.getValue(),
                             receiver: User.getName(),
                             accountId: accountRec.getId(),
                             receiveAmount: fee.getValue(),
-                            receiveWay: receiveWay.getValue()
+                            receiveWay: receiveWay.getValue(),
+                            receiveRemark: receiveRemark.getValue()
                         }, function (obj) {
                             if (obj.status == 'successful') {
                                 showMsg('付款成功！');
