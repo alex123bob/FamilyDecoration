@@ -1,17 +1,17 @@
 Ext.define('FamilyDecoration.view.entrynexit.ReceivementDesignDeposit', {
     extend: 'Ext.window.Window',
     alias: 'widget.entrynexit-receivement',
-    title: '付款',
+    title: '设计定金',
 
     requires: [
-        'FamilyDecoration.store.Account'
+        'FamilyDecoration.store.Account',
+        'FamilyDecoration.view.entrynexit.BusinessList'
     ],
 
     layout: 'vbox',
     width: 500,
     height: 350,
     modal: true,
-    maximizable: true,
     bodyPadding: 5,
 
     category: undefined,
@@ -21,8 +21,6 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementDesignDeposit', {
 
     initComponent: function () {
         var me = this;
-
-        me.title = me.category.get('value');
 
         me.items = [
             {
@@ -39,7 +37,68 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementDesignDeposit', {
                         'float': 'left'
                     }
                 },
-                items: []
+                items: [
+                    {
+                        xtype: 'textfield',
+                        readOnly: true,
+                        name: 'projectName',
+                        fieldLabel: '工程名称',
+                        width: 400,
+                        listeners: {
+                            focus: function (txt, ev, opts) {
+                                var win = Ext.create('FamilyDecoration.view.entrynexit.BusinessList', {
+                                    callback: function (business) {
+                                        var fst = me.getComponent('fieldset-headerInfo'),
+                                            salesmanField = fst.down('[name="salesman"]'),
+                                            designerField = fst.down('[name="designer"]'),
+                                            customerField = fst.down('[name="customer"]'),
+                                            contactField = fst.down('[name="contact"]'),
+                                            businessIdField = fst.down('[name="businessId"]');
+                                        txt.setValue(business.get('regionName') + ' ' + business.get('address'));
+                                        salesmanField.setValue(business.get('salesman'));
+                                        designerField.setValue(business.get('designer'));
+                                        customerField.setValue(business.get('customer'));
+                                        contactField.setValue(business.get('custContact'));
+                                        businessIdField.setValue(business.getId());
+                                    }
+                                });
+                                win.show();
+                            }
+                        }
+                    },
+                    {
+                        xtype: 'displayfield',
+                        name: 'salesman',
+                        fieldLabel: '业务员',
+                        margin: '4 8 0 0',
+                        width: 200
+                    },
+                    {
+                        xtype: 'displayfield',
+                        name: 'designer',
+                        fieldLabel: '设计师',
+                        margin: '4 0 0 0',
+                        width: 200
+                    },
+                    {
+                        xtype: 'displayfield',
+                        name: 'customer',
+                        fieldLabel: '客户姓名',
+                        margin: '4 8 0 0',
+                        width: 200
+                    },
+                    {
+                        xtype: 'displayfield',
+                        name: 'contact',
+                        fieldLabel: '联系方式',
+                        margin: '4 0 0 0',
+                        width: 200
+                    },
+                    {
+                        xtype: 'hiddenfield',
+                        name: 'businessId'
+                    }
+                ]
             },
             {
                 xtype: 'fieldset',
@@ -58,36 +117,14 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementDesignDeposit', {
                         allowBlank: false
                     },
                     {
-                        itemId: 'combobox-payAccount',
-                        fieldLabel: '付款账户',
+                        itemId: 'combobox-receiveWay',
                         xtype: 'combobox',
+                        fieldLabel: '收款方式',
                         editable: false,
-                        displayField: 'name',
-                        valueField: 'id',
-                        allowBlank: false,
-                        store: Ext.create('FamilyDecoration.store.Account', {
-                            autoLoad: true,
-                            listeners: {
-                                load: function (st, recs, success, opts){
-                                    Ext.each(recs, function (rec, index, arr){
-                                        rec.set({
-                                            name: rec.get('name') + ' (余额: ' + rec.get('balance') + ')'
-                                        });
-                                    });
-                                }
-                            }
-                        })
-                    },
-                    {
-                        itemId: 'combobox-removeBalance',
-                        fieldLabel: '抹平余额',
-                        xtype: 'combobox',
                         displayField: 'name',
                         valueField: 'value',
+                        allowBlank: false,
                         queryMode: 'local',
-                        editable: false,
-                        value: false,
-                        hidden: !(me.category.get('name') == 'workerSalary' || me.category.get('name') == 'qualityGuaranteeDeposit'),
                         store: Ext.create('Ext.data.Store', {
                             fields: ['name', 'value'],
                             proxy: {
@@ -98,14 +135,39 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementDesignDeposit', {
                             },
                             data: [
                                 {
-                                    name: '是',
-                                    value: true
+                                    name: '现金',
+                                    value: 'cash'
                                 },
                                 {
-                                    name: '否',
-                                    value: false
+                                    name: '刷卡',
+                                    value: 'bankcard'
+                                },
+                                {
+                                    name: '转账',
+                                    value: 'transference'
                                 }
                             ]
+                        })
+                    },
+                    {
+                        itemId: 'combobox-receiveAccount',
+                        fieldLabel: '收款账户',
+                        xtype: 'combobox',
+                        editable: false,
+                        displayField: 'name',
+                        valueField: 'id',
+                        allowBlank: false,
+                        store: Ext.create('FamilyDecoration.store.Account', {
+                            autoLoad: true,
+                            listeners: {
+                                load: function (st, recs, success, opts) {
+                                    Ext.each(recs, function (rec, index, arr) {
+                                        rec.set({
+                                            name: rec.get('name') + ' (余额: ' + rec.get('balance') + ')'
+                                        });
+                                    });
+                                }
+                            }
                         })
                     }
                 ]
@@ -116,33 +178,24 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementDesignDeposit', {
             {
                 text: '确定',
                 handler: function () {
-                    var fst = me.query('fieldset')[1],
+                    var headerFst = me.getComponent('fieldset-headerInfo'),
+                        fst = me.query('fieldset')[1],
                         fee = fst.getComponent('numberfield-receiveFee'),
-                        account = fst.getComponent('combobox-payAccount'),
-                        enoughBalance = true,
-                        accountVal = account.getValue(),
-                        accountRec = account.findRecord(account.valueField || account.displayField, accountVal);
+                        account = fst.getComponent('combobox-receiveAccount'),
+                        businessId = headerFst.down('[name="businessId"]');
 
-                    if (fee.isValid() && account.isValid()) {
-                        enoughBalance = ( fee.getValue() <= parseFloat(accountRec.get('balance')) ) ? true : false;
-                        if (enoughBalance) {
-                            ajaxUpdate('Account.pay', {
-                                id: me.item.get('c0'),
-                                type: me.category.get('name'),
-                                accountId: accountRec.getId(),
-                                fee: fee.getValue()
-                            }, ['id', 'accountId', 'type'], function (obj){
-                                if (obj.status == 'successful') {
-                                    showMsg('付款成功！');
-                                    me.callback();
-                                    me.close();
-                                }
-                            }, true)
+                    ajaxUpdate('Account.receipt', {
+                        businessId: businessId.getValue(),
+                        type: me.category.get('name'),
+                        accountId: accountRec.getId(),
+                        fee: fee.getValue()
+                    }, ['id', 'accountId', 'type'], function (obj) {
+                        if (obj.status == 'successful') {
+                            showMsg('付款成功！');
+                            me.callback();
+                            me.close();
                         }
-                        else {
-                            Ext.Msg.error('没有足够余额!');
-                        }
-                    }
+                    }, true)
                 }
             },
             {
@@ -152,30 +205,6 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementDesignDeposit', {
                 }
             }
         ];
-
-        this.addListener({
-            show: function (win, opts) {
-                var headerSet = me.getComponent('fieldset-headerInfo');
-                ajaxGet('EntryNExit', 'getPayHeader', {
-                    id: me.item.get('c0'),
-                    type: me.category.get('name')
-                }, function (obj) {
-                    if (obj.length > 0) {
-                        Ext.each(obj, function (item, index, arr) {
-                            arr[index] = {
-                                fieldLabel: item['k'],
-                                value: item['v'],
-                                width: 200
-                            }
-                        });
-                        headerSet.add(obj);
-                    }
-                    else {
-                        headerSet.removeAll();
-                    }
-                });
-            }
-        })
 
         this.callParent();
     }

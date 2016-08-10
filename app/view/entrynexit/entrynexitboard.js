@@ -134,10 +134,9 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                 itemId: 'button-receive',
                 icon: 'resources/img/money_collect.png',
                 hidden: true,
-                disabled: true,
                 handler: function () {
                     var resObj = _getRes();
-                    var win = Ext.create('FamilyDecoration.view.entrynexit.Receivement', {
+                    var win = Ext.create('FamilyDecoration.view.entrynexit.ReceivementDesignDeposit', {
                         category: resObj.category,
                         item: resObj.item,
                         callback: function () {
@@ -214,7 +213,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             var tbarObj = getTbar();
             tbarObj.idSearch.setValue('').show();
             tbarObj.nameSearch.setValue('').show();
-            tbarObj.receive.setDisabled(true);
+            // tbarObj.receive.setDisabled(true);
             tbarObj.pay.setDisabled(true);
             if (!rec) {
                 return;
@@ -224,7 +223,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                 case 'projectFee':
                 case 'other':
                 case 'loan':
-                    tbarObj.receive.show().setDisabled(!item || item.get('status') == 'paid');
+                    // tbarObj.receive.show().setDisabled(!item || item.get('status') == 'paid');
                     break;
                 default:
                     tbarObj.pay.show().setDisabled(!item || item.get('status') == 'paid');
