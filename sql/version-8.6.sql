@@ -172,7 +172,7 @@ update statement_bill_audit set drt = '1' where orignalStatus = 'rdyck' and newS
 update statement_bill_audit set drt = '-1' where orignalStatus = 'rdyck2' and newStatus = 'rdyck' and drt is null;
 alter table announcement_comment modify id varchar(20);
 alter table budget modify column totalFee double(16,2) default 0 comment '预算总额，每一次加载预算详细时会计算，不一致的话会自动更新';
-
+alter table error_log add column params text comment '请求参数';
 ALTER TABLE `upload_files` ADD INDEX(`refId`);
 ALTER TABLE `upload_files` ADD INDEX(`refType`);
 

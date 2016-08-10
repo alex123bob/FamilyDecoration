@@ -22,6 +22,7 @@
 				$errorLogSvc->add(array('@file'=>$errorFile,
 									'@line'=>$errorLine,
 									'@detail'=>$errstr,
+									'@params'=>json_encode($_POST),
 									'@user'=>isset($_SESSION['name']) ? $_SESSION['name'] : '',
 									'@url'=>"http://".$_SERVER["HTTP_HOST"] . ":" . $_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"],
 									'@ip'=>isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '',
