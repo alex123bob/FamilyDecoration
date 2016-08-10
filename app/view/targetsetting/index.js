@@ -72,13 +72,15 @@ Ext.define('FamilyDecoration.view.targetsetting.Index', {
 					selectionchange: function (selModel, sels, opts){
 						var depa = sels[0],
 							resObj = _getRes();
+						resObj.targetGrid.depa = depa;
 						resObj.targetGrid.refresh(depa ? depa.get('value') : undefined);
 					}
 				}
 			},
 			{
 				xtype: 'targetsetting-targetboard',
-				flex: 4
+				flex: 4,
+				depa: undefined
 			}
 		];
 

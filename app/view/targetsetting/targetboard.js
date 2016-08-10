@@ -2,11 +2,13 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.targetsetting-targetboard',
     requires: [
-        'FamilyDecoration.store.BusinessGoal'
+        'FamilyDecoration.store.BusinessGoal',
+        'FamilyDecoration.view.targetsetting.AddTarget'
     ],
     autoScroll: true,
     title: '目标量',
     columns: [],
+    depa: undefined,
 
     initComponent: function () {
         var me = this;
@@ -34,10 +36,12 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
         function _getRes() {
             var toolbar = me.down('toolbar'),
                 year = toolbar.getComponent('combobox-year'),
-                month = toolbar.getComponent('combobox-month');
+                month = toolbar.getComponent('combobox-month'),
+                st = me.getStore();
             return {
                 year: year,
-                month: month
+                month: month,
+                st: st
             };
         }
 
@@ -90,7 +94,9 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                             end,
                             data = [],
                             mCombo = combo.nextSibling(),
-                            st = mCombo.getStore();
+                            st = mCombo.getStore(),
+                            resObj = _getRes(),
+                            proxy = resObj.st.getProxy();
                         mCombo.clearValue();
                         if (newVal) {
                             if (newVal == y) {
@@ -102,8 +108,8 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                             for (var i = start; i <= end; i++) {
                                 data.push(
                                     {
-                                        name: i,
-                                        value: i
+                                        name: i >= 10 ? i : ('0' + i),
+                                        value: i >= 10 ? i : ('0' + i)
                                     }
                                 );
                             }
@@ -112,6 +118,12 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                                 value: null
                             });
                             st.loadData(data);
+                            if (proxy.extraParams) {
+                                proxy.extraParams.year = newVal;
+                                delete proxy.extraParams.month;
+                                resObj.st.setProxy(proxy);
+                                resObj.st.load();
+                            }
                         }
                         else {
                             st.removeAll();
@@ -140,7 +152,48 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                 }),
                 listeners: {
                     change: function (combo, newVal, oldVal, opts) {
-                        console.log(_getTimeObj());
+                        var timeObj = _getTimeObj(),
+                            resObj = _getRes(),
+                            proxy = resObj.st.getProxy();
+                        if (proxy.extraParams) {
+                            if (newVal) {
+                                proxy.extraParams.month = newVal;
+                            }
+                            else {
+                                delete proxy.extraParams.month;
+                            }
+                            resObj.st.setProxy(proxy);
+                            resObj.st.load();
+                        }
+                        else {
+                        }
+                    }
+                }
+            }
+        ];
+
+        me.bbar = [
+            {
+                itemId: 'button-add',
+                xtype: 'button',
+                text: '添加',
+                icon: 'resources/img/add_target.png',
+                handler: function () {
+                    if (me.depa) {
+                        var timeObj = _getTimeObj();
+                        if (timeObj.year && timeObj.month) {
+                            var win = Ext.create('FamilyDecoration.view.targetsetting.AddTarget', {
+                                depa: me.depa,
+                                timeObj: timeObj
+                            });
+                            win.show();
+                        }
+                        else {
+                            showMsg('添加指标之前必须指定年和月!');
+                        }
+                    }
+                    else {
+                        showMsg('请先选择部门！');
                     }
                 }
             }
@@ -163,10 +216,12 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                     columns: []
                 }
             ],
-                prefix = ['plan_', 'accomplishment_'],
-                st = Ext.create('FamilyDecoration.store.BusinessGoal', {
-                    autoLoad: false
-                });
+                prefix = ['', 'a'],
+                timeObj = _getTimeObj(),
+                st,
+                params = timeObj.month ? {
+                    month: timeObj.month
+                } : {};
 
             function renderCol(prefix, depa, needEditor) {
                 var arr = [];
@@ -175,46 +230,46 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                         {
                             text: '扫楼',
                             align: 'center',
-                            dataIndex: prefix + 'buildingSwiping',
+                            dataIndex: prefix + 'c1',
                             flex: 1,
                             width: 80,
-                            editor: needEditor ? null : {
+                            editor: needEditor ? {
                                 xtype: 'textfield',
                                 allowBlank: false
-                            }
+                            } : null
                         },
                         {
                             text: '电销',
                             align: 'center',
-                            dataIndex: prefix + 'telemarketing',
+                            dataIndex: prefix + 'c2',
                             flex: 1,
                             width: 80,
-                            editor: needEditor ? null : {
+                            editor: needEditor ? {
                                 xtype: 'textfield',
                                 allowBlank: false
-                            }
+                            } : null
                         },
                         {
                             text: '到店',
                             align: 'center',
-                            dataIndex: prefix + 'companyVisit',
+                            dataIndex: prefix + 'c3',
                             flex: 1,
                             width: 80,
-                            editor: needEditor ? null : {
+                            editor: needEditor ? {
                                 xtype: 'textfield',
                                 allowBlank: false
-                            }
+                            } : null
                         },
                         {
                             text: '定金',
                             align: 'center',
-                            dataIndex: prefix + 'deposist',
+                            dataIndex: prefix + 'c4',
                             flex: 1,
                             width: 80,
-                            editor: needEditor ? null : {
+                            editor: needEditor ? {
                                 xtype: 'textfield',
                                 allowBlank: false
-                            }
+                            } : null
                         }
                     ];
                 }
@@ -223,24 +278,24 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                         {
                             text: '定金率',
                             align: 'center',
-                            dataIndex: prefix + 'depositRate',
+                            dataIndex: prefix + 'c1',
                             flex: 1,
                             width: 160,
-                            editor: needEditor ? null : {
+                            editor: needEditor ? {
                                 xtype: 'textfield',
                                 allowBlank: false
-                            }
+                            } : null
                         },
                         {
                             text: '签单额',
                             align: 'center',
-                            dataIndex: prefix + 'signedBusinessNumber',
+                            dataIndex: prefix + 'c2',
                             flex: 1,
                             width: 160,
-                            editor: needEditor ? null : {
+                            editor: needEditor ? {
                                 xtype: 'textfield',
                                 allowBlank: false
-                            }
+                            } : null
                         }
                     ];
                 }
@@ -250,8 +305,37 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                 return arr;
             }
 
-            cols[1].columns = renderCol(prefix[0], depa, true);
-            cols[2].columns = renderCol(prefix[1], depa, false);
+            if (depa) {
+                Ext.apply(params, {
+                    year: timeObj.year,
+                    action: 'BusinessGoal.getByDepa',
+                    depa: (function () {
+                        if (me.depa.get('value') == 'marketDepartment') {
+                            return '004';
+                        }
+                        else if (me.depa.get('value') == 'designDepartment') {
+                            return '002';
+                        }
+                    })()
+                })
+                st = Ext.create('FamilyDecoration.store.BusinessGoal', {
+                    autoLoad: true,
+                    proxy: {
+                        type: 'rest',
+                        reader: {
+                            type: 'json'
+                        },
+                        url: './api.php',
+                        extraParams: params
+                    }
+                });
+                cols[1].columns = renderCol(prefix[0], depa, true);
+                cols[2].columns = renderCol(prefix[1], depa, false);
+            }
+            else {
+                st = false;
+                cols = [];
+            }
 
             me.reconfigure(st, cols);
         };
@@ -262,6 +346,7 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                     combo = resObj.year,
                     mCombo = resObj.month,
                     m = new Date().getMonth() + 1;
+                m = (m >= 10 ? m : '0' + m);
                 combo.fireEventArgs('change', [combo, combo.getValue()]);
                 mCombo.setValue(m);
             }
