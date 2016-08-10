@@ -161,7 +161,7 @@ Ext.define('FamilyDecoration.view.entrynexit.Index', {
             },
             {
                 xtype: 'entrynexit-entrynexitboard',
-                flex: 4,
+                flex: 12,
                 height: '100%',
                 name: 'gridpanel-entrynexit'
             }
