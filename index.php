@@ -690,6 +690,22 @@
         if (document.getElementById('logAndException')) {
             document.getElementById('logAndException').onclick = function (){
                 if (Ext) {
+                    var st = Ext.create('Ext.data.Store', {
+                        fields: ['detail', 'user', 'file', 'line', 'ip', 'refer', 'useragent', 'createTime', 'updateTime'],
+                        proxy: {
+                            type: 'rest',
+                            url: './libs/api.php',
+                            reader: {
+                                type: 'json',
+                                root: 'data',
+                                totalProperty: 'total'
+                            },
+                            extraParams: {
+                                action: 'ErrorLog.get'
+                            }
+                        },
+                        autoLoad: true
+                    });
                     var win = Ext.create('Ext.window.Window', {
                         title: '系统异常和错误',
                         width: 700,
@@ -701,22 +717,15 @@
                             {
                                 xtype: 'gridpanel',
                                 cls: 'gridpanel-errorandexception',
-                                store: Ext.create('Ext.data.Store', {
-                                    fields: ['detail', 'user', 'file', 'line', 'ip', 'refer', 'useragent', 'createTime', 'updateTime'],
-                                    proxy: {
-                                        type: 'rest',
-                                        url: './libs/api.php',
-                                        reader: {
-                                            type: 'json',
-                                            root: 'data',
-                                            totalProperty: 'total'
-                                        },
-                                        extraParams: {
-                                            action: 'ErrorLog.get'
-                                        }
-                                    },
-                                    autoLoad: true
-                                }),
+                                dockedItems: [
+                                    {
+                                        xtype: 'pagingtoolbar',
+                                        store: st,   // same store GridPanel is using
+                                        dock: 'bottom',
+                                        displayInfo: true
+                                    }
+                                ],
+                                store: st,
                                 columns: {
                                     defaults: {
                                         flex: 1,
