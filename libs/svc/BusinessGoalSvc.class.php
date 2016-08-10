@@ -27,7 +27,9 @@ class BusinessGoalSvc extends BaseSvc
 		"left join business_goal g on u.name = g.user and u.isDeleted = 'false' and g.isDeleted = 'false' and g.targetMonth like '".$targetMonth."%'  where  u.level like '".$q['depa']."%' ";
 		if(isset($q['user']))
 			$sql .= " and user = '".$q['user']."'";
-		$res = $this->parseData($sql,$q);
+		$res = array('status'=>"successful");
+		$res['data'] = $mysql->DBGetAsMap($sql);
+		$res['total'] = count($res['data']);
 		$users = array();
 		foreach ($res['data'] as $key => $value) {
 			array_push($users, $value['user']);
