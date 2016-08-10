@@ -58,7 +58,7 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
                                 if (e.field == 'content') {
                                     ajaxUpdate(me.isComment ? 'ProjectProgressAudit' : 'ProjectProgress', {
                                         content: e.record.get('content'),
-                                        id: e.record.getId(),
+                                        id: e.record.getId()
                                     }, 'id', function (obj) {
                                         showMsg('编辑成功！');
                                         e.record.store.reload();

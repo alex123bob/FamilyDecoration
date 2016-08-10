@@ -6,7 +6,7 @@ Ext.define('FamilyDecoration.model.BusinessDetail', {
 		{name: 'content', type: 'string'},
 		{name: 'createTime', type: 'string'},
 		{name: 'committer', type: 'string'},
-		{name: 'committerRealName', type: 'string'},
+		{name: 'committerRealName', type: 'string'}
 	],
 	idProperty: 'id'
 });

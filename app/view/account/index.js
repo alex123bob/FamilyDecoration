@@ -52,7 +52,7 @@ Ext.define('FamilyDecoration.view.account.Index', {
                     return {
                         add: this.down('[name="add"]'),
                         edit: this.down('[name="edit"]'),
-                        del: this.down('[name="del"]'),
+                        del: this.down('[name="del"]')
                     };
                 },
                 initBtn: function (){

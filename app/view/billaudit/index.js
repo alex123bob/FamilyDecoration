@@ -312,7 +312,7 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                                                 ajaxUpdate('StatementBill.changeStatus', {
                                                     status: '+1',
                                                     id: resourceObj.passedBill.getId(),
-                                                    comments: resourceObj.passedBill.get('billName') + '已付款',
+                                                    comments: resourceObj.passedBill.get('billName') + '已付款'
                                                 }, ['id'], function (obj) {
                                                     Ext.Msg.success('已付款！');
                                                     resourceObj.billList.getSelectionModel().deselectAll();

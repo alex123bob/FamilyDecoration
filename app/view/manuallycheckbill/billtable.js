@@ -319,7 +319,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								hidden: !hasPrePaidBill ? true : (previewMode ? false : true)
 							}
 						]
-					},
+					}
 				]
 			},
 			{
@@ -448,7 +448,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 							editor: !previewMode ? (isRegularBill ? {
 				                xtype: 'textfield',
 				                allowBlank: false
-				            } : false) : false,
+				            } : false) : false
 						},
 						{
 							text: '审核数量',

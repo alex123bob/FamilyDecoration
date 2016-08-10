@@ -23,7 +23,7 @@ Ext.define('FamilyDecoration.view.billaudit.BillList', {
                 reader: {
                     type: 'json',
                     root: 'data',
-                    totalProperty: 'total',
+                    totalProperty: 'total'
                 },
                 extraParams: {
                     action: 'StatementBill.getByStatus',
@@ -86,7 +86,7 @@ Ext.define('FamilyDecoration.view.billaudit.BillList', {
                         reader: {
                             type: 'json',
                             root: 'data',
-                            totalProperty: 'total',
+                            totalProperty: 'total'
                         },
                         extraParams: {
                             action: 'StatementBill.getByStatus',

@@ -12,7 +12,7 @@ Ext.define('FamilyDecoration.store.StatementBillItem', {
             root: 'data'
         },
         extraParams: {
-            action: 'StatementBillItem.get',
+            action: 'StatementBillItem.get'
         }
     }
 });

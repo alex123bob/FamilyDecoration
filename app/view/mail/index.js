@@ -4,7 +4,7 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 	requires: [
 		'FamilyDecoration.view.checklog.MemberList',
 		'FamilyDecoration.store.Mail',
-		'FamilyDecoration.view.mail.NewMail',
+		'FamilyDecoration.view.mail.NewMail'
 	],
 	layout: {
 		type: 'hbox',

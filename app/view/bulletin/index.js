@@ -660,7 +660,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                             {
                                 type: 'Category',
                                 position: 'bottom',
-                                fields: ['name'],
+                                fields: ['name']
                             }
                         ],
                         series: [
@@ -719,7 +719,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                 {
                                     type: 'Category',
                                     position: 'bottom',
-                                    fields: ['name'],
+                                    fields: ['name']
                                 }
                             ],
                             series: [

@@ -212,7 +212,7 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                         {
                             text: '单',
                             flex: 0.2,
-                            dataIndex: 'number',
+                            dataIndex: 'number'
                         },
                         {
                             xtype: 'actioncolumn',
@@ -233,7 +233,7 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                                                 });
                                         win.show();
                                     }
-                                },
+                                }
                             ]
                         },
                         {

@@ -13,7 +13,7 @@ Ext.define('FamilyDecoration.model.AttachmentManagement', {
         'uploader',
         'isDeleted',
         'createTime',
-        'updateTime',
+        'updateTime'
 	],
 	idProperty: 'id'
 });

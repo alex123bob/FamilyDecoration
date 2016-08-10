@@ -326,7 +326,7 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 						}
 					},
 					autoLoad: false
-				}),
+				})
 			}, {
 				xtype: 'container',
 				height: '100%',

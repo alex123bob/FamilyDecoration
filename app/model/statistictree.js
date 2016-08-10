@@ -9,7 +9,7 @@ Ext.define('FamilyDecoration.model.StatisticTree', {
         {name: 'mail', type: 'string'},
 
         {name: 'year', type: 'string'},
-        {name: 'month', type: 'string'},
+        {name: 'month', type: 'string'}
     ],
     idProperty: 'id',
     proxy: {

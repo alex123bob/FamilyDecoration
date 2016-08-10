@@ -143,7 +143,7 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 								maskRe: /[\d\.]/
 							}
 						]
-					},
+					}
 				]
 			},
 			{

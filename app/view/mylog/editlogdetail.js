@@ -79,7 +79,7 @@ Ext.define('FamilyDecoration.view.mylog.EditLogDetail', {
 				hideLabel: true,
 				flex: 1,
 				height: '100%',
-				hidden: me.logObj ? (me.logObj.get('logType') == 1 ? true : false) : false,
+				hidden: me.logObj ? (me.logObj.get('logType') == 1 ? true : false) : false
 			}, {
 				xtype: 'checkboxfield',
 				itemId: 'checkbox-sendMail',
