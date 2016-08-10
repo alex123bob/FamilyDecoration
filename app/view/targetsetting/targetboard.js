@@ -14,20 +14,33 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
         var me = this;
 
         me.plugins = [
-            Ext.create('Ext.grid.plugin.RowEditing', {
+            Ext.create('Ext.grid.plugin.CellEditing', {
                 clicksToEdit: 1,
                 listeners: {
-                    beforeedit: function (editor, e) {
-                        var rec = e.record;
-                    },
                     edit: function (editor, e) {
-                        var rec = e.record;
+                        var rec = e.record,
+                            timeObj = _getTimeObj();
                         Ext.suspendLayouts();
-
+                        var params = {};
+                        params[e.field] = e.value;
+                        params['id'] = rec.getId();
+                        rec.commit();
+                        ajaxUpdate('BusinessGoal.updateGoal', params, ['id'], function (obj){
+                            showMsg('更新成功');
+                            me.refresh(me.depa, timeObj.year, timeObj.month);
+                        }, true);
                         Ext.resumeLayouts();
                     },
                     validateedit: function (editor, e, opts) {
                         var rec = e.record;
+                        if (e.field == 'c1' || e.field == 'c2' || e.field == 'c3' || e.field == 'c4') {
+                            if (isNaN(e.value) || !/^-?\d+(\.\d+)?$/.test(e.value)) {
+                                return false;
+                            }
+                            else if (e.value == e.originalValue) {
+                                return false;
+                            }
+                        }
                     }
                 }
             })
@@ -204,7 +217,7 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                 {
                     text: '人员',
                     align: 'center',
-                    dataIndex: 'user',
+                    dataIndex: 'userRealName',
                     flex: 1
                 },
                 {
@@ -216,7 +229,7 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                     columns: []
                 }
             ],
-                prefix = ['', 'a'],
+                prefix = ['c', 'a'],
                 timeObj = _getTimeObj(),
                 st,
                 params = timeObj.month ? {
@@ -230,7 +243,7 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                         {
                             text: '扫楼',
                             align: 'center',
-                            dataIndex: prefix + 'c1',
+                            dataIndex: prefix + '1',
                             flex: 1,
                             width: 80,
                             editor: needEditor ? {
@@ -241,7 +254,7 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                         {
                             text: '电销',
                             align: 'center',
-                            dataIndex: prefix + 'c2',
+                            dataIndex: prefix + '2',
                             flex: 1,
                             width: 80,
                             editor: needEditor ? {
@@ -252,7 +265,7 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                         {
                             text: '到店',
                             align: 'center',
-                            dataIndex: prefix + 'c3',
+                            dataIndex: prefix + '3',
                             flex: 1,
                             width: 80,
                             editor: needEditor ? {
@@ -263,7 +276,7 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                         {
                             text: '定金',
                             align: 'center',
-                            dataIndex: prefix + 'c4',
+                            dataIndex: prefix + '4',
                             flex: 1,
                             width: 80,
                             editor: needEditor ? {
@@ -278,7 +291,7 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                         {
                             text: '定金率',
                             align: 'center',
-                            dataIndex: prefix + 'c1',
+                            dataIndex: prefix + '1',
                             flex: 1,
                             width: 160,
                             editor: needEditor ? {
@@ -289,7 +302,7 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                         {
                             text: '签单额',
                             align: 'center',
-                            dataIndex: prefix + 'c2',
+                            dataIndex: prefix + '2',
                             flex: 1,
                             width: 160,
                             editor: needEditor ? {
@@ -323,7 +336,8 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                     proxy: {
                         type: 'rest',
                         reader: {
-                            type: 'json'
+                            type: 'json',
+                            root: 'data'
                         },
                         url: './libs/api.php',
                         extraParams: params
