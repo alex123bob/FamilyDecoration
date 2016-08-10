@@ -368,17 +368,20 @@ class EntryNExitSvc{
 	private function projectFee($q){
 		global $mysql;
 		$sql = "select b.id as c0,
-					b.projectName as c1,
+					p.projectName as c1,
 					p.captain as c2,
 					p.designer as c3,
 					bs.customer as c4,
 					bs.custContact as c5,
-					b.totalFee as c6,
-					b.paidAmount as c7,
-					b.paidTime as c9,
-					b.reimbursementReason as c8,
-					b.status
-					from statement_bill b left join user u on u.name = b.payer left join project p on p.projectId = b.projectId left join business bs on bs.id = p.businessId
+					b.paidAmount as c8,
+					b.paidTime as c10,
+					b.reimbursementReason as c9,
+					b.status,
+					p.projectId
+					from statement_bill b 
+						left join user u on u.name = b.payer 
+						left join project p on p.projectId = b.projectId 
+						left join business bs on bs.id = p.businessId
 					where b.billType = 'pjtf' and b.isDeleted = 'false' and b.status = 'accepted'";
 		if(isset($q['c0']) && $q['c0'] != ""){
 			$sql .= ' and b.id like \'%'.$q['c0'].'%\'';
@@ -386,7 +389,40 @@ class EntryNExitSvc{
 		if(isset($q['payee']) && $q['payee'] != ""){
 			$sql .= ' and b.payee like \'%'.$q['payee'].'%\'';
 		}
-		return $this->parseData($sql,$q);
+		$res = $this->parseData($sql,$q);
+		$projectIds = array();
+		foreach ($res['data'] as $key => $value) {
+			if($value['projectId'] != null && $value['projectId'] != "" )
+				array_push($projectIds, $value['projectId']);
+		}
+		$projectIds = join($projectIds,",");
+		$sql = "select projectId,sum(totalFee) as totalFee from budget where  status != 1 and isDeleted = 'false' and projectId in ( $projectIds ) group by projectId ";
+		$data = $projectTotalFee = $mysql->DBGetAsMap($sql);
+		$projectIdBugetFeeMap = array();
+		foreach ($data as $key => $value) {
+			$projectIdBugetFeeMap[$value['projectId']] = $value['totalFee'];
+		}
+		foreach ($res['data'] as $key => &$value) {
+			if($value['projectId'] == null || $value['projectId'] == "" )
+				continue;
+			if(!isset($projectIdBugetFeeMap[$value['projectId']])){
+				$value['c7'] = '';
+				$value['c6'] = '无预算';
+				continue;
+			}
+			$totalFee = round($projectIdBugetFeeMap[$value['projectId']],2);
+			$value['c6'] = $totalFee;
+			$percentage = 1;
+			switch ($value['c9']) {
+				case '首期':$percentage = 0.2;break;
+				case '二期':$percentage = 0.3;break;
+				case '三期':$percentage = 0.2;break;
+				case '尾期':$percentage = 0.3;break;
+			}
+			$value['c7'] = round($totalFee*$percentage,2)." (".($percentage*100)."%)";
+			unset($value['projectId']);
+		}
+		return $res;
 	}
 }
 

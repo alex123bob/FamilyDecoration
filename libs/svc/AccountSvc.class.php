@@ -82,13 +82,31 @@ class AccountSvc extends BaseSvc
 					'@businessId'=>$q['@businessId'],
 					'@payer'=>$q['@receiver'],
 					'@paidAmount'=>$amount,
-					'@paidTime'=>'now',
+					'@paidTime'=>'now()',
 					'@status'=>'accepted',
 					'@descpt'=>$q['@receiveWay']
 				));
 				$mysql->DBExecute("update account set balance = balance + $amount where id = '".$accountId."';");
 				$account = $mysql->DBGetAsMap("select * from account where id = '".$accountId."';");
 				parent::getSvc('AccountLog')->add(array('@accountId'=>$accountId,'@amount'=>$amount,'@type'=>'in','@refId'=>$bill['data']['id'],'@refType'=>'designDeposit','@balance'=>$account[0]['balance']));
+				break;
+			case 'pjtf':
+				$amount = $q['@receiveAmount'];
+				$accountId = $q['@accountId'];
+				$bill = $statementBillSvc->add(array(
+					'@billType'=>$q['@billType'],
+					'@projectId'=>$q['@projectId'],
+					'@payer'=>$q['@receiver'],
+					'@paidAmount'=>$amount,
+					'@paidTime'=>'now()',
+					'@reimbursementReason'=>$q['@reimbursementReason'],
+					'@status'=>'accepted',
+					'@descpt'=>$q['@receiveWay']
+				));
+				$mysql->DBExecute("update account set balance = balance + $amount where id = '".$accountId."';");
+				$account = $mysql->DBGetAsMap("select * from account where id = '".$accountId."';");
+				parent::getSvc('AccountLog')->add(array('@accountId'=>$accountId,'@amount'=>$amount,'@type'=>'in','@refId'=>$bill['data']['id'],'@refType'=>'projectFee','@balance'=>$account[0]['balance']));
+
 				break;
 			default:
 				# code...

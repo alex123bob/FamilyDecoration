@@ -149,6 +149,7 @@ alter table statement_bill modify status varchar(10);
 alter table statement_bill add column `certs` text DEFAULT NULL comment '凭证';
 alter table statement_bill add column `businessId` varchar(20) DEFAULT NULL comment '业务ID';
 alter table statement_bill_audit add column drt varchar(10) comment '方向，1前进，-1打回';
+alter table budget add column status int(1) default 0 comment '0,正常，1 废弃';
 
 update statement_bill_audit set drt = '1' where orignalStatus = 'chk' and newStatus = 'paid' and drt is null;
 update statement_bill_audit set drt = '1' where orignalStatus = 'new' and newStatus = 'rdyck' and drt is null;
@@ -157,6 +158,7 @@ update statement_bill_audit set drt = '-1' where orignalStatus = 'rdyck' and new
 update statement_bill_audit set drt = '1' where orignalStatus = 'rdyck' and newStatus = 'rdyck2' and drt is null;
 update statement_bill_audit set drt = '-1' where orignalStatus = 'rdyck2' and newStatus = 'rdyck' and drt is null;
 alter table announcement_comment modify id varchar(20);
+alter table budget modify column totalFee double(16,2) default 0 comment '预算总额，每一次加载预算详细时会计算，不一致的话会自动更新';
 
 ALTER TABLE `upload_files` ADD INDEX(`refId`);
 ALTER TABLE `upload_files` ADD INDEX(`refType`);
