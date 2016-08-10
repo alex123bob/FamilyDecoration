@@ -101,7 +101,7 @@ class StatementBillSvc extends BaseSvc
 		}
 	}
 	//检查是否通过短信验证码或者安全密码验证
-	private function checkLimit($q,$bill,$statusChange){
+	private function checkLimit($q,$bill){
 		//目前所有状态转换需要校验,但是参数带过来,方便以后某些状态转换不需要校验,直接返回
 		if(isset($_SESSION['secureChecked']) && strtotime(date('Y-m-d H:i:s')) - $_SESSION['secureChecked'] < 60*60*2 ){
  			//两小时内不用重复校验.
@@ -138,7 +138,7 @@ class StatementBillSvc extends BaseSvc
 		$targetStatus = $this->getStatusTransferChain($bill['billType'],$bill['status'],$q['@status']);
 		// 1:forward -1:backward
 		//检查额度,检查安全密码,如果超过一定额度要检查短信
-		//$this->checkLimit($q,$bill,$statusChange);
+		$this->checkLimit($q,$bill);
 		$auditRecord = array();
 		$auditRecord['@operator'] = $_SESSION['name'];
 		$auditRecord['@billId'] = $q['id'];
