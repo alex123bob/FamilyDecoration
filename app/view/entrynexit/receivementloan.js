@@ -219,14 +219,14 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementLoan', {
                             bankName: bank.getValue(),
                             assignee: operatorName.getValue(),
                             receiveAmount: fee.getValue(),
-                            dealTime: loanTime.getSubmitValue(),
+                            loanTime: loanTime.getSubmitValue(),
                             accountId: accountRec.getId(),
                             descpt: receiveRemark.getValue(),
                             period: loanPeriod.getValue(),
                             interest: loanInterestRate.getValue()
                         }, function (obj) {
                             if (obj.status == 'successful') {
-                                showMsg('付款成功！');
+                                showMsg('收款成功！');
                                 me.callback();
                                 me.close();
                             }

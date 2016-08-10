@@ -199,7 +199,7 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementDesignDeposit', {
                             receiveWay: receiveWay.getValue()
                         }, function (obj) {
                             if (obj.status == 'successful') {
-                                showMsg('付款成功！');
+                                showMsg('收款成功！');
                                 me.callback();
                                 me.close();
                             }

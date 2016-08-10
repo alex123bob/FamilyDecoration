@@ -56,9 +56,59 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementOther', {
                         xtype: 'textfield',
                         name: 'payer',
                         fieldLabel: '交款人',
+                        readOnly: true,
                         margin: '4 0 0 0',
                         width: 200,
-                        allowBlank: false
+                        allowBlank: false,
+                        listeners: {
+                            focus: function (txt, ev, opts){
+                                var win = Ext.create('Ext.window.Window', {
+                                    width: 400,
+                                    height: 300,
+                                    layout: 'fit',
+                                    modal: true,
+                                    title: '选择人员',
+                                    items: [
+                                        {
+                                            xtype: 'checklog-memberlist'
+                                        }
+                                    ],
+                                    buttons: [
+                                        {
+                                            text: '确定',
+                                            handler: function (){
+                                                var fst = me.getComponent('fieldset-headerInfo'),
+                                                    payerName = fst.down('[name="payerName"]'),
+                                                    contact = fst.down('[name="contact"]'),
+                                                    tree = win.down('treepanel'),
+                                                    selModel = tree.getSelectionModel(),
+                                                    rec = selModel.getSelection()[0];
+                                                if (rec.get('name')){
+                                                    txt.setValue(rec.get('realname'));
+                                                    payerName.setValue(rec.get('name'));
+                                                    contact.setValue(rec.get('phone'));
+                                                    win.close();
+                                                }
+                                                else {
+                                                    showMsg('请选择人员！');
+                                                }
+                                            }
+                                        },
+                                        {
+                                            text: '取消',
+                                            handler: function (){
+                                                win.close();
+                                            }
+                                        }
+                                    ]
+                                });
+                                win.show();
+                            }
+                        }
+                    },
+                    {
+                        xtype: 'hiddenfield',
+                        name: 'payerName'
                     },
                     {
                         xtype: 'textfield',
@@ -159,6 +209,7 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementOther', {
                         projectName = headerFst.down('[name="projectName"]'),
                         payUnit = headerFst.down('[name="payUnit"]'),
                         payer = headerFst.down('[name="payer"]'),
+                        payerName = headerFst.down('[name="payerName"]'),
                         contact = headerFst.down('[name="contact"]'),
                         fst = me.query('fieldset')[1],
                         fee = fst.getComponent('numberfield-receiveFee'),
@@ -170,16 +221,17 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementOther', {
 
                     if (projectName.isValid() && payUnit.isValid() && payer.isValid() && contact.isValid() && fee.isValid() && receiveWay.isValid() && account.isValid() && receiveRemark.isValid()) {
                         ajaxAdd('Account.receipt', {
-                            billType: 'dsdpst',
-                            businessId: businessId.getValue(),
-                            receiver: User.getName(),
+                            projectName: projectName.getValue(),
+                            billType: 'other',
+                            reimbursementReason: payUnit.getValue(),
+                            payee: payerName.getValue(),
                             accountId: accountRec.getId(),
                             receiveAmount: fee.getValue(),
                             receiveWay: receiveWay.getValue(),
-                            receiveRemark: receiveRemark.getValue()
+                            descpt: receiveRemark.getValue()
                         }, function (obj) {
                             if (obj.status == 'successful') {
-                                showMsg('付款成功！');
+                                showMsg('收款成功！');
                                 me.callback();
                                 me.close();
                             }

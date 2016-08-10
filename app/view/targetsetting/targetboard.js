@@ -31,7 +31,7 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
             })
         ];
 
-        function _getRes (){
+        function _getRes() {
             var toolbar = me.down('toolbar'),
                 year = toolbar.getComponent('combobox-year'),
                 month = toolbar.getComponent('combobox-month');
@@ -151,7 +151,7 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                 {
                     text: '人员',
                     align: 'center',
-                    dataIndex: 'staffName',
+                    dataIndex: 'user',
                     flex: 1
                 },
                 {
@@ -163,7 +163,10 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                     columns: []
                 }
             ],
-                prefix = ['plan_', 'accomplishment_'];
+                prefix = ['plan_', 'accomplishment_'],
+                st = Ext.create('FamilyDecoration.store.BusinessGoal', {
+                    autoLoad: false
+                });
 
             function renderCol(prefix, depa, needEditor) {
                 var arr = [];
@@ -250,7 +253,7 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
             cols[1].columns = renderCol(prefix[0], depa, true);
             cols[2].columns = renderCol(prefix[1], depa, false);
 
-            me.reconfigure(false, cols);
+            me.reconfigure(st, cols);
         };
 
         me.addListener({
