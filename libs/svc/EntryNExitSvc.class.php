@@ -324,7 +324,7 @@ class EntryNExitSvc{
 					bs.customer as c5,
 					bs.custContact as c6,
 					b.paidAmount as c7,
-					b.payer as c8,
+					u.realName as c8,
 					b.status
 					from statement_bill b 
 						left join user u on u.name = b.payer 
