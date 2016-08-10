@@ -478,7 +478,7 @@ Ext.require('Ext.Ajax', function () {
      */
     Ext.Ajax.on('beforerequest', function (conn, opts, eopts) {
         if (/#debug/gi.test(location.hash)) {
-            opts.url += (location.indexOf('?') != -1 ? '&debug' : '?debug');
+            opts.url += (opts.url.indexOf('?') != -1 ? '&debug' : '?debug');
         }
         opts.silent = opts.silent || (opts.operation ? opts.operation.silent : false) ||
             (opts.proxy ? opts.proxy.silent : false);
