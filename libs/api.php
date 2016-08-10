@@ -9,7 +9,7 @@
 	$class = new ReflectionClass($svcName."Svc");
 	$res = $class->getMethod($action)->invoke($svc,$_REQUEST);
 	$endTime = time();
-	if($endTime - $beginTime > 10){
+	if($endTime - $beginTime > 5){
 		BaseSvc::getSvc('LongRequestLog')->add(array(
 			'@url'=>"http://".$_SERVER["HTTP_HOST"] . ":" . $_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"],
 			'@user'=>isset($_SESSION['name']) ? $_SESSION['name'] : '',

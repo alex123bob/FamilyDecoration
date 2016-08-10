@@ -7,13 +7,13 @@ class StatementBillSvc extends BaseSvc
 
 	//账单状态变化
 	public static $STATUSMAPPING = array(
-		'ppd'=> array('new','rdyck1','rdyck2','rdyck3','rdyck4','chk','paid'),
-		'reg'=> array('new','rdyck1','rdyck2','rdyck3','rdyck4','chk','paid'),
-		'qgd'=> array('new','rdyck','chk','paid'),
-		'mtf'=> array('new','rdyck1','rdyck2','rdyck3','rdyck4','chk','paid'),
-		'rbm'=> array('new','rdyck','chk','paid'),
-		'wlf'=> array('new','rdyck','chk','paid'),
-		'tax'=> array('new','rdyck1','rdyck2','rdyck3','rdyck4','chk','paid')
+		'ppd'=> array('new','rdyck1','rdyck2','rdyck3','rdyck4','chk','paid','arch'),
+		'reg'=> array('new','rdyck1','rdyck2','rdyck3','rdyck4','chk','paid','arch'),
+		'qgd'=> array('new','rdyck','chk','paid','arch'),
+		'mtf'=> array('new','rdyck1','rdyck2','rdyck3','rdyck4','chk','paid','arch'),
+		'rbm'=> array('new','rdyck','chk','paid','arch'),
+		'wlf'=> array('new','rdyck','chk','paid','arch'),
+		'tax'=> array('new','rdyck','chk','paid','arch')
 	);
 
 	public function get($q){
