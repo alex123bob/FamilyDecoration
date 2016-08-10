@@ -139,7 +139,6 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
                         }
                     }
                     if (flag) {
-                        debugger
                         Ext.apply(res, {
                             projectId: me.qgd.get('projectId'),
                             professionType: me.qgd.get('professionType'),
