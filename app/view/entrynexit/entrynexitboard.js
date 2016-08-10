@@ -8,6 +8,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
         'FamilyDecoration.view.entrynexit.ReceivementDesignDeposit',
         'FamilyDecoration.view.entrynexit.ReceivementProjectFee',
         'FamilyDecoration.view.entrynexit.ReceivementOther',
+        'FamilyDecoration.view.entrynexit.ReceivementLoan',
         'FamilyDecoration.view.paymentrequest.AttachmentManagement'
     ],
     // viewConfig: {
@@ -161,6 +162,16 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                             break;
                         case 'other':
                             var win = Ext.create('FamilyDecoration.view.entrynexit.ReceivementOther', {
+                                category: resObj.category,
+                                item: resObj.item,
+                                callback: function (){
+                                    me.refresh(resObj.category, false);
+                                }
+                            });
+                            win.show();
+                            break;
+                        case 'loan':
+                            var win = Ext.create('FamilyDecoration.view.entrynexit.ReceivementLoan', {
                                 category: resObj.category,
                                 item: resObj.item,
                                 callback: function (){
