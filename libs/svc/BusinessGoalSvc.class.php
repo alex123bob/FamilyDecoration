@@ -43,14 +43,6 @@ class BusinessGoalSvc extends BaseSvc
 		return $res;
 	}
 
-	private function parseData($sql,$q){
-		global $mysql;
-		$count = $mysql->DBGetAsOneArray("select count(*) as cnt from ( $sql ) as temp ")[0];
-		$data = $mysql->DBGetAsMap($sql.BaseSvc::parseLimitSql($q));
-		$res = array('status'=>'successful','data'=>$data,'total'=>$count);
-		return $res;
-	}
-
 	private function appendAcctualDesign(&$dataArray,$ym,$users){
 		if(count($users) == 0)
 			return;
