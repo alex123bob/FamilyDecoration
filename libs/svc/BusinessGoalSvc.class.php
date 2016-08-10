@@ -24,7 +24,7 @@ class BusinessGoalSvc extends BaseSvc
 		if(isset($q['month']))
 			$targetMonth .= '-'.$q['month'];
 		$sql = "select g.id,g.c1,g.c2,g.c3,g.c4,u.realName,u.name as user,g.targetMonth from user u ".
-		"left join business_goal g on u.name = g.user and u.isDeleted = 'false' and g.isDeleted = 'false' and g.targetMonth like '".$targetMonth."%'  where  u.level like '".$q['depa']."%' ";
+		"left join business_goal g on u.name = g.user and g.isDeleted = 'false' and g.targetMonth like '".$targetMonth."%'  where  u.level like '".$q['depa']."%'  AND u.isDeleted = 'false'  ";
 		if(isset($q['user']))
 			$sql .= " and user = '".$q['user']."'";
 		$res = array('status'=>"successful");
@@ -34,7 +34,8 @@ class BusinessGoalSvc extends BaseSvc
 		foreach ($res['data'] as $key => $value) {
 			array_push($users, $value['user']);
 		}
-		$ym = $q['year'].'-'.$q['month'];
+		if(isset($q['month']))
+			$ym = $q['year'].'-'.$q['month'];
 		if($q['depa'] == '0004'){
 			$this->appendAcctualMarket($res['data'],$ym,$users);
 		}else{
@@ -46,9 +47,10 @@ class BusinessGoalSvc extends BaseSvc
 	private function appendAcctualDesign(&$dataArray,$ym,$users){
 		if(count($users) == 0)
 			return;
+		$left = strlen($ym);
 		global $mysql;
 		$users = '\''.join($users,'\',\'').'\'';
-		$sql = "select count(*) as ctn,designerName as user from business where designerName in ($users) and left(signTime,7) = '$ym' group by designerName,left(signTime,7) "; 
+		$sql = "select count(*) as ctn,designerName as user from business where designerName in ($users) and left(signTime,$left) = '$ym' group by designerName,left(signTime,$left) "; 
 		$signRateData = $this->objectListToKeyList($mysql->DBGetAsMap($sql),'user');
 		foreach ($dataArray as &$value) {
 			$value['id'] = $value['id'] == null ? '' : $value['id'];
