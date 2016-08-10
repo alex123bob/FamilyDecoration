@@ -71,10 +71,10 @@ class AccountSvc extends BaseSvc
 
 	public function receipt($q){
 		global $mysql;
-		$statementBillSvc = parent::getSvc('StatementBill');
 		$mysql->begin();
 		switch ($q['@billType']) {
 			case 'dsdpst'://设计定金
+				$statementBillSvc = parent::getSvc('StatementBill');
 				$amount = $q['@receiveAmount'];
 				$accountId = $q['@accountId'];
 				$bill = $statementBillSvc->add(array(
@@ -91,6 +91,7 @@ class AccountSvc extends BaseSvc
 				parent::getSvc('AccountLog')->add(array('@accountId'=>$accountId,'@amount'=>$amount,'@type'=>'in','@refId'=>$bill['data']['id'],'@refType'=>'designDeposit','@balance'=>$account[0]['balance']));
 				break;
 			case 'pjtf':
+				$statementBillSvc = parent::getSvc('StatementBill');
 				$amount = $q['@receiveAmount'];
 				$accountId = $q['@accountId'];
 				$bill = $statementBillSvc->add(array(
@@ -106,7 +107,17 @@ class AccountSvc extends BaseSvc
 				$mysql->DBExecute("update account set balance = balance + $amount where id = '".$accountId."';");
 				$account = $mysql->DBGetAsMap("select * from account where id = '".$accountId."';");
 				parent::getSvc('AccountLog')->add(array('@accountId'=>$accountId,'@amount'=>$amount,'@type'=>'in','@refId'=>$bill['data']['id'],'@refType'=>'projectFee','@balance'=>$account[0]['balance']));
-
+				break;
+			case 'loan':
+				$q['@status'] = 'accepted';
+				$q['@type'] = '0';
+				$q['@amount'] = $q['@receiveAmount'];
+				$res = parent::getSvc('Loan')->add($q);
+				$amount = $q['@receiveAmount'];
+				$accountId = $q['@accountId'];
+				$mysql->DBExecute("update account set balance = balance + $amount where id = '".$accountId."';");
+				$account = $mysql->DBGetAsMap("select * from account where id = '".$accountId."';");
+				parent::getSvc('AccountLog')->add(array('@accountId'=>$accountId,'@amount'=>$amount,'@type'=>'in','@refId'=>$res['data']['id'],'@refType'=>'loan','@balance'=>$account[0]['balance']));
 				break;
 			default:
 				# code...

@@ -1,9 +1,11 @@
 <?php
 class LoanSvc extends BaseSvc
 {
-	public function add($qryParams){
-		$qryParams['@id'] = $this->getUUID();
-		return parent::add($qryParams);
+	public function add($q){
+		$q['@id'] = $this->getUUID();
+		if(!isset($q['@dealer']))
+			$q['@dealer'] = $_SESSION['name'];
+		return parent::add($q);
 	}
 
 	public function update($q){

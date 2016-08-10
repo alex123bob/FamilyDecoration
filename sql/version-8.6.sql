@@ -78,7 +78,7 @@ CREATE TABLE `supplierMaterial` (
 CREATE TABLE `loan` (
   `id` varchar(20) DEFAULT NULL,
   `relevantId` varchar(20) DEFAULT NULL comment '贷款还账对应的贷款入账id',
-  `type` varchar(1) DEFAULT NULL comment '0 贷款入账，贷款还账',
+  `type` varchar(1) DEFAULT NULL comment '0:贷款入账，1:贷款还账',
   `projectName` varchar(200) DEFAULT NULL comment '项目名称',
   `bankName` varchar(500) DEFAULT NULL comment '银行',
   `assignee` varchar(500) DEFAULT NULL comment '交办人',
@@ -89,6 +89,7 @@ CREATE TABLE `loan` (
   `period` varchar(20) DEFAULT null comment '贷款期限',
   `certs` text DEFAULT NULL comment '凭证',
   `loanTime` datetime DEFAULT null comment '贷款时间',
+  `descpt` varchar(200) default '' comment '备注',
   `status` varchar(10) DEFAULT null comment '状态. new:新创建,accepted:已收款,arch:归档,paid:已出款',
   `isDeleted` varchar(5) DEFAULT 'false',
   `createTime` datetime DEFAULT null,
