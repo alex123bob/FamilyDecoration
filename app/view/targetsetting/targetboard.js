@@ -36,12 +36,16 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                         Ext.resumeLayouts();
                     },
                     validateedit: function (editor, e, opts) {
-                        var rec = e.record;
+                        var rec = e.record,
+                            timeObj = _getTimeObj();
                         if (e.field == 'c1' || e.field == 'c2' || e.field == 'c3' || e.field == 'c4') {
                             if (isNaN(e.value) || !/^-?\d+(\.\d+)?$/.test(e.value)) {
                                 return false;
                             }
                             else if (e.value == e.originalValue) {
+                                return false;
+                            }
+                            else if (!timeObj.month) {
                                 return false;
                             }
                         }
