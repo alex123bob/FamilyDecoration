@@ -94,7 +94,4 @@ $pdf->Ln();
 $pdf->Cell(11,21,"");
 $pdf->Ln();
 $pdf->Output($address.".pdf", $action == "view" ? "I" : "D" );
-
-$pdf->writeCellLine($CellWidth,$data,0,0,'R');
-
 ?>  
