@@ -325,7 +325,7 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                         reader: {
                             type: 'json'
                         },
-                        url: './api.php',
+                        url: './libs/api.php',
                         extraParams: params
                     }
                 });

@@ -63,7 +63,7 @@ class LogListSvc extends BaseSvc
 
 		$sql = "select d,count(*) as num from (
 					select left(createTime,10) as d , potentialBusinessId  from potential_business_detail b 
-					where committer = '?' and left(createTime,6) = $ym group by potentialBusinessId,left(createTime,10) 
+					where committer = '?' and left(createTime,7) = $ym group by potentialBusinessId,left(createTime,10) 
 				) as temp group by d";
 		if($byMonth) $sql = "select sum(num) as sum from ( $sql ) as temp";
 		$telemarketingData = $mysql->DBGetAsMap($sql,$user);

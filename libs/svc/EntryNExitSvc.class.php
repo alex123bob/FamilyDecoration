@@ -79,7 +79,7 @@ class EntryNExitSvc{
 		return $res;
 	}
 
-	public function parseData($sql,$q){
+	private function parseData($sql,$q){
 		global $mysql;
 		$count = $mysql->DBGetAsOneArray("select count(*) as cnt from ( $sql ) as temp ")[0];
 		$data = $mysql->DBGetAsMap($sql.BaseSvc::parseLimitSql($q));
