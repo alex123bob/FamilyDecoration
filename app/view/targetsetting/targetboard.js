@@ -197,6 +197,7 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
             {
                 itemId: 'button-add',
                 xtype: 'button',
+                hidden: true,
                 text: '添加',
                 icon: 'resources/img/add_target.png',
                 handler: function () {
