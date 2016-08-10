@@ -23,11 +23,15 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                         Ext.suspendLayouts();
                         var params = {};
                         params[e.field] = e.value;
-                        params['id'] = rec.getId();
+                        Ext.apply(params, {
+                            id: rec.getId(),
+                            u: rec.get('user'),
+                            targetMonth: timeObj.month ? (timeObj.year + '-' + timeObj.month) : timeObj.year
+                        });
                         rec.commit();
                         ajaxUpdate('BusinessGoal.updateGoal', params, ['id'], function (obj){
                             showMsg('更新成功');
-                            me.refresh(me.depa, timeObj.year, timeObj.month);
+                            me.refresh(me.depa.get('value'), timeObj.year, timeObj.month);
                         }, true);
                         Ext.resumeLayouts();
                     },
