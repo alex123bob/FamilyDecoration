@@ -199,8 +199,10 @@ class BaseSvc{
 		$limit = $this->parseLimitSql($q);
 		$orderBy = $this->parseOrderBySql($q);	
 		$count = $mysql->DBGetAsOneArray("select count(1) as count from ".$this->tableName.$where.$this->appendWhere,$params);
-		if($onlyCount)
+
+		if($onlyCount){
 			return array('status'=>'successful', 'count'=>$count[0],'errMsg' => '');
+		}
 		$select = $this->parseSelectSql($q);
 		$sql = $select.' '.$this->appendJoin.' '.$where.$this->appendWhere.$orderBy.$limit;
 		$row = $mysql->DBGetAsMap($sql,$params);
