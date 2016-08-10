@@ -1,11 +1,11 @@
-Ext.define('FamilyDecoration.view.entrynexit.ReceivementDesignDeposit', {
+Ext.define('FamilyDecoration.view.entrynexit.ReceivementProjectFee', {
     extend: 'Ext.window.Window',
-    alias: 'widget.entrynexit-receivementdesigndeposit',
-    title: '设计定金',
+    alias: 'widget.entrynexit-receivementprojectfee',
+    title: '工程款',
 
     requires: [
         'FamilyDecoration.store.Account',
-        'FamilyDecoration.view.entrynexit.BusinessList'
+        'FamilyDecoration.view.entrynexit.ProjectList'
     ],
 
     layout: 'vbox',
@@ -43,24 +43,51 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementDesignDeposit', {
                         readOnly: true,
                         name: 'projectName',
                         fieldLabel: '工程名称',
-                        width: 400,
                         allowBlank: false,
+                        width: 400,
                         listeners: {
                             focus: function (txt, ev, opts) {
-                                var win = Ext.create('FamilyDecoration.view.entrynexit.BusinessList', {
-                                    callback: function (business) {
+                                var win = Ext.create('FamilyDecoration.view.entrynexit.ProjectList', {
+                                    callback: function (project) {
                                         var fst = me.getComponent('fieldset-headerInfo'),
-                                            salesmanField = fst.down('[name="salesman"]'),
+                                            salesmanField = fst.down('[name="captain"]'),
                                             designerField = fst.down('[name="designer"]'),
                                             customerField = fst.down('[name="customer"]'),
                                             contactField = fst.down('[name="contact"]'),
-                                            businessIdField = fst.down('[name="businessId"]');
-                                        txt.setValue(business.get('regionName') + ' ' + business.get('address'));
-                                        salesmanField.setValue(business.get('salesman'));
-                                        designerField.setValue(business.get('designer'));
-                                        customerField.setValue(business.get('customer'));
-                                        contactField.setValue(business.get('custContact'));
-                                        businessIdField.setValue(business.getId());
+                                            projectIdField = fst.down('[name="projectId"]'),
+                                            businessId = project.get('businessId');
+                                        txt.setValue(project.get('projectName'));
+                                        salesmanField.setValue(project.get('captain'));
+                                        designerField.setValue(project.get('designer'));
+                                        if (businessId) {
+                                            Ext.Ajax.request({
+                                                url: './libs/business.php',
+                                                params: {
+                                                    action: 'getBusinessById',
+                                                    businessId: businessId
+                                                },
+                                                method: 'GET',
+                                                callback: function (opts, success, res) {
+                                                    if (success) {
+                                                        var obj = Ext.decode(res.responseText);
+                                                        obj = obj[0];
+                                                        if (obj) {
+                                                            customerField.setValue(obj['customer']);
+                                                            contactField.setValue(obj['custContact']);
+                                                        }
+                                                        else {
+                                                            customerField.setValue('');
+                                                            contactField.setValue('');
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                        else {
+                                            customerField.setValue('');
+                                            contactField.setValue('');
+                                        }
+                                        projectIdField.setValue(project.getId());
                                     }
                                 });
                                 win.show();
@@ -69,8 +96,8 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementDesignDeposit', {
                     },
                     {
                         xtype: 'displayfield',
-                        name: 'salesman',
-                        fieldLabel: '业务员',
+                        name: 'captain',
+                        fieldLabel: '项目经理',
                         margin: '4 8 0 0',
                         width: 200
                     },
@@ -97,7 +124,7 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementDesignDeposit', {
                     },
                     {
                         xtype: 'hiddenfield',
-                        name: 'businessId'
+                        name: 'projectId'
                     }
                 ]
             },
@@ -105,11 +132,12 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementDesignDeposit', {
                 xtype: 'fieldset',
                 title: '选项',
                 width: '100%',
-                flex: 1,
+                flex: 1.3,
                 layout: 'anchor',
                 defaults: {
                     anchor: '100%'
                 },
+                autoScroll: true,
                 items: [
                     {
                         itemId: 'numberfield-receiveFee',
@@ -170,6 +198,43 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementDesignDeposit', {
                                 }
                             }
                         })
+                    },
+                    {
+                        itemId: 'combobox-instalment',
+                        fieldLabel: '第几期',
+                        xtype: 'combobox',
+                        editable: false,
+                        displayField: 'name',
+                        valueField: 'value',
+                        allowBlank: false,
+                        queryMode: 'local',
+                        store: Ext.create('Ext.data.Store', {
+                            fields: ['name', 'value'],
+                            proxy: {
+                                type: 'memory',
+                                reader: {
+                                    type: 'json'
+                                }
+                            },
+                            data: [
+                                {
+                                    name: '首期',
+                                    value: 'first'
+                                },
+                                {
+                                    name: '二期',
+                                    value: 'second'
+                                },
+                                {
+                                    name: '三期',
+                                    value: 'third'
+                                },
+                                {
+                                    name: '尾期',
+                                    value: 'fourth'
+                                }
+                            ]
+                        })
                     }
                 ]
             }
@@ -181,22 +246,24 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementDesignDeposit', {
                 handler: function () {
                     var headerFst = me.getComponent('fieldset-headerInfo'),
                         projectName = headerFst.down('[name="projectName"]'),
-                        businessId = headerFst.down('[name="businessId"]'),
+                        projectId = headerFst.down('[name="projectId"]'),
                         fst = me.query('fieldset')[1],
                         fee = fst.getComponent('numberfield-receiveFee'),
                         receiveWay = fst.getComponent('combobox-receiveWay'),
                         account = fst.getComponent('combobox-receiveAccount'),
+                        instalment = fst.getComponent('combobox-instalment'),
                         accountVal = account.getValue(),
                         accountRec = account.findRecord(account.valueField || account.displayField, accountVal);
 
-                    if (projectName.isValid() && fee.isValid() && receiveWay.isValid() && account.isValid()) {
+                    if (projectName.isValid() && fee.isValid() && receiveWay.isValid() && account.isValid() && instalment.isValid()) {
                         ajaxAdd('Account.receipt', {
                             billType: 'dsdpst',
-                            businessId: businessId.getValue(),
+                            projectId: projectId.getValue(),
                             receiver: User.getName(),
                             accountId: accountRec.getId(),
                             receiveAmount: fee.getValue(),
-                            receiveWay: receiveWay.getValue()
+                            receiveWay: receiveWay.getValue(),
+                            instalment: instalment.getValue()
                         }, function (obj) {
                             if (obj.status == 'successful') {
                                 showMsg('付款成功！');

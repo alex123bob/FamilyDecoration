@@ -6,6 +6,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
     requires: [
         'FamilyDecoration.view.entrynexit.Payment',
         'FamilyDecoration.view.entrynexit.ReceivementDesignDeposit',
+        'FamilyDecoration.view.entrynexit.ReceivementProjectFee',
         'FamilyDecoration.view.paymentrequest.AttachmentManagement'
     ],
     // viewConfig: {
@@ -148,8 +149,12 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                             win.show();
                             break;
                         case 'projectFee':
-                            var win = Ext.create('Ext.window.Window', {
-
+                            var win = Ext.create('FamilyDecoration.view.entrynexit.ReceivementProjectFee', {
+                                category: resObj.category,
+                                item: resObj.item,
+                                callback: function (){
+                                    me.refresh(resObj.category, false);
+                                }
                             });
                             win.show();
                             break;
