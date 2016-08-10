@@ -263,7 +263,7 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementProjectFee', {
                             accountId: accountRec.getId(),
                             receiveAmount: fee.getValue(),
                             receiveWay: receiveWay.getValue(),
-                            instalment: instalment.getValue()
+                            reimbursementReason: instalment.getRawValue()
                         }, function (obj) {
                             if (obj.status == 'successful') {
                                 showMsg('付款成功！');
