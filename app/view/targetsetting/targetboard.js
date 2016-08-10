@@ -25,7 +25,7 @@ Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
                         params[e.field] = e.value;
                         Ext.apply(params, {
                             id: rec.getId(),
-                            u: rec.get('user'),
+                            user: rec.get('user'),
                             targetMonth: timeObj.month ? (timeObj.year + '-' + timeObj.month) : timeObj.year
                         });
                         rec.commit();
