@@ -60,15 +60,17 @@ class BusinessGoalSvc extends BaseSvc
 		$signRateData = $this->objectListToKeyList($mysql->DBGetAsMap($sql),'user');
 		foreach ($dataArray as &$value) {
 			$value['id'] = $value['id'] == null ? '' : $value['id'];
-			$value['ac1'] = (int)(isset($signRateData[$value['user']]) ? $signRateData[$value['user']]['ctn'] : 0);
-			$value['ac2'] = 'TODO';
+			$value['a1'] = (int)(isset($signRateData[$value['user']]) ? $signRateData[$value['user']]['ctn'] : 0);
+			$value['a2'] = 'TODO';
 			$value['c1'] = (int)$value['c1'];
 			$value['c2'] = (int)$value['c2'];
 			unset($value['targetMonth']);
-			$value['user'] = $value['realName'];
-			unset($value['realName']);
 			unset($value['c3']);
 			unset($value['c4']);
+			$value['u'] = $value['user'];
+			$value['n'] = $value['realName'];
+			unset($value['user']);
+			unset($value['realName']);
 		}
 	}
 
@@ -91,17 +93,19 @@ class BusinessGoalSvc extends BaseSvc
 
 		foreach ($dataArray as &$value) {
 			$value['id'] = $value['id'] == null ? '' : $value['id'];
-			$value['ac1'] = (int)(isset($buildingSwipingData[$value['user']]) ? $buildingSwipingData[$value['user']]['ctn'] : 0);
-			$value['ac2'] = (int)(isset($telemarketingData[$value['user']]) ? $telemarketingData[$value['user']]['ctn'] : 0);
-			$value['ac3'] = (int)(isset($companyVisitData[$value['user']]) ? $companyVisitData[$value['user']]['ctn'] : 0);
-			$value['ac4'] = (int)(isset($depositData[$value['user']]) ? $depositData[$value['user']]['ctn'] : 0);
+			$value['a1'] = (int)(isset($buildingSwipingData[$value['user']]) ? $buildingSwipingData[$value['user']]['ctn'] : 0);
+			$value['a2'] = (int)(isset($telemarketingData[$value['user']]) ? $telemarketingData[$value['user']]['ctn'] : 0);
+			$value['a3'] = (int)(isset($companyVisitData[$value['user']]) ? $companyVisitData[$value['user']]['ctn'] : 0);
+			$value['a4'] = (int)(isset($depositData[$value['user']]) ? $depositData[$value['user']]['ctn'] : 0);
 			$value['c1'] = (int)$value['c1'];
 			$value['c2'] = (int)$value['c2'];
 			$value['c3'] = (int)$value['c3'];
 			$value['c4'] = (int)$value['c4'];
-			unset($value['targetMonth']);
-			$value['user'] = $value['realName'];
+			$value['u'] = $value['user'];
+			$value['n'] = $value['realName'];
+			unset($value['user']);
 			unset($value['realName']);
+			unset($value['targetMonth']);
 		}
 	}
 
