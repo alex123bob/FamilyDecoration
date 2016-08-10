@@ -257,7 +257,7 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementProjectFee', {
 
                     if (projectName.isValid() && fee.isValid() && receiveWay.isValid() && account.isValid() && instalment.isValid()) {
                         ajaxAdd('Account.receipt', {
-                            billType: 'dsdpst',
+                            billType: 'pjtf',
                             projectId: projectId.getValue(),
                             receiver: User.getName(),
                             accountId: accountRec.getId(),
