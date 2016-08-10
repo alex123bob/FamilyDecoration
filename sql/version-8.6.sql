@@ -141,6 +141,18 @@ CREATE TABLE `business_goal` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `long_request_log` (
+  `url` varchar(2000) DEFAULT NULL comment 'url',
+  `user` varchar(10) DEFAULT 0 comment '当前用户',
+  `ip` varchar(20) DEFAULT 0 comment 'ip',
+  `useragent` varchar(500) DEFAULT 0 comment 'useragent',
+  `params` text comment '请求参数',
+  `createTime` datetime DEFAULT null  comment '创建时间',
+  `time` int DEFAULT null comment '耗时，秒',
+  `isDeleted` varchar(5) DEFAULT 'false',
+  `updateTime` datetime DEFAULT null
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 update statement_bill set status = 'new' where status = 'rbk';
 update statement_bill_audit set newStatus = 'new' where newStatus = 'rbk';

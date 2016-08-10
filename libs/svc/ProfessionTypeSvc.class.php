@@ -6,20 +6,6 @@ class ProfessionTypeSvc extends BaseSvc
 		return parent::add($qryParams);
 	}
 	public function get($q){
-		
-		/*不能for循环查sql,用下面单语句
-		$res = parent::get($q);
-		if(isset($q['projectId'])){
-			$statementSvc = BaseSvc::getSvc('StatementBill');
-			foreach ($res['data'] as $item)
-				$item['highLight'] = $statementSvc.getCount(array('projectId',$q['projectId'],$item['professionType']));
-		}*/
-		
-		/*
-		select p.* ,IFNULL(b.h,0) as highLight from profession_type p left join ( 
-			select count(*) as h , professionType from statement_bill where `projectId` = '123' and `isDeleted` = 'false' group by professionType
-		) b on b.professionType = p.name where 1=1  and p.`isDeleted` = 'false';
-		*/
 		if(isset($q['projectId'])){
 			global $mysql;
 			$params = array();
