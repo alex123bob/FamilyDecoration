@@ -317,8 +317,8 @@ class EntryNExitSvc{
 	private function designDeposit($q){
 		global $mysql;
 		$sql = "select b.id as c0,
-					p.projectName as c1,
-					CONCAT(r.name,' ',bs.address) as c2,
+					p.projectName as c2,
+					CONCAT(r.name,' ',bs.address) as c1,
 					bs.salesman as c3,
 					bs.designer as c4,
 					bs.customer as c5,
