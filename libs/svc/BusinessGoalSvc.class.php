@@ -21,10 +21,14 @@ class BusinessGoalSvc extends BaseSvc
 	public function getByDepa($q){
 		global $mysql;
 		$targetMonth = $q['year'];
-		if(isset($q['month']))
+		if(isset($q['month'])){
 			$targetMonth .= '-'.$q['month'];
-		$sql = "select g.id,g.c1,g.c2,g.c3,g.c4,u.realName,u.name as user,g.targetMonth from user u ".
-		"left join business_goal g on u.name = g.user and g.isDeleted = 'false' and g.targetMonth like '".$targetMonth."%'  where  u.level like '".$q['depa']."%'  AND u.isDeleted = 'false'  ";
+			$sql = "select g.id,g.c1,g.c2,g.c3,g.c4,u.realName,u.name as user,g.targetMonth from user u ".
+			"left join business_goal g on u.name = g.user and g.isDeleted = 'false' and g.targetMonth like '".$targetMonth."%'  where  u.level like '".$q['depa']."%'  AND u.isDeleted = 'false'  ";
+		}else{
+			$sql = "select g.id,g.c1,g.c2,g.c3,g.c4,u.realName,u.name as user,g.targetMonth from user u ".
+			"left join (select null as id , sum(c1) as c1,sum(c2) as c2,sum(c3) as c3,sum(c4) as c4,user,LEFT (targetMonth, 4) as targetMonth from business_goal where isDeleted = 'false' and targetMonth like '".$targetMonth."%' group by left(targetMonth,4),user ) g on u.name = g.user where  u.level like '".$q['depa']."%'  AND u.isDeleted = 'false' ";
+		}		
 		if(isset($q['user']))
 			$sql .= " and user = '".$q['user']."'";
 		$res = array('status'=>"successful");
@@ -34,8 +38,11 @@ class BusinessGoalSvc extends BaseSvc
 		foreach ($res['data'] as $key => $value) {
 			array_push($users, $value['user']);
 		}
-		if(isset($q['month']))
+		if(isset($q['month'])){
 			$ym = $q['year'].'-'.$q['month'];
+		}else{
+			$ym = $q['year'];
+		}
 		if($q['depa'] == '0004'){
 			$this->appendAcctualMarket($res['data'],$ym,$users);
 		}else{
@@ -72,17 +79,18 @@ class BusinessGoalSvc extends BaseSvc
 		if(count($users) == 0)
 			return;
 		global $mysql;
+		$left = strlen($ym);
 		$users = '\''.join($users,'\',\'').'\'';
-		$sql = "select count(*)  as ctn,committer as user from potential_business_detail where left(createTime,7) = '$ym' and committer in ( $users ) group by committer,left(createTime,7) ";
+		$sql = "select count(*)  as ctn,committer as user from potential_business_detail where left(createTime,$left) = '$ym' and committer in ( $users ) group by committer,left(createTime,$left) ";
 		$telemarketingData = $this->objectListToKeyList($mysql->DBGetAsMap($sql),'user');
 
-		$sql = "select count(*)  as ctn,salesmanName as user from business where left(levelTime,7) = '$ym' and level = 'B' and salesmanName in ( $users ) group by salesmanName,left(levelTime,7) ";
+		$sql = "select count(*)  as ctn,salesmanName as user from business where left(levelTime,$left) = '$ym' and level = 'B' and salesmanName in ( $users ) group by salesmanName,left(levelTime,$left) ";
 		$companyVisitData = $this->objectListToKeyList($mysql->DBGetAsMap($sql),'user');
 
-		$sql = "select count(*)  as ctn,salesmanName as user from business where left(levelTime,7) = '$ym' and level = 'A' and salesmanName in ( $users ) group by salesmanName,left(levelTime,7) ";
+		$sql = "select count(*)  as ctn,salesmanName as user from business where left(levelTime,$left) = '$ym' and level = 'A' and salesmanName in ( $users ) group by salesmanName,left(levelTime,$left) ";
 		$depositData = $this->objectListToKeyList($mysql->DBGetAsMap($sql),'user');
 
-		$sql = "select count(*) as ctn,salesmanName as user from potential_business where left(createTime,7) = '$ym' and salesmanName in ( $users ) group by salesmanName,left(createTime,7) ";
+		$sql = "select count(*) as ctn,salesmanName as user from potential_business where left(createTime,$left) = '$ym' and salesmanName in ( $users ) group by salesmanName,left(createTime,$left) ";
 		$buildingSwipingData = $this->objectListToKeyList($mysql->DBGetAsMap($sql),'user');
 
 		foreach ($dataArray as &$value) {
