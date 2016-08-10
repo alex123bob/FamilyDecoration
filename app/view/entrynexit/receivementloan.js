@@ -4,7 +4,8 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementLoan', {
     title: '贷款',
 
     requires: [
-        'FamilyDecoration.store.Account'
+        'FamilyDecoration.store.Account',
+        'FamilyDecoration.view.checklog.MemberList'
     ],
 
     layout: 'vbox',
@@ -55,10 +56,60 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementLoan', {
                     {
                         xtype: 'textfield',
                         name: 'operator',
+                        readOnly: true,
                         fieldLabel: '交办人',
                         margin: '4 0 0 0',
                         width: 200,
-                        allowBlank: false
+                        allowBlank: false,
+                        listeners: {
+                            focus: function (txt, ev, opts){
+                                var win = Ext.create('Ext.window.Window', {
+                                    width: 400,
+                                    height: 300,
+                                    layout: 'fit',
+                                    modal: true,
+                                    title: '选择人员',
+                                    items: [
+                                        {
+                                            xtype: 'checklog-memberlist'
+                                        }
+                                    ],
+                                    buttons: [
+                                        {
+                                            text: '确定',
+                                            handler: function (){
+                                                var fst = me.getComponent('fieldset-headerInfo'),
+                                                    operatorName = fst.down('[name="operatorName"]'),
+                                                    contact = fst.down('[name="contact"]'),
+                                                    tree = win.down('treepanel'),
+                                                    selModel = tree.getSelectionModel(),
+                                                    rec = selModel.getSelection()[0];
+                                                if (rec.get('name')){
+                                                    txt.setValue(rec.get('realname'));
+                                                    operatorName.setValue(rec.get('name'));
+                                                    contact.setValue(rec.get('phone'));
+                                                    win.close();
+                                                }
+                                                else {
+                                                    showMsg('请选择人员！');
+                                                }
+                                            }
+                                        },
+                                        {
+                                            text: '取消',
+                                            handler: function (){
+                                                win.close();
+                                            }
+                                        }
+                                    ]
+                                });
+                                win.show();
+                            }
+                        }
+                    },
+                    {
+                        xtype: 'hiddenfield',
+                        name: 'operatorName'
                     },
                     {
                         xtype: 'textfield',
@@ -66,6 +117,7 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementLoan', {
                         fieldLabel: '联系方式',
                         margin: '4 8 0 0',
                         width: 200,
+                        readOnly: true,
                         allowBlank: false
                     }
                 ]
@@ -92,7 +144,8 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementLoan', {
                         fieldLabel: '贷款时间',
                         xtype: 'datefield',
                         editable: false,
-                        allowBlank: false
+                        allowBlank: false,
+                        submitFormat: 'Y-m-d H:i:s'
                     },
                     {
                         itemId: 'combobox-receiveAccount',
@@ -145,6 +198,7 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementLoan', {
                         projectName = headerFst.down('[name="projectName"]'),
                         bank = headerFst.down('[name="bank"]'),
                         operator = headerFst.down('[name="operator"]'),
+                        operatorName = headerFst.down('[name="operatorName"]'),
                         contact = headerFst.down('[name="contact"]'),
                         fst = me.query('fieldset')[1],
                         fee = fst.getComponent('numberfield-receiveFee'),
@@ -160,13 +214,16 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementLoan', {
                         && loanTime.isValid() && account.isValid() && loanPeriod.isValid() && receiveRemark.isValid() 
                         && loanInterestRate.isValid()) {
                         ajaxAdd('Account.receipt', {
-                            billType: 'dsdpst',
-                            businessId: businessId.getValue(),
-                            receiver: User.getName(),
-                            accountId: accountRec.getId(),
+                            billType: 'loan',
+                            projectName: projectName.getValue(),
+                            bankName: bank.getValue(),
+                            assignee: operatorName.getValue(),
                             receiveAmount: fee.getValue(),
-                            receiveWay: receiveWay.getValue(),
-                            receiveRemark: receiveRemark.getValue()
+                            dealTime: loanTime.getSubmitValue(),
+                            accountId: accountRec.getId(),
+                            descpt: receiveRemark.getValue(),
+                            period: loanPeriod.getValue(),
+                            interest: loanInterestRate.getValue()
                         }, function (obj) {
                             if (obj.status == 'successful') {
                                 showMsg('付款成功！');
