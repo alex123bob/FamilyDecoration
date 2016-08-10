@@ -239,6 +239,7 @@ class StatementBillSvc extends BaseSvc
 		$this->appendSelect = ",tp.cname as professionTypeName ";
 		$this->appendJoin = "left join profession_type tp on tp.value = $this->tableName.professionType";
 		$data = parent::get($q);
+
 		foreach($data['data'] as $key => &$value){
 			$value['statusName'] = self::$ALL_STATUS[$value['status']];
 		}
@@ -275,6 +276,12 @@ class StatementBillSvc extends BaseSvc
 		$projectSvc = parent::getSvc('Project');
 		$projectSvc->appendCaptain($data['data']);
 		
+		//追加预付款单子
+		$q['billType'] = 'ppd';
+		$this->appendSelect = ",tp.cname as professionTypeName ";
+		$this->appendJoin = "left join profession_type tp on tp.value = $this->tableName.professionType";
+		$data2 = parent::get($q);
+		$data = array_merge($data,$data2);
 		return $data;
 	}
 
