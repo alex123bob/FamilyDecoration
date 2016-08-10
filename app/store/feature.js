@@ -301,6 +301,12 @@
             else if (rec.get('cmp') == 'bulletin-index') {
                 flag = User.isGeneral() ? false : true;
             }
+            else if (rec.get('cmp') == 'strategy-parent') {
+                flag = User.isAdmin() ? true : false;
+            }
+            else if (rec.get('cmp') == 'targetsetting-index') {
+                flag = User.isAdmin() ? true : false;
+            }
             else if (rec.get('cmp') == 'logbook-parent') {
                 flag = User.isAdmin() || User.isManager() || User.isDesignStaff() || User.isProjectStaff() || User.isSupervisor() || User.isBusinessStaff() || User.isAdministrationStaff() || User.isPropagandaStaff() || User.isFinanceStaff() || User.isBudgetManager() || User.isBudgetStaff() ? true : false;
             }
@@ -401,13 +407,13 @@
                 flag = User.isAdmin() || User.isFinanceManager() || User.isFinanceStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'entrynexit-index') {
-                flag = User.isAdmin() || User.isFinanceManager() || User.isFinanceStaff() ? true : false;
+                flag = User.isAdmin() || User.isFinanceManager() || User.level == '008-005' ? true : false;
             }
             else if (rec.get('cmp') == 'account-index') {
-                flag = User.isAdmin() || User.isFinanceManager() ? true : false;
+                flag = User.isAdmin() ? true : false;
             }
             else if (rec.get('cmp') == 'qualityguaranteedepositmgm-index') {
-                flag = User.isAdmin() || User.isFinanceManager() ? true : false;
+                flag = User.isAdmin() ? true : false;
             }
             else if (rec.get('cmp') == 'planlabor-index') {
                 flag = User.isGeneral() ? false : true;
