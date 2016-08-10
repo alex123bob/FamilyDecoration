@@ -126,6 +126,14 @@
 				)
 			);
 			break;
+		//获取B类C类客户的业务员列表
+		case "getSalesmanlistWidthLevelBAndC":
+			$res = getSalesmanlistWidthLevelBAndC();
+			break;
+		//获取B类C类客户的业务列表
+		case "getBusinessLevelBAndC":
+			$res = getBusinessLevelBAndC($_REQUEST);
+			break;
 		//获取设计师列表
 		case "getDesignerlist":
 			$res = getDesignerlist();

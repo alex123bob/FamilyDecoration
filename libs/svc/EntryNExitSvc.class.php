@@ -317,15 +317,15 @@ class EntryNExitSvc{
 	private function designDeposit($q){
 		global $mysql;
 		$sql = "select b.id as c0,
-					b.projectName as c1,
-					p.salesman as c2,
-					p.designer as c3,
+					p.projectName as c1,
+					bs.salesman as c2,
+					bs.designer as c3,
 					bs.customer as c4,
 					bs.custContact as c5,
 					b.paidAmount as c6,
 					b.payer as c7,
 					b.status
-					from statement_bill b left join user u on u.name = b.payer left join project p on p.projectId = b.projectId left join business bs on bs.id = p.businessId
+					from statement_bill b left join user u on u.name = b.payer left join business bs on bs.id = b.businessId left join project p on p.businessId = bs.id 
 					where b.billType = 'dsdpst' and b.isDeleted = 'false' and  b.status = 'accepted'";
 		if(isset($q['c0']) && $q['c0'] != ""){
 			$sql .= ' and b.id like \'%'.$q['c0'].'%\'';

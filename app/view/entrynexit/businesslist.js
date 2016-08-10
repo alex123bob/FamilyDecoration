@@ -44,7 +44,7 @@ Ext.define('FamilyDecoration.view.entrynexit.BusinessList', {
                         reader: {
                             type: 'json'
                         },
-                        url: './libs/business.php?action=getSalesmanlist'
+                        url: './libs/business.php?action=getSalesmanlistWidthLevelBAndC'
                     }
                 }),
                 listeners: {
@@ -60,10 +60,8 @@ Ext.define('FamilyDecoration.view.entrynexit.BusinessList', {
                                 },
                                 url: './libs/business.php',
                                 extraParams: {
-                                    action: 'getBusiness',
-                                    salesmanName: rec.get('salesmanName'),
-                                    isFrozen: 'false',
-                                    isDead: 'false'
+                                    action: 'getBusinessLevelBAndC',
+                                    salesmanName: rec.get('salesmanName')
                                 }
                             });
                             businessListSt.load();
@@ -93,13 +91,7 @@ Ext.define('FamilyDecoration.view.entrynexit.BusinessList', {
                     }
                 ],
                 store: Ext.create('FamilyDecoration.store.Business', {
-                    autoLoad: false,
-                    filters: [
-                        function (item) {
-                            var level = item.get('level');
-                            return level == 'B' || level == 'C';
-                        }
-                    ]
+                    autoLoad: false
                 })
             }
         ];

@@ -70,6 +70,31 @@ class AccountSvc extends BaseSvc
 	}
 
 	public function receipt($q){
+		global $mysql;
+		$statementBillSvc = parent::getSvc('StatementBill');
+		$mysql->begin();
+		switch ($q['@billType']) {
+			case 'dsdpst'://设计定金
+				$amount = $q['@receiveAmount'];
+				$accountId = $q['@accountId'];
+				$bill = $statementBillSvc->add(array(
+					'@billType'=>$q['@billType'],
+					'@businessId'=>$q['@businessId'],
+					'@payer'=>$q['@receiver'],
+					'@paidAmount'=>$amount,
+					'@paidTime'=>'now',
+					'@status'=>'accepted',
+					'@descpt'=>$q['@receiveWay']
+				));
+				$mysql->DBExecute("update account set balance = balance + $amount where id = '".$accountId."';");
+				$account = $mysql->DBGetAsMap("select * from account where id = '".$accountId."';");
+				parent::getSvc('AccountLog')->add(array('@accountId'=>$accountId,'@amount'=>$amount,'@type'=>'in','@refId'=>$bill['data']['id'],'@refType'=>'designDeposit','@balance'=>$account[0]['balance']));
+				break;
+			default:
+				# code...
+				break;
+		}
+		$mysql->commit();
 		return array('status'=>'successful');
 	}
 

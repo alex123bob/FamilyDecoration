@@ -38,7 +38,8 @@ class StatementBillSvc extends BaseSvc
 	public function add($q){
 		$q['@id'] = $this->getUUID();
 		$q['@creator'] = $_SESSION['name'];
-		$q['@status'] = 'new';
+		if(!isset($q['@status']))
+			$q['@status'] = 'new';
 		notNullCheck($q,'@billType','审批单类型不能为空!');
 		/*notNullCheck($q,'@payee','领款人不能为空!');
 		if($q['@billType'] == 'reg' || $q['@billType'] == 'ppd'){
