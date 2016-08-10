@@ -26,10 +26,10 @@ class PDF extends PDF_Chinese{
 		$this->Text(51,48,$phone);
 		$this->Text(35,56,'领款次数:');
 		$this->Text(51,56,$times);
-		$this->Text(80,40,'工程地址:');
-		$this->Text(97,40,$address);
-		$this->Text(130,40,'项目经理:');
-		$this->Text(148,40,$captain);
+		$this->Text(80,40,'项目经理:');
+		$this->Text(97,40,$captain);
+		$this->Text(130,40,'工程地址:');
+		$this->Text(148,40,$address);
 		$this->Text(80,48,'总金额:');
 		$this->Text(93,48,$totalFee.' (元)');
 		$this->Text(80,56,'完成情况:');
