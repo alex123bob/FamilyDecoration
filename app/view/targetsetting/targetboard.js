@@ -1,7 +1,9 @@
 Ext.define('FamilyDecoration.view.targetsetting.TargetBoard', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.targetsetting-targetboard',
-    requires: [],
+    requires: [
+        'FamilyDecoration.store.BusinessGoal'
+    ],
     autoScroll: true,
     title: '目标量',
     columns: [],
