@@ -15,7 +15,10 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
     },
 
     initComponent: function () {
-        var me = this;
+        var me = this,
+            st = Ext.create('FamilyDecoration.store.StatementBill', {
+                autoLoad: false
+            });
         function _getRes() {
             var captainList = me.getComponent('gridpanel-projectCaptainList'),
                 captainSelModel = captainList.getSelectionModel(),
@@ -95,9 +98,9 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                 initBtn: function () {
                     var resObj = _getRes(),
                         btnObj = this._getBtns();
-                        btnObj.apply.setDisabled(!(resObj.qgd && resObj.qgd.data.status == "new")); //有id了说明已经实例化了，可以申付
-                        btnObj.modify.setDisabled(!(resObj.qgd && ( resObj.qgd.data.status === 'new' || resObj.qgd.data.status == '' || resObj.qgd.data.status == null))); //只有新创建或者未实例化的才能修改
-                        btnObj.pass.setDisabled(!(resObj.qgd && ( resObj.qgd.data.status === 'rdyck'))); //只有提交了审核的才能审核                     
+                    btnObj.apply.setDisabled(!(resObj.qgd && resObj.qgd.data.status == "new")); //有id了说明已经实例化了，可以申付
+                    btnObj.modify.setDisabled(!(resObj.qgd && (resObj.qgd.data.status === 'new' || resObj.qgd.data.status == '' || resObj.qgd.data.status == null))); //只有新创建或者未实例化的才能修改
+                    btnObj.pass.setDisabled(!(resObj.qgd && (resObj.qgd.data.status === 'rdyck'))); //只有提交了审核的才能审核                     
                 },
                 refresh: function () {
                     var resObj = _getRes();
@@ -121,9 +124,7 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                         resObj.qgdSt.removeAll();
                     }
                 },
-                store: Ext.create('FamilyDecoration.store.StatementBill', {
-                    autoLoad: false
-                }),
+                store: st,
                 tbar: [
                     {
                         xtype: 'button',
@@ -138,13 +139,13 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                                     return;
                                 }
                                 ajaxUpdate('StatementBill.changeStatus', {
-                                            id: resObj.qgd.data.id,
-                                            status: '+1'
-                                        }, ['id'], function (obj) {
-                                            Ext.Msg.success('递交成功！');
-                                            resObj.qgdList.refresh();
-                                        }, true);
-                                });
+                                    id: resObj.qgd.data.id,
+                                    status: '+1'
+                                }, ['id'], function (obj) {
+                                    Ext.Msg.success('递交成功！');
+                                    resObj.qgdList.refresh();
+                                }, true);
+                            });
                         }
                     },
                     {
@@ -157,7 +158,7 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                             var resObj = _getRes();
                             var win = Ext.create('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
                                 qgd: resObj.qgd,
-                                callback: function (){
+                                callback: function () {
                                     resObj.qgdList.refresh();
                                 }
                             });
@@ -177,6 +178,13 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                         text: '审核通过',
                         disabled: true,
                         icon: 'resources/img/check.png'
+                    }
+                ],
+                bbar: [
+                    {
+                        xtype: 'pagingtoolbar',
+                        store: st,   // same store GridPanel is using
+                        displayInfo: true
                     }
                 ],
                 columns: {
@@ -223,15 +231,15 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                                 {
                                     icon: 'resources/img/balance.png',
                                     tooltip: '点击查看单据',
-                                    handler: function (grid, rowIndex, colIndex){
+                                    handler: function (grid, rowIndex, colIndex) {
                                         var rec = grid.getStore().getAt(rowIndex);
                                         win = Ext.create('FamilyDecoration.view.manuallycheckbill.CheckBillList', {
-                                                    infoObj: {
-                                                        projectId: rec.data.projectId,
-                                                        professionType: rec.data.professionType,
-                                                        payee: rec.data.payee
-                                                    }
-                                                });
+                                            infoObj: {
+                                                projectId: rec.data.projectId,
+                                                professionType: rec.data.professionType,
+                                                payee: rec.data.payee
+                                            }
+                                        });
                                         win.show();
                                     }
                                 }
@@ -260,13 +268,13 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                             flex: 1.1,
                             align: 'right',
                             dataIndex: 'totalFee',
-                            renderer: function (val, meta, rec){
-                                if(val == 0)
+                            renderer: function (val, meta, rec) {
+                                if (val == 0)
                                     return 0;
-                                if(val == rec.data.qgd)
+                                if (val == rec.data.qgd)
                                     return val;
-                                var diff = (val-rec.data.qgd).toFixed(2);
-                                return val + "("+(diff > 0 ? '+' : '' )+diff.toString().replace(/0*$/gi,'').replace(/\.$/gi,'')+")";
+                                var diff = (val - rec.data.qgd).toFixed(2);
+                                return val + "(" + (diff > 0 ? '+' : '') + diff.toString().replace(/0*$/gi, '').replace(/\.$/gi, '') + ")";
                             }
                         },
                         {
@@ -281,7 +289,7 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                     ]
                 },
                 listeners: {
-                    selectionchange: function (selModel, sels, opts){
+                    selectionchange: function (selModel, sels, opts) {
                         var resObj = _getRes();
                         resObj.qgdList.initBtn();
                     }
