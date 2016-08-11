@@ -730,46 +730,56 @@
                                 },
                                 selType: 'checkboxmodel',
                                 store: st,
-                                columns: {
-                                    defaults: {
+                                columns: [
+                                    {
+                                        text: '详细',
+                                        dataIndex: 'detail',
                                         flex: 1,
                                         align: 'center'
                                     },
-                                    items: [
-                                        {
-                                            text: '详细',
-                                            dataIndex: 'detail'
-                                        },
-                                        {
-                                            text: '用户',
-                                            dataIndex: 'user'
-                                        },
-                                        {
-                                            text: '文件',
-                                            dataIndex: 'file'
-                                        },
-                                        {
-                                            text: '行号',
-                                            dataIndex: 'line'
-                                        },
-                                        {
-                                            text: 'IP',
-                                            dataIndex: 'ip'
-                                        },
-                                        {
-                                            text: 'refer',
-                                            dataIndex: 'refer'
-                                        },
-                                        {
-                                            text: '设备',
-                                            dataIndex: 'useragent'
-                                        },
-                                        {
-                                            text: '时间',
-                                            dataIndex: 'createTime'
-                                        }
-                                    ]
-                                }
+                                    {
+                                        text: '用户',
+                                        dataIndex: 'user',
+                                        flex: 1,
+                                        align: 'center'
+                                    },
+                                    {
+                                        text: '文件',
+                                        dataIndex: 'file',
+                                        flex: 1,
+                                        align: 'center'
+                                    },
+                                    {
+                                        text: '行号',
+                                        dataIndex: 'line',
+                                        flex: 1,
+                                        align: 'center'
+                                    },
+                                    {
+                                        text: 'IP',
+                                        dataIndex: 'ip',
+                                        flex: 1,
+                                        align: 'center'
+                                    },
+                                    {
+                                        text: 'refer',
+                                        dataIndex: 'refer',
+                                        flex: 1,
+                                        align: 'center'
+                                    },
+                                    {
+                                        text: '设备',
+                                        dataIndex: 'useragent',
+                                        flex: 1,
+                                        align: 'center'
+                                    },
+                                    {
+                                        text: '时间',
+                                        dataIndex: 'createTime',
+                                        flex: 1,
+                                        align: 'center'
+                                    }
+                                ]
                             }
                         ],
                         buttons: [
