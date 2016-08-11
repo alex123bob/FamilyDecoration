@@ -183,7 +183,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								}
 							}
 							else if (name == 'firstCheckBill' || name == 'returnBill') {
-								if ((User.isBudgetManager() || User.isBudgetStaff() || User.isAdmin()) && rec && rec.get('status') == 'rdyck') {
+								if ((User.isBudgetManager() || User.isBudgetStaff() || User.isAdmin()) && rec && rec.get('status') == 'rdyck1') {
 									btn.enable();
 								}
 								else {
