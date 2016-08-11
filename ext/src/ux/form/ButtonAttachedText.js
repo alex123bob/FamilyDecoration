@@ -44,7 +44,7 @@ Ext.define('Ext.ux.form.ButtonAttachedText', {
                     flex: 3.4,
                     value: me.value || '',
                     emptyText: me.emptyText || '',
-                    blankText: me.blankText || 'This field is required',
+                    blankText: me.blankText || 'This field is required'
                 },
                 {
                     xtype: 'button',

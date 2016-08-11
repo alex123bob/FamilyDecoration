@@ -25,10 +25,10 @@ Ext.define('FamilyDecoration.model.Project', {
         {name: 'budgetFinished', type: 'string'},
         
         // this is used in manuallyCheckBill module
-        {name: 'newBillCount', type: 'string'},
-        {name: 'rdyckBillCount', type: 'string'},
-        {name: 'chkBillCount', type: 'string'},
-        {name: 'paidBillCount', type: 'string'}
+        {name: 'rdyck1BillCount', type: 'string'},
+        {name: 'rdyck2BillCount', type: 'string'},
+        {name: 'rdyck3BillCount', type: 'string'},
+        {name: 'rdyck4BillCount', type: 'string'}
     ],
     idProperty: 'projectId',
     proxy: {
