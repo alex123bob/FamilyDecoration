@@ -217,25 +217,25 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 								if ((me.projectId && me.projectId == node.getId()) || !me.projectId) {
 									var renderedTxt = node.get('projectName');
 									if (me.needStatementBillCount) {
-										if (!isNaN(parseInt(node.get('newBillCount'), 10))) {
+										if (!isNaN(parseInt(node.get('rdyck1BillCount'), 10))) {
 											renderedTxt += '&nbsp;<font style="color: pink;"><strong>['
-												+ node.get('newBillCount')
+												+ node.get('rdyck1BillCount')
 												+ ']</strong></font>';
 										}
 										/*
-										if (!isNaN(parseInt(node.get('rdyckBillCount'), 10))) {
+										if (!isNaN(parseInt(node.get('rdyck2BillCount'), 10))) {
 											renderedTxt += '&nbsp;<font style="color: orange;"><strong>['
-												+ node.get('rdyckBillCount')
+												+ node.get('rdyck2BillCount')
 												+ ']</strong></font>';
 										}
-										if (!isNaN(parseInt(node.get('chkBillCount'), 10))) {
+										if (!isNaN(parseInt(node.get('rdyck3BillCount'), 10))) {
 											renderedTxt += '&nbsp;<font style="color: skyblue;"><strong>['
-												+ node.get('chkBillCount')
+												+ node.get('rdyck3BillCount')
 												+ ']</strong></font>';
 										}
-										if (!isNaN(parseInt(node.get('paidBillCount'), 10))) {
+										if (!isNaN(parseInt(node.get('rdyck4BillCount'), 10))) {
 											renderedTxt += '&nbsp;<font style="color: green;"><strong>['
-												+ node.get('paidBillCount')
+												+ node.get('rdyck4BillCount')
 												+ ']</strong></font>';
 										}
 										*/

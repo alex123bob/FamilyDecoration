@@ -55,7 +55,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 					xtype: 'progress-projectlistbycaptain',
 					needStatementBillCount: true,
 					searchFilter: true,
-					title: '工程项目名称',
+					title: '工程项目名称&nbsp;&nbsp;<span style="font-size: 10px;">[<font color="pink"><strong>*</strong></font>:待一审]</span>',
 					id: 'treepanel-projectNameForBillCheck',
 					name: 'treepanel-projectNameForBillCheck',
 					autoScroll: true,

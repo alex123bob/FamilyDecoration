@@ -151,14 +151,14 @@
 			$projectId = $project['projectId'];
 			$projects[$key]["budgets"] = $mysql->DBGetAsMap($sqlBudget, $projectId);
 			if ($needStatementBillCount == true) {
-				$rdyckCount = $mysql->DBGetAsMap("select count(*) as newBillCount from statement_bill where projectId = '?' and isDeleted = 'false' and status = 'new' ", $projectId);
-				$projects[$key]["newBillCount"] = $rdyckCount[0]["newBillCount"];
-				$rdyckCount = $mysql->DBGetAsMap("select count(*) as rdyckBillCount from statement_bill where projectId = '?' and isDeleted = 'false' and status = 'rdyck' ", $projectId);
-				$projects[$key]["rdyckBillCount"] = $rdyckCount[0]["rdyckBillCount"];
-				$chkCount = $mysql->DBGetAsMap("select count(*) as chkBillCount from statement_bill where projectId = '?' and isDeleted = 'false' and status = 'chk' ", $projectId);
-				$projects[$key]["chkBillCount"] = $chkCount[0]["chkBillCount"];
-				$paidCount = $mysql->DBGetAsMap("select count(*) as paidBillCount from statement_bill where projectId = '?' and isDeleted = 'false' and status = 'paid' ", $projectId);
-				$projects[$key]["paidBillCount"] = $paidCount[0]["paidBillCount"];
+				$rdyck1Count = $mysql->DBGetAsMap("select count(*) as rdyck1BillCount from statement_bill where projectId = '?' and isDeleted = 'false' and status = 'rdyck1' ", $projectId);
+				$projects[$key]["rdyck1BillCount"] = $rdyck1Count[0]["rdyck1BillCount"];
+				$rdyck2Count = $mysql->DBGetAsMap("select count(*) as rdyck2BillCount from statement_bill where projectId = '?' and isDeleted = 'false' and status = 'rdyck2' ", $projectId);
+				$projects[$key]["rdyck2BillCount"] = $rdyck2Count[0]["rdyck2BillCount"];
+				$rdyck3Count = $mysql->DBGetAsMap("select count(*) as rdyck3BillCount from statement_bill where projectId = '?' and isDeleted = 'false' and status = 'rdyck3' ", $projectId);
+				$projects[$key]["rdyck3BillCount"] = $rdyck3Count[0]["rdyck3BillCount"];
+				$rdyck4Count = $mysql->DBGetAsMap("select count(*) as rdyck4BillCount from statement_bill where projectId = '?' and isDeleted = 'false' and status = 'rdyck4' ", $projectId);
+				$projects[$key]["rdyck4BillCount"] = $rdyck4Count[0]["rdyck4BillCount"];
 			}
 		}
 		return $projects;
