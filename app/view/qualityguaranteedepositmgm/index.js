@@ -80,7 +80,7 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                 }
             },
             {
-                flex: 5,
+                flex: 9,
                 title: '质保金列表',
                 itemId: 'gridpanel-qgdList',
                 cls: 'gridpanel-qgdList',
@@ -187,26 +187,27 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                     items: [
                         {
                             text: '单据号',
-                            flex: 1.5,
+                            flex: 0.7,
                             dataIndex: 'id'
                         },
                         {
                             text: '领款人',
-                            flex: 0.5,
+                            flex: 0.7,
                             dataIndex: 'payee'
                         },
                         {
                             text: '工种',
-                            flex: 0.5,
+                            flex: 0.7,
                             dataIndex: 'professionTypeName'
                         },
                         {
                             text: '工程地址',
-                            flex: 1.5,
+                            flex: 0.9,
                             dataIndex: 'projectName'
                         },
                         {
                             text: '联系电话',
+                            flex: 0.9,
                             dataIndex: 'phoneNumber'
                         },
                         {
@@ -238,25 +239,25 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                         },
                         {
                             text: '总金额(元)',
-                            flex: 0.8,
                             align: 'right',
+                            flex: 1.1,
                             dataIndex: 'total'
                         },
                         {
                             text: '已付(元)',
-                            flex: 0.8,
+                            flex: 0.9,
                             align: 'right',
                             dataIndex: 'paid'
                         },
                         {
                             text: '质保金(元)',
-                            flex: 0.8,
                             align: 'right',
+                            flex: 1.1,
                             dataIndex: 'qgd'
                         },
                         {
                             text: '调整后(元)',
-                            flex: 0.8,
+                            flex: 1.1,
                             align: 'right',
                             dataIndex: 'totalFee',
                             renderer: function (val, meta, rec){
