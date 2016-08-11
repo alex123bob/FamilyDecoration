@@ -725,6 +725,10 @@
                                         displayInfo: true
                                     }
                                 ],
+                                selModel: {
+                                    mode: 'SIMPLE'
+                                },
+                                selType: 'checkboxmodel',
                                 store: st,
                                 columns: {
                                     defaults: {
@@ -768,12 +772,46 @@
                                 }
                             }
                         ],
-                        buttons: [{
-                            text: '关闭',
-                            handler: function (){
-                                win.close();
+                        buttons: [
+                            {
+                                text: '关闭',
+                                handler: function (){
+                                    win.close();
+                                }
+                            },
+                            {
+                                text: '删除',
+                                handler: function (){
+                                    var grid = win.down('gridpanel'),
+                                        recs = grid.getSelectionModel().getSelection();
+                                    if (recs.length > 0) {
+                                        Ext.Msg.warning('确定要删除所选项吗？', function (btnId){
+                                            if ('yes' == btnId) {
+                                                function del(recs) {
+                                                    var len = recs.length,
+                                                        func = arguments.callee;
+                                                    if (recs.length > 0) {
+                                                        ajaxUpdate('ErrorLog.delete', {
+                                                            createTime: recs[len - 1].get('createTime')
+                                                        }, ['createTime'], function (obj){
+                                                            recs.pop();
+                                                            func(recs);
+                                                        }, true);
+                                                    }
+                                                    else {
+                                                        grid.getStore().reload();
+                                                    }
+                                                }
+                                                del(recs);
+                                            }
+                                        });
+                                    }
+                                    else {
+                                        showMsg('请选择要删除日志！');
+                                    }
+                                }
                             }
-                        }]
+                        ]
                     });
 
                     win.show();
