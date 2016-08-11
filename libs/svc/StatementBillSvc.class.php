@@ -238,7 +238,7 @@ class StatementBillSvc extends BaseSvc
 		$q['billType'] = 'reg';
 		$this->appendSelect = ",tp.cname as professionTypeName ";
 		$this->appendJoin = "left join profession_type tp on tp.value = $this->tableName.professionType";
-		$data = parent::get($q);
+		$data = $this->get($q);
 
 		$userSvc = parent::getSvc('User');
 		$userSvc->appendRealName($data['data'],'checker');
@@ -277,7 +277,7 @@ class StatementBillSvc extends BaseSvc
 		$q['billType'] = 'ppd';
 		$this->appendSelect = ",tp.cname as professionTypeName ";
 		$this->appendJoin = "left join profession_type tp on tp.value = $this->tableName.professionType";
-		$data2 = parent::get($q);
+		$data2 = $this->get($q);
 		$userSvc->appendRealName($data2['data'],'checker');
 		foreach ($data2['data'] as $key => $value) {
 			array_push($data['data'], $value);
