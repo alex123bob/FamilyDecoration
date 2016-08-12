@@ -109,8 +109,8 @@ class LogListSvc extends BaseSvc
 		$plan = array('buildingSwiping'=>array(),'buildingSwiping'=>array());
 		if($mode == "market"){
 			$data = $this->getIndicatorMarket($user,$year,$month,false);
+			$days = date('t', strtotime("$year-$month"));//cal_days_in_month(CAL_GREGORIAN, $month, $year);
 			$temp = $mysql->DBGetAsMap("select c1 as buildingSwiping,c2 as telemarketing from business_goal where targetMonth = '?' and user = '?' ","$year-$month",$user);
-			$days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 			if(count($temp) > 0){
 				$planBwip = (int)$temp[0]['buildingSwiping'];
 				$planTele = (int)$temp[0]['telemarketing'];
@@ -166,7 +166,7 @@ class LogListSvc extends BaseSvc
 			$planTel = isset($plan['telemarketing'][$date]) ? $plan['telemarketing'][$date] : '';
 			$planWip = isset($plan['buildingSwiping'][$date]) ? $plan['buildingSwiping'][$date] : '';
 			array_push($res, array(
-				'sp'=>$mode == "market" ? $planTel.'电 '.$planWip.'扫' : null,  //standardPlan
+				'sp'=>$mode == "market" ? (int)$planTel.'电 '.(int)$planWip.'扫' : null,  //standardPlan
 				'pa'=>$mode == "market" ? $tele.'电 '.$wip.'扫' : null, //practicalAccomplishment
 				'd'=>$mode == "market" ? ($planTel-$tele)."电 ".($planWip-$wip)."扫" : null,//difference
 				's'=>$log,//selfPlan
