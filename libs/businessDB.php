@@ -176,8 +176,8 @@
 		// put result in order according to level. from A to D.
 		// force NULL value rank the last
 		$sql .= " order by IF(ISNULL(`level`), 1, 0), `level` , id desc ";
-		echo $sql;
-		var_dump($params);
+		// echo $sql;
+		// var_dump($params);
 		return $mysql->DBGetAsMap($sql,$params);
 	}
 	
