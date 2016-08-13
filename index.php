@@ -232,6 +232,9 @@
                 name: '业务员',
                 value: '004-002'
             }, {
+                name: '见习业务员',
+                value: '004-003'
+            }, {
                 name: '人事行政部主管',
                 value: '005-001'
             }, {
@@ -387,8 +390,13 @@
                     if (roleStr == '001') {
                         role = '主管';
                     }
+                    // this role could hand over businesses coming from business manager.
                     else if (roleStr == '002') {
                         role = '业务员';
+                    }
+                    // this role can't not get any business from business manager'
+                    else if (roleStr == '003') {
+                        role = '见习业务员';
                     }
                 }
                 // administration department
