@@ -41,7 +41,8 @@ class StatementBillSvc extends BaseSvc
 		if(!isset($q['@status']))
 			$q['@status'] = 'new';
 		notNullCheck($q,'@billType','审批单类型不能为空!');
-		notNullCheck($q,'@payee','领款人不能为空!');
+		if($q['@billType'] != 'qgd')
+			notNullCheck($q,'@payee','领款人不能为空!');
 		if($q['@billType'] == 'reg' || $q['@billType'] == 'ppd'){
 			$obj = array('billType'=>'qgd','projectId'=>$q['@projectId'],'payee'=>$q['@payee'],'professionType'=>$q['@professionType']);
 			$qgd = parent::get($obj);
@@ -334,57 +335,40 @@ class StatementBillSvc extends BaseSvc
 
 	public function modifyQgd($q){
 		global $mysql;
-		$obj = array('billType'=>'qgd','projectId'=>$q['projectId'],'payee'=>$q['payee'],'professionType'=>$q['professionType']);
-		$qgd = parent::get($obj);
-		if($qgd['total'] == 0){
-			$sql = "select id from statement_bill where (billType = 'reg' or billType = 'ppd') and isDeleted = 'false'".
-					" and status != 'paid' and status != 'arch' and professionType = '?' and payee = '?'";
-			$array = $mysql->DBGetAsOneArray($sql,$q['professionType'],$q['payee']);
-			if(count($array) > 0){
-				throw new Exception("以下".(count($array))."个申请单还未走完全流程：\n".join('\n',$array));
-			}
-			$this->add(array('@billType'=>'qgd','@projectId'=>$q['projectId'],'@projectName'=>$q['projectName'],'@phoneNumber'=>$q['phoneNumber'],'@payee'=>$q['payee'],'@professionType'=>$q['professionType']));
-		}else if($qgd['total'] > 1){
-			throw new Exception('有数据错误！多条质保金记录！');
-		}
 		$q['@totalFee'] = $q['@qgd'];
-		$q['billType'] = 'qgd';
-		return parent::update($q);
+		if($q['id'] == ""){
+			$q['@billType'] = 'qgd';
+			return $this->add($q);
+		}else{
+			return parent::update($q);
+		}
 	}
 
 	public function qualityGuaranteeDeposit($q){
 		global $mysql;
-		$sql = "select b.id,t.projectId,".
+		$sql = "select o.id as refId,b.id,o.projectId,".
 						"b.billName,".
-						"t.payee,".
-						"t.projectName,".
-						"t.phoneNumber,".
-						"t.number,".
+						"o.payee,".
+						"o.projectName,".
+						"o.phoneNumber,".
 						"b.totalFee,". //质保金单子的totalFee就是质保金金额，有可能是抹平/调整后的
-						"IFNULL(t.total,0) as total,".
-						"IFNULL(p.paid,0) as paid,".
-						"t.professionType,".
+						"o.totalFee as total,".
+						"o.paidAmount as paid,".
+						"o.professionType,".
 						"prof.cname as professionTypeName,".
 						"b.status,".
 						"b.descpt,".
 						"b.deadline";
-		$where = " from (".
-					"SELECT count(*) as number,max(phoneNumber) as phoneNumber,sum(IFNULL(totalFee, 0)) AS total,projectId,payee,professionType,projectName".
-					" FROM statement_bill WHERE isDeleted = 'false' AND (billType = 'reg' OR billType = 'ppd') and payee is not null".
-					" GROUP BY projectId,payee,professionType,projectName".
-				") t left join (".
-					"SELECT sum(IFNULL(paidAmount, 0)) AS paid,projectId,payee,professionType".
-					" FROM statement_bill WHERE isDeleted = 'false' AND (billType = 'reg' OR billType = 'ppd') and payee is not null".
-					" AND STATUS = 'paid' GROUP BY projectId,payee,professionType,projectName".
-				") p on p.projectId = t.projectId and p.payee = t.payee and t.professionType = p.professionType".
+		$where = " from statement_bill o ".
 				" left join statement_bill b ".
-				" on t.projectId = b.projectId and t.payee = b.payee and t.professionType = b.professionType and b.isDeleted = 'false' and b.payee is not null and b.billType = 'qgd'".
-				" left join project pro on t.projectId = pro.projectId".
-				" left join profession_type prof on prof.value = t.professionType where pro.captainName = '?' ";
+				" on o.id = b.refId and b.isDeleted = 'false' and b.billType = 'qgd'".
+				" left join project pro on o.projectId = pro.projectId".
+				" left join profession_type prof on prof.value = o.professionType".
+				" where pro.captainName = '?' and (o.status = 'paid' or o.status = 'arch')  ";
 		$count = $mysql->DBGetAsOneArray("select count(*) ".$where,$q['captainName'])[0];
 		$data = $count > 0 ? $mysql->DBGetAsMap($sql.$where.BaseSvc::parseLimitSql($q),$q['captainName']) : array();
 		foreach ($data as &$value) {
-			$value['qgd'] = $value['total'] - $value['paid'];
+			$value['qgd'] = round($value['total'] - $value['paid']);
 			if($value['status'] != null)
 				$value['statusName'] = self::$ALL_STATUS[$value['status']];
 		}
