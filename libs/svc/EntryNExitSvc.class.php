@@ -162,7 +162,7 @@ class EntryNExitSvc{
 					totalFee as c5,
 					claimAmount as c6,
 					paidAmount as c7,
-					claimAmount-paidAmount as c8,
+					totalFee-paidAmount as c8,
 					'' as c9,
 					paidTime as c10,
 					b.status,
