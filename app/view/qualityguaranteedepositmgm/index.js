@@ -228,12 +228,7 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                                     tooltip: '点击查看单据',
                                     handler: function (grid, rowIndex, colIndex) {
                                         var rec = grid.getStore().getAt(rowIndex);
-                                        win = Ext.create('FamilyDecoration.view.manuallycheckbill.CheckBillList', {
-                                            infoObj: {
-                                                refId: rec.data.refId
-                                            }
-                                        });
-                                        win.show();
+                                        var win = window.open('./fpdf/statement_bill.php?id=' + rec.get('refId'), '预览', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
                                     }
                                 }
                             ]

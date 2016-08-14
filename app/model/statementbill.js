@@ -49,6 +49,7 @@ Ext.define('FamilyDecoration.model.StatementBill', {
 		{name: 'paidAmount', type: 'float'},
 		{name: 'paid', type: 'string'},
 		{name: 'total', type: 'string'},
+		{name: 'refId', type: 'string'}, // qgd reference Id, original statementbill id
 		{name: 'number', type: 'string'} // number of bills
 	]
 });
