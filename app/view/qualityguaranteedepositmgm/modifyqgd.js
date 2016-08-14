@@ -125,35 +125,24 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
                 text: '确定',
                 handler: function () {
                     var resObj = _getRes(),
-                        res = {},
-                        flag = true;
+                        res = {};
                     for (var key in resObj) {
-                        if (resObj.hasOwnProperty(key)) {
-                            var field = resObj[key];
-                            if (!field.isValid()) {
-                                flag = false;
-                            }
-                            else {
-                                res[key] = (field.xtype == 'datefield' ? field.getSubmitValue() : field.getValue());
-                            }
-                        }
+                        if (!resObj.hasOwnProperty(key))
+                            continue;
+                        var field = resObj[key];
+                        if (!field.isValid())
+                            return ;
+                        res[key] = (field.xtype == 'datefield' ? field.getSubmitValue() : field.getValue());
                     }
-                    if (flag) {
-                        Ext.apply(res, {
-                            projectId: me.qgd.get('projectId'),
-                            professionType: me.qgd.get('professionType'),
-                            phoneNumber: me.qgd.get('phoneNumber'),
-                            projectName: me.qgd.get('professionType'),
-                            payee: me.qgd.get('payee')
-                        });
-                        ajaxUpdate('StatementBill.modifyQgd', res, ['projectId', 'professionType', 'payee'], function (obj){
-                            me.qgd.set('totalFee',res['qgd']);
-                            me.qgd.set('deadline',res['deadline']);
-                            me.qgd.set('descpt',res['descpt']);
-                            me.callback();
-                            me.close();
-                        }, true);
-                    }
+                    res['refId'] = me.qgd.get('refId');
+                    res['id'] = me.qgd.get('id');
+                    ajaxUpdate('StatementBill.modifyQgd', res, ['id'], function (obj){
+                        me.qgd.set('totalFee',res['qgd']);
+                        me.qgd.set('deadline',res['deadline']);
+                        me.qgd.set('descpt',res['descpt']);
+                        me.callback();
+                        me.close();
+                    }, true);
                 }
             },
             {

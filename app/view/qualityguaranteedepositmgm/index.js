@@ -219,13 +219,8 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                             dataIndex: 'phoneNumber'
                         },
                         {
-                            text: '单',
-                            flex: 0.2,
-                            dataIndex: 'number'
-                        },
-                        {
                             xtype: 'actioncolumn',
-                            text: '据',
+                            text: '单据',
                             flex: 0.2,
                             items: [
                                 {
@@ -235,9 +230,7 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                                         var rec = grid.getStore().getAt(rowIndex);
                                         win = Ext.create('FamilyDecoration.view.manuallycheckbill.CheckBillList', {
                                             infoObj: {
-                                                projectId: rec.data.projectId,
-                                                professionType: rec.data.professionType,
-                                                payee: rec.data.payee
+                                                refId: rec.data.refId
                                             }
                                         });
                                         win.show();
@@ -270,10 +263,10 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                             dataIndex: 'totalFee',
                             renderer: function (val, meta, rec) {
                                 if (val == 0)
-                                    return 0;
+                                    return rec.data.qgd;
                                 if (val == rec.data.qgd)
                                     return val;
-                                var diff = (val - rec.data.qgd).toFixed(2);
+                                var diff = (val - rec.data.qgd);
                                 return val + "(" + (diff > 0 ? '+' : '') + diff.toString().replace(/0*$/gi, '').replace(/\.$/gi, '') + ")";
                             }
                         },

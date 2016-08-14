@@ -33,11 +33,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.CheckBillList', {
                             root: 'data'
                         },
                         extraParams: {
-                            payee: me.infoObj.payee,
-                            professionType: me.infoObj.professionType,
-                            projectId: me.infoObj.projectId,
-                            action: 'StatementBill.get',
-                            billType : '!qgd'
+                            id: me.infoObj.refId,
+                            action: 'StatementBill.get'
                         }
                     }
                 }),
