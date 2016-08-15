@@ -40,7 +40,7 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
                 autoScroll: true,
                 cls: 'gridpanel-editstatus',
                 collapsible: true,
-                refresh: function (){
+                refresh: function () {
                     var grid = this,
                         st = grid.getStore();
                     st.load({
@@ -62,7 +62,7 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
                                     ajaxUpdate('PotentialBusinessDetail', {
                                         comments: e.record.get('comments'),
                                         id: e.record.getId()
-                                    }, 'id', function (obj){
+                                    }, 'id', function (obj) {
                                         showMsg('更改成功！');
                                         e.record.store.reload();
                                     });
@@ -101,7 +101,7 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
                                                 index = st.indexOf(rec);
                                             ajaxDel('PotentialBusinessDetail', {
                                                 id: rec.getId()
-                                            }, function (obj){
+                                            }, function (obj) {
                                                 showMsg('删除成功！');
                                                 st.reload({
                                                     callback: function (recs, ope, success) {
@@ -140,8 +140,39 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
                     }
                 ],
                 store: Ext.create('FamilyDecoration.store.PotentialBusinessDetail', {
-                    
+
                 })
+            },
+            {
+                xtype: 'fieldcontainer',
+                fieldLabel: '是否装修',
+                width: '100%',
+                flex: 0.3,
+                layout: 'hbox',
+                defaultType: 'radiofield',
+                items: [
+                    {
+                        boxLabel: '已装',
+                        name: 'isDecorated',
+                        inputValue: 'true',
+                        flex: 1,
+                        value: me.business ? (me.business.get('isDecorated') == 'true') : ''
+                    },
+                    {
+                        boxLabel: '未装',
+                        name: 'isDecorated',
+                        inputValue: 'false',
+                        flex: 1,
+                        value: me.business ? (me.business.get('isDecorated') == 'false') : ''
+                    },
+                    {
+                        boxLabel: '不装',
+                        name: 'isDecorated',
+                        inputValue: 'no',
+                        flex: 1,
+                        value: me.business ? (me.business.get('isDecorated') == 'no') : ''
+                    }
+                ]
             }
         ];
 
@@ -149,16 +180,39 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
             {
                 text: '确定',
                 handler: function () {
-                    var txtarea = me.down('textarea');
+                    var txtarea = me.down('textarea'),
+                        isDecoratedArr = me.query('[name="isDecorated"]');
                     if (txtarea.isValid()) {
                         var params = {
                             comments: txtarea.getValue(),
                             committer: User.getName(),
                             potentialBusinessId: me.business.getId()
                         };
-                        ajaxAdd('PotentialBusinessDetail', params, 
-                            function (obj){
+                        ajaxAdd('PotentialBusinessDetail', params,
+                            function (obj) {
                                 showMsg('添加成功！');
+                                // update decorated status
+                                Ext.each(isDecoratedArr, function (item, index, self) {
+                                    if (item.getValue()) {
+                                        Ext.Ajax.request({
+                                            url: './libs/business.php?action=editPotentialBusiness',
+                                            method: 'POST',
+                                            params: {
+                                                isDecorated: item.inputValue,
+                                                id: me.business.getId()
+                                            },
+                                            callback: function (opts, success, res) {
+                                                if (success) {
+                                                    var obj = Ext.decode(res.responseText);
+                                                    if (obj.status == 'successful') {
+                                                        showMsg('装修状态更新成功！');
+                                                    }
+                                                }
+                                            }
+                                        });
+                                        return false;
+                                    }
+                                });
                                 me.close();
                                 me.grid.getStore().reload();
                             }
@@ -176,7 +230,7 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
         ];
 
         me.listeners = {
-            afterrender: function (win, opts){
+            afterrender: function (win, opts) {
                 var grid = win.down('grid'),
                     st = grid.getStore();
                 st.load({

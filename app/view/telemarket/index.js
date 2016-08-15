@@ -82,7 +82,7 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                         reminderBtn = this.down('[name="button-reminder"]'),
                         returnBackBtn = this.down('[name="button-returnBack"]'),
                         cancelImportantCustBtn = this.down('[name="button-cancelImportantCust"]'),
-                        importantCustBtn  = this.down('[name="button-importantCust"]'),
+                        importantCustBtn = this.down('[name="button-importantCust"]'),
                         editStatusBtn = this.down('[name="button-editStatus"]');
                     return {
                         transferBtn: transferBtn,
@@ -102,10 +102,10 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                             btn.setDisabled(!resObj.business);
                         }
                     }
-                    if(resObj.business && resObj.business.data && resObj.business.data.isImportant == "true"){
+                    if (resObj.business && resObj.business.data && resObj.business.data.isImportant == "true") {
                         btns.importantCustBtn.hide();
                         btns.cancelImportantCustBtn.show();
-                    }else{
+                    } else {
                         btns.importantCustBtn.show();
                         btns.cancelImportantCustBtn.hide();
                     }
@@ -178,7 +178,7 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                                     recipient: resObj.telemarketingStaff.get('telemarketingStaffName'),
                                     type: 'telemarket_individual_remind',
                                     extraId: resObj.business.getId(),
-                                    afterClose: function (){
+                                    afterClose: function () {
                                         resObj.businessList.getStore().reload();
                                     }
                                 });
@@ -220,8 +220,8 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                                 url: './libs/business.php?action=editPotentialBusiness',
                                 method: 'GET',
                                 params: {
-                                    id:resObj.business.data.id,
-                                    isImportant:'true'
+                                    id: resObj.business.data.id,
+                                    isImportant: 'true'
                                 },
                                 callback: function (opts, success, res) {
                                     if (success) {
@@ -243,8 +243,8 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                                 url: './libs/business.php?action=editPotentialBusiness',
                                 method: 'GET',
                                 params: {
-                                    id:resObj.business.data.id,
-                                    isImportant:'false'
+                                    id: resObj.business.data.id,
+                                    isImportant: 'false'
                                 },
                                 callback: function (opts, success, res) {
                                     if (success) {
@@ -263,16 +263,16 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                             var resObj = me.getRes();
                             var btns = resObj.businessList.getBtns();
                             Ext.Msg.warning('确定要转回此电销业务么?', function (btnId) {
-                                if(btnId != 'yes')
+                                if (btnId != 'yes')
                                     return;
                                 Ext.Ajax.request({
                                     url: './libs/business.php?action=editPotentialBusiness',
                                     method: 'GET',
                                     params: {
-                                        id:resObj.business.data.id,
-                                        telemarketingStaff:'',
-                                        telemarketingStaffName:'',
-                                        distributeTime:''
+                                        id: resObj.business.data.id,
+                                        telemarketingStaff: '',
+                                        telemarketingStaffName: '',
+                                        distributeTime: ''
                                     },
                                     callback: function (opts, success, res) {
                                         if (success) {
@@ -306,7 +306,7 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                             }
                         });
                         resObj.businessSt.loadPage(1, {
-                            callback: function (recs, ope, success){
+                            callback: function (recs, ope, success) {
                                 var business = resObj.business,
                                     selModel = resObj.businessList.getSelectionModel();
                                 selModel.deselectAll();
@@ -352,7 +352,7 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                             flex: 0.5,
                             dataIndex: 'proprietor',
                             renderer: function (val, meta, rec) {
-                                return rec.data.isImportant == 'true' ? val+"<font color='red'>★</font>":val;
+                                return rec.data.isImportant == 'true' ? val + "<font color='red'>★</font>" : val;
                             }
                         },
                         {
@@ -381,10 +381,31 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                             }
                         },
                         {
+                            text: '已装',
+                            flex: 0.5,
+                            dataIndex: 'isDecorated',
+                            renderer: function (val, meta, rec) {
+                                if (val) {
+                                    if (val == 'true') {
+                                        return '已装';
+                                    }
+                                    else if (val == 'false') {
+                                        return '未装';
+                                    }
+                                    else if (val == 'no') {
+                                        return '不装';
+                                    }
+                                }
+                                else {
+                                    return '';
+                                }
+                            }
+                        },
+                        {
                             text: '提醒',
                             flex: 0.8,
                             dataIndex: 'reminders',
-                            renderer: function (val, meta, rec){
+                            renderer: function (val, meta, rec) {
                                 var result = '';
                                 if (val) {
                                     Ext.each(val, function (obj, index) {
