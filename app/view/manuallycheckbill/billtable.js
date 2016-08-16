@@ -329,7 +329,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 				autoScroll: true,
 				store: statementBillItemSt,
 				// selType: previewMode ? 'row' 'cellmodel',
-				plugins: previewMode && !auditMode ? [] : [
+				plugins: previewMode && !auditMode && !(User.isAdmin() || User.isBudgetManager()) ? [] : [
 					Ext.create('Ext.grid.plugin.CellEditing', {
 						clicksToEdit: 1,
 						listeners: {
@@ -454,8 +454,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 							text: '审核数量',
 							dataIndex: 'checkedNumber',
 							flex: 1,
-							hidden: auditMode ? false : true,
-							editor: auditMode ? {
+							hidden: auditMode || (!auditMode && previewMode && (User.isAdmin() || User.isBudgetManager() || User.isFinanceManager() || User.isFinanceStaff())) ? false : true,
+							editor: auditMode || (!auditMode && previewMode && (User.isAdmin() || User.isBudgetManager())) ? {
 								xtype: 'textfield',
 								allowBlank: false
 							} : false

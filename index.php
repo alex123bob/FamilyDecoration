@@ -187,6 +187,14 @@
                 return (this.level == '008-002' || this.level == '008-003' || this.level == '008-004' || this.level == '008-005');
             },
 
+            isFinanceAccountant: function (){
+                return this.level == '008-002';
+            },
+
+            isFinanceCashier: function (){
+                return this.level == '008-003';
+            },
+
             isBudgetManager: function (){
                 return this.level == '009-001';
             },

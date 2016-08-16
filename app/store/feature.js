@@ -399,16 +399,16 @@
                 flag = User.isGeneral() ? false : true;
             }
             else if (rec.get('cmp') == 'manuallycheckbill-index') {
-                flag = User.isAdmin() || User.isProjectManager() || User.isProjectStaff() || User.isBudgetManager() || User.isBudgetStaff() ? true : false;
+                flag = User.isAdmin() || User.isFinanceManager() || User.isFinanceAccountant() || User.isProjectManager() || User.isProjectStaff() || User.isBudgetManager() || User.isBudgetStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'checkbillitem-index') {
                 flag = User.isAdmin() ? true : false;
             }
             else if (rec.get('cmp') == 'billaudit-index') {
-                flag = User.isAdmin() || User.isFinanceManager() || User.isFinanceStaff() ? true : false;
+                flag = User.isAdmin() || User.isFinanceManager() || User.isFinanceAccountant() ? true : false;
             }
             else if (rec.get('cmp') == 'entrynexit-index') {
-                flag = User.isAdmin() || User.isFinanceManager() || User.level == '008-005' ? true : false;
+                flag = User.isAdmin() || User.isFinanceManager() || User.isFinanceCashier() ? true : false;
             }
             else if (rec.get('cmp') == 'account-index') {
                 flag = User.isAdmin() ? true : false;
