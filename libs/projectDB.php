@@ -66,12 +66,23 @@
 	}
 	function getProjectCaptains ($captainName){
 		global $mysql;
+		$needRdyck1BillCount = isset($_REQUEST["needRdyck1BillCount"]) ? $_REQUEST["needRdyck1BillCount"] : "";
+		$sql = "select count(*) as num from `statement_bill` b left join `project` p on b.projectId = p.projectId where p.captainName = '?' and b.status = 'rdyck1' and b.isDeleted = 'false' and p.isDeleted = 'false' and p.isFrozen = 0 ";
 		if ($captainName != "") {
-			return $mysql->DBGetAsMap("select distinct `captainName`, `captain` from project where `isDeleted` = 'false' and `captainName` = '$captainName' ");
+			$res = $mysql->DBGetAsMap("select distinct `captainName`, `captain` from project where `isDeleted` = 'false' and `captainName` = '$captainName' ");
 		}
 		else {
-			return $mysql->DBGetAsMap("select distinct `captainName`, `captain` from project where `isDeleted` = 'false' and `captainName` is not NULL");
+			$res = $mysql->DBGetAsMap("select distinct `captainName`, `captain` from project where `isDeleted` = 'false' and `captainName` is not NULL");
 		}
+		if ($needRdyck1BillCount == true) {
+			for ($i=0; $i < count($res); $i++) { 
+				$item = $res[$i];
+				$rdyck1BillCountForCaptain = $mysql->DBGetAsMap($sql, $item["captainName"]);
+				$rdyck1BillCountForCaptain = $rdyck1BillCountForCaptain[0]["num"];
+				$res[$i]["rdyck1BillCountForCaptain"] = $rdyck1BillCountForCaptain;
+			}
+		}
+		return $res;
 	}
 
 	function getVisitorProjectsByCaptain($visitorName, $captainName){
@@ -139,7 +150,7 @@
 	function getProjectsByCaptainName ($captainName){
 		global $mysql;
 		$userName = isset($_REQUEST["userName"]) ? $_REQUEST["userName"] : "";
-		$needStatementBillCount = $_REQUEST["needStatementBillCount"];
+		$needStatementBillCount = isset($_REQUEST["needStatementBillCount"]) ? $_REQUEST["needStatementBillCount"] : "";
 		if ($userName == "") {
 			$projects = $mysql->DBGetAsMap("select * from project where `isDeleted` = 'false' and `captainName` = '?' and `isFrozen` = 'false' ORDER BY `projectTime` ASC ", $captainName);
 		}

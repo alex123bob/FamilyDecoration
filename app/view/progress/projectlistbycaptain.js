@@ -42,7 +42,7 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 								params: {
 									projectName: obj.projectName
 								},
-								callback: function (recs, ope, success){
+								callback: function (recs, ope, success) {
 									if (success) {
 										grid.expand();
 									}
@@ -80,7 +80,7 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 							reader: {
 								type: 'json'
 							},
-							extraParams: (function (){
+							extraParams: (function () {
 								var p = {
 									action: 'filterProjectByProjectName'
 								}
@@ -113,18 +113,18 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 						}
 					],
 					listeners: {
-						selectionchange: function (grid, sels, opts){
+						selectionchange: function (grid, sels, opts) {
 							var treepane = me,
 								rec = sels[0],
 								children = treepane.getRootNode().childNodes;
 							if (rec) {
-								Ext.each(children, function (node, index, arr){
+								Ext.each(children, function (node, index, arr) {
 									if (node.get('captainName') == rec.get('captainName')) {
-										node.expand(false, function (recs){
-											Ext.each(recs, function (item, i, self){
+										node.expand(false, function (recs) {
+											Ext.each(recs, function (item, i, self) {
 												if (item.get('projectName') == rec.get('projectName')) {
 													treepane.getSelectionModel().select(item);
-													Ext.defer(function (){
+													Ext.defer(function () {
 														treepane.getView().focusNode(item);
 													}, 500);
 													return false;
@@ -174,7 +174,8 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 					url: './libs/project.php',
 					extraParams: (function () {
 						var p = {
-							action: 'getProjectCaptains'
+							action: 'getProjectCaptains',
+							needRdyck1BillCount: me.needStatementBillCount
 						}
 						if (User.isProjectStaff()) {
 							Ext.apply(p, {
@@ -213,36 +214,17 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 						if (!pNode) {
 						}
 						else {
+							var renderedTxt;
 							if (node.get('projectName')) {
 								if ((me.projectId && me.projectId == node.getId()) || !me.projectId) {
-									var renderedTxt = node.get('projectName');
+									renderedTxt = node.get('projectName');
 									if (me.needStatementBillCount) {
-										var rdyck1BillCount = parseInt(node.get('rdyck1BillCount'), 10),
-											rdyck2BillCount = parseInt(node.get('rdyck2BillCount'), 10),
-											rdyck3BillCount = parseInt(node.get('rdyck3BillCount'), 10),
-											rdyck4BillCount = parseInt(node.get('rdyck4BillCount'), 10);
+										var rdyck1BillCount = parseInt(node.get('rdyck1BillCount'), 10);
 										if (!isNaN(rdyck1BillCount) && rdyck1BillCount > 0) {
-											renderedTxt += '&nbsp;<font style="color: pink;"><strong>['
-												+ node.get('rdyck1BillCount')
+											renderedTxt += '&nbsp;<font style="color: red;"><strong>['
+												+ rdyck1BillCount
 												+ ']</strong></font>';
 										}
-										/*
-										if (!isNaN(rdyck2BillCount) && rdyck2BillCount > 0) {
-											renderedTxt += '&nbsp;<font style="color: orange;"><strong>['
-												+ node.get('rdyck2BillCount')
-												+ ']</strong></font>';
-										}
-										if (!isNaN(rdyck3BillCount) && rdyck3BillCount > 0) {
-											renderedTxt += '&nbsp;<font style="color: skyblue;"><strong>['
-												+ node.get('rdyck3BillCount')
-												+ ']</strong></font>';
-										}
-										if (!isNaN(rdyck4BillCount) && rdyck4BillCount > 0) {
-											renderedTxt += '&nbsp;<font style="color: green;"><strong>['
-												+ node.get('rdyck4BillCount')
-												+ ']</strong></font>';
-										}
-										*/
 									}
 									else {
 									}
@@ -258,8 +240,20 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 								}
 							}
 							else {
+								renderedTxt = node.get('captain');
+								if (me.needStatementBillCount) {
+									var rdyck1BillCountForCaptain = parseInt(node.get('rdyck1BillCountForCaptain'), 10);
+									if (!isNaN(rdyck1BillCountForCaptain) && rdyck1BillCountForCaptain > 0) {
+										renderedTxt += '&nbsp;<font style="color: red;"><strong>['
+											+ rdyck1BillCountForCaptain
+											+ ']</strong></font>';
+									}
+								}
+								else {
+
+								}
 								node.set({
-									text: node.get('captain'),
+									text: renderedTxt,
 									icon: './resources/img/user.ico'
 								});
 							}

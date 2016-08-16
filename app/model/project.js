@@ -28,7 +28,12 @@ Ext.define('FamilyDecoration.model.Project', {
         {name: 'rdyck1BillCount', type: 'string'},
         {name: 'rdyck2BillCount', type: 'string'},
         {name: 'rdyck3BillCount', type: 'string'},
-        {name: 'rdyck4BillCount', type: 'string'}
+        {name: 'rdyck4BillCount', type: 'string'},
+        // this is used to count corresponding bills in captain hierarchy
+        {name: 'rdyck1BillCountForCaptain', type: 'string'},
+        {name: 'rdyck2BillCountForCaptain', type: 'string'},
+        {name: 'rdyck3BillCountForCaptain', type: 'string'},
+        {name: 'rdyck4BillCountForCaptain', type: 'string'}
     ],
     idProperty: 'projectId',
     proxy: {
