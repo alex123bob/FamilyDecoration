@@ -9,13 +9,18 @@ class ProfessionTypeSvc extends BaseSvc
 		if(isset($q['projectId'])){
 			global $mysql;
 			$params = array();
+			$whereSql0 = parent::parseWhereSql('',$q,$params,'statement_bill');
 			$whereSql1 = parent::parseWhereSql('',$q,$params,'statement_bill');
 			$whereSql2 = parent::parseWhereSql('p.',$q,$params,'profession_type');
 			$orderBy = parent::parseOrderBySql($q);
 			$limit = parent::parseLimitSql($q);
-			$sql = "select p.* ,IFNULL(b.h,0) as highLight from profession_type p left join ( 
-						select count(*) as h , professionType from statement_bill $whereSql1 group by professionType
-					) b on b.professionType = p.value $whereSql2 ";
+			$sql = "select p.* ,IFNULL(b.h,0) as highLight,IFNULL(b2.h,0) as rdyck1 from profession_type p".
+					" left join ( ".
+						"select count(*) as h , professionType from statement_bill $whereSql0 group by professionType".
+					") b on b.professionType = p.value ".
+					"left join ( ".
+						"select count(*) as h , professionType from statement_bill $whereSql1 and status = 'rdyck1' group by professionType".
+					") b2 on b2.professionType = p.value $whereSql2 ";
 			$row = $mysql->DBGetAsMap($sql.$orderBy.$limit,$params);
 			$count = $mysql->DBGetAsOneArray("select count(*) from ( $sql ) as a",$params);
 			$count = $count[0];
