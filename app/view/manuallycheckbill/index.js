@@ -81,7 +81,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 			},
 			{
 				xtype: 'gridpanel',
-				title: '工种列表',
+				title: '工种(一审/总)',
 				id: 'gridpanel-professionType',
 				name: 'gridpanel-professionType',
 				columns: [
@@ -90,9 +90,13 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						dataIndex: 'cname',
 						flex: 1,
 						renderer: function (val, meta, rec) {
-							var num = parseInt(rec.get('billNumber'), 10);
-							var numStr = '<font style="color: ' + (num > 0 ? 'blue; text-shadow: #8F7 ' : 'white; text-shadow: black ')
-								+ '0.1em 0.1em 0.2em;"><strong>[' + num + ']</strong></font>';
+							var billNumber = parseInt(rec.get('billNumber'), 10),
+								rdyck1BillNumber = parseInt(rec.get('rdyck1BillNumber'), 10);
+							var numStr = '<font>['
+								+ '<strong style="color: red;">' + rdyck1BillNumber + '</strong>'
+								+ '/'
+								+ '<strong style="color: blue;">' + billNumber + '</strong>'
+								+ ']</font>';
 							return val + numStr;
 						}
 					}
@@ -105,7 +109,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 					borderRightWidth: '1px'
 				},
 				hideHeaders: true,
-				width: 80,
+				width: 100,
 				height: '100%',
 				listeners: {
 					selectionchange: function (selModel, sels, opts) {
