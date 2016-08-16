@@ -3,7 +3,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 	alias: 'widget.manuallycheckbill-billtable',
 	layout: 'vbox',
 	requires: [
-		'FamilyDecoration.store.StatementBillItem'
+		'FamilyDecoration.store.StatementBillItem',
+		'FamilyDecoration.view.manuallycheckbill.EditRemark'
 	],
 	header: false,
 	isPreview: false,
@@ -473,6 +474,11 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 							text: '小计',
 							dataIndex: 'subtotal',
 							flex: 1
+						},
+						{
+							text: '备注',
+							dataIndex: 'remark',
+							flex: 1
 						}
 					],
 					defaults: {
@@ -486,7 +492,18 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 						dock: 'bottom',
 						displayInfo: true
 					}
-				]
+				],
+				listeners: {
+					cellclick: function (view, td, cellIndex, rec, tr, rowIndex){
+						// remark column
+						if (cellIndex == 9) {
+							var win = Ext.create('FamilyDecoration.view.manuallycheckbill.EditRemark', {
+
+							});
+							win.show();
+						}
+					}
+				}
 			}
 		];
 		
