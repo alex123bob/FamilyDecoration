@@ -15,6 +15,7 @@ Ext.define('FamilyDecoration.model.StatementBillItem', {
 		{name: 'referenceNumber', type: 'int'},
 		{name: 'referenceItems', type: 'string'}, // 参考量对应的基础小项的id
 		{name: 'checkedNumber', type: 'string'},
+		'remarks',
         {name: 'billId', type: 'string'} // 对应的账单的id
 	]
 });

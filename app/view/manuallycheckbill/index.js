@@ -146,7 +146,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 			},
 			{
 				xtype: 'panel',
-				flex: 3,
+				flex: 4,
 				height: '100%',
 				title: '单据细目',
 				getButtons: function () {

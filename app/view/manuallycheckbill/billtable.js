@@ -10,47 +10,47 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 	isPreview: false,
 	isAudit: false,
 	hasPrePaidBill: false, // if current bill has its prePaid deposit bill or not. default false.
-	
+
 	project: undefined,
 	professionType: undefined,
-	
+
 	bill: undefined,
 	isEdit: false, // this one tells current component if he needs to load bill data after rendition or not.
 
-	initComponent: function (){
+	initComponent: function () {
 		var me = this,
 			previewMode = me.isPreview,
 			auditMode = me.isAudit,
 			hasPrePaidBill = me.hasPrePaidBill,
 			isRegularBill;
-		
+
 		if (me.bill) {
 			isRegularBill = (me.bill.get('billType') == 'reg');
 		}
 		else {
 			isRegularBill = undefined;
 		}
-			
-		me.getValues = function (){
+
+		me.getValues = function () {
 			var form = me.down('form'),
 				txts = form.query('textfield'),
 				result = {};
-			Ext.each(txts, function (txt, index){
+			Ext.each(txts, function (txt, index) {
 				result[txt.name] = txt.getValue();
 			});
-			
+
 			// special field value.
 			result['billName'] = result['payee'] + '领款单';
 			return result;
 		};
-			
-		me.refresh = function (bill){
+
+		me.refresh = function (bill) {
 			me.refreshForm(bill);
 			me.refreshGrid(bill);
 			me.refreshPrePaidItems(bill);
 		};
 
-		me.refreshPrePaidItems = function (bill){
+		me.refreshPrePaidItems = function (bill) {
 			var form = me.down('form'),
 				remainingTotalFeeField = form.down('[name="remainingTotalFee"]'),
 				prePaidFeeField = form.down('[name="prePaidFee"]');
@@ -69,14 +69,14 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 				prePaidFeeField.setValue('').hide();
 			}
 		}
-		
-		me.refreshForm = function (bill){
+
+		me.refreshForm = function (bill) {
 			var form = me.down('form'),
 				title = me.down('[name="displayfield-budgetName"]'),
 				data, field;
 			if (bill) {
 				data = bill.data;
-				title.setValue(me.getBillTitle(data.professionTypeName,data.id));
+				title.setValue(me.getBillTitle(data.professionTypeName, data.id));
 				for (var pro in data) {
 					if (data.hasOwnProperty(pro)) {
 						field = form.query('[name="' + pro + '"]');
@@ -90,13 +90,13 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 			else {
 				title.setValue(me.getBillTitle());
 				field = form.query('textfield');
-				Ext.each(field, function (cmp, index, fld){
+				Ext.each(field, function (cmp, index, fld) {
 					cmp.setValue('');
 				});
 			}
 		}
-		
-		me.refreshGrid = function (bill, callback){
+
+		me.refreshGrid = function (bill, callback) {
 			var grid = me.down('grid'),
 				st = grid.getStore();
 			if (bill) {
@@ -113,7 +113,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 					}
 				});
 				st.loadPage(1, {
-					callback: function (recs, ope, success){
+					callback: function (recs, ope, success) {
 						if (typeof callback === 'function') {
 							callback(recs, ope, success);
 						}
@@ -127,8 +127,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 				st.removeAll();
 			}
 		};
-		
-		me.focusOnLastRow = function (){
+
+		me.focusOnLastRow = function () {
 			var grid = me.down('grid'),
 				view = grid.getView(),
 				st = grid.getStore(),
@@ -136,22 +136,22 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 			grid.getSelectionModel().select(last);
 			view.focusRow(last, 200);
 		};
-		
-		me.setTotalFee = function (){
+
+		me.setTotalFee = function () {
 			var form = me.down('form'),
 				totalFeeField = form.query('[name="totalFee"]')[0],
 				claimAmountField = form.query('[name="claimAmount"]')[0];
 			ajaxGet('StatementBill', 'getTotalFee', {
 				id: me.bill.getId()
-			}, function (obj){
+			}, function (obj) {
 				totalFeeField.setValue(obj.totalFee);
 				!isRegularBill && claimAmountField.setValue(obj.totalFee);
 			});
 		};
-		me.getBillTitle = function(str,billId){
-			str = str === undefined ? "" : "("+str+")";
-			billId = billId === undefined ? "" : "-"+billId;
-			return '佳诚装饰<br />单项工程施工工程款领取审批单&nbsp;&nbsp;<span style="font-size: 12px;">公司联'+billId+str+'</font>';
+		me.getBillTitle = function (str, billId) {
+			str = str === undefined ? "" : "(" + str + ")";
+			billId = billId === undefined ? "" : "-" + billId;
+			return '佳诚装饰<br />单项工程施工工程款领取审批单&nbsp;&nbsp;<span style="font-size: 12px;">公司联' + billId + str + '</font>';
 		}
 		var statementBillItemSt = Ext.create('FamilyDecoration.store.StatementBillItem', {
 			autoLoad: false
@@ -334,9 +334,9 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 					Ext.create('Ext.grid.plugin.CellEditing', {
 						clicksToEdit: 1,
 						listeners: {
-							edit: function (editor, e){
+							edit: function (editor, e) {
 								Ext.suspendLayouts();
-								
+
 								e.record.commit();
 								editor.completeEdit();
 								if (e.field == 'amount') {
@@ -344,7 +344,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 										amount: e.record.get('amount'),
 										id: e.record.getId(),
 										billId: me.bill.getId()
-									}, 'id', function (obj){
+									}, 'id', function (obj) {
 										me.refreshGrid(me.bill);
 										showMsg('编辑成功！');
 										me.setTotalFee()
@@ -355,7 +355,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 										checkedNumber: e.record.get('checkedNumber'),
 										id: e.record.getId(),
 										billId: me.bill.getId()
-									}, 'id', function (obj){
+									}, 'id', function (obj) {
 										showMsg('编辑成功！');
 										me.refreshGrid(me.bill);
 									});
@@ -365,19 +365,19 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 										unitPrice: e.record.get('unitPrice'),
 										id: e.record.getId(),
 										billId: me.bill.getId()
-									}, 'id', function (obj){
+									}, 'id', function (obj) {
 										me.refreshGrid(me.bill);
 										showMsg('编辑成功！');
 										me.setTotalFee()
 									});
 								}
-								
+
 								Ext.resumeLayouts();
 							},
-							validateedit: function (editor, e, opts){
+							validateedit: function (editor, e, opts) {
 								var rec = e.record;
 								if (e.field == 'amount' || e.field == 'checkedNumber' || e.field == 'unitPrice') {
-									if (isNaN(e.value) || !/^-?\d+(\.\d+)?$/.test(e.value) ){
+									if (isNaN(e.value) || !/^-?\d+(\.\d+)?$/.test(e.value)) {
 										return false;
 									}
 									else if (e.value == e.originalValue) {
@@ -398,21 +398,21 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 								{
 									icon: 'resources/img/delete_for_action_column.png',
 									tooltip: '删除条目',
-									handler: function(view, rowIndex, colIndex) {
+									handler: function (view, rowIndex, colIndex) {
 										var st = view.getStore(),
 											rec = st.getAt(rowIndex),
 											index = st.indexOf(rec);
 										ajaxDel('StatementBillItem', {
 											id: rec.getId()
-										}, function (){
+										}, function () {
 											showMsg('删除成功！');
 											me.setTotalFee();
-											me.refreshGrid(me.bill, function (recs, ope, success){
+											me.refreshGrid(me.bill, function (recs, ope, success) {
 												if (success) {
 													var newRec = st.getAt(index);
 													if (newRec) {
 														view.getSelectionModel().select(newRec);
-														view.focusRow(newRec, 200);	
+														view.focusRow(newRec, 200);
 													}
 												}
 											});
@@ -424,7 +424,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 						{
 							text: '序号',
 							dataIndex: 'serialNumber',
-							flex: 1
+							flex: 0.3
 						},
 						{
 							text: '项目',
@@ -434,27 +434,27 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 						{
 							text: '单位',
 							dataIndex: 'unit',
-							flex: 1
+							flex: 0.4
 						},
 						{
 							text: '参考量',
 							dataIndex: 'referenceNumber',
-							flex: 1,
+							flex: 0.6,
 							hidden: auditMode ? false : true
 						},
 						{
 							text: '数量',
 							dataIndex: 'amount',
-							flex: 1,
+							flex: 0.4,
 							editor: !previewMode ? (isRegularBill ? {
-				                xtype: 'textfield',
-				                allowBlank: false
-				            } : false) : false
+								xtype: 'textfield',
+								allowBlank: false
+							} : false) : false
 						},
 						{
 							text: '审核数量',
 							dataIndex: 'checkedNumber',
-							flex: 1,
+							flex: 0.6,
 							hidden: auditMode || (!auditMode && previewMode && (User.isAdmin() || User.isBudgetManager() || User.isFinanceManager() || User.isFinanceStaff())) ? false : true,
 							editor: auditMode || (!auditMode && previewMode && (User.isAdmin() || User.isBudgetManager())) ? {
 								xtype: 'textfield',
@@ -464,7 +464,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 						{
 							text: '单价(元)',
 							dataIndex: 'unitPrice',
-							flex: 1,
+							flex: 0.6,
 							editor: !isRegularBill && !previewMode ? {
 								xtype: 'textfield',
 								allowBlank: false
@@ -473,12 +473,29 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 						{
 							text: '小计',
 							dataIndex: 'subtotal',
-							flex: 1
+							flex: 0.6
 						},
 						{
 							text: '备注',
-							dataIndex: 'remark',
-							flex: 1
+							dataIndex: 'remarks',
+							flex: 1,
+							hidden: previewMode ? false : true,
+							renderer: function (val, meta, rec) {
+								var result = '';
+								if (val.length > 0) {
+									Ext.each(val, function (obj, index) {
+										result += '<strong>' + (index + 1) + '.</strong>'
+											+ ' ' + obj['content'].replace(/\n/gi, '<br />') + '<br />'
+											+ '<span class="footnote">(' + obj['createTime'] + ') '
+											+ obj['committerRealName'] + '</span>'
+											+ '<br />';
+									});
+									return result;
+								}
+								else {
+									return '';
+								}
+							}
 						}
 					],
 					defaults: {
@@ -494,11 +511,14 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 					}
 				],
 				listeners: {
-					cellclick: function (view, td, cellIndex, rec, tr, rowIndex){
+					cellclick: function (view, td, cellIndex, rec, tr, rowIndex) {
 						// remark column
 						if (cellIndex == 9) {
 							var win = Ext.create('FamilyDecoration.view.manuallycheckbill.EditRemark', {
-
+								billItem: rec,
+								callback: function () {
+									rec.store.reload();
+								}
 							});
 							win.show();
 						}
@@ -506,9 +526,9 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 				}
 			}
 		];
-		
+
 		me.listeners = {
-			afterrender: function (panel, opts){
+			afterrender: function (panel, opts) {
 				if (panel.isEdit) {
 					panel.refresh(panel.bill);
 				}

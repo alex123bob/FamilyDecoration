@@ -2,7 +2,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.EditRemark', {
     extend: 'Ext.window.Window',
     alias: 'widget.manuallycheckbill-editremark',
     requires: [
-
+        'FamilyDecoration.store.StatementBillItemRemark'
     ],
     modal: true,
     title: '编辑备注',
@@ -15,6 +15,9 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.EditRemark', {
 
     layout: 'vbox',
     isDirty: false, // field to judge if current window has done several back interaction operation.
+
+    billItem: undefined,
+    callback: Ext.emptyFn,
 
     initComponent: function () {
         var me = this;
@@ -36,6 +39,21 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.EditRemark', {
                 autoScroll: true,
                 cls: 'gridpanel-editbillitemremark',
                 collapsible: true,
+                store: Ext.create('FamilyDecoration.store.StatementBillItemRemark', {
+                    autoLoad: true,
+                    proxy: {
+                        type: 'rest',
+                        reader: {
+                            type: 'json',
+                            root: 'data'
+                        },
+                        url: 'libs/api.php',
+                        extraParams: {
+                            action: 'StatementBillItemRemark.get',
+                            refId: me.billItem.getId()
+                        }
+                    }
+                }),
                 plugins: [
                     Ext.create('Ext.grid.plugin.CellEditing', {
                         clicksToEdit: 1,
@@ -84,7 +102,26 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.EditRemark', {
                                 handler: function (view, rowIndex, colIndex) {
                                     Ext.Msg.warning('确定要删除当前备注吗?', function (btnId){
                                         if ('yes' == btnId) {
-                                            
+                                            var st = view.getStore(),
+                                                rec = st.getAt(rowIndex),
+                                                index = st.indexOf(rec);
+                                            ajaxDel('StatementBillItemRemark', {
+                                                id: rec.getId()
+                                            }, function (obj){
+                                                showMsg('删除成功！');
+                                                me.isDirty = true;
+                                                st.reload({
+                                                    callback: function (recs, ope, success) {
+                                                        if (success) {
+                                                            var newRec = st.getAt(index);
+                                                            if (newRec) {
+                                                                view.getSelectionModel().select(newRec);
+                                                                view.focusRow(newRec, 200);
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                            })
                                         }
                                     });
                                 }
@@ -106,7 +143,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.EditRemark', {
                     },
                     {
                         text: '评论人',
-                        dataIndex: 'committer'
+                        dataIndex: 'committerRealName'
                     }
                 ]
             }
@@ -116,13 +153,30 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.EditRemark', {
             {
                 text: '确定',
                 handler: function () {
-
+                    var txtarea = me.down('textarea');
+                    if (txtarea.isValid()) {
+                        var params = {
+                            refId: me.billItem.getId(),
+                            content: txtarea.getValue()
+                        };
+                        ajaxAdd('StatementBillItemRemark',
+                            params,
+                            function (obj) {
+                                showMsg('添加成功！');
+                                me.callback();
+                                me.close();
+                            }
+                        );
+                    }
                 }
             },
             {
                 text: '取消',
                 handler: function () {
                     me.close();
+                    if (me.isDirty) {
+                        me.callback();
+                    }
                 }
             }
         ];

@@ -638,9 +638,12 @@
                                                                                 var grid = Ext.getCmp('gridpanel-checkFeedback');
                                                                                 showMsg('编辑成功！');
                                                                                 grid.getStore().reload();
-                                                                                sendMsg(User.getName(), rec.get('name'), '李嘉编辑了您提出的反馈意见"' + rec.get('content') + '"，编辑内容为：' + resultContent, 'respondToFeedback');
+                                                                                sendMsg(User.getName(), rec.get('name'), '李嘉编辑了您提出的反馈意见"' 
+                                                                                    + rec.get('content') + '"，编辑内容为：' 
+                                                                                    + resultContent, 'respondToFeedback');
                                                                                 win.close();
-                                                                                if (User.getName() == rec.get('name') && Ext.util.Cookies.get('lastXtype') == 'bulletin-index') {
+                                                                                if (User.getName() == rec.get('name') 
+                                                                                    && Ext.util.Cookies.get('lastXtype') == 'bulletin-index') {
                                                                                     var msgGrid = Ext.getCmp('gridpanel-message');
                                                                                     msgGrid && msgGrid.getStore().reload();
                                                                                 }
@@ -825,7 +828,7 @@
                                                         }, true);
                                                     }
                                                     else {
-                                                        grid.getStore().reload();
+                                                        grid.getStore().loadPage(1);
                                                     }
                                                 }
                                                 del(recs);
