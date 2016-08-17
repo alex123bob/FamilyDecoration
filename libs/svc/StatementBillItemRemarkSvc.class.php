@@ -3,8 +3,8 @@ class StatementBillItemRemarkSvc extends BaseSvc
 {
 	public function add($q){
 		$q['@id'] = $this->getUUID();
-		if(!isset($q['@commiter']))
-			$q['@commiter'] = $_SESSION['name'];
+		if(!isset($q['@committer']))
+			$q['@committer'] = $_SESSION['name'];
 		return parent::add($q);
 	}
 
