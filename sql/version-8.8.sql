@@ -3,6 +3,7 @@ CREATE TABLE `statement_bill_item_remark` (
   `refId` varchar(200) DEFAULT NULL comment 'billItemId',
   `committer` varchar(200) DEFAULT NULL comment '标记人',
   `isDeleted` varchar(5) DEFAULT 'false',
+  `content` varchar(500) DEFAULT '' comment '评论',
   `createTime` datetime DEFAULT null,
   `updateTime` datetime DEFAULT null,
   PRIMARY KEY (`id`)
