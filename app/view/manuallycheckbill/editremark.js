@@ -64,7 +64,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.EditRemark', {
                                 e.record.commit();
                                 editor.completeEdit();
                                 if (e.field == 'content') {
-                                    ajaxUpdate('', {
+                                    ajaxUpdate('StatementBillItemRemark', {
                                         content: e.record.get('content'),
                                         id: e.record.getId()
                                     }, 'id', function (obj) {
@@ -105,6 +105,10 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.EditRemark', {
                                             var st = view.getStore(),
                                                 rec = st.getAt(rowIndex),
                                                 index = st.indexOf(rec);
+                                            if (rec.get('committer') != User.getName()) {
+                                                showMsg('不允许删除他人的评论！');
+                                                return false;
+                                            }
                                             ajaxDel('StatementBillItemRemark', {
                                                 id: rec.getId()
                                             }, function (obj){
@@ -121,7 +125,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.EditRemark', {
                                                         }
                                                     }
                                                 });
-                                            })
+                                            });
                                         }
                                     });
                                 }
