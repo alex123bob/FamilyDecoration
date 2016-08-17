@@ -39,6 +39,7 @@ class StatementBillItemSvc extends BaseSvc
 	public function get($q){
 		$res = parent::get($q);
 		$i = 1;
+		$billItemIds = array();
 		foreach($res['data'] as &$v){
 			$v['referenceNumber'] = $v['referenceItems'] == null || $v['referenceItems'] == "" ? 0 : substr_count($v['referenceItems'],',')+1;
 			$v['serialNumber'] = $i++;
@@ -47,6 +48,22 @@ class StatementBillItemSvc extends BaseSvc
 			}catch(Exception $e){
 
 			}
+			array_push($billItemIds,$v['id']);
+		}
+		$ids = join($billItemIds,',');
+		global $mysql;
+		$data = $mysql->DBGetAsMap("select committer,id,createTime,refId from statement_bill_item_remark where refId in ($ids) and isDeleted = 'false'; ");
+		$billMarkMapping = array();
+		foreach ($data as &$value) {
+			$billItemId = $value['refId'];
+			if(!isset($billMarkMapping[$billItemId])){
+				$billMarkMapping[$billItemId] = array();
+			}
+			unset($value['refId']);
+			array_push($billMarkMapping[$billItemId], $value);
+		}
+		foreach($res['data'] as &$v){
+			$v['remarks'] = isset($billMarkMapping[$v['id']]) ? $billMarkMapping[$v['id']] : array();
 		}
 		return $res;
 	}
