@@ -254,7 +254,7 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 								}
 								node.set({
 									text: renderedTxt,
-									icon: './resources/img/user.ico'
+									icon: './resources/img/project_captain.png'
 								});
 							}
 

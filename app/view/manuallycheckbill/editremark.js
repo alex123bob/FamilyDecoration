@@ -46,7 +46,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.EditRemark', {
                                 e.record.commit();
                                 editor.completeEdit();
                                 if (e.field == 'content') {
-                                    ajaxUpdate(me.isComment ? 'ProjectProgressAudit' : 'ProjectProgress', {
+                                    ajaxUpdate('', {
                                         content: e.record.get('content'),
                                         id: e.record.getId()
                                     }, 'id', function (obj) {
@@ -64,11 +64,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.EditRemark', {
                                     if (e.value == e.originalValue) {
                                         return false;
                                     }
-                                    else if (me.isComment && rec.get('auditor') != User.getName()) {
-                                        showMsg('不允许编辑非本人填写的信息！');
-                                        return false;
-                                    }
-                                    else if (!me.isComment && rec.get('committer') != User.getName()) {
+                                    else if (rec.get('committer') != User.getName()) {
                                         showMsg('不允许编辑非本人填写的信息！');
                                         return false;
                                     }
@@ -86,6 +82,11 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.EditRemark', {
                                 icon: 'resources/img/delete_for_action_column.png',
                                 tooltip: '删除',
                                 handler: function (view, rowIndex, colIndex) {
+                                    Ext.Msg.warning('确定要删除当前备注吗?', function (btnId){
+                                        if ('yes' == btnId) {
+                                            
+                                        }
+                                    });
                                 }
                             }
                         ]
@@ -104,7 +105,8 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.EditRemark', {
                         }
                     },
                     {
-                        text: '评论人'
+                        text: '评论人',
+                        dataIndex: 'committer'
                     }
                 ]
             }
