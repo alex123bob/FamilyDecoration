@@ -22,7 +22,7 @@
 		"upload_files"=>array('id','refType','refId','name','path','size','type','desc','other','uploader'),
 		"business_goal"=>array('id','user','c1','c2','c3','c4','targetMonth'),
 		'long_request_log'=>array('url','user','ip','useragent','createTime','time','params'),
-		'statement_bill_item_remark'=>array('id','content','refId','commiter'),
+		'statement_bill_item_remark'=>array('id','content','refId','committer'),
 		"statement_bill_tag"=>array('id','tag','billId','committer'));
 
 	foreach ($TableMapping as $key => &$value) {

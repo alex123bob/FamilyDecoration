@@ -50,18 +50,20 @@ class StatementBillItemSvc extends BaseSvc
 			}
 			array_push($billItemIds,$v['id']);
 		}
-		$ids = join($billItemIds,',');
-		global $mysql;
-		$data = $mysql->DBGetAsMap("select committer,id,content,createTime,refId from statement_bill_item_remark where refId in ($ids) and isDeleted = 'false'; ");
-		BaseSvc::getSvc('User')->appendRealName($data,'committer');
 		$billMarkMapping = array();
-		foreach ($data as &$value) {
-			$billItemId = $value['refId'];
-			if(!isset($billMarkMapping[$billItemId])){
-				$billMarkMapping[$billItemId] = array();
+		if(count($billItemIds) > 0){
+			$ids = join($billItemIds,',');
+			global $mysql;
+			$data = $mysql->DBGetAsMap("select committer,id,content,createTime,refId from statement_bill_item_remark where refId in ($ids) and isDeleted = 'false'; ");
+			BaseSvc::getSvc('User')->appendRealName($data,'committer');
+			foreach ($data as &$value) {
+				$billItemId = $value['refId'];
+				if(!isset($billMarkMapping[$billItemId])){
+					$billMarkMapping[$billItemId] = array();
+				}
+				unset($value['refId']);
+				array_push($billMarkMapping[$billItemId], $value);
 			}
-			unset($value['refId']);
-			array_push($billMarkMapping[$billItemId], $value);
 		}
 		foreach($res['data'] as &$v){
 			$v['remarks'] = isset($billMarkMapping[$v['id']]) ? $billMarkMapping[$v['id']] : array();
