@@ -145,7 +145,4 @@ $pdf->Cell(11,21,"");
 //$pdf->Cell(200,$titleHeightPosition,'    注： 1、 本报价单为合同附件， 具有同等法律效力， 业主签字后生效。');
 $pdf->Ln();
 $pdf->Output($projectName.".pdf", $action == "view" ? "I" : "D" );
-
-$pdf->writeCellLine($CellWidth,$data,0,0,'R');
-
 ?>  

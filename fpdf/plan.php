@@ -195,5 +195,4 @@ foreach($bigItems as $key => $bigItem) {
 	$pdf->SetXY($pdf->getx()-$width[0]-$width[1],$pdf->gety());
 }
 $pdf->Output($address.".pdf", $action == "view" ? "I" : "D" );
-$pdf->writeCellLine($CellWidth,$data,0,0,'R');
 ?>  
