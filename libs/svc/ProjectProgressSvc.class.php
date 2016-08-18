@@ -69,6 +69,8 @@ Class ProjectProgressSvc extends BaseSvc{
 			$columnName = $value['columnName'];
 			unset($value['columnName']);
 			unset($value['isDeleted']);
+			unset($value['updateTime']);
+			unset($value['auditor']);
 			unset($value['projectId']);
 			array_push($auditByColumnName[$columnName], $value);
 		}

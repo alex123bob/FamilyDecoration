@@ -9,4 +9,6 @@ CREATE TABLE `statement_bill_item_remark` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-update `system` set `paramValue`='version-8.7' where `id`='4';
+alter table project_progress_audit add column `pass` int(1) default 0 comment '是否通过审核. 1:通过,0:未评审, -1:不通过'; 
+
+update `system` set `paramValue`='version-8.8' where `id`='4';

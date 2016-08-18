@@ -19,6 +19,24 @@ class ProjectProgressAuditSvc extends BaseSvc{
 		$userSvc->appendRealName($data['data'],'auditor');
 		return $data;
 	}
+
+	public function checkAuditPassed($type,$projectId){
+		$columnName;
+		$msg;
+		switch ($type) {
+			case '0001': $columnName = " 'c17' ";$msg="泥工工程-墙、地面砖铺贴、内部验收";break;//泥工
+			case '0004': $columnName = " 'c12' ";$msg="水电工程-客户验收、拍照留底";break;//水电
+			case '0002': $columnName = " 'c23' ";$msg="木工工程-客户验收、成品保护";break;//木工
+			case '0003': $columnName = " 'c34' ";$msg="竣工验收、保修单签单";break;//油漆
+			default:throw new Exception("未知工种:".$type);break;
+		}
+		global $mysql;
+		//可能会有多条监理审核意见.只要有一条是通过的,就算通过.哪怕还有不通过的,忽略
+		$cnt = $mysql->DBGetAsOneArray("select count(*) as cnt from project_progress_audit where projectId = '?'  and columnName = $columnName and pass = 1",$projectId);
+		if($cnt[0] > 0)
+			return true;
+		throw new Exception("该项目$msg 还未通过监理验收,暂时无法创建工资单!");
+	}
 }
 
 ?>

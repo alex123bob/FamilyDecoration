@@ -43,13 +43,8 @@ class StatementBillSvc extends BaseSvc
 		notNullCheck($q,'@billType','审批单类型不能为空!');
 		if($q['@billType'] != 'qgd')
 			notNullCheck($q,'@payee','领款人不能为空!');
-		if($q['@billType'] == 'reg' || $q['@billType'] == 'ppd'){
-			$obj = array('billType'=>'qgd','projectId'=>$q['@projectId'],'payee'=>$q['@payee'],'professionType'=>$q['@professionType']);
-			$qgd = parent::get($obj);
-			if($qgd['total'] > 0){
-				throw new Exception('项目已经创建保证金，请勿再创建申请单。');
-			}
-		}
+		if($q['@billType'] == 'reg')
+			parent::getSvc('ProjectProgressAudit')->checkAuditPassed($q['@professionType'],$q['@projectId']);
 		$res = parent::add($q);
 		return $res;
 	}
