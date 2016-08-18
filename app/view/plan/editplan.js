@@ -7,6 +7,7 @@ Ext.define('FamilyDecoration.view.plan.EditPlan', {
 	width: 500,
 	height: 350,
 	modal: true,
+	maximizable: true,
 
 	plan: null,
 	projectId: undefined,
