@@ -147,7 +147,7 @@ class EntryNExitSvc{
 						u.realName as c7,
 						b.descpt as c8,
 						b.status
-				FROM statement_bill b left join user u on u.name = b.payer WHERE b.isDeleted = 'false' AND b.billType = 'qgd'";
+				FROM statement_bill b left join user u on u.name = b.payer WHERE b.isDeleted = 'false' AND b.billType = 'qgd' and (status = 'paid' or status = 'chk') ";
 		$res = $this->parseData($sql,$q);
 		return $res;
 	}
