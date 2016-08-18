@@ -25,7 +25,10 @@ $billItemSvc = BaseSvc::getSvc('StatementBillItem');
 $projectSvc = BaseSvc::getSvc('Project');
 
 $bill = $billSvc->getLaborAndPrePaid($_REQUEST);
-
+if(count($bill['data']) == 0){
+	echo '<html><script type="text/javascript">document.write(decodeURIComponent("%E6%89%BE%E4%B8%8D%E5%88%B0%E5%AF%B9%E5%BA%94%E7%9A%84%E5%8D%95%E6%8D%AE!"));</script></html>';
+	die();
+}
 $bill = $bill['data'][0];
 $billId = $bill['id'];
 $name = str2GBK($bill['payee']);

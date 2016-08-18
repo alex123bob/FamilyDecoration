@@ -254,7 +254,7 @@ class StatementBillSvc extends BaseSvc
 
 		foreach ($data['data'] as &$item) {
 			if($item['billType']!='reg'){
-				$item['billName'] = $item['billName']."(".self::$billType[$item['billType']].")";
+				$item['billName'] = $item['billName']."(".self::$BILLTYPE[$item['billType']].")";
 				continue;
 			}
 			$key = $item['projectId'].'-'.$item['payee'].'-'.$item['professionType'];
