@@ -379,6 +379,7 @@ Class PlanMakingSvc extends BaseSvc{
 				'id'=>$plan['projectId'].'-'.$key);
 			if($isDetailed){
 				//c3, c4, c5, c9, c13, c21, c24不可编辑
+				//这几项在项目的实际进度里面，由于数据来自于主材订购，所以不可以进行手动编辑他们的实际状态。
 				$item['columnName'] = $key;
 				$item['isEditable'] = in_array($key, array('c3', 'c4','c5','c9','c13','c21','c24')) ? false:true;
 			}
