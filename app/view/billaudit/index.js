@@ -372,6 +372,7 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                         text: '打印单据',
                         name: 'printBill',
                         disabled: true,
+                        hidden: true,
                         icon: 'resources/img/print_finance.png',
                         handler: function () {
                             var resourceObj = me.getRes(),

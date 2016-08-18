@@ -303,7 +303,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                 }
                 newItem.push(
                     {
-                        width: 50,
+                        width: 60,
                         xtype: 'actioncolumn',
                         text: '凭证',
                         items: [
@@ -319,6 +319,33 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                                         }
                                     });
                                     win.show();
+                                }
+                            },
+                            {
+                                icon: 'resources/img/previewbill.png',
+                                tooltip: '点击预览单据',
+                                handler: function (grid, rowIndex, colIndex){
+                                    var rec = grid.getStore().getAt(rowIndex);
+                                    if (rec) {
+                                        var win = window.open('./fpdf/statement_bill.php?id=' + rec.get('c0'), '预览', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+                                    }
+                                    else {
+                                        showMsg('没有账单！');
+                                    }
+                                }
+                            },
+                            {
+                                icon: 'resources/img/printbill.png',
+                                tooltip: '点击打印单据',
+                                handler: function (grid, rowIndex, colIndex){
+                                    var rec = grid.getStore().getAt(rowIndex);
+                                    if (rec) {
+                                        var win = window.open('./fpdf/statement_bill.php?id=' + rec.get('c0'), '打印', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+								win.print();
+                                    }
+                                    else {
+                                        showMsg('没有账单！');
+                                    }
                                 }
                             }
                         ]

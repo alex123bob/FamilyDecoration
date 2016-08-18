@@ -512,6 +512,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 						text: '打印单据',
 						name: 'printBill',
 						disabled: true,
+						hidden: true,
 						icon: 'resources/img/printbill.png',
 						handler: function () {
 							var resourceObj = me.getRes(),
