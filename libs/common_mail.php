@@ -10,7 +10,7 @@ include_once "$APPBASE/libs/common.php";
 include_once "$APPBASE/phpmailer/class.smtp.php";
 include_once "$APPBASE/phpmailer/class.phpmailer.php";
 
-function sendEmail ($recipient,$aliasNames='',$from = '佳诚装饰' ,$subject, $body, $attachement = null){
+function sendEmail($recipient,$aliasNames='',$from = '佳诚装饰' ,$subject, $body, $attachement = null){
 	date_default_timezone_set('PRC');
 	$mail = new PHPMailer();
 	$mail->IsSMTP();
@@ -66,10 +66,7 @@ function sendEmail ($recipient,$aliasNames='',$from = '佳诚装饰' ,$subject, 
 	$mail->Body    = $body;
 	$mail->AltBody = "";
 	if(!$mail->send()) {
-		// echo "Message could not be sent.<br />\n";
-		// echo "Mailer Error: " . $mail->ErrorInfo."<br />\n";
-	} else {
-		// echo "Message has been sent<br />\n";
+		throw new Exception($mail->ErrorInfo);
 	}
 	$mail->smtpClose();
 }

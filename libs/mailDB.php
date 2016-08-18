@@ -1,26 +1,10 @@
 <?php
-	include_once "common_mail.php";
 	include_once "userDB.php";
 	
-	function insert($mailSender,$senderAddress,$mailReceiver,$receiverAddress,$mailSubject,$mailContent){
-		global $mysql;
-		$mailId = date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
-		$obj = array(
-			'mailId'=>$mailId,
-			'mailSender'=>$mailSender,
-			'senderAddress'=>$senderAddress,
-			'mailReceiver'=>$mailReceiver,
-			'receiverAddress'=>$receiverAddress,
-			'mailSubject'=>$mailSubject,
-			'mailContent'=>$mailContent
-			);
-		$mysql->DBInsertAsArray("`mail`", $obj);
-		return array('status'=>'successful', 'errMsg' => '','mailId'=>$mailId);
-	}
 	function getReceivedMailByUser($user){
 		global $mysql;
 		$forPage = isset($_GET["limit"]) && isset($_GET["start"]) ? true : false;
-		$sql = "select * from mail where `isDeleted` = 'false' and mailReceiver = '?' or mailReceiver like '%?,%' or mailReceiver like '%,?%' ORDER BY `mailTime` DESC";
+		$sql = "select * from mail where `isDeleted` = 'false' and mailReceiver = '?' or mailReceiver like '%?,%' or mailReceiver like '%,?%' ORDER BY `createTime` DESC";
 		if ($forPage) {
 			$start = $_GET["start"];
 			$limit = $_GET["limit"];
@@ -32,7 +16,6 @@
 			$arr = $mysql->DBGetAsMap($sql,$user, $user, $user);
 		}
 		$usernames = array();
-		
 		for ($i = 0; $i < count($arr); $i++) {
 			$receiver = $arr[$i]["mailReceiver"];
 			$receiverList = explode(',',$receiver);
@@ -66,7 +49,7 @@
 	
 	function getSentMailByUser($user){
 		global $mysql;
-		$sql = "select * from mail where `isDeleted` = 'false' and mailSender = '?' ORDER BY `mailTime` DESC ";
+		$sql = "select * from mail where `isDeleted` = 'false' and mailSender = '?' ORDER BY `createTime` DESC ";
 		$forPage = isset($_GET["limit"]) && isset($_GET["start"]) ? true : false;
 		if ($forPage) {
 			$start = $_GET["start"];
@@ -111,9 +94,9 @@
 		}
 	}
 
-	function setMailRead($mailId) {
+	function setMailRead($id) {
 		global $mysql;
-		$mysql->DBUpdate("mail",array('isRead'=>true),"`mailId` = '?' ",array($mailId));
+		$mysql->DBUpdate("mail",array('isRead'=>true),"`id` = '?' ",array($id));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 

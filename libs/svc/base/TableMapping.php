@@ -23,6 +23,7 @@
 		"business_goal"=>array('id','user','c1','c2','c3','c4','targetMonth'),
 		'long_request_log'=>array('url','user','ip','useragent','createTime','time','params'),
 		'statement_bill_item_remark'=>array('id','content','refId','committer'),
+		'mail'=>array('id','mailSubject','mailContent','mailSender','mailReceiver','senderAddress','receiverAddress','isRead','result','status'),  //邮件发送
 		"statement_bill_tag"=>array('id','tag','billId','committer'));
 
 	foreach ($TableMapping as $key => &$value) {

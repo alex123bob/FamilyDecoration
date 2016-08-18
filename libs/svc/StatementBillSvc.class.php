@@ -165,7 +165,7 @@ class StatementBillSvc extends BaseSvc
 
 	public function noticeAfterStatusChange($q,$bill){
 		//递交审核和审核通过,付款发邮件,短信.
-		if($q['@status'] != 'rdyck' && $q['@status'] != 'chk' && $q['@status'] != 'paid'){
+		if($q['@status'] != 'rdyck' &&$q['@status'] != 'rdyck1' && $q['@status'] != 'chk' && $q['@status'] != 'paid'){
 			return ;
 		}
 		global $mysql;
@@ -195,6 +195,7 @@ class StatementBillSvc extends BaseSvc
 		//发邮件
 		include_once __ROOT__."/libs/msgLogDB.php";
 		include_once __ROOT__."/libs/common_mail.php";
+		$userNames = array();
 		$mailAddresses = array();
 		$aliasNames = array();
 		foreach ($users as $user) {
@@ -202,10 +203,14 @@ class StatementBillSvc extends BaseSvc
 				array_push($mailAddresses, $user['mail']);
 				array_push($aliasNames, $user['realname']);
 			}
+			array_push($userNames,$user['name']);
 		}
-		if($mailAddresses!= ""){
-			sendEmail($mailAddresses, $aliasNames, 'sys-notice@dqjczs.com', "财务单$newStatusCh", $text, null);
-		}
+		parent::getSvc('Mail')->add(array(
+				"@mailSubject"=>"财务单$newStatusCh",
+				"@mailSender"=>"sys-notice@dqjczs.com",
+				"@mailContent"=> $text,
+				"@mailReceiver"=> join($userNames,',')
+			));
 		//递交审核后发短信给工程部总经理，邮件给管理员
 		//审核通过后发邮件给财务部，发短信给当值项目经理和管理员
 		//付款后发邮件给当值项目经理和管理员
@@ -215,7 +220,7 @@ class StatementBillSvc extends BaseSvc
 			try{
 				if(startWith($user['level'],'008-')) //财务不用发短信
 					continue;
-				if($q['@status']=='rdyck' && !startWith($user['level'],'003-001')) //审核通过只给工程部总经理发短信
+				if(($q['@status']=='rdyck' || $q['@status']=='rdyck1') && !startWith($user['level'],'003-001')) //审核通过只给工程部总经理发短信
 					continue;
 				if($q['@status']=='chk' && startWith($user['level'],'003-001'))
 					continue;

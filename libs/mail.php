@@ -6,36 +6,20 @@
 	$res = "";
 	switch($action){
 		case "send":
-			$mailSender = $_SESSION['name'];
-			if (isset($_REQUEST['mailSender'])) {
-				$realname = getUserRealName($_REQUEST['mailSender']);
-				$mailSender = $realname["realname"];
-			}
-			$senderAddress = $_SESSION['mail'];
-			$receiverAddress = $_REQUEST["recipient"];
-			$mailSubject = $_REQUEST["subject"];
-			$mailContent = $_REQUEST["body"];
-			
-			sendEmail($receiverAddress,null,$mailSender,$mailSubject, preg_replace('/\n/i','<br />',$mailContent), null);
-			global $mysql;
-			$mailReceivers = $mysql->DBGetAsOneArray("select name from user where `mail` = '$receiverAddress' and `isDeleted` = 'false' ");
-			//如果多个用户用同一个邮箱，则此处会出问题，收件人不一定对。
-			$mailReceiver = count($mailReceivers) == 0 ? $receiverAddress : $mailReceivers[0];
-			$res = insert($mailSender,$senderAddress,$mailReceiver,$receiverAddress,$mailSubject,$mailContent);
-			break;
-		case "insert":
-			$res = insert($_POST["mailSender"],$_POST["senderAddress"],$_POST["mailReceiver"],
-				$_POST["receiverAddress"],$_POST["mailSubject"],$_POST["mailContent"]);
+			$res = BaseSvc::getSvc('Mail')->add(array(
+					'@mailSubject'=>$_REQUEST["subject"],
+					'@mailContent'=>$_REQUEST["body"],
+					'@mailReceiver'=>$_REQUEST["recipient"],
+					'@mailSender'=> isset($_REQUEST['mailSender']) ? $_REQUEST['mailSender'] : $_SESSION['name']
+				));
 			break;
 		case "sendmail":
-			$mailSender = $_REQUEST['mailSender'];
-			$senderAddress = $_REQUEST['senderAddress'];
-			$mailReceiver = $_REQUEST['mailReceiver'];
-			$receiverAddress = $_REQUEST['receiverAddress'];
-			$mailSubject =  $_REQUEST['mailSubject'];
-			$mailContent =  $_REQUEST['mailContent'];
-			sendEMail($receiverAddress, null, $mailSender, $mailSubject, $mailContent, null);
-			$res = insert($mailSender,$senderAddress,$mailReceiver,$receiverAddress,$mailSubject,$mailContent);
+			$res = BaseSvc::getSvc('Mail')->add(array(
+					'@mailSubject'=>$_REQUEST["mailSubject"],
+					'@mailContent'=>$_REQUEST["mailContent"],
+					'@mailReceiver'=>$_REQUEST["mailReceiver"],
+					'@mailSender'=> isset($_REQUEST['mailSender']) ? $_REQUEST['mailSender'] : $_SESSION['name']
+				));
 			break;
 		case "getreceivedmailbyuser":
 			$res = getReceivedMailByUser($_REQUEST["mailUser"]);
@@ -44,7 +28,7 @@
 			$res = getSentMailByUser($_REQUEST["mailUser"]);
 			break;
 		case "setmailread":
-			$res = setMailRead($_REQUEST["mailId"]);
+			$res = setMailRead($_REQUEST["id"]);
 			break;
 		case "setmailreadbyreceiver":
 			$res = setMailReadByReceiver($_REQUEST["mailReceiver"]);

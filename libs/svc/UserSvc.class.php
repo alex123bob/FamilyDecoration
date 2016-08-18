@@ -26,6 +26,12 @@ class UserSvc extends BaseSvc
 		}
 	}
 
+	function getRealNameAndEmail($user){
+		global $mysql;
+		$sql = "select realName,mail from user where name = '?' ";
+		$names = $mysql->DBGetAsMap($sql,$user);
+		return count($names) > 0 ? $names[0] : $user;
+	}
 	public static function getDepartementByLevel($level){
 		if(strpos($level, "001") === 0) return '总经办';
 		if(strpos($level, "002") === 0) return '设计部';
