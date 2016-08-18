@@ -333,13 +333,13 @@
                 flag = true;
             }
             else if (rec.get('cmp') == 'progress-index') {
-                flag = true;
+                flag = false; // old module. deprecated.
             }
             else if (rec.get('cmp') == 'projectcategory-index') {
                 flag = User.isGeneral() ? false : true;
             }
             else if (rec.get('cmp') == 'plan-index') {
-                flag = true;
+                flag = false; // old module. deprecated.
             }
             else if (rec.get('cmp') == 'planmaking-index') {
                 flag = true;
