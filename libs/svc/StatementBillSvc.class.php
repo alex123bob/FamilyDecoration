@@ -332,7 +332,16 @@ class StatementBillSvc extends BaseSvc
 
 	public function modifyQgd($q){
 		global $mysql;
+		$orignalBill = parent::get(array('id'=>$q['@refId']));
+		$q['@claimAmount'] = $q['@qgd'];
 		$q['@totalFee'] = $q['@qgd'];
+		$q['@payee'] = $orignalBill['payee'];
+		$q['@billName'] = '质保金单';
+		$q['@projectName'] = $orignalBill['projectName'];
+		$q['@projectId'] = $orignalBill['projectId'];
+		$q['@phoneNumber'] = $orignalBill['phoneNumber'];
+		$q['@professionType'] = $orignalBill['professionType'];
+		
 		if($q['id'] == ""){
 			$q['@billType'] = 'qgd';
 			return $this->add($q);
