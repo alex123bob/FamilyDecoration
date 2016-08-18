@@ -335,13 +335,20 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                 refresh: function () {
                     var resObj = me.getRes(),
                         fieldObj = this.getFields(),
-                        endTime;
+                        endTime,
+                        progressIndex = (resObj.progress ? resObj.progressSt.indexOf(resObj.progress) : -1);
                     if (resObj.pro && resObj.pro.get('projectName')) {
                         endTime = resObj.pro.get('period').split(':')[1]
                         resObj.progressSt.load({
                             params: {
                                 action: 'ProjectProgress.getItems',
                                 projectId: resObj.pro.getId()
+                            },
+                            callback: function (recs, ope, success){
+                                if (progressIndex != -1) {
+                                    resObj.progressSelModel.deselectAll();
+                                    resObj.progressSelModel.select(progressIndex);
+                                }
                             }
                         });
                         for (var key in fieldObj) {
