@@ -150,7 +150,7 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 										url: './libs/mail.php?action=setmailread',
 										method: 'POST',
 										params: {
-											mailId: rec.getId()
+											id: rec.getId()
 										},
 										callback: function(opts, success, res) {
 											if (success) {
@@ -214,7 +214,7 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 										url: './libs/mail.php?action=setmailread',
 										method: 'POST',
 										params: {
-											mailId: rec.getId()
+											id: rec.getId()
 										},
 										callback: function(opts, success, res) {
 											if (success) {
@@ -250,7 +250,7 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 						flex: 4
 					}, {
 						text: '时间',
-						dataIndex: 'mailTime',
+						dataIndex: 'createTime',
 						flex: 2
 					}],
 					autoScroll: true,
@@ -333,7 +333,7 @@ Ext.define('FamilyDecoration.view.mail.Index', {
 						flex: 4
 					}, {
 						text: '时间',
-						dataIndex: 'mailTime',
+						dataIndex: 'createTime',
 						flex: 2
 					}],
 					autoScroll: true,
