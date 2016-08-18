@@ -20,7 +20,11 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
 
     initComponent: function () {
         var me = this;
-
+        if(me.qgd && me.qgd.data.id ){
+            me.setTitle('调整质保金');
+        }else{
+            me.setTitle('创建质保金');
+        }
         function _getRes() {
             return {
                 qgd: me.getComponent('numberfield-modifyQgd'),
@@ -94,7 +98,7 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.ModifyQgd', {
             {
                 xtype: 'numberfield',
                 itemId: 'numberfield-modifyQgd',
-                fieldLabel: '调整质保金',
+                fieldLabel: me.qgd && me.qgd.get('id') ? '调整质保金' : '质保金',
                 height: 28,
                 allowBlank: false,
                 value: me.qgd ? me.qgd.get('totalFee') || me.qgd.get('qgd') : ''

@@ -101,9 +101,7 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                     btnObj.apply.setDisabled(!(resObj.qgd && resObj.qgd.data.status == "new" && resObj.qgd.data.id != null && resObj.qgd.data.id != "" )); //有id了说明已经实例化了，可以申付
                     btnObj.modify.setDisabled(!(resObj.qgd && (resObj.qgd.data.status === 'new' || resObj.qgd.data.status == '' || resObj.qgd.data.status == null))); //只有新创建或者未实例化的才能修改
                     btnObj.pass.setDisabled(!(resObj.qgd && (resObj.qgd.data.status === 'rdyck'))); //只有提交了审核的才能审核
-                    debugger;
                     btnObj.modify.setText(resObj.qgd && resObj.qgd.data.id ? '调整质保金':'创建质保金');
-                    console.log(btnObj.modify.text );
                 },
                 refresh: function () {
                     var resObj = _getRes();

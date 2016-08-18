@@ -133,8 +133,10 @@ class StatementBillSvc extends BaseSvc
 		$q['@status'] = (int)$q['@status'];
 		$targetStatus = $this->getStatusTransferChain($bill['billType'],$bill['status'],$q['@status']);
 		// 1:forward -1:backward
-		//检查额度,检查安全密码,如果超过一定额度要检查短信
-		$this->checkLimit($q,$bill);
+		//检查额度,检查安全密码,如果超过一定额度要检查短信  质保金暂不检查
+		if($bill['billType'] != 'qgd')
+			$this->checkLimit($q,$bill);
+
 		$auditRecord = array();
 		$auditRecord['@operator'] = $_SESSION['name'];
 		$auditRecord['@billId'] = $q['id'];
