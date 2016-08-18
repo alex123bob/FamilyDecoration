@@ -25,7 +25,8 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
     isDirty: false, // field to judge if current window has done several back interaction operation.
 
     initComponent: function () {
-        var me = this;
+        var me = this,
+            needPassAudit = (Ext.Array.indexOf(['12', '17', '23', '34'], me.progress.get('serialNumber')) != -1 && me.isComment);
 
         me.title = me.isComment ? '添加监理意见' : '添加工程进度';
 
@@ -37,6 +38,14 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
                 autoScroll: true,
                 allowBlank: false,
                 fieldLabel: me.isComment ? '监理意见' : '工程进度'
+            },
+            {
+                xtype: 'checkbox',
+                boxLabel: '验收通过  (多条监理意见以最新添加为准通过验收)',
+                width: '100%',
+                flex: 0.2,
+                hidden: !needPassAudit,
+                name: 'pass'
             },
             {
                 title: me.isComment ? '意见列表' : '进度列表',
@@ -165,12 +174,18 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
             {
                 text: '确定',
                 handler: function () {
-                    var txtarea = me.down('textarea');
+                    var txtarea = me.down('textarea'),
+                        chk = me.down('checkbox');
                     if (txtarea.isValid()) {
                         var params = {
                             itemId: me.progress.getId(),
                             content: txtarea.getValue()
                         };
+                        if (needPassAudit) {
+                            Ext.apply(params, {
+                                pass: chk.getValue() ? 1 : -1
+                            });
+                        }
                         ajaxAdd(me.isComment ? 'ProjectProgressAudit' : 'ProjectProgress',
                             params,
                             function (obj) {

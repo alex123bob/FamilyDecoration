@@ -70,7 +70,14 @@ Ext.define('FamilyDecoration.view.projectprogress.ProgressTable', {
 						if (val.length > 0) {
 							Ext.each(val, function (obj, index){
 								result += '<strong>' + (index + 1) + '.</strong>' 
-									   + ' ' + obj['content'].replace(/\n/gi, '<br />') + '<br />'
+									   + ' ' + obj['content'].replace(/\n/gi, '<br />');
+								if (obj['pass'] == '1') {
+									result += '&nbsp;<font color="green">[验收通过]</font>';
+								}
+								else if (obj['pass'] == '-1') {
+									result += '&nbsp;<font color="red">[验收不通过]</font>';
+								}
+								result += '<br />'
 									   + '<span class="footnote">(' + obj['createTime'] + ') ' 
 									   + obj['auditorRealName'] + '</span>'
 									   + '<br />';

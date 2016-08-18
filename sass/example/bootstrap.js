@@ -93,6 +93,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.model.StatementBill": "../../app/model/statementbill.js",
   "FamilyDecoration.model.StatementBillAudit": "../../app/model/statementbillaudit.js",
   "FamilyDecoration.model.StatementBillItem": "../../app/model/statementbillitem.js",
+  "FamilyDecoration.model.StatementBillItemRemark": "../../app/model/statementbillitemremark.js",
   "FamilyDecoration.model.StatisticTree": "../../app/model/statistictree.js",
   "FamilyDecoration.model.TaskList": "../../app/model/tasklist.js",
   "FamilyDecoration.model.TaskScrutinize": "../../app/model/taskscrutinize.js",
@@ -143,6 +144,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.store.StatementBill": "../../app/store/statementbill.js",
   "FamilyDecoration.store.StatementBillAudit": "../../app/store/statementbillaudit.js",
   "FamilyDecoration.store.StatementBillItem": "../../app/store/statementbillitem.js",
+  "FamilyDecoration.store.StatementBillItemRemark": "../../app/store/statementbillitemremark.js",
   "FamilyDecoration.store.StatisticTree": "../../app/store/statistictree.js",
   "FamilyDecoration.store.TaskList": "../../app/store/tasklist.js",
   "FamilyDecoration.store.TaskScrutinize": "../../app/store/taskscrutinize.js",
@@ -208,6 +210,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.manuallycheckbill.BillTable": "../../app/view/manuallycheckbill/billtable.js",
   "FamilyDecoration.view.manuallycheckbill.CheckBillList": "../../app/view/manuallycheckbill/checkbilllist.js",
   "FamilyDecoration.view.manuallycheckbill.CustomizedBillItem": "../../app/view/manuallycheckbill/customizedbillitem.js",
+  "FamilyDecoration.view.manuallycheckbill.EditRemark": "../../app/view/manuallycheckbill/editremark.js",
   "FamilyDecoration.view.manuallycheckbill.Index": "../../app/view/manuallycheckbill/index.js",
   "FamilyDecoration.view.materialrequest.Index": "../../app/view/materialrequest/index.js",
   "FamilyDecoration.view.materialrequest.MaterialOrder": "../../app/view/materialrequest/materialorder.js",
@@ -1221,6 +1224,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.model.StatementBill": [],
   "FamilyDecoration.model.StatementBillAudit": [],
   "FamilyDecoration.model.StatementBillItem": [],
+  "FamilyDecoration.model.StatementBillItemRemark": [],
   "FamilyDecoration.model.StatisticTree": [],
   "FamilyDecoration.model.TaskList": [],
   "FamilyDecoration.model.TaskScrutinize": [],
@@ -1271,6 +1275,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.store.StatementBill": [],
   "FamilyDecoration.store.StatementBillAudit": [],
   "FamilyDecoration.store.StatementBillItem": [],
+  "FamilyDecoration.store.StatementBillItemRemark": [],
   "FamilyDecoration.store.StatisticTree": [],
   "FamilyDecoration.store.TaskList": [],
   "FamilyDecoration.store.TaskScrutinize": [],
@@ -1336,6 +1341,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.manuallycheckbill.BillTable": [],
   "FamilyDecoration.view.manuallycheckbill.CheckBillList": [],
   "FamilyDecoration.view.manuallycheckbill.CustomizedBillItem": [],
+  "FamilyDecoration.view.manuallycheckbill.EditRemark": [],
   "FamilyDecoration.view.manuallycheckbill.Index": [],
   "FamilyDecoration.view.materialrequest.Index": [],
   "FamilyDecoration.view.materialrequest.MaterialOrder": [],
@@ -2515,6 +2521,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.model.StatementBill": [],
   "FamilyDecoration.model.StatementBillAudit": [],
   "FamilyDecoration.model.StatementBillItem": [],
+  "FamilyDecoration.model.StatementBillItemRemark": [],
   "FamilyDecoration.model.StatisticTree": [],
   "FamilyDecoration.model.TaskList": [],
   "FamilyDecoration.model.TaskScrutinize": [],
@@ -2565,6 +2572,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.store.StatementBill": [],
   "FamilyDecoration.store.StatementBillAudit": [],
   "FamilyDecoration.store.StatementBillItem": [],
+  "FamilyDecoration.store.StatementBillItemRemark": [],
   "FamilyDecoration.store.StatisticTree": [],
   "FamilyDecoration.store.TaskList": [],
   "FamilyDecoration.store.TaskScrutinize": [],
@@ -2739,6 +2747,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.manuallycheckbill.CustomizedBillItem": [
     "widget.manuallycheckbill-customizedbillitem"
+  ],
+  "FamilyDecoration.view.manuallycheckbill.EditRemark": [
+    "widget.manuallycheckbill-editremark"
   ],
   "FamilyDecoration.view.manuallycheckbill.Index": [
     "widget.manuallycheckbill-index"
