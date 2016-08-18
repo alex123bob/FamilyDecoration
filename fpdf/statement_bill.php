@@ -50,7 +50,8 @@ $pdf->AddPage(); //增加一页
 $pdf->SetFont("GB",$GfontStyle,$GfontSize); //设置字体样式 
 $pdf->AliasNbPages("__totalPage__");
 $titles = array('序号','项目','单位','数量','单价(元)','小计(元)');
-$widths = array(10,35,35,35,35,35);
+$widths = array(10,80,20,20,20,35);
+$aligns = array('C','C','C','C','C','C');
 $pdf->writeCellLine($widths,$titles,'LTBR','','C',6,10,$fontStyles = array());
 $totalBillCount = 0;
 foreach($billItems as $value) {
@@ -62,7 +63,7 @@ foreach($billItems as $value) {
 	$data[4] = $value['unitPrice'];
 	$data[5] = $value['subtotal'];
 	$totalBillCount += $value['subtotal'];
-	$pdf->writeCellLine($widths,$data,'LTBR','','C',6,10,$fontStyles = array());
+	$pdf->writeCellLine($widths,$data,'LTBR','',$aligns,6,10,$fontStyles = array());
 }
 global $lineHeight;
 $before = $lineHeight;

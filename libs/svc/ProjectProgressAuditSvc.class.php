@@ -31,11 +31,11 @@ class ProjectProgressAuditSvc extends BaseSvc{
 			default:throw new Exception("未知工种:".$type);break;
 		}
 		global $mysql;
-		//可能会有多条监理审核意见.只要有一条是通过的,就算通过.哪怕还有不通过的,忽略
-		$cnt = $mysql->DBGetAsOneArray("select count(*) as cnt from project_progress_audit where projectId = '?'  and columnName = $columnName and pass = 1",$projectId);
-		if($cnt[0] > 0)
+		//可能会有多条监理审核意见.只按照最新添加的处理
+		$cnt = $mysql->DBGetAsOneArray("select pass from project_progress_audit where projectId = '?'  and columnName = $columnName and isDeleted = 'false' order by createTime desc limit 1 ",$projectId);
+		if(count($cnt) >0 && $cnt[0] > 0)
 			return true;
-		throw new Exception("该项目$msg 还未通过监理验收,暂时无法创建工资单!");
+		throw new Exception("该项目$msg 最新添加的监理意见还未通过验收,暂时无法创建工资单!");
 	}
 }
 
