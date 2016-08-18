@@ -334,6 +334,7 @@ class StatementBillSvc extends BaseSvc
 		global $mysql;
 		if($q['id'] == ""){
 			$orignalBill = parent::get(array('id'=>$q['@refId']));
+			$orignalBill = $orignalBill['data'][0];
 			$q['@claimAmount'] = $q['@qgd'];
 			$q['@totalFee'] = $q['@qgd'];
 			$q['@payee'] = $orignalBill['payee'];
