@@ -119,7 +119,17 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                                 captainName: resObj.captain.get('name')
                             }
                         });
-                        resObj.qgdSt.loadPage(1);
+                        resObj.qgdSt.loadPage(1, {
+                            callback: function (recs, ope, success){
+                                if (success) {
+                                    if (resObj.qgd) {
+                                        var index = resObj.qgdSt.indexOf(resObj.qgd);
+                                    }
+                                    resObj.qgdSelModel.deselectAll();
+                                    resObj.qgdSelModel.select(index);
+                                }
+                            }
+                        });
                     }
                     else {
                         resObj.qgdSt.removeAll();
@@ -178,7 +188,22 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                         name: 'button-passQgd',
                         text: '审核通过',
                         disabled: true,
-                        icon: 'resources/img/check.png'
+                        icon: 'resources/img/check.png',
+                        handler: function (){
+                            var resObj = _getRes();
+                            Ext.Msg.warning('确定将当前质保金置为审核通过吗？', function (btnId) {
+                                if ('yes' !== btnId) {
+                                    return;
+                                }
+                                ajaxUpdate('StatementBill.changeStatus', {
+                                    id: resObj.qgd.data.id,
+                                    status: '+1'
+                                }, ['id'], function (obj) {
+                                    Ext.Msg.success('审核通过！');
+                                    resObj.qgdList.refresh();
+                                }, true);
+                            });
+                        }
                     }
                 ],
                 bbar: [
