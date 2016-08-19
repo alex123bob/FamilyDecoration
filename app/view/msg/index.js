@@ -29,17 +29,20 @@ Ext.define('FamilyDecoration.view.msg.Index', {
 				flex: 1,
 				dataIndex: 'recieverPhone'
 			}, {
+				text: '状态',
+				flex: 1,
+				dataIndex: 'status',
+				renderer: function (val, meta, rec){
+					if (val == 100)
+						return '<font color="green">成功</font>';
+					if (val == 0)
+						return '<font color="blue">未发送</font>';
+					return '<font color="red">失败' + val + '次</font>';
+				}
+			},{
 				text: '发送结果',
 				flex: 1,
-				dataIndex: 'result',
-				renderer: function (val, meta, rec){
-					if (rec.get('status') == '0') {
-						return '<font color="green">' + val + '</font>';
-					}
-					else {
-						return '<font color="red">' + val + '</font>';
-					}
-				}
+				dataIndex: 'result'
 			}, {
 				text: '发送内容',
 				flex: 1,

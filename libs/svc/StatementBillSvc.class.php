@@ -89,8 +89,7 @@ class StatementBillSvc extends BaseSvc
 			//需要短信验证
 			$rand = rand(1000,9999);
 			$_SESSION['validateCode'] = $rand;
-			include_once __ROOT__."/libs/msgLogDB.php";
-			sendMsg($_SESSION['realname'].'-BillStateChange',$_SESSION['name'],$_SESSION['phone'],'您的短信验证码是:'.$rand,null,'sendSMS');
+			$parent::getSvc('MsgLog')->add(array('@reciever'=>$_SESSION['name'],'@content'=>'您的短信验证码是:'.$rand));
 			return array('status'=>'successful', 'type' => 'sms', 'errMsg' => '', 'hint' => '本次操作需要提供短信验证码，<br />验证码已发送到'.$_SESSION['phone'].'，请输入收到的验证码。<br />如果手机号更改或丢失而无法输入验证码，请联系管理员。');
 		}else{
 			return array('status'=>'successful', 'type' => 'securePass', 'errMsg' => ''.$limit[0].' '.$bill['totalFee'], 'hint' => '本次操作需要提供安全码，<br />请输入您当前账号的安全码进行下一步操作。<br />如果您未初始化安全码，请前往账户管理进行设置，或联系管理员。');
@@ -193,46 +192,28 @@ class StatementBillSvc extends BaseSvc
 		//008-% :财务
 		//其他:当值项目经理
 		//发邮件
-		include_once __ROOT__."/libs/msgLogDB.php";
-		include_once __ROOT__."/libs/common_mail.php";
-		$userNames = array();
-		$mailAddresses = array();
-		$aliasNames = array();
-		foreach ($users as $user) {
-			if(contains($user['mail'],'@')){ // 有效邮箱
-				array_push($mailAddresses, $user['mail']);
-				array_push($aliasNames, $user['realname']);
-			}
-			array_push($userNames,$user['name']);
-		}
-		parent::getSvc('Mail')->add(array(
-				"@mailSubject"=>"财务单$newStatusCh",
-				"@mailSender"=>"sys-notice@dqjczs.com",
-				"@mailContent"=> $text,
-				"@mailReceiver"=> join($userNames,',')
-			));
 		//递交审核后发短信给工程部总经理，邮件给管理员
 		//审核通过后发邮件给财务部，发短信给当值项目经理和管理员
 		//付款后发邮件给当值项目经理和管理员
 		//发短信通知
 		$sentPhones = array();
+		$userNames = array();
+		$mailAddresses = array();
+		$aliasNames = array();
+		$mailSvc = parent::getSvc('Mail');
+		$msgSvc = parent::getSvc('MsgLog');
 		foreach ($users as $user) {
-			try{
-				if(startWith($user['level'],'008-')) //财务不用发短信
-					continue;
-				if(($q['@status']=='rdyck' || $q['@status']=='rdyck1') && !startWith($user['level'],'003-001')) //审核通过只给工程部总经理发短信
-					continue;
-				if($q['@status']=='chk' && startWith($user['level'],'003-001'))
-					continue;
-				if(startWith($user['level'],'001-')) // 总经办不用发送短信
-					continue;
-				if(strlen($user['phone']) == 11 && !in_array($user['phone'], $sentPhones)){ // 11位有效手机号
-					$phoneNumber = $user['phone'];
-					array_push($sentPhones, $user['phone']);
-					sendMsg("财务单$newStatusCh",$user['name'],$phoneNumber,$text,null,'sendSMS');
-				}
-			}catch(Exception $e){
-				
+			$mailSvc ->add(array("@mailSubject"=>"财务单$newStatusCh","@mailContent"=> $text,"@mailReceiver"=> $user['name']));
+			if(startWith($user['level'],'008-')) //财务不用发短信
+				continue;
+			if(($q['@status']=='rdyck' || $q['@status']=='rdyck1') && !startWith($user['level'],'003-001')) //审核通过只给工程部总经理发短信
+				continue;
+			if($q['@status']=='chk' && startWith($user['level'],'003-001'))
+				continue;
+			if(startWith($user['level'],'001-')) // 总经办不用发送短信
+				continue;
+			if(!in_array($user['phone'], $sentPhones)){
+				$msgSvc->add(array('reciever'=>$user['name'],'@content'=>$text));
 			}
 		}
 	}

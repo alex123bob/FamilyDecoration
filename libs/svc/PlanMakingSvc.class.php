@@ -116,25 +116,38 @@ Class PlanMakingSvc extends BaseSvc{
 
 		//所有需要发送短信的人
 		$recievers = array();
-		foreach ($res as $key => $value) {
-			array_push($recievers, $value['salesman']);
-			array_push($recievers, $value['designer']);
-		}
-		//查询这些人手机号
-		$recievers = "'".join("','",array_unique($recievers))."'";
-		$recievers = $mysql->DBGetAsMap("select name,mail,phone from user where name in ($recievers);");
-		$users = array();
-		//变成key为user name的map
-		foreach ($recievers as $key => &$value) {
-			$users[$value['name']] = array('phone'=>$value['phone'],'mail'=>$value['mail']);
-		}
-		print_r($res);
-		echo '<br />';
-		echo "<br />\n";
 		foreach ($res as $key => $item) {
-			$this->sendMsg($item,$msg,$users);
+			$mailSvc = parent::getSvc('Mail');
+			$msgSvc = parent::getSvc('MsgLog');
+			//您好,{项目}还有{天}就要开始了,请提前订购{主材}!
+			$text = str_replace('{项目}',$item['projectName'],$msg);
+			$text = str_replace('{几}',$item['daysleft'],$text);
+			$text = str_replace('{主材}',PlanMakingSvc::$MainmaterialMap[$item['column']],$text);
+			$subject = $item['projectName'].' '.PlanMakingSvc::$MainmaterialMap[$item['column']].'预定提醒';
+			$msgSvc->add(array('@reciever'=>$item['salesmanName'],'@content'=>$text));
+			$msgSvc->add(array('@reciever'=>$item['designerName'],'@content'=>$text));
+			$mailSvc->add(array('@mailSubject'=>$subject,'@mailContent'=>$text,'@mailSender'=>'admin','@mailReceiver'=>$item['salesmanName']));
+			$mailSvc->add(array('@mailSubject'=>$subject,'@mailContent'=>$text,'@mailSender'=>'admin','@mailReceiver'=>$item['designerName']));
 		}
 		return array('success'=>true);
+	}
+
+	//获取需要提醒的主材对应项目
+	private function noticeOrder($column,$startDays){
+		global $TableMapping;
+		global $mysql;
+
+		//查询未结束的项目,并且主材没有在主材订购表中出现(没有订购主材的),并且小项开始时间还差n天的(n为系统配置的提醒时间),关联业务员,设计师
+		$sql = "select r.*,p.salesmanName as salesman,p.designerName as designer from (
+					select  TO_DAYS(SUBSTR($column,1,10))  - TO_DAYS(NOW()) as daysleft ,projectId,projectAddress as projectName from plan_making 
+					where endTime > now() and isDeleted = 'false' and SUBSTR($column,1,10) in ($startDays) and projectId not in (
+						select projectId from mainmaterial where materialType = '$column' and isDeleted = 'false')
+					) r left join project p on p.projectId = r.projectId;";
+		$d = $mysql->DBGetAsMap($sql);
+		foreach ($d as $key => &$value) {
+			$value['column'] = $column;
+		}
+		return $d;
 	}
 
 	public function designerAlarm(){
@@ -156,109 +169,30 @@ Class PlanMakingSvc extends BaseSvc{
 		$recievers2 = $mysql->DBGetAsMap($sql2);
 		$recievers3 = $mysql->DBGetAsMap($sql3);
 		$recievers4 = $mysql->DBGetAsMap($sql4);
-		$Users = array();
-		foreach ($recievers1 as &$busi) {
-			if(!isset($Users[$busi['designerName']]))
-				$Users[$busi['designerName']] = array('text'=>'');
-			$Users[$busi['designerName']]['text'] .= $busi['regionName'].' '.$busi['address'].'预算设计,';
-			$Users[$busi['designerName']]['phone'] = $busi['phone'];
-			$Users[$busi['designerName']]['mail'] = $busi['mail'];
-			$Users[$busi['designerName']]['name'] = isset($busi['designer']) ? $busi['designer'] : ($busi['designerName']);
+		$mailSvc = parent::getSvc('Mail');
+		$msgSvc = parent::getSvc('MsgLog');
+		foreach ($recievers1 as $busi) {
+			$text = "您的".$busi['regionName'].' '.$busi['address'].'预算设计,即将到截至日期，您是否已经完成？加油哦！';
+			$msgSvc->add(array('@reciever'=>$busi['designerName'],'@content'=>$text));
+			$mailSvc->add(array('@mailSubject'=>'设计师进度提醒','@mailContent'=>$text,'@mailReceiver'=>$name));
 		}
-		foreach ($recievers2 as &$busi) {
-			if(!isset($Users[$busi['designerName']]))
-				$Users[$busi['designerName']] = array('text'=>'');
-			$Users[$busi['designerName']]['text'] .= $busi['regionName'].' '.$busi['address'].'平面布局设计,';
-			$Users[$busi['designerName']]['phone'] = $busi['phone'];
-			$Users[$busi['designerName']]['mail'] = $busi['mail'];
-			$Users[$busi['designerName']]['name'] = isset($busi['designer']) ? $busi['designer'] : ($busi['designerName']);
+		foreach ($recievers2 as $busi) {
+			$text = "您的".$busi['regionName'].' '.$busi['address'].'平面布局设计,即将到截至日期，您是否已经完成？加油哦！';
+			$msgSvc->add(array('@reciever'=>$busi['designerName'],'@content'=>$text));
+			$mailSvc->add(array('@mailSubject'=>'设计师进度提醒','@mailContent'=>$text,'@mailReceiver'=>$name));
 		}
-		foreach ($recievers3 as &$busi) {
-			if(!isset($Users[$busi['designerName']]))
-				$Users[$busi['designerName']] = array('text'=>'');
-			$Users[$busi['designerName']]['text'] .= $busi['regionName'].' '.$busi['address'].'立面施工设计,';
-			$Users[$busi['designerName']]['phone'] = $busi['phone'];
-			$Users[$busi['designerName']]['mail'] = $busi['mail'];
-			$Users[$busi['designerName']]['name'] = isset($busi['designer']) ? $busi['designer'] : ($busi['designerName']);
+		foreach ($recievers3 as $busi) {
+			$text = "您的".$busi['regionName'].' '.$busi['address'].'立面施工设计,即将到截至日期，您是否已经完成？加油哦！';
+			$msgSvc->add(array('@reciever'=>$busi['designerName'],'@content'=>$text));
+			$mailSvc->add(array('@mailSubject'=>'设计师进度提醒','@mailContent'=>$text,'@mailReceiver'=>$name));
 		}
-		foreach ($recievers4 as &$busi) {
-			if(!isset($Users[$busi['designerName']]))
-				$Users[$busi['designerName']] = array('text'=>'');
-			$Users[$busi['designerName']]['text'] .= $busi['regionName'].' '.$busi['address'].'效果图设计,';
-			$Users[$busi['designerName']]['phone'] = $busi['phone'];
-			$Users[$busi['designerName']]['mail'] = $busi['mail'];
-			$Users[$busi['designerName']]['name'] = isset($busi['designer']) ? $busi['designer'] : ($busi['designerName']);
-		}
-		//print_r($Users);
-		include_once __ROOT__."/libs/msgLogDB.php";
-		foreach ($Users as $key => $item) {
-			$text = "您的".$item['text'].'即将到截至日期，您是否已经完成？加油哦！';
-			$mail = $item['mail'];
-			$phone = $item['phone'];
-			$name = isset($item['name']) ? $item['name'] : $phone;
-			try{
-				echo "sending msg to $name($phone) : $text\n<br />";
-				print_r( sendMsg('设计师进度提醒',$name,$phone,$text,null,'sendSMS'));
-				echo "<br />";
-			}catch(Exception $e){
-				var_dump($e);
-			}
-			echo "sending mail to $name($mail) : $text\n<br />";
-			parent::getSvc('Mail')->add(new Array(
-					'mailSubject'=>'设计师进度提醒',
-					'mailContent'=>$text,
-					'mailSender'=>'admin',
-					'mailReceiver'=>$name
-			));
+		foreach ($recievers4 as $busi) {
+			$text = "您的".$busi['regionName'].' '.$busi['address'].'效果图设计,即将到截至日期，您是否已经完成？加油哦！';
+			$msgSvc->add(array('@reciever'=>$busi['designerName'],'@content'=>$text));
+			$mailSvc->add(array('@mailSubject'=>'设计师进度提醒','@mailContent'=>$text,'@mailReceiver'=>$name));
 		}
 		echo '<br />over<br />';
 		
-	}
-
-	//发短信,邮件
-	private function sendMsg($item,$text,$users){
-		//您好,{项目}还有{天}就要开始了,请提前订购{主材}!
-		$text = str_replace('{项目}',$item['projectName'],$text);
-		$text = str_replace('{几}',$item['daysleft'],$text);
-		$text = str_replace('{主材}',PlanMakingSvc::$MainmaterialMap[$item['column']],$text);
-		$salesman = $item['salesman'];
-		$designer = $item['designer'];
-		echo "$text<br />\n";
-		include_once __ROOT__."/libs/msgLogDB.php";
-		if(isset($users[$salesman]) && strlen($users[$salesman]['phone']) == 11 ){ // 11位有效手机号
-			$phoneNumber = $users[$salesman]['phone'];
-			echo "send  to $phoneNumber<br /> \n";
-			print_r( sendMsg('工程进度主材预定提醒',$salesman,$phoneNumber,$text,null,'sendSMS'));
-			echo "<br />";
-		}
-		if(isset($users[$designer]) && strlen($users[$designer]['phone']) == 11 ){ // 11位有效手机号
-			$phoneNumber = $users[$designer]['phone'];
-			echo "send $text to $phoneNumber<br /> \n";
-			print_r(sendMsg('工程进度主材预定提醒',$designer,$phoneNumber,$text,null,'sendSMS'));
-			echo "<br />";
-		}
-		$svc = parent::getSvc('Mail');
-		echo "send email $text to $salesman<br /> \n send email $text to $designer<br /> \n";
-
-		$svc->add(new Array('mailSubject'=>'主材预定提醒','mailContent'=>$text,'mailSender'=>'admin','mailReceiver'=>$salesman));
-		$svc->add(new Array('mailSubject'=>'主材预定提醒','mailContent'=>$text,'mailSender'=>'admin','mailReceiver'=>$designer));
-	}
-	//获取需要提醒的主材对应项目
-	private function noticeOrder($column,$startDays){
-		global $TableMapping;
-		global $mysql;
-
-		//查询未结束的项目,并且主材没有在主材订购表中出现(没有订购主材的),并且小项开始时间还差n天的(n为系统配置的提醒时间),关联业务员,设计师
-		$sql = "select r.*,p.salesmanName as salesman,p.designerName as designer from (
-					select  TO_DAYS(SUBSTR($column,1,10))  - TO_DAYS(NOW()) as daysleft ,projectId,projectAddress as projectName from plan_making 
-					where endTime > now() and isDeleted = 'false' and SUBSTR($column,1,10) in ($startDays) and projectId not in (
-						select projectId from mainmaterial where materialType = '$column' and isDeleted = 'false')
-					) r left join project p on p.projectId = r.projectId;";
-		$d = $mysql->DBGetAsMap($sql);
-		foreach ($d as $key => &$value) {
-			$value['column'] = $column;
-		}
-		return $d;
 	}
 
 	public function getTimeSpanByProfessionType($q){

@@ -30,8 +30,16 @@ class UserSvc extends BaseSvc
 		global $mysql;
 		$sql = "select realName,mail from user where name = '?' ";
 		$names = $mysql->DBGetAsMap($sql,$user);
-		return count($names) > 0 ? $names[0] : $user;
+		return count($names) > 0 ? $names[0] : array('realName'=>$user,'mail'=>'');
 	}
+
+	function getRealNameAndPhone($user){
+		global $mysql;
+		$sql = "select realName,phone from user where name = '?' ";
+		$names = $mysql->DBGetAsMap($sql,$user);
+		return count($names) > 0 ? $names[0] : array('realName'=>$user,'phone'=>'');
+	}
+
 	public static function getDepartementByLevel($level){
 		if(strpos($level, "001") === 0) return '总经办';
 		if(strpos($level, "002") === 0) return '设计部';

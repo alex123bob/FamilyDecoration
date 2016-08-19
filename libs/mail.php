@@ -19,12 +19,12 @@
 					'@mailContent'=>$_REQUEST["mailContent"],
 					'@mailReceiver'=>$_REQUEST["mailReceiver"],
 					'@mailSender'=> isset($_REQUEST['mailSender']) ? $_REQUEST['mailSender'] : $_SESSION['name']
-				));
+			));
 			break;
-		case "getreceivedmailbyuser":$res = $mailSvc->($_REQUEST["mailUser"]);break;
-		case "getsentmailbyuser": $res = $mailSvc->($_REQUEST["mailUser"]); break;
-		case "setmailread":	$res = $mailSvc->($_REQUEST["id"]);	break;
-		case "setmailreadbyreceiver":$res = $mailSvc->($_REQUEST["mailReceiver"]);break;
+		case "getreceivedmailbyuser": $res = $mailSvc->getreceivedmailbyuser($_REQUEST["mailUser"]);break;
+		case "getsentmailbyuser": $res = $mailSvc->getsentmailbyuser($_REQUEST["mailUser"]); break;
+		case "setmailread":	$res = $mailSvc->setmailread($_REQUEST["id"]);	break;
+		case "setmailreadbyreceiver":$res = $mailSvc->setmailreadbyreceiver($_REQUEST["mailReceiver"]);break;
 		default: throw new Exception("unknown action:".$action);
 	}
 	echo json_encode($res);	

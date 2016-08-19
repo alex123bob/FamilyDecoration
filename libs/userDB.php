@@ -116,12 +116,11 @@
 
 	function getValidateCode(){
 		$rand = rand(1000,9999);
-		include_once __ROOT__."/libs/msgLogDB.php";
 		$_SESSION['user_validateCode'] = $rand;
 		if(!isset($_SESSION['phone']) || strlen($_SESSION['phone']) != 11){
 			throw new Exception('您的手机号码不对,请联系管理员修改!');
 		}
-		sendMsg($_SESSION['realname'].'-AccountModification',$_SESSION['name'],$_SESSION['phone'],'您的短信验证码是:'.$rand,null,'sendSMS');
+		BaseSvc::getSvc('MsgLog')->add(array('@reciever'=>$_SESSION['name'],'@content'=>'您的短信验证码是:'.$rand));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 	/**
