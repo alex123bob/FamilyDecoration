@@ -191,7 +191,6 @@ Class PlanMakingSvc extends BaseSvc{
 		}
 		//print_r($Users);
 		include_once __ROOT__."/libs/msgLogDB.php";
-		include_once __ROOT__."/libs/mailDB.php";
 		foreach ($Users as $key => $item) {
 			$text = "您的".$item['text'].'即将到截至日期，您是否已经完成？加油哦！';
 			$mail = $item['mail'];
@@ -204,12 +203,13 @@ Class PlanMakingSvc extends BaseSvc{
 			}catch(Exception $e){
 				var_dump($e);
 			}
-			try{
-				echo "sending mail to $name($mail) : $text\n<br />";
-				sendEMail($mail, null, 'sys-notice@dqjczs.com', '设计师进度提醒', $text, null);
-			}catch(Exception $e){
-				var_dump($e);
-			}
+			echo "sending mail to $name($mail) : $text\n<br />";
+			parent::getSvc('Mail')->add(new Array(
+					'mailSubject'=>'设计师进度提醒',
+					'mailContent'=>$text,
+					'mailSender'=>'admin',
+					'mailReceiver'=>$name
+			));
 		}
 		echo '<br />over<br />';
 		
@@ -225,7 +225,6 @@ Class PlanMakingSvc extends BaseSvc{
 		$designer = $item['designer'];
 		echo "$text<br />\n";
 		include_once __ROOT__."/libs/msgLogDB.php";
-		include_once __ROOT__."/libs/mailDB.php";
 		if(isset($users[$salesman]) && strlen($users[$salesman]['phone']) == 11 ){ // 11位有效手机号
 			$phoneNumber = $users[$salesman]['phone'];
 			echo "send  to $phoneNumber<br /> \n";
@@ -238,18 +237,11 @@ Class PlanMakingSvc extends BaseSvc{
 			print_r(sendMsg('工程进度主材预定提醒',$designer,$phoneNumber,$text,null,'sendSMS'));
 			echo "<br />";
 		}
-		if(isset($users[$salesman]) && contains($users[$salesman]['mail'],'@')){ // 有效邮箱
-			$mail = $users[$salesman]['mail'];
-			echo "send email $text to $mail<br /> \n";
-			sendEMail($mail, null, 'sys-notice@dqjczs.com', '主材预定提醒', $text, null);
-			insert('sys-notice@dqjczs.com','sys-notice@dqjczs.com',$mail,$mail,'[佳诚装饰]主材预定提醒',$text);
-		}
-		if(isset($users[$designer]) && contains($users[$designer]['mail'],'@')){ // 有效邮箱
-			$mail = $users[$designer]['mail'];
-			echo "send email $text to $mail<br /> \n";
-			sendEMail($mail, null, 'sys-notice@dqjczs.com', '主材预定提醒', $text, null);
-			insert('sys-notice@dqjczs.com','sys-notice@dqjczs.com',$mail,$mail,'[佳诚装饰]主材预定提醒',$text);
-		}
+		$svc = parent::getSvc('Mail');
+		echo "send email $text to $salesman<br /> \n send email $text to $designer<br /> \n";
+
+		$svc->add(new Array('mailSubject'=>'主材预定提醒','mailContent'=>$text,'mailSender'=>'admin','mailReceiver'=>$salesman));
+		$svc->add(new Array('mailSubject'=>'主材预定提醒','mailContent'=>$text,'mailSender'=>'admin','mailReceiver'=>$designer));
 	}
 	//获取需要提醒的主材对应项目
 	private function noticeOrder($column,$startDays){
