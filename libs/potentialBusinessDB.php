@@ -92,8 +92,8 @@
 	//附带最新状态
 	function getAllPotentialBusiness($data){
 		$params = array();
-		$sql = "select r.*,g.name as rn from `potential_business` r left join region g on g.id = r.regionID and r.isDeleted = 'false' and r.isTransfered = 'false'  where g.isDeleted = 'false'";
-		$fields = array('regionID','isImportant','telemarketingDeadline','status','salesman','salesmanName','telemarketingStaff','telemarketingStaffName');
+		$sql = "select r.*,g.name as rn from `potential_business` r left join region g on g.id = r.regionID and r.isDeleted = 'false' and r.isTransfered = 'false' where g.isDeleted = 'false'";
+		$fields = array('regionID','isImportant','telemarketingDeadline','status','salesman','salesmanName','telemarketingStaff','telemarketingStaffName','isLocked');
 		foreach($fields as $field){
 			if(isset($data[$field])){
 				array_push($params,$data[$field]);
@@ -151,7 +151,7 @@
 	}
 	
 	function editPotentialBusiness($data){
-		$fields = array('address','isImportant','telemarketingDeadline','regionID','proprietor','phone','status','isDecorated','status_second','status_third','salesman','salesmanName','telemarketingStaff','telemarketingStaffName','distributeTime');
+		$fields = array('address','isImportant','telemarketingDeadline','regionID','proprietor','phone','status','isDecorated','status_second','status_third','salesman','salesmanName','telemarketingStaff','telemarketingStaffName','distributeTime', 'isLocked');
 		$obj = array('lastUpdateTime'=>'now()');
 		foreach($fields as $field){
 			if(isset($data[$field]))

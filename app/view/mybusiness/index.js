@@ -138,7 +138,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								}
 							},
 							{
-								text: '门牌号',
+								text: '地址',
 								flex: 0.3,
 								dataIndex: 'address',
 								renderer: function (val, meta, rec) {
@@ -230,7 +230,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								isCsOfCurrentBusiness = false;
 							}
 							else {
-								if (rec.get('salesmanName') != User.getName() && rec.get('csStaffName') == User.getName()) {
+								if (rec && rec.get('salesmanName') != User.getName() && rec.get('csStaffName') == User.getName()) {
 									isCsOfCurrentBusiness = true;
 								}
 								else {
@@ -669,7 +669,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 								}
 							},
 							{
-								text: '门牌号',
+								text: '地址',
 								flex: 1,
 								dataIndex: 'address',
 								renderer: function (val, meta, rec) {

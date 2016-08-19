@@ -3,6 +3,7 @@ Ext.define('FamilyDecoration.model.Business', {
 	fields: [
 		'id',
 		{name: 'regionId', type: 'string'},
+		{name: 'potentialBusinessId', type: 'string'}, // 如果该任务是从扫楼业务中创建，那么这个字段存放对应扫楼业务id
 		{name: 'address', type: 'string'},
 		{name: 'customer', type: 'string'},
 		{name: 'custContact', type: 'string'},

@@ -24,5 +24,9 @@ alter table msg_log add column updateTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
 update mail set status = 100;
 update msg_log set status = 100;
+
+# potential_business
+ALTER TABLE `potential_business` ADD `isLocked` VARCHAR(5) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'false' COMMENT 'potential business will be locked when business with the same address has been created' AFTER `isTransfered`;
+ALTER TABLE `business` ADD `potentialBusinessId` VARCHAR(18) CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT 'corresponding potential business id. only when potential business is locked, does this field have value.' AFTER `regionId`;
 	
 update `system` set `paramValue`='version-8.8' where `id`='4';

@@ -29,6 +29,11 @@ Ext.define('FamilyDecoration.model.PotentialBusiness', {
 		{name: 'reminders'},
 		{name: 'createTime', type: 'string'},
 		{name: 'isDeleted', type: 'string'},
+		{name: 'isTransfered', type: 'string'},
+		// lock feature. potential business will be locked when business with the same address has been created.
+		// we can't update potential business any more and can't distribute telemarketing staff.
+		// we could only read information about this potential business in its original module which is regionMgm.
+		{name: 'isLocked', type: 'string'},
 		{name: 'lastUpdateTime', type: 'string'},
 		{name: 'distributeTime', type: 'string'} // when is the current business distributed to a telemarke staff.
 	],
