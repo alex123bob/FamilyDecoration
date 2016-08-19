@@ -22,7 +22,7 @@ class MsgLogSvc extends BaseSvc
 		$q['@sender'] = $sender['realName'];
 		$q['@reciever'] = $reciever['realName'];
 		if(!isset($q['@recieverPhone']))
-			$q['@recieverPhone'] = $reciever['recieverPhone'];
+			$q['@recieverPhone'] = $reciever['phone'];
 		return parent::add($q);
 	}
 

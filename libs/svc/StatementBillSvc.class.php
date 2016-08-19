@@ -135,16 +135,16 @@ class StatementBillSvc extends BaseSvc
 		//检查额度,检查安全密码,如果超过一定额度要检查短信  质保金暂不检查
 		if($bill['billType'] != 'qgd')
 			$this->checkLimit($q,$bill);
-
-		$auditRecord = array();
-		$auditRecord['@operator'] = $_SESSION['name'];
-		$auditRecord['@billId'] = $q['id'];
-		$auditRecord['@orignalStatus'] = $bill['status'];
-		$auditRecord['@newStatus'] = $targetStatus;
-		$auditRecord['@comments'] = isset($q['@comments']) ? $q['@comments'] : "无";
-		$auditRecord['@drt'] = $q['@status'];
-		$auditSvc = parent::getSvc('StatementBillAudit');
-		$auditSvc->add($auditRecord);
+		global $mysql;
+		//开始事务
+		$mysql->begin();
+		parent::getSvc('StatementBillAudit')->add(array(
+			'@operator' => $_SESSION['name'],
+			'@billId' => $q['id'],
+			'@orignalStatus' => $bill['status'],
+			'@newStatus' =>  $targetStatus,
+			'@comments' =>  isset($q['@comments']) ? $q['@comments'] : "无",
+			'@drt' =>  $q['@status']));
 		if($q['@status'] == "chk"){
 			$q['@checker'] = $_SESSION['name'];
 		}
@@ -154,11 +154,8 @@ class StatementBillSvc extends BaseSvc
 		$q['@status']=$targetStatus;
 		$res = parent::update($q);
 		//通知
-		try{
-			$this->noticeAfterStatusChange($q,$bill);
-		}catch(Exception $e){
-			//通知失败不能影响原有业务逻辑
-		}
+		$this->noticeAfterStatusChange($q,$bill);
+		$mysql->commit();
 		return $res;
 	}
 
@@ -182,10 +179,9 @@ class StatementBillSvc extends BaseSvc
 		$text = str_replace('{申领金额}',$bill['claimAmount'],$text);
 		$text = str_replace('{总金额}',$bill['totalFee'],$text);
 		//组装需要通知到的用户
-		$sql = "select name,realname,phone,mail,level from user where isDeleted = 'false' and (
-			level like '001-%' or level like '008-%' or level = '003-001' or name in (select captain from project where projectId = '?')
-			or name = '?' )";
-		$users = $mysql->DBGetAsMap($sql,$bill['projectId'],$_SESSION['name']);
+		$sql = "select name,level from user where isDeleted = 'false' and (
+			level like '001-%' or level like '008-%' or level = '003-001' or name in (select captain from project where projectId = '?'))";
+		$users = $mysql->DBGetAsMap($sql,$bill['projectId']);
 		//所有人都发邮件
 		//003-001:工程部总经理
 		//001-% :管理员
@@ -197,9 +193,6 @@ class StatementBillSvc extends BaseSvc
 		//付款后发邮件给当值项目经理和管理员
 		//发短信通知
 		$sentPhones = array();
-		$userNames = array();
-		$mailAddresses = array();
-		$aliasNames = array();
 		$mailSvc = parent::getSvc('Mail');
 		$msgSvc = parent::getSvc('MsgLog');
 		foreach ($users as $user) {
@@ -212,8 +205,9 @@ class StatementBillSvc extends BaseSvc
 				continue;
 			if(startWith($user['level'],'001-')) // 总经办不用发送短信
 				continue;
-			if(!in_array($user['phone'], $sentPhones)){
-				$msgSvc->add(array('reciever'=>$user['name'],'@content'=>$text));
+			if(!in_array($user['name'], $sentPhones)){
+				$msgSvc->add(array('@reciever'=>$user['name'],'@content'=>$text));
+				array_push($sentPhones, $user['name']);
 			}
 		}
 	}

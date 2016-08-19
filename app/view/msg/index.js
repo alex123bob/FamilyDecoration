@@ -18,11 +18,11 @@ Ext.define('FamilyDecoration.view.msg.Index', {
 			name: 'gridpanel-msgreport',
 			columns: [{
 				text: '发送人',
-				flex: 1,
+				flex: 0.5,
 				dataIndex: 'sender'
 			}, {
 				text: '接受人',
-				flex: 1,
+				flex: 0.5,
 				dataIndex: 'reciever'
 			}, {
 				text: '手机',
@@ -30,7 +30,7 @@ Ext.define('FamilyDecoration.view.msg.Index', {
 				dataIndex: 'recieverPhone'
 			}, {
 				text: '状态',
-				flex: 1,
+				flex: 0.5,
 				dataIndex: 'status',
 				renderer: function (val, meta, rec){
 					if (val == 100)
@@ -41,11 +41,11 @@ Ext.define('FamilyDecoration.view.msg.Index', {
 				}
 			},{
 				text: '发送结果',
-				flex: 1,
+				flex: 1.5,
 				dataIndex: 'result'
 			}, {
 				text: '发送内容',
-				flex: 1,
+				flex: 3,
 				dataIndex: 'content',
 				renderer: function (val){
 					return val.replace(/\n/ig, '<br />');
