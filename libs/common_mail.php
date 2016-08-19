@@ -31,14 +31,17 @@ function sendEmail($recipient,$aliasNames='',$from = '佳诚装饰' ,$subject, $
 	$mail->Timeout = 30;
 
 	if($recipient == null || $recipient == "")
-		throw new Exception("recipient should not be null !");
-
-	if(is_string($recipient) && contains($recipient,','))
+		throw new Exception("接收人不能为空！");
+	$recieverOk = false;
+	if(is_string($recipient) && contains($recipient,',')){
 		$recipient = explode(',',$recipient);
-	if(is_string($aliasNames) && contains($aliasNames,','))
+	}
+	if(is_string($aliasNames) && contains($aliasNames,',')){
 		$aliasNames = explode(',',$aliasNames);
+	}
 	
 	if(is_string($recipient) && contains($recipient,'@')){
+		$recieverOk = true;
 		$mail->addAddress($recipient,$aliasNames);
 	}
 
@@ -50,10 +53,14 @@ function sendEmail($recipient,$aliasNames='',$from = '佳诚装饰' ,$subject, $
 			$address = $recipient[$i];
 			$name = isset($aliasNames[$i]) ? $aliasNames[$i] : '';
 			if(is_string($address) && contains($address,'@')){
-				// echo "send mail to $address as $name <br />\n";
+				 echo "send mail to $address as $name <br />\n";
+				$recieverOk = true;
 				$mail->addAddress($address,$name);
 			}
 		}
+	}
+	if(!$recieverOk){
+		throw new Exception("接收人不能为空！");
 	}
 
 	// $mail->addAddress('674417307@qq.com','IT_Diego');

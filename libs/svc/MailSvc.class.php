@@ -38,9 +38,9 @@ class MailSvc extends BaseSvc
 				$this->sendMail($mail);
 				$mysql->DBExecute("update mail set status = 100 where id = '?'",$mail['id']);
 			} catch (Exception $e) {
-				$msg =$e->getMessage();
+				$msg = "第".($mail['status']+1)."次:".$e->getMessage();
 				echo "error:$msg<br />";
-				$mysql->DBExecute("update mail set result = CONCAT(IFNULL(result,''),'\n','?') where id = '?'",$msg,$mail['id']);
+				$mysql->DBExecute("update mail set result = CONCAT('".$msg."','\n<br />',IFNULL(result,'')) where id = '".$mail['id']."'");
 			}			
 		}
 	}

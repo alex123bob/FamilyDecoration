@@ -15,11 +15,14 @@ alter table mail modify mailReceiver text not null comment '邮件接收人，�
 alter table mail modify receiverAddress text not null comment '邮件接收人，多个用逗号分割';
 alter table mail add column result text default '' comment '结果，多次发送结果追加。';
 alter table mail add column status int default 0 comment '0未发送，100发送成功，1~n 发送失败次数';
-alter table mail add column updateTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+alter table mail add column updateTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 alter table mail change mailId id varchar(20);
 alter table mail change mailTime createTime TIMESTAMP;
 alter table msg_log modify status int default 0 comment '0未发送，100发送成功，1~n 发送失败次数';
-alter table msg_log add column isDeleted varchar(5) defailt 'false';
+alter table msg_log add column isDeleted varchar(5) default 'false';
 alter table msg_log add column updateTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
+update mail set status = 100;
+update msg_log set status = 100;
+	
 update `system` set `paramValue`='version-8.8' where `id`='4';
