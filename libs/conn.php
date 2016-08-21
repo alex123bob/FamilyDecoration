@@ -31,6 +31,8 @@
 		!strpos($_SERVER["REQUEST_URI"], "business.php?action=revertTelemarketingBusiness")
 		&&
 		!strpos($_SERVER["REQUEST_URI"], "api.php?action=MsgLog.cron")
+		&&
+		!strpos($_SERVER["REQUEST_URI"], "api.php?action=Mail.cron")
 	){
 		checkUserOnlineUniqueness();
 	}
