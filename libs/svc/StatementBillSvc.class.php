@@ -89,7 +89,8 @@ class StatementBillSvc extends BaseSvc
 			//需要短信验证
 			$rand = rand(1000,9999);
 			$_SESSION['validateCode'] = $rand;
-			$parent::getSvc('MsgLog')->add(array('@reciever'=>$_SESSION['name'],'@content'=>'您的短信验证码是:'.$rand));
+			include_once __ROOT__."/libs/msgLogDB.php";
+			sendMsg($_SESSION['realname'].'-BillStateChange',$_SESSION['name'],$_SESSION['phone'],'您的短信验证码是:'.$rand,null,'sendSMS');
 			return array('status'=>'successful', 'type' => 'sms', 'errMsg' => '', 'hint' => '本次操作需要提供短信验证码，<br />验证码已发送到'.$_SESSION['phone'].'，请输入收到的验证码。<br />如果手机号更改或丢失而无法输入验证码，请联系管理员。');
 		}else{
 			return array('status'=>'successful', 'type' => 'securePass', 'errMsg' => ''.$limit[0].' '.$bill['totalFee'], 'hint' => '本次操作需要提供安全码，<br />请输入您当前账号的安全码进行下一步操作。<br />如果您未初始化安全码，请前往账户管理进行设置，或联系管理员。');
@@ -135,16 +136,16 @@ class StatementBillSvc extends BaseSvc
 		//检查额度,检查安全密码,如果超过一定额度要检查短信  质保金暂不检查
 		if($bill['billType'] != 'qgd')
 			$this->checkLimit($q,$bill);
-		global $mysql;
-		//开始事务
-		$mysql->begin();
-		parent::getSvc('StatementBillAudit')->add(array(
-			'@operator' => $_SESSION['name'],
-			'@billId' => $q['id'],
-			'@orignalStatus' => $bill['status'],
-			'@newStatus' =>  $targetStatus,
-			'@comments' =>  isset($q['@comments']) ? $q['@comments'] : "无",
-			'@drt' =>  $q['@status']));
+
+		$auditRecord = array();
+		$auditRecord['@operator'] = $_SESSION['name'];
+		$auditRecord['@billId'] = $q['id'];
+		$auditRecord['@orignalStatus'] = $bill['status'];
+		$auditRecord['@newStatus'] = $targetStatus;
+		$auditRecord['@comments'] = isset($q['@comments']) ? $q['@comments'] : "无";
+		$auditRecord['@drt'] = $q['@status'];
+		$auditSvc = parent::getSvc('StatementBillAudit');
+		$auditSvc->add($auditRecord);
 		if($q['@status'] == "chk"){
 			$q['@checker'] = $_SESSION['name'];
 		}
@@ -154,14 +155,17 @@ class StatementBillSvc extends BaseSvc
 		$q['@status']=$targetStatus;
 		$res = parent::update($q);
 		//通知
-		$this->noticeAfterStatusChange($q,$bill);
-		$mysql->commit();
+		try{
+			$this->noticeAfterStatusChange($q,$bill);
+		}catch(Exception $e){
+			//通知失败不能影响原有业务逻辑
+		}
 		return $res;
 	}
 
 	public function noticeAfterStatusChange($q,$bill){
 		//递交审核和审核通过,付款发邮件,短信.
-		if($q['@status'] != 'rdyck' &&$q['@status'] != 'rdyck1' && $q['@status'] != 'chk' && $q['@status'] != 'paid'){
+		if($q['@status'] != 'rdyck' && $q['@status'] != 'chk' && $q['@status'] != 'paid'){
 			return ;
 		}
 		global $mysql;
@@ -179,35 +183,51 @@ class StatementBillSvc extends BaseSvc
 		$text = str_replace('{申领金额}',$bill['claimAmount'],$text);
 		$text = str_replace('{总金额}',$bill['totalFee'],$text);
 		//组装需要通知到的用户
-		$sql = "select name,level from user where isDeleted = 'false' and (
-			level like '001-%' or level like '008-%' or level = '003-001' or name in (select captain from project where projectId = '?'))";
-		$users = $mysql->DBGetAsMap($sql,$bill['projectId']);
+		$sql = "select name,realname,phone,mail,level from user where isDeleted = 'false' and (
+			level like '001-%' or level like '008-%' or level = '003-001' or name in (select captain from project where projectId = '?')
+			or name = '?' )";
+		$users = $mysql->DBGetAsMap($sql,$bill['projectId'],$_SESSION['name']);
 		//所有人都发邮件
 		//003-001:工程部总经理
 		//001-% :管理员
 		//008-% :财务
 		//其他:当值项目经理
 		//发邮件
+		include_once __ROOT__."/libs/msgLogDB.php";
+		include_once __ROOT__."/libs/common_mail.php";
+		$mailAddresses = array();
+		$aliasNames = array();
+		foreach ($users as $user) {
+			if(contains($user['mail'],'@')){ // 有效邮箱
+				array_push($mailAddresses, $user['mail']);
+				array_push($aliasNames, $user['realname']);
+			}
+		}
+		if($mailAddresses!= ""){
+			sendEmail($mailAddresses, $aliasNames, 'sys-notice@dqjczs.com', "财务单$newStatusCh", $text, null);
+		}
 		//递交审核后发短信给工程部总经理，邮件给管理员
 		//审核通过后发邮件给财务部，发短信给当值项目经理和管理员
 		//付款后发邮件给当值项目经理和管理员
 		//发短信通知
 		$sentPhones = array();
-		$mailSvc = parent::getSvc('Mail');
-		$msgSvc = parent::getSvc('MsgLog');
 		foreach ($users as $user) {
-			$mailSvc ->add(array("@mailSubject"=>"财务单$newStatusCh","@mailContent"=> $text,"@mailReceiver"=> $user['name']));
-			if(startWith($user['level'],'008-')) //财务不用发短信
-				continue;
-			if(($q['@status']=='rdyck' || $q['@status']=='rdyck1') && !startWith($user['level'],'003-001')) //审核通过只给工程部总经理发短信
-				continue;
-			if($q['@status']=='chk' && startWith($user['level'],'003-001'))
-				continue;
-			if(startWith($user['level'],'001-')) // 总经办不用发送短信
-				continue;
-			if(!in_array($user['name'], $sentPhones)){
-				$msgSvc->add(array('@reciever'=>$user['name'],'@content'=>$text));
-				array_push($sentPhones, $user['name']);
+			try{
+				if(startWith($user['level'],'008-')) //财务不用发短信
+					continue;
+				if($q['@status']=='rdyck' && !startWith($user['level'],'003-001')) //审核通过只给工程部总经理发短信
+					continue;
+				if($q['@status']=='chk' && startWith($user['level'],'003-001'))
+					continue;
+				if(startWith($user['level'],'001-')) // 总经办不用发送短信
+					continue;
+				if(strlen($user['phone']) == 11 && !in_array($user['phone'], $sentPhones)){ // 11位有效手机号
+					$phoneNumber = $user['phone'];
+					array_push($sentPhones, $user['phone']);
+					sendMsg("财务单$newStatusCh",$user['name'],$phoneNumber,$text,null,'sendSMS');
+				}
+			}catch(Exception $e){
+				
 			}
 		}
 	}
@@ -224,7 +244,7 @@ class StatementBillSvc extends BaseSvc
 		//查预付款
 		global $TableMapping;
 		global $mysql;
-		$sql = 'select count(*) as count,sum(totalFee) as totalPreFee,projectId,payee,professionType from statement_bill where billType = \'ppd\' group by projectId,payee,professionType;';
+		$sql = 'select count(*) as count,sum(totalFee) as totalPreFee,projectId,payee,professionType from statement_bill where billType = \'ppd\' and isDeleted = \'false\' group by projectId,payee,professionType;';
 		$rows = $mysql->DBGetAsMap($sql);
 		$map2 = array();
 		foreach ($rows as $item) {

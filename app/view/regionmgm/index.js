@@ -371,29 +371,34 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 										rec = grid.getSelectionModel().getSelection()[0];
 									if (region) {
 										if (rec) {
-											Ext.Msg.warning('确定要删除当前选中项吗？', function (btnId) {
-												if ('yes' == btnId) {
-													Ext.Ajax.request({
-														url: './libs/business.php?action=deletePotentialBusiness',
-														method: 'POST',
-														params: {
-															id: rec.getId()
-														},
-														callback: function (opts, success, res) {
-															if (success) {
-																var obj = Ext.decode(res.responseText);
-																if (obj.status == 'successful') {
-																	showMsg('删除成功！');
-																	grid.refresh(region);
-																}
-																else {
-																	showMsg(obj.errMsg);
+											if (rec.get('isLocked') == 'false') {
+												Ext.Msg.warning('确定要删除当前选中项吗？', function (btnId) {
+													if ('yes' == btnId) {
+														Ext.Ajax.request({
+															url: './libs/business.php?action=deletePotentialBusiness',
+															method: 'POST',
+															params: {
+																id: rec.getId()
+															},
+															callback: function (opts, success, res) {
+																if (success) {
+																	var obj = Ext.decode(res.responseText);
+																	if (obj.status == 'successful') {
+																		showMsg('删除成功！');
+																		grid.refresh(region);
+																	}
+																	else {
+																		showMsg(obj.errMsg);
+																	}
 																}
 															}
-														}
-													})
-												}
-											});
+														})
+													}
+												});
+											}
+											else {
+												showMsg('项目被锁定,无法删除!');
+											}
 										}
 										else {
 											showMsg('请选择要删除的项目！');
@@ -438,11 +443,16 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 										rec = grid.getSelectionModel().getSelection()[0];
 									if (region) {
 										if (rec) {
-											var win = Ext.create('FamilyDecoration.view.regionmgm.EditPotentialBusiness', {
-												region: region,
-												grid: grid,
-												potentialBusiness: rec
-											});
+											if (rec.get('isLocked') == 'false') {
+												var win = Ext.create('FamilyDecoration.view.regionmgm.EditPotentialBusiness', {
+													region: region,
+													grid: grid,
+													potentialBusiness: rec
+												});
+											}
+											else {
+												showMsg('项目已经被锁定，无法编辑!');
+											}
 										}
 										else {
 											showMsg('请选择编辑项目！');
@@ -466,12 +476,17 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 										grid = Ext.getCmp('gridpanel-buildingMgm'),
 										rec = grid.getSelectionModel().getSelection()[0];
 									if (region) {
-										var win = Ext.create('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
-											region: region,
-											grid: grid,
-											potentialBusiness: rec
-										});
-										win.show();
+										if (rec && rec.get('isLocked') == 'true') {
+											showMsg('项目被锁定,无法分配电销列表!');
+										}
+										else {
+											var win = Ext.create('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
+												region: region,
+												grid: grid,
+												potentialBusiness: rec
+											});
+											win.show();
+										}
 									}
 									else {
 										showMsg('请选择小区！');
@@ -495,8 +510,8 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 						initBtn: function (rec) {
 							var editBtn = Ext.getCmp('button-editBuilding'),
 								delBuilding = Ext.getCmp('button-deleteBuilding');
-							editBtn.setDisabled(!rec);
-							delBuilding.setDisabled(!rec);
+							editBtn.setDisabled(!rec || rec.get('isLocked') == 'true');
+							delBuilding.setDisabled(!rec || rec.get('isLocked') == 'true');
 						},
 						refresh: function (region) {
 							var grid = this,
@@ -613,6 +628,24 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 									renderer: function (val, meta, rec) {
 										if (val) {
 											return val.slice(0, val.indexOf(' '));
+										}
+										else {
+											return '';
+										}
+									}
+								},
+								{
+									text: '锁定',
+									flex: 0.4,
+									dataIndex: 'isLocked',
+									renderer: function (val, meta, rec) {
+										if (val) {
+											if ('true' == val) {
+												return '<font color="red">是</font>';
+											}
+											else if ('false' == val) {
+												return '<font color="green">否</font>';
+											}
 										}
 										else {
 											return '';

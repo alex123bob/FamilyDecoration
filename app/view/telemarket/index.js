@@ -155,11 +155,16 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                         handler: function () {
                             var resObj = me.getRes();
                             if (resObj.business) {
-                                var win = Ext.create('FamilyDecoration.view.telemarket.TransferToBusiness', {
-                                    grid: resObj.businessList,
-                                    potentialBusiness: resObj.business
-                                });
-                                win.show();
+                                if (resObj.business.get('isLocked') == 'false') {
+                                    var win = Ext.create('FamilyDecoration.view.telemarket.TransferToBusiness', {
+                                        grid: resObj.businessList,
+                                        potentialBusiness: resObj.business
+                                    });
+                                    win.show();
+                                }
+                                else {
+                                    showMsg('该业务被锁定,无法编辑!');
+                                }
                             }
                             else {
                                 showMsg('请选择条目！');
@@ -174,15 +179,20 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                         handler: function () {
                             var resObj = me.getRes();
                             if (resObj.business) {
-                                var win = Ext.create('FamilyDecoration.view.mybusiness.IndividualReminder', {
-                                    recipient: resObj.telemarketingStaff.get('telemarketingStaffName'),
-                                    type: 'telemarket_individual_remind',
-                                    extraId: resObj.business.getId(),
-                                    afterClose: function () {
-                                        resObj.businessList.getStore().reload();
-                                    }
-                                });
-                                win.show();
+                                if (resObj.business.get('isLocked') == 'false') {
+                                    var win = Ext.create('FamilyDecoration.view.mybusiness.IndividualReminder', {
+                                        recipient: resObj.telemarketingStaff.get('telemarketingStaffName'),
+                                        type: 'telemarket_individual_remind',
+                                        extraId: resObj.business.getId(),
+                                        afterClose: function () {
+                                            resObj.businessList.getStore().reload();
+                                        }
+                                    });
+                                    win.show();
+                                }
+                                else {
+                                    showMsg('该业务被锁定,无法添加提醒!');
+                                }
                             }
                             else {
                                 showMsg('请选择条目！');
@@ -197,11 +207,16 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                         handler: function () {
                             var resObj = me.getRes();
                             if (resObj.business) {
-                                var win = Ext.create('FamilyDecoration.view.telemarket.EditStatus', {
-                                    business: resObj.business,
-                                    grid: resObj.businessList
-                                });
-                                win.show();
+                                if (resObj.business.get('isLocked') == 'false') {
+                                    var win = Ext.create('FamilyDecoration.view.telemarket.EditStatus', {
+                                        business: resObj.business,
+                                        grid: resObj.businessList
+                                    });
+                                    win.show();
+                                }
+                                else {
+                                    showMsg('该业务被锁定,无法编辑状态!');
+                                }
                             }
                             else {
                                 showMsg('请选择条目！');
@@ -216,19 +231,24 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                         handler: function () {
                             var resObj = me.getRes();
                             var btns = resObj.businessList.getBtns();
-                            Ext.Ajax.request({
-                                url: './libs/business.php?action=editPotentialBusiness',
-                                method: 'GET',
-                                params: {
-                                    id: resObj.business.data.id,
-                                    isImportant: 'true'
-                                },
-                                callback: function (opts, success, res) {
-                                    if (success) {
-                                        resObj.businessList.getStore().reload();
+                            if (resObj.business.get('isLocked') == 'false') {
+                                Ext.Ajax.request({
+                                    url: './libs/business.php?action=editPotentialBusiness',
+                                    method: 'GET',
+                                    params: {
+                                        id: resObj.business.data.id,
+                                        isImportant: 'true'
+                                    },
+                                    callback: function (opts, success, res) {
+                                        if (success) {
+                                            resObj.businessList.getStore().reload();
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
+                            else {
+                                showMsg('该业务被锁定,无法标记!');
+                            }
                         }
                     },
                     {
@@ -239,19 +259,24 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                         handler: function () {
                             var resObj = me.getRes();
                             var btns = resObj.businessList.getBtns();
-                            Ext.Ajax.request({
-                                url: './libs/business.php?action=editPotentialBusiness',
-                                method: 'GET',
-                                params: {
-                                    id: resObj.business.data.id,
-                                    isImportant: 'false'
-                                },
-                                callback: function (opts, success, res) {
-                                    if (success) {
-                                        resObj.businessList.getStore().reload();
+                            if (resObj.business.get('isLocked') == 'false') {
+                                Ext.Ajax.request({
+                                    url: './libs/business.php?action=editPotentialBusiness',
+                                    method: 'GET',
+                                    params: {
+                                        id: resObj.business.data.id,
+                                        isImportant: 'false'
+                                    },
+                                    callback: function (opts, success, res) {
+                                        if (success) {
+                                            resObj.businessList.getStore().reload();
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
+                            else {
+                                showMsg('该业务被锁定,无法标记!');
+                            }
                         }
                     },
                     {
@@ -262,25 +287,30 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                         handler: function () {
                             var resObj = me.getRes();
                             var btns = resObj.businessList.getBtns();
-                            Ext.Msg.warning('确定要转回此电销业务么?', function (btnId) {
-                                if (btnId != 'yes')
-                                    return;
-                                Ext.Ajax.request({
-                                    url: './libs/business.php?action=editPotentialBusiness',
-                                    method: 'GET',
-                                    params: {
-                                        id: resObj.business.data.id,
-                                        telemarketingStaff: '',
-                                        telemarketingStaffName: '',
-                                        distributeTime: ''
-                                    },
-                                    callback: function (opts, success, res) {
-                                        if (success) {
-                                            resObj.businessList.getStore().reload();
+                            if (resObj.business.get('isLocked') == 'false') {
+                                Ext.Msg.warning('确定要转回此电销业务么?', function (btnId) {
+                                    if (btnId != 'yes')
+                                        return;
+                                    Ext.Ajax.request({
+                                        url: './libs/business.php?action=editPotentialBusiness',
+                                        method: 'GET',
+                                        params: {
+                                            id: resObj.business.data.id,
+                                            telemarketingStaff: '',
+                                            telemarketingStaffName: '',
+                                            distributeTime: ''
+                                        },
+                                        callback: function (opts, success, res) {
+                                            if (success) {
+                                                resObj.businessList.getStore().reload();
+                                            }
                                         }
-                                    }
+                                    });
                                 });
-                            });
+                            }
+                            else {
+                                showMsg('该业务被锁定,无法被转回!');
+                            }
                         }
                     }
                 ],
@@ -437,6 +467,22 @@ Ext.define('FamilyDecoration.view.telemarket.Index', {
                             text: '截止日期',
                             flex: 0.8,
                             dataIndex: 'telemarketingDeadline'
+                        },
+                        {
+                            text: '锁定',
+                            flex: 0.4,
+                            dataIndex: 'isLocked',
+                            renderer: function (val, meta, rec) {
+                                if (val == 'true') {
+                                    return '<font color="red">是</font>';
+                                }
+                                else if (val == 'false') {
+                                    return '<font color="green">否</font>';
+                                }
+                                else {
+                                    return '';
+                                }
+                            }
                         }
                     ]
                 },

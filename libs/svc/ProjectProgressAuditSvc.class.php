@@ -28,7 +28,9 @@ class ProjectProgressAuditSvc extends BaseSvc{
 			case '0004': $columnName = " 'c12' ";$msg="水电工程-客户验收、拍照留底";break;//水电
 			case '0002': $columnName = " 'c23' ";$msg="木工工程-客户验收、成品保护";break;//木工
 			case '0003': $columnName = " 'c34' ";$msg="竣工验收、保修单签单";break;//油漆
-			default:throw new Exception("未知工种:".$type);break;
+			default:
+            	return ;
+            //throw new Exception("未知工种:".$type);break;
 		}
 		global $mysql;
 		//可能会有多条监理审核意见.只按照最新添加的处理

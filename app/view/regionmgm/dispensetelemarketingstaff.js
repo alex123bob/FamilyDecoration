@@ -39,7 +39,12 @@ Ext.define('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
 					extraParams: {
 						regionID: me.region.getId()
 					}
-				}
+				},
+				filters: [
+					function (item){
+						return item.get('isLocked') == 'false';
+					}
+				]
 			});
 
 		me.height = me.potentialBusiness ? 114 : 500;
