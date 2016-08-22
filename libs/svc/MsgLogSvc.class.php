@@ -1,4 +1,6 @@
 <?php
+require_once __ROOT__."/libs/svc/MsgErrorCode.php";
+
 class MsgLogSvc extends BaseSvc
 {
 	/*
@@ -33,7 +35,6 @@ class MsgLogSvc extends BaseSvc
 	}
 
 	private function getValueFromXml($str,$key){
-		include_once "MsgErrorCode.php";
 		global $MsgErrorCode,$BlackListWords,$userAndPswd,$corpName,$apiUrl;
 		// get value from string like:<response><error>0</error><message>1.7</message></response>
 		// for example $this->getValueFromXml($str,"error") will return 0;
@@ -47,7 +48,6 @@ class MsgLogSvc extends BaseSvc
 	}
 	
 	public function checkMsg($content){
-		include_once "MsgErrorCode.php";
 		global $MsgErrorCode,$BlackListWords,$userAndPswd,$corpName,$apiUrl;
 		foreach($BlackListWords as $blackWord){
 			if(contains($content,$blackWord))
@@ -73,7 +73,6 @@ class MsgLogSvc extends BaseSvc
 	}
 
 	private function sendMsg($text){
-		include_once "MsgErrorCode.php";
 		global $mysql,$MsgErrorCode,$BlackListWords,$userAndPswd,$corpName,$apiUrl;
 		$sender = $text['sender'];
 		$reciever = $text['reciever'];
@@ -97,7 +96,6 @@ class MsgLogSvc extends BaseSvc
 	}
 
 	public function getBalance(){
-		include_once "MsgErrorCode.php";
 		global $mysql,$MsgErrorCode,$BlackListWords,$userAndPswd,$corpName,$apiUrl;
 		$url = $apiUrl."querybalance.action?".$userAndPswd;
 		$ch = curl_init($url);
@@ -114,7 +112,6 @@ class MsgLogSvc extends BaseSvc
 	}
 
 	public function syncWithMsgVendorServer(){
-		include_once "MsgErrorCode.php";
 		global $mysql,$MsgErrorCode,$BlackListWords,$userAndPswd,$corpName,$apiUrl;
 		$url = $apiUrl."getmo.action?".$userAndPswd;
 		$ch = curl_init($url);
@@ -168,7 +165,6 @@ class MsgLogSvc extends BaseSvc
 	}
 	
 	public function getsendmsgs($sender,$reciever,$recieverPhone,$status,$beginTime,$endTime,$page,$size){
-		include_once "MsgErrorCode.php";
 		global $mysql,$MsgErrorCode,$BlackListWords,$userAndPswd,$corpName,$apiUrl;
 		$sql = "select * from msg_log ";
 		$sqlCount = "select count(*) as count from msg_log ";
@@ -189,7 +185,6 @@ class MsgLogSvc extends BaseSvc
 	}
 	
 	public function getrecvmsgs($sender,$phone,$beginTime,$endTime,$page,$size){
-		include_once "MsgErrorCode.php";
 		global $mysql,$MsgErrorCode,$BlackListWords,$userAndPswd,$corpName,$apiUrl;
 		$sql = "select * from msg_recieve_log ";
 		$sqlCount = "select count(*) as count from msg_recieve_log ";
