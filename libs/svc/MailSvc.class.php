@@ -71,30 +71,6 @@ class MailSvc extends BaseSvc
 		else {
 			$arr = $mysql->DBGetAsMap($sql,$user, $user, $user);
 		}
-		/*
-		$usernames = array();
-		for ($i = 0; $i < count($arr); $i++) {
-			$receiver = $arr[$i]["mailReceiver"];
-			$receiverList = explode(',',$receiver);
-			$usernames = array_merge($receiverList, $usernames);
-			array_push($usernames,$arr[$i]["mailSender"]);
-		}
-		$namesArray = $mysql->DBGetAsMap("select realname,name from user where name in ( '".implode("','", array_unique($usernames))."' )");
-        $names = array();
-        for ($i = 0; $i < count($namesArray); $i++) {
-        	$names[$namesArray[$i]['name']] = $namesArray[$i]['realname'];
-        }
-		for ($i = 0; $i < count($arr); $i++) {
-			$receiver = $arr[$i]["mailReceiver"];
-			$receiverList = explode(',',$receiver);
-			for ($j = 0; $j < count($receiverList); $j++) {
-                $n = $receiverList[$j];
-                $receiverList[$j] = isset( $names[$n] ) ? $names[$n]  : '未知用户' ;
-			}
-			$receiver = implode(",", $receiverList);
-			$arr[$i]["mailReceiver"] = $receiver;
-            $arr[$i]["mailSender"] = isset( $names[$arr[$i]["mailSender"]] ) ? $names[$arr[$i]["mailSender"]]  : '未知用户';
-		}*/
 		if ($forPage) {
 			$res = array("totalCount"=>$count, "resultSet"=>$arr);
 			return $res;
@@ -106,6 +82,8 @@ class MailSvc extends BaseSvc
 	
 	function getSentMailByUser($user){
 		global $mysql;
+		$reciever = parent::getSvc('User')->getRealNameAndEmail($user);
+		$user = $reciever['realName'];
 		$sql = "select * from mail where `isDeleted` = 'false' and mailSender = '?' ORDER BY `createTime` DESC ";
 		$forPage = isset($_GET["limit"]) && isset($_GET["start"]) ? true : false;
 		if ($forPage) {
@@ -114,35 +92,9 @@ class MailSvc extends BaseSvc
 			$limitSql = " LIMIT $start, $limit ";
 			$count = count($mysql->DBGetAsMap($sql, $user));
 			$arr = $mysql->DBGetAsMap($sql.$limitSql,$user);
-		}
-		else {
+		} else {
 			$arr = $mysql->DBGetAsMap($sql,$user);
 		}
-		/*
-		$usernames = array();
-		
-		for ($i = 0; $i < count($arr); $i++) {
-			$receiver = $arr[$i]["mailReceiver"];
-			$receiverList = explode(',',$receiver);
-			$usernames = array_merge($receiverList, $usernames);
-			array_push($usernames,$arr[$i]["mailSender"]);
-		}
-		$namesArray = $mysql->DBGetAsMap("select realname,name from user where name in ( '".implode("','", array_unique($usernames))."' )");
-        $names = array();
-        for ($i = 0; $i < count($namesArray); $i++) {
-        	$names[$namesArray[$i]['name']] = $namesArray[$i]['realname'];
-        }
-		for ($i = 0; $i < count($arr); $i++) {
-			$receiver = $arr[$i]["mailReceiver"];
-			$receiverList = explode(',',$receiver);
-			for ($j = 0; $j < count($receiverList); $j++) {
-				$n = $receiverList[$j];
-                $receiverList[$j] = isset( $names[$n] ) ? $names[$n]  : '未知用户' ;
-			}
-			$receiver = implode(",", $receiverList);
-			$arr[$i]["mailReceiver"] = $receiver;
-			$arr[$i]["mailSender"] = isset( $names[$arr[$i]["mailSender"]] ) ? $names[$arr[$i]["mailSender"]]  : '未知用户';
-		}*/
 		if ($forPage) {
 			$res = array("totalCount"=>$count, "resultSet"=>$arr);
 			return $res;
