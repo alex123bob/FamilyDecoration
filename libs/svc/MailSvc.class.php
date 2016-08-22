@@ -115,6 +115,7 @@ class MailSvc extends BaseSvc
 		else {
 			$arr = $mysql->DBGetAsMap($sql,$user);
 		}
+		/*
 		$usernames = array();
 		
 		for ($i = 0; $i < count($arr); $i++) {
@@ -138,7 +139,7 @@ class MailSvc extends BaseSvc
 			$receiver = implode(",", $receiverList);
 			$arr[$i]["mailReceiver"] = $receiver;
 			$arr[$i]["mailSender"] = isset( $names[$arr[$i]["mailSender"]] ) ? $names[$arr[$i]["mailSender"]]  : '未知用户';
-		}
+		}*/
 		if ($forPage) {
 			$res = array("totalCount"=>$count, "resultSet"=>$arr);
 			return $res;
