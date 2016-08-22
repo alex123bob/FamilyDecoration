@@ -51,7 +51,7 @@ class MailSvc extends BaseSvc
 
 	private function sendMail($mail){
 		include_once "common_mail.php";
-		echo "sending mail:".$mail['id']."[".$mail['mailSubject']."] from ".$mail['mailReceiver']." to ".$mail['mailReceiver']."(".$mail['receiverAddress'].") content:".$mail['mailContent'].'<br />';
+		echo "sending mail:".$mail['id']."[".$mail['mailSubject']."] from ".$mail['mailSender']." to ".$mail['mailReceiver']."(".$mail['receiverAddress'].") content:".$mail['mailContent'].'<br />';
 		sendEmail($mail['receiverAddress'],$mail['mailReceiver'],$mail['mailSender'],$mail['mailSubject'],$mail['mailContent'],null);
 	}
 
