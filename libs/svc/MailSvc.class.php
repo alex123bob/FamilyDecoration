@@ -57,6 +57,8 @@ class MailSvc extends BaseSvc
 
 	public function getReceivedMailByUser($user){
 		global $mysql;
+		$reciever = parent::getSvc('User')->getRealNameAndEmail($user);
+		$user = $reciever['realName'];
 		$forPage = isset($_GET["limit"]) && isset($_GET["start"]) ? true : false;
 		$sql = "select * from mail where `isDeleted` = 'false' and mailReceiver = '?' or mailReceiver like '%?,%' or mailReceiver like '%,?%' ORDER BY `createTime` DESC";
 		if ($forPage) {
@@ -69,6 +71,7 @@ class MailSvc extends BaseSvc
 		else {
 			$arr = $mysql->DBGetAsMap($sql,$user, $user, $user);
 		}
+		/*
 		$usernames = array();
 		for ($i = 0; $i < count($arr); $i++) {
 			$receiver = $arr[$i]["mailReceiver"];
@@ -91,7 +94,7 @@ class MailSvc extends BaseSvc
 			$receiver = implode(",", $receiverList);
 			$arr[$i]["mailReceiver"] = $receiver;
             $arr[$i]["mailSender"] = isset( $names[$arr[$i]["mailSender"]] ) ? $names[$arr[$i]["mailSender"]]  : '未知用户';
-		}
+		}*/
 		if ($forPage) {
 			$res = array("totalCount"=>$count, "resultSet"=>$arr);
 			return $res;
