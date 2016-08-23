@@ -16,6 +16,7 @@ class AccountLogSvc extends BaseSvc
 		'financialFee'=>'贷款出账',
 		'edit'=>'修改账户',
 		'add'=>'新增账户',
+		'self'=>'转账',
 		'other'=>'其他');
 	
 	public function get($q){
@@ -44,7 +45,7 @@ class AccountLogSvc extends BaseSvc
 	}
 
 	public function update($q){
-		throw new Exception("不允许更改记录！");
+		return parent::update(array('id'=>$q['id'],'@refId'=>$q['@refId']));
 	}
 
 	public function del($q){

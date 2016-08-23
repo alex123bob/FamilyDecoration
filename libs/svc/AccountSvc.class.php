@@ -15,6 +15,35 @@ class AccountSvc extends BaseSvc
 		return $res;
 	}
 
+	public function transfer($q){
+		$SourceAccountId = $q['from'];
+		$TargetAccountId = $q['to'];
+		$amount = $q['amount'];
+		global $mysql;
+		//开始事务
+		$mysql->begin();
+		//上行锁
+		$SourceAccount = $mysql->DBGetAsMap("select * from account where id = '".$SourceAccountId."' for update;");
+		$TargetAccount = $mysql->DBGetAsMap("select * from account where id = '".$TargetAccountId."' for update;");
+		$SourceAccount = $SourceAccount[0];
+		$TargetAccount = $TargetAccount[0];
+		//检查余额
+		$newSourceBalance = (double)$SourceAccount['balance'] - ((double)$amount);
+		$newTargetBalance = (double)$TargetAccount['balance'] - ((double)$amount);
+		if($newSourceBalance < 0)
+			throw new Exception("余额不足！");
+		$affect = 0;
+		//更新记录
+		$sourceLog = parent::getSvc('AccountLog')->add(array('@accountId'=>$SourceAccountId,'@amount'=>$amount,'@type'=>'out','@refId'=>'-null-','@refType'=>'self','@balance'=>$newSourceBalance));
+		$targetLog = parent::getSvc('AccountLog')->add(array('@accountId'=>$TargetAccountId,'@amount'=>$amount,'@type'=>'in','@refId'=>$sourceLog['data']['id'],'@refType'=>'self','@balance'=>$newTargetBalance));
+		parent::getSvc('AccountLog')->update(array('id'=>$sourceLog['data']['id'],'@refId'=>$targetLog['data']['id']));
+		//更新余额
+		$mysql->DBExecute("update account set balance = $newSourceBalance where id = '".$SourceAccountId."';");
+		$mysql->DBExecute("update account set balance = $newTargetBalance where id = '".$TargetAccountId."';");
+		$mysql->commit();
+		return array('status'=>'successful');
+	}
+
 	public function add($q){
 		global $mysql;
 		$q['@id'] = $this->getUUID();
