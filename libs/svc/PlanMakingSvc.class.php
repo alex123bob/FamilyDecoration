@@ -124,10 +124,11 @@ Class PlanMakingSvc extends BaseSvc{
 			$text = str_replace('{几}',$item['daysleft'],$text);
 			$text = str_replace('{主材}',PlanMakingSvc::$MainmaterialMap[$item['column']],$text);
 			$subject = $item['projectName'].' '.PlanMakingSvc::$MainmaterialMap[$item['column']].'预定提醒';
-			$msgSvc->add(array('@reciever'=>$item['salesmanName'],'@content'=>$text));
-			$msgSvc->add(array('@reciever'=>$item['designerName'],'@content'=>$text));
-			$mailSvc->add(array('@mailSubject'=>$subject,'@mailContent'=>$text,'@mailSender'=>'admin','@mailReceiver'=>$item['salesmanName']));
-			$mailSvc->add(array('@mailSubject'=>$subject,'@mailContent'=>$text,'@mailSender'=>'admin','@mailReceiver'=>$item['designerName']));
+			var_dump($item);
+			$msgSvc->add(array('@reciever'=>$item['salesman'],'@content'=>$text));
+			$msgSvc->add(array('@reciever'=>$item['designer'],'@content'=>$text));
+			$mailSvc->add(array('@mailSubject'=>$subject,'@mailContent'=>$text,'@mailSender'=>'系统提醒','@mailReceiver'=>$item['salesman']));
+			$mailSvc->add(array('@mailSubject'=>$subject,'@mailContent'=>$text,'@mailSender'=>'系统提醒','@mailReceiver'=>$item['designer']));
 		}
 		return array('success'=>true);
 	}
