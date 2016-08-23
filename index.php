@@ -713,7 +713,7 @@
             document.getElementById('logAndException').onclick = function (){
                 if (Ext) {
                     var st = Ext.create('Ext.data.Store', {
-                        fields: ['detail', 'user', 'file', 'line', 'ip', 'refer', 'useragent', 'createTime', 'updateTime'],
+                        fields: ['detail', 'user', 'file', 'line', 'ip','url', 'refer', 'params','useragent', 'createTime', 'updateTime'],
                         proxy: {
                             type: 'rest',
                             url: './libs/api.php',
@@ -753,6 +753,18 @@
                                 selType: 'checkboxmodel',
                                 store: st,
                                 columns: [
+                                    {
+                                        text: 'url',
+                                        dataIndex: 'url',
+                                        flex: 1,
+                                        align: 'center'
+                                    },
+                                    {
+                                        text: '参数',
+                                        dataIndex: 'params',
+                                        flex: 1,
+                                        align: 'center'
+                                    },
                                     {
                                         text: '详细',
                                         dataIndex: 'detail',
