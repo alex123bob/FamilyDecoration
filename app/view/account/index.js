@@ -6,7 +6,8 @@ Ext.define('FamilyDecoration.view.account.Index', {
         'FamilyDecoration.store.Account',
         'FamilyDecoration.store.AccountLog',
         'FamilyDecoration.view.account.DateRangeFilter',
-        'FamilyDecoration.view.account.EditAccount'
+        'FamilyDecoration.view.account.EditAccount',
+        'FamilyDecoration.view.account.Transfer'
     ],
     layout: 'hbox',
     defaults: {
@@ -52,7 +53,8 @@ Ext.define('FamilyDecoration.view.account.Index', {
                     return {
                         add: this.down('[name="add"]'),
                         edit: this.down('[name="edit"]'),
-                        del: this.down('[name="del"]')
+                        del: this.down('[name="del"]'),
+                        transfer: this.down('[name="transfer"]')
                     };
                 },
                 initBtn: function (){
@@ -60,6 +62,7 @@ Ext.define('FamilyDecoration.view.account.Index', {
                         btns = this.getBtns();
                     btns.edit.setDisabled(!resObj.account);
                     btns.del.setDisabled(!resObj.account);
+                    btns.transfer.setDisabled(!resObj.account);
                 },
                 columns: {
                     defaults: {
@@ -77,6 +80,25 @@ Ext.define('FamilyDecoration.view.account.Index', {
                         }
                     ]
                 },
+                tbar: [
+                    {
+                        xtype: 'button',
+                        text: '转账',
+                        icon: 'resources/img/account_transfer_money.png',
+                        name: 'transfer',
+                        disabled: true,
+                        handler: function(){
+                            var resObj = _getRes();
+                            var win = Ext.create('FamilyDecoration.view.account.Transfer', {
+                                fromAccount: resObj.account,
+                                callback: function (){
+                                    resObj.accountSt.reload();
+                                }
+                            });
+                            win.show();
+                        }
+                    }
+                ],
                 bbar: [
                     {
                         xtype: 'button',
