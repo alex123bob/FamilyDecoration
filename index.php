@@ -53,12 +53,12 @@
         <span name="account"></span>
         <span name="authority"></span>
         <a href="javascript:void(0);" id="logout">注销</a>
-        <a href="javascript:void(0);" id="feedback">反馈</a>
+        <!-- <a href="javascript:void(0);" id="feedback">反馈</a> -->
         <?php
             if (preg_match('/001-\d{3}/', $_SESSION["level"])) {
                 // echo '<a href="javascript:void(0);" id="analysisChart">图表</a>'.
-                echo '<a href="javascript:void(0);" id="checkFeedback">反馈建议</a>'
-                     .'<a href="javascript:void(0);" id="logAndException">错误日志</a>';
+                // echo '<a href="javascript:void(0);" id="checkFeedback">反馈建议</a>'.
+                echo '<a href="javascript:void(0);" id="logAndException">错误日志</a>';
             }
         ?>
     </div>
@@ -491,6 +491,7 @@
             logout();
         }
 
+        /* temporarily close this function. mail service has been upgraded. we have to figure out a way to make this service better later.
         document.getElementById('feedback').onclick = function (){
             if (Ext) {
                 var win = Ext.create('Ext.window.Window', {
@@ -706,6 +707,8 @@
                 }
             }
         }
+        */
+
         if (document.getElementById('logAndException')) {
             document.getElementById('logAndException').onclick = function (){
                 if (Ext) {
