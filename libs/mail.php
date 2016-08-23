@@ -10,7 +10,7 @@
 					'@mailSubject'=>$_REQUEST["subject"],
 					'@mailContent'=>$_REQUEST["body"],
 					'@mailReceiver'=>$_REQUEST["recipient"],
-					'@mailSender'=> isset($_REQUEST['mailSender']) ? $_REQUEST['mailSender'] : $_SESSION['name']
+					'@mailSender'=> isset($_REQUEST['mailSender']) ? $_REQUEST['mailSender'] : $_SESSION['realname']
 				));
 			break;
 		case "sendmail":
@@ -18,7 +18,7 @@
 					'@mailSubject'=>$_REQUEST["mailSubject"],
 					'@mailContent'=>$_REQUEST["mailContent"],
 					'@mailReceiver'=>$_REQUEST["mailReceiver"],
-					'@mailSender'=> isset($_REQUEST['mailSender']) ? $_REQUEST['mailSender'] : $_SESSION['name']
+					'@mailSender'=> isset($_REQUEST['mailSender']) ? $_REQUEST['mailSender'] : $_SESSION['realname']
 			));
 			break;
 		case "getreceivedmailbyuser": $res = $mailSvc->getreceivedmailbyuser($_REQUEST["mailUser"]);break;

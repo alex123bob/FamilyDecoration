@@ -158,7 +158,7 @@ Ext.define('FamilyDecoration.view.mail.NewMail', {
 							receiverAddress: val['mailReceiver'],
 							mailSubject: val['mailSubject'],
 							mailContent: val['mailContent'],
-							mailSender: User.getName(),
+							mailSender: User.getRealName(),
 							senderAddress: User.getEmail()
 						};
 
