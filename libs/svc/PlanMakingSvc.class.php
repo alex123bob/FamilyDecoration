@@ -124,7 +124,6 @@ Class PlanMakingSvc extends BaseSvc{
 			$text = str_replace('{几}',$item['daysleft'],$text);
 			$text = str_replace('{主材}',PlanMakingSvc::$MainmaterialMap[$item['column']],$text);
 			$subject = $item['projectName'].' '.PlanMakingSvc::$MainmaterialMap[$item['column']].'预定提醒';
-			var_dump($item);
 			$msgSvc->add(array('@reciever'=>$item['salesman'],'@content'=>$text));
 			$msgSvc->add(array('@reciever'=>$item['designer'],'@content'=>$text));
 			$mailSvc->add(array('@mailSubject'=>$subject,'@mailContent'=>$text,'@mailSender'=>'系统提醒','@mailReceiver'=>$item['salesman']));
