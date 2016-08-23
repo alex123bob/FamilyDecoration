@@ -155,6 +155,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.account.DateRangeFilter": "app/view/account/daterangefilter.js",
   "FamilyDecoration.view.account.EditAccount": "app/view/account/editaccount.js",
   "FamilyDecoration.view.account.Index": "app/view/account/index.js",
+  "FamilyDecoration.view.account.Transfer": "app/view/account/transfer.js",
   "FamilyDecoration.view.basicitem.AddBasicItem": "app/view/basicitem/addbasicitem.js",
   "FamilyDecoration.view.basicitem.AddBasicSubItem": "app/view/basicitem/addbasicsubitem.js",
   "FamilyDecoration.view.basicitem.Index": "app/view/basicitem/index.js",
@@ -1286,6 +1287,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.account.DateRangeFilter": [],
   "FamilyDecoration.view.account.EditAccount": [],
   "FamilyDecoration.view.account.Index": [],
+  "FamilyDecoration.view.account.Transfer": [],
   "FamilyDecoration.view.basicitem.AddBasicItem": [],
   "FamilyDecoration.view.basicitem.AddBasicSubItem": [],
   "FamilyDecoration.view.basicitem.Index": [],
@@ -2588,6 +2590,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.account.Index": [
     "widget.account-index"
+  ],
+  "FamilyDecoration.view.account.Transfer": [
+    "widget.account-transfer"
   ],
   "FamilyDecoration.view.basicitem.AddBasicItem": [
     "widget.basicitem-addbasicitem"
