@@ -179,8 +179,7 @@
                     },
                     {
                         name: '材料申购',
-                        // cmp: 'materialrequest-index',
-                        cmp: '',
+                        cmp: 'materialrequest-index',
                         leaf: true,
                         icon: 'resources/img/material_request.png'
                     },
