@@ -104,8 +104,9 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 								title: '添加',
 								modal: true,
 								width: 700,
-								height: 300,
+								height: 400,
 								maximizable: true,
+								autoScroll: true,
 								items: [
 									{
 										xtype: 'materialrequest-materialorder'
@@ -114,7 +115,11 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 								tbar: [
 									{
 										xtype: 'button',
-										text: '添加小项'
+										icon: 'resources/img/material_request_add_small_item.png',
+										text: '添加小项',
+										handler: function (){
+
+										}
 									}
 								],
 								buttons: [
@@ -188,7 +193,8 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
                 items: [
                     {
                         xtype: 'materialrequest-materialorder',
-                        flex: 1
+                        flex: 1,
+						previewMode: true
                     },
 					{
 						title: '记录',

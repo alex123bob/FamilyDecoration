@@ -8,6 +8,7 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
     defaults: {
         width: '100%'
     },
+	previewMode: false,
 
     initComponent: function () {
         var me = this;
@@ -65,7 +66,15 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 								xtype: 'textfield',
 								fieldLabel: '供应商',
 								flex: 1,
-								name: 'supplier'
+								name: 'supplier',
+								readOnly: true,
+								listeners: {
+									focus: function (txt, ev, opts){
+										if (!me.previewMode) {
+											
+										}
+									}
+								}
 							},
 							{
 								xtype: 'textfield',
@@ -79,7 +88,8 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 								fieldLabel: '项目经理',
 								flex: 1,
 								name: 'captain',
-								readOnly: true
+								readOnly: true,
+								hidden: !me.previewMode
 							}
 						]
 					},
@@ -98,7 +108,8 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 								xtype: 'textfield',
 								fieldLabel: '联系电话',
 								flex: 1,
-								name: 'phoneNumber'
+								name: 'phoneNumber',
+								readOnly: true
 							},
 							{
 								xtype: 'textfield',
@@ -131,7 +142,8 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 								xtype: 'textfield',
 								fieldLabel: '申购次数',
 								flex: 1,
-								name: 'orderTimes'
+								name: 'orderTimes',
+								readOnly: me.previewMode
 							},
 							{
 								xtype: 'textfield',
@@ -140,7 +152,8 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 								flex: 2,
 								name: 'projectProgress',
 								afterSubTpl: '%',
-								maskRe: /[\d\.]/
+								maskRe: /[\d\.]/,
+								readOnly: me.previewMode
 							}
 						]
 					}
