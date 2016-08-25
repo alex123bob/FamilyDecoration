@@ -128,8 +128,10 @@ class StatementBillSvc extends BaseSvc
 		if(count($bills) > 1) throw new Exception("查到".count($bills)."条记录");
 		if(count($bills) == 0) throw new Exception("查不到记录");
 		if($bills[0]['status'] == 'paid') throw new Exception("已付款,无法更改状态.");
-
+	
 		$bill = $bills[0];
+		if($bill != $q['status'])
+			throw new Exception("出错啦!请联系管理员.");
 		$q['@status'] = (int)$q['@status'];
 		$targetStatus = $this->getStatusTransferChain($bill['billType'],$bill['status'],$q['@status']);
 		// 1:forward -1:backward
@@ -145,6 +147,8 @@ class StatementBillSvc extends BaseSvc
 		$auditRecord['@comments'] = isset($q['@comments']) ? $q['@comments'] : "无";
 		$auditRecord['@drt'] = $q['@status'];
 		$auditSvc = parent::getSvc('StatementBillAudit');
+		global $mysql;
+		$mysql->begin();
 		$auditSvc->add($auditRecord);
 		if($q['@status'] == "chk"){
 			$q['@checker'] = $_SESSION['name'];
@@ -154,12 +158,9 @@ class StatementBillSvc extends BaseSvc
 		}
 		$q['@status']=$targetStatus;
 		$res = parent::update($q);
+		$mysql->commit();
 		//通知
-		try{
-			$this->noticeAfterStatusChange($q,$bill);
-		}catch(Exception $e){
-			//通知失败不能影响原有业务逻辑
-		}
+		$this->noticeAfterStatusChange($q,$bill);
 		return $res;
 	}
 
@@ -193,42 +194,25 @@ class StatementBillSvc extends BaseSvc
 		//008-% :财务
 		//其他:当值项目经理
 		//发邮件
-		include_once __ROOT__."/libs/msgLogDB.php";
-		include_once __ROOT__."/libs/common_mail.php";
-		$mailAddresses = array();
-		$aliasNames = array();
+		$mailSvc = BaseSvc::getSvc('Mail');
+		$msgLogSvc = BaseSvc::getSvc('MsgLog');
 		foreach ($users as $user) {
-			if(contains($user['mail'],'@')){ // 有效邮箱
-				array_push($mailAddresses, $user['mail']);
-				array_push($aliasNames, $user['realname']);
-			}
-		}
-		if($mailAddresses!= ""){
-			sendEmail($mailAddresses, $aliasNames, 'sys-notice@dqjczs.com', "财务单$newStatusCh", $text, null);
+			$mailSvc->add(array('@mailSubject'=>"财务单$newStatusCh",'@mailContent'=>$text,'@mailSender'=>'系统提醒','@mailReceiver'=>$user['name']));
 		}
 		//递交审核后发短信给工程部总经理，邮件给管理员
 		//审核通过后发邮件给财务部，发短信给当值项目经理和管理员
 		//付款后发邮件给当值项目经理和管理员
 		//发短信通知
-		$sentPhones = array();
 		foreach ($users as $user) {
-			try{
-				if(startWith($user['level'],'008-')) //财务不用发短信
-					continue;
-				if($q['@status']=='rdyck' && !startWith($user['level'],'003-001')) //审核通过只给工程部总经理发短信
-					continue;
-				if($q['@status']=='chk' && startWith($user['level'],'003-001'))
-					continue;
-				if(startWith($user['level'],'001-')) // 总经办不用发送短信
-					continue;
-				if(strlen($user['phone']) == 11 && !in_array($user['phone'], $sentPhones)){ // 11位有效手机号
-					$phoneNumber = $user['phone'];
-					array_push($sentPhones, $user['phone']);
-					sendMsg("财务单$newStatusCh",$user['name'],$phoneNumber,$text,null,'sendSMS');
-				}
-			}catch(Exception $e){
-				
-			}
+			if(startWith($user['level'],'008-')) //财务不用发短信
+				continue;
+			if($q['@status']=='rdyck' && !startWith($user['level'],'003-001')) //审核通过只给工程部总经理发短信
+				continue;
+			if($q['@status']=='chk' && startWith($user['level'],'003-001'))
+				continue;
+			if(startWith($user['level'],'001-')) // 总经办不用发送短信
+				continue;
+			$msgLogSvc->add(array('@reciever'=>$user['name'],'@content'=>$text));
 		}
 	}
 
