@@ -10,7 +10,7 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 	alias: 'widget.progress-projectlistbycaptain',
 	isForChart: false,
 	isForAddCategory: false,
-	isForFrozen: false,
+	includeFrozen: false, // this is used to load frozen project. coz in manuallycheckbill module, we need frozen project as well.
 
 	loadAll: true,
 	searchFilter: false,
@@ -82,8 +82,9 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 							},
 							extraParams: (function () {
 								var p = {
-									action: 'filterProjectByProjectName'
-								}
+									action: 'filterProjectByProjectName',
+									includeFrozen: me.includeFrozen
+								};
 								if (User.isProjectStaff()) {
 									Ext.apply(p, {
 										projectStaff: User.getName()
@@ -197,6 +198,7 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 								st.proxy.extraParams = {
 									captainName: node.get('captainName'),
 									action: 'getProjectsByCaptainName',
+									includeFrozen: me.includeFrozen,
 									needStatementBillCount: me.needStatementBillCount
 								};
 							}
@@ -205,6 +207,7 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 									captainName: node.get('captainName'),
 									action: 'getProjectsByCaptainName',
 									userName: User.getName(),
+									includeFrozen: me.includeFrozen,
 									needStatementBillCount: me.needStatementBillCount
 								};
 							}

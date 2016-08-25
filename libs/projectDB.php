@@ -151,11 +151,12 @@
 		global $mysql;
 		$userName = isset($_REQUEST["userName"]) ? $_REQUEST["userName"] : "";
 		$needStatementBillCount = isset($_REQUEST["needStatementBillCount"]) ? $_REQUEST["needStatementBillCount"] : "";
+		$includeFrozen = $_REQUEST["includeFrozen"];
 		if ($userName == "") {
-			$projects = $mysql->DBGetAsMap("select * from project where `isDeleted` = 'false' and `captainName` = '?' and `isFrozen` = 'false' ORDER BY `projectTime` ASC ", $captainName);
+			$projects = $mysql->DBGetAsMap("select * from project where `isDeleted` = 'false' and `captainName` = '?' ".($includeFrozen == "true" ? "" : " and `isFrozen` = '0' ")." ORDER BY `projectTime` ASC ", $captainName);
 		}
 		else {
-			$projects = $mysql->DBGetAsMap("select * from project where `isDeleted` = 'false' and `captainName` = '?' and `isFrozen` = 'false' and (`salesmanName` = '?' || `designerName` = '?') ORDER BY `projectTime` ASC ", $captainName, $userName, $userName);
+			$projects = $mysql->DBGetAsMap("select * from project where `isDeleted` = 'false' and `captainName` = '?' ".($includeFrozen == "true" ? "" : " and `isFrozen` = '0' ")." and (`salesmanName` = '?' || `designerName` = '?') ORDER BY `projectTime` ASC ", $captainName, $userName, $userName);
 		}
 		$sqlBudget = "select * from budget where projectId = '?' and isDeleted = 'false'";
 		foreach($projects as $key=>$project) {
@@ -176,9 +177,9 @@
 	}
 	
 	// filter project via typing project in search above project tree
-	function filterProjectByProjectName ($projectName, $projectStaff, $userName){
+	function filterProjectByProjectName ($projectName, $projectStaff, $userName, $includeFrozen){
 		global $mysql;
-		$sql = "select * from project where `projectName` like '%?%' and `isDeleted` = 'false' and `isFrozen` = 'false' ";
+		$sql = "select * from project where `projectName` like '%?%' and `isDeleted` = 'false' ".($includeFrozen == "true" ? "" : " and `isFrozen` = '0' ");
 		if ($projectStaff) {
 			$sql .= " and captainName = '?' ";
 			$projects = $mysql->DBGetAsMap($sql, $projectName, $projectStaff);

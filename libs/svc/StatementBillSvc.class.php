@@ -43,7 +43,8 @@ class StatementBillSvc extends BaseSvc
 		notNullCheck($q,'@billType','审批单类型不能为空!');
 		if($q['@billType'] != 'qgd')
 			notNullCheck($q,'@payee','领款人不能为空!');
-		if($q['@billType'] == 'reg')
+		// 是否完工标志位用来判断，当前工程是否要进行监理意见检测。如果完工的工程，是不需要判断当前监理意见是否填写的。
+		if($q['@billType'] == 'reg' && $q["@isFrozen"] == "0")
 			parent::getSvc('ProjectProgressAudit')->checkAuditPassed($q['@professionType'],$q['@projectId']);
 		$res = parent::add($q);
 		return $res;

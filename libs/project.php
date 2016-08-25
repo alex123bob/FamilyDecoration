@@ -78,7 +78,7 @@
 		case "filterProjectByProjectName":
 			$projectStaff = isset($_REQUEST["projectStaff"]) ? $_REQUEST["projectStaff"] : false;
 			$userName = isset($_REQUEST["userName"]) ? $_REQUEST["userName"] : false;
-			$res = filterProjectByProjectName($_REQUEST["projectName"], $projectStaff, $userName);
+			$res = filterProjectByProjectName($_REQUEST["projectName"], $projectStaff, $userName, $_REQUEST["includeFrozen"]);
 			break;
 		default: 
 			throw new Exception("unknown action:".$action);
