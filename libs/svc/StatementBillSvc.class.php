@@ -155,6 +155,10 @@ class StatementBillSvc extends BaseSvc
 		}
 		if($q['@status'] == "paid") {
 			$q['@payer'] = $_SESSION['name'];
+			$q['@paidTime'] = 'now()';
+		}else{
+			unset($q['@paidAmount']);
+			unset($q['@paidTime']);
 		}
 		$q['@status']=$targetStatus;
 		$res = parent::update($q);
