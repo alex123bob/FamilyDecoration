@@ -151,10 +151,13 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                                 }
                                 ajaxUpdate('StatementBill.changeStatus', {
                                     id: resObj.qgd.data.id,
-                                    status: '+1'
-                                }, ['id'], function (obj) {
-                                    Ext.Msg.success('递交成功！');
-                                    resObj.qgdList.refresh();
+                                    status: '+1',
+                                    currentStatus: resObj.qgd.get('status')
+                                }, ['id', 'currentStatus'], function (obj) {
+                                    Ext.defer(function (){
+                                        Ext.Msg.success('递交成功！');
+                                        resObj.qgdList.refresh();
+                                    }, 500);
                                 }, true);
                             });
                         }
@@ -197,10 +200,13 @@ Ext.define('FamilyDecoration.view.qualityguaranteedepositmgm.Index', {
                                 }
                                 ajaxUpdate('StatementBill.changeStatus', {
                                     id: resObj.qgd.data.id,
-                                    status: '+1'
-                                }, ['id'], function (obj) {
-                                    Ext.Msg.success('审核通过！');
-                                    resObj.qgdList.refresh();
+                                    status: '+1',
+                                    currentStatus: resObj.qgd.get('status')
+                                }, ['id', 'currentStatus'], function (obj) {
+                                    Ext.defer(function (){
+                                        Ext.Msg.success('审核通过！');
+                                        resObj.qgdList.refresh();
+                                    }, 500);
                                 }, true);
                             });
                         }

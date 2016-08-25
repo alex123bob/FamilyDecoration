@@ -315,17 +315,20 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 											showMsg(obj.hint);
 											ajaxUpdate('StatementBill.changeStatus', {
 												id: resourceObj.bill.getId(),
-												status: '+1'
-											}, ['id'], function (obj) {
-												Ext.Msg.success('递交成功！');
-												selModel.deselectAll();
-												st.reload({
-													callback: function (recs, ope, success) {
-														if (success) {
-															selModel.select(index);
+												status: '+1',
+												currentStatus: resourceObj.bill.get('status')
+											}, ['id', 'currentStatus'], function (obj) {
+												Ext.defer(function () {
+													Ext.Msg.success('递交成功！');
+													selModel.deselectAll();
+													st.reload({
+														callback: function (recs, ope, success) {
+															if (success) {
+																selModel.select(index);
+															}
 														}
-													}
-												});
+													});
+												}, 500);
 											}, true);
 										}
 										else {
@@ -339,17 +342,20 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 													ajaxUpdate('StatementBill.changeStatus', {
 														id: resourceObj.bill.getId(),
 														status: '+1',
-														validateCode: val
-													}, ['id', 'validateCode'], function (obj) {
-														Ext.Msg.success('递交成功！');
-														selModel.deselectAll();
-														st.reload({
-															callback: function (recs, ope, success) {
-																if (success) {
-																	selModel.select(index);
+														validateCode: val,
+														currentStatus: resourceObj.bill.get('status')
+													}, ['id', 'validateCode', 'currentStatus'], function (obj) {
+														Ext.defer(function () {
+															Ext.Msg.success('递交成功！');
+															selModel.deselectAll();
+															st.reload({
+																callback: function (recs, ope, success) {
+																	if (success) {
+																		selModel.select(index);
+																	}
 																}
-															}
-														});
+															});
+														}, 500);
 													}, true);
 												});
 											}, 500);
@@ -375,8 +381,9 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 								function request(validateCode) {
 									var params = {
 										id: resourceObj.bill.getId(),
-										status: '+1'
-									}, arr = ['id'];
+										status: '+1',
+										currentStatus: resourceObj.bill.get('status')
+									}, arr = ['id', 'currentStatus'];
 									if (validateCode) {
 										Ext.apply(params, {
 											validateCode: validateCode
@@ -384,15 +391,17 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 										arr.push('validateCode');
 									}
 									ajaxUpdate('StatementBill.changeStatus', params, arr, function (obj) {
-										Ext.Msg.success('一审通过');
-										selModel.deselectAll();
-										st.reload({
-											callback: function (recs, ope, success) {
-												if (success) {
-													selModel.select(index);
+										Ext.defer(function () {
+											Ext.Msg.success('一审通过');
+											selModel.deselectAll();
+											st.reload({
+												callback: function (recs, ope, success) {
+													if (success) {
+														selModel.select(index);
+													}
 												}
-											}
-										});
+											});
+										}, 500);
 									}, true);
 								}
 								Ext.Msg.warning('确定要将当前账单置为一审通过吗？', function (btnId) {
@@ -443,9 +452,10 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 										function request(validateCode) {
 											var params = {
 												id: resourceObj.bill.getId(),
-												status: '-1'
+												status: '-1',
+												currentStatus: resourceObj.bill.get('status')
 											},
-												arr = ['id'];
+												arr = ['id', 'currentStatus'];
 											if (validateCode) {
 												Ext.apply(params, {
 													validateCode: validateCode
@@ -453,15 +463,17 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 												arr.push('validateCode');
 											}
 											ajaxUpdate('StatementBill.changeStatus', params, arr, function (obj) {
-												Ext.Msg.success('单据已退回，单据状态置为未提交！');
-												selModel.deselectAll();
-												st.reload({
-													callback: function (recs, ope, success) {
-														if (success) {
-															selModel.select(index);
+												Ext.defer(function () {
+													Ext.Msg.success('单据已退回，单据状态置为未提交！');
+													selModel.deselectAll();
+													st.reload({
+														callback: function (recs, ope, success) {
+															if (success) {
+																selModel.select(index);
+															}
 														}
-													}
-												});
+													});
+												}, 500);
 											}, true);
 										}
 										ajaxGet('StatementBill', 'getLimit', {
