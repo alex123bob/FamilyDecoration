@@ -1,0 +1,36 @@
+name: dqjczs
+version: 1
+
+cron:
+    - description: backup database in 00:20
+      url: cron_dbback.php
+      schedule: every day of month 00:20
+      timezone: Beijing
+    - description: revert telemarketing business in 00:30
+      url: libs/business.php?action=revertTelemarketingBusiness
+      schedule: every day of month 00:30
+      timezone: Beijing
+    - description: send database script to mailbox in 06:00
+      url: cron_sendmail.php
+      schedule: every day of month 06:00
+      timezone: Beijing
+    - description: business slacker alert in 06:05
+      url: cron_busialert.php
+      schedule: every day of month 06:05
+      timezone: Beijing
+    - description: plan status reminder in 07:30
+      url: libs/api.php?action=PlanMaking.designerAlarm
+      schedule: every day of month 07:30
+      timezone: Beijing
+    - description: mainmaterial reminder in 08:00
+      url: libs/api.php?action=PlanMaking.msgPreNotice
+      schedule: every day of month 08:00
+      timezone: Beijing
+    - description: go through SMS queue to trigger unsent SMS
+      url: libs/api.php?action=MsgLog.cron
+      schedule: every 10 mins
+      timezone: Beijing
+    - description: go through eMail queue to trigger unsent emails
+      url: libs/api.php?action=Mail.cron
+      schedule: every 10 mins
+      timezone: Beijing
