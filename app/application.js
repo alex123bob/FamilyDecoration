@@ -45,7 +45,8 @@ Ext.define('FamilyDecoration.Application', {
         'PaymentRequest',
         'Account',
         'MaterialRequest',
-        'QualityGuaranteeDepositMgm'
+        'QualityGuaranteeDepositMgm',
+        'SupplierManagement'
     ],
 
     stores: [

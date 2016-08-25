@@ -167,14 +167,14 @@ class EntryNExitSvc{
 					paidTime as c10,
 					b.status,
 					u.realName as c11 from statement_bill b left join profession_type t on b.professionType = t.value left join user u on u.name = b.payer 
-					where b.isDeleted = 'false' and (b.billType = 'reg' or b.billType = 'ppd') and ( b.status = 'paid' or b.status = 'chk') 
-					order by b.status";
+					where b.isDeleted = 'false' and (b.billType = 'reg' or b.billType = 'ppd') and ( b.status = 'paid' or b.status = 'chk') ";
 		if(isset($q['c0']) && $q['c0'] != ""){
 			$sql .= ' and b.id like \'%'.$q['c0'].'%\'';
 		}
 		if(isset($q['payee']) && $q['payee'] != ""){
 			$sql .= ' and b.payee like \'%'.$q['payee'].'%\'';
 		}
+		$sql .= " order by b.status ";
 		$res = $this->parseData($sql,$q);
 		foreach ($res['data'] as &$item) {
 			$item['c8'] = round($item['c8'],2);

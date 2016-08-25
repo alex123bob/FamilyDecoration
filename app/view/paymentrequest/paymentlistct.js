@@ -187,8 +187,9 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                                 function request(validateCode) {
                                     var params = {
                                         id: resObj.request.getId(),
-                                        status: '+1'
-                                    }, arr = ['id'],
+                                        status: '+1',
+                                        currentStatus: resObj.request.get('status')
+                                    }, arr = ['id', 'currentStatus'],
                                         index = resObj.requestSt.indexOf(resObj.request);
                                     if (validateCode) {
                                         Ext.apply(params, {
@@ -197,15 +198,17 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                                         arr.push('validateCode');
                                     }
                                     ajaxUpdate('StatementBill.changeStatus', params, arr, function (obj) {
-                                        Ext.Msg.success(successMsg);
-                                        resObj.requestSelModel.deselectAll();
-                                        resObj.requestSt.reload({
-                                            callback: function (recs, ope, success) {
-                                                if (success) {
-                                                    resObj.requestSelModel.select(index);
+                                        Ext.defer(function () {
+                                            Ext.Msg.success(successMsg);
+                                            resObj.requestSelModel.deselectAll();
+                                            resObj.requestSt.reload({
+                                                callback: function (recs, ope, success) {
+                                                    if (success) {
+                                                        resObj.requestSelModel.select(index);
+                                                    }
                                                 }
-                                            }
-                                        })
+                                            });
+                                        }, 500);
                                     }, true);
                                 }
                                 Ext.Msg.warning(cfmMsg, function (btnId) {
@@ -271,7 +274,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                         {
                             text: '申请日期',
                             dataIndex: 'createTime',
-                            renderer: function (val, meta, rec){
+                            renderer: function (val, meta, rec) {
                                 val = val ? val.slice(0, 10) : '';
                                 return val;
                             }
@@ -296,7 +299,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                                 {
                                     tooltip: '查看编辑附件',
                                     icon: 'resources/img/attachment.png',
-                                    handler: function (grid, rowIndex, colIndex){
+                                    handler: function (grid, rowIndex, colIndex) {
                                         var rec = grid.getStore().getAt(rowIndex),
                                             win = Ext.create('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
                                                 infoObj: {

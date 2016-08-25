@@ -179,7 +179,8 @@
                     },
                     {
                         name: '材料申购',
-                        cmp: 'materialrequest-index',
+                        // cmp: 'materialrequest-index',
+                        cmp: '',
                         leaf: true,
                         icon: 'resources/img/material_request.png'
                     },
@@ -232,6 +233,13 @@
                         cmp: 'paymentrequest-index',
                         leaf: true,
                         icon: 'resources/img/payment_request.png'
+                    },
+                    {
+                        name: '供应商管理',
+                        // cmp: 'suppliermanagement-index',
+                        cmp: '',
+                        leaf: true,
+                        icon: 'resources/img/supplier_management.png'
                     },
                     {
                         name: '账户管理',
