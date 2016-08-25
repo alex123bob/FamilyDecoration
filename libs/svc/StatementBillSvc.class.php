@@ -265,6 +265,7 @@ class StatementBillSvc extends BaseSvc
 		$this->appendJoin = "left join profession_type tp on tp.value = $this->tableName.professionType";
 		$data2 = $this->get($q);
 		$userSvc->appendRealName($data2['data'],'checker');
+		$projectSvc->appendCaptain($data2['data']);
 		foreach ($data2['data'] as $key => $value) {
 			array_push($data['data'], $value);
 		}
