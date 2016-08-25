@@ -9,9 +9,9 @@ class MailSvc extends BaseSvc
 	public function add($q){
 		$q['@id'] = $this->getUUID();
 		if (!isset($q['@mailSender']))
-			$q['@mailSender'] = $_SESSION['realname'];
+			$q['@mailSender'] = isset($_SESSION['realname']) ? $_SESSION['realname'] : '无';
 		if (!isset($q['@senderAddress']))
-			$q['@senderAddress'] = $_SESSION['mail'];
+			$q['@senderAddress'] = isset($_SESSION['mail']) ? $_SESSION['mail'] : '无';
 		if (!isset($q['@mailReceiver']) && !isset($q['@receiverAddress'])){
 			throw new Exception('收信人和邮件地址不能同时为空!');
 		}
