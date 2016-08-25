@@ -150,6 +150,7 @@ class StatementBillSvc extends BaseSvc
 		global $mysql;
 		$mysql->begin();
 		$auditSvc->add($auditRecord);
+		$q['@status']=$targetStatus;
 		if($q['@status'] == "chk"){
 			$q['@checker'] = $_SESSION['name'];
 		}
@@ -159,8 +160,7 @@ class StatementBillSvc extends BaseSvc
 		}else{
 			unset($q['@paidAmount']);
 			unset($q['@paidTime']);
-		}
-		$q['@status']=$targetStatus;
+		}		
 		$res = parent::update($q);
 		$mysql->commit();
 		//通知
