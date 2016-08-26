@@ -129,7 +129,7 @@
 			if(isset($pro[$key]))
 				$obj[$key] = $pro[$key];
 		}
-		if ($obj['isFrozen'] == '1') {
+		if (isset($obj['isFrozen']) && $obj['isFrozen'] == '1') {
 			BaseSvc::getSvc('ProjectProgressAudit')->checkAuditPassed("0001", $pro["projectId"]);
 			BaseSvc::getSvc('ProjectProgressAudit')->checkAuditPassed("0002", $pro["projectId"]);
 			BaseSvc::getSvc('ProjectProgressAudit')->checkAuditPassed("0003", $pro["projectId"]);
