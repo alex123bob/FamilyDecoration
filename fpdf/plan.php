@@ -30,20 +30,37 @@ include_once 'chinese.php';
 include_once 'pdf_chinese_plan.php';
 
 $planSvc = BaseSvc::getSvc('PlanMaking');
-
 $plan = $planSvc->get(array('id'=>$_REQUEST['id']));
-if($plan['total'] == 0 )
-	throw '没有找到id为'.$_REQUEST['id'].'的计划!';
+if($plan['total'] == 0 ){
+	header("Content-type: text/html; charset=gbk");
+	$msg = '没有找到id为'.$_REQUEST['id'].'的计划!';
+	echo $msg;
+	throw new Exception($msg);
+}
 $plan = $plan['data'][0];
+
+$projectSvc = BaseSvc::getSvc('Project');
+$project = $projectSvc->get(array('projectId'=>$plan['projectId']));
+if($project['total'] == 0 ){
+	header("Content-type: text/html; charset=gbk");
+	$msg = '没有找到id为'.$plan['projectId'].'的项目!';
+	echo $msg;
+	throw new Exception($msg);
+}
+$project = $project['data'][0];
+
 $name = str2GBK($plan['custName']);
 $address = str2GBK($plan['projectAddress']);
 $planItems = $planSvc->getItems(array('planId'=>$_REQUEST['id']));
 $action = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "view";
 
-
+//默认使用计划的时间，如果有项目时间，优先使用项目的
 $start=$plan['startTime'];
 $end=$plan['endTime'];
-
+if(isset($project['period']) && $project['period'] != null && $project['period'] != "" && contains($project['period'],":")){
+	$start = explode(":",$project['period'])[0];
+	$end = explode(":",$project['period'])[1];
+}
 
 $pdf=new PDF('L','mm', $pagetype); //创建新的FPDF对象 
 $pdf->AddGBFont(); //设置中文字体 
