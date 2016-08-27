@@ -325,6 +325,25 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 						del.disable();
 						upload.disable();
 					}
+				},
+				cellclick: function (view, td, cellIndex, rec, tr, rowIndex, ev, opts){
+					if (rec && rec.get('name') && cellIndex == 7) {
+						var win = Ext.create('Ext.window.Window', {
+							layout: 'fit',
+							width: 500,
+							height: 400,
+							maximizable: true,
+							modal: true,
+							title: '帐户照片',
+							items: [
+								{
+									xtype: 'image',
+									src: rec.get('profileImage')
+								}
+							]
+						});
+						win.show();
+					}
 				}
 			}
 		}];
