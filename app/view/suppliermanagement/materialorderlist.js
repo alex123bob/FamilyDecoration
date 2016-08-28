@@ -29,6 +29,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
             {
                 text: '确认发货',
                 name: 'confirm',
+                icon: 'resources/img/confirm_dispatch.png',
                 handler: function (){
                     
                 }
@@ -36,6 +37,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
             {
                 text: '申请付款',
                 name: 'request',
+                icon: 'resources/img/request_payment.png',
                 handler: function (){
                     var win = Ext.create('FamilyDecoration.view.suppliermanagement.ApplyForPayment', {
 
@@ -46,6 +48,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
             {
                 text: '申付审核通过',
                 name: 'pass',
+                icon: 'resources/img/payment_approval.png',
                 handler: function (){
                     
                 }
@@ -53,6 +56,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
             {
                 text: '退回申付',
                 name: 'return',
+                icon: 'resources/img/payment_return.png',
                 handler: function (){
 
                 }
