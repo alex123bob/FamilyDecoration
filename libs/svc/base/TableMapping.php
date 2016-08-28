@@ -25,6 +25,8 @@
 		'statement_bill_item_remark'=>array('id','content','refId','committer'),
 		'mail'=>array('id','mailSubject','mailContent','mailSender','mailReceiver','senderAddress','receiverAddress','isRead','result','status'),  //邮件发送
 		'msg_log'=>array('id','sender','reciever','recieverPhone','status','result','content'),  //短信发送
+		'supplier'=>array('id','name','boss','address','phone'),
+		'supplierMaterial'=>array('id','supplierId','name','unit','price','professionType'),
 		"statement_bill_tag"=>array('id','tag','billId','committer'));
 
 	foreach ($TableMapping as $key => &$value) {
