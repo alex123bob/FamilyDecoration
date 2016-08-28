@@ -744,6 +744,43 @@
                                         clicksToEdit: 1
                                     })
                                 ],
+                                tbar: [
+                                    {
+                                        xtype: 'combobox',
+                                        store: Ext.create('Ext.data.Store', {
+                                            fields: ['name', 'value'],
+                                            proxy: {
+                                                type: 'memory',
+                                                reader: {
+                                                    type: 'json'
+                                                }
+                                            },
+                                            data: [
+                                                {
+                                                    name: '系统错误/异常',
+                                                    value: 0
+                                                },
+                                                {
+                                                    name: '业务异常',
+                                                    value: 1
+                                                }
+                                            ]
+                                        }),
+                                        displayField: 'name',
+                                        valueField: 'value',
+                                        editable: false,
+                                        listeners: {
+                                            change: function (combo, newVal, oldVal, opts){
+                                                var oldProxy = st.getProxy();
+                                                Ext.apply(oldProxy.extraParams, {
+                                                    type: newVal
+                                                });
+                                                st.setProxy(oldProxy);
+                                                st.loadPage(1);
+                                            }
+                                        }
+                                    }
+                                ],
                                 dockedItems: [
                                     {
                                         xtype: 'pagingtoolbar',
