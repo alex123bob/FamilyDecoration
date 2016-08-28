@@ -1,4 +1,5 @@
 <?php
+Class BaseException extends Exception{}
 
 Class Proxy extends BaseSvc{
 

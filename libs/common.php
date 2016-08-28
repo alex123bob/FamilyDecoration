@@ -3,7 +3,7 @@
 	 * @desc Common operations including functions and operations.
 	 * @auth Diego & Alex
 	 */
-	function ErrorHandler($errno, $errstr,$errorFile,$errorLine){
+	function ErrorHandler($errno, $errstr,$errorFile,$errorLine,$errorType = 0){
 		$errstr = str_replace("Undefined index:","缺少参数:",$errstr);
 		$popupMsg = $errstr;
 		if(contains($errstr,'imagecreatefromjpeg')){
@@ -13,7 +13,6 @@
 		try{
 			if($mysql != null && $mysql->isTransactions()){
 				$mysql->rollback(true);
-
 			}	
 		}catch(Exception $e){}
 		try{
@@ -22,6 +21,7 @@
 				$errorLogSvc->add(array('@file'=>$errorFile,
 									'@line'=>$errorLine,
 									'@detail'=>$errstr,
+									'@type'=>$errorType,
 									'@params'=>json_encode($_POST),
 									'@user'=>isset($_SESSION['name']) ? $_SESSION['name'] : '',
 									'@url'=>"http://".$_SERVER["HTTP_HOST"] . ":" . $_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"],
@@ -31,6 +31,12 @@
 			}			
 		}catch(Exception $e){
 			//var_dump($e);
+		}
+		//非业务异常，邮件通知
+		if($errorType != 1){
+			$mailSvc = BaseSvc::getSvc('Mail');
+			$mailSvc->add(array('@mailSubject'=>'有系统异常啦！','@mailContent'=>'有系统异常啦！','@mailSender'=>'系统提醒','@mailReceiver'=>'674417307@qq.com'));
+			$mailSvc->add(array('@mailSubject'=>'有系统异常啦！','@mailContent'=>'有系统异常啦！','@mailSender'=>'系统提醒','@mailReceiver'=>'547010762@qq.com'));
 		}
 		$res = array(
 			'status'=>'failing',
@@ -46,7 +52,8 @@
 	}
 	
 	function ExceptionHandler($e){
-		ErrorHandler(-1,$e->getMessage(),$e->getTraceAsString(),'');
+		$errorCode = $e instanceof BaseException ? 1 : 0;
+		ErrorHandler(-1,$e->getMessage(),$e->getTraceAsString(),'',$errorCode);
 	}
 
 	function getClientIp(){
