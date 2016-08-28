@@ -48,7 +48,7 @@ class LogListSvc extends BaseSvc
 		global $mysql;
 		if(strlen($month) == 1) 
 			$month = '0'.$month;
-		$sql = "select count(*) from business where designerName = '?' and left(signTime,7) = '?'"; 
+		$sql = "select count(1) from business where designerName = '?' and left(signTime,7) = '?'"; 
 		$signedBusinessData = $mysql->DBGetAsOneArray($sql,$user,"$year-$month");
 		return array(
 			'signedBusinessNumber'=>(int)$signedBusinessData[0],
@@ -61,24 +61,24 @@ class LogListSvc extends BaseSvc
 			$month = '0'.$month;
 		$ym = '\''.$year.'-'.$month.'\'';
 
-		$sql = "select d,count(*) as num from (
+		$sql = "select d,count(1) as num from (
 					select left(createTime,10) as d , potentialBusinessId  from potential_business_detail b 
 					where committer = '?' and left(createTime,7) = $ym group by potentialBusinessId,left(createTime,10) 
 				) as temp group by d";
 		if($byMonth) $sql = "select sum(num) as sum from ( $sql ) as temp";
 		$telemarketingData = $mysql->DBGetAsMap($sql,$user);
 
-		$sql = "select left(levelTime,10) as d,count(*) as num from business b 
+		$sql = "select left(levelTime,10) as d,count(1) as num from business b 
 				where level = 'B' and salesmanName = '?' and left(levelTime,7) = $ym group by left(levelTime,10) ";
 		if($byMonth) $sql = "select sum(num) as sum  from ( $sql ) as temp";
 		$companyVisitData = $mysql->DBGetAsMap($sql,$user);
 
-		$sql = "select left(levelTime,10) as d,count(*) as num from business b 
+		$sql = "select left(levelTime,10) as d,count(1) as num from business b 
 				where level = 'A' and salesmanName = '?' and left(levelTime,7) = $ym group by left(levelTime,10) ";
 		if($byMonth) $sql = "select sum(num) as sum  from ( $sql ) as temp";
 		$depositData = $mysql->DBGetAsMap($sql,$user);
 
-		$sql = "select left(createTime,10) as d,count(*) as num  from potential_business b 
+		$sql = "select left(createTime,10) as d,count(1) as num  from potential_business b 
 				where salesmanName = '?' and left(createTime,7) = $ym group by left(createTime,10) ";
 		if($byMonth) $sql = "select sum(num) as sum  from ( $sql ) as temp";
 		$buildingSwipingData = $mysql->DBGetAsMap($sql,$user);

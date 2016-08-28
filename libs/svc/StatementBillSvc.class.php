@@ -233,7 +233,7 @@ class StatementBillSvc extends BaseSvc
 		//查预付款
 		global $TableMapping;
 		global $mysql;
-		$sql = 'select count(*) as count,sum(totalFee) as totalPreFee,projectId,payee,professionType from statement_bill where billType = \'ppd\' and isDeleted = \'false\' group by projectId,payee,professionType;';
+		$sql = 'select count(1) as count,sum(totalFee) as totalPreFee,projectId,payee,professionType from statement_bill where billType = \'ppd\' and isDeleted = \'false\' group by projectId,payee,professionType;';
 		$rows = $mysql->DBGetAsMap($sql);
 		$map2 = array();
 		foreach ($rows as $item) {
@@ -361,7 +361,7 @@ class StatementBillSvc extends BaseSvc
 				" left join project pro on o.projectId = pro.projectId".
 				" left join profession_type prof on prof.value = o.professionType".
 				" where pro.captainName = '?' and (o.status = 'paid' or o.status = 'arch') and o.paidAmount != o.totalFee and o.billType = 'reg' and o.isDeleted = 'false'";
-		$count = $mysql->DBGetAsOneArray("select count(*) ".$where,$q['captainName'])[0];
+		$count = $mysql->DBGetAsOneArray("select count(1) ".$where,$q['captainName'])[0];
 		$data = $count > 0 ? $mysql->DBGetAsMap($sql.$where.BaseSvc::parseLimitSql($q),$q['captainName']) : array();
 		foreach ($data as &$value) {
 			$value['qgd'] = round($value['total'] - $value['paid']);

@@ -57,7 +57,7 @@ class BusinessGoalSvc extends BaseSvc
 		$left = strlen($ym);
 		global $mysql;
 		$users = '\''.join($users,'\',\'').'\'';
-		$sql = "select count(*) as ctn,designerName as user from business where designerName in ($users) and left(signTime,$left) = '$ym' group by designerName,left(signTime,$left) "; 
+		$sql = "select count(1) as ctn,designerName as user from business where designerName in ($users) and left(signTime,$left) = '$ym' group by designerName,left(signTime,$left) "; 
 		$signRateData = $this->objectListToKeyList($mysql->DBGetAsMap($sql),'user');
 		foreach ($dataArray as &$value) {
 			$value['id'] = $value['id'] == null ? '' : $value['id'];
@@ -81,16 +81,16 @@ class BusinessGoalSvc extends BaseSvc
 		global $mysql;
 		$left = strlen($ym);
 		$users = '\''.join($users,'\',\'').'\'';
-		$sql = "select count(*)  as ctn,committer as user from potential_business_detail where left(createTime,$left) = '$ym' and committer in ( $users ) group by committer,left(createTime,$left) ";
+		$sql = "select count(1)  as ctn,committer as user from potential_business_detail where left(createTime,$left) = '$ym' and committer in ( $users ) group by committer,left(createTime,$left) ";
 		$telemarketingData = $this->objectListToKeyList($mysql->DBGetAsMap($sql),'user');
 
-		$sql = "select count(*)  as ctn,salesmanName as user from business where left(levelTime,$left) = '$ym' and level = 'B' and salesmanName in ( $users ) group by salesmanName,left(levelTime,$left) ";
+		$sql = "select count(1)  as ctn,salesmanName as user from business where left(levelTime,$left) = '$ym' and level = 'B' and salesmanName in ( $users ) group by salesmanName,left(levelTime,$left) ";
 		$companyVisitData = $this->objectListToKeyList($mysql->DBGetAsMap($sql),'user');
 
-		$sql = "select count(*)  as ctn,salesmanName as user from business where left(levelTime,$left) = '$ym' and level = 'A' and salesmanName in ( $users ) group by salesmanName,left(levelTime,$left) ";
+		$sql = "select count(1)  as ctn,salesmanName as user from business where left(levelTime,$left) = '$ym' and level = 'A' and salesmanName in ( $users ) group by salesmanName,left(levelTime,$left) ";
 		$depositData = $this->objectListToKeyList($mysql->DBGetAsMap($sql),'user');
 
-		$sql = "select count(*) as ctn,salesmanName as user from potential_business where left(createTime,$left) = '$ym' and salesmanName in ( $users ) group by salesmanName,left(createTime,$left) ";
+		$sql = "select count(1) as ctn,salesmanName as user from potential_business where left(createTime,$left) = '$ym' and salesmanName in ( $users ) group by salesmanName,left(createTime,$left) ";
 		$buildingSwipingData = $this->objectListToKeyList($mysql->DBGetAsMap($sql),'user');
 
 		foreach ($dataArray as &$value) {

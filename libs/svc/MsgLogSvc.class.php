@@ -167,7 +167,7 @@ class MsgLogSvc extends BaseSvc
 	public function getsendmsgs($sender,$reciever,$recieverPhone,$status,$beginTime,$endTime,$page,$size){
 		global $mysql,$MsgErrorCode,$BlackListWords,$userAndPswd,$corpName,$apiUrl;
 		$sql = "select * from msg_log ";
-		$sqlCount = "select count(*) as count from msg_log ";
+		$sqlCount = "select count(1) as count from msg_log ";
 		$where = " where createTime >= '$beginTime' and createTime <= '$endTime' ";
 
 		if($sender != null)$where .= " and sender = '$sender' ";
@@ -187,7 +187,7 @@ class MsgLogSvc extends BaseSvc
 	public function getrecvmsgs($sender,$phone,$beginTime,$endTime,$page,$size){
 		global $mysql,$MsgErrorCode,$BlackListWords,$userAndPswd,$corpName,$apiUrl;
 		$sql = "select * from msg_recieve_log ";
-		$sqlCount = "select count(*) as count from msg_recieve_log ";
+		$sqlCount = "select count(1) as count from msg_recieve_log ";
 		$where = " where createTime >= '$beginTime' and createTime <= '$endTime' ";
 
 		if($sender != null)$where .= " and sender = '$sender' ";
