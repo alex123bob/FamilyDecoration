@@ -739,6 +739,11 @@
                             {
                                 xtype: 'gridpanel',
                                 cls: 'gridpanel-errorandexception',
+                                plugins: [
+                                    Ext.create('Ext.grid.plugin.CellEditing', {
+                                        clicksToEdit: 1
+                                    })
+                                ],
                                 dockedItems: [
                                     {
                                         xtype: 'pagingtoolbar',
@@ -757,55 +762,82 @@
                                         text: 'url',
                                         dataIndex: 'url',
                                         flex: 1,
-                                        align: 'center'
+                                        align: 'center',
+                                        editor: {
+                                            xtype: 'textarea'
+                                        }
                                     },
                                     {
                                         text: '参数',
                                         dataIndex: 'params',
                                         flex: 1,
-                                        align: 'center'
+                                        align: 'center',
+                                        editor: {
+                                            xtype: 'textarea'
+                                        }
                                     },
                                     {
                                         text: '详细',
                                         dataIndex: 'detail',
                                         flex: 1,
-                                        align: 'center'
+                                        align: 'center',
+                                        editor: {
+                                            xtype: 'textarea'
+                                        }
                                     },
                                     {
                                         text: '用户',
                                         dataIndex: 'user',
                                         flex: 1,
-                                        align: 'center'
+                                        align: 'center',
+                                        editor: {
+                                            xtype: 'textarea'
+                                        }
                                     },
                                     {
                                         text: '文件',
                                         dataIndex: 'file',
                                         flex: 1,
-                                        align: 'center'
+                                        align: 'center',
+                                        editor: {
+                                            xtype: 'textarea'
+                                        }
                                     },
                                     {
                                         text: '行号',
                                         dataIndex: 'line',
                                         flex: 1,
-                                        align: 'center'
+                                        align: 'center',
+                                        editor: {
+                                            xtype: 'textfield'
+                                        }
                                     },
                                     {
                                         text: 'IP',
                                         dataIndex: 'ip',
                                         flex: 1,
-                                        align: 'center'
+                                        align: 'center',
+                                        editor: {
+                                            xtype: 'textfield'
+                                        }
                                     },
                                     {
                                         text: 'refer',
                                         dataIndex: 'refer',
                                         flex: 1,
-                                        align: 'center'
+                                        align: 'center',
+                                        editor: {
+                                            xtype: 'textfield'
+                                        }
                                     },
                                     {
                                         text: '设备',
                                         dataIndex: 'useragent',
                                         flex: 1,
-                                        align: 'center'
+                                        align: 'center',
+                                        editor: {
+                                            xtype: 'textarea'
+                                        }
                                     },
                                     {
                                         text: '时间',
