@@ -216,7 +216,7 @@ Class PlanMakingSvc extends BaseSvc{
 		global $mysql;
 		$res = $mysql->DBGetAsOneArray($select);
 		if(count($res) == 0)
-			throw new Exception("没有正在进行的项目!", 1);
+			throw new BaseException("没有正在进行的项目!", 1);
 		$start='2999-12-31';
 		$end='1970-01-01';
 		foreach ($res as $key => $value) {
@@ -252,7 +252,7 @@ Class PlanMakingSvc extends BaseSvc{
 		global $mysql;
 		$res = $mysql->DBGetAsMap($select);
 		if(count($res) == 0)
-			throw new Exception("没有正在进行的项目!", 1);
+			throw new BaseException("没有正在进行的项目!", 1);
 		foreach ($res as &$item) {
 			$item['period'] = array();
 			foreach ($item as $key => $value) {
@@ -284,7 +284,7 @@ Class PlanMakingSvc extends BaseSvc{
 		if(isset($q['projectId']))
 			$res = parent::get(array('projectId'=>$q['projectId']));
 		if($res['total'] == 0)
-			throw new Exception("没有找到项目计划!");
+			throw new BaseException("没有找到项目计划!");
 		$plan = $res['data'][0];
 		$res = array();
 		$count = 0;

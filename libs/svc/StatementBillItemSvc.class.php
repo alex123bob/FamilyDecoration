@@ -6,12 +6,12 @@ class StatementBillItemSvc extends BaseSvc
 			if(is_numeric($q['@amount'])){
 				$q['@amount'] = round($q['@amount'],3);
 			}else{
-				throw new Exception('数量必须为数字:'.$q['@amount']);
+				throw new BaseException('数量必须为数字:'.$q['@amount']);
 			}
 		}
 		if(isset($q['@unitPrice'])){
 			if(!is_numeric($q['@unitPrice'])){
-				throw new Exception('单价必须为数字:'.$q['@amount']);
+				throw new BaseException('单价必须为数字:'.$q['@amount']);
 			}else{
 				$q['@unitPrice'] = round($q['@unitPrice'],3);
 			}

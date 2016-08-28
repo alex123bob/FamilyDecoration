@@ -13,7 +13,7 @@ class MailSvc extends BaseSvc
 		if (!isset($q['@senderAddress']))
 			$q['@senderAddress'] = isset($_SESSION['mail']) ? $_SESSION['mail'] : '无';
 		if (!isset($q['@mailReceiver']) && !isset($q['@receiverAddress'])){
-			throw new Exception('收信人和邮件地址不能同时为空!');
+			throw new BaseException('收信人和邮件地址不能同时为空!');
 		}
 		notNullCheck($q,'@mailSubject','主题不能为空!');
 		notNullCheck($q,'@mailContent','内容不能为空!');

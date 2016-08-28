@@ -29,7 +29,7 @@ class ProjectProgressAuditSvc extends BaseSvc{
 			case '0002': $columnName = " 'c23' ";$msg="木工工程-客户验收、成品保护";break;//木工
 			case '0003': $columnName = " 'c34' ";$msg="竣工验收、保修单签单";break;//油漆
 			default:
-            	return ;
+            	return ;//其他工种不校验验收
             //throw new Exception("未知工种:".$type);break;
 		}
 		global $mysql;
@@ -37,7 +37,7 @@ class ProjectProgressAuditSvc extends BaseSvc{
 		$cnt = $mysql->DBGetAsOneArray("select pass from project_progress_audit where projectId = '?'  and columnName = $columnName and isDeleted = 'false' order by createTime desc limit 1 ",$projectId);
 		if(count($cnt) >0 && $cnt[0] > 0)
 			return true;
-		throw new Exception("该项目$msg 最新添加的监理意见还未通过验收,暂时无法创建工资单!");
+		throw new BaseException("该项目$msg 最新添加的监理意见还未通过验收,暂时无法创建工资单!");
 	}
 }
 

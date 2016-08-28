@@ -32,7 +32,7 @@ class StatementBillSvc extends BaseSvc
 			if(self::$STATUSMAPPING[$billType][$i] == $currentStatus && $i + $offSet < $count && $i + $offSet >= 0)
 				return self::$STATUSMAPPING[$billType][$i+$offSet];
 		}
-		throw new Exception(self::$ALL_STATUS[$currentStatus].'账单不可操作！');
+		throw new BaseException(self::$ALL_STATUS[$currentStatus].'账单不可操作！');
 	}
 
 	public function add($q){
@@ -62,7 +62,7 @@ class StatementBillSvc extends BaseSvc
 				$q['@paidTime'] = 'now()';
 			notNullCheck($q,'@paidAmount','付款金额不能为空!');
 			if((int)$q['@paidAmount'] <= 0)
-				throw new Exception("付款金额错误！".$q['@fee']);
+				throw new BaseException("付款金额错误！".$q['@fee']);
 		}
 		return parent::update($q);
 	}
@@ -126,9 +126,9 @@ class StatementBillSvc extends BaseSvc
 	public function changeStatus($q){
 		$data = parent::get($q);
 		$bills = $data['data'];
-		if(count($bills) > 1) throw new Exception("查到".count($bills)."条记录");
-		if(count($bills) == 0) throw new Exception("查不到记录");
-		if($bills[0]['status'] == 'paid') throw new Exception("已付款,无法更改状态.");
+		if(count($bills) > 1) throw new BaseException("查到".count($bills)."条记录");
+		if(count($bills) == 0) throw new BaseException("查不到记录");
+		if($bills[0]['status'] == 'paid') throw new BaseException("已付款,无法更改状态.");
 	
 		$bill = $bills[0];
 		if($bill['status'] != $q['currentStatus'])

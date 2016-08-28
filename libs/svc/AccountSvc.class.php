@@ -31,11 +31,11 @@ class AccountSvc extends BaseSvc
 		$newSourceBalance = (double)$SourceAccount['balance'] - ((double)$amount);
 		$newTargetBalance = (double)$TargetAccount['balance'] - ((double)$amount);
 		if($newSourceBalance < 0)
-			throw new Exception("余额不足！");
+			throw new BaseException("余额不足！");
 		$affect = 0;
 		//更新记录
-		$sourceLog = parent::getSvc('AccountLog')->add(array('@accountId'=>$SourceAccountId,'@amount'=>$amount,'@type'=>'out','@refId'=>'-null-','@refType'=>'self','@balance'=>$newSourceBalance));
-		$targetLog = parent::getSvc('AccountLog')->add(array('@accountId'=>$TargetAccountId,'@amount'=>$amount,'@type'=>'in','@refId'=>$sourceLog['data']['id'],'@refType'=>'self','@balance'=>$newTargetBalance));
+		$sourceLog = parent::getSvc('AccountLog')->add(array('@accountId'=>$SourceAccountId,'@amount'=>$amount,'@type'=>'out','@refId'=>'-null-','@refType'=>'self','@balance'=>$newSourceBalance,'@desc'=>'转出到'.$SourceAccount['name']));
+		$targetLog = parent::getSvc('AccountLog')->add(array('@accountId'=>$TargetAccountId,'@amount'=>$amount,'@type'=>'in','@refId'=>$sourceLog['data']['id'],'@refType'=>'self','@balance'=>$newTargetBalance,'@desc'=>'从'.$SourceAccount['name'].'转入'));
 		parent::getSvc('AccountLog')->update(array('id'=>$sourceLog['data']['id'],'@refId'=>$targetLog['data']['id']));
 		//更新余额
 		$mysql->DBExecute("update account set balance = $newSourceBalance where id = '".$SourceAccountId."';");
@@ -180,7 +180,7 @@ class AccountSvc extends BaseSvc
 		//检查余额
 		$newBalance = (double)$account['balance'] - ((double)$q['@fee']);
 		if($newBalance < 0)
-			throw new Exception("余额不足！");
+			throw new BaseException("余额不足！");
 		$affect = 0;
 		//更新单据状态
 		switch($q['type']){
@@ -206,7 +206,7 @@ class AccountSvc extends BaseSvc
 			default:throw new Exception("unknown type: ".$q['type']);
 		}
 		if($affect !== 1)
-			throw new Exception("没有找到id为".$q['id']."的已审核账单，请确认订单存在并且已通过审核！");
+			throw new BaseException("没有找到id为".$q['id']."的已审核账单，请确认订单存在并且已通过审核！");
 
 		//更新记录
 		parent::getSvc('AccountLog')->add(array('@accountId'=>$accountId,'@amount'=>$q['@fee'],'@type'=>'out','@refId'=>$q['id'],'@refType'=>$q['type'],'@balance'=>$newBalance));

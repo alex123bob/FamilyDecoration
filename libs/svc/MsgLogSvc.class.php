@@ -12,7 +12,7 @@ class MsgLogSvc extends BaseSvc
 		if (!isset($q['@sender']))
 			$q['@sender'] = isset($_SESSION['realname']) ? $_SESSION['realname'] : 'system';
 		if (!isset($q['@reciever']) && !isset($q['@recieverPhone'])){
-			throw new Exception('收信人和手机号不能同时为空!');
+			throw new BaseException('收信人和手机号不能同时为空!');
 		}
 		notNullCheck($q,'@content','短信内容不能为空!');
 		$this->checkMsg($q['@content']);
@@ -51,7 +51,7 @@ class MsgLogSvc extends BaseSvc
 		global $MsgErrorCode,$BlackListWords,$userAndPswd,$corpName,$apiUrl;
 		foreach($BlackListWords as $blackWord){
 			if(contains($content,$blackWord))
-				throw new Exception("含有非法内容：".$blackWord);
+				throw new BaseException("以下关键字已被运营商列入黑名单：".$blackWord);
 		}
 		return array('status'=>'successful', 'checked' => 'true');
 	}

@@ -49,7 +49,7 @@ class AccountLogSvc extends BaseSvc
 	}
 
 	public function del($q){
-		throw new Exception("不允许删除记录！");
+		throw new BaseException("不允许删除记录！");
 	}
 }
 

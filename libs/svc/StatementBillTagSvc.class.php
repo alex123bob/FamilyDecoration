@@ -2,7 +2,7 @@
 class StatementBillTagSvc extends BaseSvc
 {
 	public function add($q){
-		throw new Exception("请使用addTag");
+		throw new BaseException("请使用addTag");
 	}
 
 	public function addTag($q){

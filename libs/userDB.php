@@ -7,9 +7,9 @@
 		$name = $_SESSION["name"];
 		$level = $_SESSION["level"];
 		if($name == $nameToDelete)
-			throw new Exception('不能删除自己！');
+			throw new BaseException('不能删除自己！');
 		if(!startWith($level,'001-'))
-			throw new Exception('只有管理员可以删除用户！');
+			throw new BaseException('只有管理员可以删除用户！');
 		$mysql->DBUpdate('user',array('isDeleted'=>true,'updateTime'=>'now()')," `name` = '?' ",array($nameToDelete));
 		return (array('status'=>'successful', 'errMsg' => ''));
 	}
@@ -29,7 +29,7 @@
 			global $mysql;
 			$user = $mysql->DBGetOneRow("`user`", "*", "`name` = '$name'");
 			if($user){
-				throw new Exception('用户已经存在！');
+				throw new BaseException('用户已经存在！');
 			}
 			$obj = array('name'=>$name,'realname'=>$realname,'password'=>$password,'level'=>$level,'projectId'=>$projectId,'phone'=>$phone, 'mail'=>$mail);
 			$mysql->DBInsertAsArray("`user`",$obj);
@@ -63,7 +63,7 @@
 			$mysql->DBInsertAsArray("`online_user`",$obj);
 			return (array('status'=>'successful', 'errMsg'=>'','token'=>$sessionId));
 		}
-		throw new Exception('用户或密码不正确！');
+		throw new BaseException('用户或密码不正确！');
 	}
 
 	/**
@@ -109,16 +109,16 @@
 				$mysql->DBUpdate('user',$obj,"`name`= '?' ",array($user["name"]));
 				return (array('status'=>'successful', 'errMsg'=>''));
 			}
-			throw new Exception('原密码不正确！');
+			throw new BaseException('原密码不正确！');
 		}
-		throw new Exception('用户不存在！');
+		throw new BaseException('用户不存在！');
 	}
 
 	function getValidateCode(){
 		$rand = rand(1000,9999);
 		$_SESSION['user_validateCode'] = $rand;
 		if(!isset($_SESSION['phone']) || strlen($_SESSION['phone']) != 11){
-			throw new Exception('您的手机号码不对,请联系管理员修改!');
+			throw new BaseException('您的手机号码不对,请联系管理员修改!');
 		}
 		BaseSvc::getSvc('MsgLog')->add(array('@reciever'=>$_SESSION['name'],'@content'=>'您的短信验证码是:'.$rand));
 		return array('status'=>'successful', 'errMsg' => '');
@@ -143,10 +143,10 @@
 		//自己修改自己的手机或者安全密码,需要重新获取短信验证码.管理员不需要.
 		if(!isAdminOrAdministrationManager() && $name == $_SESSION['name'] && ( $securePass || $phone )){
 			if(!isset($_POST['validateCode'])){
-				throw new Exception('修改安全验证码或者手机号时,必须输入手机短信验证码!');
+				throw new BaseException('修改安全验证码或者手机号时,必须输入手机短信验证码!');
 			}
 			if($_POST['validateCode'] != $_SESSION['user_validateCode']){
-				throw new Exception('手机短信验证码错误!');
+				throw new BaseException('手机短信验证码错误!');
 			}
 			unset($_SESSION['user_validateCode']);
 		}
@@ -183,10 +183,10 @@
 		//自己修改自己的手机或者安全密码,需要重新获取短信验证码.管理员不需要.
 		if(!isAdminOrAdministrationManager() && $name == $_SESSION['name']){
 			if(!isset($_POST['validateCode'])){
-				throw new Exception('修改手机号时,必须输入手机短信验证码!');
+				throw new BaseException('修改手机号时,必须输入手机短信验证码!');
 			}
 			if($_POST['validateCode'] != $_SESSION['user_validateCode']){
-				throw new Exception('手机短信验证码错误!');
+				throw new BaseException('手机短信验证码错误!');
 			}
 			unset($_SESSION['user_validateCode']);
 		}
