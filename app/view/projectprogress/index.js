@@ -129,6 +129,29 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                                                             });
                                                         }
                                                     }
+                                                    else {
+                                                        Ext.Ajax.request({
+                                                            url: './libs/user.php?action=getuseremail',
+                                                            method: 'GET',
+                                                            params: {
+                                                                name: resObj.pro.get('supervisorName')
+                                                            },
+                                                            callback: function (opts, success, res){
+                                                                if (success) {
+                                                                    var obj = Ext.decode(res.responseText);
+                                                                    if ('successful' == obj.status) {
+                                                                        var mailContent = '用户' + User.getRealName() + '尝试将工程"'
+                                                                                        + resObj.pro.get('projectName') 
+                                                                                        + '"置为完工，但监理意见有未通过项，请查看对应工程进行验收评估。谢谢';
+                                                                        sendMail(resObj.pro.get('supervisorName'), obj['email'], '完工工地请求', mailContent);
+                                                                    }
+                                                                    else {
+                                                                        showMsg(obj.errMsg);
+                                                                    }
+                                                                }
+                                                            }
+                                                        })
+                                                    }
                                                 }
                                             })
                                         }

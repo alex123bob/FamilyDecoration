@@ -25,6 +25,10 @@
 <head>
     <link href="./favicon.ico" type="image/x-icon" rel="shortcut icon" /> 
     <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <script type="text/javascript">
+        var DEBUG = <?php echo $isLocal ?> ? true : false;
+        var _PWDPREFIX = 'familydecoration-';
+    </script>
     <title>佳诚装饰</title>
     <!-- <x-compile> -->
         <!-- <x-bootstrap> -->
@@ -41,10 +45,6 @@
     <script src="http://channel.sinaapp.com/api.js" type="text/javascript"></script>
     <!-- for Christmas effect -->
     <script src="tools/snow.min.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        var DEBUG = <?php echo $isLocal ?> ? true : false;
-        var _PWDPREFIX = 'familydecoration-';
-    </script>
 </head>
 <body>
     <div id="userInfo" class="x-hide-display">

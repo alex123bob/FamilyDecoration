@@ -7,7 +7,8 @@ Ext.define('FamilyDecoration.store.Msg', {
     	url: './libs/msg.php',
         reader: {
             type: 'json',
-            root: 'data'
+            root: 'data',
+			totalProperty: 'total'
         },
         extraParams: {
         	action: 'getsendmsgs'

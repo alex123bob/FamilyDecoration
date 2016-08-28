@@ -26,7 +26,13 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
 
     initComponent: function () {
         var me = this,
-            needPassAudit = (Ext.Array.indexOf(['12', '17', '23', '34'], me.progress.get('serialNumber')) != -1 && me.isComment);
+            needPassAudit = (
+                Ext.Array.indexOf(['12', '17', '23', '34'], me.progress.get('serialNumber')) != -1 
+                && 
+                me.isComment
+                &&
+                me.project.get('supervisorName') == User.getName()
+            );
 
         me.title = me.isComment ? '添加监理意见' : '添加工程进度';
 

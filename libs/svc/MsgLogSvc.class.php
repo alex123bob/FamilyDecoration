@@ -168,7 +168,8 @@ class MsgLogSvc extends BaseSvc
 		global $mysql,$MsgErrorCode,$BlackListWords,$userAndPswd,$corpName,$apiUrl;
 		$sql = "select * from msg_log ";
 		$sqlCount = "select count(1) as count from msg_log ";
-		$where = " where createTime >= '$beginTime' and createTime <= '$endTime' ";
+		// $where = " where createTime >= '$beginTime' and createTime <= '$endTime' "; // remove time limit, we are gonna use paging toolbar in frontend
+		$where = " where 1 = 1 ";
 
 		if($sender != null)$where .= " and sender = '$sender' ";
 		if($status != null)$where .= " and status = '$status' ";

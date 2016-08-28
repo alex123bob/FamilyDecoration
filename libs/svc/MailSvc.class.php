@@ -112,7 +112,9 @@ class MailSvc extends BaseSvc
 
 	function setMailReadByReceiver ($receiverName) {
 		global $mysql;
-		$mysql->DBUpdate("mail",array("isRead"=>true),"`mailReceiver` = '?' or `mailReceiver` like '%?,%' or `mailReceiver` like '%,?%'",array($receiverName, $receiverName, $receiverName));
+		$receiver = parent::getSvc('User')->getRealNameAndEmail($receiverName);
+		$receiverRealName = $receiver["realName"];
+		$mysql->DBUpdate("mail",array("isRead"=>true),"`mailReceiver` = '?' or `mailReceiver` like '%?,%' or `mailReceiver` like '%,?%'",array($receiverRealName, $receiverRealName, $receiverRealName));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 }

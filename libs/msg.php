@@ -14,7 +14,7 @@
 			$beginTime = isset($_REQUEST['beginTime']) ? $_REQUEST['beginTime'] : date('Y-m-d H:i:s',time() - 3600*24*7);
 			$endTime = isset($_REQUEST['endTime']) ? $_REQUEST['endTime'] :  date('Y-m-d H:i:s');
 			$page = isset($_REQUEST['page']) ? $_REQUEST['page'] : 1;
-			$size = isset($_REQUEST['size']) ? $_REQUEST['size'] : 30;
+			$size = isset($_REQUEST['size']) ? $_REQUEST['size'] : 25;
 			$res = $svc->getsendmsgs($sender,$reciever,$recieverPhone,$status,$beginTime,$endTime,$page,$size);
 			break;
 		//查询收到的短信

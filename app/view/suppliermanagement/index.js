@@ -2,7 +2,9 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 	extend: 'Ext.container.Container',
 	alias: 'widget.suppliermanagement-index',
 	requires: [
-		'FamilyDecoration.store.Supplier'
+		'FamilyDecoration.store.Supplier',
+		'FamilyDecoration.view.suppliermanagement.SupplierMaterial',
+		'FamilyDecoration.view.suppliermanagement.MaterialOrderList'
 	],
 	layout: 'hbox',
 	defaults: {
@@ -74,10 +76,10 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 				flex: 4,
 				items: [
 					{
-						title: '材料'
+						xtype: 'suppliermanagement-suppliermaterial'
 					},
 					{
-						title: '订购单列表'
+						xtype: 'suppliermanagement-materialorderlist'
 					},
 					{
 						title: '付款单审核'

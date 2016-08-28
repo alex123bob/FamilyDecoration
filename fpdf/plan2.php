@@ -64,8 +64,9 @@ if(isset($project['period']) && $project['period'] != null && $project['period']
 
 $pdf=new PDF('L','mm', $pagetype); //创建新的FPDF对象 
 $pdf->AddGBFont(); //设置中文字体 
-$pdf->Open(); //开始创建PDF 
-$pdf->SetFillColor(125);
+$pdf->Open(); //开始创建PDF
+$fillColor = 1;
+$pdf->SetFillColor(125,125,125);//设置填充颜色
 $pdf->AddPage(); //增加一页 
 $pdf->SetFont("GB",$GfontStyle,$GfontSize); //设置字体样式 
 
@@ -118,8 +119,16 @@ foreach ($days as $key => $value) { //输出日期
 		$value = substr($value, 1);
 	$d1 = $count%2==0 ? $value : '';
 	$d2 = $count%2==0 ? '' : $value;
-	$pdf->Cell($singleDayWidth,$titleLineHeight2/2,$d1,'LR',2,'C',0);
-	$pdf->Cell($singleDayWidth,$titleLineHeight2/2,$d2,'LRB',0,'C',0);
+	
+	$border = 'BT';
+	if($d1 == '1' || $d2 == '1')
+		$border .= 'L';
+	if($value %10 == 0 && $value != 30)
+		$border .= 'R';	
+	if($daysInTotal == $count)
+		$border .= 'R';
+	$pdf->Cell($singleDayWidth,$titleLineHeight2/2,$d1,$border ,2,'C',0);
+	$pdf->Cell($singleDayWidth,$titleLineHeight2/2,$d2,$border.'B',0,'C',0);
 	$pdf->SetXY($pdf->getx(),$pdf->gety()-$titleLineHeight2/2);
 	$count++;
 }
@@ -202,9 +211,31 @@ foreach($bigItems as $key => $bigItem) {
 		//---输出小项名结束
 		//输出日期填充
 		$alldaysdata = getdaysfill($item['startTime'],$item['endTime'],$daysInTotal);
-		for($smallCount = 0;$smallCount < $daysInTotal ;$smallCount++){
-
-			$pdf->Cell($singleDayWidth,$tmpheight*$item['linesNeed'],'','LBTR',0,'L',$alldaysdata[$smallCount]);
+		$smallCount = 0;
+		$fillColor = 0;
+		foreach ($days as $key => $value) { //输出日期
+			if(startWith($value,'0'))
+				$value = substr($value, 1);
+			$border = 'TB';
+			if($fillColor){
+				$pdf->SetFillColor(230,230,230);//设置填充颜色
+				$pdf->SetFillColor(255,255,255);//设置填充颜色
+			}else{
+				$pdf->SetFillColor(255,255,255);//设置填充颜色
+			}
+			if($value == '1' || $smallCount == 0){
+				$fillColor = $fillColor == 1 ? 0 : 1;
+				$border .= 'L';
+			}	
+			if($value % 10 == 0 && $value != 30 || $smallCount+1 == $daysInTotal)
+				$border .= 'R';
+			if($alldaysdata[$smallCount] == 1){
+				$pdf->SetFillColor(125,125,125);
+				$pdf->Cell($singleDayWidth,$tmpheight*$item['linesNeed'],'','BLRT',0,'L',1);
+			}else{
+				$pdf->Cell($singleDayWidth,$tmpheight*$item['linesNeed'],'',$border,0,'L',0);
+			}
+			$smallCount++;
 		}
 		$pdf->ln();
 		$pdf->SetXY($pdf->getx()+$width[0]+$width[1],$pdf->gety());
