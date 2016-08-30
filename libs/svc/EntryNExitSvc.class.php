@@ -82,7 +82,15 @@ class EntryNExitSvc{
 	private function parseData($sql,$q){
 		global $mysql;
 		$count = $mysql->DBGetAsOneArray("select count(1) as cnt from ( $sql ) as temp ")[0];
-		$data = $mysql->DBGetAsMap($sql.BaseSvc::parseLimitSql($q));
+		$thisSql = $sql;
+		//sort:[{"property":"c0","direction":"ASC"}]
+		if(isset($q['sort'])){
+			$s = json_decode($q['sort']);
+			if(count($s)>0)
+				$thisSql .= ' order by '.$s[0]->property.' '.$s[0]->direction;
+		}
+		$thisSql = $thisSql.BaseSvc::parseLimitSql($q);
+		$data = $mysql->DBGetAsMap($thisSql);
 		$res = array('status'=>'successful','data'=>$data,'total'=>$count);
 		return $res;
 	}
@@ -115,16 +123,16 @@ class EntryNExitSvc{
 		$sql = "select b.id as c0,
 					b.projectName as c1,
 					b.reimbursementReason as c2,
-					b.payee as c3,
-					b.payee as c4,
-					b.phoneNumber as c5,
+					u2.realName as c3,
+					u2.realName as c4,
+					u2.phoneNumber as c5,
 					b.totalFee as c6,
 					b.paidAmount as c7,
 					u.realName as c8,
 					b.paidTime as c9,
 					b.descpt as c10,
 					b.status
-					from statement_bill b left join user u on u.name = b.payer
+					from statement_bill b left join user u on u.name = b.payer left join user u2 on u2.name = b.payee
 					where b.billType = 'tax' and b.isDeleted = 'false' and ( b.status = 'paid' or b.status = 'chk')";
 		if(isset($q['c0']) && $q['c0'] != ""){
 			$sql .= ' and b.id like \'%'.$q['c0'].'%\'';
@@ -174,7 +182,8 @@ class EntryNExitSvc{
 		if(isset($q['payee']) && $q['payee'] != ""){
 			$sql .= ' and b.payee like \'%'.$q['payee'].'%\'';
 		}
-		$sql .= " order by b.status ";
+		if(!isset($q['sort']))
+			$q['sort'] = '[{"property":"status","direction":"DESC"}]';
 		$res = $this->parseData($sql,$q);
 		foreach ($res['data'] as &$item) {
 			$item['c8'] = round($item['c8'],2);
