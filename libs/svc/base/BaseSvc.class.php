@@ -199,7 +199,7 @@ class BaseSvc{
 		$where = $this->parseWhereSql($this->tableName.'.',$q,$params);
 		$limit = $this->parseLimitSql($q);
 		$orderBy = $this->parseOrderBySql($q);	
-		$count = $mysql->DBGetAsOneArray("select count(1) as count from ".$this->tableName.$where.$this->appendWhere,$params);
+		$count = $mysql->DBGetAsOneArray("select count(1) as count from ".$this->tableName.$where.$this->appendWhere.' limit 1,1',$params);
 
 		if($onlyCount){
 			return array('status'=>'successful', 'count'=>$count[0],'errMsg' => '');
