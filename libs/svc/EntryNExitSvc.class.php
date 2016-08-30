@@ -183,7 +183,7 @@ class EntryNExitSvc{
 			$sql .= ' and b.payee like \'%'.$q['payee'].'%\'';
 		}
 		if(!isset($q['sort']))
-			$q['sort'] = '[{"property":"status","direction":"DESC"}]';
+			$q['sort'] = '[{"property":"status","direction":"asc"}]';
 		$res = $this->parseData($sql,$q);
 		foreach ($res['data'] as &$item) {
 			$item['c8'] = round($item['c8'],2);
