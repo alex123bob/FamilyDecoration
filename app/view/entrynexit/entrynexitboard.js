@@ -369,6 +369,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             st = Ext.create('Ext.data.Store', {
                 fields: fields,
                 autoLoad: false,
+                remoteSort: true,
                 proxy: {
                     url: 'libs/api.php',
                     type: 'rest',
