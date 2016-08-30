@@ -125,7 +125,7 @@ class EntryNExitSvc{
 					b.reimbursementReason as c2,
 					u2.realName as c3,
 					u2.realName as c4,
-					u2.phoneNumber as c5,
+					u2.phone as c5,
 					b.totalFee as c6,
 					b.paidAmount as c7,
 					u.realName as c8,
