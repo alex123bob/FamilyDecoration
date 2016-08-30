@@ -81,7 +81,7 @@ class EntryNExitSvc{
 
 	private function parseData($sql,$q){
 		global $mysql;
-		$count = $mysql->DBGetAsOneArray("select count(1) as cnt from ( $sql ) as temp limit 1,1 ")[0];
+		$count = $mysql->DBGetAsOneArray("select count(1) as cnt from ( $sql ) as temp limit 0,1 ")[0];
 		$thisSql = $sql;
 		//sort:[{"property":"c0","direction":"ASC"}]
 		if(isset($q['sort'])){
