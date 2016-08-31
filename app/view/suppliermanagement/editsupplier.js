@@ -95,6 +95,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplier', {
                         xtype: 'button',
                         anchor: 'auto auto',
                         text: '添加联系人',
+                        name: 'addContact',
                         handler: function () {
                             var frm = me.down('form'),
                                 cmp = frm.getPhoneCmp();
@@ -121,8 +122,11 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplier', {
                             });
                             phone = phone.join(',');
                         }
-                        else {
+                        else if (obj.phone) {
                             phone = obj['desc'] + ':' + obj['phone'];
+                        }
+                        else {
+                            obj.phone = '';
                         }
                         obj.phone = phone;
                         delete obj.desc;

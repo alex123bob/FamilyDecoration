@@ -73,6 +73,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 						xtype: 'button',
 						text: '修改',
 						name: 'edit',
+						disabled: true,
 						icon: 'resources/img/supplier_edit.png',
 						handler: function (){
 							var resObj = _getRes();
@@ -102,16 +103,87 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 						xtype: 'button',
 						text: '删除',
 						name: 'del',
-						icon: 'resources/img/supplier_delete.png'
+						disabled: true,
+						icon: 'resources/img/supplier_delete.png',
+						handler: function (){
+							var resObj = _getRes();
+							if (resObj.supplier) {
+								Ext.Msg.warning('确定要删除当前的供应商吗？', function (btnId){
+									if ('yes' == btnId) {
+										ajaxDel('Supplier', {
+											id: resObj.supplier.getId()
+										}, function (obj){
+											showMsg('删除成功！');
+											resObj.supplierListSt.reload();
+										});
+									}
+								});
+							}
+						}
 					}
 				],
+				_initBtns: function (){
+					var btnObj = this._getBtns(),
+						resObj = _getRes();
+					btnObj.edit.setDisabled(!resObj.supplier);
+					btnObj.del.setDisabled(!resObj.supplier);
+				},
 				_getBtns: function (){
 					var tbar = this.getDockedItems('toolbar[dock="top"]'),
-						bbar = this.getDockedItems('toolbar[dock="bottom"]');
+						bbar = this.getDockedItems('toolbar[dock="bottom"]'),
+						obj = {};
+					tbar = tbar[0].items.items;
+					bbar = bbar[0].items.items;
+					obj[tbar[0].name] = tbar[0];
+					obj[tbar[1].name] = tbar[1];
+					obj[bbar[0].name] = bbar[0];
+					return obj;
 				},
 				listeners: {
+					selectionchange: function (selModel, sels, opts){
+						var resObj = _getRes();
+						resObj.supplierList._initBtns();
+					},
 					afterrender: function (grid, opts){
-						grid._getBtns();
+						var view = grid.getView();
+						var tip = Ext.create('Ext.tip.ToolTip', {
+							target: view.el,
+							delegate: view.itemSelector,
+							trackMouse: true,
+							renderTo: Ext.getBody(),
+							listeners: {
+								beforeshow: function (tip){
+									var rec = view.getRecord(tip.triggerElement),
+										phone = rec.get('phone'),
+										contactInfo = [],
+										contact = '';
+									phone = phone.split(',');
+									if (phone.length > 0) {
+										Ext.each(phone, function (p, i, arr){
+											p = p.split(':');
+											if (p.length >= 2) {
+												contactInfo.push({
+													desc: p[0],
+													phone: p[1]
+												});
+											}
+										});
+									}
+									if (contactInfo.length > 0) {
+										Ext.each(contactInfo, function (c, i){
+											contact += c.desc + ': ' + c.phone + '<br />';
+										});
+									}
+									tip.update(
+										'<strong>供应商:</strong> ' + rec.get('name') + '<br />'
+										+ '<strong>联系人:</strong> ' + rec.get('boss') + '<br />'
+										+ '<strong>地址:</strong> ' + rec.get('address') + '<br />'
+										+ '<strong>联系方式:</strong> ' + '<br />'
+										+ contact
+									);
+								}
+							}
+						});
 					}
 				}
 			},
