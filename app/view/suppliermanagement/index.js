@@ -3,6 +3,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 	alias: 'widget.suppliermanagement-index',
 	requires: [
 		'FamilyDecoration.store.Supplier',
+		'FamilyDecoration.view.suppliermanagement.EditSupplier',
 		'FamilyDecoration.view.suppliermanagement.SupplierMaterial',
 		'FamilyDecoration.view.suppliermanagement.MaterialOrderList'
 	],
@@ -15,7 +16,17 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 		var me = this;
 		
 		function _getRes (){
+			var supplierList = me.getComponent('gridpanel-supplierList'),
+				supplierListSelModel = supplierList.getSelectionModel(),
+				supplierListSt = supplierList.getStore(),
+				supplier = supplierListSelModel.getSelection()[0];
 
+			return {
+				supplierList: supplierList,
+				supplierListSelModel: supplierListSelModel,
+				supplierListSt: supplierListSt,
+				supplier: supplier
+			};
 		}
 
 		me.items = [
@@ -23,19 +34,21 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 				xtype: 'gridpanel',
 				flex: 1,
 				title: '供应商列表',
+				itemId: 'gridpanel-supplierList',
 				autoScroll: true,
 				style: {
 					borderRightStyle: 'solid',
 					borderRightWidth: '1px'
 				},
 				store: Ext.create('FamilyDecoration.store.Supplier', {
-					autoLoad: false
+					autoLoad: true
 				}),
 				columns: [
 					{
 						text: '姓名',
 						flex: 1,
-						align: 'center'
+						align: 'center',
+						dataIndex: 'name'
 					}
 				],
 				hideHeaders: true,
@@ -44,13 +57,44 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 						xtype: 'button',
 						text: '增加',
 						name: 'add',
-						icon: 'resources/img/supplier_add.png'
+						icon: 'resources/img/supplier_add.png',
+						handler: function (){
+							var resObj = _getRes();
+							var win = Ext.create('FamilyDecoration.view.suppliermanagement.EditSupplier', {
+								callback: function (){
+									resObj.supplierListSt.reload();
+								}
+							});
+
+							win.show();
+						}
 					},
 					{
 						xtype: 'button',
 						text: '修改',
 						name: 'edit',
-						icon: 'resources/img/supplier_edit.png'
+						icon: 'resources/img/supplier_edit.png',
+						handler: function (){
+							var resObj = _getRes();
+							var win = Ext.create('FamilyDecoration.view.suppliermanagement.EditSupplier', {
+								supplier: resObj.supplier,
+								callback: function (){
+									resObj.supplierListSt.reload({
+										callback: function (recs, ope, success){
+											if (success) {
+												var index = resObj.supplierListSt.indexOf(resObj.supplier);
+												resObj.supplierListSelModel.deselectAll();
+												if (index != -1) {
+													resObj.supplierListSelModel.select(index);
+												}
+											}
+										}
+									});
+								}
+							});
+
+							win.show();
+						}
 					}
 				],
 				bbar: [
