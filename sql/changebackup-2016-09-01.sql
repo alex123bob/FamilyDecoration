@@ -1,6 +1,6 @@
 -- 应zzn需求，以下工人工资单和预付款置为已付
 -- SELECT * FROM  `statement_bill` WHERE (billType =  'reg'OR billType =  'ppd')AND isDeleted =  'false'AND STATUS !=  'paid'
-
+-- update statement_bill set paidTime = now() , paidAmount = claimAmount , payer = 'admin' ,status = 'paid' , descpt= '统一修改置为已付' WHERE (billType =  'reg'OR billType =  'ppd')AND isDeleted =  'false'AND STATUS !=  'paid'
 
 --
 -- Database: 'app_dqjczs'
