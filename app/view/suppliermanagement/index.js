@@ -19,13 +19,17 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 			var supplierList = me.getComponent('gridpanel-supplierList'),
 				supplierListSelModel = supplierList.getSelectionModel(),
 				supplierListSt = supplierList.getStore(),
-				supplier = supplierListSelModel.getSelection()[0];
+				supplier = supplierListSelModel.getSelection()[0],
+				tabPanel = me.getComponent('tabpanel-container'),
+				activeTab = tabPanel.getActiveTab();
 
 			return {
 				supplierList: supplierList,
 				supplierListSelModel: supplierListSelModel,
 				supplierListSt: supplierListSt,
-				supplier: supplier
+				supplier: supplier,
+				tabPanel: tabPanel,
+				activeTab: activeTab
 			};
 		}
 
@@ -143,6 +147,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 					selectionchange: function (selModel, sels, opts){
 						var resObj = _getRes();
 						resObj.supplierList._initBtns();
+						resObj.tabPanel.refresh();
 					},
 					afterrender: function (grid, opts){
 						var view = grid.getView();
@@ -195,6 +200,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 			},
 			{
 				xtype: 'tabpanel',
+				itemId: 'tabpanel-container',
 				flex: 4,
 				items: [
 					{
@@ -207,9 +213,14 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 						title: '付款单审核'
 					}
 				],
+				refresh: function (){
+					var resObj = _getRes();
+					resObj.activeTab.refresh(resObj.supplier);
+				},
 				listeners: {
 					beforetabchange: function (tbpane, newCard, oldCard, opts){
-						newCard.refresh && newCard.refresh();
+						var resObj = _getRes();
+						newCard.refresh && newCard.refresh(resObj.supplier);
 					}
 				}
 			}

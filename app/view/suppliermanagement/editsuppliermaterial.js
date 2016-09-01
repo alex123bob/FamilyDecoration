@@ -11,9 +11,12 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
     bodyPadding: 5,
     maximizable: true,
     layout: 'fit',
+    material: undefined,
 
     initComponent: function () {
         var me = this;
+
+        me.setTitle(me.material ? '编辑材料项目' : '添加材料项目');
 
         me.tbar = [
             {
@@ -63,54 +66,74 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                         }
                     })
                 ],
-                columns: {
-                    defaults: {
+                columns: [
+                    {
+                        xtype: 'actioncolumn',
+                        width: 25,
+                        items: [
+                            {
+                                icon: 'resources/img/delete.png',
+                                tooltip: '删除',
+                                handler: function (grid, rowIndex, colIndex) {
+                                    var st = grid.getStore(),
+                                        rec = st.getAt(rowIndex);
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        text: '序号',
+                        dataIndex: 'serialNumber',
+                        flex: 0.7,
+                        align: 'center'
+                    },
+                    {
+                        text: '项目',
+                        dataIndex: 'name',
+                        editor: {
+                            xtype: 'textfield',
+                            allowBlank: false
+                        },
                         flex: 1,
                         align: 'center'
                     },
-                    items: [
-                        {
-                            text: '序号',
-                            dataIndex: 'serialNumber'
+                    {
+                        text: '单位',
+                        dataIndex: 'unit',
+                        editor: {
+                            xtype: 'textfield',
+                            allowBlank: false
                         },
-                        {
-                            text: '项目',
-                            dataIndex: 'name',
-                            editor: {
-                                xtype: 'textfield',
-                                allowBlank: false
-                            }
+                        flex: 1,
+                        align: 'center'
+                    },
+                    {
+                        text: '数量',
+                        dataIndex: 'amount',
+                        editor: {
+                            xtype: 'numberfield',
+                            allowBlank: false
                         },
-                        {
-                            text: '单位',
-                            dataIndex: 'unit',
-                            editor: {
-                                xtype: 'textfield',
-                                allowBlank: false
-                            }
+                        flex: 1,
+                        align: 'center'
+                    },
+                    {
+                        text: '参考量',
+                        dataIndex: 'referenceNumber',
+                        flex: 1,
+                        align: 'center'
+                    },
+                    {
+                        text: '单价(元)',
+                        dataIndex: 'unitPrice',
+                        editor: {
+                            xtype: 'numberfield',
+                            allowBlank: false
                         },
-                        {
-                            text: '数量',
-                            dataIndex: 'amount',
-                            editor: {
-                                xtype: 'numberfield',
-                                allowBlank: false
-                            }
-                        },
-                        {
-                            text: '参考量',
-                            dataIndex: 'referenceNumber'
-                        },
-                        {
-                            text: '单价(元)',
-                            dataIndex: 'unitPrice',
-                            editor: {
-                                xtype: 'numberfield',
-                                allowBlank: false
-                            }
-                        }
-                    ]
-                }
+                        flex: 1,
+                        align: 'center'
+                    }
+                ]
             }
         ];
 

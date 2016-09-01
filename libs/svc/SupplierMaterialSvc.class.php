@@ -1,5 +1,5 @@
 <?php
-class SupplierMaterialSvc.class extends BaseSvc
+class SupplierMaterialSvc extends BaseSvc
 {
 	public function add($q){
 		notNullCheck($q,'@name','材料名不能为空!');
