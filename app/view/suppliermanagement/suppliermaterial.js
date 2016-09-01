@@ -14,6 +14,10 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
             autoLoad: false
         });
 
+        me.refresh = function (){
+
+        };
+
         me.store = st;
 
         me.dockedItems = [

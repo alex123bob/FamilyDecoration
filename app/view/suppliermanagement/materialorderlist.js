@@ -16,6 +16,10 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
 
         me.store = st;
 
+        me.refresh = function (){
+
+        };
+
         me.dockedItems = [
             {
                 xtype: 'pagingtoolbar',

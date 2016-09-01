@@ -151,6 +151,12 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 							delegate: view.itemSelector,
 							trackMouse: true,
 							renderTo: Ext.getBody(),
+							style: {
+								backgroundColor: 'rgba(222, 222, 222, 0.8)',
+								borderRadius: '6px',
+								lineHeight: '26px',
+								fontSize: '26px'
+							},
 							listeners: {
 								beforeshow: function (tip){
 									var rec = view.getRecord(tip.triggerElement),
@@ -200,7 +206,12 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 					{
 						title: '付款单审核'
 					}
-				]
+				],
+				listeners: {
+					beforetabchange: function (tbpane, newCard, oldCard, opts){
+						newCard.refresh && newCard.refresh();
+					}
+				}
 			}
 		];
 
