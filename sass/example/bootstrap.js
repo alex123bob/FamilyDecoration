@@ -287,6 +287,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.signbusiness.GradeSignBusiness": "../../app/view/signbusiness/gradesignbusiness.js",
   "FamilyDecoration.view.signbusiness.Index": "../../app/view/signbusiness/index.js",
   "FamilyDecoration.view.suppliermanagement.ApplyForPayment": "../../app/view/suppliermanagement/applyforpayment.js",
+  "FamilyDecoration.view.suppliermanagement.EditSupplier": "../../app/view/suppliermanagement/editsupplier.js",
   "FamilyDecoration.view.suppliermanagement.EditSupplierMaterial": "../../app/view/suppliermanagement/editsuppliermaterial.js",
   "FamilyDecoration.view.suppliermanagement.Index": "../../app/view/suppliermanagement/index.js",
   "FamilyDecoration.view.suppliermanagement.MaterialOrderList": "../../app/view/suppliermanagement/materialorderlist.js",
@@ -1431,6 +1432,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.signbusiness.GradeSignBusiness": [],
   "FamilyDecoration.view.signbusiness.Index": [],
   "FamilyDecoration.view.suppliermanagement.ApplyForPayment": [],
+  "FamilyDecoration.view.suppliermanagement.EditSupplier": [],
   "FamilyDecoration.view.suppliermanagement.EditSupplierMaterial": [],
   "FamilyDecoration.view.suppliermanagement.Index": [],
   "FamilyDecoration.view.suppliermanagement.MaterialOrderList": [],
@@ -2990,6 +2992,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.suppliermanagement.ApplyForPayment": [
     "widget.suppliermanagement-applyforpayment"
+  ],
+  "FamilyDecoration.view.suppliermanagement.EditSupplier": [
+    "widget.suppliermanagement-editsupplier"
   ],
   "FamilyDecoration.view.suppliermanagement.EditSupplierMaterial": [
     "widget.suppliermanagement-editsuppliermaterial"
