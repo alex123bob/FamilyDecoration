@@ -85,7 +85,7 @@ class StatementBillSvc extends BaseSvc
 		$limit = $mysql->DBGetAsOneArray("select paramValue*10000 from system where paramName = 'msg_notice_value_limit' ");
 		if($limit[0] <= $bill['totalFee']){
 			if(!isset($_SESSION['phone']) || strlen($_SESSION['phone']) != 11){
-				throw new Exception('手机号不对,请联系管理员修改!');
+				throw new BaseException('手机号不对,请联系管理员修改!');
 			}
 			//需要短信验证
 			$rand = rand(1000,9999);
@@ -109,14 +109,14 @@ class StatementBillSvc extends BaseSvc
 		if($limit[0] <= $bill['totalFee']){
 			//需要短信验证
 			if($q['validateCode'] !=  $_SESSION['validateCode']){
-				throw new Exception('短信校验码错误!');
+				throw new BaseException('短信校验码错误!');
 			}
 			unset($_SESSION['validateCode']);
 		}else{
 			//需要安全密码验证
 			$res = $mysql->DBGetAsMap("select * from user where name = '?' and securePass = '?' ",$_SESSION['name'],$q['validateCode']);
 			if(count($res) < 1){
-				throw new Exception('安全密码验证失败!');
+				throw new BaseException('安全密码验证失败!');
 			}
 		}
 		$_SESSION['secureChecked'] = strtotime(date('Y-m-d H:i:s'));  // 当前时间秒数

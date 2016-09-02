@@ -32,11 +32,16 @@
 		}catch(Exception $e){
 			//var_dump($e);
 		}
-		//非业务异常，邮件通知
-		if($errorType != 1){
-			$mailSvc = BaseSvc::getSvc('Mail');
-			$mailSvc->add(array('@mailSubject'=>'有系统异常啦！','@mailContent'=>'有系统异常啦！','@mailSender'=>'系统提醒','@mailReceiver'=>'674417307@qq.com'));
-			$mailSvc->add(array('@mailSubject'=>'有系统异常啦！','@mailContent'=>'有系统异常啦！','@mailSender'=>'系统提醒','@mailReceiver'=>'547010762@qq.com'));
+		$errorType= 0;
+		try{
+			//非业务异常，邮件通知
+			if($errorType != 1){
+				$mailSvc = BaseSvc::getSvc('Mail');
+				$mailSvc->add(array('@mailSubject'=>'有系统异常啦！','@mailContent'=>'有系统异常啦！','@mailSender'=>'系统提醒','@mailReceiver'=>'674417307@qq.com'));
+				$mailSvc->add(array('@mailSubject'=>'有系统异常啦！','@mailContent'=>'有系统异常啦！','@mailSender'=>'系统提醒','@mailReceiver'=>'547010762@qq.com'));
+			}
+		}catch(Exception $e){
+			//var_dump($e);
 		}
 		$res = array(
 			'status'=>'failing',
@@ -106,7 +111,7 @@
 		global $mysql;
 		if (!isset($_SESSION["name"])){
 			header('HTTP/1.1 401 not login');
-			throw new Exception("未登陆！");
+			throw new BaseException("未登陆！");
 		}
 		$sessionId = session_id();
 		$userName = $_SESSION["name"];
@@ -115,7 +120,7 @@
 			header('HTTP/1.1 401 already login else');
 			session_unset();
 			session_destroy();
-			throw new Exception($userName."已在别处登陆！");
+			throw new BaseException($userName."已在别处登陆！");
 		}
 		$mysql->DBUpdate("online_user",array('lastUpdateTime'=>'now()'),"`userName` = '?'  and `sessionId` = '?' and `offlineTime` is null ",array($userName,$sessionId));
 		return array("status" => "ok","errMsg" =>"");
