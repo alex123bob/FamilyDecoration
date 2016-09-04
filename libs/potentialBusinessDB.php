@@ -126,6 +126,7 @@
 		}
 		foreach($res as &$item){
 			$item['lbd'] = array();
+			$item['bhts'] = array(); // bhts: business history telemarketing staffs
 			foreach ($details as $detail) {
 				if(isset($detail['potentialBusinessId']) && $detail['potentialBusinessId'] == $item['id']){
 					array_push($item['lbd'], $detail);
@@ -135,6 +136,14 @@
 						$item['lbc'] = $detail['committer'];
 						$item['lbcr'] = $detail['committerRealName'];
 						$item['lbt'] = $detail['createTime'];
+					}
+					if(isset($item['bhts'][$detail['committer']])) {
+						// $item['bhts'][$detail['committer']]++;
+						$item['bhts'][$detail['committerRealName']]++;
+					}
+					else {
+						// $item['bhts'][$detail['committer']] = 1;
+						$item['bhts'][$detail['committerRealName']] = 1;
 					}
 				}
 			}

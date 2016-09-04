@@ -8,7 +8,7 @@ Ext.define('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
 
 	resizable: false,
 	modal: true,
-	width: 600,
+	width: 640,
 	height: 310,
 	autoScroll: true,
 
@@ -110,6 +110,24 @@ Ext.define('FamilyDecoration.view.regionmgm.DispenseTelemarketingStaff', {
 								else {
 									return ''
 								}
+							}
+						},
+						{
+							text: '分配历史',
+							dataIndex: 'businessHistoryTelemarketingStaffs',
+							flex: 1,
+							renderer: function (val, meta, rec){
+								var res = '';
+								for (var key in val) {
+									if (val.hasOwnProperty(key)) {
+										var count = val[key];
+										res += key + ': ' + count + '次;' + '<br />';
+									}
+								}
+								if (res != '') {
+									res = res.slice(0, -6);
+								}
+								return res;
 							}
 						}
 					]

@@ -17,6 +17,7 @@ Ext.define('FamilyDecoration.model.PotentialBusiness', {
 		{name: 'latestBusinessCommitterRealName', mapping: 'lbcr'},
 		
 		{name: 'businessStatusDetail', mapping: 'lbd'},
+		{name: 'businessHistoryTelemarketingStaffs', mapping: 'bhts'},
 		// {name: 'status', type: 'string'},
 		// {name: 'status_second', type: 'string'},
 		// {name: 'status_third', type: 'string'},

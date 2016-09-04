@@ -31,7 +31,7 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
                 && 
                 me.isComment
                 &&
-                // admin or current project's supervisor could access to pass checkbox'
+                // admin or current project's supervisor could access to pass checkbox
                 (me.project.get('supervisorName') == User.getName() || User.isAdmin())
             );
 
