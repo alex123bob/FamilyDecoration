@@ -6,6 +6,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
 		'FamilyDecoration.store.MaterialOrderList',
         'FamilyDecoration.view.suppliermanagement.ApplyForPayment'
 	],
+    supplier: undefined,
 
 	initComponent: function () {
 		var me = this;

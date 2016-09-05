@@ -201,7 +201,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 			{
 				xtype: 'tabpanel',
 				itemId: 'tabpanel-container',
-				flex: 4,
+				flex: 5,
 				items: [
 					{
 						xtype: 'suppliermanagement-suppliermaterial'
@@ -215,7 +215,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 				],
 				refresh: function (){
 					var resObj = _getRes();
-					resObj.activeTab.refresh(resObj.supplier);
+					resObj.activeTab.refresh && resObj.activeTab.refresh(resObj.supplier);
 				},
 				listeners: {
 					beforetabchange: function (tbpane, newCard, oldCard, opts){
