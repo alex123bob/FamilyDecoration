@@ -183,7 +183,8 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                             allowBlank: false
                         },
                         flex: 1,
-                        align: 'center'
+                        align: 'center',
+                        hidden: true // hide amount temporarily, coz we don't know the amount of specific material of one supplier'
                     },
                     {
                         text: '参考量',
