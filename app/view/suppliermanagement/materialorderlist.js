@@ -31,7 +31,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                 confirm: me.down('button[name="confirm"]'),
                 request: me.down('button[name="request"]'),
                 pass: me.down('button[name="pass"]'),
-                return: me.down('button[name="return"]')
+                returnReq: me.down('button[name="return"]')
             };
         }
 
@@ -41,7 +41,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
             btnObj.confirm.setDisabled(!supplier || !resObj.order);
             btnObj.request.setDisabled(!supplier || !resObj.order);
             btnObj.pass.setDisabled(!supplier || !resObj.order);
-            btnObj.return.setDisabled(!supplier || !resObj.order);
+            btnObj.returnReq.setDisabled(!supplier || !resObj.order);
         }
 
         function _initGrid(supplier) {
