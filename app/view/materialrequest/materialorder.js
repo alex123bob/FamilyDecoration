@@ -3,12 +3,13 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 	alias: 'widget.materialrequest-materialorder',
 	layout: 'vbox',
 	requires: [
-
+		'FamilyDecoration.view.suppliermanagement.SupplierList'
 	],
     defaults: {
         width: '100%'
     },
 	previewMode: false,
+	project: undefined,
 
     initComponent: function () {
         var me = this;
@@ -69,19 +70,64 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 								name: 'supplier',
 								readOnly: true,
 								listeners: {
-									focus: function (txt, ev, opts){
+									focus: function (txt, ev, opts) {
 										if (!me.previewMode) {
-											
+											var win = Ext.create('Ext.window.Window', {
+												layout: 'fit',
+												title: '供应商列表',
+												width: 400,
+												height: 300,
+												modal: true,
+												items: [
+													{
+														xtype: 'suppliermanagement-supplierlist',
+														header: false
+													}
+												],
+												buttons: [
+													{
+														text: '添加',
+														handler: function () {
+															var grid = win.down('gridpanel'),
+																rec = grid.getSelectionModel().getSelection()[0],
+																hidden = txt.nextSibling('[name="supplierId"]'),
+																phone = txt.ownerCt.nextSibling().down('[name="phone"]'),
+																phones = rec.get('phone').split(',');
+
+															Ext.each(phones, function (item, index, self) {
+																self[index] = item.split(':')[1];
+															});
+
+															txt.setValue(rec.get('name'));
+															hidden.setValue(rec.getId());
+															phone.setValue(phones.join(','));
+															win.close();
+														}
+													},
+													{
+														text: '取消',
+														handler: function () {
+															win.close();
+														}
+													}
+												]
+											});
+											win.show();
 										}
 									}
 								}
+							},
+							{
+								xtype: 'hidden',
+								name: 'supplierId'
 							},
 							{
 								xtype: 'textfield',
 								fieldLabel: '工程地址',
 								flex: 1,
 								name: 'projectName',
-								readOnly: true
+								readOnly: true,
+								value: me.project ? me.project.get('projectName') : ''
 							},
 							{
 								xtype: 'textfield',
@@ -89,7 +135,8 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 								flex: 1,
 								name: 'captain',
 								readOnly: true,
-								hidden: !me.previewMode
+								hidden: !me.previewMode,
+								value: me.project ? me.project.get('captain') : ''
 							}
 						]
 					},
@@ -108,7 +155,7 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 								xtype: 'textfield',
 								fieldLabel: '联系电话',
 								flex: 1,
-								name: 'phoneNumber',
+								name: 'phone',
 								readOnly: true
 							},
 							{

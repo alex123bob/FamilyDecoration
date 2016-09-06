@@ -99,6 +99,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						icon: 'resources/img/material_request_add.png',
 						disabled: true,
 						handler: function (){
+							var resObj = _getRes();
 							var win = Ext.create('Ext.window.Window', {
 								layout: 'fit',
 								title: '添加',
@@ -109,7 +110,8 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 								autoScroll: true,
 								items: [
 									{
-										xtype: 'materialrequest-materialorder'
+										xtype: 'materialrequest-materialorder',
+										project: resObj.project
 									}
 								],
 								tbar: [
@@ -187,7 +189,8 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						xtype: 'button',
 						text: '打印订购单',
 						name: 'print',
-						icon: 'resources/img/material_request_print.png'
+						icon: 'resources/img/material_request_print.png',
+						disabled: true
 					}
 				],
                 items: [
