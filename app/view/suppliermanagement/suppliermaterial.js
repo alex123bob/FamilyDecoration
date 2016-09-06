@@ -4,8 +4,10 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
     title: '材料',
     requires: [
         'FamilyDecoration.store.SupplierMaterial',
-        'FamilyDecoration.view.suppliermanagement.EditSupplierMaterial'
+        'FamilyDecoration.view.suppliermanagement.EditSupplierMaterial',
+        'FamilyDecoration.store.WorkCategory'
     ],
+    supplier: undefined,
 
     initComponent: function () {
         var me = this;
@@ -27,9 +29,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
 
         function _getBtns() {
             return {
-                add: me.down('button[name="add"]'),
-                edit: me.down('button[name="edit"]'),
-                del: me.down('button[name="del"]'),
+                add: me.down('button[name="add"]')
             };
         }
 
@@ -37,15 +37,16 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
             var btnObj = _getBtns(),
                 resObj = _getRes();
             btnObj.add.setDisabled(!supplier);
-            btnObj.edit.setDisabled(!supplier || !resObj.material);
-            btnObj.del.setDisabled(!supplier || !resObj.material);
         }
 
         function _initGrid(supplier) {
             var resObj = _getRes();
             if (supplier) {
-                resObj.st.reload({
-                    callback: function (recs, ope, success){
+                var proxy = resObj.st.getProxy();
+                proxy.extraParams.supplierId = supplier.getId();
+                resObj.st.setProxy(proxy);
+                resObj.st.loadPage(1, {
+                    callback: function (recs, ope, success) {
                         if (success) {
                             var index = resObj.st.indexOf(resObj.material);
                             resObj.selModel.deselectAll();
@@ -62,6 +63,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
         }
 
         me.refresh = function (supplier) {
+            me.supplier = supplier;
             _initBtn(supplier);
             _initGrid(supplier);
         };
@@ -85,27 +87,12 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
                 icon: 'resources/img/material_add.png',
                 handler: function () {
                     var win = Ext.create('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
-
+                        supplier: me.supplier,
+                        callback: function (){
+                            me.refresh(me.supplier);
+                        }
                     });
                     win.show();
-                }
-            },
-            {
-                text: '修改',
-                name: 'edit',
-                disabled: true,
-                icon: 'resources/img/material_edit.png',
-                handler: function () {
-
-                }
-            },
-            {
-                text: '删除',
-                name: 'del',
-                disabled: true,
-                icon: 'resources/img/material_delete.png',
-                handler: function () {
-
                 }
             }
         ];
@@ -117,19 +104,36 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
             },
             items: [
                 {
-                    text: '序号'
+                    text: '序号',
+                    dataIndex: 'id'
                 },
                 {
-                    text: '项目'
+                    text: '项目',
+                    dataIndex: 'name'
                 },
                 {
-                    text: '数量'
+                    text: '数量',
+                    dataIndex: 'amount'
                 },
                 {
-                    text: '单位'
+                    text: '单位',
+                    dataIndex: 'unit'
                 },
                 {
-                    text: '单价(元)'
+                    text: '单价(元)',
+                    dataIndex: 'price'
+                },
+                {
+                    text: '工种',
+                    dataIndex: 'professionType',
+                    renderer: function (val, meta, rec) {
+                        if (val) {
+                            return FamilyDecoration.store.WorkCategory.renderer(val);
+                        }
+                        else {
+                            return '';
+                        }
+                    }
                 }
             ]
         };

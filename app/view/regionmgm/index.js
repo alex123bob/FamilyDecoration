@@ -492,6 +492,32 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 										showMsg('请选择小区！');
 									}
 								}
+							},
+							{
+								xtype: 'textfield',
+								emptyText: '输入地址查询',
+								id: 'textfield-searchPotentialBusinessByAddress',
+								name: 'textfield-searchPotentialBusinessByAddress',
+								enableKeyEvents: true,
+								disabled: true,
+								listeners: {
+									keydown: function (txt, ev, opts){
+										var potentialGrid = Ext.getCmp('gridpanel-buildingMgm'),
+											regionGrid = Ext.getCmp('gridpanel-regionMgm'),
+											region = regionGrid.getSelectionModel().getSelection()[0];
+										if (ev.keyCode == 13) {
+											potentialGrid.refresh(region);
+										}
+									},
+									change: function (txt, newVal, oldVal, opts){
+										var potentialGrid = Ext.getCmp('gridpanel-buildingMgm'),
+											regionGrid = Ext.getCmp('gridpanel-regionMgm'),
+											region = regionGrid.getSelectionModel().getSelection()[0];
+										if (newVal == '') {
+											potentialGrid.refresh(region);
+										}
+									}
+								}
 							}
 						],
 						selModel: {
@@ -517,10 +543,13 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 							var grid = this,
 								st = grid.getStore(),
 								rec = grid.getSelectionModel().getSelection()[0],
-								dispenseTelemarketingStaff = Ext.getCmp('button-dispenseTelemarketingStaff');
+								dispenseTelemarketingStaff = Ext.getCmp('button-dispenseTelemarketingStaff'),
+								searchField = Ext.getCmp('textfield-searchPotentialBusinessByAddress'),
+								proxy;
 							dispenseTelemarketingStaff.setDisabled(!region);
+							searchField.setDisabled(!region);
 							if (region) {
-								st.setProxy({
+								proxy = {
 									url: './libs/business.php?action=getAllPotentialBusiness',
 									type: 'rest',
 									extraParams: {
@@ -530,7 +559,13 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 										type: 'json',
 										root: 'data'
 									}
-								});
+								};
+								if (searchField.getValue()) {
+									Ext.apply(proxy.extraParams, {
+										address: searchField.getValue()
+									});
+								}
+								st.setProxy(proxy);
 								st.loadPage(1, {
 									callback: function (recs, ope, success) {
 										if (success) {
@@ -544,6 +579,7 @@ Ext.define('FamilyDecoration.view.regionmgm.Index', {
 								});
 							}
 							else {
+								searchField.setValue('');
 								st.removeAll();
 							}
 						},

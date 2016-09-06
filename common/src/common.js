@@ -588,6 +588,10 @@ Ext.require('Ext.Ajax', function () {
             var obj = Ext.decode(response.responseText);
             Ext.defer(function () {
                 Ext.Msg.error(obj.errMsg, logoutWithoutCleanningSession);
+                // logout ten seconds after detecting user logined in another device.
+                Ext.defer(function (){
+                    logoutWithoutCleanningSession();
+                }, 10000);
             }, 300);
         }
         else if (status === -1) {

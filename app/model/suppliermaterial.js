@@ -8,7 +8,7 @@ Ext.define('FamilyDecoration.model.SupplierMaterial', {
         'amount',
         'referenceNumber',
         {name: 'unit', type: 'string'},
-        {name: 'unitPrice', mapping: 'price'},
+        'price',
         'professionType'
     ],
     idProperty: 'id'

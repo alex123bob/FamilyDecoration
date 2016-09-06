@@ -6,7 +6,8 @@ Ext.define('FamilyDecoration.store.SupplierMaterial', {
 		url: './libs/api.php',
 		reader: {
 			type: 'json',
-			root: 'data'
+			root: 'data',
+			totalProperty: 'total'
 		},
 		extraParams: {
 			action: 'SupplierMaterial.get'
