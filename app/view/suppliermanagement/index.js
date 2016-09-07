@@ -148,9 +148,6 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 					},
 					{
 						xtype: 'suppliermanagement-materialorderlist'
-					},
-					{
-						title: '付款单审核'
 					}
 				],
 				refresh: function (){

@@ -9,7 +9,8 @@ Ext.define('FamilyDecoration.store.MaterialOrderList', {
 			root: 'data'
 		},
 		extraParams: {
-			action: 'MaterialOrderList.get'
+			action: 'StatementBill.get',
+			billType: 'mtf'
 		}
 	}
 });

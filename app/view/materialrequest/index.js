@@ -2,7 +2,9 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 	extend: 'Ext.container.Container',
 	alias: 'widget.materialrequest-index',
 	requires: [
-		'FamilyDecoration.view.materialrequest.MaterialOrder'
+		'FamilyDecoration.view.materialrequest.MaterialOrder',
+		'FamilyDecoration.view.materialrequest.EditMaterialOrder',
+		'FamilyDecoration.model.StatementBill'
 	],
 	// autoScroll: true,
 	layout: 'hbox',
@@ -78,7 +80,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 				initBtn: function () {
 					var btnObj = this._getBtns(),
 						resObj = _getRes();
-					
+
 					for (var key in btnObj) {
 						if (btnObj.hasOwnProperty(key)) {
 							var btn = btnObj[key];
@@ -98,48 +100,26 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						name: 'add',
 						icon: 'resources/img/material_request_add.png',
 						disabled: true,
-						handler: function (){
+						handler: function () {
 							var resObj = _getRes();
-							var win = Ext.create('Ext.window.Window', {
-								layout: 'fit',
-								title: '添加',
-								modal: true,
-								width: 700,
-								height: 400,
-								maximizable: true,
-								autoScroll: true,
-								items: [
-									{
-										xtype: 'materialrequest-materialorder',
-										project: resObj.project
-									}
-								],
-								tbar: [
-									{
-										xtype: 'button',
-										icon: 'resources/img/material_request_add_small_item.png',
-										text: '添加小项',
-										handler: function (){
-
-										}
-									}
-								],
-								buttons: [
-									{
-										text: '确定',
-										handler: function (){
-
-										}
-									},
-									{
-										text: '取消',
-										handler: function (){
-											win.close();
-										}
-									}
-								]
-							});
-							win.show();
+							if (resObj.project) {
+								ajaxAdd('StatementBill', {
+									projectId: resObj.project.getId(),
+									projectName: resObj.project.get('projectName'),
+									payee: resObj.project.get('captainName'),
+									billType: 'mtf'
+								}, function (obj) {
+									showMsg('初始化成功！');
+									var win = Ext.create('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
+										project: resObj.project,
+										order: Ext.create('FamilyDecoration.model.StatementBill', obj.data)
+									});
+									win.show();
+								});
+							}
+							else {
+								showMsg('请选择工程！');
+							}
 						}
 					},
 					{
@@ -225,7 +205,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 							]
 						},
 						listeners: {
-							selectionchange: function (selModel, sels, opts){
+							selectionchange: function (selModel, sels, opts) {
 								var resObj = _getRes();
 								resObj.billPane.initBtn();
 							}

@@ -65,7 +65,8 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                         st = grid.getStore();
                     ajaxAdd('SupplierMaterial', {
                         name: '',
-                        supplierId: me.supplier.getId()
+                        supplierId: me.supplier.getId(),
+                        price: 0
                     }, function (obj) {
                         showMsg('添加成功！');
                         me.refresh();

@@ -304,6 +304,14 @@ class StatementBillSvc extends BaseSvc
 		return array('total'=>(int)$count[0],'data'=>$row);
 	}
 
+	public function getWithSupplier($q){
+		$q['billType'] = 'mtf';
+		$this->appendSelect = ",sp.name as supplier ";
+		$this->appendJoin = "left join supplier sp on sp.id = $this->tableName.supplierId";
+		$data = $this->get($q);
+		return $data;
+	}
+
 	public function syncTotalFee($q){
 		return $this->getTotalFee($q);
 	}

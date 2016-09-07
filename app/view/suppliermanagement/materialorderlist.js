@@ -12,7 +12,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
 		var me = this;
 
         var st = Ext.create('FamilyDecoration.store.MaterialOrderList', {
-            autoLoad: false
+            autoLoad: true
         });
 
         function _getRes() {
@@ -31,7 +31,8 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                 confirm: me.down('button[name="confirm"]'),
                 request: me.down('button[name="request"]'),
                 pass: me.down('button[name="pass"]'),
-                returnReq: me.down('button[name="return"]')
+                returnReq: me.down('button[name="return"]'),
+                passSecond: me.down('button[name="pass_second"]')
             };
         }
 
@@ -42,6 +43,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
             btnObj.request.setDisabled(!supplier || !resObj.order);
             btnObj.pass.setDisabled(!supplier || !resObj.order);
             btnObj.returnReq.setDisabled(!supplier || !resObj.order);
+            btnObj.passSecond.setDisabled(!supplier || !resObj.order);
         }
 
         function _initGrid(supplier) {
@@ -129,6 +131,15 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                 fieldLabel: '总累计金额',
                 readOnly: true,
                 labelWidth: 80
+            }
+        ];
+
+        me.bbar = [
+            {
+                text: '申付二审审核通过',
+                name: 'pass_second',
+                disabled: true,
+                icon: './resources/img/pass_materialorder_request.png'
             }
         ];
 

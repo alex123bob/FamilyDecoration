@@ -189,7 +189,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.AddBill', {
 												arr.splice(0, 1);
 												func(arr);
 											}, function (obj) {
-												failedMembers.push(obj.data.billItemName);
+												failedMembers.push(obj.data[0].billItemName);
 												arr.splice(0, 1);
 												func(arr);
 											});

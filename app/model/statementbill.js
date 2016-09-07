@@ -50,6 +50,10 @@ Ext.define('FamilyDecoration.model.StatementBill', {
 		{name: 'paid', type: 'string'},
 		{name: 'total', type: 'string'},
 		{name: 'refId', type: 'string'}, // qgd reference Id, original statementbill id
-		{name: 'number', type: 'string'} // number of bills
+		{name: 'number', type: 'string'}, // number of bills
+
+		// for mtf
+		{name: 'supplierId', type: 'string'},
+		{name: 'supplier', type: 'string'}
 	]
 });
