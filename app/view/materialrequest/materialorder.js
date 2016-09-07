@@ -92,16 +92,20 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 																rec = grid.getSelectionModel().getSelection()[0],
 																hidden = txt.nextSibling('[name="supplierId"]'),
 																phone = txt.ownerCt.nextSibling().down('[name="phone"]'),
-																phones = rec.get('phone').split(',');
+																phones = rec && rec.get('phone').split(',');
+															if (rec) {
+																Ext.each(phones, function (item, index, self) {
+																	self[index] = item.split(':')[1];
+																});
 
-															Ext.each(phones, function (item, index, self) {
-																self[index] = item.split(':')[1];
-															});
-
-															txt.setValue(rec.get('name'));
-															hidden.setValue(rec.getId());
-															phone.setValue(phones.join(','));
-															win.close();
+																txt.setValue(rec.get('name'));
+																hidden.setValue(rec.getId());
+																phone.setValue(phones.join(','));
+																win.close();
+															}
+															else {
+																showMsg('请选择供应商！');
+															}
 														}
 													},
 													{
