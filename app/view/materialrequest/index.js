@@ -103,13 +103,96 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 					for (var key in btnObj) {
 						if (btnObj.hasOwnProperty(key)) {
 							var btn = btnObj[key];
-							if (key == 'add') {
-								btn.setDisabled(!resObj.project || !resObj.project.get('projectName'));
-							}
-							else {
-								btn.setDisabled(!resObj.project || !resObj.billRec);
+							switch (key) {
+								case 'add':
+									btn.setDisabled(!resObj.project || !resObj.project.get('projectName'));
+									break;
+								case 'edit':
+								case 'del':
+								case 'submit':
+									btn.setDisabled(!resObj.project || !resObj.billRec || 'new' != resObj.billRec.get('status'));
+									break;
+								case 'applyfor':
+									btn.setDisabled(!resObj.project || !resObj.billRec || 'rdyck4' != resObj.billRec.get('status'));
+									break;
+								case 'approve':
+									btn.setDisabled(!resObj.project || !resObj.billRec
+										|| (
+											'rdyck1' != resObj.billRec.get('status')
+											&& 'rdyck2' != resObj.billRec.get('status')
+											&& 'rdyck3' != resObj.billRec.get('status')
+										)
+									);
+									break;
+								case 'preview':
+								case 'print':
+									btn.setDisabled(!resObj.project || !resObj.billRec);
+									break;
+								default:
+									break;
 							}
 						}
+					}
+				},
+				changeStatus: function (status, msg, successMsg) {
+					var resObj = _getRes(),
+						st = resObj.billRecPaneSt,
+						index = st.indexOf(resObj.billRec),
+						selModel = resObj.billRecPaneSelModel;
+					if (resObj.billRec) {
+						function request(validateCode) {
+							var params = {
+								id: resObj.billRec.getId(),
+								status: status,
+								currentStatus: resObj.billRec.get('status')
+							}, arr = ['id', 'currentStatus'];
+							if (validateCode) {
+								Ext.apply(params, {
+									validateCode: validateCode
+								});
+								arr.push('validateCode');
+							}
+							ajaxUpdate('StatementBill.changeStatus', params, arr, function (obj) {
+								Ext.defer(function () {
+									Ext.Msg.success(successMsg);
+									selModel.deselectAll();
+									st.reload({
+										callback: function (recs, ope, success) {
+											if (success) {
+												selModel.select(index);
+											}
+										}
+									});
+								}, 500);
+							}, true);
+						}
+						Ext.Msg.warning(msg, function (btnId) {
+							if ('yes' == btnId) {
+								ajaxGet('StatementBill', 'getLimit', {
+									id: resObj.billRec.getId()
+								}, function (obj) {
+									if (obj.type == 'checked') {
+										showMsg(obj.hint);
+										request();
+									}
+									else {
+										Ext.defer(function () {
+											Ext.Msg.password(obj.hint, function (val) {
+												if (obj.type == 'sms') {
+												}
+												else if (obj.type == 'securePass') {
+													val = md5(_PWDPREFIX + val);
+												}
+												request(val);
+											});
+										}, 500);
+									}
+								});
+							}
+						});
+					}
+					else {
+						showMsg('请选择申购单！');
 					}
 				},
 				tbar: [
@@ -236,21 +319,47 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						text: '删除',
 						name: 'del',
 						icon: 'resources/img/material_request_delete.png',
-						disabled: true
+						disabled: true,
+						handler: function () {
+							var resObj = _getRes();
+							if (resObj.billRec) {
+								Ext.Msg.warning('确定要删除当前选中的申购单吗?', function (btnId) {
+									if ('yes' == btnId) {
+										ajaxDel('StatementBill', {
+											id: resObj.billRec.getId()
+										}, function (obj) {
+											resObj.billRecPane.refresh();
+											showMsg('删除成功！');
+										});
+									}
+								});
+							}
+							else {
+								showMsg('请选择要删除的申购单！');
+							}
+						}
 					},
 					{
 						xtype: 'button',
 						text: '递交审核',
 						name: 'submit',
 						icon: 'resources/img/material_request_submit.png',
-						disabled: true
+						disabled: true,
+						handler: function () {
+							var resObj = _getRes();
+							resObj.billPane.changeStatus('+1', '递交后不可再进行修改单据，确定要递交单据吗？', '递交成功!');
+						}
 					},
 					{
 						xtype: 'button',
 						text: '申请付款',
 						name: 'applyfor',
 						icon: 'resources/img/material_request_apply.png',
-						disabled: true
+						disabled: true,
+						handler: function (){
+							var resObj = _getRes();
+							resObj.billPane.changeStatus('+1', '确定要为当前申购单申请付款吗？', '申请成功！');
+						}
 					},
 					{
 						// limited show
@@ -258,7 +367,28 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						text: '审核通过',
 						name: 'approve',
 						icon: 'resources/img/material_request_approve.png',
-						disabled: true
+						disabled: true,
+						handler: function () {
+							var resObj = _getRes(),
+								msg, successMsg;
+							switch (resObj.billRec.get('status')) {
+								case 'rdyck1':
+									msg = '确定要将当前账单置为一审通过吗？';
+									successMsg = '一审通过!';
+									break;
+								case 'rdyck2':
+									msg = '确定要将当前账单置为二审通过吗？';
+									successMsg = '二审通过!';
+									break;
+								case 'rdyck3':
+									msg = '确定要将当前账单置为三审通过吗？';
+									successMsg = '三审通过!';
+									break;
+								default:
+									break;
+							}
+							resObj.billPane.changeStatus('+1', msg, successMsg);
+						}
 					},
 					{
 						xtype: 'button',
