@@ -21,6 +21,7 @@ class StatementBillSvc extends BaseSvc
 		foreach ($res['data'] as &$value) {
 			$value['statusName'] = self::$ALL_STATUS[$value['status']];
 			$value['billTypeName'] = self::$BILLTYPE[$value['billType']];
+			$value['totalFeeUppercase'] = cny($value['totalFee']);
 		}
 		BaseSvc::getSvc('User')->appendRealName($res['data'],'payer');
 		BaseSvc::getSvc('User')->appendRealName($res['data'],'creator');

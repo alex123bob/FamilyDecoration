@@ -45,6 +45,7 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 					frm.captain.setValue(data.creatorRealName);
 					frm.phone.setValue(data.phoneNumber);
 					frm.totalFee.setValue(data.totalFee);
+					frm.totalFeeUppercase.setValue(data.totalFeeUppercase);
 					frm.payedTimes.setValue(data.payedTimes);
 					frm.projectProgress.setValue(data.projectProgress);
 				});
