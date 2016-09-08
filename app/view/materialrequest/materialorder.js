@@ -133,6 +133,7 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 				id: me.order.getId()
 			}, function (obj) {
 				frm.totalFee.setValue(obj.totalFee);
+				frm.totalFeeUppercase.setValue(obj.totalFeeUppercase);
 			});
 		};
 

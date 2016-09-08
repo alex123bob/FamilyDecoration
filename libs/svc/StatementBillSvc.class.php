@@ -326,6 +326,7 @@ class StatementBillSvc extends BaseSvc
 		$res[0]['id'] = $q['id'];
 		$res = $res[0];
 		$res['totalFee'] = round($res['totalFee'],3);
+		$res['totalFeeUppercase'] = cny($res['totalFee']);
 		parent::update(array('id'=>$res['id'],'@totalFee' => $res['totalFee']));
 		return $res;
 	}
