@@ -4,7 +4,8 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 	requires: [
 		'FamilyDecoration.view.materialrequest.MaterialOrder',
 		'FamilyDecoration.view.materialrequest.EditMaterialOrder',
-		'FamilyDecoration.model.StatementBill'
+		'FamilyDecoration.store.StatementBill',
+		'FamilyDecoration.view.suppliermanagement.SupplierList'
 	],
 	// autoScroll: true,
 	layout: 'hbox',
@@ -34,6 +35,23 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 			};
 		}
 
+		var st = Ext.create('FamilyDecoration.store.StatementBill', {
+			autoLoad: false,
+			proxy: {
+				url: './libs/api.php',
+				extraParams: {
+					billType: 'mtf',
+					action: 'StatementBill.getWithSupplier'
+				},
+				type: 'rest',
+				reader: {
+					type: 'json',
+					root: 'data',
+					totalProperty: 'total'
+				}
+			}
+		});
+
 		me.items = [
 			{
 				xtype: 'progress-projectlistbycaptain',
@@ -51,6 +69,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 					selectionchange: function (selModel, sels, opts) {
 						var resObj = _getRes();
 						resObj.billPane.initBtn();
+						resObj.billRecPane.refresh();
 					}
 				}
 			},
@@ -103,22 +122,78 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						handler: function () {
 							var resObj = _getRes();
 							if (resObj.project) {
-								ajaxAdd('StatementBill', {
-									projectId: resObj.project.getId(),
-									projectName: resObj.project.get('projectName'),
-									payee: resObj.project.get('captainName'),
-									billType: 'mtf'
-								}, function (obj) {
-									showMsg('初始化成功！');
-									var win = Ext.create('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
-										project: resObj.project,
-										order: Ext.create('FamilyDecoration.model.StatementBill', obj.data)
-									});
-									win.show();
+								var supplierListWin = Ext.create('Ext.window.Window', {
+									layout: 'fit',
+									title: '选择供应商',
+									width: 400,
+									height: 300,
+									modal: true,
+									items: [
+										{
+											xtype: 'suppliermanagement-supplierlist',
+											header: false
+										}
+									],
+									buttons: [
+										{
+											text: '确定',
+											handler: function () {
+												var grid = supplierListWin.down('gridpanel'),
+													rec = grid.getSelectionModel().getSelection()[0],
+													phones = rec && rec.get('phone').split(',');
+												if (rec) {
+													Ext.each(phones, function (item, index, self) {
+														self[index] = item.split(':')[1];
+													});
+													ajaxAdd('StatementBill', {
+														projectId: resObj.project.getId(),
+														projectName: resObj.project.get('projectName'),
+														creator: resObj.project.get('captainName'),
+														payee: rec.get('name'),
+														billType: 'mtf',
+														phoneNumber: phones.join(','),
+														supplierId: rec.getId()
+													}, function (obj) {
+														showMsg('初始化成功！');
+														var win = Ext.create('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
+															project: resObj.project,
+															order: Ext.create('FamilyDecoration.model.StatementBill', obj.data),
+															callback: function () {
+																var resObj = _getRes();
+																resObj.billRecPaneSt.reload({
+																	callback: function (recs, ope, success) {
+																		if (success) {
+																			var index = resObj.billRecPaneSt.indexOf(resObj.billRec);
+																			if (-1 != index) {
+																				resObj.billRecPaneSelModel.deselectAll();
+																				resObj.billRecPaneSelModel.select(index);
+																			}
+																		}
+																	}
+																});
+															}
+														});
+														win.show();
+														supplierListWin.close();
+													});
+												}
+												else {
+													showMsg('请选择供应商！');
+												}
+											}
+										},
+										{
+											text: '取消',
+											handler: function () {
+												supplierListWin.close();
+											}
+										}
+									]
 								});
+								supplierListWin.show();
 							}
 							else {
-								showMsg('请选择工程！');
+								showMsg('请选择工程!');
 							}
 						}
 					},
@@ -127,7 +202,34 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						text: '编辑',
 						name: 'edit',
 						icon: 'resources/img/material_request_edit.png',
-						disabled: true
+						disabled: true,
+						handler: function () {
+							var resObj = _getRes();
+							if (resObj.project && resObj.billRec) {
+								var win = Ext.create('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
+									isEdit: true,
+									project: resObj.project,
+									order: resObj.billRec,
+									callback: function () {
+										resObj.billRecPaneSt.reload({
+											callback: function (recs, ope, success) {
+												if (success) {
+													var index = resObj.billRecPaneSt.indexOf(resObj.billRec);
+													if (-1 != index) {
+														resObj.billRecPaneSelModel.deselectAll();
+														resObj.billRecPaneSelModel.select(index);
+													}
+												}
+											}
+										});
+									}
+								});
+								win.show();
+							}
+							else {
+								showMsg('未选择工程或申购单！');
+							}
+						}
 					},
 					{
 						xtype: 'button',
@@ -173,6 +275,13 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						disabled: true
 					}
 				],
+				refresh: function () {
+					var resObj = _getRes(),
+						orderCt = this.down('materialrequest-materialorder');
+					orderCt.project = resObj.project;
+					orderCt.order = resObj.billRec;
+					orderCt.refresh();
+				},
                 items: [
                     {
                         xtype: 'materialrequest-materialorder',
@@ -184,6 +293,31 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						xtype: 'gridpanel',
 						name: 'gridpanel-billRecords',
 						flex: 0.5,
+						store: st,
+						autoScroll: true,
+						refresh: function () {
+							var resObj = _getRes(),
+								st = this.getStore(),
+								proxy = st.getProxy();
+							if (resObj.project) {
+								Ext.apply(proxy.extraParams, {
+									projectId: resObj.project.getId()
+								});
+								st.setProxy(proxy);
+								st.loadPage(1);
+							}
+							else {
+								st.removeAll();
+							}
+						},
+						dockedItems: [
+							{
+								xtype: 'pagingtoolbar',
+								store: st,
+								displayInfo: true,
+								dock: 'bottom'
+							}
+						],
 						columns: {
 							defaults: {
 								flex: 1,
@@ -191,16 +325,23 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 							},
 							items: [
 								{
-									text: '序号'
+									text: '序号',
+									dataIndex: 'id'
 								},
 								{
-									text: '单据名称'
+									text: '单据名称',
+									dataIndex: 'projectName',
+									renderer: function (val, meta, rec) {
+										return val + rec.get('supplier') + '第' + rec.get('payedTimes') + '次申购';
+									}
 								},
 								{
-									text: '总额(元)'
+									text: '总额(元)',
+									dataIndex: 'totalFee'
 								},
 								{
-									text: '单据状态' // 是否提交审核及通过，是否提交付款，是否付款
+									text: '单据状态', // 是否提交审核及通过，是否提交付款，是否付款,
+									dataIndex: 'statusName'
 								}
 							]
 						},
@@ -208,6 +349,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 							selectionchange: function (selModel, sels, opts) {
 								var resObj = _getRes();
 								resObj.billPane.initBtn();
+								resObj.billPane.refresh();
 							}
 						}
 					}

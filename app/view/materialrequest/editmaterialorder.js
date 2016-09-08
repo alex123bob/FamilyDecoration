@@ -15,6 +15,7 @@ Ext.define('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
     order: undefined,
     isEdit: false,
     closable: false,
+    callback: Ext.emptyFn,
 
     initComponent: function () {
         var me = this;
@@ -74,8 +75,8 @@ Ext.define('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
                             });
                             var win = Ext.create('Ext.window.Window', {
                                 title: me.order.get('supplier') + '供应商',
-                                width: 400,
-                                height: 300,
+                                width: 500,
+                                height: 400,
                                 layout: 'fit',
                                 modal: true,
                                 items: [
@@ -137,7 +138,7 @@ Ext.define('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
                                                 else {
                                                     if (failedMembers.length <= 0) {
                                                         showMsg('添加成功！');
-                                                        materialOrderCt.refresh();
+                                                        materialOrderCt.halfRefresh(true);
                                                     }
                                                     else {
                                                         Ext.Msg.error('以下几项添加失败\n' + failedMembers.join('<br />'));
@@ -170,7 +171,17 @@ Ext.define('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
             {
                 text: '确定',
                 handler: function () {
-
+                    var ct = me.down('materialrequest-materialorder'),
+                        frm = ct.getFrm();
+                    ajaxUpdate('StatementBill', {
+                        id: me.order.getId(),
+                        payedTimes: frm.payedTimes.getValue(),
+                        projectProgress: frm.projectProgress.getValue()
+                    }, ['id'], function (obj){
+                        showMsg('申购单更新成功！');
+                        me.close();
+                        me.callback();
+                    });
                 }
             },
             {
@@ -181,6 +192,13 @@ Ext.define('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
                 }
             }
         ];
+
+        me.addListener({
+            show: function (win, opts){
+                var ct = win.down('materialrequest-materialorder');
+                ct.refresh();
+            }
+        });
 
         this.callParent();
     }

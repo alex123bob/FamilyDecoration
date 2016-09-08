@@ -7,6 +7,7 @@ Ext.define('FamilyDecoration.model.StatementBill', {
 		{name: 'captain', type: 'string'},
 		{name: 'captainName', type: 'string'},
 		{name: 'totalFee', type: 'float'},
+		{name: 'totalFeeUpperCase', type: 'string'},
 		{name: 'claimAmount', type: 'float'},
 		{name: 'payedTimes', type: 'int'},
 		{name: 'projectProgress', type: 'string'},
@@ -25,6 +26,8 @@ Ext.define('FamilyDecoration.model.StatementBill', {
 		// billType: qgd->quality guarantee deposit质量保证金
 		{name: 'billType', type: 'string'}, 
 		{name: 'billTypeName', type: 'string'},
+		{name: 'creator', type: 'string'},
+		{name: 'creatorRealName', type: 'string'},
 
 		{name: 'certs', type: 'string'},
 

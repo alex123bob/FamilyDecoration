@@ -106,7 +106,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                                 ajaxUpdate('SupplierMaterial', updateObj, 'id', function (obj) {
                                     showMsg('更新成功！');
                                     me.isDirty = true;
-                                    me.refresh();
+                                    // me.refresh();
                                 });
 
                                 Ext.resumeLayouts();

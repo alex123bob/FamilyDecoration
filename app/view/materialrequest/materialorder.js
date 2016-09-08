@@ -3,7 +3,6 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 	alias: 'widget.materialrequest-materialorder',
 	layout: 'vbox',
 	requires: [
-		'FamilyDecoration.view.suppliermanagement.SupplierList',
 		'FamilyDecoration.model.StatementBillItem',
 		'FamilyDecoration.model.StatementBill'
 	],
@@ -26,44 +25,108 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 				phone: me.down('[name="phone"]'),
 				totalFee: me.down('[name="totalFee"]'),
 				totalFeeUppercase: me.down('[name="totalFeeUppercase"]'),
-				orderTimes: me.down('[name="orderTimes"]'),
+				payedTimes: me.down('[name="payedTimes"]'),
 				projectProgress: me.down('[name="projectProgress"]')
 			};
 		}
 
 		function _refreshForm() {
 			var frm = _getFrmField();
-			ajaxGet('StatementBill', 'getWithSupplier', {
-				id: me.order.getId()
-			}, function (obj) {
-				var data = obj.data[0];
-				me.order = Ext.create('FamilyDecoration.model.StatementBill', data);
-				frm.supplier.setValue(data.supplier);
-				frm.supplierId.setValue(data.supplierId);
-				frm.totalFee.setValue(data.totalFee);
-				frm.projectName.setValue(data.projectName);
-				frm.phone.setValue(data.phoneNumber);
-				frm.totalFee.setValue(data.totalFee);
-			});
+			if (me.order) {
+				ajaxGet('StatementBill', 'getWithSupplier', {
+					id: me.order.getId()
+				}, function (obj) {
+					var data = obj.data[0];
+					me.order = Ext.create('FamilyDecoration.model.StatementBill', data);
+					frm.supplier.setValue(data.supplier);
+					frm.supplierId.setValue(data.supplierId);
+					frm.totalFee.setValue(data.totalFee);
+					frm.projectName.setValue(data.projectName);
+					frm.captain.setValue(data.creatorRealName);
+					frm.phone.setValue(data.phoneNumber);
+					frm.totalFee.setValue(data.totalFee);
+					frm.payedTimes.setValue(data.payedTimes);
+					frm.projectProgress.setValue(data.projectProgress);
+				});
+			}
+			else {
+				_clearFrm();
+			}
+		}
+
+		function _clearFrm() {
+			var frm = _getFrmField();
+			for (var key in frm) {
+				if (frm.hasOwnProperty(key)) {
+					var elem = frm[key];
+					elem.setValue('');
+				}
+			}
 		}
 
 		function _refreshGrid() {
 			var grid = me.down('gridpanel'),
 				st = grid.getStore(),
 				proxy = st.getProxy();
-			Ext.apply(proxy.extraParams, {
-				billId: me.order.getId()
+			if (me.order) {
+				Ext.apply(proxy.extraParams, {
+					billId: me.order.getId()
+				});
+				st.setProxy(proxy);
+				st.loadPage(1);
+			}
+			else {
+				st.removeAll();
+			}
+		}
+
+		function _reloadGrid() {
+			var grid = me.down('gridpanel'),
+				st = grid.getStore(),
+				selModel = grid.getSelectionModel(),
+				rec = selModel.getSelection()[0],
+				index = st.indexOf(rec);
+			st.reload({
+				callback: function (recs, ope, success){
+					if (success) {
+						if (-1 != index) {
+							selModel.deselectAll();
+							selModel.select(index);
+						}
+					}
+				}
 			});
-			st.setProxy(proxy);
-			st.loadPage(1);
 		}
 
-		me.refresh = function () {
+		me.getFrm = function () {
+			return _getFrmField();
+		}
+
+		// reloadMode: if set true, we are gonna reload current store.
+		// or, we will configure the store's proxy and reload current store from its first page via loadPage functionality.
+		me.refresh = function (reloadMode) {
 			_refreshForm();
-			_refreshGrid();
+			if (reloadMode === true) {
+				_reloadGrid();
+			}
+			else {
+				_refreshGrid();
+			}
 		}
 
-		me.setTotalFee = function () {
+		// reloadMode: if set true, we are gonna reload current store.
+		// or, we will configure the store's proxy and reload current store from its first page via loadPage functionality.
+		me.halfRefresh = function (reloadMode) {
+			_setTotalFee();
+			if (reloadMode === true) {
+				_reloadGrid();
+			}
+			else {
+				_refreshGrid();
+			}
+		}
+
+		function _setTotalFee() {
 			var frm = _getFrmField();
 			ajaxGet('StatementBill', 'getTotalFee', {
 				id: me.order.getId()
@@ -130,62 +193,7 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 								fieldLabel: '供应商',
 								flex: 1,
 								name: 'supplier',
-								readOnly: true,
-								listeners: {
-									focus: function (txt, ev, opts) {
-										if (!me.previewMode) {
-											var win = Ext.create('Ext.window.Window', {
-												layout: 'fit',
-												title: '供应商列表',
-												width: 400,
-												height: 300,
-												modal: true,
-												items: [
-													{
-														xtype: 'suppliermanagement-supplierlist',
-														header: false
-													}
-												],
-												buttons: [
-													{
-														text: '添加',
-														handler: function () {
-															var grid = win.down('gridpanel'),
-																rec = grid.getSelectionModel().getSelection()[0],
-																hidden = txt.nextSibling('[name="supplierId"]'),
-																phone = txt.ownerCt.nextSibling().down('[name="phone"]'),
-																phones = rec && rec.get('phone').split(',');
-															if (rec) {
-																Ext.each(phones, function (item, index, self) {
-																	self[index] = item.split(':')[1];
-																});
-																ajaxUpdate('StatementBill', {
-																	id: me.order.getId(),
-																	supplierId: rec.getId(),
-																	phoneNumber: phones.join(',')
-																}, ['id'], function (obj) {
-																	showMsg('更新成功！');
-																	me.refresh();
-																	win.close();
-																});
-															}
-															else {
-																showMsg('请选择供应商！');
-															}
-														}
-													},
-													{
-														text: '取消',
-														handler: function () {
-															win.close();
-														}
-													}
-												]
-											});
-											win.show();
-										}
-									}
-								}
+								readOnly: true
 							},
 							{
 								xtype: 'hidden',
@@ -258,9 +266,10 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 								xtype: 'textfield',
 								fieldLabel: '申购次数',
 								flex: 1,
-								name: 'orderTimes',
+								name: 'payedTimes',
 								readOnly: me.previewMode,
-								value: me.order && me.order.get('orderTimes')
+								maskRe: /[\d]/,
+								value: me.order && me.order.get('payedTimes')
 							},
 							{
 								xtype: 'textfield',
@@ -290,6 +299,41 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 						displayInfo: true
 					}
 				],
+				plugins: me.previewMode ? [] : [
+					Ext.create('Ext.grid.plugin.CellEditing', {
+						clicksToEdit: 1,
+						listeners: {
+							edit: function (editor, e) {
+								Ext.suspendLayouts();
+
+								e.record.commit();
+								editor.completeEdit();
+								if (e.field == 'amount') {
+									ajaxUpdate('StatementBillItem', {
+										amount: e.record.get('amount'),
+										id: e.record.getId()
+									}, 'id', function (obj) {
+										showMsg('编辑成功！');
+										me.halfRefresh(true);
+									});
+								}
+
+								Ext.resumeLayouts();
+							},
+							validateedit: function (editor, e, opts) {
+								var rec = e.record;
+								if (e.field == 'amount') {
+									if (isNaN(e.value) || !/^-?\d+(\.\d+)?$/.test(e.value)) {
+										return false;
+									}
+									else if (e.value == e.originalValue) {
+										return false;
+									}
+								}
+							}
+						}
+					})
+				],
 				columns: [
 					{
 						xtype: 'actioncolumn',
@@ -307,8 +351,7 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 										id: rec.getId()
 									}, function () {
 										showMsg('删除成功！');
-										me.setTotalFee();
-										_refreshGrid();
+										me.halfRefresh();
 									});
 								}
 							}
@@ -324,7 +367,11 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 						text: '数量',
 						dataIndex: 'amount',
 						align: 'center',
-						flex: 1
+						flex: 1,
+						editor: me.previewMode ? false : {
+							xtype: 'textfield',
+							allowBlank: false
+						}
 					},
 					{
 						text: '单位',
