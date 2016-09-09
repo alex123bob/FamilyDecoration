@@ -4,7 +4,8 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 	layout: 'vbox',
 	requires: [
 		'FamilyDecoration.model.StatementBillItem',
-		'FamilyDecoration.model.StatementBill'
+		'FamilyDecoration.model.StatementBill',
+		'FamilyDecoration.store.WorkCategory'
 	],
     defaults: {
         width: '100%'
@@ -398,6 +399,15 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 						dataIndex: 'referenceNumber',
 						align: 'center',
 						flex: 1
+					},
+					{
+						text: '工种',
+						dataIndex: 'professionType',
+						align: 'center',
+						flex: 0.7,
+						renderer: function (val, meta, rec){
+							return FamilyDecoration.store.WorkCategory.renderer(val);
+						}
 					}
 				]
 			}

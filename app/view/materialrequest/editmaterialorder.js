@@ -101,6 +101,15 @@ Ext.define('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
                                                 flex: 1,
                                                 align: 'center',
                                                 dataIndex: 'name'
+                                            },
+                                            {
+                                                text: '工种',
+                                                flex: 1,
+                                                align: 'center',
+                                                dataIndex: 'professionType',
+                                                renderer: function (val, meta, rec){
+                                                    return FamilyDecoration.store.WorkCategory.renderer(val);
+                                                }
                                             }
                                         ],
                                         store: st
@@ -119,7 +128,8 @@ Ext.define('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
                                                     unit: rec.get('unit'),
                                                     unitPrice: rec.get('price'),
                                                     billId: me.order.getId(),
-                                                    amount: 0
+                                                    amount: 0,
+                                                    professionType: rec.get('professionType')
                                                 };
                                             });
                                             function addItems(recs) {
