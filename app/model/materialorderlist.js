@@ -8,6 +8,8 @@ Ext.define('FamilyDecoration.model.MaterialOrderList', {
         {name: 'creator', type: 'string'},
         {name: 'creatorRealName', type: 'string'},
         {name: 'billType', type: 'string'},
+        {name: 'checker', type: 'string'},
+		{name: 'checkerRealName', type: 'string'},
         'totalFee',
         'createTime',
         'status',

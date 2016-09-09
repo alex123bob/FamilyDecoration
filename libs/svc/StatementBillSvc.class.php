@@ -25,6 +25,7 @@ class StatementBillSvc extends BaseSvc
 		}
 		BaseSvc::getSvc('User')->appendRealName($res['data'],'payer');
 		BaseSvc::getSvc('User')->appendRealName($res['data'],'creator');
+		BaseSvc::getSvc('User')->appendRealName($res['data'],'checker');
 		return $res;
 	}
 

@@ -12,7 +12,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
         var me = this;
 
         var st = Ext.create('FamilyDecoration.store.MaterialOrderList', {
-            autoLoad: true
+            autoLoad: false
         });
 
         function _getRes() {
@@ -102,8 +102,10 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                 disabled: true,
                 icon: 'resources/img/request_payment.png',
                 handler: function () {
+                    var resObj = _getRes();
                     var win = Ext.create('FamilyDecoration.view.suppliermanagement.ApplyForPayment', {
-
+                        order: resObj.order,
+                        supplier: me.supplier
                     });
                     win.show();
                 }

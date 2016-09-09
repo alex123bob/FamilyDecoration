@@ -6,10 +6,11 @@ Ext.define('FamilyDecoration.store.MaterialOrderList', {
 		url: './libs/api.php',
 		reader: {
 			type: 'json',
-			root: 'data'
+			root: 'data',
+			totalProperty: 'total'
 		},
 		extraParams: {
-			action: 'StatementBill.get',
+			action: 'StatementBill.getWithSupplier',
 			billType: 'mtf'
 		}
 	}
