@@ -1,15 +1,15 @@
 Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
-	extend: 'Ext.grid.Panel',
-	alias: 'widget.suppliermanagement-materialorderlist',
+    extend: 'Ext.grid.Panel',
+    alias: 'widget.suppliermanagement-materialorderlist',
     title: '订购单列表',
-	requires: [
-		'FamilyDecoration.store.MaterialOrderList',
+    requires: [
+        'FamilyDecoration.store.MaterialOrderList',
         'FamilyDecoration.view.suppliermanagement.ApplyForPayment'
-	],
+    ],
     supplier: undefined,
 
-	initComponent: function () {
-		var me = this;
+    initComponent: function () {
+        var me = this;
 
         var st = Ext.create('FamilyDecoration.store.MaterialOrderList', {
             autoLoad: true
@@ -92,8 +92,8 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                 name: 'confirm',
                 disabled: true,
                 icon: 'resources/img/confirm_dispatch.png',
-                handler: function (){
-                    
+                handler: function () {
+
                 }
             },
             {
@@ -101,7 +101,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                 name: 'request',
                 disabled: true,
                 icon: 'resources/img/request_payment.png',
-                handler: function (){
+                handler: function () {
                     var win = Ext.create('FamilyDecoration.view.suppliermanagement.ApplyForPayment', {
 
                     });
@@ -113,8 +113,8 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                 name: 'pass',
                 disabled: true,
                 icon: 'resources/img/payment_approval.png',
-                handler: function (){
-                    
+                handler: function () {
+
                 }
             },
             {
@@ -122,7 +122,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                 name: 'return',
                 disabled: true,
                 icon: 'resources/img/payment_return.png',
-                handler: function (){
+                handler: function () {
 
                 }
             },
@@ -143,39 +143,73 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
             }
         ];
 
-        me.columns = {
-            defaults: {
-                flex: 1,
+        me.columns = [
+            {
+                text: '工程名称',
+                dataIndex: 'projectName',
+                align: 'center',
+                flex: 1
+            },
+            {
+                text: '项目经理',
+                flex: 0.7,
+                align: 'center',
+                dataIndex: 'creatorRealName'
+            },
+            {
+                text: '总金额',
+                dataIndex: 'totalFee',
+                flex: 0.7,
                 align: 'center'
             },
-            items: [
-                {
-                    text: '工程名称'
-                },
-                {
-                    text: '项目经理'
-                },
-                {
-                    text: '订购总金额'
-                },
-                {
-                    text: '订购单'
-                },
-                {
-                    text: '订购日期'
-                },
-                {
-                    text: '是否审核'
-                },
-                {
-                    text: '申领金额'
-                },
-                {
-                    text: '已付金额'
-                }
-            ]
-        };
+            {
+                text: '订购单',
+                flex: 0.5,
+                xtype: 'actioncolumn',
+                align: 'center',
+                items: [
+                    {
+                        tooltip: '点击查看单据',
+                        icon: 'resources/img/material_order_sheet.png',
+                        handler: function (grid, rowIndex, colIndex) {
+                            var rec = grid.getStore().getAt(rowIndex);
+                            var win = window.open('./fpdf/statement_bill.php?id=' + rec.getId(), '预览', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+                        }
+                    }
+                ]
+            },
+            {
+                text: '订购日期',
+                align: 'center',
+                flex: 1,
+                dataIndex: 'createTime'
+            },
+            {
+                text: '审核状态',
+                align: 'center',
+                flex: 1,
+                dataIndex: 'statusName'
+            },
+            {
+                text: '申领金额',
+                align: 'center',
+                flex: 1,
+                dataIndex: 'claimAmount'
+            },
+            {
+                text: '已付金额',
+                align: 'center',
+                flex: 1,
+                dataIndex: 'paidAmount'
+            }
+        ];
 
-		this.callParent();
-	}
+        me.addListener({
+            selectionchange: function (selModel, sels, opts) {
+                _initBtn(me.supplier);
+            }
+        });
+
+        this.callParent();
+    }
 });
