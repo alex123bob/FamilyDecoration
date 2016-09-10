@@ -12,7 +12,28 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
         var me = this;
 
         var st = Ext.create('FamilyDecoration.store.MaterialOrderList', {
-            autoLoad: false
+            autoLoad: false,
+            filters: [
+                function (item) {
+                    var status = item.get('status'),
+                        statusFlag = (status && status != 'new' && status != 'rdyck1');
+                    if (User.isAdmin() || User.isProjectManager() 
+                        || User.isFinanceAccountant() || User.isFinanceManager()) {
+                        return statusFlag;
+                    }
+                    else if (User.isProjectStaff()) {
+                        if (item.get('creator') == User.getName()) {
+                            return statusFlag;
+                        }
+                        else {
+                            return false;
+                        }
+                    }
+                    else {
+                        return false;
+                    }
+                }
+            ]
         });
 
         function _getRes() {
@@ -40,10 +61,10 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
             var btnObj = _getBtns(),
                 resObj = _getRes();
             btnObj.confirm.setDisabled(!supplier || !resObj.order);
-            btnObj.request.setDisabled(!supplier || !resObj.order);
-            btnObj.pass.setDisabled(!supplier || !resObj.order);
-            btnObj.returnReq.setDisabled(!supplier || !resObj.order);
-            btnObj.passSecond.setDisabled(!supplier || !resObj.order);
+            btnObj.request.setDisabled(!supplier || !resObj.order || resObj.order.get('status') != 'rdyck3');
+            btnObj.pass.setDisabled(!supplier || !resObj.order || resObj.order.get('status') != 'rdyck4');
+            btnObj.returnReq.setDisabled(!supplier || !resObj.order || resObj.order.get('status') == 'paid' || resObj.order.get('status') == 'arch');
+            btnObj.passSecond.setDisabled(!supplier || !resObj.order || resObj.order.get('status') != 'rdyck5');
         }
 
         function _initGrid(supplier) {
@@ -86,11 +107,77 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
             }
         ];
 
+        me.changeStatus = function (status, msg, successMsg, callback) {
+            var resObj = _getRes(),
+                st = resObj.st,
+                index = st.indexOf(resObj.order),
+                selModel = resObj.selModel;
+            if (resObj.order) {
+                function request(validateCode) {
+                    var params = {
+                        id: resObj.order.getId(),
+                        status: status,
+                        currentStatus: resObj.order.get('status')
+                    }, arr = ['id', 'currentStatus'];
+                    if (validateCode) {
+                        Ext.apply(params, {
+                            validateCode: validateCode
+                        });
+                        arr.push('validateCode');
+                    }
+                    ajaxUpdate('StatementBill.changeStatus', params, arr, function (obj) {
+                        Ext.defer(function () {
+                            Ext.Msg.success(successMsg);
+                            selModel.deselectAll();
+                            st.reload({
+                                callback: function (recs, ope, success) {
+                                    if (success) {
+                                        if (typeof callback == 'function') {
+                                            callback();
+                                        }
+                                        selModel.select(index);
+                                    }
+                                }
+                            });
+                        }, 500);
+                    }, true);
+                }
+                Ext.Msg.warning(msg, function (btnId) {
+                    if ('yes' == btnId) {
+                        ajaxGet('StatementBill', 'getLimit', {
+                            id: resObj.order.getId()
+                        }, function (obj) {
+                            if (obj.type == 'checked') {
+                                showMsg(obj.hint);
+                                request();
+                            }
+                            else {
+                                Ext.defer(function () {
+                                    Ext.Msg.password(obj.hint, function (val) {
+                                        if (obj.type == 'sms') {
+                                        }
+                                        else if (obj.type == 'securePass') {
+                                            val = md5(_PWDPREFIX + val);
+                                        }
+                                        request(val);
+                                    });
+                                }, 500);
+                            }
+                        });
+                    }
+                });
+            }
+            else {
+                showMsg('请选择申购单！');
+            }
+        };
+
         me.tbar = [
             {
                 text: '确认发货',
                 name: 'confirm',
                 disabled: true,
+                hidden: true, // hide temporarily.
                 icon: 'resources/img/confirm_dispatch.png',
                 handler: function () {
 
@@ -101,31 +188,42 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                 name: 'request',
                 disabled: true,
                 icon: 'resources/img/request_payment.png',
+                hidden: User.isAdmin() || User.isFinanceAccountant() || User.isFinanceManager() ? false : true,
                 handler: function () {
                     var resObj = _getRes();
                     var win = Ext.create('FamilyDecoration.view.suppliermanagement.ApplyForPayment', {
                         order: resObj.order,
-                        supplier: me.supplier
+                        supplier: me.supplier,
+                        changeStatus: function (status, msg, successMsg, callback){
+                            me.changeStatus(status, msg, successMsg, callback);
+                        },
+                        callback: function (){
+                            me.refresh(me.supplier);
+                        }
                     });
                     win.show();
                 }
             },
             {
                 text: '申付审核通过',
+                hidden: User.isAdmin() || User.isProjectManager() ? false : true,
                 name: 'pass',
                 disabled: true,
                 icon: 'resources/img/payment_approval.png',
                 handler: function () {
-
+                    var resObj = _getRes();
+                    me.changeStatus('+1', '确定要将当前订购单置为申付审核通过吗？', '申付审核通过！');
                 }
             },
             {
                 text: '退回申付',
                 name: 'return',
                 disabled: true,
+                hidden: User.isAdmin() ? false : true,
                 icon: 'resources/img/payment_return.png',
                 handler: function () {
-
+                    var resObj = _getRes();
+                    me.changeStatus('-1', '确定要将当前订购单退回至上一状态吗？', '已退回！');
                 }
             },
             {
@@ -141,7 +239,12 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                 text: '申付二审审核通过',
                 name: 'pass_second',
                 disabled: true,
-                icon: './resources/img/pass_materialorder_request.png'
+                icon: './resources/img/pass_materialorder_request.png',
+                hidden: User.isAdmin() ? false : true,
+                handler: function () {
+                    var resObj = _getRes();
+                    me.changeStatus('+1', '确定要将当前订购单置为申付二审通过吗？', '申付二审通过！');
+                }
             }
         ];
 

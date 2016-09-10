@@ -17,18 +17,20 @@ Ext.define('FamilyDecoration.view.suppliermanagement.ApplyForPayment', {
     },
     supplier: undefined,
     order: undefined,
+    changeStatus: Ext.emptyFn,
+    callback: Ext.emptyFn,
 
     initComponent: function () {
         var me = this;
 
-        me.refresh = function (){
+        me.refresh = function () {
             var order = me.order,
                 supplier = me.supplier,
                 fst = me.down('fieldset'),
                 fields = fst.query('displayfield'),
                 claimAmount = me.down('numberfield[name="claimAmount"]'),
                 totalFee = me.down('numberfield[name="totalFee"]');
-            Ext.each(fields, function (field, index, self){
+            Ext.each(fields, function (field, index, self) {
                 if (field.name == 'createTime') {
                     field.setValue(order.get(field.name).slice(0, 10));
                 }
@@ -79,9 +81,9 @@ Ext.define('FamilyDecoration.view.suppliermanagement.ApplyForPayment', {
                             cursor: 'pointer'
                         },
                         listeners: {
-                            afterrender: function (cmp, opts){
-                                var el = cmp.getEl().on('click', function (ev, img){
-                                    if(arguments[0].target.nodeName!='LABEL') {
+                            afterrender: function (cmp, opts) {
+                                var el = cmp.getEl().on('click', function (ev, img) {
+                                    if (arguments[0].target.nodeName != 'LABEL') {
                                         var orderId = img.getAttribute('orderId');
                                         var win = window.open('./fpdf/statement_bill.php?id=' + orderId, '预览', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
                                     }
@@ -158,7 +160,16 @@ Ext.define('FamilyDecoration.view.suppliermanagement.ApplyForPayment', {
                         totalFee = me.down('numberfield[name="totalFee"]'),
                         radios = me.query('radiofield');
                     if (claimAmount.isValid() && totalFee.isValid()) {
-                        
+                        me.changeStatus('+1', '确定要为当前订购单申请付款？', '申请成功！', function () {
+                            ajaxUpdate('StatementBill', {
+                                id: me.order.getId(),
+                                claimAmount: claimAmount.getValue(),
+                                totalFee: totalFee.getValue()
+                            }, 'id', function (obj) {
+                                me.close();
+                                me.callback();
+                            });
+                        });
                     }
                 }
             },
@@ -171,7 +182,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.ApplyForPayment', {
         ];
 
         me.addListener({
-            show: function (win, opts){
+            show: function (win, opts) {
                 win.refresh();
             }
         });

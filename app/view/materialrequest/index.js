@@ -90,7 +90,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						edit: tbar.down('[name="edit"]'),
 						del: tbar.down('[name="del"]'),
 						submit: tbar.down('[name="submit"]'),
-						applyfor: tbar.down('[name="applyfor"]'),
+						verifyPassed: tbar.down('[name="verifyPassed"]'),
 						approve: tbar.down('[name="approve"]'),
 						preview: tbar.down('[name="preview"]'),
 						print: tbar.down('[name="print"]')
@@ -112,15 +112,15 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 								case 'submit':
 									btn.setDisabled(!resObj.project || !resObj.billRec || 'new' != resObj.billRec.get('status'));
 									break;
-								case 'applyfor':
-									btn.setDisabled(!resObj.project || !resObj.billRec || 'rdyck4' != resObj.billRec.get('status'));
+								case 'verifyPassed':
+									btn.setDisabled(!resObj.project || !resObj.billRec || 'rdyck2' != resObj.billRec.get('status'));
 									break;
 								case 'approve':
 									btn.setDisabled(!resObj.project || !resObj.billRec
 										|| (
 											'rdyck1' != resObj.billRec.get('status')
-											&& 'rdyck2' != resObj.billRec.get('status')
-											&& 'rdyck3' != resObj.billRec.get('status')
+											// && 'rdyck2' != resObj.billRec.get('status')
+											// && 'rdyck3' != resObj.billRec.get('status')
 										)
 									);
 									break;
@@ -345,6 +345,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						name: 'submit',
 						icon: 'resources/img/material_request_submit.png',
 						disabled: true,
+						hidden: User.isProjectStaff() || User.isAdmin() ? false : true,
 						handler: function () {
 							var resObj = _getRes();
 							resObj.billPane.changeStatus('+1', '递交后不可再进行修改单据，确定要递交单据吗？', '递交成功!');
@@ -352,13 +353,14 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 					},
 					{
 						xtype: 'button',
-						text: '申请付款',
-						name: 'applyfor',
+						text: '验收通过',
+						name: 'verifyPassed',
 						icon: 'resources/img/material_request_apply.png',
+						hidden: User.isProjectStaff() || User.isAdmin() ? false : true,
 						disabled: true,
 						handler: function (){
 							var resObj = _getRes();
-							resObj.billPane.changeStatus('+1', '确定要为当前申购单申请付款吗？', '申请成功！');
+							resObj.billPane.changeStatus('+1', '确定要将为当前申购单置为验收通过吗？', '验收已通过！');
 						}
 					},
 					{
@@ -368,22 +370,25 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						name: 'approve',
 						icon: 'resources/img/material_request_approve.png',
 						disabled: true,
+						hidden: User.isAdmin() || User.isProjectManager() ? false : true,
 						handler: function () {
 							var resObj = _getRes(),
 								msg, successMsg;
 							switch (resObj.billRec.get('status')) {
 								case 'rdyck1':
-									msg = '确定要将当前账单置为一审通过吗？';
-									successMsg = '一审通过!';
+									msg = '确定要将当前账单置为审核通过吗？';
+									successMsg = '审核已通过!';
+									// mail to supplier
+									// @todo
 									break;
-								case 'rdyck2':
-									msg = '确定要将当前账单置为二审通过吗？';
-									successMsg = '二审通过!';
-									break;
-								case 'rdyck3':
-									msg = '确定要将当前账单置为三审通过吗？';
-									successMsg = '三审通过!';
-									break;
+								// case 'rdyck2':
+								// 	msg = '确定要将当前账单置为二审通过吗？';
+								// 	successMsg = '二审通过!';
+								// 	break;
+								// case 'rdyck3':
+								// 	msg = '确定要将当前账单置为三审通过吗？';
+								// 	successMsg = '三审通过!';
+								// 	break;
 								default:
 									break;
 							}
