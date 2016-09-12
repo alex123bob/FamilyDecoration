@@ -41,7 +41,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 				url: './libs/api.php',
 				extraParams: {
 					billType: 'mtf',
-					action: 'StatementBill.getWithSupplier'
+					action: 'SupplierOrder.getWithSupplier'
 				},
 				type: 'rest',
 				reader: {

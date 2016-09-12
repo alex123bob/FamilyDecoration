@@ -89,7 +89,7 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 				rec = selModel.getSelection()[0],
 				index = st.indexOf(rec);
 			st.reload({
-				callback: function (recs, ope, success){
+				callback: function (recs, ope, success) {
 					if (success) {
 						if (-1 != index) {
 							selModel.deselectAll();
@@ -139,7 +139,18 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 		};
 
 		var st = Ext.create('FamilyDecoration.store.StatementBillItem', {
-			autoLoad: false
+			autoLoad: false,
+			proxy: {
+				type: 'rest',
+				url: './libs/api.php',
+				reader: {
+					type: 'json',
+					root: 'data'
+				},
+				extraParams: {
+					action: 'SupplierOrderItem.get'
+				}
+			}
 		});
 
         me.items = [
@@ -405,7 +416,7 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 						dataIndex: 'professionType',
 						align: 'center',
 						flex: 0.7,
-						renderer: function (val, meta, rec){
+						renderer: function (val, meta, rec) {
 							return FamilyDecoration.store.WorkCategory.renderer(val);
 						}
 					}
