@@ -34,7 +34,7 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 		function _refreshForm() {
 			var frm = _getFrmField();
 			if (me.order) {
-				ajaxGet('StatementBill', 'getWithSupplier', {
+				ajaxGet('SupplierOrder', 'getWithSupplier', {
 					id: me.order.getId()
 				}, function (obj) {
 					var data = obj.data[0];
@@ -130,7 +130,7 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 
 		function _setTotalFee() {
 			var frm = _getFrmField();
-			ajaxGet('StatementBill', 'getTotalFee', {
+			ajaxGet('SupplierOrder', 'getTotalFee', {
 				id: me.order.getId()
 			}, function (obj) {
 				frm.totalFee.setValue(obj.totalFee);
@@ -312,7 +312,7 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 								e.record.commit();
 								editor.completeEdit();
 								if (e.field == 'amount') {
-									ajaxUpdate('StatementBillItem', {
+									ajaxUpdate('SupplierOrderItem', {
 										amount: e.record.get('amount'),
 										id: e.record.getId()
 									}, 'id', function (obj) {
@@ -350,7 +350,7 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 									var st = view.getStore(),
 										rec = st.getAt(rowIndex),
 										index = st.indexOf(rec);
-									ajaxDel('StatementBillItem', {
+									ajaxDel('SupplierOrderItem', {
 										id: rec.getId()
 									}, function () {
 										showMsg('删除成功！');

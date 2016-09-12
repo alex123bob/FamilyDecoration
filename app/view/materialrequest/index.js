@@ -152,7 +152,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 								});
 								arr.push('validateCode');
 							}
-							ajaxUpdate('StatementBill.changeStatus', params, arr, function (obj) {
+							ajaxUpdate('SupplierOrder.changeStatus', params, arr, function (obj) {
 								Ext.defer(function () {
 									Ext.Msg.success(successMsg);
 									selModel.deselectAll();
@@ -168,7 +168,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						}
 						Ext.Msg.warning(msg, function (btnId) {
 							if ('yes' == btnId) {
-								ajaxGet('StatementBill', 'getLimit', {
+								ajaxGet('SupplierOrder', 'getLimit', {
 									id: resObj.billRec.getId()
 								}, function (obj) {
 									if (obj.type == 'checked') {
@@ -228,7 +228,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 													Ext.each(phones, function (item, index, self) {
 														self[index] = item.split(':')[1];
 													});
-													ajaxAdd('StatementBill', {
+													ajaxAdd('SupplierOrder', {
 														projectId: resObj.project.getId(),
 														projectName: resObj.project.get('projectName'),
 														creator: resObj.project.get('captainName'),
@@ -325,7 +325,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 							if (resObj.billRec) {
 								Ext.Msg.warning('确定要删除当前选中的申购单吗?', function (btnId) {
 									if ('yes' == btnId) {
-										ajaxDel('StatementBill', {
+										ajaxDel('SupplierOrder', {
 											id: resObj.billRec.getId()
 										}, function (obj) {
 											resObj.billRecPane.refresh();

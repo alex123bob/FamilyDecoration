@@ -26,7 +26,7 @@ Ext.define('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
             var warnMsg = '取消会将当前材料申请单所有内容删除，<br />确定要取消吗？';
             Ext.Msg.warning(warnMsg, function (btnId) {
                 if ('yes' == btnId) {
-                    ajaxDel('StatementBill', {
+                    ajaxDel('SupplierOrder', {
                         id: me.order.getId()
                     }, function (obj) {
                         showMsg('申请单已删除！');
@@ -50,7 +50,7 @@ Ext.define('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
                 icon: 'resources/img/material_request_add_small_item.png',
                 text: '添加小项',
                 handler: function () {
-                    ajaxGet('StatementBill', 'getWithSupplier', {
+                    ajaxGet('SupplierOrder', 'getWithSupplier', {
                         id: me.order.getId()
                     }, function (obj) {
                         var data = obj.data[0];
@@ -136,7 +136,7 @@ Ext.define('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
                                                 var func = arguments.callee;
                                                 if (recs.length > 0) {
                                                     var item = recs[0];
-                                                    ajaxAdd('StatementBillItem', item, function (obj){
+                                                    ajaxAdd('SupplierOrderItem', item, function (obj){
                                                         recs.splice(0, 1);
                                                         func(recs);
                                                     }, function (obj){
@@ -183,7 +183,7 @@ Ext.define('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
                 handler: function () {
                     var ct = me.down('materialrequest-materialorder'),
                         frm = ct.getFrm();
-                    ajaxUpdate('StatementBill', {
+                    ajaxUpdate('SupplierOrder', {
                         id: me.order.getId(),
                         payedTimes: frm.payedTimes.getValue(),
                         projectProgress: frm.projectProgress.getValue()
