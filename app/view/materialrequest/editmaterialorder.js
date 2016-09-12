@@ -124,6 +124,8 @@ Ext.define('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
                                                 failedMembers = [];
                                             Ext.each(recs, function (rec, index, self) {
                                                 self[index] = {
+                                                    supplierId: me.order.get('supplierId'),
+                                                    materialId: rec.getId(),
                                                     billItemName: rec.get('name'),
                                                     unit: rec.get('unit'),
                                                     unitPrice: rec.get('price'),

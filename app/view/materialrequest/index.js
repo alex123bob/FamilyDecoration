@@ -232,9 +232,9 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 														projectId: resObj.project.getId(),
 														projectName: resObj.project.get('projectName'),
 														creator: resObj.project.get('captainName'),
-														payee: rec.get('name'),
+														// payee: rec.get('name'),
 														billType: 'mtf',
-														phoneNumber: phones.join(','),
+														// phoneNumber: phones.join(','),
 														supplierId: rec.getId()
 													}, function (obj) {
 														showMsg('初始化成功！');
