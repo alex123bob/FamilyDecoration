@@ -6,7 +6,7 @@ CREATE TABLE `supplier_order` (
   `totalFee` float(10,2) DEFAULT NULL comment '总价',
   `payedTimes` varchar(20) DEFAULT NULL comment '申购次数',
   `projectProgress` varchar(20) DEFAULT NULL comment '项目进度',
-  `status` varchar(5) DEFAULT 'new',
+  `status` varchar(10) DEFAULT 'new',
   `isDeleted` varchar(5) DEFAULT 'false',
   `createTime` datetime DEFAULT null,
   `updateTime` datetime DEFAULT null,
