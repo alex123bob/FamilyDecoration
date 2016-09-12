@@ -17,7 +17,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                 function (item) {
                     var status = item.get('status'),
                         statusFlag = (status && status != 'new' && status != 'rdyck1');
-                    if (User.isAdmin() || User.isProjectManager() 
+                    if (User.isAdmin() || User.isProjectManager()
                         || User.isFinanceAccountant() || User.isFinanceManager()) {
                         return statusFlag;
                     }
@@ -90,10 +90,25 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
             }
         }
 
+        function _initText(supplier) {
+            var resObj = _getRes();
+            if (supplier) {
+                ajaxGet('StatementBill', 'getSumForSupplier', {
+                    supplierId: supplier.getId()
+                }, function (obj){
+                    console.log(obj);
+                });
+            }
+            else {
+
+            }
+        }
+
         me.refresh = function (supplier) {
             me.supplier = supplier;
             _initBtn(supplier);
             _initGrid(supplier);
+            // _initText(supplier);
         };
 
         me.store = st;
@@ -194,10 +209,10 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                     var win = Ext.create('FamilyDecoration.view.suppliermanagement.ApplyForPayment', {
                         order: resObj.order,
                         supplier: me.supplier,
-                        changeStatus: function (status, msg, successMsg, callback){
+                        changeStatus: function (status, msg, successMsg, callback) {
                             me.changeStatus(status, msg, successMsg, callback);
                         },
-                        callback: function (){
+                        callback: function () {
                             me.refresh(me.supplier);
                         }
                     });
