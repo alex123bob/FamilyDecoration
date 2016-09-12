@@ -2,6 +2,7 @@ CREATE TABLE `supplier_order` (
   `id` varchar(20) DEFAULT NULL,
   `projectId` varchar(20) DEFAULT NULL comment 'projectId',
   `supplierId` varchar(20) DEFAULT NULL comment 'projectId',
+  `paymentId` varchar(20) DEFAULT NULL comment 'paymentId',
   `creator` varchar(200) DEFAULT NULL comment '创建人',
   `totalFee` float(10,2) DEFAULT NULL comment '总价',
   `payedTimes` varchar(20) DEFAULT NULL comment '申购次数',

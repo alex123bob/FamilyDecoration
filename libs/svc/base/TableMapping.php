@@ -27,7 +27,7 @@
 		'msg_log'=>array('id','sender','reciever','recieverPhone','status','result','content'),  //短信发送
 		'supplier'=>array('id','name','boss','address','phone'),
 		'supplier_material'=>array('id','supplierId','name','unit','price','professionType'),
-		'supplier_order'=>array('id','status','totalFee','projectId','supplierId','creator','payee','payedTimes','projectProgress'),
+		'supplier_order'=>array('id','paymentId','status','totalFee','projectId','supplierId','creator','payee','payedTimes','projectProgress'),
 		'supplier_order_item'=>array('id','referenceNumber','amount','billId','supplierId','materialId','billItemName','unit','unitPrice','professionType'),
 		"statement_bill_tag"=>array('id','tag','billId','committer'));
 
