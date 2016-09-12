@@ -204,6 +204,12 @@
                 icon: 'resources/img/finance-parent.png',
                 children: [
                     {
+                        name: '工程财物管理',
+                        cmp: DEBUG ? 'projectfinancemanagement-index' : '',
+                        leaf: true,
+                        icon: 'resources/img/project_finance_management.png'
+                    },
+                    {
                         name: '人工对账',
                         cmp: 'manuallycheckbill-index',
                         leaf: true,
