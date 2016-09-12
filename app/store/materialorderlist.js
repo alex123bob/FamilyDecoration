@@ -10,7 +10,7 @@ Ext.define('FamilyDecoration.store.MaterialOrderList', {
 			totalProperty: 'total'
 		},
 		extraParams: {
-			action: 'StatementBill.getWithSupplier',
+			action: 'SupplierOrder.getWithSupplier',
 			billType: 'mtf'
 		}
 	}
