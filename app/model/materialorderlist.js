@@ -15,7 +15,11 @@ Ext.define('FamilyDecoration.model.MaterialOrderList', {
         'status',
         'statusName',
         'claimAmount',
-        'paidAmount'
+        'paidAmount',
+        {name: 'supplierId', type: 'string'},
+        {name: 'supplier', type: 'string'},
+        {name: 'payedTimes', type: 'int'},
+        'paymentId' // 材料单子对应的付款单id
     ],
     idProperty: 'id'
 });

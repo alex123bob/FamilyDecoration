@@ -4,7 +4,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 	requires: [
 		'FamilyDecoration.view.materialrequest.MaterialOrder',
 		'FamilyDecoration.view.materialrequest.EditMaterialOrder',
-		'FamilyDecoration.store.StatementBill',
+		'FamilyDecoration.store.MaterialOrderList',
 		'FamilyDecoration.view.suppliermanagement.SupplierList'
 	],
 	// autoScroll: true,
@@ -35,7 +35,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 			};
 		}
 
-		var st = Ext.create('FamilyDecoration.store.StatementBill', {
+		var st = Ext.create('FamilyDecoration.store.MaterialOrderList', {
 			autoLoad: false,
 			proxy: {
 				url: './libs/api.php',
@@ -240,7 +240,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 														showMsg('初始化成功！');
 														var win = Ext.create('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
 															project: resObj.project,
-															order: Ext.create('FamilyDecoration.model.StatementBill', obj.data),
+															order: Ext.create('FamilyDecoration.model.MaterialOrderList', obj.data),
 															callback: function () {
 																var resObj = _getRes();
 																resObj.billRecPaneSt.reload({

@@ -321,6 +321,12 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                 align: 'center',
                 flex: 1,
                 dataIndex: 'paidAmount'
+            },
+            {
+                text: '付款单',
+                align: 'center',
+                flex: 1,
+                dataIndex: 'paymentId'
             }
         ];
 
