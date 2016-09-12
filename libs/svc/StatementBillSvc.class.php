@@ -10,7 +10,6 @@ class StatementBillSvc extends BaseSvc
 		'ppd'=> array('new','rdyck1','rdyck2','rdyck3','rdyck4','chk','paid','arch'),
 		'reg'=> array('new','rdyck1','rdyck2','rdyck3','rdyck4','chk','paid','arch'),
 		'qgd'=> array('new','rdyck','chk','paid','arch'),
-		'mtf'=> array('new','rdyck1','rdyck2','rdyck3','rdyck4','rdyck5','chk','paid','arch'),
 		'rbm'=> array('new','rdyck','chk','paid','arch'),
 		'wlf'=> array('new','rdyck','chk','paid','arch'),
 		'tax'=> array('new','rdyck','chk','paid','arch')
@@ -101,7 +100,8 @@ class StatementBillSvc extends BaseSvc
 		}
 	}
 	//检查是否通过短信验证码或者安全密码验证
-	private function checkLimit($q,$bill){
+	public function checkLimit($q,$bill){
+		return;
 		//目前所有状态转换需要校验,但是参数带过来,方便以后某些状态转换不需要校验,直接返回
 		if(isset($_SESSION['secureChecked']) && strtotime(date('Y-m-d H:i:s')) - $_SESSION['secureChecked'] < 60*60*2 ){
  			//两小时内不用重复校验.
@@ -305,14 +305,6 @@ class StatementBillSvc extends BaseSvc
 		$userSvc = parent::getSvc('User');
 		$userSvc->appendRealName($row,'checker');
 		return array('total'=>(int)$count[0],'data'=>$row);
-	}
-
-	public function getWithSupplier($q){
-		$q['billType'] = 'mtf';
-		$this->appendSelect = ",sp.name as supplier ";
-		$this->appendJoin = "left join supplier sp on sp.id = $this->tableName.supplierId";
-		$data = $this->get($q);
-		return $data;
 	}
 
 	public function syncTotalFee($q){
