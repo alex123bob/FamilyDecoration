@@ -9,7 +9,7 @@
 --
 -- Dumping data for table 'statement_bill'
 --
-
+-- 以下是备份出来的要修改数据
 INSERT INTO statement_bill (id, payee, projectId, projectName, totalFee, claimAmount, payedTimes, projectProgress, createTime, updateTime, isDeleted, phoneNumber, professionType, billName, billValue, billType, `status`, checker, creator, supplierId, payer, paidAmount, paidTime, reimbursementReason, descpt, deadline, certs, businessId, refId) VALUES
 ('20160706220540031695', '周吉初', '201601071637216586', '德信·上城 10-1808', 0, 1432, 1, 100, '2016-07-06 22:05:40', '2016-08-22 10:15:58', 'false', '13567255125', '0001', '周吉初领款单', NULL, 'reg', 'new', 'williamzhang', 'gc0009', NULL, NULL, 0.00, '2016-07-14 16:04:33', NULL, NULL, NULL, NULL, NULL, '0'),
 ('20160707123518001992', '汪礼凡', '201603181644419173', '幸福村 自建房', 5000, 5000, 2, 100, '2016-07-07 12:35:18', '2016-07-07 12:36:47', 'false', '15067268438', '0001', '汪礼凡领款单', NULL, 'ppd', 'new', NULL, 'gc0011', NULL, NULL, 0.00, '2016-07-07 12:36:47', NULL, NULL, NULL, NULL, NULL, '0'),

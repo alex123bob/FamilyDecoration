@@ -4,7 +4,7 @@ class SupplierOrderSvc extends BaseSvc
 
 	//账单状态变化
 	public static $STATUSMAPPING = array(
-		'mtf'=> array('new','rdyck1','rdyck2','rdyck3','rdyck4','rdyck5','chk','paid','arch')
+		'mtf'=> array('new','rdyck1','rdyck2','rdyck3','applied')
 	);
 
 	public function add($q){
@@ -19,6 +19,24 @@ class SupplierOrderSvc extends BaseSvc
 				return self::$STATUSMAPPING['mtf'][$i+$offSet];
 		}
 		throw new BaseException(StatementBillSvc::$ALL_STATUS[$currentStatus].'账单不可操作！');
+	}
+	
+	public function applyPayment($q){
+		//TODO
+		notNullCheck($q,'orderIds','单号不能为空(orderIds)!');
+		global $mysql;
+		$orders = $mysql->DBGetAsMap("select * from supplier_order where status != 'applied' and isDeleted = 'false' and id in (".$q['orderIds'].") ");
+		if(count($orders) != substr_count($q['orderIds'],',')+1)
+			throw new Exception('订单数量不一致！');
+		$mysql->begin();
+		$statementBillSvc = parent::getSvc('statementBill');	
+		$statementBillItemSvc = parent::getSvc('statementBillItem');	
+		$statementBill = $statementBillSvc->add();
+		foreach($orders as $order){
+			$statementBillItemSvc->add();
+		}
+		$orders = $mysql->DBExecute("update supplier_order set status = 'applied' and paymentId = '".$statementBill['id']."' where status != 'applied' and isDeleted = 'false' and id in (".$q['orderIds'].") ");
+		$mysql->commit();		
 	}
 
 
@@ -46,7 +64,7 @@ class SupplierOrderSvc extends BaseSvc
 		$auditRecord['@newStatus'] = $targetStatus;
 		$auditRecord['@comments'] = '[matiral]'.(isset($q['@comments']) ? $q['@comments'] : "无");
 		$auditRecord['@drt'] = $q['@status'];
-		$auditSvc = parent::getSvc('StatementBillAudit');
+		$auditSvc = parent::getSvc('SupplierOrderAudit');
 		global $mysql;
 		$mysql->begin();
 		$auditSvc->add($auditRecord);
