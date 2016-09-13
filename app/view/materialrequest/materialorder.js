@@ -3,15 +3,155 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 	alias: 'widget.materialrequest-materialorder',
 	layout: 'vbox',
 	requires: [
-
+		'FamilyDecoration.store.MaterialOrderItem',
+		'FamilyDecoration.model.MaterialOrderList',
+		'FamilyDecoration.store.WorkCategory'
 	],
     defaults: {
         width: '100%'
     },
 	previewMode: false,
+	project: undefined,
+	order: undefined,
 
     initComponent: function () {
         var me = this;
+
+		function _getFrmField() {
+			return {
+				supplier: me.down('[name="supplier"]'),
+				supplierId: me.down('[name="supplierId"]'),
+				projectName: me.down('[name="projectName"]'),
+				captain: me.down('[name="captain"]'),
+				phone: me.down('[name="phone"]'),
+				totalFee: me.down('[name="totalFee"]'),
+				totalFeeUppercase: me.down('[name="totalFeeUppercase"]'),
+				payedTimes: me.down('[name="payedTimes"]'),
+				projectProgress: me.down('[name="projectProgress"]')
+			};
+		}
+
+		function _refreshForm() {
+			var frm = _getFrmField();
+			if (me.order) {
+				ajaxGet('SupplierOrder', 'getWithSupplier', {
+					id: me.order.getId()
+				}, function (obj) {
+					var data = obj.data[0];
+					me.order = Ext.create('FamilyDecoration.model.MaterialOrderList', data);
+					frm.supplier.setValue(data.supplier);
+					frm.supplierId.setValue(data.supplierId);
+					frm.totalFee.setValue(data.totalFee);
+					frm.projectName.setValue(data.projectName);
+					frm.captain.setValue(data.creatorRealName);
+					frm.phone.setValue(data.phoneNumber);
+					frm.totalFee.setValue(data.totalFee);
+					frm.totalFeeUppercase.setValue(data.totalFeeUppercase);
+					frm.payedTimes.setValue(data.payedTimes);
+					frm.projectProgress.setValue(data.projectProgress);
+				});
+			}
+			else {
+				_clearFrm();
+			}
+		}
+
+		function _clearFrm() {
+			var frm = _getFrmField();
+			for (var key in frm) {
+				if (frm.hasOwnProperty(key)) {
+					var elem = frm[key];
+					elem.setValue('');
+				}
+			}
+		}
+
+		function _refreshGrid() {
+			var grid = me.down('gridpanel'),
+				st = grid.getStore(),
+				proxy = st.getProxy();
+			if (me.order) {
+				Ext.apply(proxy.extraParams, {
+					billId: me.order.getId()
+				});
+				st.setProxy(proxy);
+				st.loadPage(1);
+			}
+			else {
+				st.removeAll();
+			}
+		}
+
+		function _reloadGrid() {
+			var grid = me.down('gridpanel'),
+				st = grid.getStore(),
+				selModel = grid.getSelectionModel(),
+				rec = selModel.getSelection()[0],
+				index = st.indexOf(rec);
+			st.reload({
+				callback: function (recs, ope, success) {
+					if (success) {
+						if (-1 != index) {
+							selModel.deselectAll();
+							selModel.select(index);
+						}
+					}
+				}
+			});
+		}
+
+		me.getFrm = function () {
+			return _getFrmField();
+		}
+
+		// reloadMode: if set true, we are gonna reload current store.
+		// or, we will configure the store's proxy and reload current store from its first page via loadPage functionality.
+		me.refresh = function (reloadMode) {
+			_refreshForm();
+			if (reloadMode === true) {
+				_reloadGrid();
+			}
+			else {
+				_refreshGrid();
+			}
+		}
+
+		// reloadMode: if set true, we are gonna reload current store.
+		// or, we will configure the store's proxy and reload current store from its first page via loadPage functionality.
+		me.halfRefresh = function (reloadMode) {
+			_setTotalFee();
+			if (reloadMode === true) {
+				_reloadGrid();
+			}
+			else {
+				_refreshGrid();
+			}
+		}
+
+		function _setTotalFee() {
+			var frm = _getFrmField();
+			ajaxGet('SupplierOrder', 'getTotalFee', {
+				id: me.order.getId()
+			}, function (obj) {
+				frm.totalFee.setValue(obj.totalFee);
+				frm.totalFeeUppercase.setValue(obj.totalFeeUppercase);
+			});
+		};
+
+		var st = Ext.create('FamilyDecoration.store.MaterialOrderItem', {
+			autoLoad: false,
+			proxy: {
+				type: 'rest',
+				url: './libs/api.php',
+				reader: {
+					type: 'json',
+					root: 'data'
+				},
+				extraParams: {
+					action: 'SupplierOrderItem.get'
+				}
+			}
+		});
 
         me.items = [
             {
@@ -67,14 +207,11 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 								fieldLabel: '供应商',
 								flex: 1,
 								name: 'supplier',
-								readOnly: true,
-								listeners: {
-									focus: function (txt, ev, opts){
-										if (!me.previewMode) {
-											
-										}
-									}
-								}
+								readOnly: true
+							},
+							{
+								xtype: 'hidden',
+								name: 'supplierId'
 							},
 							{
 								xtype: 'textfield',
@@ -89,7 +226,8 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 								flex: 1,
 								name: 'captain',
 								readOnly: true,
-								hidden: !me.previewMode
+								hidden: !me.previewMode,
+								value: me.project ? me.project.get('captain') : ''
 							}
 						]
 					},
@@ -108,7 +246,7 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 								xtype: 'textfield',
 								fieldLabel: '联系电话',
 								flex: 1,
-								name: 'phoneNumber',
+								name: 'phone',
 								readOnly: true
 							},
 							{
@@ -142,8 +280,10 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 								xtype: 'textfield',
 								fieldLabel: '申购次数',
 								flex: 1,
-								name: 'orderTimes',
-								readOnly: me.previewMode
+								name: 'payedTimes',
+								readOnly: me.previewMode,
+								maskRe: /[\d]/,
+								value: me.order && me.order.get('payedTimes')
 							},
 							{
 								xtype: 'textfield',
@@ -153,7 +293,8 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 								name: 'projectProgress',
 								afterSubTpl: '%',
 								maskRe: /[\d\.]/,
-								readOnly: me.previewMode
+								readOnly: me.previewMode,
+								value: me.order && me.order.get('projectProgress')
 							}
 						]
 					}
@@ -163,32 +304,123 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 				xtype: 'gridpanel',
 				flex: 1,
 				autoScroll: true,
-				columns: {
-					defaults: {
+				store: st,
+				dockedItems: [
+					{
+						xtype: 'pagingtoolbar',
+						store: st,
+						dock: 'bottom',
+						displayInfo: true
+					}
+				],
+				plugins: me.previewMode ? [] : [
+					Ext.create('Ext.grid.plugin.CellEditing', {
+						clicksToEdit: 1,
+						listeners: {
+							edit: function (editor, e) {
+								Ext.suspendLayouts();
+
+								e.record.commit();
+								editor.completeEdit();
+								if (e.field == 'amount') {
+									ajaxUpdate('SupplierOrderItem', {
+										amount: e.record.get('amount'),
+										id: e.record.getId()
+									}, 'id', function (obj) {
+										showMsg('编辑成功！');
+										me.halfRefresh(true);
+									});
+								}
+
+								Ext.resumeLayouts();
+							},
+							validateedit: function (editor, e, opts) {
+								var rec = e.record;
+								if (e.field == 'amount') {
+									if (isNaN(e.value) || !/^-?\d+(\.\d+)?$/.test(e.value)) {
+										return false;
+									}
+									else if (e.value == e.originalValue) {
+										return false;
+									}
+								}
+							}
+						}
+					})
+				],
+				columns: [
+					{
+						xtype: 'actioncolumn',
+						hidden: me.previewMode ? true : false,
+						width: 30,
+						items: [
+							{
+								icon: 'resources/img/delete_for_action_column.png',
+								tooltip: '删除条目',
+								handler: function (view, rowIndex, colIndex) {
+									var st = view.getStore(),
+										rec = st.getAt(rowIndex),
+										index = st.indexOf(rec);
+									ajaxDel('SupplierOrderItem', {
+										id: rec.getId()
+									}, function () {
+										showMsg('删除成功！');
+										me.halfRefresh();
+									});
+								}
+							}
+						]
+					},
+					{
+						text: '材料名称',
+						dataIndex: 'billItemName',
 						align: 'center',
 						flex: 1
 					},
-					items: [
-						{
-							text: '材料名称'
-						},
-						{
-							text: '数量'
-						},
-						{
-							text: '单位'
-						},
-						{
-							text: '单价(元)'
-						},
-						{
-							text: '总价(元)'
-						},
-						{
-							text: '参考量'
+					{
+						text: '数量',
+						dataIndex: 'amount',
+						align: 'center',
+						flex: 1,
+						editor: me.previewMode ? false : {
+							xtype: 'textfield',
+							allowBlank: false
 						}
-					]
-				}
+					},
+					{
+						text: '单位',
+						dataIndex: 'unit',
+						align: 'center',
+						flex: 1
+					},
+					{
+						text: '单价(元)',
+						dataIndex: 'unitPrice',
+						align: 'center',
+						flex: 1
+					},
+					{
+						text: '总价(元)',
+						dataIndex: 'subtotal',
+						align: 'center',
+						flex: 1
+					},
+					{
+						text: '参考量',
+						dataIndex: 'referenceNumber',
+						align: 'center',
+						flex: 1
+					},
+					{
+						text: '工种',
+						dataIndex: 'professionType',
+						align: 'center',
+						flex: 0.7,
+						renderer: function (val, meta, rec) {
+							return FamilyDecoration.store.WorkCategory.renderer(val);
+						}
+					}
+				]
 			}
         ];
 

@@ -416,7 +416,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.BillTable', {
 													}
 												}
 											});
-										})
+										});
 									}
 								}
 							]

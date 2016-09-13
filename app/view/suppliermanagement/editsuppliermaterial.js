@@ -65,7 +65,8 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                         st = grid.getStore();
                     ajaxAdd('SupplierMaterial', {
                         name: '',
-                        supplierId: me.supplier.getId()
+                        supplierId: me.supplier.getId(),
+                        price: 0
                     }, function (obj) {
                         showMsg('添加成功！');
                         me.refresh();
@@ -105,7 +106,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                                 ajaxUpdate('SupplierMaterial', updateObj, 'id', function (obj) {
                                     showMsg('更新成功！');
                                     me.isDirty = true;
-                                    me.refresh();
+                                    // me.refresh();
                                 });
 
                                 Ext.resumeLayouts();
@@ -183,7 +184,8 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                             allowBlank: false
                         },
                         flex: 1,
-                        align: 'center'
+                        align: 'center',
+                        hidden: true // hide amount temporarily, coz we don't know the amount of specific material of one supplier'
                     },
                     {
                         text: '参考量',

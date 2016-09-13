@@ -3,14 +3,13 @@ class StatementBillSvc extends BaseSvc
 {
 	//账单类型  dsdpst:设计定金，pjtf:工程款，贷款(loan表)，other:其他四个是入账。其他都是出账
 	public static $BILLTYPE = array('ppd'=>'预付款','reg'=>'工人工资','dsdpst'=>'设计定金','qgd'=>'质量保证金','fdf'=>'财务费用(TODO)','pjtf'=>'工程款','mtf'=>'材料付款','rbm'=>'报销','wlf'=>'福利','tax'=>'公司税务','other'=>'其他');
-	public static $ALL_STATUS = array('new'=>'未提交','rdyck'=>'待审核','rdyck1'=>'待一审','rdyck2'=>'待二审','rdyck3'=>'待三审','rdyck4'=>'待终审','chk'=>'审核通过','paid'=>'已付款','accepted'=>'已收款','arch'=>'已归档');
+	public static $ALL_STATUS = array('new'=>'未提交','rdyck'=>'待审核','rdyck1'=>'待一审','rdyck2'=>'待二审','rdyck3'=>'待三审','rdyck4'=>'待四审','rdyck5'=>'待五审','chk'=>'审核通过','paid'=>'已付款','accepted'=>'已收款','arch'=>'已归档');
 
 	//账单状态变化
 	public static $STATUSMAPPING = array(
 		'ppd'=> array('new','rdyck1','rdyck2','rdyck3','rdyck4','chk','paid','arch'),
 		'reg'=> array('new','rdyck1','rdyck2','rdyck3','rdyck4','chk','paid','arch'),
 		'qgd'=> array('new','rdyck','chk','paid','arch'),
-		'mtf'=> array('new','rdyck1','rdyck2','rdyck3','rdyck4','chk','paid','arch'),
 		'rbm'=> array('new','rdyck','chk','paid','arch'),
 		'wlf'=> array('new','rdyck','chk','paid','arch'),
 		'tax'=> array('new','rdyck','chk','paid','arch')
@@ -21,8 +20,11 @@ class StatementBillSvc extends BaseSvc
 		foreach ($res['data'] as &$value) {
 			$value['statusName'] = self::$ALL_STATUS[$value['status']];
 			$value['billTypeName'] = self::$BILLTYPE[$value['billType']];
+			$value['totalFeeUppercase'] = cny($value['totalFee']);
 		}
 		BaseSvc::getSvc('User')->appendRealName($res['data'],'payer');
+		BaseSvc::getSvc('User')->appendRealName($res['data'],'creator');
+		BaseSvc::getSvc('User')->appendRealName($res['data'],'checker');
 		return $res;
 	}
 
@@ -37,11 +39,11 @@ class StatementBillSvc extends BaseSvc
 
 	public function add($q){
 		$q['@id'] = $this->getUUID();
-		$q['@creator'] = $_SESSION['name'];
+		$q['@creator'] = isset($q["@creator"]) ? $q["@creator"] : $_SESSION['name'];
 		if(!isset($q['@status']))
 			$q['@status'] = 'new';
 		notNullCheck($q,'@billType','审批单类型不能为空!');
-		if($q['@billType'] != 'qgd')
+		if($q['@billType'] != 'qgd' && $q['@billType'] != 'mtf')
 			notNullCheck($q,'@payee','领款人不能为空!');
 		// 是否完工标志位用来判断，当前工程是否要进行监理意见检测。如果完工的工程，是不需要判断当前监理意见是否填写的。
 		if($q['@billType'] == 'reg' && $q["@isFrozen"] == "0")
@@ -98,7 +100,8 @@ class StatementBillSvc extends BaseSvc
 		}
 	}
 	//检查是否通过短信验证码或者安全密码验证
-	private function checkLimit($q,$bill){
+	public function checkLimit($q,$bill){
+		return;
 		//目前所有状态转换需要校验,但是参数带过来,方便以后某些状态转换不需要校验,直接返回
 		if(isset($_SESSION['secureChecked']) && strtotime(date('Y-m-d H:i:s')) - $_SESSION['secureChecked'] < 60*60*2 ){
  			//两小时内不用重复校验.
@@ -316,6 +319,7 @@ class StatementBillSvc extends BaseSvc
 		$res[0]['id'] = $q['id'];
 		$res = $res[0];
 		$res['totalFee'] = round($res['totalFee'],3);
+		$res['totalFeeUppercase'] = cny($res['totalFee']);
 		parent::update(array('id'=>$res['id'],'@totalFee' => $res['totalFee']));
 		return $res;
 	}

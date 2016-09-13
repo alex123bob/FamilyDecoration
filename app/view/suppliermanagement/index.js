@@ -3,9 +3,11 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 	alias: 'widget.suppliermanagement-index',
 	requires: [
 		'FamilyDecoration.store.Supplier',
+		'FamilyDecoration.view.suppliermanagement.SupplierList',
 		'FamilyDecoration.view.suppliermanagement.EditSupplier',
 		'FamilyDecoration.view.suppliermanagement.SupplierMaterial',
-		'FamilyDecoration.view.suppliermanagement.MaterialOrderList'
+		'FamilyDecoration.view.suppliermanagement.MaterialOrderList',
+		'FamilyDecoration.view.suppliermanagement.PaymentBillCheck'
 	],
 	layout: 'hbox',
 	defaults: {
@@ -35,27 +37,13 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 
 		me.items = [
 			{
-				xtype: 'gridpanel',
+				xtype: 'suppliermanagement-supplierlist',
 				flex: 1,
-				title: '供应商列表',
 				itemId: 'gridpanel-supplierList',
-				autoScroll: true,
 				style: {
 					borderRightStyle: 'solid',
 					borderRightWidth: '1px'
 				},
-				store: Ext.create('FamilyDecoration.store.Supplier', {
-					autoLoad: true
-				}),
-				columns: [
-					{
-						text: '姓名',
-						flex: 1,
-						align: 'center',
-						dataIndex: 'name'
-					}
-				],
-				hideHeaders: true,
 				tbar: [
 					{
 						xtype: 'button',
@@ -148,53 +136,6 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 						var resObj = _getRes();
 						resObj.supplierList._initBtns();
 						resObj.tabPanel.refresh();
-					},
-					afterrender: function (grid, opts){
-						var view = grid.getView();
-						var tip = Ext.create('Ext.tip.ToolTip', {
-							target: view.el,
-							delegate: view.itemSelector,
-							trackMouse: true,
-							renderTo: Ext.getBody(),
-							style: {
-								backgroundColor: 'rgba(222, 222, 222, 0.8)',
-								borderRadius: '6px',
-								lineHeight: '26px',
-								fontSize: '26px'
-							},
-							listeners: {
-								beforeshow: function (tip){
-									var rec = view.getRecord(tip.triggerElement),
-										phone = rec.get('phone'),
-										contactInfo = [],
-										contact = '';
-									phone = phone.split(',');
-									if (phone.length > 0) {
-										Ext.each(phone, function (p, i, arr){
-											p = p.split(':');
-											if (p.length >= 2) {
-												contactInfo.push({
-													desc: p[0],
-													phone: p[1]
-												});
-											}
-										});
-									}
-									if (contactInfo.length > 0) {
-										Ext.each(contactInfo, function (c, i){
-											contact += c.desc + ': ' + c.phone + '<br />';
-										});
-									}
-									tip.update(
-										'<strong>供应商:</strong> ' + rec.get('name') + '<br />'
-										+ '<strong>联系人:</strong> ' + rec.get('boss') + '<br />'
-										+ '<strong>地址:</strong> ' + rec.get('address') + '<br />'
-										+ '<strong>联系方式:</strong> ' + '<br />'
-										+ contact
-									);
-								}
-							}
-						});
 					}
 				}
 			},
@@ -210,7 +151,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 						xtype: 'suppliermanagement-materialorderlist'
 					},
 					{
-						title: '付款单审核'
+						xtype: 'suppliermanagement-paymentbillcheck'
 					}
 				],
 				refresh: function (){

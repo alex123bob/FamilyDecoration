@@ -113,7 +113,8 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
                 },
                 {
                     text: '数量',
-                    dataIndex: 'amount'
+                    dataIndex: 'amount',
+                    hidden: true // hide amount temporarily, coz we don't know the amount of specific material of one supplier
                 },
                 {
                     text: '单位',

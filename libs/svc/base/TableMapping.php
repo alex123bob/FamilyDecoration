@@ -2,7 +2,7 @@
 	//createTime,updateTime,isDeleted 不用写
 	$TableMapping = array(
 		"profession_type"=>array('id','name','value','cname'),
-		"statement_bill"=>array('id','refId','businessId','deadline','creator','billName','billValue','status','checker','billType','payee','payer','projectId','projectName','phoneNumber','totalFee','claimAmount','payedTimes','paidAmount','paidTime','projectProgress','descpt','certs','reimbursementReason','professionType'),
+		"statement_bill"=>array('id','refId','businessId','deadline','creator','billName','billValue','status','checker','billType','payee','payer','projectId','projectName','phoneNumber','totalFee','claimAmount','payedTimes','paidAmount','paidTime','projectProgress','descpt','certs','reimbursementReason','professionType', 'supplierId'),
 		"statement_bill_item"=>array('id','billId','serialNumber','billItemName','unit','amount','unitPrice','subtotal','referenceItems','professionType','checkedNumber'),
 		"statement_basic_item"=>array('id','serialNumber','billItemName','unit','amount','unitPrice','subtotal','referenceItems','professionType'),
 		"statement_bill_audit"=>array('id','drt','billId','operator','orignalStatus','newStatus','comments'),
@@ -27,6 +27,8 @@
 		'msg_log'=>array('id','sender','reciever','recieverPhone','status','result','content'),  //短信发送
 		'supplier'=>array('id','name','boss','address','phone'),
 		'supplier_material'=>array('id','supplierId','name','unit','price','professionType'),
+		'supplier_order'=>array('id','paymentId','status','totalFee','projectId','supplierId','creator','payee','payedTimes','projectProgress'),
+		'supplier_order_item'=>array('id','referenceNumber','amount','billId','supplierId','materialId','billItemName','unit','unitPrice','professionType'),
 		"statement_bill_tag"=>array('id','tag','billId','committer'));
 
 	foreach ($TableMapping as $key => &$value) {

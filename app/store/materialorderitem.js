@@ -1,6 +1,6 @@
-Ext.define('FamilyDecoration.store.MaterialOrderList', {
+Ext.define('FamilyDecoration.store.MaterialOrderItem', {
 	extend: 'Ext.data.Store',
-	model: 'FamilyDecoration.model.MaterialOrderList',
+	model: 'FamilyDecoration.model.MaterialOrderItem',
 	proxy: {
 		type: 'rest',
 		url: './libs/api.php',
@@ -10,8 +10,7 @@ Ext.define('FamilyDecoration.store.MaterialOrderList', {
 			totalProperty: 'total'
 		},
 		extraParams: {
-			action: 'SupplierOrder.getWithSupplier',
-			billType: 'mtf'
+			action: 'SupplierOrderItem.get'
 		}
 	}
 });
