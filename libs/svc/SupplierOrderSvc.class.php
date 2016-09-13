@@ -23,20 +23,46 @@ class SupplierOrderSvc extends BaseSvc
 	
 	public function applyPayment($q){
 		//TODO
-		notNullCheck($q,'orderIds','单号不能为空(orderIds)!');
+		notNullCheck($q,'@orderIds','单号不能为空(orderIds)!');
+		$orderIds = $q['@orderIds'];
 		global $mysql;
-		$orders = $mysql->DBGetAsMap("select * from supplier_order where status != 'applied' and isDeleted = 'false' and id in (".$q['orderIds'].") ");
-		if(count($orders) != substr_count($q['orderIds'],',')+1)
-			throw new Exception('订单数量不一致！');
+		$orders = $mysql->DBGetAsMap("select * from supplier_order where status != 'applied' and isDeleted = 'false' and id in ( $orderIds ) ");
+		if(count($orders) != substr_count($orderIds,',')+1 || count($orders) == 0)
+			throw new BaseException('订单数量不一致！');
 		$mysql->begin();
 		$statementBillSvc = parent::getSvc('statementBill');	
 		$statementBillItemSvc = parent::getSvc('statementBillItem');	
-		$statementBill = $statementBillSvc->add();
-		foreach($orders as $order){
-			$statementBillItemSvc->add();
+		$auditSvc = parent::getSvc('SupplierOrderAudit');
+		$supplierId = $orders[0]['supplierId'];
+		$statementBill = $statementBillSvc->add(array(
+				'@projectId'=>$orders[0]['projectId'],
+				'@payee'=>$supplierId,
+				'@totalFee'=>$q['@totalFee'],
+				'@claimAmount'=>$q['@claimAmount'],
+				'@billType'=>'mtf',
+				'@projectName'=>$orders[0]['projectName'],
+				'@refId'=>$orderIds
+			));
+		$statementBill = $statementBill['data'];
+		//记录日志
+		foreach ($orders as $order) {
+			$auditRecord = array();
+			if($order['supplierId'] != $supplierId){
+				throw new BaseException('不能同时选中多个供应商！');
+			}
+			$auditRecord['@operator'] = $_SESSION['name'];
+			$auditRecord['@billId'] = $order['id'];
+			$auditRecord['@orignalStatus'] = $order['status'];
+			$auditRecord['@newStatus'] = 'appplied';
+			$auditRecord['@comments'] = "申请付款(单号".$statementBill['id'].')';
+			$auditRecord['@drt'] = '1';
+
+			$auditSvc->add($auditRecord);
 		}
-		$orders = $mysql->DBExecute("update supplier_order set status = 'applied' and paymentId = '".$statementBill['id']."' where status != 'applied' and isDeleted = 'false' and id in (".$q['orderIds'].") ");
-		$mysql->commit();		
+		$orders = $mysql->DBExecute("update supplier_order set status = 'applied',paymentId = '".$statementBill['id']."' where status != 'applied' and isDeleted = 'false' and id in ($orderIds) ");
+		
+		$mysql->commit();
+		return $statementBill;
 	}
 
 
@@ -62,7 +88,7 @@ class SupplierOrderSvc extends BaseSvc
 		$auditRecord['@billId'] = $q['id'];
 		$auditRecord['@orignalStatus'] = $bill['status'];
 		$auditRecord['@newStatus'] = $targetStatus;
-		$auditRecord['@comments'] = '[matiral]'.(isset($q['@comments']) ? $q['@comments'] : "无");
+		$auditRecord['@comments'] = (isset($q['@comments']) ? $q['@comments'] : "无");
 		$auditRecord['@drt'] = $q['@status'];
 		$auditSvc = parent::getSvc('SupplierOrderAudit');
 		global $mysql;

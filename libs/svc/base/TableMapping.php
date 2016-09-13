@@ -6,6 +6,7 @@
 		"statement_bill_item"=>array('id','billId','serialNumber','billItemName','unit','amount','unitPrice','subtotal','referenceItems','professionType','checkedNumber'),
 		"statement_basic_item"=>array('id','serialNumber','billItemName','unit','amount','unitPrice','subtotal','referenceItems','professionType'),
 		"statement_bill_audit"=>array('id','drt','billId','operator','orignalStatus','newStatus','comments'),
+		"supplier_order_audit"=>array('id','drt','billId','operator','orignalStatus','newStatus','comments'),
 		'project'=>array('projectId','projectName'),
 		'plan'=>array('id','projectId','projectAddress','startTime','endTime','custName','conCleaHeatDefine','bottomDig','toiletBalCheck','plumbElecCheck','knockWall','tileMarbleCabiDefine','waterElecCheck','waterElecConstruct','waterElecPhoto','tilerMateConstruct','tilerProCheck','woodMateCheck','woodProConstruct','woodProCheck','paintMateCheck','paintProConstruct','cabiInstall','toilKitchSuspend','paintProCheck','switchSocketInstall','lampSanitInstall','floorInstall','paintRepair','wallpaperPave','housekeepingClean','elecInstall','curtainFuniInstall'),
 		'plan_making'=>array('id','projectId','projectAddress','startTime','endTime','custName','c1','c2','c3','c4','c5','c6','c7','c8','c9','c10','c11','c12','c13','c14','c15','c16','c17','c18','c19','c20','c21','c22','c23','c24','c25','c26','c27','c28','c29','c30','c31','c32','c33','c34'),
@@ -27,7 +28,7 @@
 		'msg_log'=>array('id','sender','reciever','recieverPhone','status','result','content'),  //短信发送
 		'supplier'=>array('id','name','boss','address','phone'),
 		'supplier_material'=>array('id','supplierId','name','unit','price','professionType'),
-		'supplier_order'=>array('id','paymentId','status','totalFee','projectId','supplierId','creator','payee','payedTimes','projectProgress'),
+		'supplier_order'=>array('id','projectName','paymentId','status','totalFee','projectId','supplierId','creator','payee','payedTimes','projectProgress'),
 		'supplier_order_item'=>array('id','referenceNumber','amount','billId','supplierId','materialId','billItemName','unit','unitPrice','professionType'),
 		"statement_bill_tag"=>array('id','tag','billId','committer'));
 

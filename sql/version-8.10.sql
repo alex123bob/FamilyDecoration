@@ -33,5 +33,22 @@ CREATE TABLE `supplier_order_item` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `supplier_order_audit` (
+  `id` varchar(20) NOT NULL DEFAULT '',
+  `billId` varchar(20) DEFAULT NULL,
+  `comments` varchar(500) DEFAULT NULL,
+  `operator` varchar(25) DEFAULT NULL,
+  `orignalStatus` varchar(50) DEFAULT NULL,
+  `newStatus` varchar(50) DEFAULT NULL,
+  `isDeleted` varchar(5) DEFAULT NULL,
+  `createTime` datetime DEFAULT NULL,
+  `updateTime` datetime DEFAULT NULL,
+  `drt` varchar(10) DEFAULT NULL COMMENT '方向，1前进，-1打回',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-update `system` set `paramValue`='version-8.9' where `id`='4';
+alter table statement_bill modify refId text comment '质保金关联的原单子,或者材料付款单对应的材料单';
+alter table supplier_order add column `projectName` varchar(200);
+alter table supplier_order drop column `supplierId`;
+
+update `system` set `paramValue`='version-8.10' where `id`='4';
