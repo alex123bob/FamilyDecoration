@@ -7,6 +7,10 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
         'FamilyDecoration.view.suppliermanagement.ApplyForPayment'
     ],
     supplier: undefined,
+    selType: 'checkboxmodel',
+    selModel: {
+        mode: 'SIMPLE'
+    },
 
     initComponent: function () {
         var me = this;
@@ -51,9 +55,6 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
             return {
                 confirm: me.down('button[name="confirm"]'),
                 request: me.down('button[name="request"]')
-                // pass: me.down('button[name="pass"]'),
-                // returnReq: me.down('button[name="return"]'),
-                // passSecond: me.down('button[name="pass_second"]')
             };
         }
 
@@ -62,9 +63,6 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                 resObj = _getRes();
             btnObj.confirm.setDisabled(!supplier || !resObj.order);
             btnObj.request.setDisabled(!supplier || !resObj.order || resObj.order.get('status') != 'rdyck3');
-            // btnObj.pass.setDisabled(!supplier || !resObj.order || resObj.order.get('status') != 'rdyck4');
-            // btnObj.returnReq.setDisabled(!supplier || !resObj.order || resObj.order.get('status') == 'paid' || resObj.order.get('status') == 'arch');
-            // btnObj.passSecond.setDisabled(!supplier || !resObj.order || resObj.order.get('status') != 'rdyck5');
         }
 
         function _initGrid(supplier) {
@@ -219,28 +217,6 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                     win.show();
                 }
             },
-            // {
-            //     text: '申付审核通过',
-            //     hidden: User.isAdmin() || User.isProjectManager() ? false : true,
-            //     name: 'pass',
-            //     disabled: true,
-            //     icon: 'resources/img/payment_approval.png',
-            //     handler: function () {
-            //         var resObj = _getRes();
-            //         me.changeStatus('+1', '确定要将当前订购单置为申付审核通过吗？', '申付审核通过！');
-            //     }
-            // },
-            // {
-            //     text: '退回申付',
-            //     name: 'return',
-            //     disabled: true,
-            //     hidden: User.isAdmin() ? false : true,
-            //     icon: 'resources/img/payment_return.png',
-            //     handler: function () {
-            //         var resObj = _getRes();
-            //         me.changeStatus('-1', '确定要将当前订购单退回至上一状态吗？', '已退回！');
-            //     }
-            // },
             {
                 xtype: 'textfield',
                 fieldLabel: '总累计金额',
@@ -248,20 +224,6 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                 labelWidth: 80
             }
         ];
-
-        // me.bbar = [
-        //     {
-        //         text: '申付二审审核通过',
-        //         name: 'pass_second',
-        //         disabled: true,
-        //         icon: './resources/img/pass_materialorder_request.png',
-        //         hidden: User.isAdmin() ? false : true,
-        //         handler: function () {
-        //             var resObj = _getRes();
-        //             me.changeStatus('+1', '确定要将当前订购单置为申付二审通过吗？', '申付二审通过！');
-        //         }
-        //     }
-        // ];
 
         me.columns = [
             {
