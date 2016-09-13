@@ -16,7 +16,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.ApplyForPayment', {
         width: '100%'
     },
     supplier: undefined,
-    order: undefined,
+    orders: undefined,
     changeStatus: Ext.emptyFn,
     callback: Ext.emptyFn,
 
@@ -24,90 +24,111 @@ Ext.define('FamilyDecoration.view.suppliermanagement.ApplyForPayment', {
         var me = this;
 
         me.refresh = function () {
-            var order = me.order,
+            var orders = me.orders,
                 supplier = me.supplier,
-                fst = me.down('fieldset'),
-                fields = fst.query('displayfield'),
+                tabPanel = me.getComponent('tabpanel-headerInfo'),
                 claimAmount = me.down('numberfield[name="claimAmount"]'),
-                totalFee = me.down('numberfield[name="totalFee"]');
-            Ext.each(fields, function (field, index, self) {
-                if (field.name == 'createTime') {
-                    field.setValue(order.get(field.name).slice(0, 10));
-                }
-                else if (field.name == 'id') {
-                    field.setValue('<img orderId="' + order.get(field.name) + '" src="./resources/img/material_order_sheet.png" />');
-                }
-                else {
-                    field.setValue(order.get(field.name));
-                }
-            });
-            totalFee.setValue(order.get('totalFee'));
+                totalFee = me.down('numberfield[name="totalFee"]'),
+                panelConfig = {
+                    layout: 'fit',
+                    itemId: 'panel-headerInfo',
+                    items: [
+                        {
+                            xtype: 'fieldset',
+                            title: '信息',
+                            autoScroll: true,
+                            defaults: {
+                                xtype: 'displayfield',
+                                margin: '0 4 0 0',
+                                labelWidth: 70,
+                                width: 224,
+                                style: {
+                                    'float': 'left'
+                                }
+                            },
+                            items: [
+                                {
+                                    fieldLabel: '工程名称',
+                                    name: 'projectName'
+                                },
+                                {
+                                    fieldLabel: '项目经理',
+                                    name: 'creatorRealName'
+                                },
+                                {
+                                    fieldLabel: '订购总金额',
+                                    name: 'totalFee'
+                                },
+                                {
+                                    fieldLabel: '订购单',
+                                    name: 'id',
+                                    style: {
+                                        cursor: 'pointer'
+                                    },
+                                    listeners: {
+                                        afterrender: function (cmp, opts) {
+                                            var el = cmp.getEl().on('click', function (ev, img) {
+                                                if (arguments[0].target.nodeName != 'LABEL') {
+                                                    var orderId = img.getAttribute('orderId');
+                                                    var win = window.open('./fpdf/statement_bill.php?id=' + orderId, '预览', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+                                                }
+                                            });
+                                        }
+                                    }
+                                },
+                                {
+                                    fieldLabel: '订购日期',
+                                    name: 'createTime'
+                                },
+                                {
+                                    fieldLabel: '是否审核',
+                                    name: 'statusName'
+                                },
+                                {
+                                    fieldLabel: '审核人',
+                                    name: 'checkerRealName'
+                                },
+                                {
+                                    fieldLabel: '已付金额',
+                                    name: 'paidAmount'
+                                }
+                            ]
+                        }
+                    ]
+                },
+                totalFeeCount = 0;
+            for (var i = 0; i < orders.length; i++) {
+                Ext.apply(panelConfig, {
+                    title: '订购单' + (i+1),
+                    itemId: 'panel-headerInfo' + i
+                });
+                tabPanel.add(panelConfig);
+                var order = orders[i],
+                    fst = tabPanel.items.items[i].down('fieldset'),
+                    fields = fst.query('displayfield');
+                Ext.each(fields, function (field, index, self) {
+                    if (field.name == 'createTime') {
+                        field.setValue(order.get(field.name).slice(0, 10));
+                    }
+                    else if (field.name == 'id') {
+                        field.setValue('<img orderId="' + order.get(field.name) + '" src="./resources/img/material_order_sheet.png" />');
+                    }
+                    else {
+                        field.setValue(order.get(field.name));
+                    }
+                });
+                totalFeeCount = accAdd(totalFeeCount, parseFloat(order.get('totalFee')));
+            }
+            totalFee.setValue(totalFeeCount);
         };
 
         me.items = [
             {
-                xtype: 'fieldset',
-                title: '信息',
-                itemId: 'fieldset-headerInfo',
-                width: '100%',
+                xtype: 'tabpanel',
                 flex: 4,
-                autoScroll: true,
-                defaults: {
-                    xtype: 'displayfield',
-                    margin: '0 4 0 0',
-                    labelWidth: 70,
-                    width: 224,
-                    style: {
-                        'float': 'left'
-                    }
-                },
-                items: [
-                    {
-                        fieldLabel: '工程名称',
-                        name: 'projectName'
-                    },
-                    {
-                        fieldLabel: '项目经理',
-                        name: 'creatorRealName'
-                    },
-                    {
-                        fieldLabel: '订购总金额',
-                        name: 'totalFee'
-                    },
-                    {
-                        fieldLabel: '订购单',
-                        name: 'id',
-                        style: {
-                            cursor: 'pointer'
-                        },
-                        listeners: {
-                            afterrender: function (cmp, opts) {
-                                var el = cmp.getEl().on('click', function (ev, img) {
-                                    if (arguments[0].target.nodeName != 'LABEL') {
-                                        var orderId = img.getAttribute('orderId');
-                                        var win = window.open('./fpdf/statement_bill.php?id=' + orderId, '预览', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
-                                    }
-                                });
-                            }
-                        }
-                    },
-                    {
-                        fieldLabel: '订购日期',
-                        name: 'createTime'
-                    },
-                    {
-                        fieldLabel: '是否审核',
-                        name: 'statusName'
-                    },
-                    {
-                        fieldLabel: '审核人',
-                        name: 'checkerRealName'
-                    },
-                    {
-                        fieldLabel: '已付金额',
-                        name: 'paidAmount'
-                    }
-                ]
+                width: '100%',
+                itemId: 'tabpanel-headerInfo',
+                items: []
             },
             {
                 xtype: 'numberfield',
@@ -158,18 +179,31 @@ Ext.define('FamilyDecoration.view.suppliermanagement.ApplyForPayment', {
                 handler: function () {
                     var claimAmount = me.down('numberfield[name="claimAmount"]'),
                         totalFee = me.down('numberfield[name="totalFee"]'),
-                        radios = me.query('radiofield');
+                        radios = me.query('radiofield'),
+                        orderIds = [];
+                    Ext.each(me.orders, function (order, index, self){
+                        orderIds.push(order.getId());
+                    });
                     if (claimAmount.isValid() && totalFee.isValid()) {
-                        me.changeStatus('+1', '确定要为当前订购单申请付款？', '申请成功！', function () {
-                            ajaxUpdate('StatementBill', {
-                                id: me.order.getId(),
-                                claimAmount: claimAmount.getValue(),
-                                totalFee: totalFee.getValue()
-                            }, 'id', function (obj) {
-                                me.close();
-                                me.callback();
-                            });
-                        });
+                        ajaxAdd('SupplierOrder.applyPayment', {
+                            claimAmount: claimAmount.getValue(),
+                            totalFee: totalFee.getValue(),
+                            orderIds: orderIds.join(',')
+                        }, function (obj){
+                            me.callback();
+                        }, function (obj){
+
+                        }, true);
+                        // me.changeStatus('+1', '确定要为当前订购单申请付款？', '申请成功！', function () {
+                        //     ajaxUpdate('StatementBill', {
+                        //         id: me.order.getId(),
+                        //         claimAmount: claimAmount.getValue(),
+                        //         totalFee: totalFee.getValue()
+                        //     }, 'id', function (obj) {
+                        //         me.close();
+                        //         me.callback();
+                        //     });
+                        // });
                     }
                 }
             },

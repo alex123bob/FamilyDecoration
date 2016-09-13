@@ -43,10 +43,12 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
         function _getRes() {
             var st = me.getStore(),
                 selModel = me.getSelectionModel(),
-                order = selModel.getSelection()[0];
+                orders = selModel.getSelection(),
+                order = orders[0];
             return {
                 st: st,
                 selModel: selModel,
+                orders: orders,
                 order: order
             };
         }
@@ -205,7 +207,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                 handler: function () {
                     var resObj = _getRes();
                     var win = Ext.create('FamilyDecoration.view.suppliermanagement.ApplyForPayment', {
-                        order: resObj.order,
+                        orders: resObj.orders,
                         supplier: me.supplier,
                         changeStatus: function (status, msg, successMsg, callback) {
                             me.changeStatus(status, msg, successMsg, callback);
