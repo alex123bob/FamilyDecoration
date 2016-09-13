@@ -3,8 +3,8 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 	alias: 'widget.materialrequest-materialorder',
 	layout: 'vbox',
 	requires: [
-		'FamilyDecoration.model.StatementBillItem',
-		'FamilyDecoration.model.StatementBill',
+		'FamilyDecoration.store.MaterialOrderItem',
+		'FamilyDecoration.model.MaterialOrderList',
 		'FamilyDecoration.store.WorkCategory'
 	],
     defaults: {
@@ -38,7 +38,7 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 					id: me.order.getId()
 				}, function (obj) {
 					var data = obj.data[0];
-					me.order = Ext.create('FamilyDecoration.model.StatementBill', data);
+					me.order = Ext.create('FamilyDecoration.model.MaterialOrderList', data);
 					frm.supplier.setValue(data.supplier);
 					frm.supplierId.setValue(data.supplierId);
 					frm.totalFee.setValue(data.totalFee);
@@ -138,7 +138,7 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 			});
 		};
 
-		var st = Ext.create('FamilyDecoration.store.StatementBillItem', {
+		var st = Ext.create('FamilyDecoration.store.MaterialOrderItem', {
 			autoLoad: false,
 			proxy: {
 				type: 'rest',

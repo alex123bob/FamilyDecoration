@@ -10,7 +10,9 @@ Ext.define('FamilyDecoration.model.MaterialOrderList', {
         {name: 'billType', type: 'string'},
         {name: 'checker', type: 'string'},
 		{name: 'checkerRealName', type: 'string'},
+        {name: 'phoneNumber', type: 'string'},
         'totalFee',
+        'totalFeeUppercase',
         'createTime',
         'status',
         'statusName',
@@ -19,6 +21,7 @@ Ext.define('FamilyDecoration.model.MaterialOrderList', {
         {name: 'supplierId', type: 'string'},
         {name: 'supplier', type: 'string'},
         {name: 'payedTimes', type: 'int'},
+        {name: 'projectProgress', type: 'string'},
         'paymentId' // 材料单子对应的付款单id
     ],
     idProperty: 'id'

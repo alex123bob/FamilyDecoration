@@ -6,7 +6,8 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 		'FamilyDecoration.view.suppliermanagement.SupplierList',
 		'FamilyDecoration.view.suppliermanagement.EditSupplier',
 		'FamilyDecoration.view.suppliermanagement.SupplierMaterial',
-		'FamilyDecoration.view.suppliermanagement.MaterialOrderList'
+		'FamilyDecoration.view.suppliermanagement.MaterialOrderList',
+		'FamilyDecoration.view.suppliermanagement.PaymentBillCheck'
 	],
 	layout: 'hbox',
 	defaults: {
@@ -148,6 +149,9 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 					},
 					{
 						xtype: 'suppliermanagement-materialorderlist'
+					},
+					{
+						xtype: 'suppliermanagement-paymentbillcheck'
 					}
 				],
 				refresh: function (){

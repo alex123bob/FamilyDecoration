@@ -1,70 +1,72 @@
-Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
+Ext.define('FamilyDecoration.view.suppliermanagement.PaymentBillCheck', {
     extend: 'Ext.grid.Panel',
-    alias: 'widget.suppliermanagement-materialorderlist',
-    title: '订购单列表',
+    alias: 'widget.suppliermanagement-paymentbillcheck',
+    title: '付款单审核',
     requires: [
-        'FamilyDecoration.store.MaterialOrderList',
-        'FamilyDecoration.view.suppliermanagement.ApplyForPayment'
+        'FamilyDecoration.store.StatementBill'
     ],
     supplier: undefined,
 
     initComponent: function () {
         var me = this;
 
-        var st = Ext.create('FamilyDecoration.store.MaterialOrderList', {
+        var st = Ext.create('FamilyDecoration.store.StatementBill', {
             autoLoad: false,
             filters: [
                 function (item) {
-                    var status = item.get('status'),
-                        statusFlag = (status && status != 'new' && status != 'rdyck1');
                     if (User.isAdmin() || User.isProjectManager()
                         || User.isFinanceAccountant() || User.isFinanceManager()) {
-                        return statusFlag;
+                        return true;
                     }
                     else if (User.isProjectStaff()) {
-                        if (item.get('creator') == User.getName()) {
-                            return statusFlag;
-                        }
-                        else {
-                            return false;
-                        }
+                        return item.get('creator') == User.getName();
                     }
                     else {
                         return false;
                     }
                 }
-            ]
+            ],
+            proxy: {
+                type: 'rest',
+                url: './libs/api.php',
+                reader: {
+                    type: 'json',
+                    root: 'data',
+                    totalProperty: 'total'
+                },
+                extraParams: {
+                    action: 'StatementBill.get',
+                    orderby: 'createTime DESC',
+                    billType: 'mtf'
+                }
+            }
         });
 
         function _getRes() {
             var st = me.getStore(),
                 selModel = me.getSelectionModel(),
-                order = selModel.getSelection()[0];
+                bill = selModel.getSelection()[0];
             return {
                 st: st,
                 selModel: selModel,
-                order: order
+                bill: bill
             };
         }
 
         function _getBtns() {
             return {
-                confirm: me.down('button[name="confirm"]'),
-                request: me.down('button[name="request"]')
-                // pass: me.down('button[name="pass"]'),
-                // returnReq: me.down('button[name="return"]'),
-                // passSecond: me.down('button[name="pass_second"]')
+                pass: me.down('button[name="pass"]'),
+                returnReq: me.down('button[name="return"]'),
+                passSecond: me.down('button[name="pass_second"]')
             };
         }
 
         function _initBtn(supplier) {
             var btnObj = _getBtns(),
                 resObj = _getRes();
-            btnObj.confirm.setDisabled(!supplier || !resObj.order);
-            btnObj.request.setDisabled(!supplier || !resObj.order || resObj.order.get('status') != 'rdyck3');
-            // btnObj.pass.setDisabled(!supplier || !resObj.order || resObj.order.get('status') != 'rdyck4');
-            // btnObj.returnReq.setDisabled(!supplier || !resObj.order || resObj.order.get('status') == 'paid' || resObj.order.get('status') == 'arch');
-            // btnObj.passSecond.setDisabled(!supplier || !resObj.order || resObj.order.get('status') != 'rdyck5');
+            btnObj.pass.setDisabled(!supplier || !resObj.bill || resObj.bill.get('status') != 'rdyck4');
+            btnObj.returnReq.setDisabled(!supplier || !resObj.bill || resObj.bill.get('status') == 'paid' || resObj.bill.get('status') == 'arch');
+            btnObj.passSecond.setDisabled(!supplier || !resObj.bill || resObj.bill.get('status') != 'rdyck5');
         }
 
         function _initGrid(supplier) {
@@ -76,7 +78,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                 resObj.st.loadPage(1, {
                     callback: function (recs, ope, success) {
                         if (success) {
-                            var index = resObj.st.indexOf(resObj.order);
+                            var index = resObj.st.indexOf(resObj.bill);
                             resObj.selModel.deselectAll();
                             if (-1 != index) {
                                 resObj.selModel.select(index);
@@ -90,25 +92,10 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
             }
         }
 
-        function _initText(supplier) {
-            var resObj = _getRes();
-            if (supplier) {
-                ajaxGet('SupplierOrder', 'getSumForSupplier', {
-                    supplierId: supplier.getId()
-                }, function (obj){
-                    console.log(obj);
-                });
-            }
-            else {
-
-            }
-        }
-
         me.refresh = function (supplier) {
             me.supplier = supplier;
             _initBtn(supplier);
             _initGrid(supplier);
-            // _initText(supplier);
         };
 
         me.store = st;
@@ -125,14 +112,14 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
         me.changeStatus = function (status, msg, successMsg, callback) {
             var resObj = _getRes(),
                 st = resObj.st,
-                index = st.indexOf(resObj.order),
+                index = st.indexOf(resObj.bill),
                 selModel = resObj.selModel;
-            if (resObj.order) {
+            if (resObj.bill) {
                 function request(validateCode) {
                     var params = {
-                        id: resObj.order.getId(),
+                        id: resObj.bill.getId(),
                         status: status,
-                        currentStatus: resObj.order.get('status')
+                        currentStatus: resObj.bill.get('status')
                     }, arr = ['id', 'currentStatus'];
                     if (validateCode) {
                         Ext.apply(params, {
@@ -140,7 +127,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                         });
                         arr.push('validateCode');
                     }
-                    ajaxUpdate('SupplierOrder.changeStatus', params, arr, function (obj) {
+                    ajaxUpdate('StatementBill.changeStatus', params, arr, function (obj) {
                         Ext.defer(function () {
                             Ext.Msg.success(successMsg);
                             selModel.deselectAll();
@@ -159,8 +146,8 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                 }
                 Ext.Msg.warning(msg, function (btnId) {
                     if ('yes' == btnId) {
-                        ajaxGet('SupplierOrder', 'getLimit', {
-                            id: resObj.order.getId()
+                        ajaxGet('StatementBill', 'getLimit', {
+                            id: resObj.bill.getId()
                         }, function (obj) {
                             if (obj.type == 'checked') {
                                 showMsg(obj.hint);
@@ -183,85 +170,48 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                 });
             }
             else {
-                showMsg('请选择申购单！');
+                showMsg('请选择付款单！');
             }
         };
 
         me.tbar = [
             {
-                text: '确认发货',
-                name: 'confirm',
+                text: '申付审核通过',
+                hidden: User.isAdmin() || User.isProjectManager() ? false : true,
+                name: 'pass',
                 disabled: true,
-                hidden: true, // hide temporarily.
-                icon: 'resources/img/confirm_dispatch.png',
-                handler: function () {
-
-                }
-            },
-            {
-                text: '申请付款',
-                name: 'request',
-                disabled: true,
-                icon: 'resources/img/request_payment.png',
-                hidden: User.isAdmin() || User.isFinanceAccountant() || User.isFinanceManager() ? false : true,
+                icon: 'resources/img/payment_approval.png',
                 handler: function () {
                     var resObj = _getRes();
-                    var win = Ext.create('FamilyDecoration.view.suppliermanagement.ApplyForPayment', {
-                        order: resObj.order,
-                        supplier: me.supplier,
-                        changeStatus: function (status, msg, successMsg, callback) {
-                            me.changeStatus(status, msg, successMsg, callback);
-                        },
-                        callback: function () {
-                            me.refresh(me.supplier);
-                        }
-                    });
-                    win.show();
+                    me.changeStatus('+1', '确定要将当前付款单置为申付审核通过吗？', '审核通过！');
                 }
             },
-            // {
-            //     text: '申付审核通过',
-            //     hidden: User.isAdmin() || User.isProjectManager() ? false : true,
-            //     name: 'pass',
-            //     disabled: true,
-            //     icon: 'resources/img/payment_approval.png',
-            //     handler: function () {
-            //         var resObj = _getRes();
-            //         me.changeStatus('+1', '确定要将当前订购单置为申付审核通过吗？', '申付审核通过！');
-            //     }
-            // },
-            // {
-            //     text: '退回申付',
-            //     name: 'return',
-            //     disabled: true,
-            //     hidden: User.isAdmin() ? false : true,
-            //     icon: 'resources/img/payment_return.png',
-            //     handler: function () {
-            //         var resObj = _getRes();
-            //         me.changeStatus('-1', '确定要将当前订购单退回至上一状态吗？', '已退回！');
-            //     }
-            // },
             {
-                xtype: 'textfield',
-                fieldLabel: '总累计金额',
-                readOnly: true,
-                labelWidth: 80
+                text: '退回申付',
+                name: 'return',
+                disabled: true,
+                hidden: User.isAdmin() ? false : true,
+                icon: 'resources/img/payment_return.png',
+                handler: function () {
+                    var resObj = _getRes();
+                    me.changeStatus('-1', '确定要将当前付款单退回至上一状态吗？', '已退回！');
+                }
             }
         ];
 
-        // me.bbar = [
-        //     {
-        //         text: '申付二审审核通过',
-        //         name: 'pass_second',
-        //         disabled: true,
-        //         icon: './resources/img/pass_materialorder_request.png',
-        //         hidden: User.isAdmin() ? false : true,
-        //         handler: function () {
-        //             var resObj = _getRes();
-        //             me.changeStatus('+1', '确定要将当前订购单置为申付二审通过吗？', '申付二审通过！');
-        //         }
-        //     }
-        // ];
+        me.bbar = [
+            {
+                text: '申付二审审核通过',
+                name: 'pass_second',
+                disabled: true,
+                icon: './resources/img/pass_materialorder_request.png',
+                hidden: User.isAdmin() ? false : true,
+                handler: function () {
+                    var resObj = _getRes();
+                    me.changeStatus('+1', '确定要将当前付款单置为申付二审通过吗？', '申付二审通过！');
+                }
+            }
+        ];
 
         me.columns = [
             {
@@ -321,12 +271,6 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                 align: 'center',
                 flex: 1,
                 dataIndex: 'paidAmount'
-            },
-            {
-                text: '付款单',
-                align: 'center',
-                flex: 1,
-                dataIndex: 'paymentId'
             }
         ];
 

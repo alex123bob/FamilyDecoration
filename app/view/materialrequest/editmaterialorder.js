@@ -2,7 +2,7 @@ Ext.define('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
     extend: 'Ext.window.Window',
     alias: 'widget.materialrequest-editmaterialorder',
     requires: [
-        'FamilyDecoration.model.StatementBill'
+        'FamilyDecoration.model.MaterialOrderList'
     ],
     modal: true,
     title: '添加',
@@ -55,7 +55,7 @@ Ext.define('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
                     }, function (obj) {
                         var data = obj.data[0];
                         if (data.supplierId) {
-                            me.order = Ext.create('FamilyDecoration.model.StatementBill', data);
+                            me.order = Ext.create('FamilyDecoration.model.MaterialOrderList', data);
                             var materialOrderCt = me.down('materialrequest-materialorder');
                             var st = Ext.create('FamilyDecoration.store.SupplierMaterial', {
                                 autoLoad: true,
