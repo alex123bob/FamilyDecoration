@@ -22,7 +22,6 @@ class SupplierOrderSvc extends BaseSvc
 	}
 	
 	public function applyPayment($q){
-		//TODO
 		notNullCheck($q,'@orderIds','单号不能为空(orderIds)!');
 		$orderIds = $q['@orderIds'];
 		global $mysql;
