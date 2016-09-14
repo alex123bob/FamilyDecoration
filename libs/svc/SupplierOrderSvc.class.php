@@ -28,6 +28,13 @@ class SupplierOrderSvc extends BaseSvc
 		$orders = $mysql->DBGetAsMap("select * from supplier_order where status != 'applied' and isDeleted = 'false' and id in ( $orderIds ) ");
 		if(count($orders) != substr_count($orderIds,',')+1 || count($orders) == 0)
 			throw new BaseException('订单数量不一致！');
+
+		$projectNames = array();
+		foreach ($orders as $order) {
+			if(!in_array($order['projectName'], $projectNames))
+				array_push($projectNames,$order['projectName']);
+		}
+
 		$mysql->begin();
 		$statementBillSvc = parent::getSvc('statementBill');	
 		$statementBillItemSvc = parent::getSvc('statementBillItem');	
@@ -40,7 +47,7 @@ class SupplierOrderSvc extends BaseSvc
 				'@claimAmount'=>$q['@claimAmount'],
 				'@status'=>'rdyck1',
 				'@billType'=>'mtf',
-				'@projectName'=>$orders[0]['projectName'],
+				'@projectName'=>join(',',$projectNames),
 				'@refId'=>$orderIds
 			));
 		$statementBill = $statementBill['data'];
