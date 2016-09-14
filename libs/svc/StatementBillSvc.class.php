@@ -8,7 +8,7 @@ class StatementBillSvc extends BaseSvc
 	//账单状态变化
 	public static $STATUSMAPPING = array(
 		'ppd'=> array('new','rdyck1','rdyck2','rdyck3','rdyck4','chk','paid','arch'),
-		'mtf'=>array('chk','paid','arch'),
+		'mtf'=>array('rdyck1','rdyck2','chk','paid','arch'),
 		'reg'=> array('new','rdyck1','rdyck2','rdyck3','rdyck4','chk','paid','arch'),
 		'qgd'=> array('new','rdyck','chk','paid','arch'),
 		'rbm'=> array('new','rdyck','chk','paid','arch'),

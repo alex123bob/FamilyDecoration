@@ -38,6 +38,7 @@ class SupplierOrderSvc extends BaseSvc
 				'@supplierId'=>$supplierId,
 				'@totalFee'=>$q['@totalFee'],
 				'@claimAmount'=>$q['@claimAmount'],
+				'@status'=>'rdyck1',
 				'@billType'=>'mtf',
 				'@projectName'=>$orders[0]['projectName'],
 				'@refId'=>$orderIds
