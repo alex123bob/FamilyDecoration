@@ -5,6 +5,7 @@ Ext.define('FamilyDecoration.model.Supplier', {
         {name: 'name', type: 'string'},
         {name: 'boss', type: 'string'}, //联系人
         {name: 'address', type: 'string'},
+        {name: 'email', type: 'string'},
         {name: 'phone', type: 'string'},
         {name: 'isDeleted', type: 'string'},
         {name: 'createTime', type: 'string'},

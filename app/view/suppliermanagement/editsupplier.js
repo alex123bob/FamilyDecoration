@@ -92,6 +92,12 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplier', {
                         value: me.supplier ? me.supplier.get('address') : ''
                     },
                     {
+                        fieldLabel: '供应商邮箱',
+                        name: 'email',
+                        vtype: 'mail',
+                        value: me.supplier ? me.supplier.get('email') : ''
+                    },
+                    {
                         xtype: 'button',
                         anchor: 'auto auto',
                         text: '添加联系人',

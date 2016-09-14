@@ -49,5 +49,6 @@ CREATE TABLE `supplier_order_audit` (
 
 alter table statement_bill modify refId text comment '质保金关联的原单子,或者材料付款单对应的材料单';
 alter table supplier_order add column `projectName` varchar(200);
+ALTER TABLE `supplier` ADD `email` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL AFTER `address`;
 
 update `system` set `paramValue`='version-8.10' where `id`='4';

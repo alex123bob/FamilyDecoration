@@ -67,6 +67,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierList', {
                                 '<strong>供应商:</strong> ' + rec.get('name') + '<br />'
                                 + '<strong>联系人:</strong> ' + rec.get('boss') + '<br />'
                                 + '<strong>地址:</strong> ' + rec.get('address') + '<br />'
+                                + '<strong>邮箱:</strong> ' + rec.get('email') + '<br />'
                                 + '<strong>联系方式:</strong> ' + '<br />'
                                 + contact
                             );
