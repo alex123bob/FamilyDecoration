@@ -250,8 +250,59 @@ Ext.define('FamilyDecoration.view.suppliermanagement.PaymentBillCheck', {
                         tooltip: '点击查看单据',
                         icon: 'resources/img/material_order_sheet.png',
                         handler: function (grid, rowIndex, colIndex) {
-                            var rec = grid.getStore().getAt(rowIndex);
-                            var win = window.open('./fpdf/statement_bill.php?id=' + rec.getId(), '预览', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+                            var rec = grid.getStore().getAt(rowIndex),
+                                refId = rec.get('refId'),
+                                refId = refId.split(',');
+                            Ext.each(refId, function (id, i, self){
+                                self[i] = {
+                                    name: i + 1,
+                                    value: id
+                                };
+                            });
+                            var win = Ext.create('Ext.window.Window', {
+                                title: '订购单列表',
+                                modal: true,
+                                width: 400,
+                                height: 200,
+                                layout: 'fit',
+                                items: [
+                                    {
+                                        autoScroll: true,
+                                        xtype: 'gridpanel',
+                                        columns: [
+                                            {
+                                                text: '序号',
+                                                align: 'center',
+                                                flex: 1,
+                                                dataIndex: 'name'
+                                            },
+                                            {
+                                                text: '订购单ID',
+                                                align: 'center',
+                                                flex: 1,
+                                                dataIndex: 'value'
+                                            }
+                                        ],
+                                        store: Ext.create('Ext.data.Store', {
+                                            fields: ['name', 'value'],
+                                            data: refId,
+                                            autoLoad: true,
+                                            proxy: {
+                                                type: 'memory',
+                                                reader: {
+                                                    type: 'json'
+                                                }
+                                            }
+                                        }),
+                                        listeners: {
+                                            itemclick: function (view, rec){
+                                                var win = window.open('./fpdf/statement_bill.php?id=' + rec.get('value'), '预览', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+                                            }
+                                        }
+                                    }
+                                ]
+                            });
+                            win.show();
                         }
                     }
                 ]
