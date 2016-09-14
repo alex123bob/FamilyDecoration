@@ -37,7 +37,6 @@ Ext.define('FamilyDecoration.view.suppliermanagement.PaymentBillCheck', {
                 },
                 extraParams: {
                     action: 'StatementBill.get',
-                    orderby: 'createTime DESC',
                     billType: 'mtf'
                 }
             }
