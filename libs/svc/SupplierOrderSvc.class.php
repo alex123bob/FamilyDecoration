@@ -190,7 +190,7 @@ class SupplierOrderSvc extends BaseSvc
 
 	public function getWithSupplier($q){
 		$StatementBillSvc = BaseSvc::getSvc('StatementBill');
-		$this->appendSelect = ",sp.name as supplier,sp.phone as phoneNumber,p.projectName,p.captain as creatorRealName";
+		$this->appendSelect = ",sp.name as supplier,sp.email as email,sp.phone as phoneNumber,p.projectName,p.captain as creatorRealName";
 		$this->appendJoin = "left join supplier sp on sp.id = supplier_order.supplierId left join project p on p.projectId = supplier_order.projectId";
 		$data = $this->get($q);
 		foreach ($data['data'] as &$item ) {

@@ -381,14 +381,6 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 									// mail to supplier
 									// @todo
 									break;
-								// case 'rdyck2':
-								// 	msg = '确定要将当前账单置为二审通过吗？';
-								// 	successMsg = '二审通过!';
-								// 	break;
-								// case 'rdyck3':
-								// 	msg = '确定要将当前账单置为三审通过吗？';
-								// 	successMsg = '三审通过!';
-								// 	break;
 								default:
 									break;
 							}
