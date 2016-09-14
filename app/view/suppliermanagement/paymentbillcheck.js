@@ -64,7 +64,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.PaymentBillCheck', {
         function _initBtn(supplier) {
             var btnObj = _getBtns(),
                 resObj = _getRes();
-            btnObj.pass.setDisabled(!supplier || !resObj.bill || resObj.bill.get('status') != 'rdyck4');
+            btnObj.pass.setDisabled(!supplier || !resObj.bill || resObj.bill.get('status') != 'new');
             btnObj.returnReq.setDisabled(!supplier || !resObj.bill || resObj.bill.get('status') == 'paid' || resObj.bill.get('status') == 'arch');
             btnObj.passSecond.setDisabled(!supplier || !resObj.bill || resObj.bill.get('status') != 'rdyck5');
         }
