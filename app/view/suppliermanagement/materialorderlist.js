@@ -17,6 +17,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
 
         var st = Ext.create('FamilyDecoration.store.MaterialOrderList', {
             autoLoad: false,
+            remoteSort: true,
             filters: [
                 function (item) {
                     var status = item.get('status'),
@@ -229,7 +230,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
             },
             {
                 xtype: 'textfield',
-                fieldLabel: '总累计金额',
+                fieldLabel: '未付款总金额',
                 readOnly: true,
                 labelWidth: 80
             }

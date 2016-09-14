@@ -12,6 +12,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.PaymentBillCheck', {
 
         var st = Ext.create('FamilyDecoration.store.StatementBill', {
             autoLoad: false,
+            remoteSort: true,
             filters: [
                 function (item) {
                     if (User.isAdmin() || User.isProjectManager()
