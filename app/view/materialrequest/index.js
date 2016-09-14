@@ -440,7 +440,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 																sender: User.getName(),
 																reciever: resObj.billRec.get('supplier'),
 																recieverPhone: rec.get('value'),
-																content: resObj.billRec.get('projectName') + '第' + resObj.billRec.get('payedTimes') + '次申购已经审核通过！'
+																content: resObj.billRec.get('projectName') + '第' + resObj.billRec.get('payedTimes') + '次申购单已经审核通过！'
 															}, function (obj) {
 																showMsg('短信已发送！');
 																win.close();
