@@ -102,7 +102,6 @@ class StatementBillSvc extends BaseSvc
 	}
 	//检查是否通过短信验证码或者安全密码验证
 	public function checkLimit($q,$bill){
-		return;
 		//目前所有状态转换需要校验,但是参数带过来,方便以后某些状态转换不需要校验,直接返回
 		if(isset($_SESSION['secureChecked']) && strtotime(date('Y-m-d H:i:s')) - $_SESSION['secureChecked'] < 60*60*2 ){
  			//两小时内不用重复校验.
