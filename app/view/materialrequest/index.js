@@ -134,7 +134,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						}
 					}
 				},
-				changeStatus: function (status, msg, successMsg) {
+				changeStatus: function (status, msg, successMsg, callback) {
 					var resObj = _getRes(),
 						st = resObj.billRecPaneSt,
 						index = st.indexOf(resObj.billRec),
@@ -159,6 +159,9 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 									st.reload({
 										callback: function (recs, ope, success) {
 											if (success) {
+												if (typeof callback === 'function') {
+													callback();
+												}
 												selModel.select(index);
 											}
 										}
@@ -358,7 +361,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						icon: 'resources/img/material_request_apply.png',
 						hidden: User.isProjectStaff() || User.isAdmin() ? false : true,
 						disabled: true,
-						handler: function (){
+						handler: function () {
 							var resObj = _getRes();
 							resObj.billPane.changeStatus('+1', '确定要将为当前申购单置为验收通过吗？', '验收已通过！');
 						}
@@ -373,18 +376,96 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						hidden: User.isAdmin() || User.isProjectManager() ? false : true,
 						handler: function () {
 							var resObj = _getRes(),
-								msg, successMsg;
+								msg, successMsg, callback = Ext.emptyFn;
 							switch (resObj.billRec.get('status')) {
 								case 'rdyck1':
 									msg = '确定要将当前账单置为审核通过吗？';
 									successMsg = '审核已通过!';
-									// mail to supplier
-									// @todo
+									callback = function () {
+										var contacts = resObj.billRec.get('phoneNumber'),
+											contactArr = [];
+										contacts = contacts.split(',');
+										Ext.each(contacts, function (c, index, self) {
+											var arr = c.split(':');
+											contactArr.push({
+												name: arr[0],
+												value: arr[1]
+											});
+										});
+										var win = Ext.create('Ext.window.Window', {
+											modal: true,
+											title: '发送短信到供应商',
+											width: 300,
+											height: 200,
+											layout: 'fit',
+											items: [
+												{
+													xtype: 'gridpanel',
+													autoScroll: true,
+													store: Ext.create('Ext.data.Store', {
+														fields: ['name', 'value'],
+														autoLoad: true,
+														data: contactArr,
+														proxy: {
+															type: 'memory',
+															reader: {
+																type: 'json'
+															}
+														}
+													}),
+													columns: [
+														{
+															text: '名称',
+															dataIndex: 'name',
+															align: 'center',
+															flex: 1
+														},
+														{
+															text: '电话',
+															dataIndex: 'value',
+															align: 'center',
+															flex: 1
+														}
+													]
+												}
+											],
+											buttons: [
+												{
+													text: '确定',
+													handler: function () {
+														var grid = win.down('gridpanel'),
+															rec = grid.getSelectionModel().getSelection()[0];
+														if (rec) {
+															ajaxAdd('MsgLog', {
+																sender: User.getName(),
+																reciever: resObj.billRec.get('supplier'),
+																recieverPhone: rec.get('value'),
+																content: resObj.billRec.get('projectName') + '第' + resObj.billRec.get('payedTimes') + '次申购已经审核通过！'
+															}, function (obj) {
+																showMsg('短信已发送！');
+																win.close();
+															});
+														}
+														else {
+															showMsg('请选择联系方式！');
+														}
+													}
+												},
+												{
+													text: '取消',
+													handler: function () {
+														win.close();
+													}
+												}
+											]
+										});
+										win.show();
+									}
 									break;
 								default:
 									break;
 							}
-							resObj.billPane.changeStatus('+1', msg, successMsg);
+							resObj.billPane.changeStatus('+1', msg, successMsg, callback);
 						}
 					},
 					{

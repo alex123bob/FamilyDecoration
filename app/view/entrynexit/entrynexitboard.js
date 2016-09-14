@@ -154,7 +154,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                             var win = Ext.create('FamilyDecoration.view.entrynexit.ReceivementProjectFee', {
                                 category: resObj.category,
                                 item: resObj.item,
-                                callback: function (){
+                                callback: function () {
                                     me.refresh(resObj.category, false);
                                 }
                             });
@@ -164,7 +164,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                             var win = Ext.create('FamilyDecoration.view.entrynexit.ReceivementOther', {
                                 category: resObj.category,
                                 item: resObj.item,
-                                callback: function (){
+                                callback: function () {
                                     me.refresh(resObj.category, false);
                                 }
                             });
@@ -174,7 +174,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                             var win = Ext.create('FamilyDecoration.view.entrynexit.ReceivementLoan', {
                                 category: resObj.category,
                                 item: resObj.item,
-                                callback: function (){
+                                callback: function () {
                                     me.refresh(resObj.category, false);
                                 }
                             });
@@ -295,11 +295,34 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
         // dynamically generate columns according to entry and exit type
         function generateCols(rec) {
             if (rec) {
-                var items = me.columnMapping[rec.get('name')];
+                var typeName = rec.get('name');
+                var items = me.columnMapping[typeName];
                 var newItem = [];
                 for (var i = 0; i < items.length; i++) {
                     var cfgs = items[i].split(':');
-                    newItem.push({ text: cfgs[0], dataIndex: 'c' + i, flex: parseFloat(cfgs[1] || 0.5), align: cfgs[2] || 'left', hidden: cfgs[3] == 'true' ? true : false });
+                    newItem.push({
+                        text: cfgs[0],
+                        dataIndex: 'c' + i,
+                        flex: parseFloat(cfgs[1] || 0.5),
+                        align: cfgs[2] || 'left',
+                        hidden: cfgs[3] == 'true' ? true : false,
+                        renderer: (function (i) {
+                            return function (val, meta, rec) {
+                                var index = i;
+                                if (typeName == 'materialPayment') {
+                                    if (2 == index || 3 == index) {
+                                        return val && val.replace(/,/gi, '<br />');
+                                    }
+                                    else {
+                                        return val;
+                                    }
+                                }
+                                else {
+                                    return val;
+                                }
+                            }
+                        })(i)
+                    });
                 }
                 newItem.push(
                     {
@@ -324,7 +347,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                             {
                                 icon: 'resources/img/previewbill.png',
                                 tooltip: '点击预览单据',
-                                handler: function (grid, rowIndex, colIndex){
+                                handler: function (grid, rowIndex, colIndex) {
                                     var rec = grid.getStore().getAt(rowIndex);
                                     if (rec) {
                                         var win = window.open('./fpdf/statement_bill.php?id=' + rec.get('c0'), '预览', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
@@ -337,11 +360,11 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                             {
                                 icon: 'resources/img/printbill.png',
                                 tooltip: '点击打印单据',
-                                handler: function (grid, rowIndex, colIndex){
+                                handler: function (grid, rowIndex, colIndex) {
                                     var rec = grid.getStore().getAt(rowIndex);
                                     if (rec) {
                                         var win = window.open('./fpdf/statement_bill.php?id=' + rec.get('c0'), '打印', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
-								win.print();
+                                        win.print();
                                     }
                                     else {
                                         showMsg('没有账单！');

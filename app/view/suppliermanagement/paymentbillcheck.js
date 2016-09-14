@@ -218,7 +218,15 @@ Ext.define('FamilyDecoration.view.suppliermanagement.PaymentBillCheck', {
                 text: '工程名称',
                 dataIndex: 'projectName',
                 align: 'center',
-                flex: 1
+                flex: 1,
+                renderer: function (val, meta, rec){
+                    if (val) {
+                        return val.replace(/,/gi, '<br />');
+                    }
+                    else {
+                        return '';
+                    }
+                }
             },
             {
                 text: '项目经理',
