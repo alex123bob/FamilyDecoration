@@ -190,20 +190,9 @@ Ext.define('FamilyDecoration.view.suppliermanagement.ApplyForPayment', {
                             totalFee: totalFee.getValue(),
                             orderIds: orderIds.join(',')
                         }, function (obj){
+                            me.close();
                             me.callback();
-                        }, function (obj){
-
-                        }, true);
-                        // me.changeStatus('+1', '确定要为当前订购单申请付款？', '申请成功！', function () {
-                        //     ajaxUpdate('StatementBill', {
-                        //         id: me.order.getId(),
-                        //         claimAmount: claimAmount.getValue(),
-                        //         totalFee: totalFee.getValue()
-                        //     }, 'id', function (obj) {
-                        //         me.close();
-                        //         me.callback();
-                        //     });
-                        // });
+                        }, Ext.emptyFn, true);
                     }
                 }
             },

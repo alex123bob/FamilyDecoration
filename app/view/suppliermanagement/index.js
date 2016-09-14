@@ -148,7 +148,8 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 						xtype: 'suppliermanagement-suppliermaterial'
 					},
 					{
-						xtype: 'suppliermanagement-materialorderlist'
+						xtype: 'suppliermanagement-materialorderlist',
+						cls: 'gridpanel-materialorderlist'
 					},
 					{
 						xtype: 'suppliermanagement-paymentbillcheck'

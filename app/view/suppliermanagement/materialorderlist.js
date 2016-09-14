@@ -62,9 +62,17 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
 
         function _initBtn(supplier) {
             var btnObj = _getBtns(),
-                resObj = _getRes();
-            btnObj.confirm.setDisabled(!supplier || !resObj.order);
-            btnObj.request.setDisabled(!supplier || !resObj.order || resObj.order.get('status') != 'rdyck3');
+                resObj = _getRes(),
+                orders = resObj.orders,
+                flag = supplier && resObj.order ? true : false;
+            // btnObj.confirm.setDisabled(!supplier || !resObj.order);
+            Ext.each(orders, function (order, index, self){
+                if (order.get('status') != 'rdyck3') {
+                    flag = false;
+                    return false;
+                }
+            });
+            btnObj.request.setDisabled(!flag);
         }
 
         function _initGrid(supplier) {

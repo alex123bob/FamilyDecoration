@@ -67,7 +67,7 @@ table.pros td{
 .gridpanel-errorandexception .x-grid-cell-inner, .gridpanel-logContent .x-grid-cell-inner,
 .gridpanel-entrynexitboard .x-grid-cell-inner, .gridpanel-requestGrid .x-grid-cell-inner,
 .gridpanel-historyGrid .x-grid-cell-inner, .gridpanel-qgdList .x-grid-cell-inner,
-.gridpanel-editbillitemremark .x-grid-cell-inner {
+.gridpanel-editbillitemremark .x-grid-cell-inner, .gridpanel-materialorderlist .x-grid-cell-inner {
   white-space: normal;
   word-wrap: break-word;
 }
