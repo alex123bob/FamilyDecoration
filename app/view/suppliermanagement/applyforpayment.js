@@ -190,6 +190,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.ApplyForPayment', {
                             totalFee: totalFee.getValue(),
                             orderIds: orderIds.join(',')
                         }, function (obj){
+                            showMsg('申请成功！');
                             me.close();
                             me.callback();
                         }, Ext.emptyFn, true);

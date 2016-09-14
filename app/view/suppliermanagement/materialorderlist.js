@@ -298,7 +298,16 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                 text: '付款单',
                 align: 'center',
                 flex: 1,
-                dataIndex: 'paymentId'
+                dataIndex: 'paymentId',
+                renderer: function (val, meta, rec){
+                    if (rec.get('status') != 'applied') {
+                        meta.style = 'background: skyblue';
+                    }
+                    else {
+
+                    }
+                    return val;
+                }
             }
         ];
 
