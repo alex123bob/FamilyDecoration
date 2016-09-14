@@ -103,7 +103,16 @@ class BaseSvc{
 	}
 
 	public function parseOrderBySql($q){
-		return isset($q['orderby']) && trim($q['orderby']) != "" ? " order by  ".$q['orderby'] : "";
+		global $TableMapping;
+		if(isset($q['orderby']) && trim($q['orderby']) != "")
+			return " order by  ".$q['orderby'];
+		if(isset($q['sort'])){
+			$s = json_decode($q['sort']);
+			if(count($s)>0 && in_array($s[0]->property,$TableMapping[$this->tableName])){
+				return ' order by '.$this->tableName.'.'.$s[0]->property.' '.$s[0]->direction;
+			}
+		}
+		return '';
 	}
 
 	public function parseWhereSql($prefix,$q,&$params,$tableName = "",$errorNoWhere=false){
