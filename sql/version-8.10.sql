@@ -49,6 +49,5 @@ CREATE TABLE `supplier_order_audit` (
 
 alter table statement_bill modify refId text comment '质保金关联的原单子,或者材料付款单对应的材料单';
 alter table supplier_order add column `projectName` varchar(200);
-alter table statement_bill drop column `supplierId`;
 
 update `system` set `paramValue`='version-8.10' where `id`='4';

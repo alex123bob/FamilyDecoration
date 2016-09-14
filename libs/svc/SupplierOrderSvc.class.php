@@ -35,7 +35,7 @@ class SupplierOrderSvc extends BaseSvc
 		$supplierId = $orders[0]['supplierId'];
 		$statementBill = $statementBillSvc->add(array(
 				'@projectId'=>$orders[0]['projectId'],
-				'@payee'=>$supplierId,
+				'@supplierId'=>$supplierId,
 				'@totalFee'=>$q['@totalFee'],
 				'@claimAmount'=>$q['@claimAmount'],
 				'@billType'=>'mtf',

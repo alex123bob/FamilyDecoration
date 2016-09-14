@@ -73,7 +73,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.PaymentBillCheck', {
             var resObj = _getRes();
             if (supplier) {
                 var proxy = resObj.st.getProxy();
-                proxy.extraParams.payee = supplier.getId();
+                proxy.extraParams.supplierId = supplier.getId();
                 resObj.st.setProxy(proxy);
                 resObj.st.loadPage(1, {
                     callback: function (recs, ope, success) {
