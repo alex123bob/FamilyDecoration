@@ -45,12 +45,14 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
             var st = me.getStore(),
                 selModel = me.getSelectionModel(),
                 orders = selModel.getSelection(),
-                order = orders[0];
+                order = orders[0],
+                totalFee = me.down('[name="totalFee"]');
             return {
                 st: st,
                 selModel: selModel,
                 orders: orders,
-                order: order
+                order: order,
+                totalFee: totalFee
             };
         }
 
@@ -102,10 +104,10 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
         function _initText(supplier) {
             var resObj = _getRes();
             if (supplier) {
-                ajaxGet('SupplierOrder', 'getSumForSupplier', {
+                ajaxGet('SupplierOrder', 'getToPayTotalFee', {
                     supplierId: supplier.getId()
                 }, function (obj){
-                    console.log(obj);
+                    resObj.totalFee.setValue(obj.totalFee);
                 });
             }
             else {
@@ -117,7 +119,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
             me.supplier = supplier;
             _initBtn(supplier);
             _initGrid(supplier);
-            // _initText(supplier);
+            _initText(supplier);
         };
 
         me.store = st;
@@ -230,9 +232,10 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
             },
             {
                 xtype: 'textfield',
+                name: 'totalFee',
                 fieldLabel: '未付款总金额',
                 readOnly: true,
-                labelWidth: 80
+                labelWidth: 90
             }
         ];
 
