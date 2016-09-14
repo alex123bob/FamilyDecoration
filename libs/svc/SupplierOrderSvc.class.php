@@ -123,7 +123,7 @@ class SupplierOrderSvc extends BaseSvc
 		$newStatus = $q['@status'];
 		$StatementBillSvc = BaseSvc::getSvc('StatementBill');
 		$newStatusCh = StatementBillSvc::$ALL_STATUS[$newStatus];
-		$text = "您{项目}项目的材料订购单{单号}已被{操作人}变更文{现状态},总金额：{总金额}!";
+		$text = "您{项目}项目的材料订购单{单号}已被{操作人}变更为{现状态},总金额：{总金额}!";
 		$text = str_replace('{单号}',$bill['id'],$text);
 		$text = str_replace('{操作人}',$_SESSION['realname'],$text);
 		$text = str_replace('{项目}',$bill['projectName'],$text);
