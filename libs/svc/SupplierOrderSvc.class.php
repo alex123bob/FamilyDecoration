@@ -202,6 +202,13 @@ class SupplierOrderSvc extends BaseSvc
 		return $data;
 	}
 
+	public function getToPayTotalFee($q){
+		global $mysql;
+		notNullCheck($q,'supplierId','供应商不能为空(supplierId)!');
+		$res = $mysql->DBGetAsMap("select sum(totalFee) as totalFee from supplier_order where status = 'rdyck3' and isDeleted = 'false' and supplierId = '".$q['supplierId']."' ");
+		return array('status'=>'successful', 'totalFee' => $res[0]['totalFee'] == null ? 0 : $res[0]['totalFee']);
+	}
+
 	public function getTotalFee($q){
 		notNullCheck($q,'id');
 		global $mysql;
