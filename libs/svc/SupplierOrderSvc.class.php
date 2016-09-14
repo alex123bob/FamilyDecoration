@@ -61,7 +61,7 @@ class SupplierOrderSvc extends BaseSvc
 		$orders = $mysql->DBExecute("update supplier_order set status = 'applied',paymentId = '".$statementBill['id']."' where status != 'applied' and isDeleted = 'false' and id in ($orderIds) ");
 		
 		$mysql->commit();
-		return $statementBill;
+		return array('status'=>'successful', 'data' => $statementBill);
 	}
 
 
