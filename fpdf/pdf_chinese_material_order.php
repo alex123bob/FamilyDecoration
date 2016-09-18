@@ -22,7 +22,7 @@ class PDF extends PDF_Chinese{
 		$this->SetFont('GB','',10); 
 		$this->Text(35,40,'供应商:');
 		$this->Text(47,40,$name);
-		$this->Text(35,48,"第$times 次领款,完成 ".$finishPercentage);
+		$this->Text(35,48,"第$times 次领款");
 		$this->Text(80,40,'项目经理:');
 		$this->Text(97,40,$captain);
 		$this->Text(130,40,'工程地址:');
@@ -31,8 +31,10 @@ class PDF extends PDF_Chinese{
 		$this->Text(93,48,$totalFee.' (元)');
 		$this->Text(130,48,'大写:');
 		$this->Text(147,48,$cny);
-		$this->Text(35,56,'联系电话:');
-		$this->Text(51,56,$phone);
+		$this->Text(35,56,'完成情况:');
+		$this->Text(51,56,$finishPercentage);
+		$this->Text(80,56,'联系电话:');
+		$this->Text(97,56,$phone);
 
 		//$this->Line(10,50,280,50);
 		$this->Ln(45);
