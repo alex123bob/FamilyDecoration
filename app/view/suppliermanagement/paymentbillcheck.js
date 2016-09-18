@@ -296,7 +296,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.PaymentBillCheck', {
                                         }),
                                         listeners: {
                                             itemclick: function (view, rec){
-                                                var win = window.open('./fpdf/statement_bill.php?id=' + rec.get('value'), '预览', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+                                                var win = window.open('./fpdf/material_order.php?id=' + rec.get('value'), '预览', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
                                             }
                                         }
                                     }
