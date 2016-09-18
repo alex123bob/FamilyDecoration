@@ -269,7 +269,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                         icon: 'resources/img/material_order_sheet.png',
                         handler: function (grid, rowIndex, colIndex) {
                             var rec = grid.getStore().getAt(rowIndex);
-                            var win = window.open('./fpdf/statement_bill.php?id=' + rec.getId(), '预览', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+                            var win = window.open('./fpdf/material_order.php?id=' + rec.getId(), '预览', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
                         }
                     }
                 ]
