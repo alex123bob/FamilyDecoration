@@ -242,7 +242,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.PaymentBillCheck', {
             },
             {
                 text: '订购单',
-                flex: 0.5,
+                flex: 0.7,
                 xtype: 'actioncolumn',
                 align: 'center',
                 items: [
@@ -308,6 +308,22 @@ Ext.define('FamilyDecoration.view.suppliermanagement.PaymentBillCheck', {
                 ]
             },
             {
+                text: '对账单',
+                align: 'center',
+                flex: 0.7,
+                xtype: 'actioncolumn',
+                items: [
+                    {
+                        tooltip: '点击查看付款单据',
+                        icon: 'resources/img/material_bill_sheet.png',
+                        handler: function (grid, rowIndex, colIndex) {
+                            var rec = grid.getStore().getAt(rowIndex);
+                            var win = window.open('./fpdf/statement_bill.php?id=' + rec.getId(), '预览', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+                        }
+                    }
+                ]
+            },
+            {
                 text: '订购日期',
                 align: 'center',
                 flex: 1,
@@ -316,19 +332,19 @@ Ext.define('FamilyDecoration.view.suppliermanagement.PaymentBillCheck', {
             {
                 text: '审核状态',
                 align: 'center',
-                flex: 1,
+                flex: 0.8,
                 dataIndex: 'statusName'
             },
             {
                 text: '申领金额',
                 align: 'center',
-                flex: 1,
+                flex: 0.8,
                 dataIndex: 'claimAmount'
             },
             {
                 text: '已付金额',
                 align: 'center',
-                flex: 1,
+                flex: 0.8,
                 dataIndex: 'paidAmount'
             }
         ];
