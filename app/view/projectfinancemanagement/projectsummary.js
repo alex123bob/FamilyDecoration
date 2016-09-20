@@ -12,7 +12,6 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
         function _generateBudgetCfg(budgetType) {
             var cfg = {
                 text: budgetType == 'material' ? '材料成本' : '人工成本',
-                flex: false,
                 columns: [
                     {
                         text: '水电',
@@ -130,25 +129,26 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
 
         var cfg = {
             defaults: {
-                align: 'center',
-                flex: 1
+                align: 'center'
             },
             items: [
                 {
                     text: '序号',
+                    width: 50,
                     dataIndex: 'id'
                 },
                 {
                     text: '项目经理',
+                    width: 100,
                     dataIndex: 'captain'
                 },
                 {
                     text: '工程名称',
+                    width: 100,
                     dataIndex: 'projectName'
                 },
                 {
                     text: '总价',
-                    flex: false,
                     columns: [
                         {
                             text: '合同',
@@ -172,6 +172,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
                 },
                 {
                     text: '收入',
+                    width: 50,
                     dataIndex: 'income'
                 }
             ]
@@ -182,7 +183,6 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
             _generateBudgetCfg('manual'),
             {
                 text: '总计',
-                flex: false,
                 columns: [
                     {
                         text: '预算',
@@ -200,10 +200,12 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
             },
             {
                 text: '其他', // 内部工资消耗
+                width: 50,
                 dataIndex: 'others'
             },
             {
                 text: '目前状态',
+                width: 100,
                 dataIndex: 'status'
             }
         );
