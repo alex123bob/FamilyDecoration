@@ -3,7 +3,8 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.Index', {
     alias: 'widget.projectfinancemanagement-index',
     requires: [
         'FamilyDecoration.view.progress.ProjectListByCaptain',
-        'FamilyDecoration.store.WorkCategory'
+        'FamilyDecoration.store.WorkCategory',
+        'FamilyDecoration.view.projectfinancemanagement.ProjectSummary'
     ],
     // autoScroll: true,
     layout: 'hbox',
@@ -19,14 +20,16 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.Index', {
                 projectListSelModel = projectList.getSelectionModel(),
                 projectSt = projectList.getStore(),
                 project = projectListSelModel.getSelection()[0],
-                projectCategory = me.getComponent('gridpanel-projectCategory');
+                projectCategory = me.getComponent('gridpanel-projectCategory'),
+                summaryCt = me.getComponent('container-summary');
 
             return {
                 projectList: projectList,
                 projectListSelModel: projectListSelModel,
                 projectSt: projectSt,
                 project: project,
-                projectCategory: projectCategory
+                projectCategory: projectCategory,
+                summaryCt: summaryCt
             };
         };
 
@@ -47,9 +50,11 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.Index', {
                         text: '汇总',
                         icon: 'resources/img/sum.png',
                         handler: function () {
-                            var resObj = _getRes();
+                            var resObj = _getRes(),
+                                summarizedGrid = Ext.create('FamilyDecoration.view.projectfinancemanagement.ProjectSummary');
                             resObj.projectListSelModel.deselectAll();
                             resObj.projectCategory.hide();
+                            resObj.summaryCt.add(summarizedGrid);
                         }
                     }
                 ],
@@ -107,7 +112,9 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.Index', {
             },
             {
                 xtype: 'container',
-                flex: 4
+                itemId: 'container-summary',
+                flex: 4,
+                layout: 'fit'
             }
         ];
 
