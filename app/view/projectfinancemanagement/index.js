@@ -4,7 +4,9 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.Index', {
     requires: [
         'FamilyDecoration.view.progress.ProjectListByCaptain',
         'FamilyDecoration.store.WorkCategory',
-        'FamilyDecoration.view.projectfinancemanagement.ProjectSummary'
+        'FamilyDecoration.view.projectfinancemanagement.ProjectSummary',
+        'FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeBudget',
+        'FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeBudgetTotal'
     ],
     // autoScroll: true,
     layout: 'hbox',
@@ -21,6 +23,9 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.Index', {
                 projectSt = projectList.getStore(),
                 project = projectListSelModel.getSelection()[0],
                 projectCategory = me.getComponent('gridpanel-projectCategory'),
+                projectCategorySt = projectCategory.getStore(),
+                projectCategorySelModel = projectCategory.getSelectionModel(),
+                projectCategoryItem = projectCategorySelModel.getSelection()[0],
                 summaryCt = me.getComponent('container-summary');
 
             return {
@@ -29,6 +34,9 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.Index', {
                 projectSt: projectSt,
                 project: project,
                 projectCategory: projectCategory,
+                projectCategorySt: projectCategorySt,
+                projectCategorySelModel: projectCategorySelModel,
+                projectCategoryItem: projectCategoryItem,
                 summaryCt: summaryCt
             };
         };
@@ -51,9 +59,12 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.Index', {
                         icon: 'resources/img/sum.png',
                         handler: function () {
                             var resObj = _getRes(),
-                                summarizedGrid = Ext.create('FamilyDecoration.view.projectfinancemanagement.ProjectSummary');
+                                summarizedGrid,
+                                item = resObj.summaryCt.items.items[0];
                             resObj.projectListSelModel.deselectAll();
                             resObj.projectCategory.hide();
+                            summarizedGrid = Ext.create('FamilyDecoration.view.projectfinancemanagement.ProjectSummary');
+                            resObj.summaryCt.removeAll();
                             resObj.summaryCt.add(summarizedGrid);
                         }
                     }
@@ -63,14 +74,14 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.Index', {
                         var resObj = _getRes();
                         if (resObj.project) {
                             if (resObj.project.get('projectName')) {
-                                resObj.projectCategory.isHidden() && resObj.projectCategory.show();
-                            }
-                            else {
-
+                                if (resObj.projectCategory.isHidden()) {
+                                    resObj.projectCategory.show();
+                                }
+                                resObj.projectCategorySelModel.deselectAll();
                             }
                         }
                         else {
-                            
+
                         }
                     }
                 }
@@ -79,6 +90,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.Index', {
                 xtype: 'gridpanel',
                 width: 100,
                 title: '项目',
+                hidden: true,
                 hideHeaders: true,
                 itemId: 'gridpanel-projectCategory',
                 columns: {
@@ -107,6 +119,22 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.Index', {
                                 value: '0000'
                             }
                         );
+                    },
+                    selectionchange: function (selModel, sels, opts) {
+                        var resObj = _getRes(),
+                            singleProfessionBudgetGrid,
+                            singleProfessionBudgetTotalGrid,
+                            item = resObj.summaryCt.items.items[0];
+                        if (resObj.projectCategoryItem) {
+                            singleProfessionBudgetTotalGrid = Ext.create('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeBudget' + (resObj.projectCategoryItem.get('value') == '0000' ? 'Total' : ''), {
+                                professionType: resObj.projectCategoryItem.get('value')
+                            });
+                            resObj.summaryCt.removeAll();
+                            resObj.summaryCt.add(singleProfessionBudgetTotalGrid);
+                        }
+                        else {
+                            resObj.summaryCt.removeAll();
+                        }
                     }
                 }
             },

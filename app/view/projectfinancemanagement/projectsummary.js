@@ -4,7 +4,6 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
     requires: [
 
     ],
-    layout: 'fit',
 
     initComponent: function () {
         var me = this;
@@ -201,12 +200,14 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
             {
                 text: '其他', // 内部工资消耗
                 width: 50,
-                dataIndex: 'others'
+                dataIndex: 'others',
+                align: 'center'
             },
             {
                 text: '目前状态',
                 width: 100,
-                dataIndex: 'status'
+                dataIndex: 'status',
+                align: 'center'
             }
         );
 
