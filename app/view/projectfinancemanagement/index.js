@@ -113,12 +113,14 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.Index', {
                 listeners: {
                     afterrender: function (grid, opts) {
                         var st = grid.getStore();
-                        st.add(
-                            {
-                                name: '合计',
-                                value: '0000'
-                            }
-                        );
+                        if (st.last().get('value') != '0000') {
+                            st.add(
+                                {
+                                    name: '合计',
+                                    value: '0000'
+                                }
+                            );
+                        }
                     },
                     selectionchange: function (selModel, sels, opts) {
                         var resObj = _getRes(),
