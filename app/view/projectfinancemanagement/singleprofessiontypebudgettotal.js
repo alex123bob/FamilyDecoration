@@ -2,7 +2,8 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
     extend: 'Ext.panel.Panel',
     alias: 'widget.projectfinancemanagement-SingleProfessionTypeBudgetTotal',
     requires: [
-
+        'FamilyDecoration.view.projectfinancemanagement.ColumnChart',
+        'FamilyDecoration.view.projectfinancemanagement.PieChart'
     ],
     layout: 'vbox',
     defaults: {
@@ -178,7 +179,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
             {
                 xtype: 'gridpanel',
                 title: '成本分析',
-                flex: 1.5,
+                flex: 1,
                 columns: Ext.Array.push([{
                     text: '项目',
                     width: 50,
@@ -189,21 +190,24 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                 xtype: 'panel',
                 title: '分析表',
                 layout: 'hbox',
+                header: false,
                 flex: 1.5,
                 defaults: {
                     height: '100%',
-                    flex: 1,
-                    header: false
+                    flex: 1
                 },
                 items: [
                     {
-                        html: '表1'
+                        xtype: 'projectfinancemanagement-columnchart',
+                        title: '人工'
                     },
                     {
-                        html: '表2'
+                        xtype: 'projectfinancemanagement-columnchart',
+                        title: '主材'
                     },
                     {
-                        html: '表3'
+                        xtype: 'projectfinancemanagement-piechart',
+                        title: '成本组成'
                     }
                 ]
             }
