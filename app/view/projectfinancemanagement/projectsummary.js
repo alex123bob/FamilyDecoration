@@ -2,15 +2,18 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.projectfinancemanagement-projectsummary',
     requires: [
-
+        'FamilyDecoration.store.ProjectSummary'
     ],
 
     initComponent: function () {
-        var me = this;
+        var me = this,
+            st = Ext.create('FamilyDecoration.store.ProjectSummary', {
+                autoLoad: true
+            });
 
         function _generateBudgetCfg(budgetType) {
             var cfg = {
-                text: budgetType == 'material' ? '材料成本' : '人工成本',
+                text: budgetType == 'material' ? '材料成本' : (budgetType == 'manual' ? '人工成本' : ''),
                 columns: [
                     {
                         text: '水电',
@@ -20,13 +23,13 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
                                 text: '预算',
                                 align: 'center',
                                 flex: 0.5,
-                                dataIndex: budgetType + 'electricBudget'
+                                dataIndex: budgetType + 'ElectricBudget'
                             },
                             {
                                 text: '实际',
                                 align: 'center',
                                 flex: 0.5,
-                                dataIndex: budgetType + 'electricReality'
+                                dataIndex: budgetType + 'ElectricReality'
                             }
                         ]
                     },
@@ -38,13 +41,13 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
                                 text: '预算',
                                 align: 'center',
                                 flex: 0.5,
-                                dataIndex: budgetType + 'plasterBudget'
+                                dataIndex: budgetType + 'PlasterBudget'
                             },
                             {
                                 text: '实际',
                                 align: 'center',
                                 flex: 0.5,
-                                dataIndex: budgetType + 'plasterReality'
+                                dataIndex: budgetType + 'PlasterReality'
                             }
                         ]
                     },
@@ -56,13 +59,13 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
                                 text: '预算',
                                 align: 'center',
                                 flex: 0.5,
-                                dataIndex: budgetType + 'carpenterBudget'
+                                dataIndex: budgetType + 'CarpenterBudget'
                             },
                             {
                                 text: '实际',
                                 align: 'center',
                                 flex: 0.5,
-                                dataIndex: budgetType + 'carpenterReality'
+                                dataIndex: budgetType + 'CarpenterReality'
                             }
                         ]
                     },
@@ -74,13 +77,13 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
                                 text: '预算',
                                 align: 'center',
                                 flex: 0.5,
-                                dataIndex: budgetType + 'paintBudget'
+                                dataIndex: budgetType + 'PaintBudget'
                             },
                             {
                                 text: '实际',
                                 align: 'center',
                                 flex: 0.5,
-                                dataIndex: budgetType + 'paintReality'
+                                dataIndex: budgetType + 'PaintReality'
                             }
                         ]
                     },
@@ -92,13 +95,13 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
                                 text: '预算',
                                 align: 'center',
                                 flex: 0.5,
-                                dataIndex: budgetType + 'miscellaneousBudget'
+                                dataIndex: budgetType + 'MiscellaneousBudget'
                             },
                             {
                                 text: '实际',
                                 align: 'center',
                                 flex: 0.5,
-                                dataIndex: budgetType + 'miscellaneousReality'
+                                dataIndex: budgetType + 'MiscellaneousReality'
                             }
                         ]
                     },
@@ -110,13 +113,13 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
                                 text: '预算',
                                 align: 'center',
                                 flex: 0.5,
-                                dataIndex: budgetType + 'totalBudget'
+                                dataIndex: budgetType + 'TotalBudget'
                             },
                             {
                                 text: '实际',
                                 align: 'center',
                                 flex: 0.5,
-                                dataIndex: budgetType + 'totalReality'
+                                dataIndex: budgetType + 'TotalReality'
                             }
                         ]
                     }
@@ -125,6 +128,8 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
 
             return cfg;
         }
+
+        me.store = st;
 
         var cfg = {
             defaults: {

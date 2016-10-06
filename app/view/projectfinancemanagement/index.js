@@ -129,7 +129,8 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.Index', {
                             item = resObj.summaryCt.items.items[0];
                         if (resObj.projectCategoryItem) {
                             singleProfessionBudgetTotalGrid = Ext.create('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeBudget' + (resObj.projectCategoryItem.get('value') == '0000' ? 'Total' : ''), {
-                                professionType: resObj.projectCategoryItem.get('value')
+                                professionType: resObj.projectCategoryItem.get('value'),
+                                projectId: resObj.project.getId()
                             });
                             resObj.summaryCt.removeAll();
                             resObj.summaryCt.add(singleProfessionBudgetTotalGrid);

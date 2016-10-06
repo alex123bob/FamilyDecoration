@@ -2,12 +2,29 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
     extend: 'Ext.grid.Panel',
     alias: 'widget.projectfinancemanagement-singleprofessiontypebudget',
     requires: [
-        
+        'FamilyDecoration.store.SingleProfessionTypeBudget'
     ],
     professionType: undefined,
+    projectId: undefined,
     
     initComponent: function () {
-        var me = this;
+        var me = this,
+            st = Ext.create('FamilyDecoration.store.SingleProfessionTypeBudget', {
+                autoLoad: false
+            }),
+            proxy = st.getProxy();
+        
+        Ext.apply(proxy, {
+            extraParams: {
+                action: 'SingleProfessionTypeBudget.get',
+                professionType: me.professionType,
+                projectId: me.projectId
+            }
+        });
+
+        st.setProxy(proxy);
+
+        st.load();
 
         me.columns = [
             {
@@ -40,7 +57,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                 columns: [
                     {
                         text: '序号',
-                        dataIndex: 'id',
+                        dataIndex: 'mainMaterialId',
                         flex: 1,
                         align: 'center'
                     },
