@@ -3,15 +3,43 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
     alias: 'widget.projectfinancemanagement-SingleProfessionTypeBudgetTotal',
     requires: [
         'FamilyDecoration.view.projectfinancemanagement.ColumnChart',
-        'FamilyDecoration.view.projectfinancemanagement.PieChart'
+        'FamilyDecoration.view.projectfinancemanagement.PieChart',
+        'FamilyDecoration.store.SingleProfessionTypeBudgetTotal',
+        'FamilyDecoration.store.SingleProfessionTypeBudgetTotalCostDifference'
     ],
     layout: 'vbox',
     defaults: {
         width: '100%'
     },
+    professionType: undefined, // for this panel, this value should be 0000 which refers to total analysis.
+    projectId: undefined,
+
     initComponent: function () {
         var me = this,
-            cfg;
+            cfg,
+            st = Ext.create('FamilyDecoration.store.SingleProfessionTypeBudgetTotal', {
+                autoLoad: false
+            }),
+            costDiffSt = Ext.create('FamilyDecoration.store.SingleProfessionTypeBudgetTotalCostDifference', {
+                autoLoad: false
+            }),
+            proxy = st.getProxy(),
+            costDiffProxy = costDiffSt.getProxy();
+        
+        Ext.apply(proxy.extraParams, {
+            action: 'SingleProfessionTypeBudgetTotal.get',
+            professionType: me.professionType,
+            projectId: me.projectId
+        });
+
+        Ext.apply(costDiffProxy.extraParams, {
+            action: 'SingleProfessionTypeBudgetTotalCostDifference.get',
+            professionType: me.professionType,
+            projectId: me.projectId
+        });
+
+        st.load();
+        costDiffSt.load();
 
         function _generateBudgetCfg(budgetType) {
             var columnArr = [
@@ -142,6 +170,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                 xtype: 'gridpanel',
                 flex: 1,
                 itemId: 'gridpanel-costAnalysisFirstGrid',
+                store: st,
                 columns: [
                     _generateBudgetCfg('material'),
                     _generateBudgetCfg('manual'),
@@ -180,6 +209,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                 xtype: 'gridpanel',
                 title: '成本分析',
                 flex: 1,
+                store: costDiffSt,
                 columns: Ext.Array.push([{
                     text: '项目',
                     width: 50,
