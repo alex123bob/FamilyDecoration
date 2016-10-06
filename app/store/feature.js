@@ -210,6 +210,12 @@
                         icon: 'resources/img/project_finance_management.png'
                     },
                     {
+                        name: '总财物管理',
+                        cmp: DEBUG ? 'totalpropertymanagement-index' : '',
+                        leaf: true,
+                        icon: 'resources/img/total_property_management.png'
+                    },
+                    {
                         name: '人工对账',
                         cmp: 'manuallycheckbill-index',
                         leaf: true,
