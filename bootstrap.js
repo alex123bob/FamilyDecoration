@@ -39,6 +39,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.PlanMaking": "app/controller/planmaking.js",
   "FamilyDecoration.controller.Progress": "app/controller/progress.js",
   "FamilyDecoration.controller.ProjectCategory": "app/controller/projectcategory.js",
+  "FamilyDecoration.controller.ProjectFinanceManagement": "app/controller/projectfinancemanagement.js",
   "FamilyDecoration.controller.ProjectProgress": "app/controller/projectprogress.js",
   "FamilyDecoration.controller.QualityGuaranteeDepositMgm": "app/controller/qualityguaranteedepositmgm.js",
   "FamilyDecoration.controller.RegionMgm": "app/controller/regionmgm.js",
@@ -48,10 +49,12 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.TargetSetting": "app/controller/targetsetting.js",
   "FamilyDecoration.controller.TaskAssign": "app/controller/taskassign.js",
   "FamilyDecoration.controller.TeleMarket": "app/controller/telemarket.js",
+  "FamilyDecoration.controller.TotalPropertyManagement": "app/controller/totalpropertymanagement.js",
   "FamilyDecoration.controller.User": "app/controller/user.js",
   "FamilyDecoration.controller.Viewport": "app/controller/viewport.js",
   "FamilyDecoration.model.Account": "app/model/account.js",
   "FamilyDecoration.model.AccountLog": "app/model/accountlog.js",
+  "FamilyDecoration.model.AnalyticTable": "app/model/analytictable.js",
   "FamilyDecoration.model.AnnouncementComment": "app/model/announcementcomment.js",
   "FamilyDecoration.model.AttachmentManagement": "app/model/attachmentmanagement.js",
   "FamilyDecoration.model.BasicItem": "app/model/basicitem.js",
@@ -67,11 +70,13 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.model.ChartDetail": "app/model/chartdetail.js",
   "FamilyDecoration.model.Community": "app/model/community.js",
   "FamilyDecoration.model.CostAnalysis": "app/model/costanalysis.js",
+  "FamilyDecoration.model.CostComposition": "app/model/costcomposition.js",
   "FamilyDecoration.model.Feature": "app/model/feature.js",
   "FamilyDecoration.model.LogContent": "app/model/logcontent.js",
   "FamilyDecoration.model.LogList": "app/model/loglist.js",
   "FamilyDecoration.model.Mail": "app/model/mail.js",
   "FamilyDecoration.model.MainMaterial": "app/model/mainmaterial.js",
+  "FamilyDecoration.model.MaterialOrderItem": "app/model/materialorderitem.js",
   "FamilyDecoration.model.MaterialOrderList": "app/model/materialorderlist.js",
   "FamilyDecoration.model.MemberList": "app/model/memberlist.js",
   "FamilyDecoration.model.Message": "app/model/message.js",
@@ -89,8 +94,12 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.model.Project": "app/model/project.js",
   "FamilyDecoration.model.ProjectCategory": "app/model/projectcategory.js",
   "FamilyDecoration.model.ProjectProgress": "app/model/projectprogress.js",
+  "FamilyDecoration.model.ProjectSummary": "app/model/projectsummary.js",
   "FamilyDecoration.model.RegionList": "app/model/regionlist.js",
   "FamilyDecoration.model.ScrutinizeList": "app/model/scrutinizelist.js",
+  "FamilyDecoration.model.SingleProfessionTypeBudget": "app/model/singleprofessiontypebudget.js",
+  "FamilyDecoration.model.SingleProfessionTypeBudgetTotal": "app/model/singleprofessiontypebudgettotal.js",
+  "FamilyDecoration.model.SingleProfessionTypeBudgetTotalCostDifference": "app/model/singleprofessiontypebudgettotalcostdifference.js",
   "FamilyDecoration.model.StatementBasicItem": "app/model/statementbasicitem.js",
   "FamilyDecoration.model.StatementBill": "app/model/statementbill.js",
   "FamilyDecoration.model.StatementBillAudit": "app/model/statementbillaudit.js",
@@ -107,6 +116,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.model.WorkCategory": "app/model/workcategory.js",
   "FamilyDecoration.store.Account": "app/store/account.js",
   "FamilyDecoration.store.AccountLog": "app/store/accountlog.js",
+  "FamilyDecoration.store.AnalyticTable": "app/store/analytictable.js",
   "FamilyDecoration.store.AnnouncementComment": "app/store/announcementcomment.js",
   "FamilyDecoration.store.AttachmentManagement": "app/store/attachmentmanagement.js",
   "FamilyDecoration.store.BasicItem": "app/store/basicitem.js",
@@ -122,11 +132,13 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.store.ChartDetail": "app/store/chartdetail.js",
   "FamilyDecoration.store.Community": "app/store/community.js",
   "FamilyDecoration.store.CostAnalysis": "app/store/costanalysis.js",
+  "FamilyDecoration.store.CostComposition": "app/store/costcomposition.js",
   "FamilyDecoration.store.Feature": "app/store/feature.js",
   "FamilyDecoration.store.LogContent": "app/store/logcontent.js",
   "FamilyDecoration.store.LogList": "app/store/loglist.js",
   "FamilyDecoration.store.Mail": "app/store/mail.js",
   "FamilyDecoration.store.MainMaterial": "app/store/mainmaterial.js",
+  "FamilyDecoration.store.MaterialOrderItem": "app/store/materialorderitem.js",
   "FamilyDecoration.store.MaterialOrderList": "app/store/materialorderlist.js",
   "FamilyDecoration.store.MemberList": "app/store/memberlist.js",
   "FamilyDecoration.store.Message": "app/store/message.js",
@@ -143,8 +155,12 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.store.Project": "app/store/project.js",
   "FamilyDecoration.store.ProjectCategory": "app/store/projectcategory.js",
   "FamilyDecoration.store.ProjectProgress": "app/store/projectprogress.js",
+  "FamilyDecoration.store.ProjectSummary": "app/store/projectsummary.js",
   "FamilyDecoration.store.RegionList": "app/store/regionlist.js",
   "FamilyDecoration.store.ScrutinizeList": "app/store/scrutinizelist.js",
+  "FamilyDecoration.store.SingleProfessionTypeBudget": "app/store/singleprofessiontypebudget.js",
+  "FamilyDecoration.store.SingleProfessionTypeBudgetTotal": "app/store/singleprofessiontypebudgettotal.js",
+  "FamilyDecoration.store.SingleProfessionTypeBudgetTotalCostDifference": "app/store/singleprofessiontypebudgettotalcostdifference.js",
   "FamilyDecoration.store.StatementBasicItem": "app/store/statementbasicitem.js",
   "FamilyDecoration.store.StatementBill": "app/store/statementbill.js",
   "FamilyDecoration.store.StatementBillAudit": "app/store/statementbillaudit.js",
@@ -220,6 +236,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.manuallycheckbill.CustomizedBillItem": "app/view/manuallycheckbill/customizedbillitem.js",
   "FamilyDecoration.view.manuallycheckbill.EditRemark": "app/view/manuallycheckbill/editremark.js",
   "FamilyDecoration.view.manuallycheckbill.Index": "app/view/manuallycheckbill/index.js",
+  "FamilyDecoration.view.materialrequest.EditMaterialOrder": "app/view/materialrequest/editmaterialorder.js",
   "FamilyDecoration.view.materialrequest.Index": "app/view/materialrequest/index.js",
   "FamilyDecoration.view.materialrequest.MaterialOrder": "app/view/materialrequest/materialorder.js",
   "FamilyDecoration.view.msg.Index": "app/view/msg/index.js",
@@ -266,6 +283,12 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.progress.SearchFieldTree": "app/view/progress/searchfieldtree.js",
   "FamilyDecoration.view.progress.TreeFilter": "app/view/progress/treefilter.js",
   "FamilyDecoration.view.projectcategory.Index": "app/view/projectcategory/index.js",
+  "FamilyDecoration.view.projectfinancemanagement.ColumnChart": "app/view/projectfinancemanagement/columnchart.js",
+  "FamilyDecoration.view.projectfinancemanagement.Index": "app/view/projectfinancemanagement/index.js",
+  "FamilyDecoration.view.projectfinancemanagement.PieChart": "app/view/projectfinancemanagement/piechart.js",
+  "FamilyDecoration.view.projectfinancemanagement.ProjectSummary": "app/view/projectfinancemanagement/projectsummary.js",
+  "FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeBudget": "app/view/projectfinancemanagement/singleprofessiontypebudget.js",
+  "FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeBudgetTotal": "app/view/projectfinancemanagement/singleprofessiontypebudgettotal.js",
   "FamilyDecoration.view.projectprogress.EditProgress": "app/view/projectprogress/editprogress.js",
   "FamilyDecoration.view.projectprogress.Index": "app/view/projectprogress/index.js",
   "FamilyDecoration.view.projectprogress.ProgressTable": "app/view/projectprogress/progresstable.js",
@@ -291,6 +314,8 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.suppliermanagement.EditSupplierMaterial": "app/view/suppliermanagement/editsuppliermaterial.js",
   "FamilyDecoration.view.suppliermanagement.Index": "app/view/suppliermanagement/index.js",
   "FamilyDecoration.view.suppliermanagement.MaterialOrderList": "app/view/suppliermanagement/materialorderlist.js",
+  "FamilyDecoration.view.suppliermanagement.PaymentBillCheck": "app/view/suppliermanagement/paymentbillcheck.js",
+  "FamilyDecoration.view.suppliermanagement.SupplierList": "app/view/suppliermanagement/supplierlist.js",
   "FamilyDecoration.view.suppliermanagement.SupplierMaterial": "app/view/suppliermanagement/suppliermaterial.js",
   "FamilyDecoration.view.targetsetting.AddTarget": "app/view/targetsetting/addtarget.js",
   "FamilyDecoration.view.targetsetting.Index": "app/view/targetsetting/index.js",
@@ -301,6 +326,9 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.telemarket.EditStatus": "app/view/telemarket/editstatus.js",
   "FamilyDecoration.view.telemarket.Index": "app/view/telemarket/index.js",
   "FamilyDecoration.view.telemarket.TransferToBusiness": "app/view/telemarket/transfertobusiness.js",
+  "FamilyDecoration.view.totalpropertymanagement.DateFilter": "app/view/totalpropertymanagement/datefilter.js",
+  "FamilyDecoration.view.totalpropertymanagement.DiaryBill": "app/view/totalpropertymanagement/diarybill.js",
+  "FamilyDecoration.view.totalpropertymanagement.Index": "app/view/totalpropertymanagement/index.js",
   "FamilyDecoration.view.user.Index": "app/view/user/index.js"
 });
 Ext.ClassManager.addNameAlternateMappings({
@@ -1184,6 +1212,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.PlanMaking": [],
   "FamilyDecoration.controller.Progress": [],
   "FamilyDecoration.controller.ProjectCategory": [],
+  "FamilyDecoration.controller.ProjectFinanceManagement": [],
   "FamilyDecoration.controller.ProjectProgress": [],
   "FamilyDecoration.controller.QualityGuaranteeDepositMgm": [],
   "FamilyDecoration.controller.RegionMgm": [],
@@ -1193,10 +1222,12 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.TargetSetting": [],
   "FamilyDecoration.controller.TaskAssign": [],
   "FamilyDecoration.controller.TeleMarket": [],
+  "FamilyDecoration.controller.TotalPropertyManagement": [],
   "FamilyDecoration.controller.User": [],
   "FamilyDecoration.controller.Viewport": [],
   "FamilyDecoration.model.Account": [],
   "FamilyDecoration.model.AccountLog": [],
+  "FamilyDecoration.model.AnalyticTable": [],
   "FamilyDecoration.model.AnnouncementComment": [],
   "FamilyDecoration.model.AttachmentManagement": [],
   "FamilyDecoration.model.BasicItem": [],
@@ -1212,11 +1243,13 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.model.ChartDetail": [],
   "FamilyDecoration.model.Community": [],
   "FamilyDecoration.model.CostAnalysis": [],
+  "FamilyDecoration.model.CostComposition": [],
   "FamilyDecoration.model.Feature": [],
   "FamilyDecoration.model.LogContent": [],
   "FamilyDecoration.model.LogList": [],
   "FamilyDecoration.model.Mail": [],
   "FamilyDecoration.model.MainMaterial": [],
+  "FamilyDecoration.model.MaterialOrderItem": [],
   "FamilyDecoration.model.MaterialOrderList": [],
   "FamilyDecoration.model.MemberList": [],
   "FamilyDecoration.model.Message": [],
@@ -1234,8 +1267,12 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.model.Project": [],
   "FamilyDecoration.model.ProjectCategory": [],
   "FamilyDecoration.model.ProjectProgress": [],
+  "FamilyDecoration.model.ProjectSummary": [],
   "FamilyDecoration.model.RegionList": [],
   "FamilyDecoration.model.ScrutinizeList": [],
+  "FamilyDecoration.model.SingleProfessionTypeBudget": [],
+  "FamilyDecoration.model.SingleProfessionTypeBudgetTotal": [],
+  "FamilyDecoration.model.SingleProfessionTypeBudgetTotalCostDifference": [],
   "FamilyDecoration.model.StatementBasicItem": [],
   "FamilyDecoration.model.StatementBill": [],
   "FamilyDecoration.model.StatementBillAudit": [],
@@ -1252,6 +1289,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.model.WorkCategory": [],
   "FamilyDecoration.store.Account": [],
   "FamilyDecoration.store.AccountLog": [],
+  "FamilyDecoration.store.AnalyticTable": [],
   "FamilyDecoration.store.AnnouncementComment": [],
   "FamilyDecoration.store.AttachmentManagement": [],
   "FamilyDecoration.store.BasicItem": [],
@@ -1267,11 +1305,13 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.store.ChartDetail": [],
   "FamilyDecoration.store.Community": [],
   "FamilyDecoration.store.CostAnalysis": [],
+  "FamilyDecoration.store.CostComposition": [],
   "FamilyDecoration.store.Feature": [],
   "FamilyDecoration.store.LogContent": [],
   "FamilyDecoration.store.LogList": [],
   "FamilyDecoration.store.Mail": [],
   "FamilyDecoration.store.MainMaterial": [],
+  "FamilyDecoration.store.MaterialOrderItem": [],
   "FamilyDecoration.store.MaterialOrderList": [],
   "FamilyDecoration.store.MemberList": [],
   "FamilyDecoration.store.Message": [],
@@ -1288,8 +1328,12 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.store.Project": [],
   "FamilyDecoration.store.ProjectCategory": [],
   "FamilyDecoration.store.ProjectProgress": [],
+  "FamilyDecoration.store.ProjectSummary": [],
   "FamilyDecoration.store.RegionList": [],
   "FamilyDecoration.store.ScrutinizeList": [],
+  "FamilyDecoration.store.SingleProfessionTypeBudget": [],
+  "FamilyDecoration.store.SingleProfessionTypeBudgetTotal": [],
+  "FamilyDecoration.store.SingleProfessionTypeBudgetTotalCostDifference": [],
   "FamilyDecoration.store.StatementBasicItem": [],
   "FamilyDecoration.store.StatementBill": [],
   "FamilyDecoration.store.StatementBillAudit": [],
@@ -1365,6 +1409,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.manuallycheckbill.CustomizedBillItem": [],
   "FamilyDecoration.view.manuallycheckbill.EditRemark": [],
   "FamilyDecoration.view.manuallycheckbill.Index": [],
+  "FamilyDecoration.view.materialrequest.EditMaterialOrder": [],
   "FamilyDecoration.view.materialrequest.Index": [],
   "FamilyDecoration.view.materialrequest.MaterialOrder": [],
   "FamilyDecoration.view.msg.Index": [],
@@ -1411,6 +1456,12 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.progress.SearchFieldTree": [],
   "FamilyDecoration.view.progress.TreeFilter": [],
   "FamilyDecoration.view.projectcategory.Index": [],
+  "FamilyDecoration.view.projectfinancemanagement.ColumnChart": [],
+  "FamilyDecoration.view.projectfinancemanagement.Index": [],
+  "FamilyDecoration.view.projectfinancemanagement.PieChart": [],
+  "FamilyDecoration.view.projectfinancemanagement.ProjectSummary": [],
+  "FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeBudget": [],
+  "FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeBudgetTotal": [],
   "FamilyDecoration.view.projectprogress.EditProgress": [],
   "FamilyDecoration.view.projectprogress.Index": [],
   "FamilyDecoration.view.projectprogress.ProgressTable": [],
@@ -1436,6 +1487,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.suppliermanagement.EditSupplierMaterial": [],
   "FamilyDecoration.view.suppliermanagement.Index": [],
   "FamilyDecoration.view.suppliermanagement.MaterialOrderList": [],
+  "FamilyDecoration.view.suppliermanagement.PaymentBillCheck": [],
+  "FamilyDecoration.view.suppliermanagement.SupplierList": [],
   "FamilyDecoration.view.suppliermanagement.SupplierMaterial": [],
   "FamilyDecoration.view.targetsetting.AddTarget": [],
   "FamilyDecoration.view.targetsetting.Index": [],
@@ -1446,6 +1499,9 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.telemarket.EditStatus": [],
   "FamilyDecoration.view.telemarket.Index": [],
   "FamilyDecoration.view.telemarket.TransferToBusiness": [],
+  "FamilyDecoration.view.totalpropertymanagement.DateFilter": [],
+  "FamilyDecoration.view.totalpropertymanagement.DiaryBill": [],
+  "FamilyDecoration.view.totalpropertymanagement.Index": [],
   "FamilyDecoration.view.user.Index": []
 });
 Ext.ClassManager.addNameAliasMappings({
@@ -2495,6 +2551,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.PlanMaking": [],
   "FamilyDecoration.controller.Progress": [],
   "FamilyDecoration.controller.ProjectCategory": [],
+  "FamilyDecoration.controller.ProjectFinanceManagement": [],
   "FamilyDecoration.controller.ProjectProgress": [],
   "FamilyDecoration.controller.QualityGuaranteeDepositMgm": [],
   "FamilyDecoration.controller.RegionMgm": [],
@@ -2504,10 +2561,12 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.TargetSetting": [],
   "FamilyDecoration.controller.TaskAssign": [],
   "FamilyDecoration.controller.TeleMarket": [],
+  "FamilyDecoration.controller.TotalPropertyManagement": [],
   "FamilyDecoration.controller.User": [],
   "FamilyDecoration.controller.Viewport": [],
   "FamilyDecoration.model.Account": [],
   "FamilyDecoration.model.AccountLog": [],
+  "FamilyDecoration.model.AnalyticTable": [],
   "FamilyDecoration.model.AnnouncementComment": [],
   "FamilyDecoration.model.AttachmentManagement": [],
   "FamilyDecoration.model.BasicItem": [],
@@ -2523,11 +2582,13 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.model.ChartDetail": [],
   "FamilyDecoration.model.Community": [],
   "FamilyDecoration.model.CostAnalysis": [],
+  "FamilyDecoration.model.CostComposition": [],
   "FamilyDecoration.model.Feature": [],
   "FamilyDecoration.model.LogContent": [],
   "FamilyDecoration.model.LogList": [],
   "FamilyDecoration.model.Mail": [],
   "FamilyDecoration.model.MainMaterial": [],
+  "FamilyDecoration.model.MaterialOrderItem": [],
   "FamilyDecoration.model.MaterialOrderList": [],
   "FamilyDecoration.model.MemberList": [],
   "FamilyDecoration.model.Message": [],
@@ -2545,8 +2606,12 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.model.Project": [],
   "FamilyDecoration.model.ProjectCategory": [],
   "FamilyDecoration.model.ProjectProgress": [],
+  "FamilyDecoration.model.ProjectSummary": [],
   "FamilyDecoration.model.RegionList": [],
   "FamilyDecoration.model.ScrutinizeList": [],
+  "FamilyDecoration.model.SingleProfessionTypeBudget": [],
+  "FamilyDecoration.model.SingleProfessionTypeBudgetTotal": [],
+  "FamilyDecoration.model.SingleProfessionTypeBudgetTotalCostDifference": [],
   "FamilyDecoration.model.StatementBasicItem": [],
   "FamilyDecoration.model.StatementBill": [],
   "FamilyDecoration.model.StatementBillAudit": [],
@@ -2563,6 +2628,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.model.WorkCategory": [],
   "FamilyDecoration.store.Account": [],
   "FamilyDecoration.store.AccountLog": [],
+  "FamilyDecoration.store.AnalyticTable": [],
   "FamilyDecoration.store.AnnouncementComment": [],
   "FamilyDecoration.store.AttachmentManagement": [],
   "FamilyDecoration.store.BasicItem": [],
@@ -2578,11 +2644,13 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.store.ChartDetail": [],
   "FamilyDecoration.store.Community": [],
   "FamilyDecoration.store.CostAnalysis": [],
+  "FamilyDecoration.store.CostComposition": [],
   "FamilyDecoration.store.Feature": [],
   "FamilyDecoration.store.LogContent": [],
   "FamilyDecoration.store.LogList": [],
   "FamilyDecoration.store.Mail": [],
   "FamilyDecoration.store.MainMaterial": [],
+  "FamilyDecoration.store.MaterialOrderItem": [],
   "FamilyDecoration.store.MaterialOrderList": [],
   "FamilyDecoration.store.MemberList": [],
   "FamilyDecoration.store.Message": [],
@@ -2599,8 +2667,12 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.store.Project": [],
   "FamilyDecoration.store.ProjectCategory": [],
   "FamilyDecoration.store.ProjectProgress": [],
+  "FamilyDecoration.store.ProjectSummary": [],
   "FamilyDecoration.store.RegionList": [],
   "FamilyDecoration.store.ScrutinizeList": [],
+  "FamilyDecoration.store.SingleProfessionTypeBudget": [],
+  "FamilyDecoration.store.SingleProfessionTypeBudgetTotal": [],
+  "FamilyDecoration.store.SingleProfessionTypeBudgetTotalCostDifference": [],
   "FamilyDecoration.store.StatementBasicItem": [],
   "FamilyDecoration.store.StatementBill": [],
   "FamilyDecoration.store.StatementBillAudit": [],
@@ -2792,6 +2864,9 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.manuallycheckbill.Index": [
     "widget.manuallycheckbill-index"
   ],
+  "FamilyDecoration.view.materialrequest.EditMaterialOrder": [
+    "widget.materialrequest-editmaterialorder"
+  ],
   "FamilyDecoration.view.materialrequest.Index": [
     "widget.materialrequest-index"
   ],
@@ -2930,6 +3005,24 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.projectcategory.Index": [
     "widget.projectcategory-index"
   ],
+  "FamilyDecoration.view.projectfinancemanagement.ColumnChart": [
+    "widget.projectfinancemanagement-columnchart"
+  ],
+  "FamilyDecoration.view.projectfinancemanagement.Index": [
+    "widget.projectfinancemanagement-index"
+  ],
+  "FamilyDecoration.view.projectfinancemanagement.PieChart": [
+    "widget.projectfinancemanagement-piechart"
+  ],
+  "FamilyDecoration.view.projectfinancemanagement.ProjectSummary": [
+    "widget.projectfinancemanagement-projectsummary"
+  ],
+  "FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeBudget": [
+    "widget.projectfinancemanagement-singleprofessiontypebudget"
+  ],
+  "FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeBudgetTotal": [
+    "widget.projectfinancemanagement-SingleProfessionTypeBudgetTotal"
+  ],
   "FamilyDecoration.view.projectprogress.EditProgress": [
     "widget.projectprogress-editprogress"
   ],
@@ -3005,6 +3098,12 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.suppliermanagement.MaterialOrderList": [
     "widget.suppliermanagement-materialorderlist"
   ],
+  "FamilyDecoration.view.suppliermanagement.PaymentBillCheck": [
+    "widget.suppliermanagement-paymentbillcheck"
+  ],
+  "FamilyDecoration.view.suppliermanagement.SupplierList": [
+    "widget.suppliermanagement-supplierlist"
+  ],
   "FamilyDecoration.view.suppliermanagement.SupplierMaterial": [
     "widget.suppliermanagement-suppliermaterial"
   ],
@@ -3034,6 +3133,15 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.telemarket.TransferToBusiness": [
     "widget.telemarket-transfertobusiness"
+  ],
+  "FamilyDecoration.view.totalpropertymanagement.DateFilter": [
+    "widget.totalpropertymanagement-datefilter"
+  ],
+  "FamilyDecoration.view.totalpropertymanagement.DiaryBill": [
+    "widget.totalpropertymanagement-diarybill"
+  ],
+  "FamilyDecoration.view.totalpropertymanagement.Index": [
+    "widget.totalpropertymanagement-index"
   ],
   "FamilyDecoration.view.user.Index": [
     "widget.user-index"
