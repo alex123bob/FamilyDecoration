@@ -2,9 +2,9 @@
 
 	function addPotentialBusiness($data){
 		global $mysql;
-		$count = $mysql->DBGetAsOneArray("select count(*) as count from potential_business where address = '".$data['address']."' ");
+		$count = $mysql->DBGetAsOneArray("select count(*) as count from potential_business where address = '".$data['address']."' and regionID = '".$data['regionID']."' ");
 		if($count[0] > 0)
-			throw new BaseException('已存在地址为'.$data['address'].'的名单!');
+			throw new BaseException('该小区已存在地址为'.$data['address'].'的名单!');
 		$obj = array(
 			"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
 			"address"=>$data['address'],
