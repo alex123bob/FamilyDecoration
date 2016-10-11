@@ -1,6 +1,10 @@
 <?php
 
 	function addPotentialBusiness($data){
+		global $mysql;
+		$count = $mysql->DBGetAsOneArray("select count(*) as count from potential_business where address = '".$data['address']."' ");
+		if($count[0] > 0)
+			throw new BaseException('已存在地址为'.$data['address'].'的名单!');
 		$obj = array(
 			"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
 			"address"=>$data['address'],
@@ -20,7 +24,7 @@
 			$obj['status_second'] = $data['status_second'];
 		if(isset($data['status_third']))
 			$obj['status_third'] = $data['status_third'];
-		global $mysql;
+		
 		$mysql->DBInsertAsArray("potential_business",$obj);
 		if (isset($data["initialStatus"])) {
 			$detailObj = array(
