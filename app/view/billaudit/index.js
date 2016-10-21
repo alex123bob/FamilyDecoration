@@ -186,7 +186,7 @@ Ext.define('FamilyDecoration.view.billaudit.Index', {
                                                 id: bill.getId(),
                                                 status: '-1',
                                                 comments: txt,
-                                                currentStatus: resourceObj.bill.get('status')
+                                                currentStatus: bill.get('status')
                                             },
                                                 arr = ['id', 'currentStatus'];
                                             if (validateCode) {
