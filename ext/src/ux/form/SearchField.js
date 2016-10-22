@@ -75,10 +75,25 @@ Ext.define('Ext.ux.form.SearchField', {
         if (value.length > 0) {
             // Param name is ignored here since we use custom encoding in the proxy.
             // id is used by the Store to replace any previous filter
-            me.store.filter({
-                id: me.paramName,
-                property: me.paramName,
-                value: new RegExp(value) // edit by Alexander Lee
+            // me.store.filter({
+            //     id: me.paramName,
+            //     property: me.paramName,
+            //     value: new RegExp(value) // edit by Alexander Lee
+            // });
+            me.store.filterBy(function (rec, id){
+                var flag = false;
+                if (Ext.isArray(me.paramName)) {
+                    Ext.each(me.paramName, function (param, index, self){
+                        flag = new RegExp(value).test(rec.data[param]);
+                        if (flag) {
+                            return false;
+                        }
+                    });
+                }
+                else if (Ext.isString(me.paramName)) {
+                    flag = new RegExp(value).test(rec.data[me.paramName]);
+                }
+                return flag;
             });
             me.hasSearch = true;
             me.triggerCell.item(0).setDisplayed(true);

@@ -61,8 +61,8 @@ Ext.define('FamilyDecoration.view.budget.HistoryBudget', {
 					xtype: 'searchfield',
 					flex: 1,
 					store: budgetSt,
-					paramName: 'projectName',
-					emptyText: '根据工程名称搜索'
+					paramName: ['projectName', 'businessAddress', 'businessRegion'],
+					emptyText: '根据工程名称或业务名称搜索'
 				}]
 			}],
 			columns: [
