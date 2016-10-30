@@ -451,7 +451,7 @@
                         && User.isProjectStaff()
                         && User.isFinanceManager()
                         && User.isFinanceStaff()
-                        && User.isAdmin() && ? true : false;
+                        && User.isAdmin() ? true : false;
             }
             else {
                 flag = true;
