@@ -179,7 +179,7 @@
                     },
                     {
                         name: '材料申购',
-                        cmp: DEBUG ? 'materialrequest-index' : '',
+                        cmp: 'materialrequest-index',
                         leaf: true,
                         icon: 'resources/img/material_request.png'
                     },
@@ -247,7 +247,7 @@
                     },
                     {
                         name: '供应商管理',
-                        cmp: DEBUG ? 'suppliermanagement-index' : '',
+                        cmp: 'suppliermanagement-index',
                         leaf: true,
                         icon: 'resources/img/supplier_management.png'
                     },
@@ -435,6 +435,23 @@
             }
             else if (rec.get('cmp') == 'planlabor-index') {
                 flag = User.isGeneral() ? false : true;
+            }
+            //项目经理、监理,以及财务部、最高管
+            else if (rec.get('cmp') == 'materialrequest-index'){
+                flag = User.isProjectManager()  
+                        && User.isProjectStaff()
+                        && User.isSupervisor() 
+                        && User.isFinanceManager()
+                        && User.isFinanceStaff()
+                        && User.isAdmin() ? true : false;
+            }
+            //供应商管理：对应项目经理、财务部、最高管
+            else if (rec.get('cmp') == 'suppliermanagement-index'){
+                flag = User.isProjectManager() 
+                        && User.isProjectStaff()
+                        && User.isFinanceManager()
+                        && User.isFinanceStaff()
+                        && User.isAdmin() && ? true : false;
             }
             else {
                 flag = true;
