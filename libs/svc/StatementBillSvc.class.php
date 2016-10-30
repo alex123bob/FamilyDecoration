@@ -296,7 +296,7 @@ class StatementBillSvc extends BaseSvc
 		}else{
 			$sql .= " and (b.billType = 'ppd' or b.billType = 'reg')";
 		}
-		$sqlCount = "select count(1) as cnt from ( $sql ) as temp ";
+		$sqlCount = "select count(1) as cnt from ( $sql ) as temp limit 0,1";
 		global $mysql;
 		$count = $mysql->DBGetAsOneArray($sqlCount,array($q['status']));
 		$limit = $this->parseLimitSql($q);

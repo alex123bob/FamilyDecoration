@@ -439,19 +439,19 @@
             //项目经理、监理,以及财务部、最高管
             else if (rec.get('cmp') == 'materialrequest-index'){
                 flag = User.isProjectManager()  
-                        && User.isProjectStaff()
-                        && User.isSupervisor() 
-                        && User.isFinanceManager()
-                        && User.isFinanceStaff()
-                        && User.isAdmin() ? true : false;
+                        || User.isProjectStaff()
+                        || User.isSupervisor() 
+                        || User.isFinanceManager()
+                        || User.isFinanceStaff()
+                        || User.isAdmin() ? true : false;
             }
             //供应商管理：对应项目经理、财务部、最高管
             else if (rec.get('cmp') == 'suppliermanagement-index'){
                 flag = User.isProjectManager() 
-                        && User.isProjectStaff()
-                        && User.isFinanceManager()
-                        && User.isFinanceStaff()
-                        && User.isAdmin() ? true : false;
+                        || User.isProjectStaff()
+                        || User.isFinanceManager()
+                        || User.isFinanceStaff()
+                        || User.isAdmin() ? true : false;
             }
             else {
                 flag = true;

@@ -90,7 +90,15 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 										projectStaff: User.getName()
 									});
 								}
-								else if (User.isAdmin() || User.isProjectManager() || User.isSupervisor() || User.isAdministrationManager() || User.isFinanceManager() || User.isBudgetManager() || User.isBudgetStaff()) {
+								else if (
+									User.isAdmin() 
+									|| User.isProjectManager() 
+									|| User.isSupervisor() 
+									|| User.isAdministrationManager() 
+									|| User.isFinanceManager() 
+									|| User.isBudgetManager() 
+									|| User.isBudgetStaff()
+								) {
 								}
 								else {
 									Ext.apply(p, {

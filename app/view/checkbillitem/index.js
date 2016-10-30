@@ -20,7 +20,8 @@ Ext.define('FamilyDecoration.view.checkbillitem.Index', {
 					{
 						text: '列表',
 						dataIndex: 'cname',
-						flex: 1
+						flex: 1,
+						align: 'center'
 					}
 				],
 				store: Ext.create('FamilyDecoration.store.ProfessionType', {

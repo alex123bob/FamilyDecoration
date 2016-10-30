@@ -12,7 +12,7 @@ Ext.define('FamilyDecoration.model.SingleProfessionTypeBudget', {
         {name: 'unitPrice', type: 'string'},
         {name: 'mainMaterialTotalFee', type: 'string'},
         {name: 'supplierName', type: 'string'},
-        {name: 'createTime', type: 'string'},
+        {name: 'createTime', type: 'string'}
     ],
     idProperty: 'id'
 });
