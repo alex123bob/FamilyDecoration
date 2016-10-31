@@ -65,6 +65,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 				title: '工程列表',
 				itemId: 'treepanel-projectName',
 				autoScroll: true,
+				needMaterialOrderCount: true,
 				listeners: {
 					selectionchange: function (selModel, sels, opts) {
 						var resObj = _getRes();

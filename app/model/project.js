@@ -29,11 +29,21 @@ Ext.define('FamilyDecoration.model.Project', {
         {name: 'rdyck2BillCount', type: 'string'},
         {name: 'rdyck3BillCount', type: 'string'},
         {name: 'rdyck4BillCount', type: 'string'},
+        // this is used in materialrequest module
+        {name: 'rdyck1MaterialOrderCount', type: 'string'},
+        {name: 'rdyck2MaterialOrderCount', type: 'string'},
+        {name: 'rdyck3MaterialOrderCount', type: 'string'},
+        {name: 'rdyck4MaterialOrderCount', type: 'string'},
         // this is used to count corresponding bills in captain hierarchy
         {name: 'rdyck1BillCountForCaptain', type: 'string'},
         {name: 'rdyck2BillCountForCaptain', type: 'string'},
         {name: 'rdyck3BillCountForCaptain', type: 'string'},
-        {name: 'rdyck4BillCountForCaptain', type: 'string'}
+        {name: 'rdyck4BillCountForCaptain', type: 'string'},
+        // this is used to count corresponding material orders in captain hierarchy
+        {name: 'rdyck1MaterialOrderCountForCaptain', type: 'string'},
+        {name: 'rdyck2MaterialOrderCountForCaptain', type: 'string'},
+        {name: 'rdyck3MaterialOrderCountForCaptain', type: 'string'},
+        {name: 'rdyck4MaterialOrderCountForCaptain', type: 'string'}
     ],
     idProperty: 'projectId',
     proxy: {

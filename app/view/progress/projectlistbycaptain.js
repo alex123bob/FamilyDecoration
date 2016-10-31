@@ -18,6 +18,7 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 	singleExpand: true,
 
 	needStatementBillCount: false,
+	needMaterialOrderCount: false,
 
 	initComponent: function () {
 		var me = this;
@@ -184,7 +185,8 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 					extraParams: (function () {
 						var p = {
 							action: 'getProjectCaptains',
-							needRdyck1BillCount: me.needStatementBillCount
+							needRdyck1BillCount: me.needStatementBillCount,
+							needMaterialOrderCount: me.needMaterialOrderCount
 						}
 						if (User.isProjectStaff()) {
 							Ext.apply(p, {
@@ -207,7 +209,8 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 									captainName: node.get('captainName'),
 									action: 'getProjectsByCaptainName',
 									includeFrozen: me.includeFrozen,
-									needStatementBillCount: me.needStatementBillCount
+									needStatementBillCount: me.needStatementBillCount,
+									needMaterialOrderCount: me.needMaterialOrderCount
 								};
 							}
 							else {
@@ -216,7 +219,8 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 									action: 'getProjectsByCaptainName',
 									userName: User.getName(),
 									includeFrozen: me.includeFrozen,
-									needStatementBillCount: me.needStatementBillCount
+									needStatementBillCount: me.needStatementBillCount,
+									needMaterialOrderCount: me.needMaterialOrderCount
 								};
 							}
 						}
@@ -237,7 +241,13 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 												+ ']</strong></font>';
 										}
 									}
-									else {
+									else if (me.needMaterialOrderCount) {
+										var rdyck1MaterialOrderCount = parseInt(node.get('rdyck1MaterialOrderCount'), 10);
+										if (!isNaN(rdyck1MaterialOrderCount) && rdyck1MaterialOrderCount > 0) {
+											renderedTxt += '&nbsp;<font style="color: red;"><strong>['
+												+ rdyck1MaterialOrderCount
+												+ ']</strong></font>';
+										}
 									}
 									node.set({
 										// text: node.get('projectName') + '(' + node.get('projectTime').split(' ')[0] + ')',
@@ -260,8 +270,13 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 											+ ']</strong></font>';
 									}
 								}
-								else {
-
+								else if(me.needMaterialOrderCount) {
+									var rdyck1MaterialOrderCountForCaptain = parseInt(node.get('rdyck1MaterialOrderCountForCaptain'), 10);
+									if (!isNaN(rdyck1MaterialOrderCountForCaptain) && rdyck1MaterialOrderCountForCaptain > 0) {
+										renderedTxt += '&nbsp;<font style="color: red;"><strong>['
+											+ rdyck1MaterialOrderCountForCaptain
+											+ ']</strong></font>';
+									}
 								}
 								node.set({
 									text: renderedTxt,
