@@ -2,25 +2,59 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
     extend: 'Ext.toolbar.Toolbar',
     alias: 'widget.totalpropertymanagement-datefilter',
     requires: [
-        
+        'FamilyDecoration.store.Account'
     ],
-    layout: 'hbox',
+    layout: 'vbox',
     defaults: {
-        height: '100%'
+        width: '100%'
     },
-    direction: 'horizontal', // horizontal or vertical
 
     initComponent: function () {
         var me = this;
 
-        me.layout = (me.direction == 'vertical' ? 'vbox' : (me.direction == 'horizontal' ? 'hbox' : ''));
+        var getRes = function (){
+            return {
+                startTime: me.getComponent('startTime'),
+                endTime: me.getComponent('endTime')
+            };
+        }
+
+        var generateAccount = function (cfgFlag){
+            var cfg = {
+                xtype: 'combobox',
+                displayField: 'name',
+                valueField: 'id',
+                editable: false,
+                store: Ext.create('FamilyDecoration.store.Account', {
+                    autoLoad: true
+                }),
+                queryMode: 'local',
+                flex: 1
+            };
+            return cfgFlag ? cfg : Ext.create('Ext.form.FieldContainer', {
+                layout: 'hbox',
+                width: '100%',
+                items: [
+                    cfg,
+                    {
+                        xtype: 'button',
+                        width: 50,
+                        text: '删除',
+                        handler: function (){
+                            var fct = this.ownerCt,
+                                toolbar = fct.ownerCt;
+                            toolbar.remove(fct);
+                        }
+                    }
+                ]
+            });
+        }
 
         me.items = [
             {
                 xtype: 'datefield',
                 flex: 1,
                 editable: false,
-                width: '100%',
                 name: 'startTime',
                 itemId: 'startTime',
                 emptyText: '开始时间',
@@ -50,7 +84,6 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                 xtype: 'datefield',
                 flex: 1,
                 editable: false,
-                width: '100%',
                 emptyText: '结束时间',
                 name: 'endTime',
                 itemId: 'endTime',
@@ -75,7 +108,23 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                         return true;
                     }
                 }
-            }
+            },
+            {
+                xtype: 'fieldcontainer',
+                flex: 1,
+                layout: 'hbox',
+                items: [
+                    generateAccount(true),
+                    {
+                        xtype: 'button',
+                        text: '添加',
+                        width: 50,
+                        handler: function (){
+                            me.add(generateAccount());
+                        }
+                    }
+                ]
+            },
         ];
         
         this.callParent();

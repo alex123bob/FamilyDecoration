@@ -2,7 +2,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.totalpropertymanagement-diarybill',
     requires: [
-        'FamilyDecoration.view.billaudit.DateFilter'
+        'FamilyDecoration.view.totalpropertymanagement.DateFilter'
     ],
     layout: 'vbox',
     defaults: {
@@ -18,9 +18,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                 xtype: 'gridpanel',
                 dockedItems: [
                     {
-                        xtype: 'billaudit-datefilter',
-                        needBillNumber: false,
-                        needCustomTxt: false
+                        xtype: 'totalpropertymanagement-datefilter'
                     }
                 ],
                 columns: {
