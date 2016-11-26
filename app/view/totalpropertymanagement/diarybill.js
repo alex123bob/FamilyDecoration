@@ -15,10 +15,45 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
 
         me.items = [
             {
+                flex: 7,
                 xtype: 'gridpanel',
                 dockedItems: [
                     {
                         xtype: 'totalpropertymanagement-datefilter'
+                    }
+                ],
+                _getBtns: function (){
+					var bbar = this.getDockedItems('toolbar[dock="bottom"]')[0];
+					return {
+                        bilret: bbar.down('[name="bilret"]'),
+                        bilchk: bbar.down('[name="bilchk"]'),
+                        bilexp: bbar.down('[name="bilexp"]')
+                    };
+				},
+                bbar: [
+                    {
+                        text: '退回单据',
+                        name: 'bilret',
+                        icon: 'resources/img/bill_return.png',
+                        handler: function (){
+
+                        }
+                    },
+                    {
+                        text: '核对',
+                        name: 'bilchk',
+                        icon: 'resources/img/bill_check.png',
+                        handler: function () {
+
+                        }
+                    },
+                    {
+                        text: '导出报表',
+                        name: 'bilexp',
+                        icon: 'resources/img/bill_export.png',
+                        handler: function (){
+
+                        }
                     }
                 ],
                 columns: {
@@ -47,6 +82,11 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                         }
                     ]
                 }
+            },
+            {
+                flex: 1,
+                xtype: 'panel',
+                title: '年度核对'
             }
         ];
 

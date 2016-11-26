@@ -89,6 +89,24 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
                         ]
                     },
                     {
+                        text: '力工',
+                        align: 'center',
+                        columns: [
+                            {
+                                text: '预算',
+                                align: 'center',
+                                flex: 0.5,
+                                dataIndex: budgetType + 'LaborBudget'
+                            },
+                            {
+                                text: '实际',
+                                align: 'center',
+                                flex: 0.5,
+                                dataIndex: budgetType + 'LaborReality'
+                            }
+                        ]
+                    },
+                    {
                         text: '杂项',
                         align: 'center',
                         columns: [
