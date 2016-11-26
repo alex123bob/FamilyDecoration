@@ -153,7 +153,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
                 },
                 {
                     text: '工程名称',
-                    width: 130,
+                    width: 150,
                     dataIndex: 'projectName'
                 },
                 {
