@@ -93,12 +93,28 @@ class ProjectSvc extends BaseSvc
 			//人力预算、实际-总计
 			$v['manualTotalBudget']            =isset($map[$projectId.'totalManPowerCost']) ? $map[$projectId.'totalManPowerCost'] : 0;
 			$v['manualTotalReality']           =$v['manualElectricReality']+$v['manualPlasterReality']+$v['manualCarpenterReality']+$v['manualPaintReality']+$v['manualMiscellaneousReality']+$v['manualLaborReality'];
+			
+			//计算差额。方便前端使用。
+			$v['elctMtDf'] = $v['materialElectricReality'] - $v['materialElectricBudget'];
+			$v['elctMpDf'] = $v['manualElectricReality'] - $v['manualElectricBudget'];
+			$v['plstMtDf'] = $v['materialPlasterReality'] - $v['materialPlasterBudget'];
+			$v['plstMpDf'] = $v['manualPlasterReality'] - $v['manualPlasterBudget'];
+			$v['cptMtDf']  = $v['materialCarpenterReality'] - $v['materialCarpenterBudget'];
+			$v['cpMpDf']   = $v['manualCarpenterReality'] - $v['manualCarpenterBudget'];
+			$v['ptMtDf']   = $v['materialPaintReality'] - $v['materialPaintBudget'];
+			$v['ptMpDf']   = $v['manualPaintReality'] - $v['manualPaintBudget'];
+			$v['msclMtDf'] = $v['materialMiscellaneousReality'] - $v['materialMiscellaneousBudget'];
+			$v['msclMpDf'] = $v['manualMiscellaneousReality'] - $v['manualMiscellaneousBudget'];
+			$v['lbMtDf']   = $v['materialLaborReality'] - $v['materialTotalBudget'];
+			$v['lbMpDf']   = $v['manualLaborReality'] - $v['manualLaborBudget'];
+			
+			
 			//所有预算成本总计
 			$v['totalBudget']= $v['manualTotalBudget'] + $v['materialTotalBudget'];
 			//所有实际成本总计
 			$v['totalReality']=$v['materialTotalReality'] + $v['manualTotalReality'];
 			$v['others']='/';
-			$v['status']='/';			
+			$v['status']='/';
 		}
 		return $data;
 	}
