@@ -2,6 +2,7 @@ Ext.define('FamilyDecoration.model.SingleProfessionTypeBudgetTotalCostDifference
     extend: 'Ext.data.Model',
     fields: [
         'id',
+        'extra',
         {name: 'elctMtDf', type: 'string'},
         {name: 'elctMpDf', type: 'string'},
         {name: 'plstMtDf', type: 'string'},

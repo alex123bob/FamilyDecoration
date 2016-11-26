@@ -248,6 +248,12 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                 flex: 1,
                 store: costDiffSt,
                 columns: [
+                    {
+                        text: '项目',
+                        dataIndex: 'extra',
+                        align: 'center',
+                        width: 50
+                    },
                     _generateDiffCfg('水电', 'elct'),
                     _generateDiffCfg('泥工', 'plst'),
                     _generateDiffCfg('木工', 'cpt'),
