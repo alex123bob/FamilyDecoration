@@ -13,6 +13,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.PieChart', {
     initComponent: function () {
         var me = this,
             st = Ext.create('FamilyDecoration.store.CostComposition', {
+                autoLoad: true,
                 proxy: {
                     type: 'rest',
                     url: './libs/api.php',
