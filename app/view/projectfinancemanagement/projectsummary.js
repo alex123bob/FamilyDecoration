@@ -18,17 +18,17 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
                 columns: [
                     {
                         text: '水电',
-                        align: 'center',
+                        align: 'right',
                         columns: [
                             {
                                 text: '预算',
-                                align: 'center',
+                                align: 'right',
                                 flex: 0.5,
                                 dataIndex: budgetType + 'ElectricBudget'
                             },
                             {
                                 text: '实际',
-                                align: 'center',
+                                align: 'right',
                                 flex: 0.5,
                                 dataIndex: budgetType + 'ElectricReality'
                             }
@@ -36,17 +36,17 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
                     },
                     {
                         text: '泥工',
-                        align: 'center',
+                        align: 'right',
                         columns: [
                             {
                                 text: '预算',
-                                align: 'center',
+                                align: 'right',
                                 flex: 0.5,
                                 dataIndex: budgetType + 'PlasterBudget'
                             },
                             {
                                 text: '实际',
-                                align: 'center',
+                                align: 'right',
                                 flex: 0.5,
                                 dataIndex: budgetType + 'PlasterReality'
                             }
@@ -54,17 +54,17 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
                     },
                     {
                         text: '木工',
-                        align: 'center',
+                        align: 'right',
                         columns: [
                             {
                                 text: '预算',
-                                align: 'center',
+                                align: 'right',
                                 flex: 0.5,
                                 dataIndex: budgetType + 'CarpenterBudget'
                             },
                             {
                                 text: '实际',
-                                align: 'center',
+                                align: 'right',
                                 flex: 0.5,
                                 dataIndex: budgetType + 'CarpenterReality'
                             }
@@ -72,17 +72,17 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
                     },
                     {
                         text: '油漆',
-                        align: 'center',
+                        align: 'right',
                         columns: [
                             {
                                 text: '预算',
-                                align: 'center',
+                                align: 'right',
                                 flex: 0.5,
                                 dataIndex: budgetType + 'PaintBudget'
                             },
                             {
                                 text: '实际',
-                                align: 'center',
+                                align: 'right',
                                 flex: 0.5,
                                 dataIndex: budgetType + 'PaintReality'
                             }
@@ -90,17 +90,17 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
                     },
                     {
                         text: '力工',
-                        align: 'center',
+                        align: 'right',
                         columns: [
                             {
                                 text: '预算',
-                                align: 'center',
+                                align: 'right',
                                 flex: 0.5,
                                 dataIndex: budgetType + 'LaborBudget'
                             },
                             {
                                 text: '实际',
-                                align: 'center',
+                                align: 'right',
                                 flex: 0.5,
                                 dataIndex: budgetType + 'LaborReality'
                             }
@@ -108,17 +108,17 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
                     },
                     {
                         text: '杂项',
-                        align: 'center',
+                        align: 'right',
                         columns: [
                             {
                                 text: '预算',
-                                align: 'center',
+                                align: 'right',
                                 flex: 0.5,
                                 dataIndex: budgetType + 'MiscellaneousBudget'
                             },
                             {
                                 text: '实际',
-                                align: 'center',
+                                align: 'right',
                                 flex: 0.5,
                                 dataIndex: budgetType + 'MiscellaneousReality'
                             }
@@ -126,17 +126,17 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
                     },
                     {
                         text: '合计',
-                        align: 'center',
+                        align: 'right',
                         columns: [
                             {
                                 text: '预算',
-                                align: 'center',
+                                align: 'right',
                                 flex: 0.5,
                                 dataIndex: budgetType + 'TotalBudget'
                             },
                             {
                                 text: '实际',
-                                align: 'center',
+                                align: 'right',
                                 flex: 0.5,
                                 dataIndex: budgetType + 'TotalReality'
                             }
@@ -161,7 +161,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
 
         var cfg = {
             defaults: {
-                align: 'center'
+                align: 'right'
             },
             items: [
                 {
@@ -179,19 +179,19 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
                     columns: [
                         {
                             text: '合同',
-                            align: 'center',
+                            align: 'right',
                             flex: 0.5,
                             dataIndex: 'contract'
                         },
                         {
                             text: '增减',
-                            align: 'center',
+                            align: 'right',
                             flex: 0.5,
                             dataIndex: 'incNDec'
                         },
                         {
                             text: '合计',
-                            align: 'center',
+                            align: 'right',
                             flex: 0.5,
                             dataIndex: 'subTotal'
                         }
@@ -214,13 +214,13 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
                     {
                         text: '预算',
                         flex: 0.5,
-                        align: 'center',
+                        align: 'right',
                         dataIndex: 'totalBudget'
                     },
                     {
                         text: '实际',
                         flex: 0.5,
-                        align: 'center',
+                        align: 'right',
                         dataIndex: 'totalReality'
                     }
                 ]
@@ -229,13 +229,13 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
                 text: '其他', // 内部工资消耗
                 width: 50,
                 dataIndex: 'others',
-                align: 'center'
+                align: 'right'
             },
             {
                 text: '目前状态',
                 width: 100,
                 dataIndex: 'status',
-                align: 'center'
+                align: 'right'
             }
         );
 

@@ -28,6 +28,7 @@ class ProjectSvc extends BaseSvc
 	
 	function financeReport($q){
 		$q['_fields'] = 'projectId,projectName,captain';
+		//$q['projectId'] = '201607241524463666';  for test
 		$data = $this->get($q);
 		//get all project ids
 		$projectIds = '';
@@ -40,7 +41,83 @@ class ProjectSvc extends BaseSvc
 			}
 			$projectIds = join($projects,',');
 		}
-		//获取项目成本
+		//人力及材料预算成本
+		$map = $this->getCostBudget($projectIds);
+		//实际人力成本
+		$mp2 = $this->getActualManPowerCost($projectIds);
+		//追加预算
+		foreach($data['data'] as $key => &$v){
+			$projectId = $v['projectId'];
+			$v['contract'] = 'TODO';
+			$v['incNDec']='TODO';
+			$v['subTotal']='TODO';
+			$v['income']='TODO';
+			//材料成本预算、实际
+			$v['materialElectricBudget']       =isset($map[$projectId.'mainMaterialCost0004']) ? $map[$projectId.'mainMaterialCost0004'] : 0;
+			$v['materialElectricReality']      ='TODO';
+			$v['materialPlasterBudget']        =isset($map[$projectId.'mainMaterialCost0001']) ? $map[$projectId.'mainMaterialCost0001'] : 0;
+			$v['materialPlasterReality']       ='TODO';
+			$v['materialCarpenterBudget']      =isset($map[$projectId.'mainMaterialCost0002']) ? $map[$projectId.'mainMaterialCost0002'] : 0;
+			$v['materialCarpenterReality']     ='TODO';
+			$v['materialPaintBudget']          =isset($map[$projectId.'mainMaterialCost0003']) ? $map[$projectId.'mainMaterialCost0003'] : 0;
+			$v['materialPaintReality']         ='TODO';
+			$v['materialMiscellaneousBudget']  =isset($map[$projectId.'mainMaterialCost0009']) ? $map[$projectId.'mainMaterialCost0009'] : 0;
+			$v['materialMiscellaneousReality'] ='TODO';
+			$v['materialLaborBudget']          =isset($map[$projectId.'mainMaterialCost0005']) ? $map[$projectId.'mainMaterialCost0005'] : 0;
+			$v['materialLaborReality']         ='TODO';
+			//材料成本预算、实际 -总计
+			$v['materialTotalBudget']          =isset($map[$projectId.'totalMainMaterialCost']) ? $map[$projectId.'totalMainMaterialCost'] : 0;
+			$v['materialTotalReality']         =$v['materialElectricReality']+$v['materialPlasterReality']+$v['materialCarpenterReality']+$v['materialPaintReality']+$v['materialMiscellaneousReality']+$v['materialLaborReality'];
+			//人力成本预算、实际
+			$v['manualElectricBudget']         =isset($map[$projectId.'manPowerCost0004']) ? $map[$projectId.'mainMaterialCost0004'] : 0;
+			$v['manualElectricReality']        =isset($mp2[$projectId.'-0004']) ? $mp2[$projectId.'-0004'] : 0;
+			
+			$v['manualPlasterBudget']          =isset($map[$projectId.'manPowerCost0001']) ? $map[$projectId.'mainMaterialCost0001'] : 0;
+			$v['manualPlasterReality']         =isset($mp2[$projectId.'-0001']) ? $mp2[$projectId.'-0001'] : 0;
+			
+			$v['manualCarpenterBudget']        =isset($map[$projectId.'manPowerCost0002']) ? $map[$projectId.'mainMaterialCost0002'] : 0;
+			$v['manualCarpenterReality']       =isset($mp2[$projectId.'-0002']) ? $mp2[$projectId.'-0002'] : 0;
+			
+			$v['manualPaintBudget']            =isset($map[$projectId.'manPowerCost0003']) ? $map[$projectId.'mainMaterialCost0003'] : 0;
+			$v['manualPaintReality']           =isset($mp2[$projectId.'-0003']) ? $mp2[$projectId.'-0003'] : 0;
+			
+			$v['manualMiscellaneousBudget']    =isset($map[$projectId.'manPowerCost0009']) ? $map[$projectId.'mainMaterialCost0009'] : 0;
+			$v['manualMiscellaneousReality']   =isset($mp2[$projectId.'-0009']) ? $mp2[$projectId.'-0009'] : 0;
+			
+			$v['manualLaborBudget']            =isset($map[$projectId.'manPowerCost0005']) ? $map[$projectId.'mainMaterialCost0005'] : 0;
+			$v['manualLaborReality']           =isset($mp2[$projectId.'-0005']) ? $mp2[$projectId.'-0005'] : 0;
+			//人力预算、实际-总计
+			$v['manualTotalBudget']            =isset($map[$projectId.'totalManPowerCost']) ? $map[$projectId.'totalManPowerCost'] : 0;
+			$v['manualTotalReality']           =$v['manualElectricReality']+$v['manualPlasterReality']+$v['manualCarpenterReality']+$v['manualPaintReality']+$v['manualMiscellaneousReality']+$v['manualLaborReality'];
+			//所有预算成本总计
+			$v['totalBudget']= $v['manualTotalBudget'] + $v['materialTotalBudget'];
+			//所有实际成本总计
+			$v['totalReality']=$v['materialTotalReality'] + $v['manualTotalReality'];
+			$v['others']='TODO';
+			$v['status']='TODO';			
+		}
+		$data['mp2']=$mp2;
+		return $data;
+	}
+	
+	//获取项目实际人工成本
+	private function getActualManPowerCost($projectIds){
+		$sql = "select CONCAT(s.projectId,'-',s.professionType) as k,round(sum(d.amount*d.unitPrice),2) as v 
+				from statement_bill_item d 
+				left join statement_bill s on s.id = d.billId 
+				where s.isDeleted = 'false' and d.isDeleted = 'false' and s.billType in ('reg','ppd','qgd') and s.projectId in ($projectIds)
+				group by projectId,s.professionType;";
+		global $mysql;
+		$costData = $mysql->DBGetAsMap($sql);
+		$map = array();
+		foreach($costData as $k => $v){
+			$map[$v['k'].''] = $v['v'];
+		}
+		return $map;
+	}
+	
+	//获取项目预算成本
+	private function getCostBudget($projectIds){
 		$sql = "select sum(totalManPowerCost) as manPowerCost, sum(totalMainMaterialCost) as mainMaterialCost,projectId,workCategory from 
 		(
 			SELECT
@@ -61,19 +138,7 @@ class ProjectSvc extends BaseSvc
 			group by projectId,workCategory;";
 		global $mysql;
 		$costData = $mysql->DBGetAsMap($sql);
-		//整理数据，由二维表转为下面类似层级结构
-		/*
-			项目一
-				泥工预算
-				油漆工预算
-				...
-			项目二
-				泥工预算
-				油漆工预算
-				...			
-			...
-		
-		*/
+		//整理成本预算数据
 		$map = array();
 		foreach($costData as $key => $value){
 			$projectId = $value['projectId'];
@@ -83,55 +148,16 @@ class ProjectSvc extends BaseSvc
 			$map[$projectId.'totalManPowerCost'] = (isset($map[$projectId.'totalManPowerCost']) ? $map[$projectId.'totalManPowerCost'] : 0 ) + $map[$projectId.'manPowerCost'.$workCategory];
 			$map[$projectId.'totalMainMaterialCost'] = (isset($map[$projectId.'totalMainMaterialCost']) ? $map[$projectId.'totalMainMaterialCost'] : 0 ) + $map[$projectId.'mainMaterialCost'.$workCategory];
 		}
-//$map[$projectId][$workCategory]['manPowerCost'] $map[$projectId][$workCategory]['mainMaterialCost']
-/*
-plaster	泥工	0001
-carpenter	木工	0002
-painter	油漆工	0003
-electrician	水电工	0004
-handyman	力工	0005
-other	其他	0009
-*/
-		//追加预算
-		foreach($data['data'] as $key => &$value){
-			$projectId = $value['projectId'];
-			$value['contract'] = 'TODO';
-			$value['incNDec']='TODO';
-			$value['subTotal']='TODO';
-			$value['income']='TODO';
-			//材料预算-实际  TODO 力工？没有出现。
-			$value['materialElectricBudget']       =isset($map[$projectId.'mainMaterialCost0004']) ? $map[$projectId.'mainMaterialCost0004'] : 0;
-			$value['materialElectricReality']      ='TODO';
-			$value['materialPlasterBudget']        =isset($map[$projectId.'mainMaterialCost0001']) ? $map[$projectId.'mainMaterialCost0001'] : 0;
-			$value['materialPlasterReality']       ='TODO';
-			$value['materialCarpenterBudget']      =isset($map[$projectId.'mainMaterialCost0002']) ? $map[$projectId.'mainMaterialCost0002'] : 0;
-			$value['materialCarpenterReality']     ='TODO';
-			$value['materialPaintBudget']          =isset($map[$projectId.'mainMaterialCost0003']) ? $map[$projectId.'mainMaterialCost0003'] : 0;
-			$value['materialPaintReality']         ='TODO';
-			$value['materialMiscellaneousBudget']  =isset($map[$projectId.'mainMaterialCost0009']) ? $map[$projectId.'mainMaterialCost0009'] : 0;
-			$value['materialMiscellaneousReality'] ='TODO';
-			$value['materialTotalBudget']          =isset($map[$projectId.'totalMainMaterialCost']) ? $map[$projectId.'totalMainMaterialCost'] : 0;
-			$value['materialTotalReality']         ='TODO';
-			//人力预算-实际
-			$value['manualElectricBudget']         =isset($map[$projectId.'manPowerCost0004']) ? $map[$projectId.'mainMaterialCost0004'] : 0;
-			$value['manualElectricReality']        ='TODO';
-			$value['manualPlasterBudget']          =isset($map[$projectId.'manPowerCost0001']) ? $map[$projectId.'mainMaterialCost0001'] : 0;
-			$value['manualPlasterReality']         ='TODO';
-			$value['manualCarpenterBudget']        =isset($map[$projectId.'manPowerCost0002']) ? $map[$projectId.'mainMaterialCost0002'] : 0;
-			$value['manualCarpenterReality']       ='TODO';
-			$value['manualPaintBudget']            =isset($map[$projectId.'manPowerCost0003']) ? $map[$projectId.'mainMaterialCost0003'] : 0;
-			$value['manualPaintReality']           ='TODO';
-			$value['manualMiscellaneousBudget']    =isset($map[$projectId.'manPowerCost0009']) ? $map[$projectId.'mainMaterialCost0009'] : 0;
-			$value['manualMiscellaneousReality']   ='TODO';
-			$value['manualTotalBudget']            =isset($map[$projectId.'totalManPowerCost']) ? $map[$projectId.'totalManPowerCost'] : 0;
-			$value['manualTotalReality']           ='TODO';
-			
-			$value['totalBudget']= $value['manualTotalBudget'] + $value['materialTotalBudget'];
-			$value['totalReality']='TODO';
-			$value['others']='TODO';
-			$value['status']='TODO';			
-		}
-		return $data;
+		//$map[$projectId][$workCategory]['manPowerCost'] $map[$projectId][$workCategory]['mainMaterialCost']
+		/*
+		plaster	泥工	0001
+		carpenter	木工	0002
+		painter	油漆工	0003
+		electrician	水电工	0004
+		handyman	力工	0005
+		other	其他	0009
+		*/
+		return $map;
 	}
 }
 
