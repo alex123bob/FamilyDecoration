@@ -8,7 +8,8 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
     initComponent: function () {
         var me = this,
             st = Ext.create('FamilyDecoration.store.ProjectSummary', {
-                autoLoad: true
+                autoLoad: true,
+                remoteSort: true
             });
 
         function _generateBudgetCfg(budgetType) {
@@ -145,11 +146,6 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
                 align: 'center'
             },
             items: [
-                {
-                    text: '序号',
-                    width: 50,
-                    dataIndex: 'id'
-                },
                 {
                     text: '项目经理',
                     width: 100,
