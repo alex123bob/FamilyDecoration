@@ -28,6 +28,7 @@ class ProjectSvc extends BaseSvc
 	
 	function financeReport($q){
 		$q['_fields'] = 'projectId,projectName,captain';
+		$q['isFrozen'] = 0;
 		//$q['projectId'] = '201503120934479771';  //for test
 		$data = $this->get($q);
 		//get all project ids
