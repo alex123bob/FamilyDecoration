@@ -9,6 +9,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ColumnChart', {
 
     },
     rootName: undefined, // colMan, colMat
+    projectId: undefined,
     initComponent: function () {
         var me = this,
             st = Ext.create('FamilyDecoration.store.AnalyticTable', {
@@ -21,6 +22,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ColumnChart', {
                         root: me.rootName
                     },
                     extraParams: {
+                        projectId: me.projectId,
                         action: 'Project.financeReport'
                     }
                 }
