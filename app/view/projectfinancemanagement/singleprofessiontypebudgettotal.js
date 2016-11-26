@@ -32,7 +32,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
         });
 
         Ext.apply(costDiffProxy.extraParams, {
-            action: 'Project.get',
+            action: 'Project.financeReport',
             projectId: me.projectId
         });
 
