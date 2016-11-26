@@ -99,7 +99,6 @@ class ProjectSvc extends BaseSvc
 			$v['others']='/';
 			$v['status']='/';			
 		}
-		$data['mp2']=$mp2;
 		return $data;
 	}
 	
