@@ -33,8 +33,10 @@ class ProjectSvc extends BaseSvc
 		$data = $this->get($q);
 		//get all project ids
 		$projectIds = '';
+		$singleQuery = false;
 		if(isset($q['projectId'])){
 			$projectIds = $q['projectId'];
+			$singleQuery = true;
 		}else{
 			$projects = array();
 			foreach($data['data'] as $key => $value){
@@ -95,18 +97,24 @@ class ProjectSvc extends BaseSvc
 			$v['manualTotalReality']           =$v['manualElectricReality']+$v['manualPlasterReality']+$v['manualCarpenterReality']+$v['manualPaintReality']+$v['manualMiscellaneousReality']+$v['manualLaborReality'];
 			
 			//计算差额。方便前端使用。
-			$v['elctMtDf'] = $v['materialElectricReality'] - $v['materialElectricBudget'];
-			$v['elctMpDf'] = $v['manualElectricReality'] - $v['manualElectricBudget'];
-			$v['plstMtDf'] = $v['materialPlasterReality'] - $v['materialPlasterBudget'];
-			$v['plstMpDf'] = $v['manualPlasterReality'] - $v['manualPlasterBudget'];
-			$v['cptMtDf']  = $v['materialCarpenterReality'] - $v['materialCarpenterBudget'];
-			$v['cptMpDf']  = $v['manualCarpenterReality'] - $v['manualCarpenterBudget'];
-			$v['ptMtDf']   = $v['materialPaintReality'] - $v['materialPaintBudget'];
-			$v['ptMpDf']   = $v['manualPaintReality'] - $v['manualPaintBudget'];
-			$v['msclMtDf'] = $v['materialMiscellaneousReality'] - $v['materialMiscellaneousBudget'];
-			$v['msclMpDf'] = $v['manualMiscellaneousReality'] - $v['manualMiscellaneousBudget'];
-			$v['lbMtDf']   = $v['materialLaborReality'] - $v['materialTotalBudget'];
-			$v['lbMpDf']   = $v['manualLaborReality'] - $v['manualLaborBudget'];
+			if($singleQuery){
+				$v['elctMtDf'] = $v['materialElectricReality'] - $v['materialElectricBudget'];
+				$v['elctMpDf'] = $v['manualElectricReality'] - $v['manualElectricBudget'];
+				$v['plstMtDf'] = $v['materialPlasterReality'] - $v['materialPlasterBudget'];
+				$v['plstMpDf'] = $v['manualPlasterReality'] - $v['manualPlasterBudget'];
+				$v['cptMtDf']  = $v['materialCarpenterReality'] - $v['materialCarpenterBudget'];
+				$v['cptMpDf']  = $v['manualCarpenterReality'] - $v['manualCarpenterBudget'];
+				$v['ptMtDf']   = $v['materialPaintReality'] - $v['materialPaintBudget'];
+				$v['ptMpDf']   = $v['manualPaintReality'] - $v['manualPaintBudget'];
+				$v['msclMtDf'] = $v['materialMiscellaneousReality'] - $v['materialMiscellaneousBudget'];
+				$v['msclMpDf'] = $v['manualMiscellaneousReality'] - $v['manualMiscellaneousBudget'];
+				$v['lbMtDf']   = $v['materialLaborReality'] - $v['materialTotalBudget'];
+				$v['lbMpDf']   = $v['manualLaborReality'] - $v['manualLaborBudget'];
+				
+				$v['ttMtDf']   = $v['elctMtDf']+$v['plstMtDf']+$v['cptMtDf']+$v['ptMtDf']+$v['msclMtDf']+$v['lbMtDf'];
+				$v['ttMpDf']   = $v['elctMpDf']+$v['plstMpDf']+$v['cptMpDf']+$v['ptMpDf']+$v['msclMpDf']+$v['lbMpDf'];
+				$v['extra'] = '差额';
+			}
 			
 			
 			//所有预算成本总计
