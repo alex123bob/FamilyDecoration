@@ -10,7 +10,7 @@ Ext.define('FamilyDecoration.store.ProjectSummary', {
             totalProperty: 'total'
         },
         extraParams: {
-            action: 'Project.get'
+            action: 'Project.financeReport'
         }
     }
 });
