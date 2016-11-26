@@ -12,24 +12,15 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.PieChart', {
     initComponent: function () {
         var me = this,
             st = Ext.create('FamilyDecoration.store.CostComposition', {
-                data: [
-                    {
-                        costType: '材料',
-                        costPercent: 10
-                    },
-                    {
-                        costType: '人工',
-                        costPercent: 15
-                    },
-                    {
-                        costType: '其他',
-                        costPercent: 12
-                    }
-                ],
                 proxy: {
-                    type: 'memory',
+                    type: 'rest',
+                    url: './libs/api.php',
                     reader: {
-                        type: 'json'
+                        type: 'json',
+                        root: 'pie'
+                    },
+                    extraParams: {
+                        action: 'Project.financeReport'
                     }
                 }
             });

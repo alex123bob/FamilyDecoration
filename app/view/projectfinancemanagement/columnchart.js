@@ -8,45 +8,21 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ColumnChart', {
     defaults: {
 
     },
-    url: undefined, // retrieve data from db to render chart
     initComponent: function () {
         var me = this,
             st = Ext.create('FamilyDecoration.store.AnalyticTable', {
                 autoLoad: true,
                 proxy: {
                     type: 'rest',
-                    url: me.url,
+                    url: './libs/api.php',
                     reader: {
-                        type: 'json'
+                        type: 'json',
+                        root: 'column'
+                    },
+                    extraParams: {
+                        action: 'Project.financeReport'
                     }
-                },
-                data: [
-                    {
-                        reality: 1,
-                        budget: 2,
-                        professionType: '水电'
-                    },
-                    {
-                        reality: 4,
-                        budget: 5,
-                        professionType: '泥工'
-                    },
-                    {
-                        reality: 3.1,
-                        budget: 2.2,
-                        professionType: '木工'
-                    },
-                    {
-                        reality: 1.2,
-                        budget: 4,
-                        professionType: '油漆'
-                    },
-                    {
-                        reality: 4.3,
-                        budget: 4,
-                        professionType: '杂项'
-                    }
-                ]
+                }
             });
 
         me.items = [

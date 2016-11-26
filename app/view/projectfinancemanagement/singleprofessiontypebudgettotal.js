@@ -244,7 +244,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
             },
             {
                 xtype: 'gridpanel',
-                title: '成本分析',
+                title: '成本分析(实际-预算)',
                 flex: 1,
                 store: costDiffSt,
                 columns: [
