@@ -16,7 +16,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
         
         Ext.apply(proxy, {
             extraParams: {
-                action: 'SingleProfessionTypeBudget.get',
+                action: 'Project.get',
                 professionType: me.professionType,
                 projectId: me.projectId
             }
@@ -25,6 +25,17 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
         st.setProxy(proxy);
 
         st.load();
+
+        me.store = st;
+
+        me.dockedItems = [
+            {
+                xtype: 'pagingtoolbar',
+                store: st,
+                dock: 'bottom',
+                displayInfo: true
+            }
+        ];
 
         me.columns = [
             {
