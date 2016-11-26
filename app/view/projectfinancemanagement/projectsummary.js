@@ -131,6 +131,15 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
 
         me.store = st;
 
+        me.dockedItems = [
+            {
+                xtype: 'pagingtoolbar',
+                store: st,
+                dock: 'bottom',
+                displayInfo: true
+            }
+        ];
+
         var cfg = {
             defaults: {
                 align: 'center'
