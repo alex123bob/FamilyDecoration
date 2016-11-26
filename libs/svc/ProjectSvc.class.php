@@ -106,9 +106,6 @@ class ProjectSvc extends BaseSvc
 		//如果只查一个项目
 		if($singleProjectQuery){
 			$d = &$data['data'][0];
-			$total = $d['materialTotalReality']+$d['manualTotalReality']+$d['others'];
-			if($total == 0)
-				$total = 1;
 			//计算差额。方便前端使用。
 			$d['elctMtDf'] = $d['materialElectricReality'] - $d['materialElectricBudget'];
 			$d['elctMpDf'] = $d['manualElectricReality'] - $d['manualElectricBudget'];
@@ -128,9 +125,9 @@ class ProjectSvc extends BaseSvc
 			$d['extra'] = '差额';
 			//前端柱状图，饼状图使用。
 			$data['pie']=array(
-				array('costType'=>'材料','costPercent'=>round($d['materialTotalReality']/$total*100,2)),
-				array('costType'=>'人工','costPercent'=>round($d['manualTotalReality']/$total*100,2)),
-				array('costType'=>'其他','costPercent'=>round($d['others']/$total*100,2))
+				array('costType'=>'材料','cost'=>$d['materialTotalReality']),
+				array('costType'=>'人工','cost'=>$d['manualTotalReality']),
+				array('costType'=>'其他','cost'=>$d['others'])
 			);
 			$data['colMan']=array(
 				array('professionType'=>'水电','reality'=>$d['manualElectricReality'],'budget'=>$d['manualElectricBudget']),
