@@ -12,7 +12,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
     initComponent: function () {
         var me = this;
 
-        var getRes = function (){
+        var _getRes = function (){
             return {
                 startTime: me.getComponent('startTime'),
                 endTime: me.getComponent('endTime')
@@ -60,11 +60,11 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                 emptyText: '开始时间',
                 cleanBtn: true,
                 cleanHandler: function () {
-                    var resObj = getRes();
+                    var resObj = _getRes();
                     resObj.endTime.isValid();
                 },
                 validator: function (val) {
-                    var resObj = getRes();
+                    var resObj = _getRes();
                     if (val && resObj.endTime.getValue()) {
                         return true;
                     }
@@ -89,11 +89,11 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                 itemId: 'endTime',
                 cleanBtn: true,
                 cleanHandler: function () {
-                    var resObj = getRes();
+                    var resObj = _getRes();
                     resObj.startTime.isValid();
                 },
                 validator: function (val) {
-                    var resObj = getRes();
+                    var resObj = _getRes();
                     if (val && resObj.startTime.getValue()) {
                         return true;
                     }
