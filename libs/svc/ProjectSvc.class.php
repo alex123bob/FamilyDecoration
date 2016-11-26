@@ -28,7 +28,7 @@ class ProjectSvc extends BaseSvc
 	
 	function financeReport($q){
 		$q['_fields'] = 'projectId,projectName,captain';
-		//$q['projectId'] = '201607241524463666';  for test
+		//$q['projectId'] = '201503120934479771';  //for test
 		$data = $this->get($q);
 		//get all project ids
 		$projectIds = '';
@@ -43,10 +43,11 @@ class ProjectSvc extends BaseSvc
 		}
 		//人力及材料预算成本
 		$map = $this->getCostBudget($projectIds);
+		//实际材料成本,只算材料订购单中的。suppier_order
+		$mp1 = $this->getAcctualMateriaCost($projectIds);
 		//实际人力成本,只算statement_bill中预付款ppb，工人工资reg，保证金qgd类型金额
 		$mp2 = $this->getActualManPowerCost($projectIds);
-		//实际材料成本,只算材料订购单中的。suppier_order
-		$mp3 = $this->getAcctualMateriaCost($projectIds);
+		
 		//追加预算
 		foreach($data['data'] as $key => &$v){
 			$projectId = $v['projectId'];
@@ -56,17 +57,17 @@ class ProjectSvc extends BaseSvc
 			$v['income']='/';
 			//材料成本预算、实际
 			$v['materialElectricBudget']       =isset($map[$projectId.'mainMaterialCost0004']) ? $map[$projectId.'mainMaterialCost0004'] : 0;
-			$v['materialElectricReality']      =isset($mp2[$projectId.'-0004']) ? $mp2[$projectId.'-0004'] : 0;
+			$v['materialElectricReality']      =isset($mp1[$projectId.'-0004']) ? $mp1[$projectId.'-0004'] : 0;
 			$v['materialPlasterBudget']        =isset($map[$projectId.'mainMaterialCost0001']) ? $map[$projectId.'mainMaterialCost0001'] : 0;
-			$v['materialPlasterReality']       =isset($mp2[$projectId.'-0001']) ? $mp2[$projectId.'-0001'] : 0;
+			$v['materialPlasterReality']       =isset($mp1[$projectId.'-0001']) ? $mp1[$projectId.'-0001'] : 0;
 			$v['materialCarpenterBudget']      =isset($map[$projectId.'mainMaterialCost0002']) ? $map[$projectId.'mainMaterialCost0002'] : 0;
-			$v['materialCarpenterReality']     =isset($mp2[$projectId.'-0002']) ? $mp2[$projectId.'-0002'] : 0;
+			$v['materialCarpenterReality']     =isset($mp1[$projectId.'-0002']) ? $mp1[$projectId.'-0002'] : 0;
 			$v['materialPaintBudget']          =isset($map[$projectId.'mainMaterialCost0003']) ? $map[$projectId.'mainMaterialCost0003'] : 0;
-			$v['materialPaintReality']         =isset($mp2[$projectId.'-0003']) ? $mp2[$projectId.'-0003'] : 0;
+			$v['materialPaintReality']         =isset($mp1[$projectId.'-0003']) ? $mp1[$projectId.'-0003'] : 0;
 			$v['materialMiscellaneousBudget']  =isset($map[$projectId.'mainMaterialCost0009']) ? $map[$projectId.'mainMaterialCost0009'] : 0;
-			$v['materialMiscellaneousReality'] =isset($mp2[$projectId.'-0009']) ? $mp2[$projectId.'-0009'] : 0;
+			$v['materialMiscellaneousReality'] =isset($mp1[$projectId.'-0009']) ? $mp1[$projectId.'-0009'] : 0;
 			$v['materialLaborBudget']          =isset($map[$projectId.'mainMaterialCost0005']) ? $map[$projectId.'mainMaterialCost0005'] : 0;
-			$v['materialLaborReality']         =isset($mp2[$projectId.'-0005']) ? $mp2[$projectId.'-0005'] : 0;
+			$v['materialLaborReality']         =isset($mp1[$projectId.'-0005']) ? $mp1[$projectId.'-0005'] : 0;
 			//材料成本预算、实际 -总计
 			$v['materialTotalBudget']          =isset($map[$projectId.'totalMainMaterialCost']) ? $map[$projectId.'totalMainMaterialCost'] : 0;
 			$v['materialTotalReality']         =$v['materialElectricReality']+$v['materialPlasterReality']+$v['materialCarpenterReality']+$v['materialPaintReality']+$v['materialMiscellaneousReality']+$v['materialLaborReality'];
