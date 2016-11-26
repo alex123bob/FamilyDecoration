@@ -15,7 +15,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
 
         me.items = [
             {
-                flex: 7,
+                flex: 1,
                 xtype: 'gridpanel',
                 dockedItems: [
                     {
@@ -84,9 +84,29 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                 }
             },
             {
-                flex: 1,
-                xtype: 'panel',
-                title: '年度核对'
+                height: 74,
+                xtype: 'gridpanel',
+                header: {
+                    title: '年度核对',
+                    padding: 2
+                },
+                columns: {
+                    defaults: {
+                        align: 'center',
+                        flex: 1
+                    },
+                    items: [
+                        {
+                            text: '日、月、年度进账'
+                        },
+                        {
+                            text: '日、月、年度出账'
+                        },
+                        {
+                            text: '日、月、年度余额'
+                        }
+                    ]
+                }
             }
         ];
 

@@ -214,7 +214,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                 }
                 return cls;
             }
-        }
+        };
 
         function getTbar() {
             var toolbar = me.down('toolbar');

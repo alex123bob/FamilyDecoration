@@ -119,6 +119,15 @@ tr.bill-unpaid .x-grid-td {
 
 /* end of entry and exit module class */
 
+/* project finance management module class */
+tr.bill-money-exceptional .x-grid-td {
+    background-color: lightyellow;
+}
+tr.bill-reality-greater-than-budget .x-grid-td {
+    background-color: orangered;
+}
+/* end of project finance management module class */
+
 @-webkit-keyframes blink {
     0% {
         opacity: 1;

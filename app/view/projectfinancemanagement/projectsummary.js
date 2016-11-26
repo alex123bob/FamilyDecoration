@@ -150,6 +150,23 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
 
         me.store = st;
 
+        me.viewConfig = {
+            getRowClass: function (rec, rowIndex, rowParams, st) {
+                var totalReality = parseFloat(rec.get('totalReality')),
+                    totalBudget = parseFloat(rec.get('totalBudget')),
+                    cls = '';
+                if (Ext.isNumber(totalBudget) && Ext.isNumber(totalBudget)) {
+                    if (totalBudget === 0 || totalReality === 0) {
+                        cls = 'bill-money-exceptional';
+                    }
+                    else if (totalReality - totalBudget > 0) {
+                        cls = 'bill-reality-greater-than-budget';
+                    }
+                }
+                return cls;
+            }
+        };
+
         me.dockedItems = [
             {
                 xtype: 'pagingtoolbar',
@@ -227,7 +244,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
             },
             {
                 text: '其他', // 内部工资消耗
-                width: 50,
+                width: 54,
                 dataIndex: 'others',
                 align: 'right'
             },
