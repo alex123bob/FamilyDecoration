@@ -16,7 +16,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
         
         Ext.apply(proxy, {
             extraParams: {
-                action: 'Project.get',
+                action: 'Project.financeReport',
                 professionType: me.professionType,
                 projectId: me.projectId
             }
