@@ -128,6 +128,8 @@ class ProjectSvc extends BaseSvc
 		if($singleProjectQuery){
 			$d = $data['data'][0];
 			$total = $d['materialTotalReality']+$d['manualTotalReality']+$d['others'];
+			if($total == 0)
+				$total = 1;
 			$data['pie']=array(
 				array('costType'=>'材料','costPercent'=>round($d['materialTotalReality']/$total*100,2)),
 				array('costType'=>'人工','costPercent'=>round($d['manualTotalReality']/$total*100,2)),
