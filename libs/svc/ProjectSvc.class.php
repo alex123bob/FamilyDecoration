@@ -43,28 +43,30 @@ class ProjectSvc extends BaseSvc
 		}
 		//人力及材料预算成本
 		$map = $this->getCostBudget($projectIds);
-		//实际人力成本
+		//实际人力成本,只算statement_bill中预付款ppb，工人工资reg，保证金qgd类型金额
 		$mp2 = $this->getActualManPowerCost($projectIds);
+		//实际材料成本,只算材料订购单中的。suppier_order
+		$mp3 = $this->getAcctualMateriaCost($projectIds);
 		//追加预算
 		foreach($data['data'] as $key => &$v){
 			$projectId = $v['projectId'];
-			$v['contract'] = 'TODO';
-			$v['incNDec']='TODO';
-			$v['subTotal']='TODO';
-			$v['income']='TODO';
+			$v['contract'] = '/';
+			$v['incNDec']='/';
+			$v['subTotal']='/';
+			$v['income']='/';
 			//材料成本预算、实际
 			$v['materialElectricBudget']       =isset($map[$projectId.'mainMaterialCost0004']) ? $map[$projectId.'mainMaterialCost0004'] : 0;
-			$v['materialElectricReality']      ='TODO';
+			$v['materialElectricReality']      =isset($mp2[$projectId.'-0004']) ? $mp2[$projectId.'-0004'] : 0;
 			$v['materialPlasterBudget']        =isset($map[$projectId.'mainMaterialCost0001']) ? $map[$projectId.'mainMaterialCost0001'] : 0;
-			$v['materialPlasterReality']       ='TODO';
+			$v['materialPlasterReality']       =isset($mp2[$projectId.'-0001']) ? $mp2[$projectId.'-0001'] : 0;
 			$v['materialCarpenterBudget']      =isset($map[$projectId.'mainMaterialCost0002']) ? $map[$projectId.'mainMaterialCost0002'] : 0;
-			$v['materialCarpenterReality']     ='TODO';
+			$v['materialCarpenterReality']     =isset($mp2[$projectId.'-0002']) ? $mp2[$projectId.'-0002'] : 0;
 			$v['materialPaintBudget']          =isset($map[$projectId.'mainMaterialCost0003']) ? $map[$projectId.'mainMaterialCost0003'] : 0;
-			$v['materialPaintReality']         ='TODO';
+			$v['materialPaintReality']         =isset($mp2[$projectId.'-0003']) ? $mp2[$projectId.'-0003'] : 0;
 			$v['materialMiscellaneousBudget']  =isset($map[$projectId.'mainMaterialCost0009']) ? $map[$projectId.'mainMaterialCost0009'] : 0;
-			$v['materialMiscellaneousReality'] ='TODO';
+			$v['materialMiscellaneousReality'] =isset($mp2[$projectId.'-0009']) ? $mp2[$projectId.'-0009'] : 0;
 			$v['materialLaborBudget']          =isset($map[$projectId.'mainMaterialCost0005']) ? $map[$projectId.'mainMaterialCost0005'] : 0;
-			$v['materialLaborReality']         ='TODO';
+			$v['materialLaborReality']         =isset($mp2[$projectId.'-0005']) ? $mp2[$projectId.'-0005'] : 0;
 			//材料成本预算、实际 -总计
 			$v['materialTotalBudget']          =isset($map[$projectId.'totalMainMaterialCost']) ? $map[$projectId.'totalMainMaterialCost'] : 0;
 			$v['materialTotalReality']         =$v['materialElectricReality']+$v['materialPlasterReality']+$v['materialCarpenterReality']+$v['materialPaintReality']+$v['materialMiscellaneousReality']+$v['materialLaborReality'];
@@ -93,11 +95,35 @@ class ProjectSvc extends BaseSvc
 			$v['totalBudget']= $v['manualTotalBudget'] + $v['materialTotalBudget'];
 			//所有实际成本总计
 			$v['totalReality']=$v['materialTotalReality'] + $v['manualTotalReality'];
-			$v['others']='TODO';
-			$v['status']='TODO';			
+			$v['others']='/';
+			$v['status']='/';			
 		}
 		$data['mp2']=$mp2;
 		return $data;
+	}
+	
+	//获取项目实际材料成本
+	private function getAcctualMateriaCost($projectIds){
+		$sql = "
+			SELECT
+				CONCAT(o.projectId,'-',i.professionType) as k,
+				round(sum(i.unitPrice * i.amount),2) as v
+			FROM
+				supplier_order_item i
+			LEFT JOIN supplier_order o ON o.id = i.supplierId
+			WHERE
+				o.isDeleted = 'false' AND i.isDeleted = 'false' and o.projectId in ($projectIds)
+			GROUP BY
+				o.projectId,
+				professionType;
+		";
+		global $mysql;
+		$costData = $mysql->DBGetAsMap($sql);
+		$map = array();
+		foreach($costData as $k => $v){
+			$map[$v['k'].''] = $v['v'];
+		}
+		return $map;
 	}
 	
 	//获取项目实际人工成本
