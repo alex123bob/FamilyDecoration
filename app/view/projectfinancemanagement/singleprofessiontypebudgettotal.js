@@ -27,8 +27,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
             costDiffProxy = costDiffSt.getProxy();
         
         Ext.apply(proxy.extraParams, {
-            action: 'SingleProfessionTypeBudgetTotal.get',
-            professionType: me.professionType,
+            action: 'Project.financeReport',
             projectId: me.projectId
         });
 

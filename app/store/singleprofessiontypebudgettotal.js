@@ -10,7 +10,7 @@ Ext.define('FamilyDecoration.store.SingleProfessionTypeBudgetTotal', {
             totalProperty: 'total'
         },
         extraParams: {
-            action: 'SingleProfessionTypeBudgetTotal.get'
+            action: 'Project.financeReport'
         }
     }
 });
