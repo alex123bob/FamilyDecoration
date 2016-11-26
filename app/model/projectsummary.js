@@ -1,7 +1,7 @@
 Ext.define('FamilyDecoration.model.ProjectSummary', {
     extend: 'Ext.data.Model',
     fields: [
-        'id',
+        'projectId',
         {name: 'captain', type: 'string'},
         {name: 'projectName', type: 'string'},
         {name: 'contract', type: 'string'},
@@ -40,5 +40,5 @@ Ext.define('FamilyDecoration.model.ProjectSummary', {
         {name: 'others', type: 'string'},
         {name: 'status', type: 'string'}
     ],
-    idProperty: 'id'
+    idProperty: 'projectId'
 });
