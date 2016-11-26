@@ -10,7 +10,7 @@ Ext.define('FamilyDecoration.store.SingleProfessionTypeBudgetTotalCostDifference
             totalProperty: 'total'
         },
         extraParams: {
-            action: 'SingleProfessionTypeBudgetTotalCostDifference.get'
+            action: 'Project.financeReport'
         }
     }
 });

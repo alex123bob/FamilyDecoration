@@ -32,8 +32,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
         });
 
         Ext.apply(costDiffProxy.extraParams, {
-            action: 'SingleProfessionTypeBudgetTotalCostDifference.get',
-            professionType: me.professionType,
+            action: 'Project.get',
             projectId: me.projectId
         });
 
@@ -182,6 +181,26 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
             return cfg;
         }
 
+        function _generateDiffCfg (txt, typeName){
+            return {
+                text: txt,
+                columns: [
+                    {
+                        text: '材料',
+                        align: 'center',
+                        flex: 0.5,
+                        dataIndex: typeName + 'MtDf'
+                    },
+                    {
+                        text: '人工',
+                        align: 'center',
+                        flex: 0.5,
+                        dataIndex: typeName + 'MpDf'
+                    }
+                ]
+            }
+        }
+
         me.items = [
             {
                 xtype: 'gridpanel',
@@ -193,6 +212,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                     _generateBudgetCfg('manual'),
                     {
                         text: '总计',
+                        align: 'center',
                         columns: [
                             {
                                 text: '预算',
@@ -227,11 +247,15 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                 title: '成本分析',
                 flex: 1,
                 store: costDiffSt,
-                columns: Ext.Array.push([{
-                    text: '项目',
-                    width: 50,
-                    align: 'center'
-                }], _generateBudgetCfg())
+                columns: [
+                    _generateDiffCfg('水电', 'elct'),
+                    _generateDiffCfg('泥工', 'plst'),
+                    _generateDiffCfg('木工', 'cpt'),
+                    _generateDiffCfg('油漆', 'pt'),
+                    _generateDiffCfg('力工', 'lb'),
+                    _generateDiffCfg('杂项', 'mscl'),
+                    _generateDiffCfg('合计', 'tt')
+                ]
             },
             {
                 xtype: 'panel',
