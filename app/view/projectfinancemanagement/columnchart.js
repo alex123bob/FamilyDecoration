@@ -8,6 +8,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ColumnChart', {
     defaults: {
 
     },
+    rootName: undefined, // colMan, colMat
     initComponent: function () {
         var me = this,
             st = Ext.create('FamilyDecoration.store.AnalyticTable', {
@@ -17,7 +18,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ColumnChart', {
                     url: './libs/api.php',
                     reader: {
                         type: 'json',
-                        root: 'column'
+                        root: me.rootName
                     },
                     extraParams: {
                         action: 'Project.financeReport'

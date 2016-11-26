@@ -276,11 +276,13 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                 items: [
                     {
                         xtype: 'projectfinancemanagement-columnchart',
-                        title: '人工'
+                        title: '人工',
+                        rootName: 'colMan'
                     },
                     {
                         xtype: 'projectfinancemanagement-columnchart',
-                        title: '主材'
+                        title: '主材',
+                        rootName: 'colMat'
                     },
                     {
                         xtype: 'projectfinancemanagement-piechart',
