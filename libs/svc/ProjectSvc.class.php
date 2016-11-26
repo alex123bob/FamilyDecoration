@@ -95,28 +95,7 @@ class ProjectSvc extends BaseSvc
 			//人力预算、实际-总计
 			$v['manualTotalBudget']            =isset($map[$projectId.'totalManPowerCost']) ? $map[$projectId.'totalManPowerCost'] : 0;
 			$v['manualTotalReality']           =$v['manualElectricReality']+$v['manualPlasterReality']+$v['manualCarpenterReality']+$v['manualPaintReality']+$v['manualMiscellaneousReality']+$v['manualLaborReality'];
-			
-			//计算差额。方便前端使用。
-			if($singleProjectQuery){
-				$v['elctMtDf'] = $v['materialElectricReality'] - $v['materialElectricBudget'];
-				$v['elctMpDf'] = $v['manualElectricReality'] - $v['manualElectricBudget'];
-				$v['plstMtDf'] = $v['materialPlasterReality'] - $v['materialPlasterBudget'];
-				$v['plstMpDf'] = $v['manualPlasterReality'] - $v['manualPlasterBudget'];
-				$v['cptMtDf']  = $v['materialCarpenterReality'] - $v['materialCarpenterBudget'];
-				$v['cptMpDf']  = $v['manualCarpenterReality'] - $v['manualCarpenterBudget'];
-				$v['ptMtDf']   = $v['materialPaintReality'] - $v['materialPaintBudget'];
-				$v['ptMpDf']   = $v['manualPaintReality'] - $v['manualPaintBudget'];
-				$v['msclMtDf'] = $v['materialMiscellaneousReality'] - $v['materialMiscellaneousBudget'];
-				$v['msclMpDf'] = $v['manualMiscellaneousReality'] - $v['manualMiscellaneousBudget'];
-				$v['lbMtDf']   = $v['materialLaborReality'] - $v['materialTotalBudget'];
-				$v['lbMpDf']   = $v['manualLaborReality'] - $v['manualLaborBudget'];
-				
-				$v['ttMtDf']   = $v['elctMtDf']+$v['plstMtDf']+$v['cptMtDf']+$v['ptMtDf']+$v['msclMtDf']+$v['lbMtDf'];
-				$v['ttMpDf']   = $v['elctMpDf']+$v['plstMpDf']+$v['cptMpDf']+$v['ptMpDf']+$v['msclMpDf']+$v['lbMpDf'];
-				$v['extra'] = '差额';
-			}
-			
-			
+
 			//所有预算成本总计
 			$v['totalBudget']= $v['manualTotalBudget'] + $v['materialTotalBudget'];
 			//所有实际成本总计
@@ -124,12 +103,30 @@ class ProjectSvc extends BaseSvc
 			$v['others']=0; //TODO
 			$v['status']='/';
 		}
-		//前端柱状图，饼状图使用。
+		//如果只查一个项目
 		if($singleProjectQuery){
-			$d = $data['data'][0];
+			$d = &$data['data'][0];
 			$total = $d['materialTotalReality']+$d['manualTotalReality']+$d['others'];
 			if($total == 0)
 				$total = 1;
+			//计算差额。方便前端使用。
+			$d['elctMtDf'] = $d['materialElectricReality'] - $d['materialElectricBudget'];
+			$d['elctMpDf'] = $d['manualElectricReality'] - $d['manualElectricBudget'];
+			$d['plstMtDf'] = $d['materialPlasterReality'] - $d['materialPlasterBudget'];
+			$d['plstMpDf'] = $d['manualPlasterReality'] - $d['manualPlasterBudget'];
+			$d['cptMtDf']  = $d['materialCarpenterReality'] - $d['materialCarpenterBudget'];
+			$d['cptMpDf']  = $d['manualCarpenterReality'] - $d['manualCarpenterBudget'];
+			$d['ptMtDf']   = $d['materialPaintReality'] - $d['materialPaintBudget'];
+			$d['ptMpDf']   = $d['manualPaintReality'] - $d['manualPaintBudget'];
+			$d['msclMtDf'] = $d['materialMiscellaneousReality'] - $d['materialMiscellaneousBudget'];
+			$d['msclMpDf'] = $d['manualMiscellaneousReality'] - $d['manualMiscellaneousBudget'];
+			$d['lbMtDf']   = $d['materialLaborReality'] - $d['materialTotalBudget'];
+			$d['lbMpDf']   = $d['manualLaborReality'] - $d['manualLaborBudget'];
+			
+			$d['ttMtDf']   = $d['elctMtDf']+$d['plstMtDf']+$d['cptMtDf']+$d['ptMtDf']+$d['msclMtDf']+$d['lbMtDf'];
+			$d['ttMpDf']   = $d['elctMpDf']+$d['plstMpDf']+$d['cptMpDf']+$d['ptMpDf']+$d['msclMpDf']+$d['lbMpDf'];
+			$d['extra'] = '差额';
+			//前端柱状图，饼状图使用。
 			$data['pie']=array(
 				array('costType'=>'材料','costPercent'=>round($d['materialTotalReality']/$total*100,2)),
 				array('costType'=>'人工','costPercent'=>round($d['manualTotalReality']/$total*100,2)),
