@@ -7,7 +7,7 @@ Ext.define('FamilyDecoration.model.SingleProfessionTypeBudgetTotalCostDifference
         {name: 'plstMtDf', type: 'string'},
         {name: 'plstMpDf', type: 'string'},
         {name: 'cptMtDf', type: 'string'},
-        {name: 'cpMpDf', type: 'string'},
+        {name: 'cptMpDf', type: 'string'},
         {name: 'ptMtDf', type: 'string'},
         {name: 'ptMpDf', type: 'string'},
         {name: 'lbMtDf', type: 'string'},
