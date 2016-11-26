@@ -33,10 +33,10 @@ class ProjectSvc extends BaseSvc
 		$data = $this->get($q);
 		//get all project ids
 		$projectIds = '';
-		$singleQuery = false;
+		$singleProjectQuery = false;
 		if(isset($q['projectId'])){
 			$projectIds = $q['projectId'];
-			$singleQuery = true;
+			$singleProjectQuery = true;
 		}else{
 			$projects = array();
 			foreach($data['data'] as $key => $value){
@@ -97,7 +97,7 @@ class ProjectSvc extends BaseSvc
 			$v['manualTotalReality']           =$v['manualElectricReality']+$v['manualPlasterReality']+$v['manualCarpenterReality']+$v['manualPaintReality']+$v['manualMiscellaneousReality']+$v['manualLaborReality'];
 			
 			//计算差额。方便前端使用。
-			if($singleQuery){
+			if($singleProjectQuery){
 				$v['elctMtDf'] = $v['materialElectricReality'] - $v['materialElectricBudget'];
 				$v['elctMpDf'] = $v['manualElectricReality'] - $v['manualElectricBudget'];
 				$v['plstMtDf'] = $v['materialPlasterReality'] - $v['materialPlasterBudget'];
@@ -121,8 +121,34 @@ class ProjectSvc extends BaseSvc
 			$v['totalBudget']= $v['manualTotalBudget'] + $v['materialTotalBudget'];
 			//所有实际成本总计
 			$v['totalReality']=$v['materialTotalReality'] + $v['manualTotalReality'];
-			$v['others']='/';
+			$v['others']=0; //TODO
 			$v['status']='/';
+		}
+		//前端柱状图，饼状图使用。
+		if($singleProjectQuery){
+			$d = $data['data'][0];
+			$total = $d['materialTotalReality']+$d['manualTotalReality']+$d['others'];
+			$data['pie']=array(
+				array('costType'=>'材料','costPercent'=>round($d['materialTotalReality']/$total*100,2)),
+				array('costType'=>'人工','costPercent'=>round($d['manualTotalReality']/$total*100,2)),
+				array('costType'=>'其他','costPercent'=>round($d['others']/$total*100,2))
+			);
+			$data['colMan']=array(
+				array('professionType'=>'水电','reality'=>$d['manualElectricReality'],'budget'=>$d['manualElectricBudget']),
+				array('professionType'=>'泥工','reality'=>$d['manualPlasterReality'],'budget'=>$d['manualPlasterBudget']),
+				array('professionType'=>'木工','reality'=>$d['manualCarpenterReality'],'budget'=>$d['manualCarpenterBudget']),
+				array('professionType'=>'油漆','reality'=>$d['manualPaintReality'],'budget'=>$d['manualPaintBudget']),
+				array('professionType'=>'力工','reality'=>$d['manualLaborReality'],'budget'=>$d['manualLaborBudget']),
+				array('professionType'=>'杂项','reality'=>$d['manualMiscellaneousReality'],'budget'=>$d['manualMiscellaneousBudget'])
+			);
+			$data['colMat']=array(
+				array('professionType'=>'水电','reality'=>$d['materialElectricReality'],'budget'=>$d['materialElectricBudget']),
+				array('professionType'=>'泥工','reality'=>$d['materialPlasterReality'],'budget'=>$d['materialPlasterBudget']),
+				array('professionType'=>'木工','reality'=>$d['materialCarpenterReality'],'budget'=>$d['materialCarpenterBudget']),
+				array('professionType'=>'油漆','reality'=>$d['materialPaintReality'],'budget'=>$d['materialPaintBudget']),
+				array('professionType'=>'力工','reality'=>$d['materialLaborReality'],'budget'=>$d['materialLaborBudget']),
+				array('professionType'=>'杂项','reality'=>$d['materialMiscellaneousReality'],'budget'=>$d['materialMiscellaneousBudget'])
+			);
 		}
 		return $data;
 	}
