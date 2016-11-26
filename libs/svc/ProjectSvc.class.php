@@ -100,7 +100,7 @@ class ProjectSvc extends BaseSvc
 			$v['plstMtDf'] = $v['materialPlasterReality'] - $v['materialPlasterBudget'];
 			$v['plstMpDf'] = $v['manualPlasterReality'] - $v['manualPlasterBudget'];
 			$v['cptMtDf']  = $v['materialCarpenterReality'] - $v['materialCarpenterBudget'];
-			$v['cpMpDf']   = $v['manualCarpenterReality'] - $v['manualCarpenterBudget'];
+			$v['cptMpDf']  = $v['manualCarpenterReality'] - $v['manualCarpenterBudget'];
 			$v['ptMtDf']   = $v['materialPaintReality'] - $v['materialPaintBudget'];
 			$v['ptMpDf']   = $v['manualPaintReality'] - $v['manualPaintBudget'];
 			$v['msclMtDf'] = $v['materialMiscellaneousReality'] - $v['materialMiscellaneousBudget'];
