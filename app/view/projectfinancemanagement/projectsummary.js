@@ -148,12 +148,12 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
             items: [
                 {
                     text: '项目经理',
-                    width: 100,
+                    width: 80,
                     dataIndex: 'captain'
                 },
                 {
                     text: '工程名称',
-                    width: 100,
+                    width: 130,
                     dataIndex: 'projectName'
                 },
                 {
