@@ -41,7 +41,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.PieChart', {
                 series: [
                     {
                         type: 'pie',
-                        field: 'costPercent',
+                        field: 'cost',
                         showInLegend: true,
                         donut: false,
                         tips: {
@@ -52,9 +52,9 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.PieChart', {
                                 //calculate percentage.
                                 var total = 0;
                                 st.each(function (rec) {
-                                    total += rec.get('costPercent');
+                                    total += rec.get('cost');
                                 });
-                                this.setTitle(storeItem.get('costType') + ': ' + Math.round(storeItem.get('costPercent') / total * 100) + '%');
+                                this.setTitle(storeItem.get('costType') + ': ' + Math.round(storeItem.get('cost') / total * 100) + '%');
                             }
                         },
                         highlight: {

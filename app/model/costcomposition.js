@@ -3,6 +3,6 @@ Ext.define('FamilyDecoration.model.CostComposition', {
     fields: [
         'id',
         {name: 'costType', type: 'string'},
-        {name: 'costPercent'}
+        {name: 'cost'}
     ]
 });
