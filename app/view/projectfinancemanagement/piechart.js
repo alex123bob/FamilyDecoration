@@ -45,6 +45,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.PieChart', {
                         field: 'cost',
                         showInLegend: true,
                         donut: false,
+                        colorSet: ['darkorange', 'skyblue', 'orangered'],
                         tips: {
                             trackMouse: true,
                             width: 140,

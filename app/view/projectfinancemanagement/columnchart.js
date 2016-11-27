@@ -14,6 +14,33 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ColumnChart', {
         var me = this,
             st = Ext.create('FamilyDecoration.store.AnalyticTable', {
                 autoLoad: true,
+                // data: [
+                //     {
+                //         reality: 1,
+                //         budget: 2,
+                //         professionType: '水电'
+                //     },
+                //     {
+                //         reality: 4,
+                //         budget: 5,
+                //         professionType: '泥工'
+                //     },
+                //     {
+                //         reality: 3.1,
+                //         budget: 2.2,
+                //         professionType: '木工'
+                //     },
+                //     {
+                //         reality: 1.2,
+                //         budget: 4,
+                //         professionType: '油漆'
+                //     },
+                //     {
+                //         reality: 4.3,
+                //         budget: 4,
+                //         professionType: '杂项'
+                //     }
+                // ],
                 proxy: {
                     type: 'rest',
                     url: './libs/api.php',
@@ -64,7 +91,15 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ColumnChart', {
                         axis: 'left',
                         xField: 'professionType',
                         yField: ['reality', 'budget'],
-                        title: ['实际', '预算']
+                        title: ['实际', '预算'],
+                        tips: {
+                            trackMouse: true,
+                            width: 140,
+                            height: 28,
+                            renderer: function (storeItem, item) {
+                                this.setTitle(item.value[0] + ': ' + item.value[1]);
+                            }
+                        },
                     }
                 ]
             }
