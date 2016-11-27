@@ -5,9 +5,11 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
         'FamilyDecoration.view.projectfinancemanagement.ColumnChart',
         'FamilyDecoration.view.projectfinancemanagement.PieChart',
         'FamilyDecoration.store.SingleProfessionTypeBudgetTotal',
-        'FamilyDecoration.store.SingleProfessionTypeBudgetTotalCostDifference'
+        'FamilyDecoration.store.SingleProfessionTypeBudgetTotalCostDifference',
+        'FamilyDecoration.store.SingleProfessionTypeBudgetTotalAnalysis'
     ],
-    layout: 'vbox',
+    // layout: 'vbox',
+    autoScroll: true,
     defaults: {
         width: '100%'
     },
@@ -23,8 +25,12 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
             costDiffSt = Ext.create('FamilyDecoration.store.SingleProfessionTypeBudgetTotalCostDifference', {
                 autoLoad: false
             }),
+            analysisSt = Ext.create('FamilyDecoration.store.SingleProfessionTypeBudgetTotalAnalysis', {
+                autoLoad: false
+            }),
             proxy = st.getProxy(),
-            costDiffProxy = costDiffSt.getProxy();
+            costDiffProxy = costDiffSt.getProxy(),
+            analysisProxy = analysisSt.getProxy();
         
         Ext.apply(proxy.extraParams, {
             action: 'Project.financeReport',
@@ -36,8 +42,14 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
             projectId: me.projectId
         });
 
+        Ext.apply(analysisProxy.extraParams, {
+            action: 'Project.financeReport',
+            projectId: me.projectId
+        });
+
         st.load();
         costDiffSt.load();
+        analysisSt.load();
 
         function _generateBudgetCfg(budgetType) {
             var columnArr = [
@@ -47,13 +59,13 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                     columns: [
                         {
                             text: '预算',
-                            align: 'center',
+                            align: 'right',
                             flex: 0.5,
                             dataIndex: budgetType + 'ElectricBudget'
                         },
                         {
                             text: '实际',
-                            align: 'center',
+                            align: 'right',
                             flex: 0.5,
                             dataIndex: budgetType + 'ElectricReality'
                         }
@@ -65,13 +77,13 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                     columns: [
                         {
                             text: '预算',
-                            align: 'center',
+                            align: 'right',
                             flex: 0.5,
                             dataIndex: budgetType + 'PlasterBudget'
                         },
                         {
                             text: '实际',
-                            align: 'center',
+                            align: 'right',
                             flex: 0.5,
                             dataIndex: budgetType + 'PlasterReality'
                         }
@@ -83,13 +95,13 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                     columns: [
                         {
                             text: '预算',
-                            align: 'center',
+                            align: 'right',
                             flex: 0.5,
                             dataIndex: budgetType + 'CarpenterBudget'
                         },
                         {
                             text: '实际',
-                            align: 'center',
+                            align: 'right',
                             flex: 0.5,
                             dataIndex: budgetType + 'CarpenterReality'
                         }
@@ -101,13 +113,13 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                     columns: [
                         {
                             text: '预算',
-                            align: 'center',
+                            align: 'right',
                             flex: 0.5,
                             dataIndex: budgetType + 'PaintBudget'
                         },
                         {
                             text: '实际',
-                            align: 'center',
+                            align: 'right',
                             flex: 0.5,
                             dataIndex: budgetType + 'PaintReality'
                         }
@@ -119,13 +131,13 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                     columns: [
                         {
                             text: '预算',
-                            align: 'center',
+                            align: 'right',
                             flex: 0.5,
                             dataIndex: budgetType + 'LaborBudget'
                         },
                         {
                             text: '实际',
-                            align: 'center',
+                            align: 'right',
                             flex: 0.5,
                             dataIndex: budgetType + 'LaborReality'
                         }
@@ -137,13 +149,13 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                     columns: [
                         {
                             text: '预算',
-                            align: 'center',
+                            align: 'right',
                             flex: 0.5,
                             dataIndex: budgetType + 'MiscellaneousBudget'
                         },
                         {
                             text: '实际',
-                            align: 'center',
+                            align: 'right',
                             flex: 0.5,
                             dataIndex: budgetType + 'MiscellaneousReality'
                         }
@@ -155,13 +167,13 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                     columns: [
                         {
                             text: '预算',
-                            align: 'center',
+                            align: 'right',
                             flex: 0.5,
                             dataIndex: budgetType + 'TotalBudget'
                         },
                         {
                             text: '实际',
-                            align: 'center',
+                            align: 'right',
                             flex: 0.5,
                             dataIndex: budgetType + 'TotalReality'
                         }
@@ -187,13 +199,13 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                 columns: [
                     {
                         text: '材料',
-                        align: 'center',
+                        align: 'right',
                         flex: 0.5,
                         dataIndex: typeName + 'MtDf'
                     },
                     {
                         text: '人工',
-                        align: 'center',
+                        align: 'right',
                         flex: 0.5,
                         dataIndex: typeName + 'MpDf'
                     }
@@ -204,7 +216,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
         me.items = [
             {
                 xtype: 'gridpanel',
-                flex: 1,
+                // flex: 1,
                 itemId: 'gridpanel-costAnalysisFirstGrid',
                 store: st,
                 columns: [
@@ -212,18 +224,18 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                     _generateBudgetCfg('manual'),
                     {
                         text: '总计',
-                        align: 'center',
+                        align: 'right',
                         columns: [
                             {
                                 text: '预算',
                                 flex: 0.5,
-                                align: 'center',
+                                align: 'right',
                                 dataIndex: 'totalBudget'
                             },
                             {
                                 text: '实际',
                                 flex: 0.5,
-                                align: 'center',
+                                align: 'right',
                                 dataIndex: 'totalReality'
                             }
                         ]
@@ -232,20 +244,20 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                         text: '其他', // 内部工资消耗
                         width: 50,
                         dataIndex: 'others',
-                        align: 'center'
+                        align: 'right'
                     },
                     {
                         text: '目前状态',
                         width: 100,
                         dataIndex: 'status',
-                        align: 'center'
+                        align: 'right'
                     }
                 ]
             },
             {
                 xtype: 'gridpanel',
                 title: '成本分析(实际-预算)',
-                flex: 1,
+                // flex: 1,
                 store: costDiffSt,
                 columns: [
                     {
@@ -268,7 +280,8 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                 title: '分析表',
                 layout: 'hbox',
                 header: false,
-                flex: 1.5,
+                // flex: 1.5,
+                height: 290,
                 defaults: {
                     height: '100%',
                     flex: 1
@@ -292,6 +305,92 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                         projectId: me.projectId
                     }
                 ]
+            },
+            {
+                xtype: 'gridpanel',
+                title: '解析',
+                height: 400,
+                autoScroll: true,
+                store: analysisSt,
+                columns: {
+                    defaults: {
+
+                    },
+                    items: [
+                        {
+                            text: '工种',
+                            align: 'center',
+                            flex: 1,
+                            dataIndex: 'professionType'
+                        },
+                        {
+                            text: '名称',
+                            align: 'center',
+                            flex: 1,
+                            dataIndex: 'name'
+                        },
+                        {
+                            text: '单位',
+                            align: 'center',
+                            flex: 1,
+                            dataIndex: 'unit'
+                        },
+                        {
+                            text: '实际',
+                            align: 'center',
+                            flex: 1,
+                            dataIndex: 'reality'
+                        },
+                        {
+                            text: '预算',
+                            align: 'center',
+                            flex: 1,
+                            dataIndex: 'budget'
+                        },
+                        {
+                            text: '所用材料',
+                            align: 'center',
+                            columns: [
+                                {
+                                    text: '名称',
+                                    flex: 0.5,
+                                    align: 'center',
+                                    dataIndex: 'matName'
+                                },
+                                {
+                                    text: '单位',
+                                    flex: 0.5,
+                                    align: 'center',
+                                    dataIndex: 'matUnit'
+                                },
+                                {
+                                    text: '数量',
+                                    align: 'center',
+                                    columns: [
+                                        {
+                                            text: '实际',
+                                            flex: 0.5,
+                                            align: 'center',
+                                            dataIndex: 'matRealNumber'
+                                        },
+                                        {
+                                            text: '预算',
+                                            flex: 0.5,
+                                            align: 'center',
+                                            dataIndex: 'matBudgetNumber'
+                                        }
+                                    ]
+                                },
+                                {
+                                    text: '供应商',
+                                    flex: 0.5,
+                                    align: 'center',
+                                    dataIndex: 'supplier'
+                                }
+                            ]
+                        }
+                    ]
+                }
             }
         ];
 
