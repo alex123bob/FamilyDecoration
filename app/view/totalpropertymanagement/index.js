@@ -2,7 +2,9 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.Index', {
     extend: 'Ext.tab.Panel',
     alias: 'widget.totalpropertymanagement-index',
     requires: [
-        'FamilyDecoration.view.totalpropertymanagement.DiaryBill'
+        'FamilyDecoration.view.totalpropertymanagement.DiaryBill',
+        'FamilyDecoration.view.totalpropertymanagement.FinanceAggregation',
+        'FamilyDecoration.view.totalpropertymanagement.FinanceAnalysis'
     ],
     defaults: {
     },
@@ -15,10 +17,10 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.Index', {
                 xtype: 'totalpropertymanagement-diarybill'
             },
             {
-                title: '财务分析'
+                xtype: 'totalpropertymanagement-financeanalysis'
             },
             {
-                title: '财物汇总'
+                xtype: 'totalpropertymanagement-financeaggregation'
             },
             {
                 title: '各类报表'

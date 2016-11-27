@@ -8,6 +8,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
     defaults: {
         width: '100%'
     },
+    needBankAccount: false,
 
     initComponent: function () {
         var me = this;
@@ -128,7 +129,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                     }
                 ]
             },
-            {
+            me.needBankAccount ? {
                 xtype: 'fieldcontainer',
                 flex: 1,
                 layout: 'hbox',
@@ -153,7 +154,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                         }
                     }
                 ]
-            },
+            } : undefined,
         ];
         
         this.callParent();

@@ -19,7 +19,8 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                 xtype: 'gridpanel',
                 dockedItems: [
                     {
-                        xtype: 'totalpropertymanagement-datefilter'
+                        xtype: 'totalpropertymanagement-datefilter',
+                        needBankAccount: true
                     }
                 ],
                 _getBtns: function (){
