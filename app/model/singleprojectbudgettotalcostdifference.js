@@ -1,4 +1,4 @@
-Ext.define('FamilyDecoration.model.SingleProfessionTypeBudgetTotalCostDifference', {
+Ext.define('FamilyDecoration.model.SingleProjectBudgetTotalCostDifference', {
     extend: 'Ext.data.Model',
     fields: [
         'id',

@@ -1,6 +1,6 @@
-Ext.define('FamilyDecoration.store.SingleProfessionTypeBudgetTotalAnalysis', {
+Ext.define('FamilyDecoration.store.SingleProjectBudgetTotalCostDifference', {
     extend: 'Ext.data.Store',
-    model: 'FamilyDecoration.model.SingleProfessionTypeBudgetTotalAnalysis',
+    model: 'FamilyDecoration.model.SingleProjectBudgetTotalCostDifference',
     proxy: {
         type: 'rest',
         url: './libs/api.php',

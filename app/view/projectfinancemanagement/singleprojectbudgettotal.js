@@ -1,12 +1,11 @@
-Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeBudgetTotal', {
+Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProjectBudgetTotal', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.projectfinancemanagement-SingleProfessionTypeBudgetTotal',
+    alias: 'widget.projectfinancemanagement-singleprojectbudgettotal',
     requires: [
         'FamilyDecoration.view.projectfinancemanagement.ColumnChart',
         'FamilyDecoration.view.projectfinancemanagement.PieChart',
-        'FamilyDecoration.store.SingleProfessionTypeBudgetTotal',
-        'FamilyDecoration.store.SingleProfessionTypeBudgetTotalCostDifference',
-        'FamilyDecoration.store.SingleProfessionTypeBudgetTotalAnalysis'
+        'FamilyDecoration.store.SingleProjectBudgetTotal',
+        'FamilyDecoration.store.SingleProjectBudgetTotalCostDifference'
     ],
     // layout: 'vbox',
     autoScroll: true,
@@ -19,18 +18,14 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
     initComponent: function () {
         var me = this,
             cfg,
-            st = Ext.create('FamilyDecoration.store.SingleProfessionTypeBudgetTotal', {
+            st = Ext.create('FamilyDecoration.store.SingleProjectBudgetTotal', {
                 autoLoad: false
             }),
-            costDiffSt = Ext.create('FamilyDecoration.store.SingleProfessionTypeBudgetTotalCostDifference', {
-                autoLoad: false
-            }),
-            analysisSt = Ext.create('FamilyDecoration.store.SingleProfessionTypeBudgetTotalAnalysis', {
+            costDiffSt = Ext.create('FamilyDecoration.store.SingleProjectBudgetTotalCostDifference', {
                 autoLoad: false
             }),
             proxy = st.getProxy(),
-            costDiffProxy = costDiffSt.getProxy(),
-            analysisProxy = analysisSt.getProxy();
+            costDiffProxy = costDiffSt.getProxy();
         
         Ext.apply(proxy.extraParams, {
             action: 'Project.financeReport',
@@ -42,14 +37,8 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
             projectId: me.projectId
         });
 
-        Ext.apply(analysisProxy.extraParams, {
-            action: 'Project.financeReport',
-            projectId: me.projectId
-        });
-
         st.load();
         costDiffSt.load();
-        analysisSt.load();
 
         function _generateBudgetCfg(budgetType) {
             var columnArr = [
@@ -213,6 +202,81 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
             }
         }
 
+        function _generateAnalysisPanel (professionTypeTitle, professionType) {
+            function _generateGrid (title, type){
+                var st = Ext.create('Ext.data.Store', {
+                    fields: ['name', 'unit', 'amount', 'price', 'totalPrice'],
+                    proxy: {
+                        type: 'rest',
+                        url: './libs/api.php',
+                        extraParams: {
+                            action: 'Project.getAnalysisDetail',
+                            projectId: me.projectId,
+                            professionType: professionType,
+                            type: type
+                        }
+                    },
+                    autoLoad: true
+                })
+                return {
+                    header: {
+                        title: title,
+                        padding: 1
+                    },
+                    margin: '0 1 0 0',
+                    store: st,
+                    columns: {
+                        defaults: {
+                            align: 'center',
+                            flex: 1
+                        },
+                        items: [
+                            {
+                                text: '名称',
+                                dataIndex: 'name'
+                            },
+                            {
+                                text: '单位',
+                                dataIndex: 'unit'
+                            },
+                            {
+                                text: '数量',
+                                dataIndex: 'amount'
+                            },
+                            {
+                                text: '单价',
+                                dataIndex: 'price'
+                            },
+                            {
+                                text: '总价',
+                                dataIndex: 'totalPrice'
+                            }
+                        ]
+                    }
+                }
+            }
+            return {
+                xtype: 'panel',
+                header: {
+                    title: professionTypeTitle,
+                    padding: 2
+                },
+                height: 300,
+                layout: 'hbox',
+                defaults: {
+                    height: '100%',
+                    xtype: 'gridpanel',
+                    flex: 1
+                },
+                items: [
+                    _generateGrid('人力预算', 'manpowerBudget'),
+                    _generateGrid('人力实际', 'manpowerReality'),
+                    _generateGrid('材料预算', 'materialBudget'),
+                    _generateGrid('材料实际', 'materialReality')
+                ]
+            };
+        }
+
         me.items = [
             {
                 xtype: 'gridpanel',
@@ -306,92 +370,9 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                     }
                 ]
             },
-            {
-                xtype: 'gridpanel',
-                title: '解析',
-                height: 400,
-                autoScroll: true,
-                store: analysisSt,
-                columns: {
-                    defaults: {
-
-                    },
-                    items: [
-                        {
-                            text: '工种',
-                            align: 'center',
-                            flex: 1,
-                            dataIndex: 'professionType'
-                        },
-                        {
-                            text: '名称',
-                            align: 'center',
-                            flex: 1,
-                            dataIndex: 'name'
-                        },
-                        {
-                            text: '单位',
-                            align: 'center',
-                            flex: 1,
-                            dataIndex: 'unit'
-                        },
-                        {
-                            text: '实际',
-                            align: 'center',
-                            flex: 1,
-                            dataIndex: 'reality'
-                        },
-                        {
-                            text: '预算',
-                            align: 'center',
-                            flex: 1,
-                            dataIndex: 'budget'
-                        },
-                        {
-                            text: '所用材料',
-                            align: 'center',
-                            columns: [
-                                {
-                                    text: '名称',
-                                    flex: 0.5,
-                                    align: 'center',
-                                    dataIndex: 'matName'
-                                },
-                                {
-                                    text: '单位',
-                                    flex: 0.5,
-                                    align: 'center',
-                                    dataIndex: 'matUnit'
-                                },
-                                {
-                                    text: '数量',
-                                    align: 'center',
-                                    columns: [
-                                        {
-                                            text: '实际',
-                                            flex: 0.5,
-                                            align: 'center',
-                                            dataIndex: 'matRealNumber'
-                                        },
-                                        {
-                                            text: '预算',
-                                            flex: 0.5,
-                                            align: 'center',
-                                            dataIndex: 'matBudgetNumber'
-                                        }
-                                    ]
-                                },
-                                {
-                                    text: '供应商',
-                                    flex: 0.5,
-                                    align: 'center',
-                                    dataIndex: 'supplier'
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
+            _generateAnalysisPanel('水电', '004'),
+            _generateAnalysisPanel('泥工', '001'),
+            _generateAnalysisPanel('木工', '002')
         ];
 
         this.callParent();

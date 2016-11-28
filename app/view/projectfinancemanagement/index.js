@@ -6,7 +6,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.Index', {
         'FamilyDecoration.store.WorkCategory',
         'FamilyDecoration.view.projectfinancemanagement.ProjectSummary',
         'FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeBudget',
-        'FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeBudgetTotal'
+        'FamilyDecoration.view.projectfinancemanagement.SingleProjectBudgetTotal'
     ],
     // autoScroll: true,
     layout: 'hbox',
@@ -88,7 +88,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.Index', {
             },
             {
                 xtype: 'gridpanel',
-                width: 100,
+                width: 60,
                 title: '项目',
                 hidden: true,
                 hideHeaders: true,
@@ -129,8 +129,8 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.Index', {
                             item = resObj.summaryCt.items.items[0];
                         if (resObj.projectCategoryItem) {
                             singleProfessionBudgetTotalGrid = Ext.create(
-                                'FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeBudget' 
-                                    + (resObj.projectCategoryItem.get('value') == '0000' ? 'Total' : ''), {
+                                'FamilyDecoration.view.projectfinancemanagement.' 
+                                    + (resObj.projectCategoryItem.get('value') == '0000' ? 'SingleProjectBudgetTotal' : 'SingleProfessionTypeBudget'), {
                                 professionType: resObj.projectCategoryItem.get('value'),
                                 projectId: resObj.project.getId()
                             });
@@ -146,7 +146,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.Index', {
             {
                 xtype: 'container',
                 itemId: 'container-summary',
-                flex: 4,
+                flex: 6,
                 layout: 'fit'
             }
         ];

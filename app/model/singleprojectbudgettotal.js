@@ -1,4 +1,4 @@
-Ext.define('FamilyDecoration.model.SingleProfessionTypeBudgetTotal', {
+Ext.define('FamilyDecoration.model.SingleProjectBudgetTotal', {
     extend: 'Ext.data.Model',
     fields: [
         'id',
