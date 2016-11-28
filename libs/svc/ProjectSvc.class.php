@@ -250,7 +250,7 @@ class ProjectSvc extends BaseSvc
 		//实际人工成本
 		$sql3 = "select d.billItemName as name,d.unit,d.amount,d.unitPrice as price,round(d.unitPrice*d.amount,2) as totalPrice
 				from statement_bill_item d left join statement_bill s on s.id = d.billId 
-				where s.isDeleted = 'false' and d.isDeleted = 'false' and s.billType in ('reg','ppd','qgd') and s.projectId = '?' and d.professionType = '?' order by name desc;";
+				where s.isDeleted = 'false' and d.isDeleted = 'false' and s.billType in ('reg','ppd','qgd') and s.projectId = '?' and s.professionType = '?' order by name desc;";
 		//实际材料成本
 		$sql4 = "SELECT i.billItemName as name,i.unit,i.amount,i.unitPrice as price,round(i.unitPrice*i.amount,2) as totalPrice
 				FROM supplier_order_item i LEFT JOIN supplier_order o ON o.id = i.supplierId
