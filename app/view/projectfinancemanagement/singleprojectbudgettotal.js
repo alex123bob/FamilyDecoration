@@ -305,8 +305,8 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProjectBudgetTo
                         flex: 1
                     },
                     items: [
-                        _generateGrid('人力预算(详细)', 'manpowerBudget'),
-                        _generateGrid('人力实际(详细)', 'manpowerReality')
+                        _generateGrid('材料预算(详细)', 'materialBudget'),
+                        _generateGrid('材料实际(详细)', 'materialReality')
                     ]
                 }
             ];
