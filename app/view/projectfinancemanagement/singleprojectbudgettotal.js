@@ -259,7 +259,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProjectBudgetTo
                     }
                 }
             }
-            return {
+            var paneConfig = {
                 xtype: 'panel',
                 header: {
                     title: professionTypeTitle,
@@ -273,15 +273,46 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProjectBudgetTo
                     flex: 1
                 },
                 items: [
-                    _generateGrid('人力预算', 'manpowerBudget'),
-                    _generateGrid('人力实际', 'manpowerReality'),
-                    _generateGrid('材料预算', 'materialBudget'),
-                    _generateGrid('材料实际', 'materialReality')
                 ]
             };
+            return [
+                {
+                    xtype: 'panel',
+                    header: {
+                        title: professionTypeTitle,
+                        padding: 2
+                    },
+                    height: 300,
+                    layout: 'hbox',
+                    defaults: {
+                        height: '100%',
+                        xtype: 'gridpanel',
+                        flex: 1
+                    },
+                    items: [
+                        _generateGrid('人力预算(详细)', 'manpowerBudget'),
+                        _generateGrid('人力实际(详细)', 'manpowerReality')
+                    ]
+                },
+                {
+                    xtype: 'panel',
+                    header: false,
+                    height: 300,
+                    layout: 'hbox',
+                    defaults: {
+                        height: '100%',
+                        xtype: 'gridpanel',
+                        flex: 1
+                    },
+                    items: [
+                        _generateGrid('人力预算(详细)', 'manpowerBudget'),
+                        _generateGrid('人力实际(详细)', 'manpowerReality')
+                    ]
+                }
+            ];
         }
 
-        me.items = [
+        var items = [
             {
                 xtype: 'gridpanel',
                 // flex: 1,
@@ -373,11 +404,14 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProjectBudgetTo
                         projectId: me.projectId
                     }
                 ]
-            },
-            _generateAnalysisPanel('水电', '0004'),
+            }
+        ];
+
+        me.items = items.concat(
+            _generateAnalysisPanel('水电', '0004'), 
             _generateAnalysisPanel('泥工', '0001'),
             _generateAnalysisPanel('木工', '0002')
-        ];
+        );
 
         this.callParent();
     }
