@@ -232,6 +232,17 @@ class ProjectSvc extends BaseSvc
 		*/
 		return $map;
 	}
+	
+	function getAnayliseDetail($q){
+		$a = $q['professionType'];
+		$projectId = $q['projectId'];
+		$type = $q['type'];
+		return array(
+			array('name'=>'xxx','unit'=>'米','price'=>3,'amount'=>5,'total'=>15),
+			array('name'=>'xxx','unit'=>'米','price'=>3,'amount'=>5,'total'=>15),
+			array('name'=>'xxx','unit'=>'米','price'=>3,'amount'=>5,'total'=>15)
+		);
+	}
 }
 
 ?>
