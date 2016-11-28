@@ -233,15 +233,38 @@ class ProjectSvc extends BaseSvc
 		return $map;
 	}
 	
-	function getAnayliseDetail($q){
-		$a = $q['professionType'];
+	function getAnalysisDetail($q){
+		global $mysql;
+		$professionType = $q['professionType'];
 		$projectId = $q['projectId'];
-		$type = $q['type'];
-		return array(
-			array('name'=>'xxx','unit'=>'米','price'=>3,'amount'=>5,'total'=>15),
-			array('name'=>'xxx','unit'=>'米','price'=>3,'amount'=>5,'total'=>15),
-			array('name'=>'xxx','unit'=>'米','price'=>3,'amount'=>5,'total'=>15)
-		);
+		$type = strtolower($q['type']);
+		//预算人工成本
+		$sql1 = "SELECT i.itemName as name,i.itemUnit as unit,i.manpowerCost as price,i.itemAmount as amount,i.manpowerCost*i.itemAmount as totalPrice
+				 FROM budget b LEFT JOIN budget_item i ON i.budgetId = b.budgetId
+				 WHERE b.isDeleted = 'false' AND i.isDeleted = 'false' AND b.projectId IS NOT NULL AND i.workCategory IS NOT NULL and i.itemAmount > 0 and b.projectId = '?' and i.workCategory = '?' ";
+		//预算材料成本
+		$sql2 = "SELECT i.itemName as name,i.itemUnit as unit,i.mainMaterialCost as price,i.itemAmount as amount,i.mainMaterialCost*i.itemAmount as totalPrice
+				 FROM budget b LEFT JOIN budget_item i ON i.budgetId = b.budgetId
+				 WHERE b.isDeleted = 'false' AND i.isDeleted = 'false' AND b.projectId IS NOT NULL AND i.workCategory IS NOT NULL and i.itemAmount > 0 and b.projectId = '?' and i.workCategory = '?' ";
+		//实际人工成本
+		$sql3 = "select d.billItemName as name,d.unit,d.amount,d.unitPrice as price,d.unitPrice*d.amount as totalPrice
+				from statement_bill_item d left join statement_bill s on s.id = d.billId 
+				where s.isDeleted = 'false' and d.isDeleted = 'false' and s.billType in ('reg','ppd','qgd') and s.projectId = '?' and d.professionType = '?';";
+		//实际材料成本
+		$sql4 = "SELECT i.billItemName as name,i.unit,i.amount,i.unitPrice as price,i.unitPrice*i.amount as totalPrice
+				FROM supplier_order_item i LEFT JOIN supplier_order o ON o.id = i.supplierId
+				WHERE o.isDeleted = 'false' AND i.isDeleted = 'false' and o.projectId = '?' and i.professionType = '?'";
+		$sql = "";
+		switch($type){
+			case "manpowerbudget": $sql = $sql1; break;
+			case "materialbudget": $sql = $sql2; break;
+			case "manpowerreality":$sql = $sql3; break;
+			case "materialreality":$sql = $sql4; break;
+			default : throw new Exception("unknow type $type , must be one of [manpower/material][budget/reality]");
+		}
+		
+		$data = $mysql->DBGetAsMap($sql,$projectId,$professionType);
+		return $data;
 	}
 }
 
