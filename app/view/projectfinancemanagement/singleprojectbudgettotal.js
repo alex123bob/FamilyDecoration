@@ -370,9 +370,9 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProjectBudgetTo
                     }
                 ]
             },
-            _generateAnalysisPanel('水电', '004'),
-            _generateAnalysisPanel('泥工', '001'),
-            _generateAnalysisPanel('木工', '002')
+            _generateAnalysisPanel('水电', '0004'),
+            _generateAnalysisPanel('泥工', '0001'),
+            _generateAnalysisPanel('木工', '0002')
         ];
 
         this.callParent();
