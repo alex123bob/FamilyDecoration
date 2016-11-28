@@ -265,7 +265,7 @@ class ProjectSvc extends BaseSvc
 		}
 		
 		$data = $mysql->DBGetAsMap($sql,$projectId,$professionType);
-		return $data;
+		return array("status"=>"successful","errMsg":"",'data'=>$data);
 	}
 }
 
