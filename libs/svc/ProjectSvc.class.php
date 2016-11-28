@@ -233,6 +233,7 @@ class ProjectSvc extends BaseSvc
 		return $map;
 	}
 	
+	//工程财务管理--某一项目--合计--解析部分
 	function getAnalysisDetail($q){
 		global $mysql;
 		$professionType = $q['professionType'];
