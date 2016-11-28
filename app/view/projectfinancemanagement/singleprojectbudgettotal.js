@@ -214,6 +214,10 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProjectBudgetTo
                             projectId: me.projectId,
                             professionType: professionType,
                             type: type
+                        },
+                        reader: {
+                            root: 'data',
+                            type: 'json'
                         }
                     },
                     autoLoad: true
