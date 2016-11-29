@@ -64,11 +64,37 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                         },
                         {
                             text: '申领金额',
-                            dataIndex: 'claimAmount'
+                            dataIndex: 'claimAmount',
+                            renderer: function (val, meta, rec){
+                                if (!rec.raw.claimAmount) {
+                                    if (rec.raw.claimAmount !== 0) {
+                                        return '';
+                                    }
+                                    else {
+                                        return val;
+                                    }
+                                }
+                                else {
+                                    return val;
+                                }
+                            }
                         },
                         {
                             text: '实付金额',
-                            dataIndex: 'paidAmount'
+                            dataIndex: 'paidAmount',
+                            renderer: function (val, meta, rec){
+                                if (!rec.raw.paidAmount) {
+                                    if (rec.raw.paidAmount !== 0) {
+                                        return '';
+                                    }
+                                    else {
+                                        return val;
+                                    }
+                                }
+                                else {
+                                    return val;
+                                }
+                            }
                         },
                         {
                             text: '订购单',
