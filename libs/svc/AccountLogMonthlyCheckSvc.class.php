@@ -65,7 +65,7 @@ class AccountLogMonthlyCheckSvc extends BaseSvc
 			'@balance'=>$balance,
 			'@accountId'=>$accountId,
 			'@checkMonth'=>$month
-		));
+		))['data'];
 	}
 	
 	public function markChecked($q){
