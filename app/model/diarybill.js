@@ -6,7 +6,6 @@ Ext.define('FamilyDecoration.model.DiaryBill', {
         'income',
         'outcome',
         'balance',
-        {name: 'detail', type: 'string'},
         {name: 'checker', type: 'string'}
     ],
     idProperty: 'id'

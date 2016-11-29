@@ -79,22 +79,28 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                     },
                     items: [
                         {
-                            text: '月份'
+                            text: '月份',
+                            dataIndex: 'checkMonth'
                         },
                         {
-                            text: '月出账'
+                            text: '月出账',
+                            dataIndex: 'outcome'
                         },
                         {
-                            text: '月入账'
+                            text: '月入账',
+                            dataIndex: 'income'
                         },
                         {
-                            text: '账户余额'
+                            text: '账户余额',
+                            dataIndex: 'balance'
                         },
                         {
-                            text: '明细'
+                            text: '明细',
+                            dataIndex: 'id'
                         },
                         {
-                            text: '核对人'
+                            text: '核对人',
+                            dataIndex: 'checker'
                         }
                     ]
                 }
