@@ -2,13 +2,15 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
     extend: 'Ext.toolbar.Toolbar',
     alias: 'widget.totalpropertymanagement-datefilter',
     requires: [
-        'FamilyDecoration.store.Account'
+        'FamilyDecoration.store.Account',
+        'Ext.form.field.Month'
     ],
     layout: 'vbox',
     defaults: {
         width: '100%'
     },
     needBankAccount: false,
+    filterFunc: Ext.emptyFn,
 
     initComponent: function () {
         var me = this;
@@ -70,17 +72,14 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                 itemId: 'dateCt',
                 items: [
                     {
-                        xtype: 'datefield',
+                        xtype: 'monthfield',
                         flex: 1,
                         editable: false,
                         name: 'startTime',
                         itemId: 'startTime',
                         emptyText: '开始时间',
-                        cleanBtn: true,
-                        cleanHandler: function () {
-                            var resObj = _getRes();
-                            resObj.endTime.isValid();
-                        },
+                        format: 'F, Y',
+                        submitFormat: 'Y-m-d',
                         validator: function (val) {
                             var resObj = _getRes();
                             if (val && resObj.endTime.getValue()) {
@@ -96,20 +95,22 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                             else {
                                 return true;
                             }
+                        },
+                        listeners: {
+                            change: function (cmp, newVal, oldVal, opts){
+                                console.log(newVal, oldVal);
+                            }
                         }
                     },
                     {
-                        xtype: 'datefield',
+                        xtype: 'monthfield',
                         flex: 1,
                         editable: false,
                         emptyText: '结束时间',
                         name: 'endTime',
                         itemId: 'endTime',
-                        cleanBtn: true,
-                        cleanHandler: function () {
-                            var resObj = _getRes();
-                            resObj.startTime.isValid();
-                        },
+                        format: 'F, Y',
+                        submitFormat: 'Y-m-d',
                         validator: function (val) {
                             var resObj = _getRes();
                             if (val && resObj.startTime.getValue()) {
@@ -124,6 +125,11 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                             }
                             else {
                                 return true;
+                            }
+                        },
+                        listeners: {
+                            change: function (cmp, newVal, oldVal, opts){
+                                console.log(newVal, oldVal);
                             }
                         }
                     }

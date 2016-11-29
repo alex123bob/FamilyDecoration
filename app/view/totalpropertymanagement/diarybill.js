@@ -2,7 +2,8 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.totalpropertymanagement-diarybill',
     requires: [
-        'FamilyDecoration.view.totalpropertymanagement.DateFilter'
+        'FamilyDecoration.view.totalpropertymanagement.DateFilter',
+        'FamilyDecoration.store.DiaryBill'
     ],
     layout: 'vbox',
     defaults: {
@@ -11,7 +12,11 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
     title: '日记账',
 
     initComponent: function () {
-        var me = this;
+        var me = this,
+            diarybillSt = Ext.create('FamilyDecoration.store.DiaryBill', {
+                autoLoad: false
+            });
+
 
         me.items = [
             {
@@ -20,9 +25,13 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                 dockedItems: [
                     {
                         xtype: 'totalpropertymanagement-datefilter',
-                        needBankAccount: true
+                        needBankAccount: true,
+                        filterFunc: function (startTime, endTime){
+                            
+                        }
                     }
                 ],
+                store: diarybillSt,
                 _getBtns: function (){
 					var bbar = this.getDockedItems('toolbar[dock="bottom"]')[0];
 					return {
