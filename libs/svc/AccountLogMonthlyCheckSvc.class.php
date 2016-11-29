@@ -42,6 +42,8 @@ class AccountLogMonthlyCheckSvc extends BaseSvc
 		}
 		$data = array();
 		for($i=$numStartTime;$i<=$numEndTime;$i++){
+			if(((int)$i%100)>12 || ((int)$i%100)==0)
+				continue;
 			$value = isset($dataMapCheckMonthAsKey[$i]) ? $dataMapCheckMonthAsKey[$i] : $this->generateMonthData($i,$accountId);
 			array_push($data,$value);
 		}
