@@ -267,6 +267,32 @@ class ProjectSvc extends BaseSvc
 		$data = $mysql->DBGetAsMap($sql,$projectId,$professionType);
 		return array("status"=>"successful","errMsg"=>"",'data'=>$data);
 	}
+	
+	//工程财务管理--某一项目--单工种成本--人工成本
+	function getProjectManPowerCost($q){
+		global $mysql;
+		$professionType = $q['professionType'];
+		$projectId = $q['projectId'];
+		//实际人工成本
+		$sql = "select payee,id,claimAmount,paidAmount,status from statement_bill "
+			  ."where billType in ('reg','ppd','qgd') and isDeleted = 'false' and projectId = '?' and professionType = '?' order by name desc;"
+		$data = $mysql->DBGetAsMap($sql,$projectId,$professionType);
+		return array("status"=>"successful","errMsg"=>"",'data'=>$data);
+	}
+	
+	//工程财务管理--某一项目--单工种成本--材料成本
+	function getProjectMaterialCost($q){
+		global $mysql;
+		$professionType = $q['professionType'];
+		$projectId = $q['projectId'];
+		//实际材料成本
+		$sql = "select i.supplierId,i.billItemName as name,i.amount,i.unit,i.unitPrice,round(i.amount*i.unitPrice,2) as totalPrice,s.name,i.createTime from supplier_order_item i "
+				."left join supplier s on i.supplierId = s.id "
+				."left join supplier_order o on o.supplierId = i.supplierId "
+				."where s.isDeleted = 'false' and i.isDeleted = 'false' and o.isDeleted = 'false' and o.projectId = '?' and i.professionType = '?' order by name desc";
+		$data = $mysql->DBGetAsMap($sql,$projectId,$professionType);
+		return array("status"=>"successful","errMsg"=>"",'data'=>$data);
+	}
 }
 
 ?>
