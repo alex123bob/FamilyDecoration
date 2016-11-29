@@ -275,7 +275,7 @@ class ProjectSvc extends BaseSvc
 		$projectId = $q['projectId'];
 		//实际人工成本
 		$sql = "select payee,id,claimAmount,paidAmount,status from statement_bill "
-			  ."where billType in ('reg','ppd','qgd') and isDeleted = 'false' and projectId = '?' and professionType = '?' order by name desc;"
+			  ."where billType in ('reg','ppd','qgd') and isDeleted = 'false' and projectId = '?' and professionType = '?' order by payee desc;";
 		$data = $mysql->DBGetAsMap($sql,$projectId,$professionType);
 		return array("status"=>"successful","errMsg"=>"",'data'=>$data);
 	}
@@ -286,7 +286,7 @@ class ProjectSvc extends BaseSvc
 		$professionType = $q['professionType'];
 		$projectId = $q['projectId'];
 		//实际材料成本
-		$sql = "select o.id,i.billItemName as name,i.amount,i.unit,i.unitPrice,round(i.amount*i.unitPrice,2) as totalPrice,s.supplierName,i.createTime from supplier_order_item i "
+		$sql = "select o.id,i.billItemName as name,i.amount,i.unit,i.unitPrice,round(i.amount*i.unitPrice,2) as totalPrice,s.name as suppierName,i.createTime from supplier_order_item i "
 				."left join supplier s on i.supplierId = s.id "
 				."left join supplier_order o on o.supplierId = i.supplierId "
 				."where s.isDeleted = 'false' and i.isDeleted = 'false' and o.isDeleted = 'false' and o.projectId = '?' and i.professionType = '?' order by name desc";
