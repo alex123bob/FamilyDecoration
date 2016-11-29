@@ -48,7 +48,7 @@ class AccountLogMonthlyCheckSvc extends BaseSvc
 		return $data;
 	}
 	
-	public function generateMonthData($month,$accountId){
+	private function generateMonthData($month,$accountId){
 		$sql1 = "select ifnull(sum(amount),0) as income from account_log where type = 'in' and accountId = '?' and replace(left(createTime,7),'-','') = '?' and isDeleted = 'false' ";
 		$sql2 = "select ifnull(sum(amount),0) as outcome from account_log where type = 'out' and accountId = '?' and replace(left(createTime,7),'-','') = '?' and isDeleted = 'false' ";
 		$sql3 = "select balance from account_log where accountId = '?' and isDeleted = 'false' and replace(left(createTime,7),'-','') = '?' order by createTime desc limit 1 offset 0";
