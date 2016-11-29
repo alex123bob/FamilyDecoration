@@ -19,6 +19,7 @@
 		"salary"=>array('id','period','payee','basicSalary','positionSalary','meritSalary','socialTax','balance','amount','paidTime','payer','status'),
 		"account"=>array('id','name','accountType','balance'),
 		"account_log"=>array('id','accountId','type','amount','balance','refId','refType','operator','desc'),
+		"account_log_monthly_check"=>array('id','accountId','checkMonth','income','outcome','balance','checker','status'),
 		"loan"=>array('id','relevantId','type','projectName','bankName','assignee','mobile','amount','dealer','dealTime','interest','period','loanTime','status'),
 		"upload_files"=>array('id','refType','refId','name','path','size','type','desc','other','uploader'),
 		"business_goal"=>array('id','user','c1','c2','c3','c4','targetMonth'),
