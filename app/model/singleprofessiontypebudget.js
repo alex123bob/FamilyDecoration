@@ -2,6 +2,7 @@ Ext.define('FamilyDecoration.model.SingleProfessionTypeBudget', {
     extend: 'Ext.data.Model',
     fields: [
         'id',
+        'orderId',
         {name: 'name', type: 'string'},
         {name: 'amount', type: 'string'},
         {name: 'unit', type: 'string'},

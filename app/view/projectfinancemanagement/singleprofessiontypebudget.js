@@ -71,8 +71,18 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                             dataIndex: 'paidAmount'
                         },
                         {
-                            text: '单据',
-                            dataIndex: 'id'
+                            text: '订购单',
+                            xtype: 'actioncolumn',
+                            items: [
+                                {
+                                    tooltip: '点击查看订单',
+                                    icon: 'resources/img/material_order_sheet.png',
+                                    handler: function (grid, rowIndex, colIndex) {
+                                        var rec = grid.getStore().getAt(rowIndex);
+                                        var win = window.open('./fpdf/statement_bill.php?id=' + rec.getId(), '预览', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+                                    }
+                                }
+                            ]
                         }
                     ]
                 }
@@ -89,51 +99,35 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProfessionTypeB
                     items: [
                         {
                             text: '序号',
-                            dataIndex: 'id',
-                            flex: 1,
-                            align: 'center'
+                            dataIndex: 'orderId'
                         },
                         {
                             text: '名称',
-                            dataIndex: 'name',
-                            flex: 1,
-                            align: 'center'
+                            dataIndex: 'name'
                         },
                         {
                             text: '数量',
-                            dataIndex: 'amount',
-                            flex: 1,
-                            align: 'center'
+                            dataIndex: 'amount'
                         },
                         {
                             text: '单位',
-                            dataIndex: 'unit',
-                            flex: 1,
-                            align: 'center'
+                            dataIndex: 'unit'
                         },
                         {
                             text: '单价',
-                            dataIndex: 'unitPrice',
-                            flex: 1,
-                            align: 'center'
+                            dataIndex: 'unitPrice'
                         },
                         {
                             text: '总价',
-                            dataIndex: 'totalPrice',
-                            flex: 1,
-                            align: 'center'
+                            dataIndex: 'totalPrice'
                         },
                         {
                             text: '供货商',
-                            dataIndex: 'supplierName',
-                            flex: 1,
-                            align: 'center'
+                            dataIndex: 'supplierName'
                         },
                         {
                             text: '日期',
-                            dataIndex: 'createTime',
-                            flex: 1,
-                            align: 'center'
+                            dataIndex: 'createTime'
                         }
                     ]
                 }
