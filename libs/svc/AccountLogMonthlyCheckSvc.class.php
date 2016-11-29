@@ -21,12 +21,20 @@ class AccountLogMonthlyCheckSvc extends BaseSvc
 	}
 	
 	public function get($q){
+		global $mysql;
 		$startTime = $q['startTime'];
 		$endTime = $q['endTime'];
 		$accountId = $q['accountId'];
 		$numStartTime = (int)date('Ym',strtotime($startTime));
 		$numEndTime = (int)date('Ym',strtotime($endTime));
 		
+		$sql = "select replace(left(createTime,7),'-','') from account where id = '?' and isDeleted = 'false'";
+		$accounts = $mysql->DBGetAsOneArray($sql,$accountId);
+		if(count($accounts)==0){
+			throw new BaseException("找不到id为 $accountId 的账户！");
+		}
+		if($numStartTime < (int)$accounts[0])
+			$numStartTime = (int)$accounts[0];
 		if($numEndTime >= (int)(date('Ym'))){
 			throw new BaseException('最迟只能看到上个月月账单！');
 		}
@@ -34,7 +42,7 @@ class AccountLogMonthlyCheckSvc extends BaseSvc
 			throw new BaseException('开始时间不能晚于结束时间！');
 		}
 		$sql = "select * from account_log_monthly_check where checkMonth >= '?' and checkMonth <= '?' and accountId = '?' and isDeleted = 'false' order by checkMonth asc ";
-		global $mysql;
+		
 		$data = $mysql->DBGetAsMap($sql,$numStartTime,$numEndTime,$accountId);
 		$dataMapCheckMonthAsKey = array();
 		foreach($data as $key=>$value){
@@ -45,6 +53,8 @@ class AccountLogMonthlyCheckSvc extends BaseSvc
 			if(((int)$i%100)>12 || ((int)$i%100)==0)
 				continue;
 			$value = isset($dataMapCheckMonthAsKey[$i]) ? $dataMapCheckMonthAsKey[$i] : $this->generateMonthData($i,$accountId);
+			if($value['income'] == $value['outcome'] && $value['income'] == $value['balance'])
+				$value['balance'] = '同上';
 			array_push($data,$value);
 		}
 		return array('status'=>'successful', 'data' => $data);
