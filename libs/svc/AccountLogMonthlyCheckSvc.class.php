@@ -33,14 +33,19 @@ class AccountLogMonthlyCheckSvc extends BaseSvc
 		if(count($accounts)==0){
 			throw new BaseException("找不到id为 $accountId 的账户！");
 		}
-		if($numStartTime < (int)$accounts[0])
-			$numStartTime = (int)$accounts[0];
+		$accountCreateTime = (int)$accounts[0];
 		if($numEndTime >= (int)(date('Ym'))){
 			throw new BaseException('最迟只能看到上个月月账单！');
 		}
 		if($numStartTime > $numEndTime){
 			throw new BaseException('开始时间不能晚于结束时间！');
 		}
+		if($numEndTime < $accountCreateTime){
+			throw new BaseException("此时间段账户还未创建，账户创建时间：$accountCreateTime");
+		}
+		if($numStartTime < $accountCreateTime)
+			$numStartTime = $accountCreateTime;
+		
 		$sql = "select * from account_log_monthly_check where checkMonth >= '?' and checkMonth <= '?' and accountId = '?' and isDeleted = 'false' order by checkMonth asc ";
 		
 		$data = $mysql->DBGetAsMap($sql,$numStartTime,$numEndTime,$accountId);
