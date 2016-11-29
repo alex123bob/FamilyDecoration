@@ -78,7 +78,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                         name: 'startTime',
                         itemId: 'startTime',
                         emptyText: '开始时间',
-                        format: 'F, Y',
+                        format: 'Y-m',
                         submitFormat: 'Y-m-d',
                         validator: function (val) {
                             var resObj = _getRes();
@@ -109,7 +109,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                         emptyText: '结束时间',
                         name: 'endTime',
                         itemId: 'endTime',
-                        format: 'F, Y',
+                        format: 'Y-m',
                         submitFormat: 'Y-m-d',
                         validator: function (val) {
                             var resObj = _getRes();
