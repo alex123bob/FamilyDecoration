@@ -19,7 +19,8 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
             var dateCt = me.getComponent('dateCt');
             return {
                 startTime: dateCt.getComponent('startTime'),
-                endTime: dateCt.getComponent('endTime')
+                endTime: dateCt.getComponent('endTime'),
+                account: me.down('combobox')
             };
         }
 
@@ -33,7 +34,15 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                     autoLoad: true
                 }),
                 queryMode: 'local',
-                flex: 1
+                flex: 1,
+                listeners: {
+                    change: function (cmp, newVal, oldVal, opts){
+                        var resObj = _getRes();
+                        if (resObj.startTime.getValue() && resObj.endTime.getValue() && resObj.account.getValue()) {
+                            me.filterFunc(resObj.startTime.getValue(), resObj.endTime.getValue(), resObj.account.findRecord('id', resObj.account.getValue()));
+                        }
+                    }
+                }
             };
             return cfgFlag ? cfg : Ext.create('Ext.form.FieldContainer', {
                 layout: 'hbox',
@@ -98,7 +107,10 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                         },
                         listeners: {
                             change: function (cmp, newVal, oldVal, opts){
-                                console.log(newVal, oldVal);
+                                var resObj = _getRes();
+                                if (resObj.startTime.getValue() && resObj.endTime.getValue() && resObj.account.getValue()) {
+                                    me.filterFunc(resObj.startTime.getValue(), resObj.endTime.getValue(), resObj.account.findRecord('id', resObj.account.getValue()));
+                                }
                             }
                         }
                     },
@@ -129,7 +141,10 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                         },
                         listeners: {
                             change: function (cmp, newVal, oldVal, opts){
-                                console.log(newVal, oldVal);
+                                var resObj = _getRes();
+                                if (resObj.startTime.getValue() && resObj.endTime.getValue() && resObj.account.getValue()) {
+                                    me.filterFunc(resObj.startTime.getValue(), resObj.endTime.getValue(), resObj.account.findRecord('id', resObj.account.getValue()));
+                                }
                             }
                         }
                     }
@@ -144,6 +159,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                     {
                         xtype: 'button',
                         text: '清空',
+                        hidden: true,
                         width: 50,
                         handler: function (){
                             var fct = this.ownerCt,
@@ -155,6 +171,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                         xtype: 'button',
                         text: '添加',
                         width: 50,
+                        hidden: true,
                         handler: function (){
                             me.add(generateAccount());
                         }

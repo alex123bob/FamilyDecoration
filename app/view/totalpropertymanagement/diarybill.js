@@ -15,7 +15,8 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
         var me = this,
             diarybillSt = Ext.create('FamilyDecoration.store.DiaryBill', {
                 autoLoad: false
-            });
+            }),
+            diarybillProxy = diarybillSt.getProxy();
 
 
         me.items = [
@@ -26,8 +27,13 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                     {
                         xtype: 'totalpropertymanagement-datefilter',
                         needBankAccount: true,
-                        filterFunc: function (startTime, endTime){
-                            
+                        filterFunc: function (startTime, endTime, account){
+                            Ext.apply(diarybillProxy.extraParams, {
+                                startTime: Ext.Date.format(startTime, 'Y-m'),
+                                endTime: Ext.Date.format(endTime, 'Y-m'),
+                                accountId: account.getId()
+                            });
+                            diarybillSt.load();
                         }
                     }
                 ],

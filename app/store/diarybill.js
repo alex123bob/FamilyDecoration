@@ -10,7 +10,7 @@ Ext.define('FamilyDecoration.store.DiaryBill', {
             totalProperty: 'total'
         },
         extraParams: {
-            action: 'AccountLogMonthlyCheckSvc.get'
+            action: 'AccountLogMonthlyCheck.get'
         }
     }
 });
