@@ -78,7 +78,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.Index', {
                                     resObj.projectCategory.show();
                                 }
                                 resObj.projectCategorySelModel.deselectAll();
-                                resObj.projectCategorySelModel.select(resObj.projectCategorySt.last());
+                                // resObj.projectCategorySelModel.select(resObj.projectCategorySt.last());
                             }
                         }
                         else {
