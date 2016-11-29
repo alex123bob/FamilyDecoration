@@ -45,7 +45,7 @@ class AccountLogMonthlyCheckSvc extends BaseSvc
 			$value = isset($dataMapCheckMonthAsKey[$i]) ? $dataMapCheckMonthAsKey[$i] : $this->generateMonthData($i,$accountId);
 			array_push($data,$value);
 		}
-		return $data;
+		return array('status'=>'successful', 'data' => $data);
 	}
 	
 	private function generateMonthData($month,$accountId){
