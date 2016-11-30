@@ -25,8 +25,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                 dateFilter = diaryBill.getDockedItems('toolbar[dock="top"]')[0];
             return {
                 diaryBill: diaryBill,
-                dateFilter: dateFilter,
-                yearlyCheck: me.getComponent('gridpanel-yearlyCheck')
+                dateFilter: dateFilter
             };
         }
 
@@ -156,33 +155,6 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                         {
                             text: '核对人',
                             dataIndex: 'checker'
-                        }
-                    ]
-                }
-            },
-            {
-                height: 74,
-                xtype: 'gridpanel',
-                hidden: true,
-                itemId: 'gridpanel-yearlyCheck',
-                header: {
-                    title: '年度核对',
-                    padding: 2
-                },
-                columns: {
-                    defaults: {
-                        align: 'center',
-                        flex: 1
-                    },
-                    items: [
-                        {
-                            text: '日、月、年度进账'
-                        },
-                        {
-                            text: '日、月、年度出账'
-                        },
-                        {
-                            text: '日、月、年度余额'
                         }
                     ]
                 }
