@@ -8,7 +8,7 @@ Ext.define('FamilyDecoration.model.DiaryBill', {
         'outcome',
         'balance',
         {name: 'checker', type: 'string'},
-        {name: 'checkerRealName', type: 'string'},
+        {name: 'checkername', type: 'string'},
         'createTime',
         'isDeleted',
         'status', // unchecked, checked

@@ -78,7 +78,15 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                                         }, ['id'], function (obj){
                                             if ('successful' == obj.status) {
                                                 showMsg('核对成功！');
-                                                resObj.diaryBill.getStore().reload();
+                                                resObj.diaryBill.getStore().reload({
+                                                    callback: function (recs, ope, success){
+                                                        if (success) {
+                                                            var selModel = resObj.diaryBill.getSelectionModel();
+                                                            selModel.deselectAll();
+                                                            selModel.select(resObj.diaryBill.getStore().indexOf(billItem));
+                                                        }
+                                                    }
+                                                });
                                             }
                                         });
                                     }
@@ -154,7 +162,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                         },
                         {
                             text: '核对人',
-                            dataIndex: 'checkerRealName'
+                            dataIndex: 'checker'
                         }
                     ]
                 }
