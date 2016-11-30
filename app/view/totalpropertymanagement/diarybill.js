@@ -154,7 +154,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                         },
                         {
                             text: '核对人',
-                            dataIndex: 'checker'
+                            dataIndex: 'checkerRealName'
                         }
                     ]
                 }
