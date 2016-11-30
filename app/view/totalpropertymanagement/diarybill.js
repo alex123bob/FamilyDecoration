@@ -41,11 +41,12 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                         xtype: 'totalpropertymanagement-datefilter',
                         dock: 'top',
                         needBankAccount: true,
-                        filterFunc: function (startTime, endTime, account) {
+                        filterFunc: function (startTime, endTime, account, scale) {
                             Ext.apply(diarybillProxy.extraParams, {
-                                startTime: Ext.Date.format(startTime, 'Y-m'),
-                                endTime: Ext.Date.format(endTime, 'Y-m'),
-                                accountId: account.getId()
+                                startTime: Ext.Date.format(startTime, 'Ymd'),
+                                endTime: Ext.Date.format(endTime, 'Ymd'),
+                                accountId: account.getId(),
+                                scale: scale
                             });
                             diarybillSt.load();
                         }
@@ -55,20 +56,11 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                 _getBtns: function () {
                     var bbar = this.getDockedItems('toolbar[dock="bottom"]')[0];
                     return {
-                        bilret: bbar.down('[name="bilret"]'),
                         bilchk: bbar.down('[name="bilchk"]'),
                         bilexp: bbar.down('[name="bilexp"]')
                     };
                 },
                 bbar: [
-                    {
-                        text: '退回单据',
-                        name: 'bilret',
-                        icon: 'resources/img/bill_return.png',
-                        handler: function () {
-
-                        }
-                    },
                     {
                         text: '核对',
                         name: 'bilchk',
@@ -76,24 +68,26 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                         handler: function () {
                             var resObj = _getRes(),
                                 accountCombo = resObj.dateFilter._getRes().account,
-                                account = accountCombo.findRecord('id', accountCombo.getValue());
-                            ajaxGet('AccountLogMonthlyCheck', 'getYearInfo', {
-                                accountId: account.getId()
-                            }, function (obj) {
-                                if ('successful' == obj.status) {
-                                    Ext.Msg.show({
-                                        title: '核对',
-                                        msg: '该账户本年度出账***，入账***，余额***，请核对',
-                                        width: 300,
-                                        buttons: Ext.Msg.OKCANCEL,
-                                        // multiline: true,
-                                        fn: function (btnId, txt, opt) {
-                                            console.log(btnId);
-                                        },
-                                        icon: Ext.window.MessageBox.INFO
-                                    });
-                                }
-                            });
+                                account = accountCombo.findRecord('id', accountCombo.getValue()),
+                                billItem = resObj.diaryBill.getSelectionModel().getSelection()[0];
+                            if (billItem && billItem.get('status') == 'unchecked') {
+                                Ext.Msg.warning('确定要进行核对吗?', function (btnId){
+                                    if (btnId == 'yes') {
+                                        ajaxUpdate('AccountLogMonthlyCheck', {
+                                            status: 'checked',
+                                            id: billItem.getId()
+                                        }, ['id'], function (obj){
+                                            if ('successful' == obj.status) {
+                                                showMsg('核对成功！');
+                                                resObj.diaryBill.getStore().reload();
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                            else {
+                                showMsg('未选择条目或者已经被审核！');
+                            }
                         }
                     },
                     {
@@ -104,7 +98,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                             var resObj = _getRes();
                             if (resObj.dateFilter.isFiltered()) {
                                 var exportFrame = document.getElementById('exportDiaryBill');
-                                // exportFrame.src = './fpdf/index2.php?budgetId=' + me.budgetId;
+                                // exportFrame.src = './fpdf/monthly_check_detail.php?accountId=' + me.budgetId; // startTime, endTime, accountId
                             }
                             else {
                                 showMsg('请先进行筛选！');
@@ -161,6 +155,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
             {
                 height: 74,
                 xtype: 'gridpanel',
+                hidden: true,
                 itemId: 'gridpanel-yearlyCheck',
                 header: {
                     title: '年度核对',
