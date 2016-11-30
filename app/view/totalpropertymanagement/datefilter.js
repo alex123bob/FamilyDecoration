@@ -26,8 +26,18 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
 
         // expose this function for external use
         me.isFiltered = function () {
-            var resObj = me._getRes();
-            return resObj.startTime.getValue() && resObj.endTime.getValue() && resObj.account.getValue() && resObj.scale.getValue();
+            var resObj = me._getRes(),
+                flag;
+            flag = resObj.startTime.getValue() && resObj.endTime.getValue() ? true : false;
+            if (flag) {
+                if (me.needBankAccount) {
+                    flag = resObj.account.getValue() ? true : false;
+                }
+                if (flag) {
+                    flag = resObj.scale.getValue() ? true : false;
+                }
+            }
+            return flag;
         }
 
         var filter = function (){
@@ -36,7 +46,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                 me.filterFunc(
                     resObj.startTime.getValue(), 
                     resObj.endTime.getValue(), 
-                    resObj.account.findRecord('id', resObj.account.getValue()),
+                    me.needBankAccount ? resObj.account.findRecord('id', resObj.account.getValue()) : undefined,
                     resObj.scale.getSubmitValue()
                 );
             }
