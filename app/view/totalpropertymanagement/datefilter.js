@@ -30,6 +30,18 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
             return resObj.startTime.getValue() && resObj.endTime.getValue() && resObj.account.getValue() && resObj.scale.getValue();
         }
 
+        var filter = function (){
+            var resObj = me._getRes();
+            if (me.isFiltered()) {
+                me.filterFunc(
+                    resObj.startTime.getValue(), 
+                    resObj.endTime.getValue(), 
+                    resObj.account.findRecord('id', resObj.account.getValue()),
+                    resObj.scale.getSubmitValue()
+                );
+            }
+        }
+
         var generateAccount = function (cfgFlag){
             var cfg = {
                 xtype: 'combobox',
@@ -44,15 +56,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                 flex: 1,
                 listeners: {
                     change: function (cmp, newVal, oldVal, opts){
-                        var resObj = me._getRes();
-                        if (me.isFiltered()) {
-                            me.filterFunc(
-                                resObj.startTime.getValue(), 
-                                resObj.endTime.getValue(), 
-                                resObj.account.findRecord('id', resObj.account.getValue()),
-                                resObj.scale.getSubmitValue()
-                            );
-                        }
+                        filter();
                     }
                 }
             };
@@ -119,15 +123,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                         },
                         listeners: {
                             change: function (cmp, newVal, oldVal, opts){
-                                var resObj = me._getRes();
-                                if (me.isFiltered()) {
-                                    me.filterFunc(
-                                        resObj.startTime.getValue(), 
-                                        resObj.endTime.getValue(), 
-                                        resObj.account.findRecord('id', resObj.account.getValue()),
-                                        resObj.scale.getSubmitValue()
-                                    );
-                                }
+                                filter();
                             }
                         }
                     },
@@ -158,15 +154,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                         },
                         listeners: {
                             change: function (cmp, newVal, oldVal, opts){
-                                var resObj = me._getRes();
-                                if (me.isFiltered()) {
-                                    me.filterFunc(
-                                        resObj.startTime.getValue(), 
-                                        resObj.endTime.getValue(), 
-                                        resObj.account.findRecord('id', resObj.account.getValue()),
-                                        resObj.scale.getSubmitValue()
-                                    );
-                                }
+                                filter();
                             }
                         }
                     },
@@ -205,15 +193,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                         fieldLabel: '查询粒度',
                         listeners: {
                             change: function (cmp, newVal, oldVal, opts){
-                                var resObj = me._getRes();
-                                if (me.isFiltered()) {
-                                    me.filterFunc(
-                                        resObj.startTime.getValue(), 
-                                        resObj.endTime.getValue(), 
-                                        resObj.account.findRecord('id', resObj.account.getValue()),
-                                        resObj.scale.getSubmitValue()
-                                    );
-                                }
+                                filter();
                             }
                         }
                     }
