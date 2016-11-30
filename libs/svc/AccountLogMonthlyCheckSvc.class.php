@@ -20,57 +20,77 @@ class AccountLogMonthlyCheckSvc extends BaseSvc
 		throw new BaseException("不允许删除记录！");
 	}
 	
+	private function generateTimeSpan($startTime,$endTime,$scale,$accountCreateDay){
+		$days = array();
+		$startTime = $startTime < $accountCreateDay ? $accountCreateDay : $startTime;
+		if($startTime > $endTime){
+			throw new BaseException('开始时间不能晚于结束时间！');
+		}
+		$timeFormat = self::$SCALE_TIMEFORMAT[$scale];
+		for($i = strtotime($startTime); $i <= strtotime($endTime); $i += 86400){
+			if(!in_array(date($timeFormat,$i),$days)){
+				array_push($days,date($timeFormat,$i));
+			}
+		}
+		return $days;
+	}
+	
+	private static $SCALE_TYPE = array('Y'=>0,'M'=>1,'D'=>2);
+	private static $SCALE_TIMEFORMAT = array('Y'=>'Y','M'=>'Ym','D'=>'Ymd');
+	private static $SCALE_FOR_LEFT = array('Y'=>4,'M'=>7,'D'=>10);
+	private static $SCALE_LAST_WARNING = array('Y'=>'上一年','M'=>'上个月','D'=>'昨天');
+	
 	public function get($q){
 		global $mysql;
 		$startTime = $q['startTime'];
 		$endTime = $q['endTime'];
 		$accountId = $q['accountId'];
-		$numStartTime = (int)date('Ym',strtotime($startTime));
-		$numEndTime = (int)date('Ym',strtotime($endTime));
+		$scale = $q['scale'];
 		
-		$sql = "select replace(left(createTime,7),'-','') from account where id = '?' and isDeleted = 'false'";
-		$accounts = $mysql->DBGetAsOneArray($sql,$accountId);
-		if(count($accounts)==0){
-			throw new BaseException("找不到id为 $accountId 的账户！");
+		$scaleInt = self::$SCALE_TYPE[$scale];//数据库中scale，Y：0，M:1，D：2
+		$accountCreateDay = $this->getSvc('Account')->getAccountCreateDay($accountId);   //format 20160908
+		$accountCreateDayByScale = $accountCreateDay;
+		$days = $this->generateTimeSpan($startTime,$endTime,$scale,$accountCreateDay);
+
+		if($scale == 'Y'){
+			$accountCreateDayByScale = substr($accountCreateDayByScale,0,4);
+			$startTime = substr($startTime,0,4);
+			$endTime = substr($endTime,0,4);
+		}else if($scale == 'M'){			
+			$accountCreateDayByScale = substr($accountCreateDayByScale,0,6);
+			$startTime = substr($startTime,0,6);
+			$endTime = substr($endTime,0,6);
 		}
-		$accountCreateTime = (int)$accounts[0];
-		if($numEndTime >= (int)(date('Ym'))){
-			throw new BaseException('最迟只能看到上个月月账单！');
+		if($endTime >= (int)(date(self::$SCALE_TIMEFORMAT[$scale]))){
+			throw new BaseException('最迟只能审核上'.self::$SCALE_LAST_WARNING[$scale].'账单！');
 		}
-		if($numStartTime > $numEndTime){
-			throw new BaseException('开始时间不能晚于结束时间！');
+		if($endTime < $accountCreateDayByScale){
+			throw new BaseException("此时间段账户还未创建，账户创建时间：$accountCreateDay");
 		}
-		if($numEndTime < $accountCreateTime){
-			throw new BaseException("此时间段账户还未创建，账户创建时间：$accountCreateTime");
-		}
-		if($numStartTime < $accountCreateTime)
-			$numStartTime = $accountCreateTime;
 		
-		$sql = "select * from account_log_monthly_check where checkMonth >= '?' and checkMonth <= '?' and accountId = '?' and isDeleted = 'false' order by checkMonth asc ";
-		
-		$data = $mysql->DBGetAsMap($sql,$numStartTime,$numEndTime,$accountId);
+		$sql = "select * from account_log_monthly_check where checkMonth >= '?' and checkMonth <= '?' and accountId = '?' and scale = '?' and isDeleted = 'false' order by checkMonth asc ";
+		$data = $mysql->DBGetAsMap($sql,$startTime,$endTime,$accountId,$scaleInt);
 		$dataMapCheckMonthAsKey = array();
 		foreach($data as $key=>$value){
 			$dataMapCheckMonthAsKey[$value['checkMonth']] = $value;
 		}
 		$data = array();
-		$lastMonthBalance = 0;
-		for($i=$numStartTime;$i<=$numEndTime;$i++){
-			if(((int)$i%100)>12 || ((int)$i%100)==0)
-				continue;
-			$value = isset($dataMapCheckMonthAsKey[$i]) ? $dataMapCheckMonthAsKey[$i] : $this->generateMonthData($i,$accountId);
+		$lastBalance = 0;
+		foreach($days as $key => $day){
+			$value = isset($dataMapCheckMonthAsKey[$day]) ? $dataMapCheckMonthAsKey[$day] : $this->generateMonthData($day,$accountId,$scale);
 			if($value['income'] == $value['outcome'] && $value['income'] == $value['balance'] && $value['income'] == 0)
-				$value['balance'] = $lastMonthBalance;
+				$value['balance'] = $lastBalance;
 			array_push($data,$value);
-			$lastMonthBalance = $value['balance'];
+			$lastBalance = $value['balance'];
 		}
 		return array('status'=>'successful', 'data' => $data);
 	}
 	
-	private function generateMonthData($month,$accountId){
-		$sql1 = "select ifnull(sum(amount),0) as income from account_log where type = 'in' and accountId = '?' and replace(left(createTime,7),'-','') = '?' and isDeleted = 'false' ";
-		$sql2 = "select ifnull(sum(amount),0) as outcome from account_log where type = 'out' and accountId = '?' and replace(left(createTime,7),'-','') = '?' and isDeleted = 'false' ";
-		$sql3 = "select balance from account_log where accountId = '?' and isDeleted = 'false' and replace(left(createTime,7),'-','') = '?' order by createTime desc limit 1 offset 0";
+	private function generateMonthData($month,$accountId,$scale){
+		$left = self::$SCALE_FOR_LEFT[$scale];
+		$sql1 = "select ifnull(sum(amount),0) as income from account_log where type = 'in' and accountId = '?' and replace(left(createTime,$left),'-','') = '?' and isDeleted = 'false' ";
+		$sql2 = "select ifnull(sum(amount),0) as outcome from account_log where type = 'out' and accountId = '?' and replace(left(createTime,$left),'-','') = '?' and isDeleted = 'false' ";
+		$sql3 = "select balance from account_log where accountId = '?' and isDeleted = 'false' and replace(left(createTime,$left),'-','') = '?' order by createTime desc limit 1 offset 0";
 		global $mysql;
 		$income = $mysql->DBGetAsOneArray($sql1,$accountId,$month);
 		$outcome = $mysql->DBGetAsOneArray($sql2,$accountId,$month);
@@ -82,6 +102,7 @@ class AccountLogMonthlyCheckSvc extends BaseSvc
 			'@income'=>$income,
 			'@outcome'=>$outcome,
 			'@balance'=>$balance,
+			'@scale'=>self::$SCALE_TYPE[$scale],
 			'@accountId'=>$accountId,
 			'@checkMonth'=>$month
 		))['data'];

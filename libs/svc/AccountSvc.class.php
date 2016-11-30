@@ -15,6 +15,17 @@ class AccountSvc extends BaseSvc
 		return $res;
 	}
 
+	//返回格式 20160909
+	public function getAccountCreateDay($accountId){
+		global $mysql;
+		$sql = "select replace(left(createTime, 10 ),'-','') from account where id = '?' and isDeleted = 'false'";
+		$accounts = $mysql->DBGetAsOneArray($sql,$accountId);
+		if(count($accounts)==0){
+			throw new BaseException("找不到id为 $accountId 的账户！");
+		}
+		return (int)$accounts[0];
+	}
+	
 	public function transfer($q){
 		$SourceAccountId = $q['from'];
 		$TargetAccountId = $q['to'];
