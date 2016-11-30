@@ -95,10 +95,18 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                         name: 'bilexp',
                         icon: 'resources/img/bill_export.png',
                         handler: function () {
-                            var resObj = _getRes();
+                            var resObj = _getRes(),
+                                dateFilter = resObj.dateFilter,
+                                accountCombo = dateFilter._getRes().account,
+                                account = accountCombo.findRecord('id', accountCombo.getValue()),
+                                startTime = Ext.Date.format(dateFilter._getRes().startTime.getValue(), 'Ymd'),
+                                endTime = Ext.Date.format(dateFilter._getRes().endTime.getValue(), 'Ymd'),
+                                scale = dateFilter._getRes().scale;
                             if (resObj.dateFilter.isFiltered()) {
                                 var exportFrame = document.getElementById('exportDiaryBill');
-                                // exportFrame.src = './fpdf/monthly_check_detail.php?accountId=' + me.budgetId; // startTime, endTime, accountId
+                                exportFrame.src = './fpdf/monthly_check_detail.php?accountId=' 
+                                                + account.getId() + '&startTime=' + startTime
+                                                + '&endTime=' + endTime + '&scale=' + scale.getSubmitValue(); // startTime, endTime, accountId
                             }
                             else {
                                 showMsg('请先进行筛选！');
