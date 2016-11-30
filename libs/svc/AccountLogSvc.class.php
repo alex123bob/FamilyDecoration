@@ -23,6 +23,12 @@ class AccountLogSvc extends BaseSvc
 		if(!isset($q['orderby'])){
 			$q['orderby'] = 'createTime desc';
 		}
+		if(isset($q['checkMonth'])){
+			//201609 总财务管理需要
+			$checkmonth = $q['checkMonth'].'';
+			$q['createTimeMin'] = substr($checkmonth,0,4).'-'.substr($checkmonth,4,2).'-01 00:00:00';
+			$q['createTimeMax'] = substr($checkmonth,0,4).'-'.substr($checkmonth,4,2)	.'-31 59:59:59';
+		}
 		$res = parent::get($q);
 		$svc = BaseSvc::getSvc('User');
 		$svc->appendRealName($res['data'],'operator');

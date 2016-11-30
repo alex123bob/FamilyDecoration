@@ -54,13 +54,15 @@ class AccountLogMonthlyCheckSvc extends BaseSvc
 			$dataMapCheckMonthAsKey[$value['checkMonth']] = $value;
 		}
 		$data = array();
+		$lastMonthBalance = 0;
 		for($i=$numStartTime;$i<=$numEndTime;$i++){
 			if(((int)$i%100)>12 || ((int)$i%100)==0)
 				continue;
 			$value = isset($dataMapCheckMonthAsKey[$i]) ? $dataMapCheckMonthAsKey[$i] : $this->generateMonthData($i,$accountId);
-			if($value['income'] == $value['outcome'] && $value['income'] == $value['balance'])
-				$value['balance'] = '同上';
+			if($value['income'] == $value['outcome'] && $value['income'] == $value['balance'] && $value['income'] == 0)
+				$value['balance'] = $lastMonthBalance;
 			array_push($data,$value);
+			$lastMonthBalance = $value['balance'];
 		}
 		return array('status'=>'successful', 'data' => $data);
 	}
