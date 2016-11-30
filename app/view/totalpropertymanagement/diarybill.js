@@ -11,6 +11,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
         width: '100%'
     },
     title: '日记账',
+    html: '<iframe id="exportDiaryBill"  src="javascript:void(0);" style="display:none"></iframe>',
 
     initComponent: function () {
         var me = this,
@@ -19,14 +20,26 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
             }),
             diarybillProxy = diarybillSt.getProxy();
 
+        var _getRes = function () {
+            var diaryBill = me.getComponent('gridpanel-diaryBill'),
+                dateFilter = diaryBill.getDockedItems('toolbar[dock="top"]')[0];
+            return {
+                diaryBill: diaryBill,
+                dateFilter: dateFilter,
+                yearlyCheck: me.getComponent('gridpanel-yearlyCheck')
+            };
+        }
+
 
         me.items = [
             {
                 flex: 1,
                 xtype: 'gridpanel',
+                itemId: 'gridpanel-diaryBill',
                 dockedItems: [
                     {
                         xtype: 'totalpropertymanagement-datefilter',
+                        dock: 'top',
                         needBankAccount: true,
                         filterFunc: function (startTime, endTime, account) {
                             Ext.apply(diarybillProxy.extraParams, {
@@ -61,17 +74,25 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                         name: 'bilchk',
                         icon: 'resources/img/bill_check.png',
                         handler: function () {
-                            ajaxGet()
-                            Ext.Msg.show({
-                                title: '核对',
-                                msg: '该账户本年度出账***，入账***，余额***，请核对',
-                                width: 300,
-                                buttons: Ext.Msg.OKCANCEL,
-                                // multiline: true,
-                                fn: function (btnId, txt, opt){
-                                    console.log(btnId);
-                                },
-                                icon: Ext.window.MessageBox.INFO
+                            var resObj = _getRes(),
+                                accountCombo = resObj.dateFilter._getRes().account,
+                                account = accountCombo.findRecord('id', accountCombo.getValue());
+                            ajaxGet('AccountLogMonthlyCheck', 'getYearInfo', {
+                                accountId: account.getId()
+                            }, function (obj) {
+                                if ('successful' == obj.status) {
+                                    Ext.Msg.show({
+                                        title: '核对',
+                                        msg: '该账户本年度出账***，入账***，余额***，请核对',
+                                        width: 300,
+                                        buttons: Ext.Msg.OKCANCEL,
+                                        // multiline: true,
+                                        fn: function (btnId, txt, opt) {
+                                            console.log(btnId);
+                                        },
+                                        icon: Ext.window.MessageBox.INFO
+                                    });
+                                }
                             });
                         }
                     },
@@ -80,7 +101,14 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                         name: 'bilexp',
                         icon: 'resources/img/bill_export.png',
                         handler: function () {
-
+                            var resObj = _getRes();
+                            if (resObj.dateFilter.isFiltered()) {
+                                var exportFrame = document.getElementById('exportDiaryBill');
+                                // exportFrame.src = './fpdf/index2.php?budgetId=' + me.budgetId;
+                            }
+                            else {
+                                showMsg('请先进行筛选！');
+                            }
                         }
                     }
                 ],
@@ -133,6 +161,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
             {
                 height: 74,
                 xtype: 'gridpanel',
+                itemId: 'gridpanel-yearlyCheck',
                 header: {
                     title: '年度核对',
                     padding: 2

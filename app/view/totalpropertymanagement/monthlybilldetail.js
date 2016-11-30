@@ -14,6 +14,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.MonthlyBillDetail', {
     defaults: {
         
     },
+    html: '<iframe id="exportMonthlyBillDetail"  src="javascript:void(0);" style="display:none"></iframe>',
     initComponent: function () {
         var me = this,
             st = Ext.create('FamilyDecoration.store.AccountLog', {
@@ -31,7 +32,13 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.MonthlyBillDetail', {
             {
                 text: '导出报表',
                 handler: function () {
-                    // todo, invoke backend interfaces to generate corresponding pdf
+                    if (me.account) {
+                        var exportFrame = document.getElementById('exportMonthlyBillDetail');
+                        // exportFrame.src = './fpdf/index2.php?budgetId=' + me.budgetId;
+                    }
+                    else {
+                        showMsg('没有账号!');
+                    }
                 }
             }
         ]
@@ -53,11 +60,17 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.MonthlyBillDetail', {
                         },
                         {
                             text: '出账',
-                            dataIndex: 'outcome'
+                            dataIndex: 'amount',
+                            renderer: function (val, meta, rec) {
+                                return rec.get('type') == 'out' ? val : '';
+                            }
                         },
                         {
                             text: '入账',
-                            dataIndex: 'income'
+                            dataIndex: 'amount',
+                            renderer: function (val, meta, rec){
+                                return rec.get('type') == 'in' ? val : '';
+                            }
                         },
                         {
                             text: '账户余额',
@@ -65,11 +78,11 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.MonthlyBillDetail', {
                         },
                         {
                             text: '明细',
-                            dataIndex: 'createTime'
+                            dataIndex: 'desc'
                         },
                         {
                             text: '核对人',
-                            dataIndex: 'checker'
+                            dataIndex: 'operatorRealName'
                         }
                     ]
                 }

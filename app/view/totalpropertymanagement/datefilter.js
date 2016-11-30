@@ -15,13 +15,19 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
     initComponent: function () {
         var me = this;
 
-        var _getRes = function (){
+        me._getRes = function (){
             var dateCt = me.getComponent('dateCt');
             return {
                 startTime: dateCt.getComponent('startTime'),
                 endTime: dateCt.getComponent('endTime'),
                 account: me.down('combobox')
             };
+        }
+
+        // expose this function for external use
+        me.isFiltered = function () {
+            var resObj = me._getRes();
+            return resObj.startTime.getValue() && resObj.endTime.getValue() && resObj.account.getValue();
         }
 
         var generateAccount = function (cfgFlag){
@@ -37,9 +43,13 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                 flex: 1,
                 listeners: {
                     change: function (cmp, newVal, oldVal, opts){
-                        var resObj = _getRes();
-                        if (resObj.startTime.getValue() && resObj.endTime.getValue() && resObj.account.getValue()) {
-                            me.filterFunc(resObj.startTime.getValue(), resObj.endTime.getValue(), resObj.account.findRecord('id', resObj.account.getValue()));
+                        var resObj = me._getRes();
+                        if (me.isFiltered()) {
+                            me.filterFunc(
+                                resObj.startTime.getValue(), 
+                                resObj.endTime.getValue(), 
+                                resObj.account.findRecord('id', resObj.account.getValue())
+                            );
                         }
                     }
                 }
@@ -90,7 +100,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                         format: 'Y-m',
                         submitFormat: 'Y-m-d',
                         validator: function (val) {
-                            var resObj = _getRes();
+                            var resObj = me._getRes();
                             if (val && resObj.endTime.getValue()) {
                                 return true;
                             }
@@ -107,9 +117,13 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                         },
                         listeners: {
                             change: function (cmp, newVal, oldVal, opts){
-                                var resObj = _getRes();
-                                if (resObj.startTime.getValue() && resObj.endTime.getValue() && resObj.account.getValue()) {
-                                    me.filterFunc(resObj.startTime.getValue(), resObj.endTime.getValue(), resObj.account.findRecord('id', resObj.account.getValue()));
+                                var resObj = me._getRes();
+                                if (me.isFiltered()) {
+                                    me.filterFunc(
+                                        resObj.startTime.getValue(), 
+                                        resObj.endTime.getValue(), 
+                                        resObj.account.findRecord('id', resObj.account.getValue())
+                                    );
                                 }
                             }
                         }
@@ -124,7 +138,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                         format: 'Y-m',
                         submitFormat: 'Y-m-d',
                         validator: function (val) {
-                            var resObj = _getRes();
+                            var resObj = me._getRes();
                             if (val && resObj.startTime.getValue()) {
                                 return true;
                             }
@@ -141,9 +155,13 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                         },
                         listeners: {
                             change: function (cmp, newVal, oldVal, opts){
-                                var resObj = _getRes();
-                                if (resObj.startTime.getValue() && resObj.endTime.getValue() && resObj.account.getValue()) {
-                                    me.filterFunc(resObj.startTime.getValue(), resObj.endTime.getValue(), resObj.account.findRecord('id', resObj.account.getValue()));
+                                var resObj = me._getRes();
+                                if (me.isFiltered()) {
+                                    me.filterFunc(
+                                        resObj.startTime.getValue(), 
+                                        resObj.endTime.getValue(), 
+                                        resObj.account.findRecord('id', resObj.account.getValue())
+                                    );
                                 }
                             }
                         }
