@@ -3,7 +3,8 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
     alias: 'widget.totalpropertymanagement-diarybill',
     requires: [
         'FamilyDecoration.view.totalpropertymanagement.DateFilter',
-        'FamilyDecoration.store.DiaryBill'
+        'FamilyDecoration.store.DiaryBill',
+        'FamilyDecoration.view.totalpropertymanagement.MonthlyBillDetail'
     ],
     layout: 'vbox',
     defaults: {
@@ -27,7 +28,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                     {
                         xtype: 'totalpropertymanagement-datefilter',
                         needBankAccount: true,
-                        filterFunc: function (startTime, endTime, account){
+                        filterFunc: function (startTime, endTime, account) {
                             Ext.apply(diarybillProxy.extraParams, {
                                 startTime: Ext.Date.format(startTime, 'Y-m'),
                                 endTime: Ext.Date.format(endTime, 'Y-m'),
@@ -38,20 +39,20 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                     }
                 ],
                 store: diarybillSt,
-                _getBtns: function (){
-					var bbar = this.getDockedItems('toolbar[dock="bottom"]')[0];
-					return {
+                _getBtns: function () {
+                    var bbar = this.getDockedItems('toolbar[dock="bottom"]')[0];
+                    return {
                         bilret: bbar.down('[name="bilret"]'),
                         bilchk: bbar.down('[name="bilchk"]'),
                         bilexp: bbar.down('[name="bilexp"]')
                     };
-				},
+                },
                 bbar: [
                     {
                         text: '退回单据',
                         name: 'bilret',
                         icon: 'resources/img/bill_return.png',
-                        handler: function (){
+                        handler: function () {
 
                         }
                     },
@@ -60,14 +61,25 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                         name: 'bilchk',
                         icon: 'resources/img/bill_check.png',
                         handler: function () {
-
+                            ajaxGet()
+                            Ext.Msg.show({
+                                title: '核对',
+                                msg: '该账户本年度出账***，入账***，余额***，请核对',
+                                width: 300,
+                                buttons: Ext.Msg.OKCANCEL,
+                                // multiline: true,
+                                fn: function (btnId, txt, opt){
+                                    console.log(btnId);
+                                },
+                                icon: Ext.window.MessageBox.INFO
+                            });
                         }
                     },
                     {
                         text: '导出报表',
                         name: 'bilexp',
                         icon: 'resources/img/bill_export.png',
-                        handler: function (){
+                        handler: function () {
 
                         }
                     }
@@ -95,8 +107,21 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                             dataIndex: 'balance'
                         },
                         {
-                            text: '明细',
-                            dataIndex: 'id'
+                            xtype: 'actioncolumn',
+                            text: '查看明细',
+                            items: [
+                                {
+                                    icon: './resources/img/detail.png',
+                                    tooltip: '查看明细',
+                                    handler: function (grid, rowIndex, colIndex) {
+                                        var rec = grid.getStore().getAt(rowIndex),
+                                            win = Ext.create('FamilyDecoration.view.totalpropertymanagement.MonthlyBillDetail', {
+                                                account: rec
+                                            });
+                                        win.show();
+                                    }
+                                }
+                            ]
                         },
                         {
                             text: '核对人',

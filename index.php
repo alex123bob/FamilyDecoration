@@ -42,7 +42,7 @@
     <link rel="stylesheet" href="tools/dhtmlx/codebase/themes/message_solid.css" />
     <link rel="stylesheet" href="tools/sweetalert/dist/sweetalert.css" />
     <script type="text/javascript" src="resources/locale/ext-lang-zh_CN.js"></script>
-    <script src="http://channel.sinaapp.com/api.js" type="text/javascript"></script>
+    <!-- <script src="http://channel.sinaapp.com/api.js" type="text/javascript"></script> -->
     <!-- for Christmas effect -->
     <script src="tools/snow.min.js" type="text/javascript"></script>
 </head>

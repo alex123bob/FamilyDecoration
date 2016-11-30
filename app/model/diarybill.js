@@ -2,6 +2,7 @@ Ext.define('FamilyDecoration.model.DiaryBill', {
     extend: 'Ext.data.Model',
     fields: [
         'id',
+        'accountId',
         {name: 'checkMonth', type: 'string'},
         'income',
         'outcome',
