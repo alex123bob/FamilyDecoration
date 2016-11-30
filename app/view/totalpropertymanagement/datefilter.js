@@ -180,15 +180,15 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                             fields: ['name', 'value'],
                             data: [
                                 {
-                                    name: '年查询',
+                                    name: '按年',
                                     value: 'Y'
                                 },
                                 {
-                                    name: '月查询',
+                                    name: '按月',
                                     value: 'M'
                                 },
                                 {
-                                    name: '日查询',
+                                    name: '按日',
                                     value: 'D'
                                 }
                             ],
@@ -202,7 +202,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                         queryMode: 'local',
                         labelWidth: 65,
                         width: 200,
-                        fieldLabel: '查询力度',
+                        fieldLabel: '查询粒度',
                         listeners: {
                             change: function (cmp, newVal, oldVal, opts){
                                 var resObj = me._getRes();
