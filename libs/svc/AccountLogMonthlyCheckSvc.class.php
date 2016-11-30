@@ -12,7 +12,8 @@ class AccountLogMonthlyCheckSvc extends BaseSvc
 	}
 
 	public function update($q){
-		$q['@checker'] = $_SESSION['name'];
+		$q['@checker'] = $_SESSION['realname'];
+		$q['@checkername'] = $_SESSION['name'];
 		return parent::update($q);
 	}
 
@@ -96,6 +97,7 @@ class AccountLogMonthlyCheckSvc extends BaseSvc
 		return $this->add(array(
 			'@income'=>$income,
 			'@outcome'=>$outcome,
+			'@status'=>'unchecked',
 			'@balance'=>$balance,
 			'@scale'=>self::$SCALE_TYPE[$scale],
 			'@accountId'=>$accountId,
