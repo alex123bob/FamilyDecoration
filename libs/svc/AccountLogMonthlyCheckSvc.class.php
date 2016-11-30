@@ -13,6 +13,7 @@ class AccountLogMonthlyCheckSvc extends BaseSvc
 
 	public function update($q){
 		$q['@checker'] = $_SESSION['realname'];
+		$q['@checkername'] = $_SESSION['name'];
 		return parent::update($q);
 	}
 
