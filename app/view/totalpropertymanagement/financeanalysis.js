@@ -23,7 +23,10 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.FinanceAnalysis', {
 
         me.dockedItems = [
             {
-                xtype: 'totalpropertymanagement-datefilter'
+                xtype: 'totalpropertymanagement-datefilter',
+                filterFunc: function (startTime, endTime, account, scale){
+                    console.log(arguments);
+                }
             }
         ];
 
