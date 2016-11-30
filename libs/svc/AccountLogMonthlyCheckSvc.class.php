@@ -21,12 +21,11 @@ class AccountLogMonthlyCheckSvc extends BaseSvc
 		throw new BaseException("不允许删除记录！");
 	}
 	
-	private function generateTimeSpan($startTime,$endTime,$scale,$accountId){
+	private function generateTimeSpan($startTime,$endTime,$scale,$accountId,$accountCreateDay){
 		$days = array();
 		if($startTime > $endTime){
 			throw new BaseException('开始时间不能晚于结束时间！');
 		}
-		$accountCreateDay = $this->getSvc('Account')->getAccountCreateDay($accountId);   //format 20160908
 		if($accountCreateDay > $endTime){
 			throw new BaseException("此时间段账户还未创建，账户创建时间：$accountCreateDay");
 		}
@@ -40,6 +39,17 @@ class AccountLogMonthlyCheckSvc extends BaseSvc
 		return $days;
 	}
 	
+	private function getAccountLastBalance($accountId,$startTime,$accountCreateDay){
+		global $mysql;
+		$sql = "select balance from account_log where replace(left(createTime,10),'-','') < '?' and accountId = '?' order by createTime desc limit 1 offset 0;";
+		$accounts = $mysql->DBGetAsOneArray($sql,$startTime,$accountId);
+		if(count($accounts)==0){
+			return 0;
+		}
+		return (int)$accounts[0];
+		
+	}
+	
 	private static $SCALE_TYPE = array('Y'=>0,'M'=>1,'D'=>2);
 	private static $SCALE_TIMEFORMAT = array('Y'=>'Y','M'=>'Ym','D'=>'Ymd');
 	private static $SCALE_FOR_LEFT = array('Y'=>4,'M'=>7,'D'=>10);
@@ -51,7 +61,8 @@ class AccountLogMonthlyCheckSvc extends BaseSvc
 		$endTime = $q['endTime'];
 		$accountId = $q['accountId'];
 		$scale = $q['scale'];
-		$days = $this->generateTimeSpan($startTime,$endTime,$scale,$accountId);
+		$accountCreateDay = $this->getSvc('Account')->getAccountCreateDay($accountId);   //format 20160908
+		$days = $this->generateTimeSpan($startTime,$endTime,$scale,$accountId,$accountCreateDay);
 
 		if($scale == 'Y'){
 			$startTime = substr($startTime,0,4);
@@ -71,11 +82,11 @@ class AccountLogMonthlyCheckSvc extends BaseSvc
 			$dataMapCheckMonthAsKey[$value['checkMonth']] = $value;
 		}
 		$data = array();
-		$lastBalance = 0;
+		$lastBalance = 'null';
 		foreach($days as $key => $day){
 			$value = isset($dataMapCheckMonthAsKey[$day]) ? $dataMapCheckMonthAsKey[$day] : $this->generateMonthData($day,$accountId,$scale);
 			if($value['income'] == $value['outcome'] && $value['income'] == $value['balance'] && $value['income'] == 0)
-				$value['balance'] = $lastBalance;
+				$value['balance'] = $lastBalance == 'null' ? $this->getAccountLastBalance($accountId,$q['startTime'],$accountCreateDay) : $lastBalance;
 			array_push($data,$value);
 			$lastBalance = $value['balance'];
 		}
