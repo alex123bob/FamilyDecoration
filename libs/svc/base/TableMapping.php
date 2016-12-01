@@ -16,7 +16,7 @@
 		"potential_business_detail"=>array('id','potentialBusinessId','comments','committer'),
 		"log_list"=>array('id','content','committer','logType','isFinished'),
 		"error_log"=>array('params','user','detail','file','line','url','ip','refer','useragent','type'),
-		"salary"=>array('id','period','payee','basicSalary','positionSalary','meritSalary','socialTax','balance','amount','paidTime','payer','status'),
+		"salary"=>array('id','socialTaxCorp','period','payee','basicSalary','positionSalary','meritSalary','socialTax','balance','amount','paidTime','payer','status'),
 		"account"=>array('id','name','accountType','balance'),
 		"account_log"=>array('id','accountId','type','amount','balance','refId','refType','operator','desc'),
 		"account_log_monthly_check"=>array('id','accountId','scale','checkMonth','income','outcome','balance','checker','status','checkername'),
