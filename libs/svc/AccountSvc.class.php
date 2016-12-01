@@ -227,6 +227,25 @@ class AccountSvc extends BaseSvc
 		$mysql->commit();
 		return array('status'=>'successful','d'=>$account);
 	}
+	
+	//财务分析--收入分析
+	function incomeAnalysis($q){
+		global $mysql;
+		//工程款//设计定金
+		$sql = "select sum(paidAmount) as amount,billType from statement_bill where billType in ('pjtf','dsdpst','other') and isDeleted = 'false' group by billType;";
+		$types = array('pjtf'=>'工程款','dsdpst'=>'设计定金','other'=>'其他','gov'=>'政府补贴','longterminvt'=>'长期投资','shortterminvt'=>'短期投资');
+		$data = $mysql->DBGetAsMap($sql);
+		$gotTypes = '/';
+		foreach($data as &$item){
+			$gotTypes .= $item['billType'].'/';
+			$item['billType'] = $types[$item['billType']];
+		}
+		foreach($types as $type => $typeCN){
+			if(!contains($gotTypes,'/'.$type.'/'))
+				array_push($data,array('amount'=>0,'billType'=>$typeCN));
+		}
+		return $data; 
+	}
 }
 
 ?>
