@@ -237,23 +237,30 @@ class AccountSvc extends BaseSvc
 		$data = $mysql->DBGetAsMap($sql,$q['startTime'],$q['endTime']);
 		$gotTypes = '/';
 		$total = 0;
-		foreach($data as &$item){
+		$isShowTotalAndZoneElement = isset($q['total']) && $q['total'] == 'true';
+
+		foreach($data as $key => &$item){
 			$gotTypes .= $item['type'].'/';
 			$item['type'] = $types[$item['type']];
 			$total += $item['amount'];
+			if(!$isShowTotalAndZoneElement && ((int)$item['amount']) == 0){
+				unset($data[$key]);
+			}
 		}
 		foreach($types as $type => $typeCN){
-			if(!contains($gotTypes,'/'.$type.'/'))
+			if(!contains($gotTypes,'/'.$type.'/') && $isShowTotalAndZoneElement)
 				array_push($data,array('amount'=>0,'type'=>$typeCN));	
 		}
-		if(isset($q['total']) && $q['total'] == 'true')
-			array_push($data,array('amount'=>0,'type'=>'总收入'));
+		if($isShowTotalAndZoneElement)
+			array_push($data,array('amount'=>$total,'type'=>'总收入'));
 		return $data; 
 	}
 	
 	//财务分析--内部支出分析
 	function corpOutcomeAnalysis($q){
 		global $mysql;
+		$isShowTotalAndZoneElement = isset($q['total']) && $q['total'] == 'true';
+
 		$sql = "select sum(paidAmount) as amount,reimbursementReason as type from statement_bill where billType in ('rbm','fdf','wlf','tax') ".
 		"and status != 'new' and isDeleted = 'false' and paidTime >= '?' and paidTime <= '?' ".
 		"and reimbursementReason not like '工程%' and reimbursementReason not like '%数据录入%' group by reimbursementReason";
@@ -263,12 +270,27 @@ class AccountSvc extends BaseSvc
 		$res = $mysql->DBGetAsOneArray($sql,$q['startTime'],$q['endTime']);
 		array_push($data,array('type'=>'工人工资','amount'=>$res[0]));
 		array_push($data,array('type'=>'社保(公司部分)','amount'=>$res[1]));
-		foreach($data as $value)
+		foreach($data as $key => &$value){
+			//公司内部管理费用-管理费-研究费用 ------> 研究费用
+			$texts = explode('-',$value['type']);
+			if(count($texts) > 1){
+				$value['type'] = $texts[count($texts)-1];
+			}
 			$total += $value['amount'];
-		if(isset($q['total']) && $q['total'] == 'true')
-			array_push($data,array('amount'=>0,'type'=>'总支出'));
+			if(!$isShowTotalAndZoneElement && ((int)$value['amount']) == 0){
+				unset($data[$key]);
+				
+			}
+		}	
+		if($isShowTotalAndZoneElement)
+			array_push($data,array('amount'=>$total,'type'=>'总支出'));
 		return $data; 
 	}
+	
+	//财务分析--内部支出分析
+	function projectOutcomeAnalysis($q){
+	}
+ 
 }
 
 ?>
