@@ -18,7 +18,18 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.FinanceAggregation', {
 
         me.dockedItems = [
             {
-                xtype: 'totalpropertymanagement-datefilter'
+                xtype: 'totalpropertymanagement-datefilter',
+                needScale: false,
+                filterFunc: function (startTime, endTime, account, scale){
+                    var st = me.getStore(),
+                        proxy = st.getProxy();
+                    Ext.apply(proxy.extraParams, {
+                        startTime: startTime,
+                        endTime: endTime,
+                        action: ''
+                    });
+                    st.load();
+                }
             }
         ];
 

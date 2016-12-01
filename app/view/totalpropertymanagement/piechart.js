@@ -51,9 +51,9 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.PieChart', {
                                 //calculate percentage.
                                 var total = 0;
                                 st.each(function (rec) {
-                                    total += rec.get('amount');
+                                    total += parseFloat(rec.get('amount'));
                                 });
-                                this.setTitle(storeItem.get('type') + ': ' + Math.round(storeItem.get('amount') / total * 100) + '%');
+                                this.setTitle(storeItem.get('type') + ': ' + Math.round(parseFloat(storeItem.get('amount')) / total * 100) + '%');
                             }
                         },
                         highlight: {
