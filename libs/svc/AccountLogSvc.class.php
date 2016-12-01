@@ -23,11 +23,20 @@ class AccountLogSvc extends BaseSvc
 		if(!isset($q['orderby'])){
 			$q['orderby'] = 'createTime desc';
 		}
-		if(isset($q['checkMonth'])){
-			//201609 总财务管理需要
-			$checkmonth = $q['checkMonth'].'';
-			$q['createTimeMin'] = substr($checkmonth,0,4).'-'.substr($checkmonth,4,2).'-01 00:00:00';
-			$q['createTimeMax'] = substr($checkmonth,0,4).'-'.substr($checkmonth,4,2)	.'-31 59:59:59';
+		if(isset($q['date'])){
+			//20160912 总财务管理需要
+			$date = $q['date'].'';
+			if($q['scale'] == 'Y'){
+				$q['createTimeMin'] = substr($date,0,4).'-01-01 00:00:00';
+				$q['createTimeMax'] = substr($date,0,4).'-12-31 59:59:59';
+			}else if($q['scale'] == 'M'){
+				$q['createTimeMin'] = substr($date,0,4).'-'.substr($date,4,2).'-01 00:00:00';
+				$q['createTimeMax'] = substr($date,0,4).'-'.substr($date,4,2).'-31 59:59:59';
+			}else{
+				$q['createTimeMin'] = substr($date,0,4).'-'.substr($date,4,2).'-'.substr($date,6,2).' 00:00:00';
+				$q['createTimeMax'] = substr($date,0,4).'-'.substr($date,4,2).'-'.substr($date,6,2).' 59:59:59';
+			}
+			
 		}
 		$res = parent::get($q);
 		$svc = BaseSvc::getSvc('User');
