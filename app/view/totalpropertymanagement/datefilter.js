@@ -9,6 +9,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
         width: '100%'
     },
     needBankAccount: false,
+    needScale: true,
     filterFunc: Ext.emptyFn,
 
     initComponent: function () {
@@ -33,7 +34,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                 if (me.needBankAccount) {
                     flag = resObj.account.getValue() ? true : false;
                 }
-                if (flag) {
+                if (flag && me.needScale) {
                     flag = resObj.scale.getValue() ? true : false;
                 }
             }
@@ -47,7 +48,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                     resObj.startTime.getValue(), 
                     resObj.endTime.getValue(), 
                     me.needBankAccount ? resObj.account.findRecord('id', resObj.account.getValue()) : undefined,
-                    resObj.scale.getSubmitValue()
+                    me.needBankAccount ? resObj.scale.getSubmitValue() : undefined
                 );
             }
         }
@@ -168,7 +169,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                             }
                         }
                     },
-                    {
+                    me.needScale ? {
                         xtype: 'combobox',
                         displayField: 'name',
                         valueField: 'value',
@@ -206,7 +207,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                                 filter();
                             }
                         }
-                    }
+                    } : {}
                 ]
             },
             me.needBankAccount ? {

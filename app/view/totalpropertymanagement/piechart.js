@@ -12,28 +12,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.PieChart', {
         var me = this,
             st = Ext.create('Ext.data.Store', {
                 autoLoad: false,
-                fields: ['id', 'name', 'value'],
-                data: [
-                    {
-                        name: 'aaa',
-                        value: 123
-                    },
-                    {
-                        name: 'bbb',
-                        value: 100
-                    },
-                    {
-                        name: 'ccc',
-                        value: 67
-                    },{
-                        name: 'ddd',
-                        value: 80
-                    },
-                    {
-                        name: 'eee',
-                        value: 201
-                    }
-                ],
+                fields: ['id', 'type', 'amount'],
                 proxy: {
                     type: 'rest',
                     url: './libs/api.php',
@@ -42,7 +21,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.PieChart', {
                         root: 'data'
                     },
                     extraParams: {
-                        action: 'FinanceManagement.get'
+                        action: 'Account.get' // Account.incomeAnalysis
                     }
                 }
             });
@@ -61,7 +40,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.PieChart', {
                 series: [
                     {
                         type: 'pie',
-                        field: 'value',
+                        field: 'amount',
                         showInLegend: true,
                         donut: false,
                         tips: {
@@ -72,9 +51,9 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.PieChart', {
                                 //calculate percentage.
                                 var total = 0;
                                 st.each(function (rec) {
-                                    total += rec.get('value');
+                                    total += rec.get('amount');
                                 });
-                                this.setTitle(storeItem.get('name') + ': ' + Math.round(storeItem.get('value') / total * 100) + '%');
+                                this.setTitle(storeItem.get('type') + ': ' + Math.round(storeItem.get('amount') / total * 100) + '%');
                             }
                         },
                         highlight: {
@@ -83,7 +62,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.PieChart', {
                             }
                         },
                         label: {
-                            field: 'name',
+                            field: 'type',
                             display: 'rotate',
                             contrast: true,
                             font: '18px Arial'
