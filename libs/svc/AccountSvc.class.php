@@ -287,8 +287,39 @@ class AccountSvc extends BaseSvc
 		return $data; 
 	}
 	
-	//财务分析--内部支出分析
+	//财务分析--工程支出分析
 	function projectOutcomeAnalysis($q){
+		global $mysql;
+		$isShowTotalAndZoneElement = isset($q['total']) && $q['total'] == 'true';
+		$data = array();
+		//其他成本
+		$sql = "select ifnull(sum(paidAmount),0) as amount from statement_bill where billType in ('rbm','fdf','wlf','tax') ".
+		"and status != 'new' and isDeleted = 'false' and paidTime >= '?' and paidTime <= '?' ".
+		"and reimbursementReason like '工程%' and reimbursementReason not like '%数据录入%'";
+		$data1 = $mysql->DBGetAsOneArray($sql,$q['startTime'],$q['endTime']);
+		
+		//材料成本
+		$sql = "select ifnull(sum(paidAmount),0) as amount from statement_bill where billType = 'mtf' ".
+		"and status != 'new' and isDeleted = 'false' and paidTime >= '?' and paidTime <= '?' ";
+		$data2 = $mysql->DBGetAsOneArray($sql,$q['startTime'],$q['endTime']);
+		
+		//人工成本
+		$sql = "select ifnull(sum(paidAmount),0) as amount from statement_bill where billType in ('ppd','reg') ".
+		"and status != 'new' and isDeleted = 'false' and paidTime >= '?' and paidTime <= '?' ";
+		$data3 = $mysql->DBGetAsOneArray($sql,$q['startTime'],$q['endTime']);
+		
+		if($isShowTotalAndZoneElement){
+			//工程总收入
+			$sql = "select ifnull(sum(paidAmount),0) as amount from statement_bill where billType in ('dsdpst','pjtf') ".
+			"and status != 'new' and isDeleted = 'false' and paidTime >= '?' and paidTime <= '?' ";
+			$data4 = $mysql->DBGetAsOneArray($sql,$q['startTime'],$q['endTime']);
+			array_push($data,array('amount'=>$data4[0],'type'=>'工程总收入'));
+			array_push($data,array('amount'=>$data1[0]+$data2[0]+$data3[0],'type'=>'工程总成本'));
+		}
+		array_push($data,array('amount'=>$data1[0],'type'=>'其他成本'));
+		array_push($data,array('amount'=>$data2[0],'type'=>'材料成本'));
+		array_push($data,array('amount'=>$data3[0],'type'=>'人工成本'));
+		return $data;
 	}
  
 }
