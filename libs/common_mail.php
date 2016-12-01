@@ -22,7 +22,7 @@ function sendEmail($recipient,$aliasNames='',$from = '佳诚装饰' ,$subject, $
 	$mail->SMTPSecure = "ssl";
 	$mail->SMTPAuth = true;
 	$mail->Username = "674417307@qq.com";
-	$mail->Password = "qqNJ20";
+	$mail->Password = "wjiecvhqgqambdge";
 	$mail->Priority = 1;
 	$mail->Charset = 'utf-8';
 	$mail->Encoding = 'base64';
