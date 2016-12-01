@@ -24,7 +24,8 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.MonthlyBillDetail', {
 
         Ext.apply(proxy.extraParams, {
             accountId: me.account.get('accountId'),
-            checkMonth: me.account.get('checkMonth')
+            date: me.account.get('checkMonth'),
+            scale: me.scale.getSubmitValue()
         });
         st.load();
 

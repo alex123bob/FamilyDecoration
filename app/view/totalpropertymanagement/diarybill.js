@@ -152,8 +152,12 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                                     tooltip: '查看明细',
                                     handler: function (grid, rowIndex, colIndex) {
                                         var rec = grid.getStore().getAt(rowIndex),
+                                            resObj = _getRes(),
+                                            dateFilter = resObj.dateFilter,
+                                            scale = dateFilter._getRes().scale;
                                             win = Ext.create('FamilyDecoration.view.totalpropertymanagement.MonthlyBillDetail', {
-                                                account: rec
+                                                account: rec,
+                                                scale: scale
                                             });
                                         win.show();
                                     }
