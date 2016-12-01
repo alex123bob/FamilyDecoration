@@ -15,4 +15,5 @@ CREATE TABLE `account_log_monthly_check` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+alter table salary add column   `socialTaxCorp` double(16,2) DEFAULT 0 comment '社保(公司)';
 update `system` set `paramValue`='version-8.11' where `id`='4';
