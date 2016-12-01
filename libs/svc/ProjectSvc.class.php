@@ -178,7 +178,7 @@ class ProjectSvc extends BaseSvc
 		$sql = "select CONCAT(s.projectId,'-',s.professionType) as k,round(sum(d.amount*d.unitPrice),2) as v 
 				from statement_bill_item d 
 				left join statement_bill s on s.id = d.billId 
-				where s.isDeleted = 'false' and d.isDeleted = 'false' and s.billType in ('reg','ppd','qgd') and s.projectId in ($projectIds)
+				where s.isDeleted = 'false' and s.status != 'new' and d.isDeleted = 'false' and s.billType in ('reg','ppd','qgd') and s.projectId in ($projectIds)
 				group by projectId,s.professionType;";
 		global $mysql;
 		$costData = $mysql->DBGetAsMap($sql);
@@ -204,6 +204,7 @@ class ProjectSvc extends BaseSvc
 			WHERE
 					b.isDeleted = 'false'
 				AND i.isDeleted = 'false'
+				AND b.status = 0
 				AND b.projectId IS NOT NULL
 				AND i.workCategory IS NOT NULL
 				and i.itemAmount > 0 and projectId in ($projectIds)
@@ -242,19 +243,19 @@ class ProjectSvc extends BaseSvc
 		//预算人工成本
 		$sql1 = "SELECT i.itemName as name,i.itemUnit as unit,i.manpowerCost as price,i.itemAmount as amount,round(i.manpowerCost*i.itemAmount,2) as totalPrice
 				 FROM budget b LEFT JOIN budget_item i ON i.budgetId = b.budgetId
-				 WHERE b.isDeleted = 'false' AND i.isDeleted = 'false' AND b.projectId IS NOT NULL AND i.workCategory IS NOT NULL and i.itemAmount > 0 and b.projectId = '?' and i.workCategory = '?'  order by name desc";
+				 WHERE b.status = 0 and b.isDeleted = 'false' AND i.isDeleted = 'false' AND b.projectId IS NOT NULL AND i.workCategory IS NOT NULL and i.itemAmount > 0 and b.projectId = '?' and i.workCategory = '?'  order by name desc";
 		//预算材料成本
 		$sql2 = "SELECT i.itemName as name,i.itemUnit as unit,i.mainMaterialCost as price,i.itemAmount as amount,round(i.mainMaterialCost*i.itemAmount,2) as totalPrice
 				 FROM budget b LEFT JOIN budget_item i ON i.budgetId = b.budgetId
-				 WHERE b.isDeleted = 'false' AND i.isDeleted = 'false' AND b.projectId IS NOT NULL AND i.workCategory IS NOT NULL and i.itemAmount > 0 and b.projectId = '?' and i.workCategory = '?'  order by name desc";
+				 WHERE b.status = 0 and b.isDeleted = 'false' AND i.isDeleted = 'false' AND b.projectId IS NOT NULL AND i.workCategory IS NOT NULL and i.itemAmount > 0 and b.projectId = '?' and i.workCategory = '?'  order by name desc";
 		//实际人工成本
 		$sql3 = "select d.billItemName as name,d.unit,d.amount,d.unitPrice as price,round(d.unitPrice*d.amount,2) as totalPrice
 				from statement_bill_item d left join statement_bill s on s.id = d.billId 
-				where s.isDeleted = 'false' and d.isDeleted = 'false' and s.billType in ('reg','ppd','qgd') and s.projectId = '?' and s.professionType = '?' order by name desc;";
+				where s.status != 'new' and s.isDeleted = 'false' and d.isDeleted = 'false' and s.billType in ('reg','ppd','qgd') and s.projectId = '?' and s.professionType = '?' order by name desc;";
 		//实际材料成本
 		$sql4 = "SELECT i.billItemName as name,i.unit,i.amount,i.unitPrice as price,round(i.unitPrice*i.amount,2) as totalPrice
 				FROM supplier_order_item i LEFT JOIN supplier_order o ON o.id = i.supplierId
-				WHERE o.isDeleted = 'false' AND i.isDeleted = 'false' and o.projectId = '?' and i.professionType = '?' order by name desc";
+				WHERE s.status != 'new' and o.isDeleted = 'false' AND i.isDeleted = 'false' and o.projectId = '?' and i.professionType = '?' order by name desc";
 		$sql = "";
 		switch($type){
 			case "manpowerbudget": $sql = $sql1; break;
@@ -275,7 +276,7 @@ class ProjectSvc extends BaseSvc
 		$projectId = $q['projectId'];
 		//实际人工成本
 		$sql = "select payee,id,claimAmount,paidAmount,status from statement_bill "
-			  ."where billType in ('reg','ppd','qgd') and isDeleted = 'false' and projectId = '?' and professionType = '?' order by payee desc;";
+			  ."where billType in ('reg','ppd','qgd') and status != 'new' and  isDeleted = 'false' and projectId = '?' and professionType = '?' order by payee desc;";
 		$data = $mysql->DBGetAsMap($sql,$projectId,$professionType);
 		return array("status"=>"successful","errMsg"=>"",'data'=>$data);
 	}
