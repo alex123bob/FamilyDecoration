@@ -12,7 +12,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.PieChart', {
         var me = this,
             st = Ext.create('Ext.data.Store', {
                 autoLoad: false,
-                fields: ['id', 'billType', 'amount'],
+                fields: ['id', 'type', 'amount'],
                 proxy: {
                     type: 'rest',
                     url: './libs/api.php',
@@ -53,7 +53,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.PieChart', {
                                 st.each(function (rec) {
                                     total += rec.get('amount');
                                 });
-                                this.setTitle(storeItem.get('billType') + ': ' + Math.round(storeItem.get('amount') / total * 100) + '%');
+                                this.setTitle(storeItem.get('type') + ': ' + Math.round(storeItem.get('amount') / total * 100) + '%');
                             }
                         },
                         highlight: {
@@ -62,7 +62,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.PieChart', {
                             }
                         },
                         label: {
-                            field: 'billType',
+                            field: 'type',
                             display: 'rotate',
                             contrast: true,
                             font: '18px Arial'

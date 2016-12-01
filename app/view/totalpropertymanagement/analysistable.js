@@ -8,7 +8,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.AnalysisTable', {
     initComponent: function () {
         var me = this,
             st = Ext.create('Ext.data.Store', {
-                fields: ['name', 'value'],
+                fields: ['type', 'amount'],
                 autoLoad: false,
                 proxy: {
                     type: 'rest',
@@ -33,11 +33,11 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.AnalysisTable', {
             items: [
                 {
                     text: '项目',
-                    dataIndex: 'name'
+                    dataIndex: 'type'
                 },
                 {
                     text: '内容',
-                    dataIndex: 'value'
+                    dataIndex: 'amount'
                 }
             ]
         };
