@@ -232,40 +232,41 @@ class AccountSvc extends BaseSvc
 	function incomeAnalysis($q){
 		global $mysql;
 		//工程款//设计定金
-		$sql = "select sum(paidAmount) as amount,billType from statement_bill where billType in ('pjtf','dsdpst','other') and isDeleted = 'false' and createTime >= '?' and createTime <= '?' group by billType;";
+		$sql = "select sum(paidAmount) as amount,billType as type from statement_bill where status != 'new' and billType in ('pjtf','dsdpst','other') and isDeleted = 'false' and createTime >= '?' and createTime <= '?' group by billType;";
 		$types = array('pjtf'=>'工程款','dsdpst'=>'设计定金','other'=>'其他','gov'=>'政府补贴','longterminvt'=>'长期投资','shortterminvt'=>'短期投资');
 		$data = $mysql->DBGetAsMap($sql,$q['startTime'],$q['endTime']);
 		$gotTypes = '/';
 		$total = 0;
 		foreach($data as &$item){
-			$gotTypes .= $item['billType'].'/';
-			$item['billType'] = $types[$item['billType']];
+			$gotTypes .= $item['type'].'/';
+			$item['type'] = $types[$item['type']];
 			$total += $item['amount'];
 		}
 		foreach($types as $type => $typeCN){
 			if(!contains($gotTypes,'/'.$type.'/'))
-				array_push($data,array('amount'=>0,'billType'=>$typeCN));	
+				array_push($data,array('amount'=>0,'type'=>$typeCN));	
 		}
 		if(isset($q['total']) && $q['total'] == 'true')
-			array_push($data,array('amount'=>0,'billType'=>'总收入'));
+			array_push($data,array('amount'=>0,'type'=>'总收入'));
 		return $data; 
 	}
 	
 	//财务分析--内部支出分析
 	function corpOutcomeAnalysis($q){
 		global $mysql;
-		$sql = "select sum(paidAmount) as amount,billType from statement_bill where billType in ('pjtf','dsdpst','other') and isDeleted = 'false' group by billType;";
-		$types = array('pjtf'=>'工程款','dsdpst'=>'设计定金','other'=>'其他','gov'=>'政府补贴','longterminvt'=>'长期投资','shortterminvt'=>'短期投资');
-		$data = $mysql->DBGetAsMap($sql);
-		$gotTypes = '/';
-		foreach($data as &$item){
-			$gotTypes .= $item['billType'].'/';
-			$item['billType'] = $types[$item['billType']];
-		}
-		foreach($types as $type => $typeCN){
-			if(!contains($gotTypes,'/'.$type.'/'))
-				array_push($data,array('amount'=>0,'billType'=>$typeCN));
-		}
+		$sql = "select sum(paidAmount) as amount,reimbursementReason as type from statement_bill where billType in ('rbm','fdf','wlf','tax') ".
+		"and status != 'new' and isDeleted = 'false' and paidTime >= '?' and paidTime <= '?' ".
+		"and reimbursementReason not like '工程%' and reimbursementReason not like '%数据录入%' group by reimbursementReason";
+		$data = $mysql->DBGetAsMap($sql,$q['startTime'],$q['endTime']);
+		$total = 0;
+		$sql = "select ifnull(sum(amount),0),ifnull(sum(socialTaxCorp),0) from salary where isDeleted = 'false' and paidTime >= '?' and paidTime <= '?' ;";
+		$res = $mysql->DBGetAsOneArray($sql,$q['startTime'],$q['endTime']);
+		array_push($data,array('type'=>'工人工资','amount'=>$res[0]));
+		array_push($data,array('type'=>'社保(公司部分)','amount'=>$res[1]));
+		foreach($data as $value)
+			$total += $value['amount'];
+		if(isset($q['total']) && $q['total'] == 'true')
+			array_push($data,array('amount'=>0,'type'=>'总支出'));
 		return $data; 
 	}
 }
