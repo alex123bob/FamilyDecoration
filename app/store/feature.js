@@ -205,13 +205,13 @@
                 children: [
                     {
                         name: '工程财物管理',
-                        cmp: DEBUG ? 'projectfinancemanagement-index' : '',
+                        cmp: 'projectfinancemanagement-index',
                         leaf: true,
                         icon: 'resources/img/project_finance_management.png'
                     },
                     {
                         name: '总财物管理',
-                        cmp: DEBUG ? 'totalpropertymanagement-index' : '',
+                        cmp: 'totalpropertymanagement-index',
                         leaf: true,
                         icon: 'resources/img/total_property_management.png'
                     },
@@ -414,6 +414,12 @@
             }
             else if (rec.get('cmp') == 'finance-parent') {
                 flag = User.isGeneral() ? false : true;
+            }
+            else if (rec.get('cmp') == 'projectfinancemanagement-index') {
+                flag = User.isAdmin() ? true : false;
+            }
+            else if (rec.get('cmp') == 'totalpropertymanagement-index') {
+                flag = User.isAdmin() ? true : false;
             }
             else if (rec.get('cmp') == 'manuallycheckbill-index') {
                 flag = User.isAdmin() || User.isFinanceManager() || User.isFinanceAccountant() || User.isProjectManager() || User.isProjectStaff() || User.isBudgetManager() || User.isBudgetStaff() ? true : false;
