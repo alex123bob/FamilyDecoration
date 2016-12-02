@@ -23,12 +23,13 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.FinanceAggregation', {
                 filterFunc: function (startTime, endTime, account, scale){
                     var st = me.getStore(),
                         proxy = st.getProxy();
-                    Ext.apply(proxy.extraParams, {
-                        startTime: startTime,
-                        endTime: endTime,
-                        action: ''
-                    });
-                    st.load();
+                    Ext.Msg.info('数据和相关模块不齐全，需要协商，敬请期待模块开放');
+                    // Ext.apply(proxy.extraParams, {
+                    //     startTime: startTime,
+                    //     endTime: endTime,
+                    //     action: ''
+                    // });
+                    // st.load();
                 }
             }
         ];

@@ -255,7 +255,7 @@ class ProjectSvc extends BaseSvc
 		//实际材料成本
 		$sql4 = "SELECT i.billItemName as name,i.unit,i.amount,i.unitPrice as price,round(i.unitPrice*i.amount,2) as totalPrice
 				FROM supplier_order_item i LEFT JOIN supplier_order o ON o.id = i.supplierId
-				WHERE s.status != 'new' and o.isDeleted = 'false' AND i.isDeleted = 'false' and o.projectId = '?' and i.professionType = '?' order by name desc";
+				WHERE o.status != 'new' and o.isDeleted = 'false' AND i.isDeleted = 'false' and o.projectId = '?' and i.professionType = '?' order by name desc";
 		$sql = "";
 		switch($type){
 			case "manpowerbudget": $sql = $sql1; break;
