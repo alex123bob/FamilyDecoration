@@ -205,13 +205,13 @@
                 children: [
                     {
                         name: '工程财物管理',
-                        cmp: 'projectfinancemanagement-index',
+                        cmp: DEBUG ? 'projectfinancemanagement-index' : '',
                         leaf: true,
                         icon: 'resources/img/project_finance_management.png'
                     },
                     {
                         name: '总财物管理',
-                        cmp: 'totalpropertymanagement-index',
+                        cmp: DEBUG ?  'totalpropertymanagement-index' : '',
                         leaf: true,
                         icon: 'resources/img/total_property_management.png'
                     },

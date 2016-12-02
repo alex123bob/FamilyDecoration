@@ -237,7 +237,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DateFilter', {
                         }
                     }
                 ]
-            } : undefined,
+            } : undefined
         ];
         
         this.callParent();

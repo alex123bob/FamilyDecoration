@@ -99,7 +99,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ColumnChart', {
                             renderer: function (storeItem, item) {
                                 this.setTitle(item.value[0] + ': ' + item.value[1]);
                             }
-                        },
+                        }
                     }
                 ]
             }
