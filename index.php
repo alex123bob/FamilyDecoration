@@ -27,14 +27,7 @@
     <meta http-equiv="content-type" content="text/html;charset=utf-8">
     <script type="text/javascript">
         var DEBUG = <?php echo $isLocal ?> ? true : false;
-        if (<?php 
-                if (isset($_GET["force_debug"])) {
-                    echo $_GET["force_debug"];
-                }
-                else {
-                    echo 'false';
-                } 
-            ?> == true) {
+        if (<?php echo isset($_GET["force_debug"]) ? "true" : "false"; ?> == true) {
             DEBUG = true;
         }
         var _PWDPREFIX = 'familydecoration-';
