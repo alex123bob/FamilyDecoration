@@ -110,11 +110,16 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                                 endTime = Ext.Date.format(dateFilter._getRes().endTime.getValue(), 'Ymd'),
                                 scale = dateFilter._getRes().scale;
                             if (resObj.dateFilter.isFiltered()) {
-                                var exportFrame = document.getElementById('exportDiaryBill');
-                                exportFrame.src = './fpdf/account_anlysis.php?accountId=' 
+                                // var exportFrame = document.getElementById('exportDiaryBill');
+                                // exportFrame.src = './fpdf/account_anlysis.php?accountId=' 
+                                //                 + account.getId() + '&startTime=' + startTime
+                                //                 + '&endTime=' + endTime + '&scale=' + scale.getSubmitValue()
+                                //                 + '&orderby=createTime'; // startTime, endTime, accountId
+                                var url = './fpdf/account_anlysis.php?accountId=' 
                                                 + account.getId() + '&startTime=' + startTime
                                                 + '&endTime=' + endTime + '&scale=' + scale.getSubmitValue()
-                                                + '&orderby=createTime'; // startTime, endTime, accountId
+                                                + '&orderby=createTime';
+                                var win = window.open(url, '预览', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
                             }
                             else {
                                 showMsg('请先进行筛选！');

@@ -12,7 +12,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.MonthlyBillDetail', {
     modal: true,
     account: undefined,
     defaults: {
-        
+
     },
     html: '<iframe id="exportMonthlyBillDetail"  src="javascript:void(0);" style="display:none"></iframe>',
     initComponent: function () {
@@ -35,9 +35,13 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.MonthlyBillDetail', {
                 handler: function () {
                     if (me.account) {
                         var exportFrame = document.getElementById('exportMonthlyBillDetail');
-                        exportFrame.src = './fpdf/account_log.php?accountId=' + me.account.get('accountId')
-                                        + '&date=' + me.account.get('checkMonth') + '&scale=' + me.scale.getSubmitValue()
-                                        + '&orderby=createTime';
+                        // exportFrame.src = './fpdf/account_log.php?accountId=' + me.account.get('accountId')
+                        //                 + '&date=' + me.account.get('checkMonth') + '&scale=' + me.scale.getSubmitValue()
+                        //                 + '&orderby=createTime';
+                        var url = './fpdf/account_log.php?accountId=' + me.account.get('accountId')
+                            + '&date=' + me.account.get('checkMonth') + '&scale=' + me.scale.getSubmitValue()
+                            + '&orderby=createTime';
+                        var win = window.open(url, '预览', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
                     }
                     else {
                         showMsg('没有账号!');
@@ -71,7 +75,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.MonthlyBillDetail', {
                         {
                             text: '入账',
                             dataIndex: 'amount',
-                            renderer: function (val, meta, rec){
+                            renderer: function (val, meta, rec) {
                                 return rec.get('type') == 'in' ? val : '';
                             }
                         },
@@ -91,7 +95,7 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.MonthlyBillDetail', {
                 }
             }
         ]
-        
+
         this.callParent();
     }
 });
