@@ -35,7 +35,9 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.MonthlyBillDetail', {
                 handler: function () {
                     if (me.account) {
                         var exportFrame = document.getElementById('exportMonthlyBillDetail');
-                        // exportFrame.src = './fpdf/index2.php?budgetId=' + me.budgetId;
+                        exportFrame.src = './fpdf/account_log.php?accountId=' + me.account.get('accountId')
+                                        + '&date=' + me.account.get('checkMonth') + '&scale=' + me.scale.getSubmitValue()
+                                        + '&orderby=createTime';
                     }
                     else {
                         showMsg('没有账号!');

@@ -111,9 +111,10 @@ Ext.define('FamilyDecoration.view.totalpropertymanagement.DiaryBill', {
                                 scale = dateFilter._getRes().scale;
                             if (resObj.dateFilter.isFiltered()) {
                                 var exportFrame = document.getElementById('exportDiaryBill');
-                                exportFrame.src = './fpdf/monthly_check_detail.php?accountId=' 
+                                exportFrame.src = './fpdf/account_anlysis.php?accountId=' 
                                                 + account.getId() + '&startTime=' + startTime
-                                                + '&endTime=' + endTime + '&scale=' + scale.getSubmitValue(); // startTime, endTime, accountId
+                                                + '&endTime=' + endTime + '&scale=' + scale.getSubmitValue()
+                                                + '&orderby=createTime'; // startTime, endTime, accountId
                             }
                             else {
                                 showMsg('请先进行筛选！');
