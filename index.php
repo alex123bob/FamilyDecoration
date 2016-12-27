@@ -939,7 +939,7 @@
          * for Christmas snow effect
          */
         // just close the snow coz now it's spring in China. -_-||
-        // createSnow('resources/img/snow/', 100);
+        createSnow('resources/img/snow/', 100);
         
     </script>
     <script type="text/javascript" src="tools/jquery-1.11.1.min.js"></script>
