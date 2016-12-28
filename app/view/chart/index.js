@@ -477,7 +477,7 @@ Ext.define('FamilyDecoration.view.chart.Index', {
 							pid: sel.getId()
 						};
 
-						changeMainCt('progress-index', {
+						changeMainCt('projectprogress-index', {
 							loadAll: false
 						});
 					}
