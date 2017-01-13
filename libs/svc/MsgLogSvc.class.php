@@ -33,8 +33,8 @@ class MsgLogSvc extends BaseSvc
 		global $MsgErrorCode,$BlackListWords,$userAndPswd,$corpName,$apiUrl,$mysql;
 		$res = $this->add($q);
 		$this->sendMsg($res['data']);
-		$mysql->DBExecute("update msg_log set status = 100 where id = '".$res['id']."'");
-		return $data;
+		$mysql->DBExecute("update msg_log set status = 100 where id = '".$res['data']['id']."'");
+		return $res;
 	}
 
 	private function getValueFromXml($str,$key){
