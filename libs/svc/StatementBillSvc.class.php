@@ -93,7 +93,8 @@ class StatementBillSvc extends BaseSvc
 			//需要短信验证
 			$rand = rand(1000,9999);
 			$_SESSION['validateCode'] = $rand;
-			$this->getSvc('MsgLog')->addAndSend(new Array(
+			$msgLogSvc = $this->getSvc('MsgLog');
+			$msgLogSvc->addAndSend(array(
 				'@reciever'=>$_SESSION['name'],
 				'@recieverPhone'=>$_SESSION['phone'],
 				'@content'=>'您的短信验证码是:'.$rand,
