@@ -93,8 +93,11 @@ class StatementBillSvc extends BaseSvc
 			//需要短信验证
 			$rand = rand(1000,9999);
 			$_SESSION['validateCode'] = $rand;
-			include_once __ROOT__."/libs/msgLogDB.php";
-			sendMsg($_SESSION['realname'].'-BillStateChange',$_SESSION['name'],$_SESSION['phone'],'您的短信验证码是:'.$rand,null,'sendSMS');
+			$this->getSvc('MsgLog')->addAndSend(new Array(
+				'@reciever'=>$_SESSION['name'],
+				'@recieverPhone'=>$_SESSION['phone'],
+				'@content'=>'您的短信验证码是:'.$rand,
+			));
 			return array('status'=>'successful', 'type' => 'sms', 'errMsg' => '', 'hint' => '本次操作需要提供短信验证码，<br />验证码已发送到'.$_SESSION['phone'].'，请输入收到的验证码。<br />如果手机号更改或丢失而无法输入验证码，请联系管理员。');
 		}else{
 			return array('status'=>'successful', 'type' => 'securePass', 'errMsg' => ''.$limit[0].' '.$bill['totalFee'], 'hint' => '本次操作需要提供安全码，<br />请输入您当前账号的安全码进行下一步操作。<br />如果您未初始化安全码，请前往账户管理进行设置，或联系管理员。');
