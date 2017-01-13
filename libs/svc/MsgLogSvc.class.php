@@ -30,8 +30,11 @@ class MsgLogSvc extends BaseSvc
 
 	//新增短信入库并立即发送
 	public function addAndSend($q){
+		global $MsgErrorCode,$BlackListWords,$userAndPswd,$corpName,$apiUrl,$mysql;
 		$res = $this->add($q);
-		return $this->sendMsg($res['data']);
+		$data = $this->sendMsg($res['data']);
+		$mysql->DBExecute("update msg_log set status = 100 where id = '".$data['id']."'");
+		return $data;
 	}
 
 	private function getValueFromXml($str,$key){
