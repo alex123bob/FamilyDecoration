@@ -17,4 +17,4 @@ ALTER TABLE  `taskcensor` CHANGE  `id`  `id` VARCHAR( 20 ) CHARACTER SET utf8 CO
 ALTER TABLE  `task_list` CHANGE  `id`  `id` VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT  'id主键';
 ALTER TABLE  `task_self_assessment` CHANGE  `id`  `id` VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT  'id主键';
 
-update `system` set `paramValue`='version-8.11' where `id`='4';
+update `system` set `paramValue`='version-8.12' where `id`='4';
