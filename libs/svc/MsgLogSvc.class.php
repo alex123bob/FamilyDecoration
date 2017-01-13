@@ -32,8 +32,8 @@ class MsgLogSvc extends BaseSvc
 	public function addAndSend($q){
 		global $MsgErrorCode,$BlackListWords,$userAndPswd,$corpName,$apiUrl,$mysql;
 		$res = $this->add($q);
-		$data = $this->sendMsg($res['data']);
-		$mysql->DBExecute("update msg_log set status = 100 where id = '".$data['id']."'");
+		$this->sendMsg($res['data']);
+		$mysql->DBExecute("update msg_log set status = 100 where id = '".$res['id']."'");
 		return $data;
 	}
 
