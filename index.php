@@ -942,6 +942,7 @@
         // just close the snow coz now it's spring in China. -_-||
         // createSnow('resources/img/snow/', 100);
 
+        // for firework effect.
         $(function (){
             var $fireworkCanvas = $('<div class="fireworkCanvas" style="z-index: 99999999; width: 100%; height: 100%; position: fixed;">');
             $('body').append($fireworkCanvas);
@@ -957,6 +958,7 @@
                 });
             }, 10000);
         });
+        // end of firework effect.
         
     </script>
     <script type="text/javascript" src="highchart/js/highcharts.js"></script>
