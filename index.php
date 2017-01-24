@@ -946,17 +946,18 @@
         $(function (){
             var $fireworkCanvas = $('<div class="fireworkCanvas" style="z-index: 99999999; width: 100%; height: 100%; position: fixed;">');
             $('body').append($fireworkCanvas);
-            $('.fireworkCanvas').fireworks({ 
-                sound: false, // 声音效果
+            $fireworkCanvas.append($('<div class="closeBtn" style="position: absolute; right: 10px; top: 10px; cursor: pointer; color: #fff; z-index: 100000000;">X</div>'));
+            var fireworkField = $('.fireworkCanvas').fireworks({ 
+                sound: true, // 声音效果
                 opacity: 0.9, 
                 width: '100%', 
                 height: '100%'
             });
-            setTimeout(function() {
-                $('.fireworkCanvas').fadeOut(2000, function (){
-                    $(this).remove();
+            $('.closeBtn').on('click', function (){
+                $fireworkCanvas.fadeOut(1000, function (){
+                    fireworkField.close();
                 });
-            }, 10000);
+            });
         });
         // end of firework effect.
         

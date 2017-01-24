@@ -201,7 +201,7 @@
         context.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         // customized effect by Alexander Li and Diego Zhu.
         context.fillStyle = "#ff0000";
-        context.font = "normal 40px arial";
+        context.font = "normal 40px Arial";
         context.fillText('新年快乐', SCREEN_WIDTH / 2 - 80, 40);
         // end of cutomize effect
 
@@ -272,9 +272,19 @@
 
     // Append the canvas and start the loops
     $(fireworksField).append(canvas);
-    setInterval(launch, 800);
-    setInterval(loop, 1000 / 50);
+    // clear it while field is removed from body.
+    var launchIntervallId = setInterval(launch, 800);
+    var loopIntervalId = setInterval(loop, 1000 / 50);
 
-    return fireworksField;
+    // extend self defined functinality.
+    return $.extend(fireworksField, {
+        close: function (){
+            clearInterval(launchIntervallId);
+            clearInterval(loopIntervalId);
+            audio.pause();
+            audio.currentTime = 0;
+            $(fireworksField).remove();
+        }
+    });
   };
 }(jQuery));
