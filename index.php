@@ -48,6 +48,7 @@
     <script src="http://channel.sinaapp.com/api.js" type="text/javascript"></script>
     <!-- for Christmas effect -->
     <script src="tools/snow.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="tools/jquery-1.11.1.min.js"></script>
 </head>
 <body>
     <div id="userInfo" class="x-hide-display">
@@ -939,10 +940,25 @@
          * for Christmas snow effect
          */
         // just close the snow coz now it's spring in China. -_-||
-        createSnow('resources/img/snow/', 100);
+        // createSnow('resources/img/snow/', 100);
+
+        $(function (){
+            var $fireworkCanvas = $('<div class="fireworkCanvas" style="z-index: 99999999; width: 100%; height: 100%; position: fixed;">');
+            $('body').append($fireworkCanvas);
+            $('.fireworkCanvas').fireworks({ 
+                sound: false, // 声音效果
+                opacity: 0.9, 
+                width: '100%', 
+                height: '100%'
+            });
+            setTimeout(function() {
+                $('.fireworkCanvas').fadeOut(2000, function (){
+                    $(this).remove();
+                });
+            }, 10000);
+        });
         
     </script>
-    <script type="text/javascript" src="tools/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="highchart/js/highcharts.js"></script>
     <script type="text/javascript" src="highchart/js/highcharts-3d.js"></script>
     <script type="text/javascript" src="highchart/js/exporting.js"></script>
@@ -951,5 +967,6 @@
     <script type="text/javascript" src="tools/dhtmlx/codebase/message.js"></script>
     <script type="text/javascript" src="tools/sweetalert/dist/sweetalert.min.js"></script>
     <script type="text/javascript" src="tools/md5.min.js"></script>
+    <script type="text/javascript" src="tools/jquery.firework.js"></script>
 </body>
 </html>
