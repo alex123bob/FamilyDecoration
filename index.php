@@ -946,7 +946,7 @@
         $(function (){
             var $fireworkCanvas = $('<div class="fireworkCanvas" style="z-index: 99999999; width: 100%; height: 100%; position: fixed;">');
             $('body').append($fireworkCanvas);
-            $fireworkCanvas.append($('<div class="closeBtn" style="position: absolute; right: 10px; top: 10px; cursor: pointer; color: #fff; z-index: 100000000;">X</div>'));
+            $fireworkCanvas.append($('<div class="closeBtn" style="font-size: 20px; position: absolute; right: 10px; top: 10px; cursor: pointer; color: #fff; z-index: 100000000;">X</div>'));
             var fireworkField = $('.fireworkCanvas').fireworks({ 
                 sound: true, // 声音效果
                 opacity: 0.9, 
@@ -954,7 +954,7 @@
                 height: '100%'
             });
             $('.closeBtn').on('click', function (){
-                $fireworkCanvas.fadeOut(1000, function (){
+                $fireworkCanvas.fadeOut(2500, function (){
                     fireworkField.close();
                 });
             });

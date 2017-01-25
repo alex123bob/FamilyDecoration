@@ -200,7 +200,11 @@
         context.fillStyle = "rgba(0, 0, 0, 0.05)";
         context.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         // customized effect by Alexander Li and Diego Zhu.
-        context.fillStyle = "#ff0000";
+        var gradient = context.createLinearGradient(SCREEN_WIDTH / 2 - 80, 40, SCREEN_WIDTH / 2 + 80, 40);
+        gradient.addColorStop(0, 'orange');
+        gradient.addColorStop(0.5, 'magenta');
+        gradient.addColorStop(1, 'red');
+        context.fillStyle = gradient;
         context.font = "normal 40px Arial";
         context.fillText('新年快乐', SCREEN_WIDTH / 2 - 80, 40);
         // end of cutomize effect
