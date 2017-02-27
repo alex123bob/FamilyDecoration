@@ -272,12 +272,14 @@
 		include_once "projectDB.php";
 		$res = addProject($obj);
 		$mysql->DBUpdate('business',array('isTransfered'=>'true','updateTime'=>'now()','applyProjectTransference'=>2),"`id`='?'",array($businessId));
+		// start of inserting projectId into relative budget record.
 		include_once "budgetDB.php";
 		$budgets = getBudgetsByBusinessId($businessId);
 		for ($i=0; $i < count($budgets); $i++) { 
 			$budget = $budgets[$i];
 			editBudget(array("budgetId" => $budget["budgetId"], "projectId" => $res["projectId"]));
 		}
+		// end of inserting
 		return array('status'=>'successful', 'errMsg' => '','projectId'=>$res['projectId']);
 	}
 
