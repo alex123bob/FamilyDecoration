@@ -29,6 +29,22 @@ Ext.define('FamilyDecoration.view.businesstotransfer.Index', {
         me.items = [
             {
                 title: '等待业务列表',
+                tbar: [
+                    {
+                        text: '锁定',
+                        handler: function (){
+                            var grid = this.up('gridpanel'),
+                                selModel = grid.getSelectionModel(),
+                                rec = selModel.getSelection()[0];
+                            if (rec) {
+                                
+                            }
+                            else {
+                                showMsg('没有选中的业务!');
+                            }
+                        }
+                    }
+                ],
                 autoScroll: true,
                 store: st,
                 columns: {
