@@ -32,6 +32,7 @@
 	function getBusinessByDesigner($post){
 		global $mysql;
 		// isWaiting: default false, 传递为true表示查询当前designer的待转列表业务
+		// 这边的isWaiting不是数据库的那个字段
 		if (isset($post["isWaiting"]) && $post["isWaiting"] == true) {
 			$waitingListSql = " and ds_lp = '-1' ";
 		}
@@ -159,7 +160,7 @@
 	
 	function getBusiness($data){
 		global $mysql;
-		$fields = array('floorArea','houseType','regionId','potentialBusinessId','address','isFrozen','requestDead','isDead','requestDeadBusinessTitle','requestDeadBusinessReason','customer','custContact','salesman','salesmanName','designer','designerName','csStaff','csStaffName','applyDesigner','level','ds_lp','ds_fc','ds_bs','ds_bp');
+		$fields = array('floorArea','houseType','regionId','potentialBusinessId','address','isFrozen','requestDead','isDead','requestDeadBusinessTitle','requestDeadBusinessReason','customer','custContact','salesman','salesmanName','designer','designerName','csStaff','csStaffName','applyDesigner','level','ds_lp','ds_fc','ds_bs','ds_bp','isWaiting','isLocked');
 		$params = array();
 		$sql = "select `b`.*, `r`.name from `business` `b` left join `region` `r` on `b`.regionId = `r`.id where `b`.`isDeleted` = 'false' and b.isTransfered = 'false' ";
 		foreach($fields as $field){
@@ -228,8 +229,8 @@
 	function editBusiness($data){
 		global $mysql;
 		$id = $data["id"];
-		$fields = array("regionId","potentialBusinessId","address","isFrozen",'requestDead','isDead','requestDeadBusinessTitle','requestDeadBusinessReason',"isTransfered","updateTime","signTime","customer","custContact","salesman","source","salesmanName","csStaff","csStaffName","designer","designerName","applyDesigner","applyProjectTransference","applyBudget","ds_lp","ds_fc","ds_bs","ds_bp");
-		$obj = array();
+		$fields = array("regionId","potentialBusinessId","address","isFrozen",'requestDead','isDead','requestDeadBusinessTitle','requestDeadBusinessReason',"isTransfered","updateTime","signTime","customer","custContact","salesman","source","salesmanName","csStaff","csStaffName","designer","designerName","applyDesigner","applyProjectTransference","applyBudget","ds_lp","ds_fc","ds_bs","ds_bp","isWaiting","isLocked");
+		$obj = array('updateTime'=>'now()');
 		foreach($fields as $field){
 			if(isset($data[$field]))
 				$obj[$field] = $data[$field];
@@ -256,7 +257,7 @@
 		$businessId = $data['businessId'];
 		$obj = array('customer'=>$data['customer'],"custContact"=>$data["custContact"],"businessId"=>$businessId);
 		//可选字段
-		$fields = array("projectTime","projectName","designer","designerName","captain","captainName","salesman","supervisor","supervisorName","salesmanName");
+		$fields = array("projectTime","projectName","designer","designerName","captain","captainName","salesman","supervisor","supervisorName","salesmanName","isWaiting","isLocked");
 		foreach($fields as $field){
 			if(isset($data[$field]))
 				$obj[$field] = $data[$field];

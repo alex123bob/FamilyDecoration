@@ -361,6 +361,28 @@
         "name": "Test",
         "fields": "id:int:null,name:auto:null,email:auto:null"
       }
+    },
+    "app/controller/app/controller/businesstotransfer.js": {
+      "source": "{controllerFileName}.js.tpl.merge",
+      "version": "b092f4aad11d2f7eaab5ce3e2dcc2fc3134f3188",
+      "parameters": {
+        "appName": "FamilyDecoration",
+        "controllerName": "app/controller/businesstotransfer",
+        "name": "app/controller/businesstotransfer",
+        "controllerNamespace": "FamilyDecoration.controller",
+        "controllerFileName": "app/controller/businesstotransfer"
+      }
+    },
+    "app/controller/businesstotransfer.js": {
+      "source": "{controllerFileName}.js.tpl.merge",
+      "version": "b092f4aad11d2f7eaab5ce3e2dcc2fc3134f3188",
+      "parameters": {
+        "appName": "FamilyDecoration",
+        "controllerName": "businesstotransfer",
+        "name": "businesstotransfer",
+        "controllerNamespace": "FamilyDecoration.controller",
+        "controllerFileName": "businesstotransfer"
+      }
     }
   }
 }
