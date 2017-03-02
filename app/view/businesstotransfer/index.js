@@ -34,18 +34,51 @@ Ext.define('FamilyDecoration.view.businesstotransfer.Index', {
                         text: '锁定',
                         handler: function (){
                             var grid = this.up('gridpanel'),
+                                st = grid.getStore(),
                                 selModel = grid.getSelectionModel(),
                                 rec = selModel.getSelection()[0];
-                            if (rec) {
-                                
+                            if (rec && rec.get('isLocked') == 'false') {
+                                Ext.Msg.warning('确定要锁定当前业务吗？锁定后的业务不能被自动分配!', function (btnId){
+                                    if (btnId == 'yes') {
+                                        Ext.Ajax.request({
+                                            url: './libs/business.php',
+                                            method: 'POST',
+                                            params: {
+                                                action: 'editBusiness',
+                                                id: rec.getId(),
+                                                isLocked: 'true'
+                                            },
+                                            callback: function (opts, success, res){
+                                                if (success) {
+                                                    var obj = Ext.decode(res.responseText);
+                                                    if ('successful' == obj.status) {
+                                                        showMsg('锁定业务成功!');
+                                                        st.reload();
+                                                        grid.getSelectionModel().deselectAll();
+                                                    }
+                                                }
+                                            }
+                                        })
+                                    }
+                                });
                             }
                             else {
-                                showMsg('没有选中的业务!');
+                                showMsg('没有选中的业务或业务被锁定!');
                             }
                         }
                     }
                 ],
                 autoScroll: true,
+                viewConfig: {
+                    getRowClass: function (rec, rowIndex, rowParams, st){
+                        if (rec.get('isLocked') == 'true') {
+                            return 'business-locked';
+                        }
+                        else {
+                            return 'business-unlocked';
+                        }
+                    }
+                },
                 store: st,
                 columns: {
                     defaults: {

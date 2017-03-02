@@ -294,6 +294,15 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 					}
 				},
 				{
+					text: '锁定账号',
+					hidden: User.isAdmin() ? false : true,
+					name: 'button-lockAccount',
+					id: 'button-lockAccount',
+					handler: function (){
+						
+					}
+				},
+				{
 					text: '优先级配置',
 					hidden: User.isAdmin() ? false : true,
 					icon: './resources/img/priority.png',
