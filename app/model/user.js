@@ -13,6 +13,7 @@ Ext.define('FamilyDecoration.model.User', {
 		{name: 'department', type: 'string'},
 		{name: 'profileImage', type: 'string'},
 		{name: 'priority', type: 'string'},
-		{name: 'priorityTitle', type: 'string'}
+		{name: 'priorityTitle', type: 'string'},
+		{name: 'isLocked', type: 'string'}
 	]
 });
