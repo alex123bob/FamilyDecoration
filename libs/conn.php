@@ -1,6 +1,13 @@
 <?php
 	header("Content-type: text/html; charset=utf-8");
 	header("message-queue: 1");
+	header( 'Access-Control-Allow-Origin:'.$_SERVER['HTTP_ORIGIN']);
+	header( 'Access-Control-Allow-Credentials:true');
+	header( 'Access-Control-Allow-Headers:Origin, X-Requested-With, Content-Type, Accept');
+
+
+	//print_r($_REQUEST);
+	//print_r($_SERVER);
 	define('__ROOT__', dirname(dirname(__FILE__))); 
 
 	if (!session_id()) session_start();
