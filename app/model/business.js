@@ -29,6 +29,7 @@ Ext.define('FamilyDecoration.model.Business', {
 		{name: 'requestDeadBusinessTitle', type: 'string'}, // 申请废单的目录
 		{name: 'requestDeadBusinessReason', type: 'string'}, // 该业务申请废单的原因
 		{name: 'budgetFinished', type: 'string'}, // an indicator used for telling if the corresponding budget is finished or not
+		{name: 'levelTime', type: 'string'}, //签单时间
 		{name: 'createTime', type: 'string'},
 		{name: 'houseType', type: 'string'},
 		{name: 'floorArea', type: 'string'}

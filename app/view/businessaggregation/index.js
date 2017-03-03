@@ -29,6 +29,17 @@ Ext.define('FamilyDecoration.view.businessaggregation.Index', {
         st.setProxy(proxy);
         st.load();
 
+        var timeRenderer = function (val, meta, rec) {
+            if (val) {
+                val = Ext.Date.format(new Date(val.replace(/-/gi, '/')), 'Y-m-d');
+            }
+            else {
+                val = '';
+            }
+
+            return val;
+        };
+
         me.items = [
             {
                 title: '业务汇总',
@@ -38,7 +49,33 @@ Ext.define('FamilyDecoration.view.businessaggregation.Index', {
                         xtype: 'pagingtoolbar',
                         store: st,   // same store GridPanel is using
                         dock: 'bottom',
-                        displayInfo: true
+                        displayInfo: true,
+                        updateInfo: function () {
+                            // we override this method for special use.
+                            var me = this,
+                                displayItem = me.child('#displayItem'),
+                                store = me.store,
+                                pageData = me.getPageData(),
+                                count, msg,
+                                // here we are gonna put ABCD business count into displayInfo.
+                                jsonData = store.getProxy().getReader().jsonData;
+
+                            if (displayItem) {
+                                count = store.getCount();
+                                if (count === 0) {
+                                    msg = me.emptyMsg;
+                                } else {
+                                    msg = Ext.String.format(
+                                        me.displayMsg,
+                                        pageData.fromRecord,
+                                        pageData.toRecord,
+                                        pageData.total
+                                    );
+                                }
+                                msg = 'A类: ' + jsonData.totalA + '; B类: ' + jsonData.totalB + '; C类: ' + jsonData.totalC + '; D类: ' + jsonData.totalD + '; ' + msg;
+                                displayItem.setText(msg);
+                            }
+                        }
                     }
                 ],
                 columns: {
@@ -57,7 +94,8 @@ Ext.define('FamilyDecoration.view.businessaggregation.Index', {
                         },
                         {
                             text: '等级',
-                            dataIndex: 'level'
+                            dataIndex: 'level',
+                            flex: 0.5
                         },
                         {
                             text: '客户',
@@ -79,19 +117,15 @@ Ext.define('FamilyDecoration.view.businessaggregation.Index', {
                             text: '来源',
                             dataIndex: 'source'
                         },
+                        // {
+                        //     text: '签单时间',
+                        //     dataIndex: 'levelTime',
+                        //     renderer: timeRenderer
+                        // },
                         {
                             text: '时间',
                             dataIndex: 'createTime',
-                            renderer: function (val, meta, rec) {
-                                if (val) {
-                                    val = Ext.Date.format(new Date(val.replace(/-/gi, '/')), 'Y-m-d');
-                                }
-                                else {
-                                    val = '';
-                                }
-
-                                return val;
-                            }
+                            renderer: timeRenderer
                         }
                     ]
                 }
