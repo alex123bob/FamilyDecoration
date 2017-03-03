@@ -2,14 +2,15 @@ Ext.define('FamilyDecoration.view.businessaggregation.Index', {
     extend: 'Ext.container.Container',
     alias: 'widget.businessaggregation-index',
     requires: [
-        
+        'FamilyDecoration.store.Business'
     ],
     layout: 'fit',
     defaults: {
         xtype: 'gridpanel'
     },
     initComponent: function () {
-        var me = this;
+        var me = this,
+            st = Ext.create('FamilyDecoration.store.Business');
 
         me.items = [
             {
@@ -21,7 +22,10 @@ Ext.define('FamilyDecoration.view.businessaggregation.Index', {
                     },
                     items: [
                         {
-                            text: '名称'
+                            text: '小区'
+                        },
+                        {
+                            text: '地址'
                         },
                         {
                             text: '等级'
