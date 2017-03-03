@@ -74,6 +74,11 @@
                         cmp: 'targetsetting-index',
                         leaf: true,
                         icon: 'resources/img/target-setting.png'
+                    },
+                    {
+                        name: '业务汇总',
+                        cmp: 'businessaggregation-index',
+                        leaf: true
                     }
                 ]
             },
@@ -324,6 +329,9 @@
             }
             else if (rec.get('cmp') == 'targetsetting-index') {
                 flag = User.isAdmin() ? true : false;
+            }
+            else if (rec.get('cmp') == 'businessaggregation-index') {
+                flag = User.isAdmin() || User.isBusinessManager() || User.isDesignManager() ? true : false;
             }
             else if (rec.get('cmp') == 'logbook-parent') {
                 flag = User.isAdmin() || User.isManager() || User.isDesignStaff() || User.isProjectStaff() || User.isSupervisor() || User.isBusinessStaff() || User.isAdministrationStaff() || User.isPropagandaStaff() || User.isFinanceStaff() || User.isBudgetManager() || User.isBudgetStaff() ? true : false;
