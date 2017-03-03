@@ -178,6 +178,9 @@
 		$sql .= " order by IF(ISNULL(`level`), 1, 0), `level` , id desc ";
 		// echo $sql;
 		// var_dump($params);
+		if (isset($data["limit"])) {
+			$sql .= " LIMIT ".$data["limit"];
+		}
 		return $mysql->DBGetAsMap($sql,$params);
 	}
 	
@@ -322,5 +325,25 @@
 		}catch(Exception $e){
 			var_dump($e);
 		}
+	}
+
+	function getBusinessAggregation($data) {
+		global $mysql;
+		$list = getBusiness(
+			array(
+				'isDead' => 'false',
+				'isFrozen' => 'false',
+				'isWaiting' => 'false',
+				'limit' => $data['start'].', '.$data['limit']
+			)
+		);
+		$total = $mysql->DBGetAsMap("select count(*) as totalBusiness from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and isWaiting = 'false'");
+		$total = $total[0]["totalBusiness"];
+		$res = array(
+			"data" => $list,
+			"total" => $total
+		);
+
+		return $res;
 	}
 ?>
