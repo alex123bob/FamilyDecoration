@@ -14,6 +14,7 @@ Ext.define('FamilyDecoration.view.budget.AddBasicItem', {
 
 	grid: null, // 预算表格
 	budgetId: undefined, // 预算id
+	insertBeforeItemCode: null,
 
 	initComponent: function () {
 		var me = this;
@@ -37,7 +38,8 @@ Ext.define('FamilyDecoration.view.budget.AddBasicItem', {
 								data.push({
 									itemName: txt == '' ? mainRec.get('itemName') : txt,
 									budgetId: me.budgetId,
-									basicItemId: mainRec.getId()
+									basicItemId: mainRec.getId(),
+									insertBefore: me.insertBeforeItemCode
 								});
 								for (var i = 0; i < subRecs.length; i++) {
 									data.push({
