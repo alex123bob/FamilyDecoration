@@ -64,7 +64,8 @@
                     {
                         name: '等待业务',
                         cmp: 'businesstotransfer-index',
-                        leaf: true
+                        leaf: true,
+                        icon: 'resources/img/wait.png'
                     }
                 ]
             },
@@ -83,7 +84,8 @@
                     {
                         name: '业务汇总',
                         cmp: 'businessaggregation-index',
-                        leaf: true
+                        leaf: true,
+                        icon: 'resources/img/business_aggregation.png'
                     }
                 ]
             },
@@ -424,6 +426,9 @@
             }
             else if (rec.get('cmp') == 'regionmgm-index') {
                 flag = User.isGeneral() ? false : true;
+            }
+            else if (rec.get('cmp') == 'businesstotransfer-index') {
+                flag = User.isAdmin() || (User.isManager() && !User.isProjectManager()) ? true : false;
             }
             else if (rec.get('cmp') == 'finance-parent') {
                 flag = User.isGeneral() ? false : true;

@@ -208,6 +208,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				text: '插入大项',
 				tooltip: '在当前选择的大项或者小项所属的大项前面插入大项',
 				name: 'button-insertNewItem',
+				icon: './resources/img/insert.png',
 				hidden: true,
 				disabled: true,
 				handler: function (){

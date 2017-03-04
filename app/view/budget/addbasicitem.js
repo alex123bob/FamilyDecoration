@@ -19,6 +19,8 @@ Ext.define('FamilyDecoration.view.budget.AddBasicItem', {
 	initComponent: function () {
 		var me = this;
 
+		me.insertBeforeItemCode && me.setTitle(me.title + ' <font color="orange">[插入到大项' + me.insertBeforeItemCode + '之前]</font>');
+
 		me.buttons = [
 			{
 				text: '添加',
