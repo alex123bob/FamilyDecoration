@@ -32,6 +32,7 @@ Ext.define('FamilyDecoration.view.businesstotransfer.Index', {
                 tbar: [
                     {
                         text: '锁定',
+                        icon: 'resources/img/lock1.png',
                         handler: function (){
                             var grid = this.up('gridpanel'),
                                 st = grid.getStore(),
