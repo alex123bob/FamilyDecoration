@@ -38,7 +38,7 @@
 			if($errorType != 1){
 				$mailSvc = BaseSvc::getSvc('Mail');
 				$mailSvc->add(array('@mailSubject'=>'有系统异常啦！','@mailContent'=>'有系统异常啦！','@mailSender'=>'系统提醒','@mailReceiver'=>'674417307@qq.com','@receiverAddress'=>'674417307@qq.com'));
-				$mailSvc->add(array('@mailSubject'=>'有系统异常啦！','@mailContent'=>'有系统异常啦！','@mailSender'=>'系统提醒','@mailReceiver'=>'547010762@qq.com','@receiverAddress'=>'674417307@qq.com'));
+				$mailSvc->add(array('@mailSubject'=>'有系统异常啦！','@mailContent'=>'有系统异常啦！','@mailSender'=>'系统提醒','@mailReceiver'=>'547010762@qq.com','@receiverAddress'=>'547010762@qq.com'));
 			}
 		}catch(Exception $e){
 			//var_dump($e);
