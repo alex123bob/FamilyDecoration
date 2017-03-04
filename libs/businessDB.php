@@ -4,7 +4,7 @@
 		$order = $desc == true ? "DESC" : "ASC";
 		$sql = 	"SELECT name AS salesmanName, realName AS salesman, IFNULL(number,0) as number FROM user LEFT JOIN ("
 					." SELECT salesman, salesmanName, COUNT( * ) AS number FROM business"
-					." WHERE createTime >=  '?' AND createTime <= '?' and isDeleted = 'false' and isWaiting = 'false' GROUP BY salesman ORDER BY number ? LIMIT ?"
+					." WHERE createTime >=  '?' AND createTime <= '?' and isDeleted = 'false' GROUP BY salesman ORDER BY number ? LIMIT ?"
 				.") a ON a.salesmanName = user.name where user.isDeleted = 'false' and user.level like '004-%' ORDER BY number ? LIMIT ? ";
 		return $mysql->DBGetAsMap($sql,$startTime,$endTime,$order,$number,$order,$number);
 	}
@@ -13,21 +13,21 @@
 		$order = $desc == true ? "DESC" : "ASC";
 		$sql = 	"SELECT name AS designerName, realName AS designer, IFNULL(number,0) as number  FROM user LEFT JOIN ("
 					." SELECT designer, designerName, COUNT( * ) AS number FROM business"
-					." WHERE `applyDesigner` = '2' and createTime >=  '?' AND createTime <= '?' and isDeleted = 'false' and isWaiting = 'false' GROUP BY designer ORDER BY number ? LIMIT ?"
+					." WHERE `applyDesigner` = '2' and createTime >=  '?' AND createTime <= '?' and isDeleted = 'false' GROUP BY designer ORDER BY number ? LIMIT ?"
 				.") a ON a.designerName = user.name where user.isDeleted = 'false' and user.level like '002-%' ORDER BY number ? LIMIT ? ";
 		return $mysql->DBGetAsMap($sql,$startTime,$endTime,$order,$number,$order,$number);
 	}
 
 	function getBusinessByRegion($reginId,$isFrozen,$isTransfered,$salesmanName=null){
 		global $mysql;
-		$where = "where regionId = '?' and `isDeleted` = 'false' and `isFrozen` = '?' and `isTransfered` = '?' and `isWaiting` = 'false' ";
+		$where = "where regionId = '?' and `isDeleted` = 'false' and `isFrozen` = '?' and `isTransfered` = '?' ";
 		if($salesmanName != null)
 			$where = $where." and salesmanName = '?' ";
 		return $mysql->DBGetAsMap("select * from business ".$where,$reginId,$isFrozen,$isTransfered,$salesmanName);
 	}
 	function getBusinessByAddress($address, $region){
 		global $mysql;
-		return $mysql->DBGetAsMap("select * from business where address = '?' and `regionId` = '?' and `isDeleted` = 'false' and `isWaiting` = 'false' ",$address, $region);
+		return $mysql->DBGetAsMap("select * from business where address = '?' and `regionId` = '?' and `isDeleted` = 'false' ",$address, $region);
 	}
 	function getBusinessByDesigner($post){
 		global $mysql;
@@ -40,19 +40,19 @@
 			$waitingListSql = "and (ds_lp != '-1' || ds_lp is null) ";
 		}
 		// force NULL value to be ranked the last
-		return $mysql->DBGetAsMap("select `b`.*, `r`.`name` from `business` `b` left join `region` `r` on `b`.`regionId` = `r`.`id` where  `b`.`designerName` = '?' and `b`.`isDeleted` = 'false' and `b`.`isFrozen` = 'false' and `b`.`isTransfered` = 'false' and `b`.`isDead` = 'false' and `b`.`isWaiting` = 'false' ".$waitingListSql." order by IF( ISNULL(`b`.`signBusinessLevel`), 1, 0), `b`.`signBusinessLevel` DESC ",$post["designerName"]);
+		return $mysql->DBGetAsMap("select `b`.*, `r`.`name` from `business` `b` left join `region` `r` on `b`.`regionId` = `r`.`id` where  `b`.`designerName` = '?' and `b`.`isDeleted` = 'false' and `b`.`isFrozen` = 'false' and `b`.`isTransfered` = 'false' and `b`.`isDead` = 'false' ".$waitingListSql." order by IF( ISNULL(`b`.`signBusinessLevel`), 1, 0), `b`.`signBusinessLevel` DESC ",$post["designerName"]);
 	}
 	function getDesignerlist(){
 		global $mysql;
-		$res0 = $mysql->DBGetAsMap("select distinct designer,designerName from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and isWaiting = 'false' and designer is not null ;");
+		$res0 = $mysql->DBGetAsMap("select distinct designer,designerName from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and designer is not null ;");
 		//signedBusinesAllcount
-		$res4 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and isWaiting = 'false' and applyDesigner = 2 and designer is not null group by designer;");
+		$res4 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and applyDesigner = 2 and designer is not null group by designer;");
 		//signedBusinesALevelCount
-		$res1 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and isWaiting = 'false' and signBusinessLevel = 'A' and applyDesigner = 2 and designer is not null group by designer;");
+		$res1 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and signBusinessLevel = 'A' and applyDesigner = 2 and designer is not null group by designer;");
 		//applyBudgetCount
-		$res2 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and isWaiting = 'false' and applyBudget = 1 and designer is not null group by designer;");
+		$res2 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and applyBudget = 1 and designer is not null group by designer;");
 		//applyTransferCount
-		$res3 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and isWaiting = 'false' and applyProjectTransference  = 1 and designer is not null group by designer;");
+		$res3 = $mysql->DBGetAsMap("select distinct designer,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and applyProjectTransference  = 1 and designer is not null group by designer;");
 
 		$signedBusinesCount = array();
 		$signedBusinesAllCount = array();
@@ -83,23 +83,23 @@
 	
 	function getBusinessLevelBAndC($q){
 		global $mysql;
-		$sql = "select `b`.*, `r`.name from `business` `b` left join `region` `r` on `b`.regionId = `r`.id where `b`.`isDeleted` = 'false' and `b`.`isWaiting` = 'false' and b.salesmanName = '?' order by level desc ";
+		$sql = "select `b`.*, `r`.name from `business` `b` left join `region` `r` on `b`.regionId = `r`.id where `b`.`isDeleted` = 'false' and b.salesmanName = '?' order by level desc ";
 		return $mysql->DBGetAsMap($sql,$q['salesmanName']);
 	}
 	
 	function getSalesmanlistWidthLevelBAndC(){
 		global $mysql;
-		return $mysql->DBGetAsMap("select distinct salesman,salesmanName,count(*) as number from business where isDeleted = 'false' and isWaiting = 'false' group by salesman,salesmanName  order by level desc ;");
+		return $mysql->DBGetAsMap("select distinct salesman,salesmanName,count(*) as number from business where isDeleted = 'false' group by salesman,salesmanName  order by level desc ;");
 	}
 	
 	function getSalesmanlist(){
 		global $mysql;
 		// get list and number of business
-		$res1 = $mysql->DBGetAsMap("select distinct salesman,salesmanName, count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and isWaiting = 'false' and salesmanName is not null group by salesman;");
+		$res1 = $mysql->DBGetAsMap("select distinct salesman,salesmanName, count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and salesmanName is not null group by salesman;");
 		// get list and number of A level business
-		$res3 = $mysql->DBGetAsMap("select distinct salesman,salesmanName, count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and isWaiting = 'false' and level = 'A' and salesmanName is not null group by salesman;");
+		$res3 = $mysql->DBGetAsMap("select distinct salesman,salesmanName, count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and level = 'A' and salesmanName is not null group by salesman;");
 		// get list and number of business which require designer  
-		$res2 = $mysql->DBGetAsMap("select distinct salesman,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and isWaiting = 'false' and applyDesigner = 1 and salesmanName is not null group by salesman;");
+		$res2 = $mysql->DBGetAsMap("select distinct salesman,count(*) as number from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and applyDesigner = 1 and salesmanName is not null group by salesman;");
 		// sort from map list to map     [{'salesman':aaa,'number':111},{'salesman':bbb,'number':222}...]  to [aaa:111,bbb:222]
 		$applyDesignerCount = array();
 		$ALevelBuisness = array();
@@ -121,8 +121,8 @@
 	}
 	function getSalesmanlistWithDeadBusinessNumber (){
 		global $mysql;
-		$requestDeadRes = $mysql->DBGetAsMap("select distinct salesman,salesmanName, count(*) as requestDeadNumber from business where isDeleted = 'false' and isTransfered = 'false' and isWaiting = 'false' and requestDead = 1 group by salesman ");
-		$alreadyDeadRes = $mysql->DBGetAsMap("select distinct salesman,salesmanName, count(*) as alreadyDeadNumber from business where isDeleted = 'false' and isTransfered = 'false' and isDead = 'true' and isWaiting = 'false'  group by salesman ");
+		$requestDeadRes = $mysql->DBGetAsMap("select distinct salesman,salesmanName, count(*) as requestDeadNumber from business where isDeleted = 'false' and isTransfered = 'false' and requestDead = 1 group by salesman ");
+		$alreadyDeadRes = $mysql->DBGetAsMap("select distinct salesman,salesmanName, count(*) as alreadyDeadNumber from business where isDeleted = 'false' and isTransfered = 'false' and isDead = 'true'  group by salesman ");
 		for ($i=0; $i < count($requestDeadRes); $i++) { 
 			$outerItem = $requestDeadRes[$i];
 			for ($j=0; $j < count($alreadyDeadRes); $j++) { 
@@ -148,14 +148,14 @@
 	}
 	function getDeadBusinessOrRequestDeadBusiness ($salesmanName){
 		global $mysql;
-		$requestDeadArr = getBusiness(array("salesmanName"=>$salesmanName, "requestDead"=>"1", "isWaiting"=>'false'));
-		$deadBusinessArr = getBusiness(array("salesmanName"=>$salesmanName, "isDead"=>"true", "isWaiting"=>'false'));
+		$requestDeadArr = getBusiness(array("salesmanName"=>$salesmanName, "requestDead"=>"1"));
+		$deadBusinessArr = getBusiness(array("salesmanName"=>$salesmanName, "isDead"=>"true"));
 		$res = array_merge($requestDeadArr, $deadBusinessArr);
 		return $res;
 	}
 	function getBusinessById($businessId){
 		global $mysql;
-		return $mysql->DBGetAsMap("select * from business where id = '?' and `isDeleted` = 'false' and `isWaiting` = 'false' ",$businessId);
+		return $mysql->DBGetAsMap("select * from business where id = '?' and `isDeleted` = 'false' ",$businessId);
 	}
 	
 	function getBusiness($data){
@@ -179,7 +179,7 @@
 		$sql .= " order by IF(ISNULL(`level`), 1, 0), `level` , id desc ";
 		// echo $sql;
 		// var_dump($params);
-		if (isset($data["limit"])) {
+		if (isset($data["needPaging"]) && $data["needPaging"] == 'true' && isset($data["limit"])) {
 			$sql .= " LIMIT ".$data["limit"];
 		}
 		return $mysql->DBGetAsMap($sql,$params);
@@ -188,7 +188,7 @@
 	
 	function getBusinessListForBudget (){
 		global $mysql;
-		return $mysql->DBGetAsMap("select `b`.*, `r`.`name` from `business` `b` left join `region` `r` on (`b`.`regionId` = `r`.`id`) where `b`.`isDeleted` = 'false' and `b`.`isTransfered` = 'false' and `b`.`applyBudget` != 0 and `b`.`budgetFinished` = 'false' and `b`.`isWaiting` = 'false' ");
+		return $mysql->DBGetAsMap("select `b`.*, `r`.`name` from `business` `b` left join `region` `r` on (`b`.`regionId` = `r`.`id`) where `b`.`isDeleted` = 'false' and `b`.`isTransfered` = 'false' and `b`.`applyBudget` != 0 and `b`.`budgetFinished` = 'false' ");
 	}
 	function addBusiness($post){
 		$businesss = getBusinessByAddress($post["address"], $post["regionId"]);
@@ -329,16 +329,17 @@
 			array(
 				'isDead' => 'false',
 				'isFrozen' => 'false',
-				'isWaiting' => 'false',
+				// 'isWaiting' => 'false',
+				'needPaging' => 'true',
 				'limit' => $data['start'].', '.$data['limit']
 			)
 		);
-		$total = $mysql->DBGetAsMap("select count(*) as totalBusiness from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and isWaiting = 'false'");
+		$total = $mysql->DBGetAsMap("select count(*) as totalBusiness from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' ");
 		$total = $total[0]["totalBusiness"];
-		$A = $mysql->DBGetAsMap("select count(*) as totalA from business where level = 'A' and isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and isWaiting = 'false'");
-		$B = $mysql->DBGetAsMap("select count(*) as totalB from business where level = 'B' and isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and isWaiting = 'false'");
-		$C = $mysql->DBGetAsMap("select count(*) as totalC from business where level = 'C' and isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and isWaiting = 'false'");
-		$D = $mysql->DBGetAsMap("select count(*) as totalD from business where level = 'D' and isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and isWaiting = 'false'");
+		$A = $mysql->DBGetAsMap("select count(*) as totalA from business where level = 'A' and isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' ");
+		$B = $mysql->DBGetAsMap("select count(*) as totalB from business where level = 'B' and isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' ");
+		$C = $mysql->DBGetAsMap("select count(*) as totalC from business where level = 'C' and isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' ");
+		$D = $mysql->DBGetAsMap("select count(*) as totalD from business where level = 'D' and isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' ");
 		$res = array(
 			"data" => $list,
 			"total" => $total,

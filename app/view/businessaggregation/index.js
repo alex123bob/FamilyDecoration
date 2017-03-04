@@ -126,6 +126,15 @@ Ext.define('FamilyDecoration.view.businessaggregation.Index', {
                             text: '时间',
                             dataIndex: 'createTime',
                             renderer: timeRenderer
+                        },
+                        {
+                            text: '等待',
+                            dataIndex: 'isWaiting',
+                            flex: 0.5,
+                            renderer: function (val, meta, rec){
+                                val = (val === 'true' ? '<font color="red">是</font>' : '否');
+                                return val;
+                            }
                         }
                     ]
                 }
