@@ -179,6 +179,9 @@
 		$sql .= " order by IF(ISNULL(`level`), 1, 0), `level` , id desc ";
 		// echo $sql;
 		// var_dump($params);
+		if (isset($data["limit"])) {
+			$sql .= " LIMIT ".$data["limit"];
+		}
 		return $mysql->DBGetAsMap($sql,$params);
 	}
 	
@@ -318,5 +321,33 @@
 		}catch(Exception $e){
 			var_dump($e);
 		}
+	}
+
+	function getBusinessAggregation($data) {
+		global $mysql;
+		$list = getBusiness(
+			array(
+				'isDead' => 'false',
+				'isFrozen' => 'false',
+				'isWaiting' => 'false',
+				'limit' => $data['start'].', '.$data['limit']
+			)
+		);
+		$total = $mysql->DBGetAsMap("select count(*) as totalBusiness from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and isWaiting = 'false'");
+		$total = $total[0]["totalBusiness"];
+		$A = $mysql->DBGetAsMap("select count(*) as totalA from business where level = 'A' and isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and isWaiting = 'false'");
+		$B = $mysql->DBGetAsMap("select count(*) as totalB from business where level = 'B' and isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and isWaiting = 'false'");
+		$C = $mysql->DBGetAsMap("select count(*) as totalC from business where level = 'C' and isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and isWaiting = 'false'");
+		$D = $mysql->DBGetAsMap("select count(*) as totalD from business where level = 'D' and isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' and isWaiting = 'false'");
+		$res = array(
+			"data" => $list,
+			"total" => $total,
+			"totalA" => $A[0]["totalA"],
+			"totalB" => $B[0]["totalB"],
+			"totalC" => $C[0]["totalC"],
+			"totalD" => $D[0]["totalD"]
+		);
+
+		return $res;
 	}
 ?>

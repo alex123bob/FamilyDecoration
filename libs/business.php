@@ -220,6 +220,9 @@
 		case "revertTelemarketingBusiness":
 			$res = revertTelemarketingBusiness();
 			break;
+		case "getBusinessAggregation":
+			$res = getBusinessAggregation($_REQUEST);
+			break;
 		default: 
 			throw new Exception("unknown action:".$action);
 	}

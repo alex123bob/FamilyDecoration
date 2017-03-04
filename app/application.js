@@ -49,6 +49,7 @@ Ext.define('FamilyDecoration.Application', {
         'SupplierManagement',
         'ProjectFinanceManagement',
         'TotalPropertyManagement',
+        'BusinessAggregation',
         'BusinessToTransfer'
     ],
 
