@@ -46,6 +46,9 @@
 		global $mysql;
 		$user = $mysql->DBGetOneRow("`user`", "*", "`name` = '$name' and `isDeleted` = 'false' ");
 		if ($user["name"] == $name && $user["password"] == $password) {
+			if ($user["isLocked"] == "true") {
+				throw new BaseException('用户被锁定，无法登陆!');
+			}
 			$sessionId = session_id();
 			$userName = $user["name"];
 			$_SESSION["name"] = $userName;
@@ -135,6 +138,7 @@
 		$projectId = isset($_POST["projectId"]) ? $_POST["projectId"] : '';
 		$phone = isset($_POST["phone"]) ? $_POST["phone"] : '';
 		$mail = isset($_POST["mail"]) ? $_POST["mail"] : '';
+		$isLocked = isset($_POST["isLocked"]) ? $_POST["isLocked"] : false; // isLocked: 1->lock -1->unlock
 		$profileImage = isset($_POST["profileImage"]) ? $_POST["profileImage"] : false;
 		$priority = isset($_POST["priority"]) ? $_POST["priority"] : false;
 		$priorityTitle = isset($_POST["priorityTitle"]) ? $_POST["priorityTitle"] : '';
@@ -173,8 +177,41 @@
 		if ($securePass) {
 			$updateArr["securePass"] = $securePass;
 		}
+		if ($isLocked !== false) {
+			$updateArr["isLocked"] = ($isLocked == 1 ? 'true' : 'false');
+		}
 		$mysql->DBUpdate('user',$updateArr,"`name`='?'",array($name));
-		return (array('status'=>'successful', 'errMsg' => ''));
+		// if this operation is to lock account
+		if ($isLocked !== false) {
+			if ($isLocked == 1) {
+				$businesses = $mysql->DBGetAsMap("select b.*, r.name from business b left join region r on b.regionId = r.id where b.salesmanName = '?' and b.isDeleted = 'false' and b.isTransfered = 'false' and b.isDead = 'false' and b.isFrozen = 'false' ", $name);
+				for ($i=0; $i < count($businesses); $i++) { 
+					$business = $businesses[$i];
+					$mysql->DBUpdate('business',array("salesman"=>NULL,"salesmanName"=>NULL,"isWaiting"=>"true"), "`id`='?'",array($business["id"]));
+					$mysql->DBInsertAsArray("`user_behavior`", 
+												array(
+													"userName"=>$_SESSION["name"], 
+													"interfaceName"=>"lock account `".$name."`, set salesman of business `".$business["name"]." ".$business["address"]."` as null, businessId is `".$business["id"]."`"
+												)
+											);
+				}
+				$businesses = $mysql->DBGetAsMap("select b.*, r.name from business b left join region r on b.regionId = r.id where b.designerName = '?' and b.isDeleted = 'false' and b.isTransfered = 'false' and b.isDead = 'false' and b.isFrozen = 'false' ", $name);
+				for ($i=0; $i < count($businesses); $i++) { 
+					$business = $businesses[$i];
+					$mysql->DBUpdate('business',array("designer"=>NULL,"designerName"=>NULL), "`id`='?'",array($business["id"]));
+					$mysql->DBInsertAsArray("`user_behavior`", 
+												array(
+													"userName"=>$_SESSION["name"], 
+													"interfaceName"=>"lock account `".$name."`, set designer of business `".$business["name"]." ".$business["address"]."` as null, businessId is `".$business["id"]."`"
+												)
+											);
+				}
+			}
+			else if ($isLocked === -1) {
+
+			}
+		}
+		return (array('status'=>'successful', 'errMsg' => '' ));
 	}
 
 	function modifyPhoneNumber (){

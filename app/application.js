@@ -49,7 +49,8 @@ Ext.define('FamilyDecoration.Application', {
         'SupplierManagement',
         'ProjectFinanceManagement',
         'TotalPropertyManagement',
-        'BusinessAggregation'
+        'BusinessAggregation',
+        'BusinessToTransfer'
     ],
 
     stores: [

@@ -128,6 +128,12 @@ tr.bill-reality-greater-than-budget .x-grid-td {
 }
 /* end of project finance management module class */
 
+/* businesstotransfer module class */
+tr.business-locked .x-grid-td {
+    background-color: lightcoral;
+}
+/* end of businesstotransfer module class */
+
 @-webkit-keyframes blink {
     0% {
         opacity: 1;

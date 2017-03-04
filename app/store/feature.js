@@ -60,6 +60,11 @@
                         cmp: 'deadbusiness-index',
                         leaf: true,
                         icon: 'resources/img/trashbin1.png'
+                    },
+                    {
+                        name: '等待业务',
+                        cmp: 'businesstotransfer-index',
+                        leaf: true
                     }
                 ]
             },
