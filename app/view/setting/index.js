@@ -294,6 +294,42 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 					}
 				},
 				{
+					text: '锁定账号',
+					hidden: User.isAdmin() ? false : true,
+					name: 'button-lockAccount',
+					id: 'button-lockAccount',
+					handler: function (){
+						var treepanel = me.down('treepanel'),
+							rec = treepanel.getSelectionModel().getSelection()[0];
+						Ext.Msg.warning('确定要锁定当前用户账号吗？一经锁定，该账号关联的业务将会被重置！', function (btnId){
+							if ('yes' == btnId) {
+								Ext.Ajax.request({
+									url: './libs/user.php?action=modify',
+									method: 'POST',
+									params: {
+										name: rec.get('name'),
+										level: rec.get('level'),
+										realname: rec.get('realname'),
+										isLocked: 1
+									},
+									callback: function (opts, success, res){
+										if (success) {
+											var obj = Ext.decode(res.responseText);
+											if ('successful' == obj.status) {
+												showMsg('账号锁定成功!');
+												me.down('treepanel').refresh();
+											}
+											else {
+												showMsg(obj.errMsg);
+											}
+										}
+									}
+								})
+							}
+						});
+					}
+				},
+				{
 					text: '优先级配置',
 					hidden: User.isAdmin() ? false : true,
 					icon: './resources/img/priority.png',
@@ -311,19 +347,22 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 						edit = Ext.getCmp('button-editaccount'),
 						reset = Ext.getCmp('button-resetaccount'),
 						del = Ext.getCmp('button-deleteaccount'),
-						upload = Ext.getCmp('button-uploadProfileImage');
+						upload = Ext.getCmp('button-uploadProfileImage'),
+						lockAccount = Ext.getCmp('button-lockAccount');
 
 					if (rec && rec.get('name')) {
 						edit.enable();
 						reset.enable();
 						upload.enable();
 						del.setDisabled(rec.get('level') == 1);
+						lockAccount.enable();
 					}
 					else {
 						edit.disable();
 						reset.disable();
 						del.disable();
 						upload.disable();
+						lockAccount.disable();
 					}
 				},
 				cellclick: function (view, td, cellIndex, rec, tr, rowIndex, ev, opts){

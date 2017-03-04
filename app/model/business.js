@@ -31,7 +31,9 @@ Ext.define('FamilyDecoration.model.Business', {
 		{name: 'budgetFinished', type: 'string'}, // an indicator used for telling if the corresponding budget is finished or not
 		{name: 'createTime', type: 'string'},
 		{name: 'houseType', type: 'string'},
-		{name: 'floorArea', type: 'string'}
+		{name: 'floorArea', type: 'string'},
+		{name: 'isWaiting', type: 'string'}, // if a business is set as waiting, then it will be put into another panel, waited to be distributed.
+		{name: 'isLocked', type: 'string'} // locked business can't be distributed to other salesman even after 30 days' quietness
 	],
 	idProperty: 'id'
 });

@@ -48,7 +48,8 @@ Ext.define('FamilyDecoration.Application', {
         'QualityGuaranteeDepositMgm',
         'SupplierManagement',
         'ProjectFinanceManagement',
-        'TotalPropertyManagement'
+        'TotalPropertyManagement',
+        'BusinessToTransfer'
     ],
 
     stores: [
