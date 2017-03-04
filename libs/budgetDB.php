@@ -62,15 +62,15 @@
 	//获取项目下一个ItemCode编码
 	function _getNextItemCode($budgetId){
 		global $mysql;
-		$sql = "SELECT DISTINCT LEFT( itemCode, 1 ) as code , itemName FROM  `budget_item` WHERE `isDeleted` = 'false' and `budgetId` = '?' and LEFT( itemCode, 1 ) NOT IN ('N','O','P','Q','R','S') order by code asc";
-		$existItemCodes = $mysql->DBGetAsOneArray($sql,$budgetId);
-		$ItemCodeList = array("A","B","C","D","E","F","G","H","I","J","K","L","M","T","U","V","W","X","Y","Z");
-		foreach($ItemCodeList as $char){
-			if(!in_array($char,$existItemCodes)){
-				return $char;
-			}
+		$sql = "SELECT  CHAR(ASCII((max(LEFT( itemCode, 1 )))) + 1) FROM  `budget_item` WHERE `isDeleted` = 'false'  and `budgetId` = '?' and itemCode < 'N';";
+		$code = $mysql->DBGetAsOneArray($sql,$budgetId);
+		if(count($code) == 0 || $code[0] == ''){
+			return 'A';
 		}
-		throw new Exception("超过itemCode最大值M");
+		if($code[0] > 'M'){
+			throw new Exception("超过itemCode最大值M");
+		}
+		return $code[0];
 	}
 	//获取大项下一个小项的itemCode编码
 	function _getNextBasicCode($budgetId,$ItemCode){
@@ -83,10 +83,24 @@
 		}
 		return $ItemCode."-".$count;
 	}
+	//将budgetId的所有budget项itemCode在insertChar之后的所有后移一位.供插入.
+	function _moveOneASCII($budgetId, $insertChar){
+		global $mysql;
+		$sql = 'update budget_item set itemCode = concat(CHAR(ASCII(LEFT( itemCode, 1 ))+1),substring(itemCode, 2)) '.
+		"WHERE `isDeleted` = 'false' and itemCode != 'XXX' and left(itemCode,1) < 'N' and left(itemCode,1) >= '".$insertChar."' and budgetId = '".$budgetId."';";
+		$mysql->DBExecute($sql);
+		return $insertChar;
+	}
+
 	//添加大项
 	function addBigItem($post){
-		$itemCode = _getNextItemCode($post["budgetId"]);
 		global $mysql;
+		$mysql->begin();
+		$itemCode =  _getNextItemCode($post["budgetId"]);//此处可检查是否已经超过最大项M, 超过则报异常
+		if(isset($post['insertBefore']) && $post['insertBefore'] != ''){
+			$itemCode = _moveOneASCII($post["budgetId"],$post["insertBefore"]);			
+		}
+		
 		$fields = array('itemName','budgetId','itemUnit','itemAmount','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','lossPercent','remark','basicItemId','basicSubItemId');
 		$obj = array('itemCode'=>$itemCode,'budgetItemId' => uniqid().str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT));
 		foreach($fields as $field){
@@ -94,6 +108,7 @@
 				$obj[$field] = $post[$field];
 		}
 		$mysql->DBInsertAsArray("`budget_item`",$obj);
+		$mysql->commit();
 		return array('status'=>'successful', 'errMsg' => '','itemCode'=>$itemCode);
 	}
 	//添加小项
