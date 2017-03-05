@@ -298,6 +298,7 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 					hidden: User.isAdmin() ? false : true,
 					name: 'button-lockAccount',
 					id: 'button-lockAccount',
+					icon: 'resources/img/lock2.png',
 					handler: function (){
 						var treepanel = me.down('treepanel'),
 							rec = treepanel.getSelectionModel().getSelection()[0];

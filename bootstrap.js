@@ -15,6 +15,8 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.BillAudit": "app/controller/billaudit.js",
   "FamilyDecoration.controller.Budget": "app/controller/budget.js",
   "FamilyDecoration.controller.Bulletin": "app/controller/bulletin.js",
+  "FamilyDecoration.controller.BusinessAggregation": "app/controller/businessaggregation.js",
+  "FamilyDecoration.controller.BusinessToTransfer": "app/controller/businesstotransfer.js",
   "FamilyDecoration.controller.Chart": "app/controller/chart.js",
   "FamilyDecoration.controller.Chat": "app/controller/chat.js",
   "FamilyDecoration.controller.CheckBillItem": "app/controller/checkbillitem.js",
@@ -201,6 +203,8 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.bulletin.BulletinInspection": "app/view/bulletin/bulletininspection.js",
   "FamilyDecoration.view.bulletin.EditBulletin": "app/view/bulletin/editbulletin.js",
   "FamilyDecoration.view.bulletin.Index": "app/view/bulletin/index.js",
+  "FamilyDecoration.view.businessaggregation.Index": "app/view/businessaggregation/index.js",
+  "FamilyDecoration.view.businesstotransfer.Index": "app/view/businesstotransfer/index.js",
   "FamilyDecoration.view.chart.AddCategory": "app/view/chart/addcategory.js",
   "FamilyDecoration.view.chart.BatchRemove": "app/view/chart/batchremove.js",
   "FamilyDecoration.view.chart.Index": "app/view/chart/index.js",
@@ -1201,6 +1205,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.BillAudit": [],
   "FamilyDecoration.controller.Budget": [],
   "FamilyDecoration.controller.Bulletin": [],
+  "FamilyDecoration.controller.BusinessAggregation": [],
+  "FamilyDecoration.controller.BusinessToTransfer": [],
   "FamilyDecoration.controller.Chart": [],
   "FamilyDecoration.controller.Chat": [],
   "FamilyDecoration.controller.CheckBillItem": [],
@@ -1387,6 +1393,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.bulletin.BulletinInspection": [],
   "FamilyDecoration.view.bulletin.EditBulletin": [],
   "FamilyDecoration.view.bulletin.Index": [],
+  "FamilyDecoration.view.businessaggregation.Index": [],
+  "FamilyDecoration.view.businesstotransfer.Index": [],
   "FamilyDecoration.view.chart.AddCategory": [],
   "FamilyDecoration.view.chart.BatchRemove": [],
   "FamilyDecoration.view.chart.Index": [],
@@ -2552,6 +2560,8 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.BillAudit": [],
   "FamilyDecoration.controller.Budget": [],
   "FamilyDecoration.controller.Bulletin": [],
+  "FamilyDecoration.controller.BusinessAggregation": [],
+  "FamilyDecoration.controller.BusinessToTransfer": [],
   "FamilyDecoration.controller.Chart": [],
   "FamilyDecoration.controller.Chat": [],
   "FamilyDecoration.controller.CheckBillItem": [],
@@ -2775,6 +2785,12 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.bulletin.EditBulletin": [],
   "FamilyDecoration.view.bulletin.Index": [
     "widget.bulletin-index"
+  ],
+  "FamilyDecoration.view.businessaggregation.Index": [
+    "widget.businessaggregation-index"
+  ],
+  "FamilyDecoration.view.businesstotransfer.Index": [
+    "widget.businesstotransfer-index"
   ],
   "FamilyDecoration.view.chart.AddCategory": [
     "widget.chart-addcategory"
