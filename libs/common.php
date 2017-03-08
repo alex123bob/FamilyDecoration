@@ -15,7 +15,7 @@
 				$mysql->rollback(true);
 			}	
 		}catch(Exception $e){}
-		var $error = array('@file'=>$errorFile,
+		$error = array('@file'=>$errorFile,
 							'@line'=>$errorLine,
 							'@detail'=>$errstr,
 							'@type'=>$errorType,
