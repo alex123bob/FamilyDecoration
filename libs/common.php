@@ -35,7 +35,7 @@
 			//非业务异常，邮件通知
 			if($errorType != 1){
 				$mailSvc = BaseSvc::getSvc('Mail');
-				$mailContent = '有系统异常啦！<br />'.join('<br />', $error);
+				$mailContent = '有系统异常啦！<br />'.json_encode($error);
 				$mailSvc->add(array('@mailSubject'=>'有系统异常啦！','@mailContent'=>$mailContent,'@mailSender'=>'系统提醒','@mailReceiver'=>'674417307@qq.com','@receiverAddress'=>'674417307@qq.com'));
 				$mailSvc->add(array('@mailSubject'=>'有系统异常啦！','@mailContent'=>$mailContent,'@mailSender'=>'系统提醒','@mailReceiver'=>'547010762@qq.com','@receiverAddress'=>'547010762@qq.com'));
 			}
