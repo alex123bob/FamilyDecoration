@@ -15,20 +15,18 @@
 				$mysql->rollback(true);
 			}	
 		}catch(Exception $e){}
+		var $error = array('@file'=>$errorFile,
+							'@line'=>$errorLine,
+							'@detail'=>$errstr,
+							'@type'=>$errorType,
+							'@params'=>json_encode($_POST),
+							'@user'=>isset($_SESSION['name']) ? $_SESSION['name'] : '',
+							'@url'=>"http://".$_SERVER["HTTP_HOST"] . ":" . $_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"],
+							'@ip'=>isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '',
+							'@refer'=>isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
+							'@useragent'=>isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '');
 		try{
-			if($mysql != null){
-				$errorLogSvc = BaseSvc::getSvc('ErrorLog');
-				$errorLogSvc->add(array('@file'=>$errorFile,
-									'@line'=>$errorLine,
-									'@detail'=>$errstr,
-									'@type'=>$errorType,
-									'@params'=>json_encode($_POST),
-									'@user'=>isset($_SESSION['name']) ? $_SESSION['name'] : '',
-									'@url'=>"http://".$_SERVER["HTTP_HOST"] . ":" . $_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"],
-									'@ip'=>isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '',
-									'@refer'=>isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
-									'@useragent'=>isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''));
-			}			
+			BaseSvc::getSvc('ErrorLog')->add($error);
 		}catch(Exception $e){
 			//var_dump($e);
 		}
@@ -37,8 +35,9 @@
 			//非业务异常，邮件通知
 			if($errorType != 1){
 				$mailSvc = BaseSvc::getSvc('Mail');
-				$mailSvc->add(array('@mailSubject'=>'有系统异常啦！','@mailContent'=>'有系统异常啦！<br />'.$errstr,'@mailSender'=>'系统提醒','@mailReceiver'=>'674417307@qq.com','@receiverAddress'=>'674417307@qq.com'));
-				$mailSvc->add(array('@mailSubject'=>'有系统异常啦！','@mailContent'=>'有系统异常啦！<br />'.$errstr,'@mailSender'=>'系统提醒','@mailReceiver'=>'547010762@qq.com','@receiverAddress'=>'547010762@qq.com'));
+				$mailContent = '有系统异常啦！<br />'.join('<br />', $error);
+				$mailSvc->add(array('@mailSubject'=>'有系统异常啦！','@mailContent'=>$mailContent,'@mailSender'=>'系统提醒','@mailReceiver'=>'674417307@qq.com','@receiverAddress'=>'674417307@qq.com'));
+				$mailSvc->add(array('@mailSubject'=>'有系统异常啦！','@mailContent'=>$mailContent,'@mailSender'=>'系统提醒','@mailReceiver'=>'547010762@qq.com','@receiverAddress'=>'547010762@qq.com'));
 			}
 		}catch(Exception $e){
 			//var_dump($e);
