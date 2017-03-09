@@ -3,7 +3,7 @@
 	 * @desc Common operations including functions and operations.
 	 * @auth Diego & Alex
 	 */
-	function ErrorHandler($errno, $errstr,$errorFile,$errorLine,$errorType = 0){
+	function ErrorAndExceptionHandler($errno, $errstr,$errorFile,$errorLine,$errorType = 0){
 		$errstr = str_replace("Undefined index:","缺少参数:",$errstr);
 		$popupMsg = $errstr;
 		if(contains($errstr,'imagecreatefromjpeg')){
@@ -15,30 +15,28 @@
 				$mysql->rollback(true);
 			}	
 		}catch(Exception $e){}
+		$error = array('@file'=>$errorFile,
+							'@line'=>$errorLine,
+							'@detail'=>$errstr,
+							'@type'=>$errorType,
+							'@params'=>json_encode($_POST),
+							'@user'=>isset($_SESSION['name']) ? $_SESSION['name'] : '',
+							'@url'=>"http://".$_SERVER["HTTP_HOST"] . ":" . $_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"],
+							'@ip'=>isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '',
+							'@refer'=>isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
+							'@useragent'=>isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '');
 		try{
-			if($mysql != null){
-				$errorLogSvc = BaseSvc::getSvc('ErrorLog');
-				$errorLogSvc->add(array('@file'=>$errorFile,
-									'@line'=>$errorLine,
-									'@detail'=>$errstr,
-									'@type'=>$errorType,
-									'@params'=>json_encode($_POST),
-									'@user'=>isset($_SESSION['name']) ? $_SESSION['name'] : '',
-									'@url'=>"http://".$_SERVER["HTTP_HOST"] . ":" . $_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"],
-									'@ip'=>isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '',
-									'@refer'=>isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
-									'@useragent'=>isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''));
-			}			
+			BaseSvc::getSvc('ErrorLog')->add($error);
 		}catch(Exception $e){
 			//var_dump($e);
 		}
-		$errorType= 0;
 		try{
 			//非业务异常，邮件通知
 			if($errorType != 1){
 				$mailSvc = BaseSvc::getSvc('Mail');
-				$mailSvc->add(array('@mailSubject'=>'有系统异常啦！','@mailContent'=>'有系统异常啦！<br />'.$errstr,'@mailSender'=>'系统提醒','@mailReceiver'=>'674417307@qq.com','@receiverAddress'=>'674417307@qq.com'));
-				$mailSvc->add(array('@mailSubject'=>'有系统异常啦！','@mailContent'=>'有系统异常啦！<br />'.$errstr,'@mailSender'=>'系统提醒','@mailReceiver'=>'547010762@qq.com','@receiverAddress'=>'547010762@qq.com'));
+				$mailContent = '有系统异常啦！<br />'.str_replace(',',',<br />',json_encode($error));
+				$mailSvc->add(array('@mailSubject'=>'有系统异常啦！'.$errstr,'@mailContent'=>$mailContent,'@mailSender'=>'系统提醒','@mailReceiver'=>'674417307@qq.com','@receiverAddress'=>'674417307@qq.com'));
+				$mailSvc->add(array('@mailSubject'=>'有系统异常啦！'.$errstr,'@mailContent'=>$mailContent,'@mailSender'=>'系统提醒','@mailReceiver'=>'547010762@qq.com','@receiverAddress'=>'547010762@qq.com'));
 			}
 		}catch(Exception $e){
 			//var_dump($e);
@@ -50,7 +48,7 @@
 			'file'=>$errorFile
 			);
 		if(isset($_REQUEST['debug'])){
-			$res['executedSqls'] = $mysql->executedSqls;
+			$res['executedSqls'] = $mysql != null ? $mysql->executedSqls : 'mysql not inited.';
 		}
 		echo (json_encode($res));
 		die();
@@ -58,7 +56,11 @@
 	
 	function ExceptionHandler($e){
 		$errorCode = $e instanceof BaseException ? 1 : 0;
-		ErrorHandler(-1,$e->getMessage(),$e->getTraceAsString(),'',$errorCode);
+		ErrorAndExceptionHandler(-1,$e->getMessage(),$e->getTraceAsString(),'', $errorCode);
+	}
+
+	function ErrorHandler($errno, $errstr,$errorFile,$errorLine){
+		ErrorAndExceptionHandler($errno, $errstr,$errorFile,$errorLine, 0);
 	}
 
 	function getClientIp(){
