@@ -1,15 +1,21 @@
 <?php
-	function addTaskList($post){		
-		$obj = array(
-			"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
-			"taskName"=>$post["taskName"],
-			"taskContent"=>myStrEscape($post["taskContent"]),
-			"taskDispatcher"=>"-".$_SESSION["name"]."-",
-			"taskExecutor"=>"-".str_replace(",", "-", $post["taskExecutor"])."-",
-			"taskProcess"=>0
-		);
+	function addTaskList($post){
+		$executor = explode(",", $post["taskExecutor"]);
 		global $mysql;
-		$mysql->DBInsertAsArray("`task_list`",$obj);
+		for ($i=0; $i < count($executor); $i++) { 
+			$obj = array(
+				"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
+				"taskName"=>$post["taskName"],
+				"taskContent"=>myStrEscape($post["taskContent"]),
+				"taskDispatcher"=>$_SESSION["name"],
+				"taskExecutor"=>$executor[$i],
+				"taskProcess"=>0,
+				"startTime"=>$post["startTime"],
+				"endTime"=>$post["endTime"],
+				"priority"=>$post["priority"]
+			);
+			$mysql->DBInsertAsArray("`task_list`",$obj);
+		}
 		return array('status'=>'successful', 'errMsg' => '','taskListId'=> $obj["id"]);
 	}
 
@@ -80,6 +86,26 @@
 		    $count ++;
         }
         return $res;
+	}
+
+	function getTaskList ($data){
+		global $mysql;
+		$sql = " select * from `task_list` ";
+		$fields = array("taskName", "taskContent", "startTime", "endTime", "priority", "assistant", "score", "taskDispatcher", "taskExecutor", "taskProcess");
+		$params = array();
+		$values = array();
+		foreach ($fields as $key => $field) {
+			if (isset($data[$field])) {
+				array_push($params, "`".$field."` = '?'");
+				array_push($values, $data[$field]);
+			}
+		}
+		if (count($params) > 0) {
+			$params = implode(" and ", $params);
+			$sql .= "where ".$params;
+		}
+		$res = $mysql->DBGetAsMap($sql, $values);
+		return $res;
 	}
 
 	function getTaskListYears(){

@@ -1,3 +1,4 @@
 ALTER TABLE `task_list` ADD `startTime` TIMESTAMP NULL AFTER `createTime`, ADD `endTime` TIMESTAMP NULL AFTER `startTime`, ADD `priority` INT(4) NULL COMMENT 'priority of task, 1-10, the lower the number is, the more urgent the task is ' AFTER `endTime`, ADD `assistant` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL AFTER `priority`, ADD `score` DOUBLE NULL COMMENT 'task evaluation toward the accomplishment' AFTER `assistant`;
+TRUNCATE table task_list; # according to boss, we don't need legacy data any more.
 
 UPDATE `familydecoration`.`system` SET `paramValue` = 'version-8.14' WHERE `system`.`id` = '4';

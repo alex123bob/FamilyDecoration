@@ -2,8 +2,8 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 	extend: 'Ext.window.Window',
 	requires: ['FamilyDecoration.view.taskassign.UserTaskList', 'FamilyDecoration.view.checklog.MemberList'],
 	alias: 'widget.taskassign-assigntaskwin',
-	width: 500,
-	height: 300,
+	width: 600,
+	height: 400,
 	title: '分配任务',
 	layout: {
 		type: 'hbox',
@@ -12,124 +12,200 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 	modal: true,
 	task: null,
 
-	initComponent: function (){
+	initComponent: function () {
 		var me = this;
 
-		me.items = [{
-			xtype: 'container',
-			flex: 2,
-			layout: 'border',
-			items: [{
-				xtype: 'textfield',
-				id: 'textfield-taskName',
-				name: 'textfield-taskName',
-				region: 'north',
-				width: '100%',
-				height: 20,
-				margin: '0 0 1 0',
-				emptyText: '任务名称',
-				value: me.task ? me.task.get('taskName') : '',
-				allowBlank: false
-			}, {
-				xtype: 'textarea',
-				id: 'textarea-taskContent',
-				name: 'textarea-taskContent',
-				region: 'center',
-				width: '100%',
-				margin: 0,
-				autoScroll: true,
-				emptyText: '任务内容',
-				allowBlank: false,
-				value: me.task ? me.task.get('taskContent') : ''
-			}, {
-				xtype: 'fieldcontainer',
-				layout: 'hbox',
-				width: '100%',
-				hideLabel: true,
-				region: 'south',
-				height: 20,
-				style: {
-					background: '#ffffff'
+		me.items = [
+			{
+				name: 'container-taskBody',
+				xtype: 'container',
+				flex: 2,
+				margin: '0 1 0 0',
+				defaults: {
+					width: '100%'
 				},
-				items: [{
-					xtype: 'checkboxfield',
-					itemId: 'checkbox-sendSMS',
-					name: 'checkbox-sendSMS',
-					boxLabel: '短信提醒',
-					hideLabel: true,
-					flex: 1,
-					height: '100%',
-					style: {
-						background: '#ffffff'
-					}
-				}, {
-					xtype: 'checkboxfield',
-					itemId: 'checkbox-sendMail',
-					name: 'checkbox-sendMail',
-					boxLabel: '邮件提醒',
-					hideLabel: true,
-					flex: 1,
-					height: '100%',
-					style: {
-						background: '#ffffff'
-					}
-				}]
-			}]
-		}, {
-			xtype: 'checklog-memberlist',
-			title: '任务分配人员',
-			id: 'treepanel-taskassignee',
-			name: 'treepanel-taskassignee',
-			isCheckMode: true,
-			flex: 1,
-			fullList: true,
-			assignees: me.task ? me.task.get('taskExecutor').split(',') : undefined,
-			listeners: {
-				load: function (){
-					var treepanel = Ext.getCmp('treepanel-taskassignee');
-					treepanel.expandAll();
-				},
-				checkchange: function (node, checked, opts){
-					node.cascadeBy(function(n) {
-						n.set('checked', checked);
-					});
-					node.bubble(function (n){
-						if (!n.isRoot() && !n.get('name')) {
-							var childNodes = n.childNodes;
-							var isAllCheck = true;
-							for (var i = childNodes.length - 1; i >= 0; i--) {
-								var el = childNodes[i];
-								if (el.get('checked') == false) {
-									isAllCheck = false;
-									break;
+				layout: 'vbox',
+				items: [
+					{
+						xtype: 'textfield',
+						id: 'textfield-taskName',
+						name: 'textfield-taskName',
+						height: 20,
+						margin: '0 0 1 0',
+						emptyText: '任务名称',
+						value: me.task ? me.task.get('taskName') : '',
+						allowBlank: false
+					},
+					{
+						xtype: 'textarea',
+						id: 'textarea-taskContent',
+						name: 'textarea-taskContent',
+						flex: 3,
+						margin: '0 0 1 0',
+						autoScroll: true,
+						emptyText: '任务内容',
+						allowBlank: false,
+						value: me.task ? me.task.get('taskContent') : ''
+					},
+					{
+						itemId: 'timePeriod',
+						xtype: 'fieldcontainer',
+						layout: 'hbox',
+						hideLabel: true,
+						height: 20,
+						margin: '0 0 1 0',
+						defaults: {
+							flex: 1,
+							height: '98%',
+							labelWidth: 60,
+							editable: false,
+							xtype: 'datefield',
+							allowBlank: false
+						},
+						items: [
+							{
+								fieldLabel: '开始时间',
+								itemId: 'startTime'
+							},
+							{
+								fieldLabel: '完成时间',
+								itemId: 'endTime'
+							}
+						]
+					},
+					{
+						height: 20,
+						itemId: 'priority',
+						fieldLabel: '优先级',
+						margin: '0 0 1 0',
+						xtype: 'combobox',
+						displayField: 'name',
+						editable: false,
+						valueField: 'value',
+						allowBlank: false,
+						store: Ext.create('Ext.data.Store', {
+							fields: ['name', 'value'],
+							autoLoad: true,
+							proxy: {
+								type: 'memory',
+								reader: {
+									type: 'json'
+								}
+							},
+							data: [
+								{
+									name: '普通',
+									value: 1
+								},
+								{
+									name: '一般',
+									value: 2
+								},
+								{
+									name: '紧急',
+									value: 3
+								}
+							]
+						})
+					},
+					{
+						xtype: 'fieldcontainer',
+						layout: 'hbox',
+						hideLabel: true,
+						height: 20,
+						style: {
+							background: '#ffffff'
+						},
+						items: [
+							{
+								xtype: 'checkboxfield',
+								itemId: 'checkbox-sendSMS',
+								name: 'checkbox-sendSMS',
+								boxLabel: '短信提醒',
+								hideLabel: true,
+								flex: 1,
+								height: '100%',
+								style: {
+									background: '#ffffff'
+								}
+							},
+							{
+								xtype: 'checkboxfield',
+								itemId: 'checkbox-sendMail',
+								name: 'checkbox-sendMail',
+								boxLabel: '邮件提醒',
+								hideLabel: true,
+								flex: 1,
+								height: '100%',
+								style: {
+									background: '#ffffff'
 								}
 							}
-							n.set('checked', isAllCheck);
-						}
-					});
+						]
+					}
+				]
+			},
+			{
+				xtype: 'checklog-memberlist',
+				title: '任务分配人员',
+				id: 'treepanel-taskassignee',
+				name: 'treepanel-taskassignee',
+				isCheckMode: true,
+				flex: 1,
+				fullList: true,
+				assignees: me.task ? me.task.get('taskExecutor').split(',') : undefined,
+				listeners: {
+					load: function () {
+						var treepanel = Ext.getCmp('treepanel-taskassignee');
+						treepanel.expandAll();
+					},
+					checkchange: function (node, checked, opts) {
+						node.cascadeBy(function (n) {
+							n.set('checked', checked);
+						});
+						node.bubble(function (n) {
+							if (!n.isRoot() && !n.get('name')) {
+								var childNodes = n.childNodes;
+								var isAllCheck = true;
+								for (var i = childNodes.length - 1; i >= 0; i--) {
+									var el = childNodes[i];
+									if (el.get('checked') == false) {
+										isAllCheck = false;
+										break;
+									}
+								}
+								n.set('checked', isAllCheck);
+							}
+						});
+					}
 				}
 			}
-		}];
+		];
 
 		me.buttons = [{
 			text: '确定',
-			handler: function (){
+			handler: function () {
 				var name = Ext.getCmp('textfield-taskName'),
 					content = Ext.getCmp('textarea-taskContent'),
 					tree = Ext.getCmp('treepanel-taskassignee'),
-					executor = [], 
+					executor = [],
 					p = {
 						taskName: name.getValue(),
 						taskContent: content.getValue()
 					},
-					memberList = Ext.getCmp('treepanel-taskMemberName'),
-					memberSt = memberList.getStore(),
-					taskList = Ext.getCmp('treepanel-taskNameByUser'),
-					taskSt = taskList.getStore(),
 					sms = Ext.ComponentQuery.query('[name="checkbox-sendSMS"]')[0],
 					mail = Ext.ComponentQuery.query('[name="checkbox-sendMail"]')[0],
-					sendContent;
-				if (name.isValid() && content.isValid()) {
+					sendContent,
+					taskBody = me.down('[name="container-taskBody"]'),
+					timePeriod = taskBody.getComponent('timePeriod'),
+					startTime = timePeriod.getComponent('startTime'),
+					endTime = timePeriod.getComponent('endTime'),
+					priority = taskBody.getComponent('priority');
+				if (name.isValid() && content.isValid() && startTime.isValid() && endTime.isValid() && priority.isValid()) {
+					if (startTime.getValue() - endTime.getValue() > 0) {
+						showMsg('开始时间不能晚于完成时间！');
+						return;
+					}
 					var assignees = tree.getChecked();
 					if (assignees.length > 0) {
 						for (var i = 0; i < assignees.length; i++) {
@@ -139,7 +215,10 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 						}
 						executor = executor.join(',');
 						Ext.apply(p, {
-							taskExecutor: executor
+							taskExecutor: executor,
+							startTime: Ext.Date.format(startTime.getValue(), 'Y-m-d H:i:s'),
+							endTime: Ext.Date.format(endTime.getValue(), 'Y-m-d H:i:s'),
+							priority: priority.getValue()
 						});
 						if (me.task) {
 							Ext.apply(p, {
@@ -152,12 +231,12 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 						}
 						checkMsg({
 							content: sendContent,
-							success: function (){
+							success: function () {
 								Ext.Ajax.request({
 									url: me.task ? './libs/tasklist.php?action=editTaskList' : './libs/tasklist.php?action=addTaskList',
 									method: 'POST',
 									params: p,
-									callback: function (opts, success, res){
+									callback: function (opts, success, res) {
 										if (success) {
 											var obj = Ext.decode(res.responseText);
 											sendMsg(User.getName(), executor, sendContent, 'assignTask', (me.task ? me.task.getId() : obj['taskListId']));
@@ -170,31 +249,6 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 
 											if (obj.status == 'successful') {
 												me.task ? showMsg('任务编辑成功！') : showMsg('任务分配成功！');
-												memberSt.getProxy().url = './libs/loglist.php?action=getLogListDepartments';
-												memberSt.getProxy().extraParams = {
-													email: false,
-													fullList: true,
-													individual: false
-												};
-												memberSt.load({
-													node: memberSt.getRootNode(),
-													callback: function (recs, ope, success){
-														if (success) {
-															if (memberList.getSelectionModel().getSelection()[0]) {
-																taskSt.getProxy().extraParams = {
-																	user: memberList.getSelectionModel().getSelection()[0].get('name')
-																};
-																taskSt.getProxy().url = './libs/tasklist.php?action=getTaskListYearsByUser';
-																taskSt.load({
-																	node: taskSt.getRootNode(),
-																	callback: function (){
-																		taskList.getSelectionModel().deselectAll();
-																	}
-																});
-															}
-														}
-													}
-												});
 												me.close();
 											}
 											else {
@@ -204,7 +258,7 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 									}
 								});
 							},
-							failure: function (){
+							failure: function () {
 
 							}
 						})
@@ -216,7 +270,7 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 			}
 		}, {
 			text: '取消',
-			handler: function (){
+			handler: function () {
 				me.close();
 			}
 		}];
