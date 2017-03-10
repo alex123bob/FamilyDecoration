@@ -8,6 +8,7 @@ Ext.define('FamilyDecoration.view.checklog.MemberList', {
 	fullList: false,
 	forIndividual: false,
 	userName: undefined,
+	loadAll: false,
 
 	initComponent: function (){
 		var me = this;
@@ -97,6 +98,9 @@ Ext.define('FamilyDecoration.view.checklog.MemberList', {
 	            				}
 	            			};
 	            		}
+						if (me.loadAll) {
+							me.expandAll();
+						}
 	            	}
 				}
 			})

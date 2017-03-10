@@ -14,7 +14,13 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 
         me.items = [
             {
-                xtype: 'mytask-tasktable'
+                xtype: 'mytask-tasktable',
+                filterCfg: {
+                    taskExecutor: User.getName()
+                },
+                processEditEnabled: function (){
+                    return true;
+                }
             }
         ]
 

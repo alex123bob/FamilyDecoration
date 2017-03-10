@@ -24,7 +24,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 			{
 				xtype: 'checklog-memberlist',
 				title: '成员列表',
-				id: 'treepanel-taskMemberName',
+				itemId: 'treepanel-taskMemberName',
 				name: 'treepanel-taskMemberName',
 				userName: me.taskExecutor,
 				flex: 1,
@@ -46,65 +46,106 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 					},
 					selectionchange: function (selModel, sels, opts) {
 						var rec = sels[0],
-							userTaskPanel = Ext.getCmp('treepanel-taskNameByUser'),
-							st = userTaskPanel.getStore(),
-							taskDetailPanel = Ext.getCmp('panel-taskDetailByUser');
-
-						if (rec && rec.get('level') && rec.get('name')) {
-							userTaskPanel.getSelectionModel().deselectAll();
-
-							userTaskPanel.userName = rec.get('name');
-							st.proxy.url = './libs/tasklist.php';
-							st.proxy.extraParams = {
-								action: 'getTaskListYearsByUser',
-								user: rec.get('name')
+							taskTable = me.getComponent('taskTable'),
+							cfg;
+						if (rec && rec.get('name')) {
+							cfg = {
+								taskExecutor: rec.get('name')
 							};
-							st.load({
-								node: st.getRootNode(),
-								callback: function (recs, ope, success) {
-									if (success) {
-										ope.node.expand();
-									}
-								}
+							taskTable.filterCfg = cfg;
+							taskTable.refresh({
+								params: cfg
 							});
 						}
 						else {
-							// todo
+							taskTable.removeAll();
 						}
+						// taskTable.initBtn();
 					},
 					load: function () {
-						var treepanel = Ext.getCmp('treepanel-taskMemberName');
+						var treepanel = me.getComponent('treepanel-taskMemberName');
 						treepanel.expandAll();
 					}
 				}
 			},
 			{
 				xtype: 'mytask-tasktable',
+				itemId: 'taskTable',
 				flex: 7,
+				needLoad: false,
+				assistantEditEnabled: function (){
+					return User.isAdmin();
+				},
+				_getBtns: function (){
+					var top = this.getDockedItems('toolbar[dock="top"]')[0],
+						bottom = this.getDockedItems('toolbar[dock="bottom"]')[0];
+					return {
+						add: top.getComponent('button-addTask'),
+						edit: top.getComponent('button-editTask'),
+						del: bottom.getComponent('button-delTask')
+					}
+				},
+				initBtn: function (rec){
+					var btn = this._getBtns(),
+						memberTree = me.getComponent('treepanel-taskMemberName'),
+						selModel = memberTree.getSelectionModel(),
+						user = selModel.getSelection()[0];
+					btn.add.setDisabled(!(user && user.get('name')));
+					btn.edit.setDisabled(!(rec && rec.get('taskName')));
+					btn.del.setDisabled(!(rec && rec.get('taskName')));
+				},
+				listeners: {
+					selectionchange: function (selModel, sels, opts){
+						var taskTable = me.getComponent('taskTable');
+						taskTable.initBtn(sels[0]);
+					}
+				},
 				tbar: [
 					{
 						text: '添加',
-						id: 'button-addTask',
+						itemId: 'button-addTask',
 						icon: './resources/img/add1.png',
 						name: 'button-addTask',
 						handler: function () {
+							var taskTable = me.getComponent('taskTable'),
+								memberTree = me.getComponent('treepanel-taskMemberName'),
+								selModel = memberTree.getSelectionModel(),
+								user = selModel.getSelection()[0];
 							var win = Ext.create('FamilyDecoration.view.taskassign.AssignTaskWin', {
+								callback: function (){
+									taskTable.refresh({
+										params: {
+											taskExecutor: user.get('name')
+										}
+									});
+								}
 							});
 							win.show();
 						}
 					},
 					{
 						text: '修改',
-						id: 'button-editTask',
+						itemId: 'button-editTask',
 						name: 'button-editTask',
 						icon: './resources/img/edit1.png',
 						disabled: true,
 						handler: function () {
-							var tree = Ext.getCmp('treepanel-taskNameByUser'),
-								task = tree.getSelectionModel().getSelection()[0];
+							var taskTable = me.getComponent('taskTable'),
+								memberTree = me.getComponent('treepanel-taskMemberName'),
+								selModel = memberTree.getSelectionModel(),
+								user = selModel.getSelection()[0],
+								selModel = taskTable.getSelectionModel(),
+								task = selModel.getSelection()[0];
 							if (task) {
 								var win = Ext.create('FamilyDecoration.view.taskassign.AssignTaskWin', {
-									task: task
+									task: task,
+									callback: function (){
+										taskTable.refresh({
+											params: {
+												taskExecutor: user.get('name')
+											}
+										});
+									}
 								});
 								win.show();
 							}
@@ -117,57 +158,37 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 				bbar: [
 					{
 						text: '删除',
-						id: 'button-delTask',
+						itemId: 'button-delTask',
 						name: 'button-delTask',
 						icon: './resources/img/delete1.png',
 						disabled: true,
 						handler: function () {
-							var tree = Ext.getCmp('treepanel-taskNameByUser'),
-								task = tree.getSelectionModel().getSelection()[0],
-								taskSt = tree.getStore(),
-								memberTree = Ext.getCmp('treepanel-taskMemberName'),
-								memberSt = memberTree.getStore();
+							var taskTable = me.getComponent('taskTable'),
+								selModel = taskTable.getSelectionModel(),
+								memberTree = me.getComponent('treepanel-taskMemberName'),
+								user = memberTree.getSelectionModel().getSelection()[0],
+								task = selModel.getSelection()[0];
 							if (task) {
 								Ext.Msg.warning('确定要删除当前任务吗？', function (btnId) {
 									if ('yes' == btnId) {
 										Ext.Ajax.request({
-											url: './libs/tasklist.php?action=editTaskList',
+											url: './libs/tasklist.php',
 											method: 'POST',
 											params: {
-												id: task.getId(),
-												isDeleted: 'true'
+												action: 'editTaskList',
+												isDeleted: 'true',
+												id: task.getId()
 											},
-											callback: function (opts, success, res) {
+											callback: function (opts, success, res){
 												if (success) {
 													var obj = Ext.decode(res.responseText);
-													if (obj.status == 'successful') {
-														showMsg('删除任务成功！');
-														memberSt.getProxy().url = './libs/loglist.php?action=getLogListDepartments';
-														memberSt.getProxy().extraParams = {
-															email: false,
-															fullList: true,
-															individual: false
-														};
-														memberSt.load({
-															node: memberSt.getRootNode(),
-															callback: function (recs, ope, success) {
-																if (success) {
-																	taskSt.getProxy().extraParams = {
-																		user: memberTree.getSelectionModel().getSelection()[0].get('name')
-																	};
-																	taskSt.getProxy().url = './libs/tasklist.php?action=getTaskListYearsByUser';
-																	taskSt.load({
-																		node: taskSt.getRootNode(),
-																		callback: function () {
-																			tree.getSelectionModel().deselectAll();
-																		}
-																	});
-																}
+													if (obj.status === 'successful') {
+														showMsg('任务删除成功!');
+														taskTable.refresh({
+															params: {
+																taskExecutor: user.get('name')
 															}
-														});
-													}
-													else {
-														showMsg(obj.errMsg);
+														})
 													}
 												}
 											}

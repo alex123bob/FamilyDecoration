@@ -11,6 +11,7 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 	},
 	modal: true,
 	task: null,
+	callback: Ext.emptyFn,
 
 	initComponent: function () {
 		var me = this;
@@ -65,11 +66,13 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 						items: [
 							{
 								fieldLabel: '开始时间',
-								itemId: 'startTime'
+								itemId: 'startTime',
+								value: me.task ? new Date(me.task.get('startTime').replace(/-/gi, '/')) : ''
 							},
 							{
 								fieldLabel: '完成时间',
-								itemId: 'endTime'
+								itemId: 'endTime',
+								value: me.task ? new Date(me.task.get('endTime').replace(/-/gi, '/')) : ''
 							}
 						]
 					},
@@ -83,6 +86,7 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 						editable: false,
 						valueField: 'value',
 						allowBlank: false,
+						value: me.task ? me.task.get('priority') : '',
 						store: Ext.create('Ext.data.Store', {
 							fields: ['name', 'value'],
 							autoLoad: true,
@@ -112,6 +116,7 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 						xtype: 'fieldcontainer',
 						layout: 'hbox',
 						hideLabel: true,
+						disabled: me.task ? true : false,
 						height: 20,
 						style: {
 							background: '#ffffff'
@@ -153,6 +158,7 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 				isCheckMode: true,
 				flex: 1,
 				fullList: true,
+				disabled: me.task ? true : false,
 				assignees: me.task ? me.task.get('taskExecutor').split(',') : undefined,
 				listeners: {
 					load: function () {
@@ -250,6 +256,7 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 											if (obj.status == 'successful') {
 												me.task ? showMsg('任务编辑成功！') : showMsg('任务分配成功！');
 												me.close();
+												me.callback();
 											}
 											else {
 												showMsg(obj.errMsg);
