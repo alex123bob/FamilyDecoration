@@ -262,7 +262,7 @@
 	function editTaskList($data){
 		global $mysql;
 		$obj = array();
-		$fields = array("id", "taskName","createTime", "taskContent","isDeleted", "taskProcess", "startTime", "endTime", "priority", "assistant");
+		$fields = array("id", "taskName","createTime", "taskContent","isDeleted", "taskProcess", "startTime", "endTime", "priority", "assistant", "score");
 		foreach ($fields as $field)
 			if (isset($data[$field]))
 				$obj[$field] = $data[$field];

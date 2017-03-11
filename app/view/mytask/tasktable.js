@@ -6,7 +6,7 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
         'FamilyDecoration.view.mytask.AssistantList'
     ],
     defaults: {
-        
+
     },
     autoScroll: true,
     title: '任务列表',
@@ -23,7 +23,7 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
 
     processEditEnabled: Ext.emptyFn,
 
-    refresh: function (cfg){
+    refresh: function (cfg) {
         var st = this.getStore();
         if (cfg) {
             st.load(cfg);
@@ -32,7 +32,7 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
             st.load();
         }
     },
-    removeAll: function (){
+    removeAll: function () {
         this.getStore().removeAll();
     },
     initComponent: function () {
@@ -53,12 +53,12 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
         me.needLoad && st.load();
         this.store = st;
 
-        var T = function (str){
+        var T = function (str) {
             var date = new Date(str.replace(/-/gi, '/'));
             return Ext.Date.format(date, 'Y-m-d');
         };
 
-        var P = function (num){
+        var P = function (num) {
             var res = '未知';
             switch (num) {
                 case 1:
@@ -74,6 +74,22 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                     break;
             }
             return res;
+        };
+
+        this.viewConfig = {
+            getRowClass: function (rec, rowIndex, rowParams, st){
+                var cls = '';
+                switch (rec.get('priority')) {
+                    case 3:
+                        cls = 'priority-emergency'
+                        break;
+                    case 2:
+                        cls = 'priority-general'
+                    default:
+                        break;
+                }
+                return cls;
+            }
         };
 
         this.columns = {
@@ -135,18 +151,53 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
 
         this.on(
             {
-                cellclick: function (view, td, cellIndex, rec, tr, rowIndex, e, eOpts){
+                cellclick: function (view, td, cellIndex, rec, tr, rowIndex, e, eOpts) {
                     var grid = me,
                         colMg = grid.getColumnManager(),
                         header = colMg.getHeaderAtIndex(cellIndex),
-                        dataIndex = header.dataIndex;
+                        dataIndex = header.dataIndex,
+                        func = function (msg, field, rec) {
+                            Ext.Msg.read(msg, function (inputVal) {
+                                inputVal = parseInt(inputVal, 10);
+                                swal.close();
+                                if (isNaN(inputVal)) {
+                                    showMsg('请输入数字');
+                                    return;
+                                }
+                                if (inputVal < 0 || inputVal > 100) {
+                                    showMsg('输入的数字不在0～100之间');
+                                    return;
+                                }
+                                var params = {
+                                    action: 'editTaskList',
+                                    id: rec.getId()
+                                };
+                                params[field] = inputVal;
+                                Ext.Ajax.request({
+                                    url: './libs/tasklist.php',
+                                    method: 'POST',
+                                    params: params,
+                                    callback: function (opts, success, res) {
+                                        if (success) {
+                                            var obj = Ext.decode(res.responseText);
+                                            if ('successful' == obj.status) {
+                                                showMsg('进度填写完成！');
+                                                grid.refresh({
+                                                    params: me.filterCfg
+                                                });
+                                            }
+                                        }
+                                    }
+                                })
+                            });
+                        };
                     switch (dataIndex) {
                         case "assistantRealName":
                             if (me.assistantEditEnabled()) {
                                 var win = Ext.create('FamilyDecoration.view.mytask.AssistantList', {
                                     task: rec,
                                     assistantList: rec.get('assistant').split(','),
-                                    callback: function (){
+                                    callback: function () {
                                         grid.refresh({
                                             params: me.filterCfg
                                         });
@@ -157,38 +208,12 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                             break;
                         case "taskProcess":
                             if (me.processEditEnabled()) {
-                                Ext.Msg.read('请输入完成百分比，从0到100。当前完成情况:' + rec.get('taskProcess'), function (inputVal){
-                                    inputVal = parseInt(inputVal, 10);
-                                    swal.close();
-                                    if (isNaN(inputVal)) {
-                                        showMsg('请输入数字');
-                                        return;
-                                    }
-                                    if (inputVal < 0 || inputVal > 100) {
-                                        showMsg('输入的数字不在0～100之间');
-                                        return;
-                                    }
-                                    Ext.Ajax.request({
-                                        url: './libs/tasklist.php',
-                                        method: 'POST',
-                                        params: {
-                                            action: 'editTaskList',
-                                            id: rec.getId(),
-                                            taskProcess: inputVal
-                                        },
-                                        callback: function (opts, success, res){
-                                            if (success) {
-                                                var obj = Ext.decode(res.responseText);
-                                                if ('successful' == obj.status) {
-                                                    showMsg('进度填写完成！');
-                                                    grid.refresh({
-                                                        params: me.filterCfg
-                                                    });
-                                                }
-                                            }
-                                        }
-                                    })
-                                });
+                                func('请输入完成百分比，从0到100。当前完成情况:' + rec.get('taskProcess'), 'taskProcess', rec);
+                            }
+                            break;
+                        case 'score':
+                            if (me.scoreEditEnabled()) {
+                                func('请对当前任务进行评分。当前分数:' + rec.get('score'), 'score', rec);
                             }
                             break;
                         default:
@@ -197,7 +222,7 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                 }
             }
         );
-        
+
         this.callParent();
     }
 });

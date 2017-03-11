@@ -76,6 +76,9 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 				assistantEditEnabled: function (){
 					return User.isAdmin();
 				},
+				scoreEditEnabled: function (){
+					return User.isAdmin();
+				},
 				_getBtns: function (){
 					var top = this.getDockedItems('toolbar[dock="top"]')[0],
 						bottom = this.getDockedItems('toolbar[dock="bottom"]')[0];
