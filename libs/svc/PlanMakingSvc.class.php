@@ -174,22 +174,22 @@ Class PlanMakingSvc extends BaseSvc{
 		foreach ($recievers1 as $busi) {
 			$text = "您的".$busi['regionName'].' '.$busi['address'].'预算设计,即将到截至日期，您是否已经完成？加油哦！';
 			$msgSvc->add(array('@reciever'=>$busi['designerName'],'@content'=>$text));
-			$mailSvc->add(array('@mailSubject'=>'设计师进度提醒','@mailContent'=>$text,'@mailReceiver'=>$name));
+			$mailSvc->add(array('@mailSubject'=>'设计师进度提醒','@mailContent'=>$text,'@mailReceiver'=>$busi['designerName']));
 		}
 		foreach ($recievers2 as $busi) {
 			$text = "您的".$busi['regionName'].' '.$busi['address'].'平面布局设计,即将到截至日期，您是否已经完成？加油哦！';
 			$msgSvc->add(array('@reciever'=>$busi['designerName'],'@content'=>$text));
-			$mailSvc->add(array('@mailSubject'=>'设计师进度提醒','@mailContent'=>$text,'@mailReceiver'=>$name));
+			$mailSvc->add(array('@mailSubject'=>'设计师进度提醒','@mailContent'=>$text,'@mailReceiver'=>$busi['designerName']));
 		}
 		foreach ($recievers3 as $busi) {
 			$text = "您的".$busi['regionName'].' '.$busi['address'].'立面施工设计,即将到截至日期，您是否已经完成？加油哦！';
 			$msgSvc->add(array('@reciever'=>$busi['designerName'],'@content'=>$text));
-			$mailSvc->add(array('@mailSubject'=>'设计师进度提醒','@mailContent'=>$text,'@mailReceiver'=>$name));
+			$mailSvc->add(array('@mailSubject'=>'设计师进度提醒','@mailContent'=>$text,'@mailReceiver'=>$busi['designerName']));
 		}
 		foreach ($recievers4 as $busi) {
 			$text = "您的".$busi['regionName'].' '.$busi['address'].'效果图设计,即将到截至日期，您是否已经完成？加油哦！';
 			$msgSvc->add(array('@reciever'=>$busi['designerName'],'@content'=>$text));
-			$mailSvc->add(array('@mailSubject'=>'设计师进度提醒','@mailContent'=>$text,'@mailReceiver'=>$name));
+			$mailSvc->add(array('@mailSubject'=>'设计师进度提醒','@mailContent'=>$text,'@mailReceiver'=>$busi['designerName']));
 		}
 		echo '<br />over<br />';
 		
