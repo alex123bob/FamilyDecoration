@@ -7,6 +7,7 @@
 	switch($action){
 		case "addTaskList": 	$res = addTaskList($_REQUEST);  break;
 		case "editTaskList":$res = editTaskList($_POST);break;
+		case "getTaskList":$res = getTaskList($_REQUEST);break;
 		case "getTaskListYears":$res = getTaskListYears();break;
 		case "getTaskListMonths":$res = getTaskListMonths($_GET["year"]);break;
 		case "getTaskListByMonth":$res = getTaskListByMonth($_GET["year"],$_GET["month"]);break;

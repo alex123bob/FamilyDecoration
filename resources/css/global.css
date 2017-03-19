@@ -134,6 +134,15 @@ tr.business-locked .x-grid-td {
 }
 /* end of businesstotransfer module class */
 
+/* tasktable module class */
+tr.priority-emergency .x-grid-td {
+    background-color: mediumpurple;
+}
+tr.priority-general .x-grid-td {
+    background-color: sandybrown;
+}
+/* end of tasktable module class */
+
 @-webkit-keyframes blink {
     0% {
         opacity: 1;

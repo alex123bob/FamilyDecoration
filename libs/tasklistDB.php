@@ -1,15 +1,21 @@
 <?php
-	function addTaskList($post){		
-		$obj = array(
-			"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
-			"taskName"=>$post["taskName"],
-			"taskContent"=>myStrEscape($post["taskContent"]),
-			"taskDispatcher"=>"-".$_SESSION["name"]."-",
-			"taskExecutor"=>"-".str_replace(",", "-", $post["taskExecutor"])."-",
-			"taskProcess"=>0
-		);
+	function addTaskList($post){
+		$executor = explode(",", $post["taskExecutor"]);
 		global $mysql;
-		$mysql->DBInsertAsArray("`task_list`",$obj);
+		for ($i=0; $i < count($executor); $i++) { 
+			$obj = array(
+				"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
+				"taskName"=>$post["taskName"],
+				"taskContent"=>myStrEscape($post["taskContent"]),
+				"taskDispatcher"=>$_SESSION["name"],
+				"taskExecutor"=>$executor[$i],
+				"taskProcess"=>0,
+				"startTime"=>$post["startTime"],
+				"endTime"=>$post["endTime"],
+				"priority"=>$post["priority"]
+			);
+			$mysql->DBInsertAsArray("`task_list`",$obj);
+		}
 		return array('status'=>'successful', 'errMsg' => '','taskListId'=> $obj["id"]);
 	}
 
@@ -80,6 +86,36 @@
 		    $count ++;
         }
         return $res;
+	}
+
+	function getTaskList ($data){
+		global $mysql;
+		$sql = " SELECT t.*, u.realname as taskDispatcherRealName, p.realname as taskExecutorRealName FROM `task_list` t left join user u on t.taskDispatcher=u.name left join user p on t.taskExecutor = p.name";
+		$orderBy = " ORDER BY t.priority DESC, endTime ASC ";
+		$fields = array("taskName", "taskContent", "startTime", "endTime", "priority", "assistant", "score", "taskDispatcher", "taskExecutor", "taskProcess");
+		$params = array();
+		$values = array();
+		foreach ($fields as $key => $field) {
+			if (isset($data[$field])) {
+				array_push($params, "t.`".$field."` = '?'");
+				array_push($values, $data[$field]);
+			}
+		}
+		if (count($params) > 0) {
+			$params = implode(" and ", $params);
+			$sql .= " where t.isDeleted = 'false' and ".$params;
+		}
+		$sql .= $orderBy;
+		$res = $mysql->DBGetAsMap($sql, $values);
+		include_once "userDB.php";
+		for ($i=0; $i < count($res); $i++) { 
+			$assistantArr = explode(",", $res[$i]["assistant"]);
+			for ($j=0; $j < count($assistantArr); $j++) { 
+				$assistantArr[$j] = getUserRealName($assistantArr[$j])["realname"];
+			}
+			$res[$i]["assistantRealName"] = implode(",", $assistantArr);
+		}
+		return $res;
 	}
 
 	function getTaskListYears(){
@@ -226,14 +262,14 @@
 	function editTaskList($data){
 		global $mysql;
 		$obj = array();
-		$fields = array("id", "taskName","createTime", "taskContent","isDeleted", "taskProcess");
+		$fields = array("id", "taskName","createTime", "taskContent","isDeleted", "taskProcess", "startTime", "endTime", "priority", "assistant", "score");
 		foreach ($fields as $field)
 			if (isset($data[$field]))
 				$obj[$field] = $data[$field];
 		if (isset($data['taskDispatcher']))
-			$obj['taskDispatcher'] = '-'.$data["taskDispatcher"].'-';
+			$obj['taskDispatcher'] = $data["taskDispatcher"];
 		if (isset($data['taskExecutor']))
-			$obj['taskExecutor'] = '-'.str_replace(',','-', $data["taskExecutor"]).'-';
+			$obj['taskExecutor'] = $data["taskExecutor"];
 		$mysql->DBUpdate('task_list',$obj,"`id` = '?' ",array($data["id"]));
 		return array('status'=>'successful', 'errMsg' => 'edit tasklist ok');
 	}

@@ -100,6 +100,10 @@ Ext.define('FamilyDecoration.view.businesstotransfer.Index', {
                             dataIndex: 'regionName'
                         },
                         {
+                            text: '业务员',
+                            dataIndex: 'salesman'
+                        },
+                        {
                             text: '小区地址',
                             dataIndex: 'address'
                         },
