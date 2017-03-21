@@ -264,11 +264,13 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.mylog.LogList": "app/view/mylog/loglist.js",
   "FamilyDecoration.view.mylog.SelfPlan": "app/view/mylog/selfplan.js",
   "FamilyDecoration.view.mylog.SummarizedLog": "app/view/mylog/summarizedlog.js",
+  "FamilyDecoration.view.mytask.AssistantList": "app/view/mytask/assistantlist.js",
   "FamilyDecoration.view.mytask.EditProcess": "app/view/mytask/editprocess.js",
   "FamilyDecoration.view.mytask.Index": "app/view/mytask/index.js",
   "FamilyDecoration.view.mytask.SelfAssess": "app/view/mytask/selfassess.js",
   "FamilyDecoration.view.mytask.TaskGrid": "app/view/mytask/taskgrid.js",
   "FamilyDecoration.view.mytask.TaskList": "app/view/mytask/tasklist.js",
+  "FamilyDecoration.view.mytask.TaskTable": "app/view/mytask/tasktable.js",
   "FamilyDecoration.view.paymentrequest.AttachmentManagement": "app/view/paymentrequest/attachmentmanagement.js",
   "FamilyDecoration.view.paymentrequest.EditBelongedItem": "app/view/paymentrequest/editbelongeditem.js",
   "FamilyDecoration.view.paymentrequest.EditRequest": "app/view/paymentrequest/editrequest.js",
@@ -1454,11 +1456,13 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.mylog.LogList": [],
   "FamilyDecoration.view.mylog.SelfPlan": [],
   "FamilyDecoration.view.mylog.SummarizedLog": [],
+  "FamilyDecoration.view.mytask.AssistantList": [],
   "FamilyDecoration.view.mytask.EditProcess": [],
   "FamilyDecoration.view.mytask.Index": [],
   "FamilyDecoration.view.mytask.SelfAssess": [],
   "FamilyDecoration.view.mytask.TaskGrid": [],
   "FamilyDecoration.view.mytask.TaskList": [],
+  "FamilyDecoration.view.mytask.TaskTable": [],
   "FamilyDecoration.view.paymentrequest.AttachmentManagement": [],
   "FamilyDecoration.view.paymentrequest.EditBelongedItem": [],
   "FamilyDecoration.view.paymentrequest.EditRequest": [],
@@ -2969,6 +2973,9 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.mylog.SummarizedLog": [
     "widget.mylog-summarizedlog"
   ],
+  "FamilyDecoration.view.mytask.AssistantList": [
+    "widget.mytask-assistantlist"
+  ],
   "FamilyDecoration.view.mytask.EditProcess": [
     "widget.mytask-editprocess"
   ],
@@ -2983,6 +2990,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.mytask.TaskList": [
     "widget.mytask-tasklist"
+  ],
+  "FamilyDecoration.view.mytask.TaskTable": [
+    "widget.mytask-tasktable"
   ],
   "FamilyDecoration.view.paymentrequest.AttachmentManagement": [
     "widget.paymentrequest-attachmentmanagement"
