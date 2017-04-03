@@ -219,6 +219,41 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                         default:
                             break;
                     }
+                },
+                celldblclick: function(view, td, cellIndex, rec, tr, rowIndex, e, eOpts) {
+                    var win = Ext.create('Ext.window.Window', {
+                        width: 400,
+                        height: 300,
+                        resizable: false,
+                        title: '任务详情',
+                        autoScroll: true,
+                        html: [
+                            '<strong>分配人:</strong> ' + rec.get('taskDispatcherRealName'),
+                            '<br />','<br />',
+                            '<strong>协助人:</strong> ' + rec.get('assistantRealName'),
+                            '<br />','<br />',
+                            '<strong>标题:</strong> ' + rec.get('taskName'),
+                            '<br />','<br />',
+                            '<strong>内容:</strong> ',
+                            '<br />',
+                            rec.get('taskContent').replace(/[\t ]/gi, '&nbsp;').replace(/\n/gi, '<br />'),
+                            '<br />','<br />',
+                            '<strong>时间:</strong> ' + rec.get('createTime'),
+                            '<br />','<br />',
+                            '<strong>完成情况:</strong> ' + rec.get('taskProcess'),
+                            '<br />','<br />'
+                        ].join(''),
+                        modal: true,
+                        buttons: [
+                            {
+                                text: '关闭',
+                                handler: function() {
+                                    win.close();
+                                }
+                            }
+                        ]
+                    });
+                    win.show();
                 }
             }
         );
