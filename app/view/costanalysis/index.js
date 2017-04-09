@@ -142,7 +142,8 @@ Ext.define('FamilyDecoration.view.costanalysis.Index', {
                             url: './libs/budget.php',
                             extraParams: {
                                 action: 'list',
-                                onlyBusiness: true
+                                onlyBusiness: true,
+                                isTransfered: false // cost analysis: hide those businesses which have been transferred to project
                             },
                             reader: {
                                 type: 'json'
