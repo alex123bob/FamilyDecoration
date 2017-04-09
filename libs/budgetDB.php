@@ -320,18 +320,20 @@
 	}
 	function getBudgets (){
 		global $mysql;
-		$arr = $mysql->DBGetAsMap("SELECT b.*,p.projectName,bz.address as businessAddress,`r`.`name` as businessRegion FROM `budget` b left join `project` p on b.projectId=p.projectId left join `business` `bz` on `bz`.`id` = `b`.`businessId` left join `region` `r` on `r`.`id` = `bz`.`regionId` where b.`isDeleted` = 'false' ORDER BY `b`.`createTime` DESC ");
-		$res = array();
+		$select = "SELECT b.*,p.projectName,bz.address as businessAddress,`r`.`name` as businessRegion FROM `budget` b left join `project` p on b.projectId=p.projectId left join `business` `bz` on `bz`.`id` = `b`.`businessId` left join `region` `r` on `r`.`id` = `bz`.`regionId` ";
+		$where = " where b.`isDeleted` = 'false' ";
+		$orderby = " ORDER BY `b`.`createTime` DESC ";
+
 		if (isset($_GET["onlyBusiness"]) && $_GET["onlyBusiness"] == true) {
-			for ($i=0; $i < count($arr); $i++) { 
-				if ($arr[$i]["businessId"]) {
-					array_push($res, $arr[$i]);
-				}
-			}
-			return $res;
-		}else {
-			return $arr;
+			$where = $where." and (bz.id != '' and bz.id is not null) ";
 		}
+
+		if (isset($_GET["isTransfered"])) {
+			$where = $where." and bz.isTransfered = '".$_GET["isTransfered"]."' ";
+		}
+
+		$arr = $mysql->DBGetAsMap($select.$where.$orderby);
+		return $arr;
 	}
 	
 	function getBudgetsByBudgetId ($budgetId){
