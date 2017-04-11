@@ -243,6 +243,56 @@
 			return array();
 		}
 		/**
+		DBGetAsKeyValueList("select xxx as k, xxx as v from xxx where id = '?' and xxx = '?' and xxx like '%?%' ",arg1,arg2,arg3);
+		or DBGetAsKeyValueList("select xxx as k, xxx as v from xxx where id = '?' and xxx = '?' and xxx like '%?%' ",array(arg1,arg2,arg3);
+		**/
+		public function DBGetAsKeyValueList($sql){
+			$count = substr_count($sql,"?");
+			$count2 = func_num_args() - 1;
+			$paramArray = null;
+			if($count2 == 1 && is_array(func_get_arg(1))){
+				// param passed as array
+				$paramArray = func_get_arg(1);
+				$count2 = count($paramArray);
+				if($count > $count2)
+					throw new Exception("sql:$sql need $count values but get $count2 !");
+			}else if($count > $count2){
+				throw new Exception("sql:$sql need $count values but get $count2 !");
+			}
+			$i = 0;
+			$index = 0;
+			for(;$i<$count;$i++){
+				$value = $paramArray === null ? func_get_arg($i+1) : $paramArray[$i];
+				$type = gettype($value);
+				switch($type){
+					case "boolean":
+						$value = ($value ? "true" : "false");
+						break;
+					case "integer":
+					case "NULL":
+					case "double":
+						break;
+					case "string":
+						$value = myStrEscape($value);
+						break;
+					default:
+						throw new Exception("unknown type:".$type." of value:".$value);
+						break;
+				}
+				$sql = str_replace_once($sql,"?",$value);
+			}
+			$this->dbSQL = $sql;
+			$this->DBExecute($this->dbSQL);
+			$res = array();
+			if (mysqli_num_rows($this->dbResult) > 0){
+				while($partRows = mysqli_fetch_array($this->dbResult,MYSQLI_ASSOC)){
+					$res[$partRows['k']] = $partRows['v'];
+				}
+				return $res;
+			}
+			return $res;
+		}
+		/**
 		DBGetAsMap("select * from xxx where id = '?' and xxx = '?' and xxx like '%?%' ",arg1,arg2,arg3);
 		or DBGetAsMap("select * from xxx where id = '?' and xxx = '?' and xxx like '%?%' ",array(arg1,arg2,arg3);
 		**/

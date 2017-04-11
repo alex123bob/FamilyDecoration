@@ -95,10 +95,17 @@
 		return $res;
 	}
 
-	function getVisitorProjectsByCaptain($visitorName, $captainName){
+	function getVisitorProjectsByCaptain($visitorName, $captainName, $settled){
 		global $mysql;
 		$sql = "select * from user left join project p on p.projectId = user.projectId where user.name = '?' and p.captainName = '?' and p.projectId is not null and p.isDeleted = 'false' ";
-		return $mysql->DBGetAsMap($sql,$visitorName,$captainName);
+		$params = new array();
+		array_push($params, $visitorName);
+		array_push($params, $captainName);
+		if ($settled >= 0 ) {
+			$sql = $sql." and settled = ? ";
+			array_push($params, $settled);
+		}
+		return $mysql->DBGetAsMap($sql,$params);
 	}
 
 	function getProjectMonths ($year){
@@ -163,41 +170,46 @@
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
-	function getProjectsByCaptainName ($captainName){
+	function getProjectsByCaptainName ($captainName, $settled){
 		global $mysql;
 		$userName = isset($_REQUEST["userName"]) ? $_REQUEST["userName"] : "";
 		$needStatementBillCount = isset($_REQUEST["needStatementBillCount"]) ? $_REQUEST["needStatementBillCount"] : "";
 		$needMaterialOrderCount = isset($_REQUEST["needMaterialOrderCount"]) ? $_REQUEST["needMaterialOrderCount"] : "";
 		$includeFrozen = $_REQUEST["includeFrozen"];
-		if ($userName == "") {
-			$projects = $mysql->DBGetAsMap("select * from project where `isDeleted` = 'false' and `captainName` = '?' ".($includeFrozen == "true" ? "" : " and `isFrozen` = '0' ")." ORDER BY `projectTime` ASC ", $captainName);
+		$sql = "select * from project where `isDeleted` = 'false' and `captainName` = '?' ";
+		$orderby = " ORDER BY `projectTime` ASC ";
+		$params = array();
+		array_push($params, $captainName);
+		if ($includeFrozen != "true") {
+			$sql = $sql." and isFrozen = '0' ";
 		}
-		else {
-			$projects = $mysql->DBGetAsMap("select * from project where `isDeleted` = 'false' and `captainName` = '?' ".($includeFrozen == "true" ? "" : " and `isFrozen` = '0' ")." and (`salesmanName` = '?' || `designerName` = '?') ORDER BY `projectTime` ASC ", $captainName, $userName, $userName);
+		if ($userName != "") {
+			$sql = $sql." and (`salesmanName` = '?' || `designerName` = '?') ";
+			array_push($params, $userName);
+			array_push($params, $userName);
 		}
+		if ($settled >= 0 ) {
+			$sql = $sql." and settled = ? ";
+			array_push($params, $settled);
+		}
+		$projects = $mysql->DBGetAsMap($sql.$orderby, $params);
 		$sqlBudget = "select * from budget where projectId = '?' and isDeleted = 'false'";
 		foreach($projects as $key=>$project) {
 			$projectId = $project['projectId'];
 			$projects[$key]["budgets"] = $mysql->DBGetAsMap($sqlBudget, $projectId);
 			if ($needStatementBillCount == 'true') {
-				$rdyck1Count = $mysql->DBGetAsMap("select count(*) as rdyck1BillCount from statement_bill where projectId = '?' and isDeleted = 'false' and status = 'rdyck1' ", $projectId);
-				$projects[$key]["rdyck1BillCount"] = $rdyck1Count[0]["rdyck1BillCount"];
-				$rdyck2Count = $mysql->DBGetAsMap("select count(*) as rdyck2BillCount from statement_bill where projectId = '?' and isDeleted = 'false' and status = 'rdyck2' ", $projectId);
-				$projects[$key]["rdyck2BillCount"] = $rdyck2Count[0]["rdyck2BillCount"];
-				$rdyck3Count = $mysql->DBGetAsMap("select count(*) as rdyck3BillCount from statement_bill where projectId = '?' and isDeleted = 'false' and status = 'rdyck3' ", $projectId);
-				$projects[$key]["rdyck3BillCount"] = $rdyck3Count[0]["rdyck3BillCount"];
-				$rdyck4Count = $mysql->DBGetAsMap("select count(*) as rdyck4BillCount from statement_bill where projectId = '?' and isDeleted = 'false' and status = 'rdyck4' ", $projectId);
-				$projects[$key]["rdyck4BillCount"] = $rdyck4Count[0]["rdyck4BillCount"];
+				$res = $mysql->DBGetAsKeyValueList("select count(*) as v, status as k from statement_bill where projectId = '?' and isDeleted = 'false' group by status", $projectId);
+				$projects[$key]["rdyck1BillCount"] = isset($res['rdyck1']) ? $res['rdyck1'] : 0;
+				$projects[$key]["rdyck2BillCount"] = isset($res['rdyck2']) ? $res['rdyck2'] : 0;
+				$projects[$key]["rdyck3BillCount"] = isset($res['rdyck3']) ? $res['rdyck3'] : 0;
+				$projects[$key]["rdyck4BillCount"] = isset($res['rdyck4']) ? $res['rdyck4'] : 0;
 			}
-			else if ($needMaterialOrderCount == 'true') {
-				$rdyck1Count = $mysql->DBGetAsMap("select count(*) as rdyck1MaterialOrderCount from supplier_order where projectId = '?' and isDeleted = 'false' and status = 'rdyck1' ", $projectId);
-				$projects[$key]["rdyck1MaterialOrderCount"] = $rdyck1Count[0]["rdyck1MaterialOrderCount"];
-				$rdyck2Count = $mysql->DBGetAsMap("select count(*) as rdyck2MaterialOrderCount from supplier_order where projectId = '?' and isDeleted = 'false' and status = 'rdyck2' ", $projectId);
-				$projects[$key]["rdyck2MaterialOrderCount"] = $rdyck2Count[0]["rdyck2MaterialOrderCount"];
-				$rdyck3Count = $mysql->DBGetAsMap("select count(*) as rdyck3MaterialOrderCount from supplier_order where projectId = '?' and isDeleted = 'false' and status = 'rdyck3' ", $projectId);
-				$projects[$key]["rdyck3MaterialOrderCount"] = $rdyck3Count[0]["rdyck3MaterialOrderCount"];
-				$rdyck4Count = $mysql->DBGetAsMap("select count(*) as rdyck4MaterialOrderCount from supplier_order where projectId = '?' and isDeleted = 'false' and status = 'rdyck4' ", $projectId);
-				$projects[$key]["rdyck4MaterialOrderCount"] = $rdyck4Count[0]["rdyck4MaterialOrderCount"];
+			if ($needMaterialOrderCount == 'true') {
+				$res = $mysql->DBGetAsKeyValueList("select count(*) as v, status as k from supplier_order where projectId = '?' and isDeleted = 'false' group by status = 'rdyck1' ", $projectId);
+				$projects[$key]["rdyck1MaterialOrderCount"] = isset($res['rdyck1']) ? $res['rdyck1'] : 0;
+				$projects[$key]["rdyck2MaterialOrderCount"] = isset($res['rdyck2']) ? $res['rdyck2'] : 0;
+				$projects[$key]["rdyck3MaterialOrderCount"] = isset($res['rdyck3']) ? $res['rdyck3'] : 0;
+				$projects[$key]["rdyck4MaterialOrderCount"] = isset($res['rdyck4']) ? $res['rdyck4'] : 0;
 			}
 		}
 		return $projects;

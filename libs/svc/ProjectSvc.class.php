@@ -26,6 +26,18 @@ class ProjectSvc extends BaseSvc
 		}
 	}
 	
+	public function update($q){
+		if(isset($q['@settled'])){
+			global $mysql;
+			$sql = "select count(*) as count from statement_bill where projectId = '?' and isDeleted = 'false' and status not in ('?', '?') ";
+			$res = $mysql->DBGetAsMap($sql, $q['projectId'], 'paid', 'arch');
+			if($res[0]['count'] > 0) {
+				throw new BaseException('该工程还有'.$res[0]['count'].'个单据未结束流程(非已付款或归档状态)!');
+			}
+		}
+		return parent::update($q);
+	}
+
 	function financeReport($q){
 		$q['_fields'] = 'projectId,projectName,captain';
 		$q['isFrozen'] = 0;
