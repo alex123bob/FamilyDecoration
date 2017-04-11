@@ -73,9 +73,9 @@ class BaseSvc{
 			}
 		}
 
-		if(!isset($obj['isDeleted']) || $obj['updateTime'] == '')
+		if(!isset($obj['isDeleted']) || $obj['isDeleted'] == '')
 			$obj['isDeleted'] = 'false';
-		if(!isset($obj['createTime']) || $obj['updateTime'] == '')
+		if(!isset($obj['createTime']) || $obj['createTime'] == '')
 			$obj['createTime'] = 'now()';
 		if(!isset($obj['updateTime']) || $obj['updateTime'] == '')
 			$obj['updateTime'] = 'now()';
