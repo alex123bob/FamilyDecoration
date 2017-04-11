@@ -67,12 +67,13 @@
 			}
 			break;
 		case "getProjectsByCaptainName":
+			$settled = isset($_REQUEST['settled']) ? (int)$_REQUEST['settled'] : -1;
 			if ($_SESSION["level"] == "006-001") {
 				$visitorName = $_SESSION["name"];
-				$res = getVisitorProjectsByCaptain($visitorName, $_REQUEST["captainName"]);
+				$res = getVisitorProjectsByCaptain($visitorName, $_REQUEST["captainName"], $settled);
 			}
 			else {
-				$res = getProjectsByCaptainName($_REQUEST["captainName"]);
+				$res = getProjectsByCaptainName($_REQUEST["captainName"], $settled);
 			}
 			break;
 		case "filterProjectByProjectName":
