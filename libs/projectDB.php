@@ -98,7 +98,7 @@
 	function getVisitorProjectsByCaptain($visitorName, $captainName, $settled){
 		global $mysql;
 		$sql = "select * from user left join project p on p.projectId = user.projectId where user.name = '?' and p.captainName = '?' and p.projectId is not null and p.isDeleted = 'false' ";
-		$params = new array();
+		$params = array();
 		array_push($params, $visitorName);
 		array_push($params, $captainName);
 		if ($settled >= 0 ) {
