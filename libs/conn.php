@@ -29,6 +29,8 @@
 		&&
 		!strpos($_SERVER["REQUEST_URI"], "cron_busialert.php")
 		&&
+		!strpos($_SERVER["REQUEST_URI"], "cron_businesspropertychange.php")
+		&&
 		!strpos($_SERVER["REQUEST_URI"], "mode=application_request_url")
 		&&
 		!strpos($_SERVER["REQUEST_URI"], "api.php?action=PlanMaking.designerAlarm")
