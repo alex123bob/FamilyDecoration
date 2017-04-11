@@ -64,7 +64,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 									if (resourceObj.project) {
 										Ext.Msg.warning('确定将当前工程置为结算完成状态吗？', function(btnId) {
 											if ('yes' == btnId) {
-												ajaxUpdate('project', {
+												ajaxUpdate('Project', {
 													projectId: resourceObj.project.getId(),
 													settled: 1
 												}, ['projectId'], function(obj) {
