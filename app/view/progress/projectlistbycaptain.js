@@ -19,6 +19,8 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 
 	needStatementBillCount: false,
 	needMaterialOrderCount: false,
+	// 工程账单结算是否完成
+	settled: 0,
 
 	initComponent: function () {
 		var me = this;
@@ -201,27 +203,25 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 				},
 				listeners: {
 					beforeload: function (st, ope) {
-						var node = ope.node;
+						var node = ope.node,
+							params = {};
 						if (node.get('captain')) {
 							st.proxy.url = './libs/project.php';
+							params = {
+								captainName: node.get('captainName'),
+								action: 'getProjectsByCaptainName',
+								includeFrozen: me.includeFrozen,
+								needStatementBillCount: me.needStatementBillCount,
+								needMaterialOrderCount: me.needMaterialOrderCount,
+								settled: me.settled
+							}
 							if (User.isAdmin() || User.isProjectManager() || User.isSupervisor() || User.isProjectStaff() || User.isAdministrationManager() || User.isFinanceManager() || User.isBudgetManager() || User.isBudgetStaff()) {
-								st.proxy.extraParams = {
-									captainName: node.get('captainName'),
-									action: 'getProjectsByCaptainName',
-									includeFrozen: me.includeFrozen,
-									needStatementBillCount: me.needStatementBillCount,
-									needMaterialOrderCount: me.needMaterialOrderCount
-								};
+								st.proxy.extraParams = params;
 							}
 							else {
-								st.proxy.extraParams = {
-									captainName: node.get('captainName'),
-									action: 'getProjectsByCaptainName',
-									userName: User.getName(),
-									includeFrozen: me.includeFrozen,
-									needStatementBillCount: me.needStatementBillCount,
-									needMaterialOrderCount: me.needMaterialOrderCount
-								};
+								st.proxy.extraParams = Ext.apply(params, {
+									userName: User.getName()
+								});
 							}
 						}
 					},

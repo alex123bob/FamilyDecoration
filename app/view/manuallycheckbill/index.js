@@ -26,6 +26,7 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 				billDetailPanel = Ext.getCmp('billtable-previewTable');
 			return {
 				projectGrid: projectGrid,
+				projectSt: projectGrid.getStore(),
 				project: projectGrid.getSelectionModel().getSelection()[0],
 				professionTypeGrid: professionTypeGrid,
 				professionTypeSt: professionTypeGrid.getStore(),
@@ -54,9 +55,50 @@ Ext.define('FamilyDecoration.view.manuallycheckbill.Index', {
 							borderRightWidth: '1px'
 						},
 						xtype: 'progress-projectlistbycaptain',
+						bbar: [
+							{
+								text: '结算完成',
+								handler: function() {
+									var resourceObj = me.getRes();
+									Ext.Msg.warning('确定将当前工程置为结算完成状态吗？', function(btnId) {
+										if ('yes' == btnId) {
+											ajaxUpdate('project', {
+												projectId: resourceObj.project.getId(),
+												settled: 1
+											}, ['projectId'], function(obj) {
+												resourceObj.professionTypeSt.removeAll();
+												resourceObj.projectSt.proxy.url = './libs/project.php';
+												resourceObj.projectSt.proxy.extraParams = {
+													action: 'getProjectsByCaptainName',
+													captainName: resourceObj.project.get('captainName')
+												};
+												resourceObj.projectSt.load({
+													node: resourceObj.project.parentNode,
+													callback: function(recs, ope, success) {
+														if (success) {
+															var newPro;
+															for (var i = 0; i < recs.length; i++) {
+																if (recs[i].getId() == resourceObj.project.getId()) {
+																	newPro = recs[i];
+																	break;
+																}
+															}
+															resourceObj.projectGrid.getSelectionModel().deselectAll()
+															resourceObj.projectGrid.getSelectionModel().select(newPro);
+															showMsg('结算完成！');
+														}
+													}
+												});
+											})
+										}
+									});
+								}
+							}
+						],
 						includeFrozen: true,
 						needStatementBillCount: true,
 						searchFilter: true,
+						settled: 1,
 						title: '工程项目名称&nbsp;&nbsp;<span style="font-size: 10px;">[<font color="pink"><strong>*</strong></font>:待一审]</span>',
 						id: 'treepanel-projectNameForBillCheck',
 						name: 'treepanel-projectNameForBillCheck',

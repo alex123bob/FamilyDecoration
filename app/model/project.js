@@ -20,6 +20,9 @@ Ext.define('FamilyDecoration.model.Project', {
         {name: 'text', type: 'string', mapping: 'projectName'},
         {name: 'budgets'},
         {name: 'isFrozen', type: 'string'},
+        // 结算完成: 当前工程是否结算完成，默认0, 未结算完成, 1: 结算完成'; 
+        // 结算完成的工程不显示在人工对账的工程列表中
+        {name: 'settled'},
         {name: 'businessId', type: 'string'},
         {name: 'hasChart', type: 'string'},
         {name: 'budgetFinished', type: 'string'},
