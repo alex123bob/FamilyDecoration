@@ -73,10 +73,12 @@ class BaseSvc{
 			}
 		}
 
-		if(!isset($obj['isDeleted']))
+		if(!isset($obj['isDeleted']) || $obj['updateTime'] == '')
 			$obj['isDeleted'] = 'false';
-		if(!isset($obj['createTime']))
+		if(!isset($obj['createTime']) || $obj['updateTime'] == '')
 			$obj['createTime'] = 'now()';
+		if(!isset($obj['updateTime']) || $obj['updateTime'] == '')
+			$obj['updateTime'] = 'now()';
 		$mysql->DBInsertAsArray($this->tableName,$obj);
 		return array('status'=>'successful', 'data'=>$obj,'errMsg' => '');
 	}

@@ -16,6 +16,9 @@ class StatementBillItemSvc extends BaseSvc
 				$q['@unitPrice'] = round($q['@unitPrice'],3);
 			}
 		}
+		if(!isset($q['@checkedNumber']) || $q['@checkedNumber'] == ''){
+			$q['@checkedNumber'] = 0;
+		}
 	}
 
 	public function add($q){
