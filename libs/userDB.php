@@ -64,7 +64,7 @@
 			$mysql->DBUpdate('online_user',array('lastUpdateTime'=>'now()','offlineTime'=>'now()'),"`userName` = '?' and `offlineTime` is null ",array($userName));
 			$obj = array('userName'=>$name,'onlineTime'=>'now()','sessionId'=>$sessionId,'lastUpdateTime'=>'now()','ip'=>$ip,'userAgent'=>$userAgent);
 			$mysql->DBInsertAsArray("`online_user`",$obj);
-			return (array('status'=>'successful', 'errMsg'=>'','token'=>$sessionId));
+			return (array('status'=>'successful', 'errMsg'=>'','token'=>$sessionId, 'level'=>$user["level"]));
 		}
 		throw new BaseException('用户或密码不正确！');
 	}
@@ -321,6 +321,13 @@
 		global $mysql;
 		$arr = $mysql->DBGetSomeRows("`user`", "*" ,"where `level` = '".$level."' and `isDeleted` = 'false' ");
 		return ($arr);
+	}
+
+	function getUserLevel($name) {
+		global $mysql;
+		$level = $mysql->DBGetAsOneArray("select level from user where name = '?' ",$name);
+		$level = count($level) > 0 ? $level[0] : "";
+		return array('status'=>'successful',"level"=>$level);
 	}
 
 	function getUserDepartments (){
