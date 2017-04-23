@@ -1,0 +1,2 @@
+ALTER TABLE `project_progress_audit` ADD `pics` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT 'pics taken by supervisors.' AFTER `content`;
+update `system` set `paramValue`='version-9.1' where `id`='4';

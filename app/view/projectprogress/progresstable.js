@@ -66,7 +66,8 @@ Ext.define('FamilyDecoration.view.projectprogress.ProgressTable', {
                     text: '监理意见',
                     dataIndex: 'supervisorComment',
 					renderer: function (val, meta, rec){
-						var result = '';
+						var result = '',
+							pics;
 						if (val.length > 0) {
 							Ext.each(val, function (obj, index){
 								result += '<strong>' + (index + 1) + '.</strong>' 
@@ -81,12 +82,15 @@ Ext.define('FamilyDecoration.view.projectprogress.ProgressTable', {
 									   + '<span class="footnote">(' + obj['createTime'] + ') ' 
 									   + obj['auditorRealName'] + '</span>'
 									   + '<br />';
+								if (obj.pics) {
+									pics = obj.pics.split('>>><<<');
+									Ext.each(pics, function(pic){
+										result += '<img src="' + pic + '" width="100" height="50" />' + '<br />';
+									});
+								}
 							});
-							return result;
 						}
-						else {
-							return '';
-						}
+						return result;
 					}
                 }
 			]

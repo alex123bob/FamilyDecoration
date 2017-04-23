@@ -10,6 +10,7 @@ Ext.define('FamilyDecoration.model.ProjectProgress', {
         {name: 'professionType', type: 'string'}, // this indicates which working category it belongs to
         {name: 'practicalProgress'},
         {name: 'supervisorComment'},
+        {name: 'pics'},
 		{name: 'projectId', type: 'string'},
         {name: 'isEditable'}
     ],
