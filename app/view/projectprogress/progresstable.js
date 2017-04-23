@@ -78,16 +78,18 @@ Ext.define('FamilyDecoration.view.projectprogress.ProgressTable', {
 								else if (obj['pass'] == '-1') {
 									result += '&nbsp;<font color="red">[验收不通过]</font>';
 								}
-								result += '<br />'
-									   + '<span class="footnote">(' + obj['createTime'] + ') ' 
-									   + obj['auditorRealName'] + '</span>'
-									   + '<br />';
+								if (result != '') {
+									result += '<br />';
+								}
 								if (obj.pics) {
 									pics = obj.pics.split('>>><<<');
 									Ext.each(pics, function(pic){
 										result += '<img src="' + pic + '" width="100" height="50" />' + '<br />';
 									});
 								}
+								result += '<span class="footnote">(' + obj['createTime'] + ') ' 
+									   + obj['auditorRealName'] + '</span>'
+									   + '<br />';
 							});
 						}
 						return result;
