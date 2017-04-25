@@ -84,7 +84,7 @@ Ext.define('FamilyDecoration.view.projectprogress.ProgressTable', {
 								if (obj.pics) {
 									pics = obj.pics.split('>>><<<');
 									Ext.each(pics, function(pic){
-										result += '<img src="' + pic + '" width="100" height="50" />' + '<br />';
+										result += '<img onclick="showPic(\'' + pic + '\', \'监理意见\');" src="' + pic + '" width="100" height="50" />' + '<br />';
 									});
 								}
 								result += '<span class="footnote">(' + obj['createTime'] + ') ' 

@@ -1112,6 +1112,28 @@ String.prototype.format = function () {
     return res;
 }
 
+function showPic(src, title) {
+    if (src) {
+        var win = Ext.create('Ext.window.Window', {
+            layout: 'fit',
+            title: title || '',
+            width: 400,
+            height: 400,
+            modal: true,
+            autoScroll: true,
+            maximizable: true,
+            items: [{
+                xtype: 'image',
+                src: src
+            }]
+        });
+        win.show();
+    }
+    else {
+        showMsg('没有图片!');
+    }
+}
+
 Ext.require('Ext.form.field.VTypes', function () {
     Ext.apply(Ext.form.field.VTypes, {
         'phone': function () {
