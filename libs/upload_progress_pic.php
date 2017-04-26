@@ -4,7 +4,8 @@ include_once "chart.php";
 global $IS_SAE;
 $IS_SAE = defined("SAE_MYSQL_HOST_M");
 
-if(!isset($_FILES) || !isset($_FILES['photo']) || !isset($_FILES['photo']['tmp_name']) || $_FILES['photo']['tmp_name'][0] =="") throw new Exception("no files uploaded!");
+if(!isset($_FILES) || !isset($_FILES['photo']) || !isset($_FILES['photo']['tmp_name']) || !is_array($_FILES['photo']['tmp_name']) || $_FILES['photo']['tmp_name'][0] =="") 
+	throw new Exception("no files uploaded!");
 
 $name = $_FILES['photo']['name'];
 $tmpName = $_FILES['photo']['tmp_name'];
