@@ -77,6 +77,10 @@ table.pros td{
   cursor: pointer;
 }
 
+#gridpanel-projectProgressForProjectProgress .x-grid-cell-inner img {
+    cursor: pointer;
+}
+
 #chartContainer {
   min-width: 310px; 
   height: 400px; 
