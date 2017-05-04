@@ -171,11 +171,19 @@ Ext.define('FamilyDecoration.view.projectcategory.Index', {
 												else {
 													extraParams[txt.itemId] = newVal;
 												}
+												if (!needLoadAll) {
+													Ext.apply(extraParams, {
+														userName: User.getName()
+													});
+												}
 												st.setProxy(proxy);
 												st.load();
 											}
 										}
 									}
+								}
+								else {
+									self[index] = null;
 								}
 							});
 							return arr;
