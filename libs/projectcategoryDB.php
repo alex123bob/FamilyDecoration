@@ -5,6 +5,7 @@
 		global $mysql;
 		$start = $_GET["start"];
 		$limit = $_GET["limit"];
+		$filterSql = "";
 		if (isset($_GET["userName"])) {
 			$userName = $_GET["userName"];
 			$userCheckSql = " and (`captainName` = '$userName' or `designerName` = '$userName' or `salesmanName` = '$userName' or `supervisorName` = '$userName') ";
@@ -12,8 +13,20 @@
 		else {
 			$userCheckSql = '';
 		}
+		if (isset($_GET["captain"])) {
+			$filterSql .= " and `captain` like '%".$_GET["captain"]."%' ";
+		}
+		if (isset($_GET["projectName"])) {
+			$filterSql .= " and `projectName` like '%".$_GET["projectName"]."%' ";
+		}
+		if (isset($_GET["designer"])) {
+			$filterSql .= " and `designer` like '%".$_GET["designer"]."%' ";
+		}
+		if (isset($_GET["salesman"])) {
+			$filterSql .= " and `salesman` like '%".$_GET["salesman"]."%' ";
+		}
 		$orderBySql = " ORDER BY `captainName` ASC ";
-		$sql = "select *, YEAR(`projectTime`) as projectYear , MONTH(`projectTime`) as projectMonth from `project` where `isDeleted` = 'false' and `isFrozen` = 0 ".$userCheckSql.$orderBySql;
+		$sql = "select * from `project` where `isDeleted` = 'false' and `isFrozen` = 0 ".$userCheckSql.$filterSql.$orderBySql;
 		$limitSql = " limit $start, $limit ";
 		$count = count($mysql->DBGetAsMap($sql));
 		$projects = $mysql->DBGetAsMap($sql.$limitSql);
@@ -43,9 +56,9 @@
 				$projects[$i]["tilerProCheck"] = "";
 				$projects[$i]["woodProCheck"] = "";
 			}
-			$projectProgress = $mysql->DBGetAsMap("select `progress` from `progress` where `projectId` = '?' and `isDeleted` = 'false' ORDER BY createTime DESC", $projectId);
+			$projectProgress = $mysql->DBGetAsMap("select `content` from `project_progress` where `projectId` = '?' and `isDeleted` = 'false' ORDER BY createTime DESC", $projectId);
 			if (count($projectProgress) > 0) {
-				$projects[$i]["projectProgress"] = $projectProgress[0]["progress"];
+				$projects[$i]["projectProgress"] = $projectProgress[0]["content"];
 			}
 			else {
 				$projects[$i]["projectProgress"] = '';
