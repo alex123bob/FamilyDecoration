@@ -40,11 +40,78 @@ Ext.define('FamilyDecoration.view.businessaggregation.Index', {
             return val;
         };
 
+        var filter = function(name, val) {
+            var proxy = st.getProxy(),
+                extraParams = proxy.extraParams;
+            if (val === '') {
+                delete extraParams[name]
+            }
+            else {
+                extraParams[name] = val;
+            }
+            st.setProxy(proxy);
+            st.loadPage(1);
+        }
+
         me.items = [
             {
                 title: '业务汇总',
                 store: st,
                 dockedItems: [
+                    {
+                        xtype: 'toolbar',
+                        dock: 'top',
+                        layout: 'hbox',
+                        defaults: {
+                            xtype: 'textfield',
+                            flex: 1,
+                            hideLabel: true
+                        },
+                        items: [
+                            {
+                                itemId: 'salesman',
+                                emptyText: '业务员',
+                                listeners: {
+                                    change: function(txt, newVal, oldVal) {
+                                        filter(txt.itemId, newVal);
+                                    }
+                                }
+                            },
+                            {
+                                itemId: 'designer',
+                                emptyText: '设计师',
+                                listeners: {
+                                    change: function(txt, newVal, oldVal) {
+                                        filter(txt.itemId, newVal);
+                                    }
+                                }
+                            },
+                            {
+                                itemId: 'level',
+                                emptyText: '等级',
+                                flex: 0.2,
+                                listeners: {
+                                    change: function(txt, newVal, oldVal) {
+                                        filter(txt.itemId, newVal);
+                                    }
+                                }
+                            },
+                            {
+                                itemId: 'createTime',
+                                emptyText: '创建时间',
+                                xtype: 'datefield',
+                                editable: false,
+                                cleanBtn: true,
+                                cleanHandler: function() {
+                                },
+                                listeners: {
+                                    change: function(txt, newVal, oldVal) {
+                                        filter(txt.itemId, newVal !== '' ? Ext.Date.format(newVal,'Y-m-d') : '');
+                                    }
+                                }
+                            }
+                        ]
+                    },
                     {
                         xtype: 'pagingtoolbar',
                         store: st,   // same store GridPanel is using

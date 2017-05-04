@@ -160,7 +160,7 @@
 	
 	function getBusiness($data){
 		global $mysql;
-		$fields = array('floorArea','houseType','regionId','potentialBusinessId','address','isFrozen','requestDead','isDead','requestDeadBusinessTitle','requestDeadBusinessReason','customer','custContact','salesman','salesmanName','designer','designerName','csStaff','csStaffName','applyDesigner','level','ds_lp','ds_fc','ds_bs','ds_bp','isWaiting','isLocked');
+		$fields = array('floorArea','houseType','regionId','potentialBusinessId','address','isFrozen','requestDead','isDead','requestDeadBusinessTitle','requestDeadBusinessReason','customer','custContact','salesman','salesmanName','designer','designerName','csStaff','csStaffName','applyDesigner','level','ds_lp','ds_fc','ds_bs','ds_bp','isWaiting','isLocked', 'createTime' );
 		$params = array();
 		$sql = "select `b`.*, `r`.name from `business` `b` left join `region` `r` on `b`.regionId = `r`.id where `b`.`isDeleted` = 'false' and b.isTransfered = 'false' ";
 		foreach($fields as $field){
@@ -168,6 +168,15 @@
 				array_push($params,$data[$field]);
 				if ($field == 'csStaff' || $field == 'csStaffName') {
 					$sql .= " or $field = '?' ";
+				}
+				// we assume the following two fields,
+				// we would only search vaguely;
+				// we need to figure out a way when later there is exact matching requirement.
+				else if ($field == 'salesman' || $field == 'designer') {
+					$sql .= " and $field like '%?%' ";
+				}
+				else if ($field == 'createTime') {
+					$sql .= " and `b`.$field like '%?%' ";
 				}
 				else {
 					$sql .= " and $field = '?' ";
@@ -325,21 +334,37 @@
 
 	function getBusinessAggregation($data) {
 		global $mysql;
-		$list = getBusiness(
-			array(
-				'isDead' => 'false',
-				'isFrozen' => 'false',
-				// 'isWaiting' => 'false',
-				'needPaging' => 'true',
-				'limit' => $data['start'].', '.$data['limit']
-			)
+		$searchArr = array(
+			'isDead' => 'false',
+			'isFrozen' => 'false',
+			// 'isWaiting' => 'false',
+			'needPaging' => 'true',
+			'limit' => $data['start'].', '.$data['limit']
 		);
-		$total = $mysql->DBGetAsMap("select count(*) as totalBusiness from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' ");
+		$filterSql = "";
+		$params = array();
+		$fields = array('salesman', 'designer', 'level', 'createTime');
+		foreach ($fields as $field) {
+			if (isset($data[$field])) {
+				$searchArr[$field] = $data[$field];
+				if ($field == 'salesman' || $field == 'designer' || $field == 'createTime') {
+					$filterSql .= " and $field like '%?%' ";
+				}
+				else {
+					$filterSql .= " and $field = '?' ";
+				}
+				array_push($params, $data[$field]);
+			}
+		}
+		$list = getBusiness(
+			$searchArr
+		);
+		$total = $mysql->DBGetAsMap("select count(*) as totalBusiness from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' ".$filterSql, $params);
 		$total = $total[0]["totalBusiness"];
-		$A = $mysql->DBGetAsMap("select count(*) as totalA from business where level = 'A' and isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' ");
-		$B = $mysql->DBGetAsMap("select count(*) as totalB from business where level = 'B' and isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' ");
-		$C = $mysql->DBGetAsMap("select count(*) as totalC from business where level = 'C' and isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' ");
-		$D = $mysql->DBGetAsMap("select count(*) as totalD from business where level = 'D' and isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' ");
+		$B = $mysql->DBGetAsMap("select count(*) as totalB from business where level = 'B' and isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' ".$filterSql, $params);
+		$A = $mysql->DBGetAsMap("select count(*) as totalA from business where level = 'A' and isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' ".$filterSql, $params);
+		$C = $mysql->DBGetAsMap("select count(*) as totalC from business where level = 'C' and isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' ".$filterSql, $params);
+		$D = $mysql->DBGetAsMap("select count(*) as totalD from business where level = 'D' and isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' ".$filterSql, $params);
 		$res = array(
 			"data" => $list,
 			"total" => $total,

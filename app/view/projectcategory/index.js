@@ -177,7 +177,7 @@ Ext.define('FamilyDecoration.view.projectcategory.Index', {
 													});
 												}
 												st.setProxy(proxy);
-												st.load();
+												st.loadPage(1);
 											}
 										}
 									}
