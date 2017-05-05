@@ -70,12 +70,18 @@ Ext.define('FamilyDecoration.view.checkbusiness.Index', {
 				},
 				listeners: {
 					load: function (){
-						var grid = Ext.getCmp('gridpanel-businessStaff');
+						var grid = Ext.getCmp('gridpanel-businessStaff'),
+							st = grid.getStore(),
+							rec,
+							selModel = grid.getSelectionModel();
 						if (me.salesmanName) {
-							var st = grid.getStore(),
-								rec = st.findRecord('salesmanName', me.salesmanName);
-							rec && grid.getSelectionModel().select(rec);
+							rec = st.findRecord('salesmanName', me.salesmanName);
 						}
+						else if (window.busi) {
+							rec = st.findRecord('salesmanName', window.busi.salesmanName);
+							delete window.busi.salesmaneName;
+						}
+						rec && selModel.select(rec);
 					}
 				}
 			}),

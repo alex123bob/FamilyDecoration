@@ -255,6 +255,7 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 						},
 						refresh: function () {
 							var grid = this,
+								selModel = grid.getSelectionModel(),
 								st = grid.getStore(),
 								rec = grid.getSelectionModel().getSelection()[0];
 							st.reload({
@@ -271,6 +272,12 @@ Ext.define('FamilyDecoration.view.mybusiness.Index', {
 										if (rec) {
 											var index = st.indexOf(rec);
 											grid.getSelectionModel().select(index);
+										}
+										else if (window.busi) {
+											rec = st.findRecord('id', window.busi.bid);
+											delete window.busi.bid;
+											delete window.busi;
+											selModel.select(rec);
 										}
 									}
 								}

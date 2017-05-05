@@ -204,7 +204,17 @@ Ext.define('FamilyDecoration.view.businessaggregation.Index', {
                             }
                         }
                     ]
-                }
+                },
+                listeners: {
+					itemdblclick: function (view, rec, item, index, e, opts) {
+						window.busi = {
+							salesmanName: rec.get('salesmanName'),
+							bid: rec.getId()
+						};
+
+						changeMainCt('checkbusiness-index');
+					}
+				}
             }
         ]
 
