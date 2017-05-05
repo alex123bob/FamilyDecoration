@@ -1,10 +1,11 @@
 Ext.define('FamilyDecoration.view.planlabor.ScheduledTimeTable', {
-    extend: 'Ext.container.Container',
+    extend: 'Ext.panel.Panel',
     alias: 'widget.planlabor-scheduledtimetable',
     layout: 'vbox',
     requires: [
         'FamilyDecoration.store.PlanLabor'
     ],
+    professionType: undefined,
 
     initComponent: function () {
         var me = this;
@@ -107,9 +108,24 @@ Ext.define('FamilyDecoration.view.planlabor.ScheduledTimeTable', {
         }
 
         me.refresh = function (professionType, startTime, endTime){
+            me.professionType = professionType;
             renderTitle(professionType);
             renderGridByProfessionType(professionType, startTime, endTime);
         }
+
+        me.tbar = [
+            {
+                xtype: 'button',
+                text: '预览',
+                icon: 'resources/img/preview_planlabour.png',
+                handler: function() {
+                    if (me.professionType) {
+                        var url = './fpdf/planlabor.php?professionType=' + me.professionType.get('value');
+                        var win = window.open(url,'预览','height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+                    }
+                }
+            }
+        ];
 
         me.items = [
             {
