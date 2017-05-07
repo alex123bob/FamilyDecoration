@@ -27,7 +27,7 @@ $titleLineHeight2 = 8;   //表头下半部分行高
 $height = 6; //数据表格每行高度
 $width = array();  //左侧1列宽度, 项目名称
 $pagetype = isset($_REQUEST['page']) ? $_REQUEST['page'] : 'A4';
-array_push($width, 5); //序号宽度
+array_push($width, 10); //序号宽度
 array_push($width, 45); //工程项目宽度
 $xuhaoLineHeight = ($titleLineHeight1  + $titleLineHeight2);  // 项目名称
 $leftNameWith = $width[0]+ $width[1];
@@ -45,6 +45,7 @@ if(count($plans) == 0 ){
 	throw new Exception($msg);
 }
 
+$pageSizeFit = array('A3'=>30,'A4'=>20,'A1'=>150,'A2'=>90);
 $action = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "view";
 
 //默认使用计划的时间，如果有项目时间，优先使用项目的
@@ -56,7 +57,7 @@ $end=$timespan['endTime'];
 $pdf=new PDF('L','mm', $pagetype); //创建新的FPDF对象 
 $pdf->AddGBFont(); //设置中文字体 
 $pdf->Open(); //开始创建PDF 
-$pdf->SetFillColor(125);
+$pdf->SetFillColor(85);
 $pdf->AddPage(); //增加一页 
 $pdf->SetFont("GB",$GfontStyle,$GfontSize); //设置字体样式 
 
@@ -125,16 +126,19 @@ $lineCount = 0;
 foreach($plans as $key => $item) {
 	$lineCount ++;
 	$projectName = str2GBK($item['projectName']);
-	//输出子项目
-	$lastPageNum = $pdf->page;
+	$linesNeed = $pdf->GetStringShowLines($projectName,$width[1]);
+	//输出项目  mutilCell 调用cell函数, cell函数会自动检测换页, 因此, 会触发多个addPage, 因此,在这儿仅手动去addPage一次. fix bug
+	if((($pdf->y + (8 * $linesNeed )) > $pdf->PageBreakTrigger)){
+		$pdf->addPage();
+	}
+	
 	$startX = $pdf->getx();
 	$startY = $pdf->gety();
-	//输出项目
-	$linesNeed = $pdf->GetStringShowLines($projectName,$width[1]);
-	$pdf->MultiCell($width[0],8 * $linesNeed,$lineCount,'LBTR','L',false,$height);
+
+	$pdf->MultiCell($width[0],8 * $linesNeed,$lineCount,'LBTR','C',false,$height);
 	$pdf->setXY($startX + $width[0],$startY);
 	$pdf->MultiCell($width[1],8,$projectName,'LBTR','L',0,$height);
-	$pdf->setXY($startX+$width[0]+$width[1],$startY);
+	$pdf->setXY($startX + $width[0] + $width[1],$startY);
 	//---输出项目结束
 
 	//输出日期填充
@@ -156,18 +160,13 @@ foreach($plans as $key => $item) {
 		}
 	}
 	for($smallCount = 0;$smallCount < $daysInTotal ;$smallCount++){
-		$c = '';
 		if($contentdata[$smallCount]){
 			$pdf->SetFillColor(200);
-			$c = '*';
 		}
-		$pdf->Cell($singleDayWidth,8*$linesNeed, $c,'LBTR',0,'L',$data[$smallCount]);
-		$pdf->SetFillColor(125);
+		$pdf->Cell($singleDayWidth,8*$linesNeed, '','LBTR',0,'L',$data[$smallCount]);
+		$pdf->SetFillColor(85);
 	}
-	
 	$pdf->ln();
-	$pdf->SetXY($pdf->getx()+$width[0]+$width[1],$pdf->gety());
-	$pdf->SetXY($pdf->getx()-$width[0]-$width[1],$pdf->gety());
 }
 $pdf->Output($professionTypes[$_REQUEST['professionType']].'用工计划划时间表('.$start.'至'.$end.').pdf', $action == "view" ? "I" : "D" );
 ?>  
