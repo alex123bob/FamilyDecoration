@@ -139,6 +139,7 @@ foreach($plans as $key => $item) {
 
 	//Êä³öÈÕÆÚÌî³ä
 	$data = array_fill(0, $daysInTotal, 0);
+	$contentdata = array_fill(0, $daysInTotal, 0);
 	if(isset($item['period']) && is_array($item['period'])  && count($item['period']) > 0){
 		$periods = $item['period'];
 		foreach($periods as $key => $period) {
@@ -148,13 +149,20 @@ foreach($plans as $key => $item) {
 				for($i = $periodStarDaysFromStartDay;$i <= $periodEndDaysFromStartDay ;$i++){
 					if(isset($data[$i])){
 						$data[$i] = 1;
+						$contentdata[$i] = $period['c'] == 0 ? 0 : 1;
 					}
 				}
 			}
 		}
 	}
 	for($smallCount = 0;$smallCount < $daysInTotal ;$smallCount++){
-		$pdf->Cell($singleDayWidth,8*$linesNeed,'','LBTR',0,'L',$data[$smallCount]);
+		$c = '';
+		if($contentdata[$smallCount]){
+			$pdf->SetFillColor(200);
+			$c = '*';
+		}
+		$pdf->Cell($singleDayWidth,8*$linesNeed, $c,'LBTR',0,'L',$data[$smallCount]);
+		$pdf->SetFillColor(125);
 	}
 	
 	$pdf->ln();
