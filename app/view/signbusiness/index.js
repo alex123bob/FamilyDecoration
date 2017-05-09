@@ -747,6 +747,22 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 																			if (obj.status == 'successful') {
 																				Ext.Msg.info('申请已发送，请耐心等待！');
 																				detailedAddressGrid.refresh();
+																				Ext.Ajax.request({
+																					url: './libs/user.php?action=getuserbylevel',
+																					method: 'GET',
+																					params: {
+																						level: '003-001',
+																					},
+																					callback: function(opts, success, res) {
+																						if (success) {
+																							var users = Ext.decode(res.responseText),
+																								content = User.getRealName() + '申请将 "' + detailedAddress.get('regionName') + ' ' + detailedAddress.get('address') + '" ' + '申请转为工程，请您关注具体进度,谢谢。';
+																							Ext.each(users, function(user, index, self) {
+																								sendSMS(User.getName(), user.name, user.phone, content);
+																							});
+																						}
+																					}
+																				});
 																			}
 																			else {
 																				showMsg(obj.errMsg);
