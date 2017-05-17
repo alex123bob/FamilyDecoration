@@ -63,8 +63,8 @@ foreach($budgetItems as $bItem){
 	$amount = $bItem["itemAmount"];
 	$itemCode = $bItem["itemCode"];
 	$itemName = $bItem["itemName"];
-	$remark = $bItem["remark"];
-	
+	$remark = trim($bItem["remark"], '<br />');
+
 	$data = array($itemCode,$itemName,$bItem["itemUnit"],$amount,
 				$bItem["mainMaterialPrice"],$bItem["mainMaterialTotalPrice"],
 				$bItem["auxiliaryMaterialPrice"],$bItem["auxiliaryMaterialTotalPrice"],$bItem["manpowerPrice"],
