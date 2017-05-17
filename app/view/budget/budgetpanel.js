@@ -582,8 +582,13 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				icon: './resources/img/print.png',
 				handler: function (){
 					if (me.budgetId) {
-						var win = window.open('./fpdf/index2.php?action=view&budgetId=' + me.budgetId,'打印','height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
-						win.print();
+						Ext.Msg.confirm('打印确认', '打印简版请点击是<br />打印完整版请点击否', function (btnId) {
+							if(btnId == 'cancel')
+								return ;
+							var url = './fpdf/'+(btnId == 'yes' ? 'index2' : 'index3')+'.php?action=view&budgetId=' + me.budgetId;
+							var win = window.open(url,'打印','height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+							win.print();
+						});
 					}
 					else {
 						showMsg('没有预算！');
@@ -595,8 +600,12 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				icon: './resources/img/pdf.png',
 				handler: function (){
 					if (me.budgetId) {
-						var exportFrame = document.getElementById('exportFrame');
-						exportFrame.src = './fpdf/index2.php?budgetId=' + me.budgetId;
+						Ext.Msg.confirm('导出预算', '导出简版请点击是<br />导出完整版请点击否', function (btnId) {
+							if(btnId == 'cancel')
+								return ;
+							var exportFrame = document.getElementById('exportFrame');
+							exportFrame.src = './fpdf/'+(btnId == 'yes' ? 'index2' : 'index3')+'.php?budgetId=' + me.budgetId;
+						});
 					}
 					else {
 						showMsg('没有预算！');
@@ -608,7 +617,12 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				icon: './resources/img/preview.png',
 				handler: function (){
 					if (me.budgetId) {
-						var win = window.open('./fpdf/index2.php?action=view&budgetId=' + me.budgetId,'打印','height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+						Ext.Msg.confirm('预览预算', '预览简版请点击是<br />预览完整版请点击否', function (btnId) {
+							if(btnId == 'cancel')
+								return ;
+							var url = './fpdf/'+(btnId == 'yes' ? 'index2' : 'index3')+'.php?action=view&budgetId=' + me.budgetId
+							var win = window.open(url,'打印','height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+						});
 					}
 					else {
 						showMsg('没有预算！');
