@@ -30,6 +30,7 @@ Ext.define('FamilyDecoration.view.costanalysis.Index', {
                     width: '100%',
                     title: '工程项目名称',
                     searchFilter: true,
+                    includeFrozen: true,
                     listeners: {
                         itemclick: function (view, record, item){
                             var pro = record,
