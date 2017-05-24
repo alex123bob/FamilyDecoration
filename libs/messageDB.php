@@ -6,9 +6,10 @@
 		$extraId = isset($data["extraId"]) ? $data["extraId"] : NULL;
 		$showTime = isset($data["showTime"]) ? $data["showTime"] : NULL;
 		global $mysql;
+		$rnd = 0;
 		foreach($receivers as $re){
 			$obj = array(
-				"id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
+				"id"=>(date("YmdHis") + $rnd ++).str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
 				"content"=>$data["content"],
 				"sender"=>$data["sender"],
 				"receiver"=>$re,
