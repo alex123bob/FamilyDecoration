@@ -66,15 +66,19 @@
 		$budget = addBudget($post);
 		$items = getBudgetTemplateItem($post['budgetTemplateId']);
 		$budgetItemFields = array('itemCode','workCategory','','remark','mainMaterialPrice','auxiliaryMaterialPrice','manpowerCost', 'mainMaterialCost','itemName','budgetId','itemUnit','itemAmount','manpowerPrice','machineryPrice','lossPercent','basicItemId','basicSubItemId','isCustomized');
+		$date = date("YmdHis");
+		$i = 0;
+		$mysql->begin();
 		foreach($items as $key=> $item){
 			foreach($item as $key=> $val){
 				if(is_numeric($key) || !in_array($key,$budgetItemFields))
 					unset($item[$key]);
 			}
 			$item['budgetId'] = $budget['budgetId'];
-			$item['budgetItemId'] = uniqid().str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
+			$item['budgetItemId'] = ($date + $i ++ ).str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
 			$mysql->DBInsertAsArray("`budget_item`",$item);
 		}
+		$mysql->commit();
 		return array('status'=>'successful', 'errMsg' => '', "budgetId" => $budget['budgetId']);
 	}
 	
