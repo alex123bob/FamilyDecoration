@@ -209,6 +209,7 @@ Class PlanMakingSvc extends BaseSvc{
 			case '0003':$select .= 'c8,c22,c25,c26,c27,c29';break;
 			case '0004':$select .= 'c10';break;
 			case '0005':$select .= 'c6';break;
+			case '0009':throw new BaseException('其他工种暂无指定项目,如需添加请联系管理员');break;
 			default:throw new Exception('找不到工种:'.$q['professionType']);
 		}
 		$select .= " from plan_making where isDeleted = 'false' and endTime > now() ";
