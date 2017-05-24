@@ -841,7 +841,7 @@ function checkMsg(obj) {
 }
 
 // time: 20151019124530 yyyyMMddHHmmss
-function sendSMS(sender, reciever, recieverPhone, content, time) {
+function sendSMS(sender, reciever, recieverPhone, content, rightnow) {
     if (sender && reciever) {
         Ext.Ajax.request({
             url: './libs/user.php?action=getrealname',
@@ -876,11 +876,9 @@ function sendSMS(sender, reciever, recieverPhone, content, time) {
                                             recieverPhone: recieverPhone,
                                             content: content
                                         };
-                                        if (time) {
-                                            Ext.apply(p, {
-                                                time: time
-                                            });
-                                        }
+                                        Ext.apply(p, {
+                                            rightnow: rightnow === true ? true : false
+                                        });
                                         Ext.Ajax.request({
                                             url: './libs/msg.php?action=sendmsg',
                                             method: 'POST',

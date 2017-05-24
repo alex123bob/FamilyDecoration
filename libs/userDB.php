@@ -123,7 +123,7 @@
 		if(!isset($_SESSION['phone']) || strlen($_SESSION['phone']) != 11){
 			throw new BaseException('您的手机号码不对,请联系管理员修改!');
 		}
-		BaseSvc::getSvc('MsgLog')->add(array('@reciever'=>$_SESSION['name'],'@content'=>'您的短信验证码是:'.$rand));
+		BaseSvc::getSvc('MsgLog')->addAndSend(array('@reciever'=>$_SESSION['name'],'@content'=>'您的短信验证码是:'.$rand));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 	/**

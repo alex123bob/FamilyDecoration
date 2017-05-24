@@ -31,12 +31,18 @@
 		case "checkmsg":$res = $svc->checkMsg($_REQUEST['content']);break;
 		//发送短信
 		case "sendmsg":
-			$res = $svc->add(array(
-					'@sender'=>$_REQUEST['sender'],
-					'@reciever'=>$_REQUEST['reciever'],
-					'@recieverPhone'=>$_REQUEST['recieverPhone'],
-					'@content'=>$_REQUEST['content'],
-				));
+			$params = array(
+				'@sender'=>$_REQUEST['sender'],
+				'@reciever'=>$_REQUEST['reciever'],
+				'@recieverPhone'=>$_REQUEST['recieverPhone'],
+				'@content'=>$_REQUEST['content'],
+			);
+			if ($_REQUEST["rightnow"] == true) {
+				$res = $svc->addAndSend($params);
+			}
+			else {
+				$res = $svc->add($params);
+			}
 			break;
 		//查询余额
 		case "getbalance":$res = $svc->getBalance(); break;
