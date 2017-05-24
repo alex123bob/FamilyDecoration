@@ -6,6 +6,7 @@
 		$start = $_GET["start"];
 		$limit = $_GET["limit"];
 		$filterSql = "";
+		$filterParams = array();
 		if (isset($_GET["userName"])) {
 			$userName = $_GET["userName"];
 			$userCheckSql = " and (`captainName` = '$userName' or `designerName` = '$userName' or `salesmanName` = '$userName' or `supervisorName` = '$userName') ";
@@ -14,22 +15,26 @@
 			$userCheckSql = '';
 		}
 		if (isset($_GET["captain"])) {
-			$filterSql .= " and `captain` like '%".$_GET["captain"]."%' ";
+			$filterSql .= " and `captain` like '%?%' ";
+			array_push($filterParams, $_GET["captain"]);
 		}
 		if (isset($_GET["projectName"])) {
-			$filterSql .= " and `projectName` like '%".$_GET["projectName"]."%' ";
+			$filterSql .= " and `projectName` like '%?%' ";
+			array_push($filterParams, $_GET["projectName"]);
 		}
 		if (isset($_GET["designer"])) {
-			$filterSql .= " and `designer` like '%".$_GET["designer"]."%' ";
+			$filterSql .= " and `designer` like '%?%' ";
+			array_push($filterParams, $_GET["designer"]);
 		}
 		if (isset($_GET["salesman"])) {
-			$filterSql .= " and `salesman` like '%".$_GET["salesman"]."%' ";
+			$filterSql .= " and `salesman` like '%?%' ";
+			array_push($filterParams, $_GET["salesman"]);
 		}
 		$orderBySql = " ORDER BY `captainName` ASC ";
 		$sql = "select * from `project` where `isDeleted` = 'false' and `isFrozen` = 0 ".$userCheckSql.$filterSql.$orderBySql;
 		$limitSql = " limit $start, $limit ";
-		$count = count($mysql->DBGetAsMap($sql));
-		$projects = $mysql->DBGetAsMap($sql.$limitSql);
+		$projects = $mysql->DBGetAsMap($sql.$limitSql, $filterParams);
+		$count = count($projects);
 		for ($i=0; $i < count($projects); $i++) {
 			$projects[$i]["serialNumber"] = $start + $i + 1;
 			$businessId = $projects[$i]["businessId"];
