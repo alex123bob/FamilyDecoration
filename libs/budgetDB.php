@@ -456,7 +456,6 @@
 		$res= array();
 		$arr = $mysql->DBGetAsMap(" select * from `budget_item` where `budgetId` = '?' and `isDeleted` = 'false' ORDER BY LEFT( itemCode, 2 ) ASC , ( SUBSTRING( itemCode, 2 ) ) *1 DESC ",$budgetId);
 		$budget = $mysql->DBGetAsMap(" select * from `budget` where `budgetId` = '?' and `isDeleted` = 'false' ",$budgetId);
-		print_r($budget);
 		$budget = $budget[0];
 		$count = 0;
 		$smallCount = array(0,0,0,0,0,0);
