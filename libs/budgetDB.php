@@ -244,6 +244,7 @@
 			throw new Exception("预算必须有关联的项目或者业务！");
 		}
 		// 将applyBudget置为2表示当前业务可以进行预算查看了
+		$mysql->begin();
 		if (isset($post["businessId"])) {
 			editBusiness(array("id"=>$post["businessId"], "applyBudget"=>2));
 		}
@@ -262,24 +263,25 @@
 		$mysql->DBInsertAsArray("`budget_item`",$item);
 		//O
 		$item = array('itemCode'=>'O','itemName'=>'设计费6%','itemUnit'=>'元','itemAmount'=>0.06,'budgetId'=>$budgetId);
-		$item['budgetItemId'] = "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
+		$item['budgetItemId'] = "budget-item-".(date("YmdHis") + 1 ).str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
 		$mysql->DBInsertAsArray("`budget_item`",$item);
 		//P
 		$item = array('itemCode'=>'P','itemName'=>'效果图','itemUnit'=>'张','itemAmount'=>0,'budgetId'=>$budgetId);
-		$item['budgetItemId'] = "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
+		$item['budgetItemId'] = "budget-item-".(date("YmdHis") + 2 ).str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
 		$mysql->DBInsertAsArray("`budget_item`",$item);
 		//Q
 		$item = array('itemCode'=>'Q','itemName'=>'5%管理费','itemUnit'=>'元','itemAmount'=>0.05,'budgetId'=>$budgetId);
-		$item['budgetItemId'] = "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
+		$item['budgetItemId'] = "budget-item-".(date("YmdHis") + 3 ).str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
 		$mysql->DBInsertAsArray("`budget_item`",$item);
 		//R
 		$item = array('itemCode'=>'R','itemName'=>'税金','itemUnit'=>'元','itemAmount'=>0.03,'budgetId'=>$budgetId);
-		$item['budgetItemId'] = "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
+		$item['budgetItemId'] = "budget-item-".(date("YmdHis") + 4 ).str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
 		$mysql->DBInsertAsArray("`budget_item`",$item);
 		//S
 		$item = array('itemCode'=>'S','itemName'=>'工程总造价','itemUnit'=>'元','budgetId'=>$budgetId);
-		$item['budgetItemId'] = "budget-item-".date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
+		$item['budgetItemId'] = "budget-item-".(date("YmdHis") + 5 ).str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
 		$mysql->DBInsertAsArray("`budget_item`",$item);
+		$mysql->commit();
 		return array('status'=>'successful', 'errMsg' => '', "budgetId" => $budgetId);
 	}
 
@@ -454,6 +456,7 @@
 		$res= array();
 		$arr = $mysql->DBGetAsMap(" select * from `budget_item` where `budgetId` = '?' and `isDeleted` = 'false' ORDER BY LEFT( itemCode, 2 ) ASC , ( SUBSTRING( itemCode, 2 ) ) *1 DESC ",$budgetId);
 		$budget = $mysql->DBGetAsMap(" select * from `budget` where `budgetId` = '?' and `isDeleted` = 'false' ",$budgetId);
+		print_r($budget);
 		$budget = $budget[0];
 		$count = 0;
 		$smallCount = array(0,0,0,0,0,0);
