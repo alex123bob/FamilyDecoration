@@ -482,14 +482,6 @@ Ext.require('Ext.Ajax', function () {
         }
         opts.silent = opts.silent || (opts.operation ? opts.operation.silent : false) ||
             (opts.proxy ? opts.proxy.silent : false);
-        if (opts.params && Ext.isObject(opts.params)) {
-            opts.params.platform = navigator.platform;
-        }
-        else {
-            opts.params = {
-                platform: navigator.platform
-            };
-        }
         if (opts.silent === true && opts.automatic === true) {
             return;
         }
