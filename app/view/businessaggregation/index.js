@@ -178,6 +178,12 @@ Ext.define('FamilyDecoration.view.businessaggregation.Index', {
                                                                     data: data
                                                                 }]
                                                             });
+                                                        },
+                                                        resize: function (win){
+                                                            var chart = $('.businessLineChart').highcharts();
+                                                            if (chart) {
+                                                                chart.setSize(win.getWidth(), win.getHeight(), true);
+                                                            }
                                                         }
                                                     }
                                                 });
