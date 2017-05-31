@@ -34,7 +34,7 @@
 		$sql = "select * from `project` where `isDeleted` = 'false' and `isFrozen` = 0 ".$userCheckSql.$filterSql.$orderBySql;
 		$limitSql = " limit $start, $limit ";
 		$projects = $mysql->DBGetAsMap($sql.$limitSql, $filterParams);
-		$count = count($projects);
+		$count = count($mysql->DBGetAsMap($sql, $filterParams));
 		for ($i=0; $i < count($projects); $i++) {
 			$projects[$i]["serialNumber"] = $start + $i + 1;
 			$businessId = $projects[$i]["businessId"];

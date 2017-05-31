@@ -223,6 +223,9 @@
 		case "getBusinessAggregation":
 			$res = getBusinessAggregation($_REQUEST);
 			break;
+		case "getBusinessByDate":
+			$res = getBusinessByDate();
+			break;
 		default: 
 			throw new Exception("unknown action:".$action);
 	}

@@ -376,4 +376,40 @@
 
 		return $res;
 	}
+
+	function getBusinessByDate() {
+		global $mysql;
+		$arr = $mysql->DBGetAsMap("select count(*) as num, date(createTime) as date FROM `business` WHERE isDeleted = 'false' and isFrozen = 'false' and isDead = 'false' and isTransfered = 'false' GROUP by date(createTime) order by date(createTime) asc");
+		$extraArr = array();
+		for ($i=0; $i < count($arr); $i++) { 
+			if ($i >= 1) {
+				$days = (strtotime($arr[$i]["date"]) - strtotime($arr[$i - 1]["date"])) / 60 / 60 / 24;
+				if ($days > 1) {
+					for ($j = 1; $j < $days; $j++) {
+						array_push($extraArr, array(
+							"num" => $arr[$i - 1]["num"],
+							"date" => date("Y-m-d", strtotime("+".$j." day", strtotime($arr[$i - 1]["date"])))
+						));
+					}
+					$arr[$i]["num"] += $arr[$i - 1]["num"];
+				}
+				else if ($days == 1) {
+					$arr[$i]["num"] += $arr[$i - 1]["num"];
+				}
+			}
+		}
+		// return $extraArr;
+		$arr = array_merge($arr, $extraArr);
+		$sortlist = array();
+		foreach ($arr as $key => $value) {
+			$sortlist[$key]["date"] = $value["date"];
+		}
+		array_multisort($arr, SORT_ASC, $sortlist);
+		$res = array(
+			"data" => $arr,
+			"status" => "successful",
+			"errMsg" => ""
+		);
+		return $res;
+	}
 ?>

@@ -109,6 +109,89 @@ Ext.define('FamilyDecoration.view.businessaggregation.Index', {
                                         filter(txt.itemId, newVal !== '' ? Ext.Date.format(newVal,'Y-m-d') : '');
                                     }
                                 }
+                            },
+                            {
+                                xtype: 'button',
+                                text: '图表',
+                                flex: 0.2,
+                                handler: function() {
+                                    Ext.Ajax.request({
+                                        url: './libs/business.php',
+                                        params: {
+                                            action: 'getBusinessByDate'
+                                        },
+                                        method: 'GET',
+                                        callback: function(opts, success, res) {
+                                            if (success) {
+                                                var arr = Ext.decode(res.responseText),
+                                                    xAxis = [], data = [];
+                                                Ext.each(arr.data, function(el, index, self) {
+                                                    xAxis.push(el.date);
+                                                    data.push(el.num);
+                                                });
+                                                xAxis = xAxis.slice(-30);
+                                                data = data.slice(-30);
+                                                var win = Ext.create('Ext.window.Window', {
+                                                    title: '业务日增量',
+                                                    width: 500,
+                                                    height: 400,
+                                                    maximized: true,
+                                                    modal: true,
+                                                    maximizable: true,
+                                                    layout: 'fit',
+                                                    items: [
+                                                        {
+                                                            xtype: 'panel',
+                                                            cls: 'businessLineChart'
+                                                        }
+                                                    ],
+                                                    listeners: {
+                                                        show: function(win) {
+                                                            $('.businessLineChart').highcharts({
+                                                                chart: {
+                                                                    type: 'line'
+                                                                },
+                                                                title: {
+                                                                    text: '业务增量统计'
+                                                                },
+                                                                subtitle: {
+                                                                    text: '佳诚装饰'
+                                                                },
+                                                                xAxis: {
+                                                                    categories: xAxis
+                                                                },
+                                                                yAxis: {
+                                                                    title: {
+                                                                        text: '业务量'
+                                                                    }
+                                                                },
+                                                                plotOptions: {
+                                                                    line: {
+                                                                        dataLabels: {
+                                                                            enabled: true
+                                                                        },
+                                                                        enableMouseTracking: false
+                                                                    }
+                                                                },
+                                                                series: [{
+                                                                    name: '业务量',
+                                                                    data: data
+                                                                }]
+                                                            });
+                                                        },
+                                                        resize: function (win){
+                                                            var chart = $('.businessLineChart').highcharts();
+                                                            if (chart) {
+                                                                chart.setSize(win.getWidth(), win.getHeight(), true);
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                                win.show();
+                                            }
+                                        }
+                                    })
+                                }
                             }
                         ]
                     },

@@ -340,9 +340,11 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                         text: '内容',
                         dataIndex: 'content',
                         flex: 12,
-                        renderer: function (val) {
+                        renderer: function (val, meta, rec) {
+                            var createTime = rec.get('createTime');
+                            createTime = '<div style="width: 100%;" class="footnote">' + createTime + '</div>';
                             if (val) {
-                                return val.replace(/\n/ig, '<br />');
+                                return val.replace(/\n/ig, '<br />') + ' ' + createTime;
                             }
                             else {
                                 return val;
