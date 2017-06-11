@@ -87,22 +87,22 @@ class ProjectSvc extends BaseSvc
 			$v['materialTotalBudget']          =isset($map[$projectId.'totalMainMaterialCost']) ? $map[$projectId.'totalMainMaterialCost'] : 0;
 			$v['materialTotalReality']         =$v['materialElectricReality']+$v['materialPlasterReality']+$v['materialCarpenterReality']+$v['materialPaintReality']+$v['materialMiscellaneousReality']+$v['materialLaborReality'];
 			//人力成本预算、实际
-			$v['manualElectricBudget']         =isset($map[$projectId.'manPowerCost0004']) ? $map[$projectId.'mainMaterialCost0004'] : 0;
+			$v['manualElectricBudget']         =isset($map[$projectId.'manPowerCost0004']) ? $map[$projectId.'manPowerCost0004'] : 0;
 			$v['manualElectricReality']        =isset($mp2[$projectId.'-0004']) ? $mp2[$projectId.'-0004'] : 0;
 			
-			$v['manualPlasterBudget']          =isset($map[$projectId.'manPowerCost0001']) ? $map[$projectId.'mainMaterialCost0001'] : 0;
+			$v['manualPlasterBudget']          =isset($map[$projectId.'manPowerCost0001']) ? $map[$projectId.'manPowerCost0001'] : 0;
 			$v['manualPlasterReality']         =isset($mp2[$projectId.'-0001']) ? $mp2[$projectId.'-0001'] : 0;
 			
-			$v['manualCarpenterBudget']        =isset($map[$projectId.'manPowerCost0002']) ? $map[$projectId.'mainMaterialCost0002'] : 0;
+			$v['manualCarpenterBudget']        =isset($map[$projectId.'manPowerCost0002']) ? $map[$projectId.'manPowerCost0002'] : 0;
 			$v['manualCarpenterReality']       =isset($mp2[$projectId.'-0002']) ? $mp2[$projectId.'-0002'] : 0;
 			
-			$v['manualPaintBudget']            =isset($map[$projectId.'manPowerCost0003']) ? $map[$projectId.'mainMaterialCost0003'] : 0;
+			$v['manualPaintBudget']            =isset($map[$projectId.'manPowerCost0003']) ? $map[$projectId.'manPowerCost0003'] : 0;
 			$v['manualPaintReality']           =isset($mp2[$projectId.'-0003']) ? $mp2[$projectId.'-0003'] : 0;
 			
-			$v['manualMiscellaneousBudget']    =isset($map[$projectId.'manPowerCost0009']) ? $map[$projectId.'mainMaterialCost0009'] : 0;
+			$v['manualMiscellaneousBudget']    =isset($map[$projectId.'manPowerCost0009']) ? $map[$projectId.'manPowerCost0009'] : 0;
 			$v['manualMiscellaneousReality']   =isset($mp2[$projectId.'-0009']) ? $mp2[$projectId.'-0009'] : 0;
 			
-			$v['manualLaborBudget']            =isset($map[$projectId.'manPowerCost0005']) ? $map[$projectId.'mainMaterialCost0005'] : 0;
+			$v['manualLaborBudget']            =isset($map[$projectId.'manPowerCost0005']) ? $map[$projectId.'manPowerCost0005'] : 0;
 			$v['manualLaborReality']           =isset($mp2[$projectId.'-0005']) ? $mp2[$projectId.'-0005'] : 0;
 			//人力预算、实际-总计
 			$v['manualTotalBudget']            =isset($map[$projectId.'totalManPowerCost']) ? $map[$projectId.'totalManPowerCost'] : 0;
@@ -208,7 +208,7 @@ class ProjectSvc extends BaseSvc
 			SELECT
 				b.projectId,
 				i.manpowerCost*i.itemAmount as totalManPowerCost,
-				i.mainMaterialCost as totalMainMaterialCost,
+				i.mainMaterialCost*i.itemAmount as totalMainMaterialCost,
 				i.workCategory
 			FROM
 				budget b
