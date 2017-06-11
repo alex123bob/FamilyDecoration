@@ -226,6 +226,20 @@
 		case "getBusinessByDate":
 			$res = getBusinessByDate();
 			break;
+		case "distributeBusiness":
+			editBusiness(array(
+				"id" => $_REQUEST["id"],
+				"isWaiting" => "false",
+				"salesmanName" => $_REQUEST["salesmanName"],
+				"salesman" => $_REQUEST["salesman"]
+			));
+			$realname = getUserRealName($_SESSION["name"]);
+			$realname = $realname["realname"];
+			$res = addBusinessDetail(array(
+				"businessId" => $_REQUEST["id"],
+				"content" => $realname.'将当前业务分配至'.$_REQUEST["salesman"]."名下"
+			));
+			break;
 		default: 
 			throw new Exception("unknown action:".$action);
 	}

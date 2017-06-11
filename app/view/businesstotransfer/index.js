@@ -2,7 +2,7 @@ Ext.define('FamilyDecoration.view.businesstotransfer.Index', {
     extend: 'Ext.container.Container',
     alias: 'widget.businesstotransfer-index',
     requires: [
-        'FamilyDecoration.store.Business'
+        'FamilyDecoration.store.Business', 'FamilyDecoration.view.checklog.MemberList'
     ],
     layout: 'fit',
     defaults: {
@@ -65,6 +65,71 @@ Ext.define('FamilyDecoration.view.businesstotransfer.Index', {
                             }
                             else {
                                 showMsg('没有选中的业务或业务被锁定!');
+                            }
+                        }
+                    },
+                    {
+                        text: '分配',
+                        handler: function() {
+                            var grid = this.up('gridpanel'),
+                                st = grid.getStore(),
+                                selModel = grid.getSelectionModel(),
+                                busi = selModel.getSelection()[0];
+                            if (busi) {
+                                var win = Ext.create('Ext.window.Window', {
+                                    width: 500,
+                                    height: 300,
+                                    layout: 'fit',
+                                    title: '选择业务员',
+                                    modal: true,
+                                    items: [{
+                                        xtype: 'checklog-memberlist',
+                                        name: 'memberlist-salesmanList',
+                                        fullList: true
+                                    }],
+                                    buttons: [{
+                                        text: '确定',
+                                        handler: function () {
+                                            var list = win.down('checklog-memberlist'),
+                                                rec = list.getSelectionModel().getSelection()[0];
+
+                                            if (rec && rec.get('name')) {
+                                                Ext.Ajax.request({
+                                                    url: './libs/business.php',
+                                                    method: 'POST',
+                                                    params: {
+                                                        id: busi.getId(),
+                                                        action: 'distributeBusiness',
+                                                        salesman: rec.get('realname'),
+                                                        salesmanName: rec.get('name')
+                                                    },
+                                                    callback: function(opts, success, res) {
+                                                        if (success) {
+                                                            var obj = Ext.decode(res.responseText);
+                                                            if (obj.status === 'successful') {
+                                                                showMsg('分配成功，分配后的业务不再处于等待业务区，请到对应业务员下进行查验');
+                                                                win.close();
+                                                                grid.getStore().reload();
+                                                            }
+                                                        }
+                                                    }
+                                                })
+                                            }
+                                            else {
+                                                showMsg('请选择业务员！');
+                                            }
+                                        }
+                                    }, {
+                                            text: '取消',
+                                            handler: function () {
+                                                win.close();
+                                            }
+                                        }]
+                                });
+                                win.show();
+                            }
+                            else {
+                                showMsg('请选择要进行人工分配的业务!');
                             }
                         }
                     }
