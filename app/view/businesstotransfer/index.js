@@ -70,6 +70,7 @@ Ext.define('FamilyDecoration.view.businesstotransfer.Index', {
                     },
                     {
                         text: '分配',
+                        icon: './resources/img/distribute_waiting_business.png',
                         handler: function() {
                             var grid = this.up('gridpanel'),
                                 st = grid.getStore(),
