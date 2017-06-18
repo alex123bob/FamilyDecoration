@@ -184,6 +184,66 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                             break;
                     }
                 }
+            },
+            {
+                xtype: 'button',
+                text: '退单',
+                itemId: 'button-reject',
+                icon: 'resources/img/reject.png',
+                disabled: true,
+                hidden: true,
+                handler: function () {
+                    var resObj = _getRes();
+                    if (resObj.item) {
+                        Ext.Msg.warning('确定要将当前账单退回到上一状态吗？', function (btnId) {
+                            if ('yes' == btnId) {
+                                function request(validateCode) {
+                                    var params = {
+                                        id: resObj.item.get('c0'),
+                                        status: '-1',
+                                        currentStatus: resObj.item.get('status')
+                                    },
+                                        arr = ['id', 'currentStatus'];
+                                    if (validateCode) {
+                                        Ext.apply(params, {
+                                            validateCode: validateCode
+                                        });
+                                        arr.push('validateCode');
+                                    }
+                                    ajaxUpdate('StatementBill.changeStatus', params, arr, function (obj) {
+                                        Ext.defer(function () {
+                                            Ext.Msg.success('单据已退回至上一状态!');
+                                            me.refresh(resObj.category, false);
+                                        }, 500);
+                                    }, true);
+                                }
+                                ajaxGet('StatementBill', 'getLimit', {
+                                    id: resObj.item.get('c0')
+                                }, function (obj) {
+                                    if (obj.type == 'checked') {
+                                        showMsg(obj.hint);
+                                        request();
+                                    }
+                                    else {
+                                        Ext.defer(function () {
+                                            Ext.Msg.password(obj.hint, function (val) {
+                                                if (obj.type == 'sms') {
+                                                }
+                                                else if (obj.type == 'securePass') {
+                                                    val = md5(_PWDPREFIX + val);
+                                                }
+                                                request(val);
+                                            });
+                                        }, 500);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    else {
+                        showMsg('请选择单据!');
+                    }
+                }
             }
         ];
 
@@ -222,7 +282,8 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                 idSearch: toolbar.getComponent('textfield-id'),
                 nameSearch: toolbar.getComponent('textfield-payee'),
                 pay: toolbar.getComponent('button-pay'),
-                receive: toolbar.getComponent('button-receive')
+                receive: toolbar.getComponent('button-receive'),
+                reject: toolbar.getComponent('button-reject')
             };
         }
 
@@ -234,6 +295,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             }
             tbarObj.idSearch.show();
             tbarObj.nameSearch.show();
+            User.isAdmin() && tbarObj.reject.show();
             tbarObj.pay.hide();
             tbarObj.receive.hide();
             if (!rec) {
@@ -262,8 +324,12 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             tbarObj.nameSearch.show();
             // tbarObj.receive.setDisabled(true);
             tbarObj.pay.setDisabled(true);
+            tbarObj.reject.setDisabled(true);
             if (!rec) {
                 return;
+            }
+            if (User.isAdmin() && rec.get('name')) {
+                tbarObj.reject.setDisabled(!item);
             }
             switch (rec.get('name')) {
                 case 'designDeposit':
