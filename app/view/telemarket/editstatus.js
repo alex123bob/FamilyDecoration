@@ -21,7 +21,12 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
     layout: 'vbox',
 
     initComponent: function () {
-        var me = this;
+        var me = this,
+            focusRow = function() {
+                var rec = me.business;
+                me.grid.getView().focusRow(rec, 200);
+                me.grid.getSelectionModel().select(rec);
+            }
 
         me.items = [
             {
@@ -214,7 +219,9 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
                                     }
                                 });
                                 me.close();
-                                me.grid.getStore().reload();
+                                me.grid.getStore().reload({
+                                    callback: focusRow
+                                });
                             }
                         );
                     }
@@ -224,7 +231,9 @@ Ext.define('FamilyDecoration.view.telemarket.EditStatus', {
                 text: '关闭',
                 handler: function () {
                     me.close();
-                    me.grid.getStore().reload();
+                    me.grid.getStore().reload({
+                        callback: focusRow
+                    });
                 }
             }
         ];
