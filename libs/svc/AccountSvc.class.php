@@ -40,7 +40,7 @@ class AccountSvc extends BaseSvc
 		$TargetAccount = $TargetAccount[0];
 		//检查余额
 		$newSourceBalance = (double)$SourceAccount['balance'] - ((double)$amount);
-		$newTargetBalance = (double)$TargetAccount['balance'] - ((double)$amount);
+		$newTargetBalance = (double)$TargetAccount['balance'] + ((double)$amount);
 		if($newSourceBalance < 0)
 			throw new BaseException("余额不足！");
 		$affect = 0;
