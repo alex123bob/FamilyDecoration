@@ -8,7 +8,7 @@ if(strpos($_SERVER["HTTP_USER_AGENT"],"Safari") && !strpos($_SERVER["HTTP_USER_A
 	$UserBrowserClient = 'default';
 }
 
-global $paid,$payTime,$payee,$name,$phone,$times,$address,$totalFee,$projectName,$finishPercentage,$requiredFee,$cny,$billId; 
+global $auditstr,$paid,$payTime,$payee,$name,$phone,$times,$address,$totalFee,$projectName,$finishPercentage,$requiredFee,$cny,$billId; 
 
 $lineHeight 	= 6;
 //全局字体
@@ -22,6 +22,7 @@ include_once 'pdf_chinese_rbm_bill.php';
 
 $entryNExitSvc = BaseSvc::getSvc('EntryNExit');
 $statementBillSvc = BaseSvc::getSvc('StatementBill');
+$billAuditSvc = BaseSvc::getSvc('StatementBillAudit');
 
 $bill = $statementBillSvc->get($_REQUEST);
 if(count($bill['data']) == 0){
@@ -43,8 +44,16 @@ $paid = str2GBK($entryNExitBill['c5']);
 $reimbursementReason = str2GBK($bill['reimbursementReason']);
 $payee = str2GBK($entryNExitBill['c8']);
 $payTime = str2GBK($entryNExitBill['c7']);
-
-
+$audits = $billAuditSvc->get(array('billId'=>$billId));
+$auditstr = array();
+foreach ($audits['data'] as $key => $item) {
+	$s = str2GBK($item['operatorRealName']);
+	if($item['drt'] == -1){
+		array_pop($auditstr);
+	} else {
+		array_push($auditstr, $s);
+	}
+}
 
 $action = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "view";
 $pdf=new PDF('P','mm', 'A4'); //创建新的FPDF对象 

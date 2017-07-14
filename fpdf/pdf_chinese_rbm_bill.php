@@ -4,7 +4,7 @@ class PDF extends PDF_Chinese{
 	
 	function Header(){ //设置页眉 
 	
-		global $paid,$payTime,$payee,$name,$phone,$times,$address,$projectName,$totalFee,$cny,$billId,$reimbursementReason; 
+		global $auditstr,$paid,$payTime,$payee,$name,$phone,$times,$address,$projectName,$totalFee,$cny,$billId,$reimbursementReason; 
 		
 		$this->SetFont('GB','',13); 
 		$this->SetLeftMargin(15);
@@ -25,6 +25,8 @@ class PDF extends PDF_Chinese{
 		$this->Text(42,48,$phone);
 		$this->Text(30,56,'付款人:');
 		$this->Text(46,56,$payee);
+		$this->Text(30,64,"审核人:");
+		$this->Text(46,64,join($auditstr,'→'));
 		$this->Text(75,40,'报销金额:');
 		$this->Text(92,40,$totalFee.'(元)');
 		$this->Text(125,40,'大写:');

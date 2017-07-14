@@ -23,6 +23,7 @@ include_once 'pdf_chinese_statement_bill.php';
 $billSvc = BaseSvc::getSvc('StatementBill');
 $billItemSvc = BaseSvc::getSvc('StatementBillItem');
 $projectSvc = BaseSvc::getSvc('Project');
+$billAuditSvc = BaseSvc::getSvc('StatementBillAudit');
 
 $bill = $billSvc->getLaborAndPrePaid($_REQUEST);
 if(count($bill['data']) == 0){
@@ -100,7 +101,17 @@ $pdf->Cell(175,5,'','RB','','L');
 
 
 $pdf->Ln();
-$pdf->Cell(11,21,"");
+$audits = $billAuditSvc->get(array('billId'=>$billId));
+$auditstr = array();
+foreach ($audits['data'] as $key => $item) {
+	$s = str2GBK($item['operatorRealName']);
+	if($item['drt'] == -1){
+		array_pop($auditstr);
+	} else {
+		array_push($auditstr, $s);
+	}
+}
+$pdf->Cell(11,21,"ÉóºËÈË : ".join($auditstr,'¡ú'));
 $pdf->Ln();
 $pdf->Output($address.".pdf", $action == "view" ? "I" : "D" );
 ?>  

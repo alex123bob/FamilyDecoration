@@ -24,6 +24,7 @@ $billSvc = BaseSvc::getSvc('SupplierOrder');
 $supplierSvc = BaseSvc::getSvc('Supplier');
 $billItemSvc = BaseSvc::getSvc('SupplierOrderItem');
 $projectSvc = BaseSvc::getSvc('Project');
+$supplierOrderAudit = BaseSvc::getSvc('SupplierOrderAudit');
 
 $bill = $billSvc->getWithSupplier($_REQUEST);
 if(count($bill['data']) == 0){
@@ -95,7 +96,18 @@ $pdf->Cell(30,5,'年     月      日','R','','L');
 $pdf->ln();
 $pdf->Cell(10,5,'','LB','','L');
 $pdf->Cell(175,5,'','RB','','L');
-
+$pdf->Ln();
+$audits = $supplierOrderAudit->get(array('billId'=>$billId));
+$auditstr = array();
+foreach ($audits['data'] as $key => $item) {
+	$s = str2GBK($item['operatorRealName']);
+	if($item['drt'] == -1){
+		array_pop($auditstr);
+	} else {
+		array_push($auditstr, $s);
+	}
+}
+$pdf->Cell(0,8,"审核人 : ".join($auditstr,'→'));
 
 $pdf->Ln();
 $pdf->Cell(11,21,"");
