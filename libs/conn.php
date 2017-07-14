@@ -5,6 +5,12 @@
 	header( 'Access-Control-Allow-Credentials:true');
 	header( 'Access-Control-Allow-Headers:Origin, X-Requested-With, Content-Type, Accept');
 
+	$isLocal = $_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1';
+    if(!$isLocal && $_SERVER['HTTPS'] != 'on') {
+        header('HTTP/1.1 301 Moved Permanently');
+        header('Location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+        exit();
+    }
 
 	//print_r($_REQUEST);
 	//print_r($_SERVER);
