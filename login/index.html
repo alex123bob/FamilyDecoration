@@ -9,6 +9,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	
 <head>
 	<title>佳诚装饰</title>
+		<script>
+			if(location.href.indexOf('http://') != -1 && location.href.indexOf('localhost') == -1 && location.href.indexOf('127.0.0.1') == -1) {
+				location.href = location.href.replace('http://','https://');
+			}
+		</script>
 		<link href="./favicon.ico" type="image/x-icon" rel="shortcut icon" /> 
 		<meta charset="utf-8">
 		<link href="css/style.css" rel='stylesheet' type='text/css' />
