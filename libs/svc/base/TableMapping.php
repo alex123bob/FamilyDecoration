@@ -31,6 +31,9 @@
 		'supplier_material'=>array('id','supplierId','name','unit','price','professionType'),
 		'supplier_order'=>array('id','projectName','paymentId','status','totalFee','projectId','supplierId','creator','payee','payedTimes','projectProgress'),
 		'supplier_order_item'=>array('id','referenceNumber','amount','billId','supplierId','materialId','billItemName','unit','unitPrice','professionType'),
+		"versions"=>array('id','desc'),
+		"supplier_order_template"=>array('id','supplierId','templateName','supplierId'),
+		"supplier_order_item_template"=>array('id','templateId','materialId','referenceNumber'),
 		"statement_bill_tag"=>array('id','tag','billId','committer'));
 
 	foreach ($TableMapping as $key => &$value) {

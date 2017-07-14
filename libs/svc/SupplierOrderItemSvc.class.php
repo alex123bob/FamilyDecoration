@@ -2,7 +2,7 @@
 class SupplierOrderItemSvc extends BaseSvc
 {
 	public function add($q){
-		notNullCheck($q,'@billId','单号不能为空!');
+		notNullCheck($q,'@billId','单号不能为空:@billId');
 		$q['@id'] = $this->getUUID();
 		return parent::add($q);
 	}

@@ -9,6 +9,9 @@ class SupplierOrderSvc extends BaseSvc
 
 	public function add($q){
 		$q['@id'] = $this->getUUID();
+		if(!isset($q['@creator'])){
+			$q['@creator'] = $_SESSION['name'];
+		}
 		return parent::add($q);
 	}
 
@@ -37,7 +40,7 @@ class SupplierOrderSvc extends BaseSvc
 
 		$mysql->begin();
 		$statementBillSvc = parent::getSvc('statementBill');	
-		$statementBillItemSvc = parent::getSvc('statementBillItem');	
+		$statementBillItemSvc = parent::getSvc('StatementBillItem');	
 		$auditSvc = parent::getSvc('SupplierOrderAudit');
 		$supplierId = $orders[0]['supplierId'];
 		$statementBill = $statementBillSvc->add(array(
