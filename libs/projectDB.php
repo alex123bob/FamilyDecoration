@@ -22,8 +22,8 @@
 
 	function delProject ($projectId){
 		global $mysql;
-		$mysql->DBUpdate("project",array('isDeleted'=>true),"`projectId` = '?'",array($projectId));
-		$mysql->DBUpdate("budget",array('isDeleted'=>true),"`projectId` = '?'",array($projectId));
+		$mysql->DBUpdate("project",array('isDeleted'=>true,'updateTime' => 'now()'),"`projectId` = '?'",array($projectId));
+		$mysql->DBUpdate("budget",array('isDeleted'=>true, 'lastUpdateTime' => 'now()'),"`projectId` = '?'",array($projectId));
 		//TODO 删除plan和progress,budgetItem，其实不删也可以
 		return array('status'=>'successful', 'errMsg' => '');
 	}
@@ -139,7 +139,7 @@
 	function editProject (array $pro){
 		global $mysql;
 		// fields that could be edit.
-		$obj = array();
+		$obj = array('updateTime' => 'now()');
 		$fields = array('businessId','projectName','period','captain','captainName','supervisor','supervisorName','hasChart','createTime', 'salesman','salesmanName', 'designer','designerName','projectTime','budgetId','isFrozen');
 
 		foreach($fields as $key){
@@ -162,7 +162,7 @@
 		$setValue = " isDeleted = isDeleted ";
 		// fields that could be edit.
 		$fields = array('businessId','projectName','period','captain','captainName','supervisor','supervisorName','hasChart','createTime', 'salesman','salesmanName', 'designer','designerName','projectTime','budgetId','isFrozen');
-		$obj = array();
+		$obj = array('updateTime' => 'now()');
 		foreach($fields as $key)
 			if(isset($pro[$key]))
 				$obj[$key]=$pro[$key];

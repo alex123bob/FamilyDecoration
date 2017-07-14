@@ -21,7 +21,7 @@
 
 	function deleteProgressByProjectId($projectId){
 		global $mysql;
-		$mysql->DBUpdate("progress",array('isDeleted'=>true),"`projectId` = '?' ",array($progressId));
+		$mysql->DBUpdate("progress",array('isDeleted'=>true),"`projectId` = '?' ",array($projectId));
 		return array('status'=>'successful', 'errMsg' => '');
 	}
 
