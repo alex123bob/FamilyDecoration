@@ -63,6 +63,13 @@
 			//update
 			$mysql->DBUpdate('online_user',array('lastUpdateTime'=>'now()','offlineTime'=>'now()'),"`userName` = '?' and `offlineTime` is null ",array($userName));
 			$obj = array('userName'=>$name,'onlineTime'=>'now()','sessionId'=>$sessionId,'lastUpdateTime'=>'now()','ip'=>$ip,'userAgent'=>$userAgent);
+			if($_REQUEST["app"] == true || $_REQUEST["app"] == 'true') {
+				$obj['app'] = 1;
+				$obj['manufacturer'] = $_REQUEST["manufacturer"];
+				$obj['model'] = $_REQUEST["model"];
+				$obj['platform'] = $_REQUEST["platform"];
+				$obj['version'] = $_REQUEST["version"];
+			}
 			$mysql->DBInsertAsArray("`online_user`",$obj);
 			return (array('status'=>'successful', 'errMsg'=>'','token'=>$sessionId, 'level'=>$user["level"]));
 		}
