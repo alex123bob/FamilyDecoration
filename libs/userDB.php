@@ -43,7 +43,7 @@
 	function login (){
 		//兼容旧的app,下一个版本可以删掉
 		if(!isset($_REQUEST["name"])){
-			throw new BaseException('请升级到最新版app!');
+			throw new BaseException('请前往 https://dqjczs.sinaapp.com/app/ 升级到最新版app!');
 		}
 		//兼容旧的app,下一个版本可以删掉
 
