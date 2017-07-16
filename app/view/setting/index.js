@@ -51,7 +51,7 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 				dataIndex: 'name'
 			}, {
 				text: '等级',
-				flex: 1,
+				flex: 0.5,
 				dataIndex: 'level',
 				renderer: function (val, meta, rec){
 					if (rec.get('name')) {
@@ -84,6 +84,13 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 					else {
 						return '未上传';
 					}
+				}
+			}, {
+				text: '锁定',
+				flex: 0.5,
+				dataIndex: 'isLocked',
+				renderer: function(val) {
+					return val === 'true' ? '<font color="red">是</font>' : '否';
 				}
 			}],
 			rootVisible: false,
