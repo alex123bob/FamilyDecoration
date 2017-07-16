@@ -49,6 +49,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 						xtype: 'button',
 						text: '增加',
 						name: 'add',
+						hidden: User.isSupplier(),
 						icon: 'resources/img/supplier_add.png',
 						handler: function (){
 							var resObj = _getRes();
@@ -66,6 +67,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 						text: '修改',
 						name: 'edit',
 						disabled: true,
+						hidden: User.isSupplier(),
 						icon: 'resources/img/supplier_edit.png',
 						handler: function (){
 							var resObj = _getRes();
@@ -96,6 +98,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 						text: '删除',
 						name: 'del',
 						disabled: true,
+						hidden: User.isSupplier(),
 						icon: 'resources/img/supplier_delete.png',
 						handler: function (){
 							var resObj = _getRes();

@@ -214,6 +214,10 @@
                 return this.level == '009-002';
             },
 
+            isSupplier: function() {
+                return this.level == '010-001';
+            },
+
             isCurrent: function (name){
                 if (name) {
                     return this.name == name;
@@ -289,6 +293,9 @@
             }, {
                 name: '预决算员工',
                 value: '009-002'
+            }, {
+                name: '供应商',
+                value: '010-001'
             }],
 
             getStatus: function (){
@@ -364,6 +371,9 @@
                 }
                 else if (/^009-\d{3}$/i.test(level)) {
                     department = '预决算部';
+                }
+                else if (/^010-\d{3}$/i.test(level)) {
+                    department = '供应商';
                 }
                 else {
                     department = '非部门';
@@ -466,6 +476,9 @@
                     else if (roleStr == '002') {
                         role = '员工';
                     }
+                }
+                else if (/^010-\d{3}$/i.test(level)) {
+                    role = '供应商';
                 }
                 else {
                     role = '未知角色';

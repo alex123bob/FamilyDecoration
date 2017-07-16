@@ -228,12 +228,17 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 					store: levelSt,
 					listeners: {
 						change: function (combo, newVal, oldVal) {
-							if (newVal == '001' && combo.previousSibling().getValue() == '006') {
-								combo.nextSibling().show();
-							}
-							else {
-								combo.nextSibling().hide();
-							}
+							var level = newVal,
+								depa = combo.previousSibling().getValue(),
+								projectCt = combo.nextSibling(),
+								frm = combo.ownerCt,
+								supplierList = frm.getComponent('supplierList'),
+								isGeneral = (level == '001' && depa == '006'),
+								isSupplier = (level == '001' && depa == '010');
+							isGeneral ? projectCt.show() : projectCt.hide();
+							supplierList.setVisible(isSupplier);
+							supplierList.allowBlank = !isSupplier;
+							supplierList.validateValue(supplierList.getValue());
 						}
 					}
 				},
@@ -306,6 +311,20 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 							id: 'hidden-projectId'
 						}
 					]
+				},
+				{
+					xtype: 'combobox',
+					fieldLabel: '供应商列表',
+					hidden: true,
+					allowBlank: true,
+					itemId: 'supplierList',
+					displayField: 'name',
+					valueField: 'id',
+					queryMode: 'local',
+					store: Ext.create('FamilyDecoration.store.Supplier', {
+						autoLoad: true
+					}),
+					editable: false
 				}
 			]
 		}];
@@ -491,6 +510,12 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 					txt.setValue(account.get('projectName'));
 					hidden.setValue(account.get('projectId'));
 					ct.show();
+				}
+				else if (account && account.get('level') == '010-001') {
+					var form = me.down('form'),
+						supplierList = form.getComponent('supplierList');
+					// todo: supplierList.setValue(account.get('supplierListId));
+					supplierList.show();
 				}
 			}
 		}

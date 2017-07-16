@@ -97,6 +97,9 @@ Ext.define('FamilyDecoration.view.Viewport', {
             if (User.isGeneral()) {
                 changeMainCt('chart-index');
             }
+            else if (User.isSupplier()) {
+                changeMainCt('suppliermanagement-index');
+            }
             else {
                 if (lastXtype) {
                     changeMainCt(lastXtype);
@@ -132,7 +135,7 @@ Ext.define('FamilyDecoration.view.Viewport', {
                     title: '用户名片图片上传',
                     url: './libs/uploadUserProfileImage.php',
                     supportMult: false,
-                    closable: false,
+                    closable: User.isSupplier() || User.isGeneral(),
                     afterUpload: function(fp, o) {
                         var p = {},
                             content = '',

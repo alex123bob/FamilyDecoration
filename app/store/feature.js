@@ -329,7 +329,7 @@
                 flag = false;
             }
             else if (rec.get('cmp') == 'bulletin-index') {
-                flag = User.isGeneral() ? false : true;
+                flag = User.isGeneral() || User.isSupplier() ? false : true;
             }
             else if (rec.get('cmp') == 'strategy-parent') {
                 flag = User.isAdmin() ? true : false;
@@ -359,16 +359,16 @@
                 flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() || User.isBudgetManager() || User.isBudgetStaff() || User.isFinanceManager() ? true : false;
             }
             else if (rec.get('cmp') == 'chart-index') {
-                flag = true;
+                flag = User.isSupplier() ? false : true;
             }
             else if (rec.get('cmp') == 'project-parent') {
-                flag = true;
+                flag = User.isSupplier() ? false : true;
             }
             else if (rec.get('cmp') == 'progress-index') {
                 flag = false; // old module. deprecated.
             }
             else if (rec.get('cmp') == 'projectcategory-index') {
-                flag = User.isGeneral() ? false : true;
+                flag = User.isGeneral() || User.isSupplier() ? false : true;
             }
             else if (rec.get('cmp') == 'plan-index') {
                 flag = false; // old module. deprecated.
@@ -389,16 +389,16 @@
                 flag =  User.isAdmin() || User.isBudgetManager() || User.isBudgetStaff() || User.isFinanceManager() ? true : false;
             }
             else if (rec.get('cmp') == 'personnel-parent') {
-                flag = User.isGeneral() ? false : true;
+                flag = User.isGeneral() || User.isSupplier() ? false : true;
             }
             else if (rec.get('cmp') == 'personnel-index') {
                 flag = User.isAdmin() || User.isAdministrationManager() || User.isAdministrationStaff() ? true : false;
             }
             else if (rec.get('cmp') == 'setting-index') {
-                flag = User.isGeneral() ? false : true;
+                flag = User.isGeneral() || User.isSupplier() ? false : true;
             }
             else if (rec.get('cmp') == 'mail-index') {
-                flag = User.isGeneral() ? false : true;
+                flag = User.isGeneral() || User.isSupplier() ? false : true;
             }
             else if (rec.get('cmp') == 'budget-index') {
                 flag = User.isAdmin() || User.isDesignManager() || User.isDesignStaff() || User.isBudgetManager() || User.isBudgetStaff() || User.isFinanceManager() ? true : false;
@@ -407,13 +407,13 @@
                 flag = User.isAdmin() || User.isBudgetManager() || User.isFinanceManager() ? true : false;
             }
             else if (rec.get('cmp') == 'business-parent') {
-                flag = User.isGeneral() ? false : true;
+                flag = User.isGeneral() || User.isSupplier() ? false : true;
             }
             else if (rec.get('cmp') == 'telemarket-index') {
-                flag = User.isGeneral() ? false : true;
+                flag = User.isGeneral() || User.isSupplier() ? false : true;
             }
             else if (rec.get('cmp') == 'mybusiness-index') {
-                flag = User.isGeneral() ? false : true;
+                flag = User.isGeneral() || User.isSupplier() ? false : true;
             }
             else if (rec.get('cmp') == 'checkbusiness-index') {
                 flag = User.isAdmin() || User.isBusinessManager() || User.isAdministrationManager() || User.isDesignManager() || User.isFinanceManager() ? true : false;
@@ -425,7 +425,7 @@
                 flag = User.isAdmin() || User.isDesignManager() || User.isProjectManager() || User.isBudgetManager() || User.isBudgetStaff() || User.isFinanceManager() ? true : false;
             }
             else if (rec.get('cmp') == 'regionmgm-index') {
-                flag = User.isGeneral() ? false : true;
+                flag = User.isGeneral() || User.isSupplier() ? false : true;
             }
             else if (rec.get('cmp') == 'businesstotransfer-index') {
                 flag = User.isAdmin() || (User.isManager() && !User.isProjectManager()) ? true : false;
@@ -451,6 +451,9 @@
             else if (rec.get('cmp') == 'entrynexit-index') {
                 flag = User.isAdmin() || User.isFinanceManager() || User.isFinanceCashier() ? true : false;
             }
+            else if (rec.get('cmp') == 'paymentrequest-index') {
+                flag = User.isGeneral() || User.isSupplier() ? false : true;
+            }
             else if (rec.get('cmp') == 'account-index') {
                 flag = User.isAdmin() ? true : false;
             }
@@ -458,7 +461,7 @@
                 flag = User.isAdmin() ? true : false;
             }
             else if (rec.get('cmp') == 'planlabor-index') {
-                flag = User.isGeneral() ? false : true;
+                flag = User.isGeneral() || User.isSupplier() ? false : true;
             }
             //项目经理、监理,以及财务部、最高管
             else if (rec.get('cmp') == 'materialrequest-index'){
@@ -475,6 +478,7 @@
                         || User.isProjectStaff()
                         || User.isFinanceManager()
                         || User.isFinanceStaff()
+                        || User.isSupplier()
                         || User.isAdmin() ? true : false;
             }
             else {
