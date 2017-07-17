@@ -239,6 +239,7 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 							supplierList.setVisible(isSupplier);
 							supplierList.allowBlank = !isSupplier;
 							supplierList.validateValue(supplierList.getValue());
+							!isSupplier && supplierList.clearValue();
 						}
 					}
 				},
@@ -318,9 +319,11 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 					hidden: true,
 					allowBlank: true,
 					itemId: 'supplierList',
+					name: 'supplierId',
 					displayField: 'name',
 					valueField: 'id',
 					queryMode: 'local',
+					value: account ? account.get('supplierId') : '',
 					store: Ext.create('FamilyDecoration.store.Supplier', {
 						autoLoad: true
 					}),
@@ -378,7 +381,8 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 					var frm = me.down('form'),
 						container = Ext.getCmp('fieldcontainer-projectId'),
 						projectTxt = container.down('textfield'),
-						needValidateCode = false;
+						needValidateCode = false,
+						supplierList = frm.getComponent('supplierList');
 					if (frm.isValid()) {
 						if (container.isHidden() || (!container.isHidden() && projectTxt.getValue())) {
 							var data = frm.getValues(),
@@ -392,7 +396,7 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 									password: md5(_PWDPREFIX + data.pwd)
 								});
 							}
-							if (!frm.child('[name="securePass"]').readOnly) {
+							if (!frm.child('[name="securePass"]').readOnly && data.securePass) {
 								Ext.apply(p, {
 									securePass: md5(_PWDPREFIX + data.securePass)
 								});
@@ -403,6 +407,9 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 									projectId: Ext.getCmp('hidden-projectId').getValue()
 								});
 							}
+							data.supplierId && Ext.apply(p, {
+								supplierId: data.supplierId
+							});
 							if (data.phone) {
 								if (!frm.child('[name="phone"]').readOnly) {
 									Ext.apply(p, {
@@ -516,6 +523,8 @@ Ext.define('FamilyDecoration.view.setting.AddAccount', {
 						supplierList = form.getComponent('supplierList');
 					// todo: supplierList.setValue(account.get('supplierListId));
 					supplierList.show();
+					supplierList.allowBlank = false;
+					supplierList.validateValue(supplierList.getValue());
 				}
 			}
 		}

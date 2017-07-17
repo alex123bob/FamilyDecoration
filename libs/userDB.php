@@ -26,12 +26,24 @@
 			$phone = isset($_POST["phone"]) ? $_POST["phone"] : '' ;
 			$mail = isset($_POST["mail"]) ? $_POST["mail"] : '' ;
 			$profileImage = isset($_POST["profileImage"]) ? $_POST["profileImage"] : '' ;
+			$securePass = isset($_POST["securePass"]) ? $_POST["securePass"] : '' ;
+			$supplierId = isset($_POST["supplierId"]) ? $_POST["supplierId"] : '' ;
 			global $mysql;
 			$user = $mysql->DBGetOneRow("`user`", "*", "`name` = '$name'");
 			if($user){
 				throw new BaseException('用户已经存在！');
 			}
-			$obj = array('name'=>$name,'realname'=>$realname,'password'=>$password,'level'=>$level,'projectId'=>$projectId,'phone'=>$phone, 'mail'=>$mail);
+			$obj = array(
+				'name'=>$name,
+				'realname'=>$realname,
+				'password'=>$password,
+				'level'=>$level,
+				'projectId'=>$projectId,
+				'phone'=>$phone,
+				'mail'=>$mail,
+				'securePass' => $securePass,
+				'supplierId' => $supplierId
+			);
 			$mysql->DBInsertAsArray("`user`",$obj);
 			return (array('status'=>'successful', 'errMsg' => ''));
 	}
@@ -157,6 +169,7 @@
 		$priorityTitle = isset($_POST["priorityTitle"]) ? $_POST["priorityTitle"] : '';
 		$securePass = isset($_POST['securePass']) ? $_POST["securePass"] : false;
 		$phone = isset($_POST['phone']) ? $_POST["phone"] : false;
+		$supplierId = isset($_POST['supplierId']) ? $_POST["supplierId"] : false;
 		//自己修改自己的手机或者安全密码,需要重新获取短信验证码.管理员不需要.
 		if(!isAdminOrAdministrationManager() && $name == $_SESSION['name'] && ( $securePass || $phone )){
 			if(!isset($_POST['validateCode'])){
@@ -189,6 +202,9 @@
 		}
 		if ($securePass) {
 			$updateArr["securePass"] = $securePass;
+		}
+		if ($supplierId) {
+			$updateArr["supplierId"] = $supplierId;
 		}
 		if ($isLocked !== false) {
 			$updateArr["isLocked"] = ($isLocked == 1 ? 'true' : 'false');
@@ -303,7 +319,7 @@
 	 */
 	function getList (){
 		global $mysql, $prefix;
-		$arr = $mysql->DBGetSomeRows("`user` ", " user.*,p.projectName "," left join project p on p.projectId = user.projectId where user.isDeleted = 'false'" ,"");
+		$arr = $mysql->DBGetAsMap("select u.*, p.projectName, s.name as supplierName from `user` u left join project p on p.projectId = u.projectId left join supplier s on u.supplierId = s.id where u.`isDeleted` = 'false' ");
 		//select u.*,p.projectName from user u left join project p on p.projectId = u.projectId;
 		//$res = $mysql->DBGetAllRows("`user`", "*");
 		return ($arr);
@@ -377,19 +393,19 @@
 		$userName = $_SESSION["name"];
 		// admin members or administration manager
 		if (startWith($level, '001-') || $level == '005-001') {
-			$userList = $mysql->DBGetSomeRows("`user`", " user.*,p.projectName ", " left join project p on p.projectId = user.projectId where user.`level` like '%$department-%' and user.`isDeleted` = 'false' ");
+			$userList = $mysql->DBGetAsMap("select u.*, p.projectName, s.name as supplierName from `user` u left join project p on p.projectId = u.projectId left join supplier s on u.supplierId = s.id where u.`level` like '%?-%' and u.`isDeleted` = 'false' ", $department);
 		}
 		// market people
 		else if (startWith($level, '004-')) {
 			if ($department == '006') {
-				$userList = $mysql->DBGetSomeRows("`user`", " user.*,p.projectName ", " left join project p on p.projectId = user.projectId where user.`level` like '%$department-%' and user.`isDeleted` = 'false' ");
+				$userList = $mysql->DBGetAsMap("select u.*, p.projectName, s.name as supplierName from `user` u left join project p on p.projectId = u.projectId left join supplier s on u.supplierId = s.id where u.`level` like '%?-%' and u.`isDeleted` = 'false' ", $department);
 			}
 			else {
-				$userList = $mysql->DBGetSomeRows("`user`", " user.*,p.projectName ", " left join project p on p.projectId = user.projectId where user.`name` = '$userName' and user.`isDeleted` = 'false' ");
+				$userList = $mysql->DBGetAsMap("select u.*, p.projectName, s.name as supplierName from `user` u left join project p on p.projectId = u.projectId left join supplier s on u.supplierId = s.id where u.`name` = '?' and u.`isDeleted` = 'false' ", $userName);
 			}
 		}
 		else {
-			$userList = $mysql->DBGetSomeRows("`user`", " user.*,p.projectName ", " left join project p on p.projectId = user.projectId where user.`name` = '$userName' and user.`isDeleted` = 'false' ");
+			$userList = $mysql->DBGetAsMap("select u.*, p.projectName, s.name as supplierName from `user` u left join project p on p.projectId = u.projectId left join supplier s on u.supplierId = s.id where u.`name` = '?' and u.`isDeleted` = 'false' ", $userName);
 		}
 		for($i = 0; $i < count($userList); $i++) {
 			$userList[$i]["department"] = $userList[$i]["level"];
@@ -399,7 +415,7 @@
 
 	function getFullUserListByDepartment ($department) {
 		global $mysql;
-		$userList = $mysql->DBGetAsMap("select `user`.*, p.projectName from `user` left join project p on p.projectId = user.projectId where `user`.`level` like '%?-%' and user.`isDeleted` = 'false' ", $department);
+		$userList = $mysql->DBGetAsMap("select u.*, p.projectName, s.name as supplierName from `user` u left join project p on p.projectId = u.projectId left join supplier s on u.supplierId = s.id where u.`level` like '%?-%' and u.`isDeleted` = 'false' ", $department);
 		return $userList;
 	}
 

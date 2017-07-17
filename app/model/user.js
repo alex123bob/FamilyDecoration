@@ -6,6 +6,8 @@ Ext.define('FamilyDecoration.model.User', {
 		{name: 'password', type: 'string'},
 		{name: 'level', type: 'string'},
 		{name: 'projectId', type: 'string'},
+		{name: 'supplierId', type: 'string'},
+		{name: 'supplierName', type: 'string'},
 		{name: 'projectName', type: 'string'},
 		{name: 'phone', type: 'string'},
 		{name: 'securePass', type: 'string'},

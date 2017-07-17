@@ -43,11 +43,11 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 				}
 			}, {
 				text: '姓名',
-				flex: 1,
+				flex: 0.5,
 				dataIndex: 'realname'
 			}, {
 				text: '账号',
-				flex: 1,
+				flex: 0.6,
 				dataIndex: 'name'
 			}, {
 				text: '等级',
@@ -67,27 +67,31 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 				dataIndex: 'phone'
 			}, {
 				text: '邮箱',
-				flex: 1.3,
+				flex: 1,
 				dataIndex: 'mail'
 			}, {
 				text: '项目',
 				flex: 1,
 				dataIndex: 'projectName'
 			}, {
+				text: '供应商',
+				flex: 1,
+				dataIndex: 'supplierName'
+			}, {
 				text: '照片',
-				flex: 0.6,
+				flex: 0.3,
 				dataIndex: 'profileImage',
 				renderer: function (val){
 					if (val) {
 						return '<img src="' + val + '" width="30" height="30" />';
 					}
 					else {
-						return '未上传';
+						return '无';
 					}
 				}
 			}, {
 				text: '锁定',
-				flex: 0.5,
+				flex: 0.3,
 				dataIndex: 'isLocked',
 				renderer: function(val) {
 					return val === 'true' ? '<font color="red">是</font>' : '否';
