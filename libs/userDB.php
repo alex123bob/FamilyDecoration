@@ -76,6 +76,7 @@
 			$_SESSION["phone"] = $user["phone"];
 			$_SESSION["mail"] = $user["mail"];
 			$_SESSION["profileImage"] = $user["profileImage"];
+			!empty($user["supplierId"]) && ($_SESSION["supplierId"] = $user["supplierId"]);
 			$ip = getIP();
 			$userAgent = $_SERVER['HTTP_USER_AGENT'];
 			//update

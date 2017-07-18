@@ -6,6 +6,21 @@ class SupplierSvc extends BaseSvc
 		$q['@id'] = $this->getUUID();
 		return parent::add($q);
 	}
+
+	public function get($q) {
+		global $mysql;
+		$res = parent::get($q);
+		if (isset($_SESSION["supplierId"])) {
+			$supplierId = $_SESSION["supplierId"];
+			foreach ($res["data"] as $key => $obj) {
+				if ($obj["id"] != $supplierId) {
+					unset($res["data"][$key]);
+				}
+			}
+			$res["data"] = array_values($res["data"]);
+		}
+		return $res;
+	}
 }
 
 ?>

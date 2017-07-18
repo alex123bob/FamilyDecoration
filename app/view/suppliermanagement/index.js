@@ -44,6 +44,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 					borderRightStyle: 'solid',
 					borderRightWidth: '1px'
 				},
+				hidden: User.isSupplier(),
 				tbar: [
 					{
 						xtype: 'button',
@@ -133,6 +134,14 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 					obj[tbar[1].name] = tbar[1];
 					obj[bbar[0].name] = bbar[0];
 					return obj;
+				},
+				afterSupplierLoad: function(st, recs, success, opts) {
+					if (User.isSupplier()) {
+						var resObj = _getRes(),
+							supplierId = User.supplierId;
+							
+						resObj.supplierListSelModel.select(st.getById(supplierId));
+					}
 				},
 				listeners: {
 					selectionchange: function (selModel, sels, opts){

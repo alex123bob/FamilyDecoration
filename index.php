@@ -124,6 +124,8 @@
 
             profileImage: '<?php echo $_SESSION["profileImage"]; ?>',
 
+            supplierId: '<?php echo (isset($_SESSION["supplierId"]) ? $_SESSION["supplierId"] : false); ?>',
+
             isAdmin: function (){
                 return this.level == '001-001' || this.level == '001-002';
             },

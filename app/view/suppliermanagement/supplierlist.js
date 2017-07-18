@@ -7,12 +7,16 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierList', {
     ],
     autoScroll: true,
     hideHeaders: true,
+    afterSupplierLoad: Ext.emptyFn,
 
     initComponent: function () {
         var me = this;
 
         var st = Ext.create('FamilyDecoration.store.Supplier', {
-            autoLoad: true
+            autoLoad: true,
+            listeners: {
+                load: me.afterSupplierLoad
+            }
         });
 
         me.store = st;
