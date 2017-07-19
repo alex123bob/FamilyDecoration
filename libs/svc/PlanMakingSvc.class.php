@@ -196,7 +196,9 @@ Class PlanMakingSvc extends BaseSvc{
 	}
 
 	public function getTimeSpanByProfessionType($q){
-		/*	泥工	 0001
+		/*	
+		贴砖泥工	 0001
+		基础泥工	 0006
 		木工 0002
 		油漆工 0003
 		水电工 0004
@@ -204,7 +206,8 @@ Class PlanMakingSvc extends BaseSvc{
 		其他	0009*/
 		$select = "select ";
 		switch ($q['professionType']){
-			case '0001':$select .= 'c7,c15,c17';break;
+			case '0001':$select .= 'c15,c17';break;
+			case '0006':$select .= 'c7';break;
 			case '0002':$select .= 'c20';break;
 			case '0003':$select .= 'c8,c22,c25,c26,c27,c29';break;
 			case '0004':$select .= 'c10';break;
@@ -233,7 +236,9 @@ Class PlanMakingSvc extends BaseSvc{
 	}
 
 	public function getLaborPlanByProfessionType($q){
-		/*	泥工	 0001
+		/*	
+		贴砖泥工	 0001
+		基础泥工	 0006
 		木工 0002
 		油漆工 0003
 		水电工 0004
@@ -241,7 +246,8 @@ Class PlanMakingSvc extends BaseSvc{
 		其他	0009*/
 		$select = "select projectId,projectAddress as projectName,";
 		switch ($q['professionType']){
-			case '0001':$select .= 'c7,c15,c17';break;
+			case '0001':$select .= 'c15,c17';break;
+			case '0006':$select .= 'c7';break;
 			case '0002':$select .= 'c20';break;
 			case '0003':$select .= 'c8,c22,c25,c29';break;
 			case '0004':$select .= 'c10';break;

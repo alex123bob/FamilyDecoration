@@ -24,7 +24,8 @@ class ProjectProgressAuditSvc extends BaseSvc{
 		$columnName;
 		$msg;
 		switch ($type) {
-			case '0001': $columnName = " 'c17' ";$msg="泥工工程-墙、地面砖铺贴、内部验收";break;//泥工
+			case '0001': $columnName = " 'c7' ";$msg="贴砖泥工工程-地面砖铺贴、内部验收";break;//泥工
+			case '0006': $columnName = " 'c17' ";$msg="基础泥工工程-土建-墙体验收";break;//泥工
 			case '0004': $columnName = " 'c12' ";$msg="水电工程-客户验收、拍照留底";break;//水电
 			case '0002': $columnName = " 'c23' ";$msg="木工工程-客户验收、成品保护";break;//木工
 			case '0003': $columnName = " 'c34' ";$msg="竣工验收、保修单签单";break;//油漆

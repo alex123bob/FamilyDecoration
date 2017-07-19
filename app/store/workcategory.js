@@ -4,8 +4,12 @@ Ext.define('FamilyDecoration.store.WorkCategory', {
 
 	data: [
 		{
-			name: '泥工',
+			name: '贴砖泥工',
 			value: '0001'
+		},
+		{
+			name: '基础泥工',
+			value: '0006'
 		},
 		{
 			name: '木工',

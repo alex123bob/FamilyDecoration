@@ -75,6 +75,8 @@ class ProjectSvc extends BaseSvc
 			$v['materialElectricReality']      =isset($mp1[$projectId.'-0004']) ? $mp1[$projectId.'-0004'] : 0;
 			$v['materialPlasterBudget']        =isset($map[$projectId.'mainMaterialCost0001']) ? $map[$projectId.'mainMaterialCost0001'] : 0;
 			$v['materialPlasterReality']       =isset($mp1[$projectId.'-0001']) ? $mp1[$projectId.'-0001'] : 0;
+			$v['materialBasicPlasterBudget']        =isset($map[$projectId.'mainMaterialCost0006']) ? $map[$projectId.'mainMaterialCost0006'] : 0;
+			$v['materialBasicPlasterReality']       =isset($mp1[$projectId.'-0006']) ? $mp1[$projectId.'-0006'] : 0;
 			$v['materialCarpenterBudget']      =isset($map[$projectId.'mainMaterialCost0002']) ? $map[$projectId.'mainMaterialCost0002'] : 0;
 			$v['materialCarpenterReality']     =isset($mp1[$projectId.'-0002']) ? $mp1[$projectId.'-0002'] : 0;
 			$v['materialPaintBudget']          =isset($map[$projectId.'mainMaterialCost0003']) ? $map[$projectId.'mainMaterialCost0003'] : 0;
@@ -92,6 +94,9 @@ class ProjectSvc extends BaseSvc
 			
 			$v['manualPlasterBudget']          =isset($map[$projectId.'manPowerCost0001']) ? $map[$projectId.'manPowerCost0001'] : 0;
 			$v['manualPlasterReality']         =isset($mp2[$projectId.'-0001']) ? $mp2[$projectId.'-0001'] : 0;
+
+			$v['manualBasicPlasterBudget']          =isset($map[$projectId.'manPowerCost0006']) ? $map[$projectId.'manPowerCost0006'] : 0;
+			$v['manualBasicPlasterReality']         =isset($mp2[$projectId.'-0006']) ? $mp2[$projectId.'-0006'] : 0;
 			
 			$v['manualCarpenterBudget']        =isset($map[$projectId.'manPowerCost0002']) ? $map[$projectId.'manPowerCost0002'] : 0;
 			$v['manualCarpenterReality']       =isset($mp2[$projectId.'-0002']) ? $mp2[$projectId.'-0002'] : 0;
@@ -236,7 +241,8 @@ class ProjectSvc extends BaseSvc
 		}
 		//$map[$projectId][$workCategory]['manPowerCost'] $map[$projectId][$workCategory]['mainMaterialCost']
 		/*
-		plaster	泥工	0001
+		plaster	基础泥工	0001
+		plaster	贴砖泥工	0006
 		carpenter	木工	0002
 		painter	油漆工	0003
 		electrician	水电工	0004
