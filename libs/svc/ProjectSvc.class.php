@@ -127,6 +127,8 @@ class ProjectSvc extends BaseSvc
 			$d['elctMtDf'] = $d['materialElectricReality'] - $d['materialElectricBudget'];
 			$d['elctMpDf'] = $d['manualElectricReality'] - $d['manualElectricBudget'];
 			$d['plstMtDf'] = $d['materialPlasterReality'] - $d['materialPlasterBudget'];
+			$d['plstbMpDf'] = $d['manualBasicPlasterReality'] - $d['manualBasicPlasterBudget'];
+			$d['plstbMtDf'] = $d['materialBasicPlasterReality'] - $d['materialBasicPlasterBudget'];
 			$d['plstMpDf'] = $d['manualPlasterReality'] - $d['manualPlasterBudget'];
 			$d['cptMtDf']  = $d['materialCarpenterReality'] - $d['materialCarpenterBudget'];
 			$d['cptMpDf']  = $d['manualCarpenterReality'] - $d['manualCarpenterBudget'];
@@ -148,7 +150,8 @@ class ProjectSvc extends BaseSvc
 			);
 			$data['colMan']=array(
 				array('professionType'=>'水电','reality'=>$d['manualElectricReality'],'budget'=>$d['manualElectricBudget']),
-				array('professionType'=>'泥工','reality'=>$d['manualPlasterReality'],'budget'=>$d['manualPlasterBudget']),
+				array('professionType'=>'贴砖泥工','reality'=>$d['manualPlasterReality'],'budget'=>$d['manualPlasterBudget']),
+				array('professionType'=>'基础泥工','reality'=>$d['manualBasicPlasterReality'],'budget'=>$d['manualBasicPlasterBudget']),
 				array('professionType'=>'木工','reality'=>$d['manualCarpenterReality'],'budget'=>$d['manualCarpenterBudget']),
 				array('professionType'=>'油漆','reality'=>$d['manualPaintReality'],'budget'=>$d['manualPaintBudget']),
 				array('professionType'=>'力工','reality'=>$d['manualLaborReality'],'budget'=>$d['manualLaborBudget']),
@@ -156,7 +159,8 @@ class ProjectSvc extends BaseSvc
 			);
 			$data['colMat']=array(
 				array('professionType'=>'水电','reality'=>$d['materialElectricReality'],'budget'=>$d['materialElectricBudget']),
-				array('professionType'=>'泥工','reality'=>$d['materialPlasterReality'],'budget'=>$d['materialPlasterBudget']),
+				array('professionType'=>'贴砖泥工','reality'=>$d['materialPlasterReality'],'budget'=>$d['materialPlasterBudget']),
+				array('professionType'=>'基础泥工','reality'=>$d['materialBasicPlasterReality'],'budget'=>$d['materialBasicPlasterBudget']),
 				array('professionType'=>'木工','reality'=>$d['materialCarpenterReality'],'budget'=>$d['materialCarpenterBudget']),
 				array('professionType'=>'油漆','reality'=>$d['materialPaintReality'],'budget'=>$d['materialPaintBudget']),
 				array('professionType'=>'力工','reality'=>$d['materialLaborReality'],'budget'=>$d['materialLaborBudget']),
