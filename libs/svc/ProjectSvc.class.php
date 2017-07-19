@@ -87,7 +87,7 @@ class ProjectSvc extends BaseSvc
 			$v['materialLaborReality']         =isset($mp1[$projectId.'-0005']) ? $mp1[$projectId.'-0005'] : 0;
 			//材料成本预算、实际 -总计
 			$v['materialTotalBudget']          =isset($map[$projectId.'totalMainMaterialCost']) ? $map[$projectId.'totalMainMaterialCost'] : 0;
-			$v['materialTotalReality']         =$v['materialElectricReality']+$v['materialPlasterReality']+$v['materialCarpenterReality']+$v['materialPaintReality']+$v['materialMiscellaneousReality']+$v['materialLaborReality'];
+			$v['materialTotalReality']         =$v['materialElectricReality']+$v['materialPlasterReality']+$v['materialBasicPlasterReality']+$v['materialCarpenterReality']+$v['materialPaintReality']+$v['materialMiscellaneousReality']+$v['materialLaborReality'];
 			//人力成本预算、实际
 			$v['manualElectricBudget']         =isset($map[$projectId.'manPowerCost0004']) ? $map[$projectId.'manPowerCost0004'] : 0;
 			$v['manualElectricReality']        =isset($mp2[$projectId.'-0004']) ? $mp2[$projectId.'-0004'] : 0;
@@ -111,7 +111,7 @@ class ProjectSvc extends BaseSvc
 			$v['manualLaborReality']           =isset($mp2[$projectId.'-0005']) ? $mp2[$projectId.'-0005'] : 0;
 			//人力预算、实际-总计
 			$v['manualTotalBudget']            =isset($map[$projectId.'totalManPowerCost']) ? $map[$projectId.'totalManPowerCost'] : 0;
-			$v['manualTotalReality']           =$v['manualElectricReality']+$v['manualPlasterReality']+$v['manualCarpenterReality']+$v['manualPaintReality']+$v['manualMiscellaneousReality']+$v['manualLaborReality'];
+			$v['manualTotalReality']           =$v['manualElectricReality']+$v['manualPlasterReality']+$v['manualBasicPlasterReality']+$v['manualCarpenterReality']+$v['manualPaintReality']+$v['manualMiscellaneousReality']+$v['manualLaborReality'];
 
 			//所有预算成本总计
 			$v['totalBudget']= $v['manualTotalBudget'] + $v['materialTotalBudget'];
@@ -127,9 +127,9 @@ class ProjectSvc extends BaseSvc
 			$d['elctMtDf'] = $d['materialElectricReality'] - $d['materialElectricBudget'];
 			$d['elctMpDf'] = $d['manualElectricReality'] - $d['manualElectricBudget'];
 			$d['plstMtDf'] = $d['materialPlasterReality'] - $d['materialPlasterBudget'];
+			$d['plstMpDf'] = $d['manualPlasterReality'] - $d['manualPlasterBudget'];
 			$d['plstbMpDf'] = $d['manualBasicPlasterReality'] - $d['manualBasicPlasterBudget'];
 			$d['plstbMtDf'] = $d['materialBasicPlasterReality'] - $d['materialBasicPlasterBudget'];
-			$d['plstMpDf'] = $d['manualPlasterReality'] - $d['manualPlasterBudget'];
 			$d['cptMtDf']  = $d['materialCarpenterReality'] - $d['materialCarpenterBudget'];
 			$d['cptMpDf']  = $d['manualCarpenterReality'] - $d['manualCarpenterBudget'];
 			$d['ptMtDf']   = $d['materialPaintReality'] - $d['materialPaintBudget'];
