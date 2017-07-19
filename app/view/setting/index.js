@@ -378,7 +378,11 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 					}
 				},
 				cellclick: function (view, td, cellIndex, rec, tr, rowIndex, ev, opts){
-					if (rec && rec.get('name') && cellIndex == 7) {
+					var treepanel = me.down('treepanel'),
+						headerCt = treepanel.down('headercontainer')
+						header = headerCt.getHeaderAtIndex(cellIndex),
+						dataIndex = header.dataIndex;
+					if (rec && rec.get('name') && dataIndex == 'profileImage') {
 						var win = Ext.create('Ext.window.Window', {
 							layout: 'fit',
 							width: 500,
