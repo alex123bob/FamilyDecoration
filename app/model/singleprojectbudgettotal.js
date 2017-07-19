@@ -4,6 +4,8 @@ Ext.define('FamilyDecoration.model.SingleProjectBudgetTotal', {
         'id',
         {name: 'materialElectricBudget', type: 'string'},
         {name: 'materialElectricReality', type: 'string'},
+        {name: 'materialBasicPlasterBudget', type: 'string'},
+        {name: 'materialBasicPlasterReality', type: 'string'},
         {name: 'materialPlasterBudget', type: 'string'},
         {name: 'materialPlasterReality', type: 'string'},
         {name: 'materialCarpenterBudget', type: 'string'},
@@ -19,6 +21,8 @@ Ext.define('FamilyDecoration.model.SingleProjectBudgetTotal', {
 
         {name: 'manualElectricBudget', type: 'string'},
         {name: 'manualElectricReality', type: 'string'},
+        {name: 'manualBasicPlasterBudget', type: 'string'},
+        {name: 'manualBasicPlasterReality', type: 'string'},
         {name: 'manualPlasterBudget', type: 'string'},
         {name: 'manualPlasterReality', type: 'string'},
         {name: 'manualCarpenterBudget', type: 'string'},

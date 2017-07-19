@@ -5,6 +5,8 @@ Ext.define('FamilyDecoration.model.SingleProjectBudgetTotalCostDifference', {
         'extra',
         {name: 'elctMtDf', type: 'string'},
         {name: 'elctMpDf', type: 'string'},
+        {name: 'plstbMtDf', type: 'string'},
+        {name: 'plstbMpDf', type: 'string'},
         {name: 'plstMtDf', type: 'string'},
         {name: 'plstMpDf', type: 'string'},
         {name: 'cptMtDf', type: 'string'},
