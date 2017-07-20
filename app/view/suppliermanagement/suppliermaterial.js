@@ -105,11 +105,17 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
             items: [
                 {
                     text: '序号',
-                    dataIndex: 'id'
+                    dataIndex: 'id',
+                    renderer: function (val, meta, rec) {
+                        return renderAudit(val, meta, rec, 'id');
+                    }
                 },
                 {
                     text: '项目',
-                    dataIndex: 'name'
+                    dataIndex: 'name',
+                    renderer: function (val, meta, rec) {
+                        return renderAudit(val, meta, rec, 'Name');
+                    }
                 },
                 {
                     text: '数量',
@@ -118,26 +124,56 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
                 },
                 {
                     text: '单位',
-                    dataIndex: 'unit'
+                    dataIndex: 'unit',
+                    renderer: function (val, meta, rec) {
+                        return renderAudit(val, meta, rec, 'Unit');
+                    }
                 },
                 {
                     text: '单价(元)',
-                    dataIndex: 'price'
+                    dataIndex: 'price',
+                    renderer: function (val, meta, rec) {
+                        return renderAudit(val, meta, rec, 'Price');
+                    }
                 },
                 {
                     text: '工种',
                     dataIndex: 'professionType',
                     renderer: function (val, meta, rec) {
-                        if (val) {
-                            return FamilyDecoration.store.WorkCategory.renderer(val);
-                        }
-                        else {
-                            return '';
-                        }
+                        return renderAudit(val, meta, rec, 'ProfessionType');
                     }
                 }
             ]
         };
+
+        function renderAudit(val, meta, rec, index) {
+            var newValue = rec.data['audit' + index];
+            var color = {'add':'green','delete':'red','update':'blue'}[rec.data.auditOperation] || '';
+            var concatIcon = '--->';
+
+            val = val === null ? '' : val;
+            newValue = newValue === null ? '' : newValue;
+
+            if(index === 'id') {
+                newValue = {'add':'-新增','delete':'-删除','update':'-修改'}[rec.data.auditOperation] || '';
+                concatIcon = '';
+            }
+            if(index === 'ProfessionType') {
+                val = FamilyDecoration.store.WorkCategory.renderer(val);
+                newValue = FamilyDecoration.store.WorkCategory.renderer(newValue);
+            }
+            if(!val || !newValue) {
+                concatIcon = '';
+            }
+            if(rec.data.auditOperation == 'delete' && index !== 'id'){
+                newValue = '';
+                concatIcon = '';
+            }
+            if(color){
+                return '<font color="' + color + '">' + val + concatIcon + newValue + '</font>';
+            }
+            return val;
+        }
 
         this.callParent();
     }

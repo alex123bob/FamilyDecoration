@@ -8,7 +8,7 @@ CREATE TABLE `supplier_material_audit` (
   `isDeleted` varchar(5) DEFAULT 'false',
   `createTime` datetime DEFAULT NULL,
   `updateTime` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `operation` varchar(5) NOT NULL COMMENT '操作类型: 1.update, 2. delete, 3. add',
+  `operation` varchar(10) NOT NULL COMMENT '操作类型: 1.update, 2. delete, 3. add',
   `creator` varchar(5) NOT NULL COMMENT '创建人(供应商)',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

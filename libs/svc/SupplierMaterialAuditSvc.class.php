@@ -53,7 +53,8 @@ class SupplierMaterialAuditSvc extends BaseSvc
 		parent::del(array('materialId'=>$q['materialId']));
 		//再新增此次修改
 		$q['@id'] = $this->getUUID();
-		$q['@opertaion'] = 'delete';
+		$q['@operation'] = 'delete';
+		$q['@materialId'] = $q['materialId'];
 		$res = parent::add($q);
 		$mysql->commit();
 		return $res;
@@ -69,7 +70,7 @@ class SupplierMaterialAuditSvc extends BaseSvc
 		parent::del(array('materialId'=>$q['materialId']));
 		//再新增此次修改
 		$q['@id'] = $this->getUUID();
-		$q['@opertaion'] = 'update';
+		$q['@operation'] = 'update';
 		$res = parent::add($q);
 		$mysql->commit();
 		return $res;

@@ -9,7 +9,16 @@ Ext.define('FamilyDecoration.model.SupplierMaterial', {
         'referenceNumber',
         {name: 'unit', type: 'string'},
         'price',
-        'professionType'
+        'professionType',
+        'auditCreateTime',
+        'auditCreator',
+        'auditCreatorRealName',
+        'auditId',
+        {name: 'auditName', type: 'string'},
+        'auditOperation',
+        'auditPrice',
+        'auditProfessionType',
+        {name: 'auditUnit', type: 'string'}
     ],
     idProperty: 'id'
 });
