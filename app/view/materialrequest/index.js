@@ -114,14 +114,14 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 									btn.setDisabled(!resObj.project || !resObj.billRec || 'new' != resObj.billRec.get('status'));
 									break;
 								case 'verifyPassed':
-									btn.setDisabled(!resObj.project || !resObj.billRec || 'rdyck2' != resObj.billRec.get('status'));
+									btn.setDisabled(!resObj.project || !resObj.billRec || 'pass' != resObj.billRec.get('status'));
 									break;
 								case 'approve':
 									btn.setDisabled(!resObj.project || !resObj.billRec
 										|| (
-											'rdyck1' != resObj.billRec.get('status')
-											// && 'rdyck2' != resObj.billRec.get('status')
-											// && 'rdyck3' != resObj.billRec.get('status')
+											'rdyck' != resObj.billRec.get('status')
+											// && 'pass' != resObj.billRec.get('status')
+											// && 'checked' != resObj.billRec.get('status')
 										)
 									);
 									break;
@@ -379,7 +379,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 							var resObj = _getRes(),
 								msg, successMsg, callback = Ext.emptyFn;
 							switch (resObj.billRec.get('status')) {
-								case 'rdyck1':
+								case 'rdyck':
 									msg = '确定要将当前账单置为审核通过吗？';
 									successMsg = '审核已通过!';
 									callback = function () {

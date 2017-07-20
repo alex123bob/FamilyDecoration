@@ -232,7 +232,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.PaymentBillCheck', {
                 text: '项目经理',
                 flex: 0.7,
                 align: 'center',
-                dataIndex: 'creatorRealName'
+                dataIndex: 'captain'
             },
             {
                 text: '总金额',

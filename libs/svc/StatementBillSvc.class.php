@@ -17,6 +17,9 @@ class StatementBillSvc extends BaseSvc
 	);
 
 	public function get($q){
+		$this->appendSelect = ', p.projectName , p.captain ';
+		$this->appendJoin = 'left join project p on p.projectId = statement_bill.projectId ';
+		$this->appendWhere = " and ( p.isDeleted = 'false' or p.isDeleted is null)";
 		$res = parent::get($q);
 		foreach ($res['data'] as &$value) {
 			$value['statusName'] = self::$ALL_STATUS[$value['status']];

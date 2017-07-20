@@ -21,7 +21,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
             filters: [
                 function (item) {
                     var status = item.get('status'),
-                        statusFlag = (status && status != 'new' && status != 'rdyck1');
+                        statusFlag = (status && status != 'new' && status != 'rdyck');
                     if (User.isAdmin() || User.isProjectManager()
                         || User.isFinanceAccountant() || User.isFinanceManager()) {
                         return statusFlag;
@@ -70,7 +70,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                 flag = supplier && resObj.order ? true : false;
             // btnObj.confirm.setDisabled(!supplier || !resObj.order);
             Ext.each(orders, function (order, index, self){
-                if (order.get('status') != 'rdyck3') {
+                if (order.get('status') != 'checked') {
                     flag = false;
                     return false;
                 }

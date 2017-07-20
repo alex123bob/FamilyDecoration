@@ -4,8 +4,9 @@ class SupplierOrderSvc extends BaseSvc
 
 	//账单状态变化
 	public static $STATUSMAPPING = array(
-		'mtf'=> array('new','rdyck1','rdyck2','rdyck3','applied')
+		'splo'=> array('new','rdyck','pass','checked','applied')
 	);
+	public static $ALL_STATUS = array('new'=>'未提交','rdyck'=>'待审核','pass'=>'审核通过','checked'=>'验收通过','applied'=>'已申请付款');
 
 	public function add($q){
 		$q['@id'] = $this->getUUID();
@@ -16,12 +17,12 @@ class SupplierOrderSvc extends BaseSvc
 	}
 
 	public function getStatusTransferChain($currentStatus,$offSet){
-		$count = count(self::$STATUSMAPPING['mtf']);
+		$count = count(self::$STATUSMAPPING['splo']);
 		for($i = 0;$i<$count;$i++) {
-			if(self::$STATUSMAPPING['mtf'][$i] == $currentStatus && $i + $offSet < $count && $i + $offSet >= 0)
-				return self::$STATUSMAPPING['mtf'][$i+$offSet];
+			if(self::$STATUSMAPPING['splo'][$i] == $currentStatus && $i + $offSet < $count && $i + $offSet >= 0)
+				return self::$STATUSMAPPING['splo'][$i+$offSet];
 		}
-		throw new BaseException(StatementBillSvc::$ALL_STATUS[$currentStatus].'账单不可操作！');
+		throw new BaseException(self::$ALL_STATUS[$currentStatus].'账单不可操作！');
 	}
 	
 	public function applyPayment($q){
@@ -39,7 +40,7 @@ class SupplierOrderSvc extends BaseSvc
 		}
 
 		$mysql->begin();
-		$statementBillSvc = parent::getSvc('statementBill');	
+		$statementBillSvc = parent::getSvc('StatementBill');	
 		$statementBillItemSvc = parent::getSvc('StatementBillItem');	
 		$auditSvc = parent::getSvc('SupplierOrderAudit');
 		$supplierId = $orders[0]['supplierId'];
@@ -125,7 +126,7 @@ class SupplierOrderSvc extends BaseSvc
 		global $mysql;
 		$newStatus = $q['@status'];
 		$StatementBillSvc = BaseSvc::getSvc('StatementBill');
-		$newStatusCh = StatementBillSvc::$ALL_STATUS[$newStatus];
+		$newStatusCh = self::$ALL_STATUS[$newStatus];
 		$text = "您{项目}项目的材料订购单{单号}已被{操作人}变更为{现状态},总金额：{总金额}!";
 		$text = str_replace('{单号}',$bill['id'],$text);
 		$text = str_replace('{操作人}',$_SESSION['realname'],$text);
@@ -213,7 +214,7 @@ class SupplierOrderSvc extends BaseSvc
 			$item['totalFee'] = round($item['totalFee'],3);
 			$item['totalFeeUppercase'] = cny($item['totalFee']);
 			if($item['status'] != null)
-				$item['statusName'] = StatementBillSvc::$ALL_STATUS[$item['status']];
+				$item['statusName'] = self::$ALL_STATUS[$item['status']];
 		}		
 		return $data;
 	}
