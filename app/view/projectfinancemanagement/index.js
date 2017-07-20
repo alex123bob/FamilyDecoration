@@ -89,7 +89,7 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.Index', {
             },
             {
                 xtype: 'gridpanel',
-                width: 60,
+                width: 78,
                 title: '项目',
                 hidden: true,
                 hideHeaders: true,

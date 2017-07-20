@@ -187,6 +187,26 @@ Ext.require('Ext.toolbar.Toolbar', function () {
     Ext.toolbar.Toolbar.prototype.enableOverflow = true;
 });
 
+Ext.require('Ext.grid.Panel', function() {
+    Ext.override(Ext.grid.Panel, {
+        focusRow: function(row) {
+            var selModel = this.getSelectionModel(),
+                gridView = this.getView(),
+                st = this.getStore(),
+                index;
+            if (row) {
+                selModel.deselectAll();
+                index = st.indexOf(row);
+                gridView.focusRow(index, 200);
+                selModel.select(index);
+            }
+            else {
+                // do nothing.
+            }
+        }
+    });
+});
+
 // actionName: if false, use default action "get"
 function ajaxGet(className, actionName, params, callback) {
     if (Ext.isObject(params) && !Ext.Object.isEmpty(params)) {

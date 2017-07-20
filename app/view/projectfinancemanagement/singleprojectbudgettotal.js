@@ -61,7 +61,25 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProjectBudgetTo
                     ]
                 },
                 {
-                    text: '泥工',
+                    text: '基础泥工',
+                    align: 'center',
+                    columns: [
+                        {
+                            text: '预算',
+                            align: 'right',
+                            flex: 0.5,
+                            dataIndex: budgetType + 'BasicPlasterBudget'
+                        },
+                        {
+                            text: '实际',
+                            align: 'right',
+                            flex: 0.5,
+                            dataIndex: budgetType + 'BasicPlasterReality'
+                        }
+                    ]
+                },
+                {
+                    text: '贴砖泥工',
                     align: 'center',
                     columns: [
                         {
@@ -366,7 +384,8 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProjectBudgetTo
                         width: 50
                     },
                     _generateDiffCfg('水电', 'elct'),
-                    _generateDiffCfg('泥工', 'plst'),
+                    _generateDiffCfg('基础泥工', 'plstb'),
+                    _generateDiffCfg('贴砖泥工', 'plst'),
                     _generateDiffCfg('木工', 'cpt'),
                     _generateDiffCfg('油漆', 'pt'),
                     _generateDiffCfg('力工', 'lb'),
@@ -409,7 +428,8 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProjectBudgetTo
 
         me.items = items.concat(
             _generateAnalysisPanel('水电', '0004'), 
-            _generateAnalysisPanel('泥工', '0001'),
+            _generateAnalysisPanel('基础泥工', '0001'),
+            _generateAnalysisPanel('贴砖泥工', '0006'),
             _generateAnalysisPanel('木工', '0002')
         );
 

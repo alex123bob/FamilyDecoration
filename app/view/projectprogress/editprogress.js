@@ -27,7 +27,7 @@ Ext.define('FamilyDecoration.view.projectprogress.EditProgress', {
     initComponent: function () {
         var me = this,
             needPassAudit = (
-                Ext.Array.indexOf(['12', '17', '23', '34'], me.progress.get('serialNumber')) != -1 
+                Ext.Array.indexOf(['7', '12', '17', '23', '34'], me.progress.get('serialNumber')) != -1 
                 && 
                 me.isComment
                 &&

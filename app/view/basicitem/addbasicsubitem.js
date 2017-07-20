@@ -185,13 +185,18 @@ Ext.define('FamilyDecoration.view.basicitem.AddBasicSubItem', {
 							params: p,
 							callback: function (opts, success, res){
 								if (success) {
-									var obj = Ext.decode(res.responseText);
+									var obj = Ext.decode(res.responseText),
+										grid = Ext.getCmp('gridpanel-basicSubItem'),
+										selModel = grid.getSelectionModel();
 									if (obj.status == 'successful') {
 										var msg = me.subItem ? '编辑成功！' : '添加成功！';
 										showMsg(msg);
 										me.close();
-										Ext.getCmp('gridpanel-basicSubItem').getStore().reload();
-										Ext.getCmp('gridpanel-basicSubItem').getSelectionModel().deselectAll();
+										grid.getStore().reload({
+											callback: function(recs, ope, success) {
+												grid.focusRow(me.subItem);
+											}
+										});
 									}
 								}
 							}

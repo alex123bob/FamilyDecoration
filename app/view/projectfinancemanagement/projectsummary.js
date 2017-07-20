@@ -35,7 +35,25 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.ProjectSummary', {
                         ]
                     },
                     {
-                        text: '泥工',
+                        text: '基础泥工',
+                        align: 'right',
+                        columns: [
+                            {
+                                text: '预算',
+                                align: 'right',
+                                flex: 0.5,
+                                dataIndex: budgetType + 'BasicPlasterBudget'
+                            },
+                            {
+                                text: '实际',
+                                align: 'right',
+                                flex: 0.5,
+                                dataIndex: budgetType + 'BasicPlasterReality'
+                            }
+                        ]
+                    },
+                    {
+                        text: '贴砖泥工',
                         align: 'right',
                         columns: [
                             {
