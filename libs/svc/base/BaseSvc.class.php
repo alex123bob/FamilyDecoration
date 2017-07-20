@@ -61,7 +61,7 @@ class BaseSvc{
 	public function del($q){
 		$q['@isDeleted'] = 'true';
 		$q['@updateTime'] = 'now()';
-		return $this->update($q);
+		return BaseSvc::update($q);
 	}
 	//增加
 	public function add($q){
@@ -198,7 +198,7 @@ class BaseSvc{
 		return $this->_get($q,false);
 	}
 	public function getCount($q){
-		return $this->_get($q,true,$appendWhere);
+		return $this->_get($q,true);
 	}
 	private function _get($q,$onlyCount){
 		global $TableMapping;
@@ -210,8 +210,10 @@ class BaseSvc{
 		$where = $this->parseWhereSql($this->tableName.'.',$q,$params);
 		$limit = $this->parseLimitSql($q);
 		$orderBy = $this->parseOrderBySql($q);	
-		$count = $mysql->DBGetAsOneArray("select count(1) as count from ".$this->tableName.$where.$this->appendWhere.' limit 0,1',$params);
 
+		$select = 'select count(1) as count from '.$this->tableName;
+		$sql = $select.' '.$this->appendJoin.' '.$where.$this->appendWhere.' limit 0,1';
+		$count = $mysql->DBGetAsOneArray($sql,$params);
 		if($onlyCount){
 			return array('status'=>'successful', 'count'=>$count[0],'errMsg' => '');
 		}
