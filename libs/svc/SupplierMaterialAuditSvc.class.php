@@ -91,6 +91,36 @@ class SupplierMaterialAuditSvc extends BaseSvc
 		$mysql->commit();
 		return $res;
 	}
+
+	/*
+		通过供应商请求
+	*/
+	public function passUpdateMaterialRequest($q){
+		notNullCheck($q,'id','修改记录Id(id)不能为空!');
+		$supplierMaterialSvc = BaseSvc::getSvc('SupplierMaterial');
+		global $mysql;
+		$mysql->begin();
+		$request = parent::get($q);
+		if($request['total'] != 1){
+			throw new BaseException('没有id为' .$q['id'].'的修改请求.');
+		}
+		$request = $request['data'][0];
+		if($request['operation'] == 'delete') {
+			$supplierMaterialSvc->del(array('id'=>$request['materialId']));
+		}
+		if($request['operation'] == 'update') {
+			$supplierMaterialSvc->update(array(
+				'id'=>$request['materialId'],
+				'@name'=>$request['name'],
+				'@unit'=>$request['unit'],
+				'@price'=>$request['price'],
+				'@professionType'=>$request['professionType']
+			));
+		}
+		$res = parent::del(array('id'=>$request['id']));
+		$mysql->commit();
+		return $res;
+	}
 }
 
 ?>
