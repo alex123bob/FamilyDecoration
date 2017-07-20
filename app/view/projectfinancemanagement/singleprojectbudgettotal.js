@@ -428,8 +428,8 @@ Ext.define('FamilyDecoration.view.projectfinancemanagement.SingleProjectBudgetTo
 
         me.items = items.concat(
             _generateAnalysisPanel('水电', '0004'), 
-            _generateAnalysisPanel('基础泥工', '0001'),
-            _generateAnalysisPanel('贴砖泥工', '0006'),
+            _generateAnalysisPanel('基础泥工', '0006'),
+            _generateAnalysisPanel('贴砖泥工', '0001'),
             _generateAnalysisPanel('木工', '0002')
         );
 
