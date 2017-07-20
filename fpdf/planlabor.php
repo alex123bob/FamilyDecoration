@@ -11,7 +11,8 @@ if(strpos($_SERVER["HTTP_USER_AGENT"],"Safari") && !strpos($_SERVER["HTTP_USER_A
 global $phone,$times,$totalFee,$finishPercentage,$requiredFee,$cny,$start,$end,$professionTypes;
 
 $professionTypes = array(
-		"0001"=>"泥工",
+		"0001"=>"贴砖泥工",
+		"0006"=>"基础泥工",
 		"0002"=>"木工",
 		"0003"=>"油漆工",
 		"0004"=>"水电工",
