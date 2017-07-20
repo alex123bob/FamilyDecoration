@@ -47,7 +47,10 @@ $payTime = str2GBK($entryNExitBill['c7']);
 $audits = $billAuditSvc->get(array('billId'=>$billId));
 $auditstr = array();
 foreach ($audits['data'] as $key => $item) {
-	$s = str2GBK($item['operatorRealName']);
+	if($item['newStatus'] == 'new' || $item['orignalStatus'] == 'new') {
+		continue;
+	}
+	$s = str2GBK($item['operatorRealName'].'('.$item['newStatusName'].')');
 	if($item['drt'] == -1){
 		array_pop($auditstr);
 	} else {

@@ -9,7 +9,6 @@ class SupplierOrderAuditSvc extends BaseSvc
 		return parent::add($q);
 	}
 	public function get($q){
-		require_once __ROOT__."/libs/svc/StatementBillSvc.class.php";
 		$res = parent::get($q);
 		$billSvc = $this->getSvc('StatementBill');
 		foreach ($res['data'] as &$v) {

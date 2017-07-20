@@ -114,13 +114,13 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 									btn.setDisabled(!resObj.project || !resObj.billRec || 'new' != resObj.billRec.get('status'));
 									break;
 								case 'verifyPassed':
-									btn.setDisabled(!resObj.project || !resObj.billRec || 'pass' != resObj.billRec.get('status'));
+									btn.setDisabled(!resObj.project || !resObj.billRec || 'chk' != resObj.billRec.get('status'));
 									break;
 								case 'approve':
 									btn.setDisabled(!resObj.project || !resObj.billRec
 										|| (
 											'rdyck' != resObj.billRec.get('status')
-											// && 'pass' != resObj.billRec.get('status')
+											// && 'chk' != resObj.billRec.get('status')
 											// && 'checked' != resObj.billRec.get('status')
 										)
 									);

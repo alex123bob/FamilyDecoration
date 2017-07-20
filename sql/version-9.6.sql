@@ -14,14 +14,14 @@ CREATE TABLE `supplier_material_audit` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 update supplier_order set status = 'rdyck' where status = 'rdyck1';
-update supplier_order set status = 'pass' where status = 'rdyck2';
+update supplier_order set status = 'chk' where status = 'rdyck2';
 update supplier_order set status = 'checked' where status = 'rdyck3';
 update supplier_order_audit set orignalStatus = 'rdyck' where orignalStatus = 'rdyck1';
-update supplier_order_audit set orignalStatus = 'pass' where orignalStatus = 'rdyck2';
+update supplier_order_audit set orignalStatus = 'chk' where orignalStatus = 'rdyck2';
 update supplier_order_audit set orignalStatus = 'checked' where orignalStatus = 'rdyck3';
 
 update supplier_order_audit set newStatus = 'rdyck' where newStatus = 'rdyck1';
-update supplier_order_audit set newStatus = 'pass' where newStatus = 'rdyck2';
+update supplier_order_audit set newStatus = 'chk' where newStatus = 'rdyck2';
 update supplier_order_audit set newStatus = 'checked' where newStatus = 'rdyck3';
 
 insert into `versions`(`id`) values ('version-9.6');

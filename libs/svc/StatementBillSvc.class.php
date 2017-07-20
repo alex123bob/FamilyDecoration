@@ -3,7 +3,7 @@ class StatementBillSvc extends BaseSvc
 {
 	//账单类型  dsdpst:设计定金，pjtf:工程款，贷款(loan表)，other:其他四个是入账。其他都是出账
 	public static $BILLTYPE = array('ppd'=>'预付款','reg'=>'工人工资','dsdpst'=>'设计定金','qgd'=>'质量保证金','fdf'=>'财务费用(TODO)','pjtf'=>'工程款','mtf'=>'材料付款','rbm'=>'报销','wlf'=>'福利','tax'=>'公司税务','other'=>'其他');
-	public static $ALL_STATUS = array('applied'=>'已申请付款','new'=>'未提交','rdyck'=>'待审核','rdyck1'=>'待一审','rdyck2'=>'待二审','rdyck3'=>'待三审','rdyck4'=>'待四审','rdyck5'=>'待五审','chk'=>'审核通过','paid'=>'已付款','accepted'=>'已收款','arch'=>'已归档');
+	public static $ALL_STATUS = array('applied'=>'已申请付款','new'=>'未提交','checked'=>'验收通过','rdyck'=>'待审核','rdyck1'=>'待一审','rdyck2'=>'待二审','rdyck3'=>'待三审','rdyck4'=>'待四审','rdyck5'=>'待五审','chk'=>'审核通过','paid'=>'已付款','accepted'=>'已收款','arch'=>'已归档');
 
 	//账单状态变化
 	public static $STATUSMAPPING = array(
@@ -13,7 +13,8 @@ class StatementBillSvc extends BaseSvc
 		'qgd'=> array('new','rdyck','chk','paid','arch'),
 		'rbm'=> array('new','rdyck','chk','paid','arch'),
 		'wlf'=> array('new','rdyck','chk','paid','arch'),
-		'tax'=> array('new','rdyck','chk','paid','arch')
+		'tax'=> array('new','rdyck','chk','paid','arch'),
+		'splo'=> array('new','rdyck','chk','checked','applied')
 	);
 
 	public function get($q){
@@ -47,8 +48,11 @@ class StatementBillSvc extends BaseSvc
 		if(!isset($q['@status']))
 			$q['@status'] = 'new';
 		notNullCheck($q,'@billType','审批单类型不能为空!');
-		if($q['@billType'] != 'qgd' && $q['@billType'] != 'mtf' && $q['@billType'] != 'pjtf'  && $q['@billType'] != 'dsdpst' )
+		if($q['@billType'] != 'qgd' && $q['@billType'] != 'mtf' && $q['@billType'] != 'pjtf'  && $q['@billType'] != 'dsdpst' ) {
 			notNullCheck($q,'@payee','领款人不能为空!');
+		}else{
+			$q['@payee'] = isset($q["@payee"]) ? $q["@payee"] : $_SESSION['name'];
+		}
 		// 是否完工标志位用来判断，当前工程是否要进行监理意见检测。如果完工的工程，是不需要判断当前监理意见是否填写的。
 		if($q['@billType'] == 'reg' && $q["@isFrozen"] == "0")
 			parent::getSvc('ProjectProgressAudit')->checkAuditPassed($q['@professionType'],$q['@projectId']);

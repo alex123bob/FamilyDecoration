@@ -24,8 +24,15 @@ $billSvc = BaseSvc::getSvc('StatementBill');
 $billItemSvc = BaseSvc::getSvc('StatementBillItem');
 $projectSvc = BaseSvc::getSvc('Project');
 $billAuditSvc = BaseSvc::getSvc('StatementBillAudit');
+$professionTypeSvc = BaseSvc::getSvc('ProfessionType');
 
-$bill = $billSvc->getLaborAndPrePaid($_REQUEST);
+$bill = $billSvc->get($_REQUEST);
+if($bill['total'] == 1 && $bill['data'][0]['billType'] == 'mtf'){
+	echo '<html><script type="text/javascript">location.href = location.href.replace(\'statement_bill.php\', \'material_order_pay.php\')</script></html>';
+	die();
+}
+
+$bill = $billSvc->get($_REQUEST);
 if(count($bill['data']) == 0){
 	$bills = $billSvc->get($_REQUEST);
 	if($bills['total'] == 1 && $bills['data'][0]['billType'] == 'rbm') {
@@ -45,7 +52,7 @@ $times = $bill['payedTimes'];
 $address = str2GBK($bill['projectName']);
 $totalFee = $bill['totalFee'];
 $finishPercentage = str2GBK($bill['projectProgress']);
-$professionTypeName = str2GBK($bill['professionTypeName']);
+$professionTypeName = str2GBK($professionTypeSvc->get(array('_fields'=>'cname','value'=>$bill['professionType']))['data'][0]['cname']);
 $requiredFee = $bill['claimAmount'];
 $cny = str2GBK(cny($requiredFee));
 
@@ -104,7 +111,10 @@ $pdf->Ln();
 $audits = $billAuditSvc->get(array('billId'=>$billId));
 $auditstr = array();
 foreach ($audits['data'] as $key => $item) {
-	$s = str2GBK($item['operatorRealName']);
+	if($item['newStatus'] == 'new' || $item['orignalStatus'] == 'new') {
+		continue;
+	}
+	$s = str2GBK($item['operatorRealName'].'('.$item['newStatusName'].')');
 	if($item['drt'] == -1){
 		array_pop($auditstr);
 	} else {

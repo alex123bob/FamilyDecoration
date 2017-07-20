@@ -3,7 +3,7 @@ class StatementBillAuditSvc extends BaseSvc
 {
 	public function add($q){
 		$q['@id'] = $this->getUUID();
-		if(isset($q['@operator'])){
+		if(!isset($q['@operator'])){
 			$q['@operator'] = $_SESSION['name'];
 		}
 		return parent::add($q);

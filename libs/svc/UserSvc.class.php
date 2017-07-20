@@ -12,7 +12,7 @@ class UserSvc extends BaseSvc
 		if(count($names) == 0)
 			return ;
 		global $mysql;
-		$sql = "select name,realName from $this->tableName where name in ( '" . join("','",array_unique($names)) . "')";
+		$sql = "select name,realName from $this->tableName where name in ( '" . join("','",array_unique($names)) . "') and isDeleted = 'false'";
 		$names = $mysql->DBGetAsMap($sql);
 		$namemapping = array();
 		foreach ($names as $key => $value) {
