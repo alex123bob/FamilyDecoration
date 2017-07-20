@@ -165,10 +165,11 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
             if(!val || !newValue) {
                 concatIcon = '';
             }
-            if(rec.data.auditOperation == 'delete' && index !== 'id'){
+            if(!( index === 'id' || rec.data.auditOperation == 'update')){
                 newValue = '';
                 concatIcon = '';
             }
+
             if(color){
                 return '<font color="' + color + '">' + val + concatIcon + newValue + '</font>';
             }
