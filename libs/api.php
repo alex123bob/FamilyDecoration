@@ -24,13 +24,20 @@
 	if(isset($_REQUEST['debug']) && (isset($res['status']) || isset($res['total']))){
 		$res['executedSqls'] = $mysql->executedSqls;
 	}
-	if(isset($res['data'])){
+	if(isset($res['data']) && is_array($res['data'])){
 		foreach ($res['data'] as $key => &$item) {
-			foreach ($item as $key => &$value) {
+			if(is_array($item)) {
+				foreach ($item as $key => &$value) {
+					if($value == null || $value == ''){
+						unset($item[$key]);
+					}
+				}
+			} else {
 				if($value == null || $value == ''){
 					unset($item[$key]);
 				}
 			}
+			
 		}
 	}
 	echo (json_encode($res));
