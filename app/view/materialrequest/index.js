@@ -94,7 +94,8 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						verifyPassed: tbar.down('[name="verifyPassed"]'),
 						approve: tbar.down('[name="approve"]'),
 						preview: tbar.down('[name="preview"]'),
-						print: tbar.down('[name="print"]')
+						print: tbar.down('[name="print"]'),
+						templatize: tbar.down('[name="templatize"]')
 					}
 				},
 				initBtn: function () {
@@ -127,6 +128,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 									break;
 								case 'preview':
 								case 'print':
+								case 'templatize':
 									btn.setDisabled(!resObj.project || !resObj.billRec);
 									break;
 								default:
@@ -482,6 +484,24 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						name: 'print',
 						icon: 'resources/img/material_request_print.png',
 						disabled: true
+					},
+					{
+						xtype: 'button',
+						text: '置为模板',
+						name: 'templatize',
+						disabled: true,
+						handler: function (){
+							var resObj = _getRes();
+							Ext.Msg.read('请输入模板名称', function (inputVal){
+								ajaxUpdate('SupplierOrderTemplate.supplierOrder2template', {
+									supplierOrderId: resObj.billRec.getId(),
+									templateName: inputVal
+								}, 'supplierOrderId', function (obj){
+									showMsg('设置成功!');
+									swal.close();
+								}, true);
+							});
+						}
 					}
 				],
 				refresh: function () {
