@@ -331,9 +331,14 @@ function ajaxAdd(className, params, callback, errorHandler, isCustomAction) {
 /**
  * @params only need pass the id of corresponding record.
  */
-function ajaxDel(className, params, callback) {
+function ajaxDel(className, params, callback, isCustomAction) {
     if (Ext.isObject(params) && !Ext.Object.isEmpty(params)) {
-        var url = './libs/api.php?action=' + className + '.del';
+        if (isCustomAction == true) {
+            url = './libs/api.php?action=' + className;
+        }
+        else {
+            var url = './libs/api.php?action=' + className + '.del';
+        }
         for (var pro in params) {
             if (params.hasOwnProperty(pro)) {
                 var val = params[pro];

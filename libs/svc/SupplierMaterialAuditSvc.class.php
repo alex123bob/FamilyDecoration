@@ -29,8 +29,8 @@ class SupplierMaterialAuditSvc extends BaseSvc
 	*/
 	public function addMaterial($q) {
 		notNullCheck($q,'@supplierId','供应商不能为空!');
-		notNullCheck($q,'@name','材料名不能为空!');
-		notNullCheck($q,'@professionType','工种不能为空!');
+		// notNullCheck($q,'@name','材料名不能为空!');
+		// notNullCheck($q,'@professionType','工种不能为空!');
 		$q['@id'] = $this->getUUID();
 		$q['@operation'] = 'add';
 		global $mysql;
@@ -71,6 +71,8 @@ class SupplierMaterialAuditSvc extends BaseSvc
 		//再新增此次修改
 		$q['@id'] = $this->getUUID();
 		$q['@operation'] = 'update';
+		$q['@materialId'] = $q['materialId'];
+		unset($q['materialId']);
 		$res = parent::add($q);
 		$mysql->commit();
 		return $res;

@@ -62,12 +62,18 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                 icon: 'resources/img/add.png',
                 handler: function () {
                     var grid = me.down('gridpanel'),
-                        st = grid.getStore();
-                    ajaxAdd('SupplierMaterial', {
-                        name: '',
-                        supplierId: me.supplier.getId(),
-                        price: 0
-                    }, function (obj) {
+                        st = grid.getStore(),
+                        content = {
+                            name: ' ',
+                            supplierId: me.supplier.getId(),
+                            price: 0
+                        };
+
+                    User.isSupplier() ? ajaxAdd('SupplierMaterialAudit.addMaterial', content, function(){
+                        showMsg('申请添加材料已提交，请等待审批！');
+                        me.refresh();
+                        me.isDirty = true;
+                    }, Ext.emptyFn, true) : ajaxAdd('SupplierMaterial', content, function (obj) {
                         showMsg('添加成功！');
                         me.refresh();
                         me.isDirty = true;
@@ -99,11 +105,16 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                                 e.record.commit();
                                 editor.completeEdit();
 
-                                var updateObj = {
+                                var updateObj = User.isSupplier() ? {
+                                    materialId: e.record.getId()
+                                } :{
                                     id: e.record.getId()
                                 };
                                 updateObj[e.field] = e.value;
-                                ajaxUpdate('SupplierMaterial', updateObj, 'id', function (obj) {
+                                User.isSupplier() ? ajaxUpdate('SupplierMaterialAudit.updateMaterial', updateObj, 'materialId', function(obj) {
+                                    showMsg('申请材料修改已提交，请等待审批！');
+                                    me.isDirty = true;
+                                }, true) : ajaxUpdate('SupplierMaterial', updateObj, 'id', function (obj) {
                                     showMsg('更新成功！');
                                     me.isDirty = true;
                                     // me.refresh();
@@ -137,7 +148,13 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                                     var rec = grid.getStore().getAt(rowIndex);
                                     Ext.Msg.warning('确定要删除当前材料吗？', function (btnId) {
                                         if ('yes' == btnId) {
-                                            ajaxDel('SupplierMaterial', {
+                                            User.isSupplier() ? ajaxDel('SupplierMaterialAudit.deleteMaterial', {
+                                                materialId: rec.getId()
+                                            }, function (obj){
+                                                showMsg('申请删除材料已提交');
+                                                me.refresh();
+                                                me.isDirty = true;
+                                            }, true) : ajaxDel('SupplierMaterial', {
                                                 id: rec.getId()
                                             }, function (obj) {
                                                 showMsg('删除成功！');

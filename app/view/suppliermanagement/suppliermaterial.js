@@ -142,20 +142,65 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
                     renderer: function (val, meta, rec) {
                         return renderAudit(val, meta, rec, 'ProfessionType');
                     }
+                },
+                {
+                    xtype: 'actioncolumn',
+                    hidden: User.isSupplier(),
+                    width: 50,
+                    text: '操作',
+                    items: [
+                        {
+                            icon: 'resources/img/supplier_material_approve.png',
+                            tooltip: '批准材料改动申请',
+                            handler: function (grid, rowIndex, colIndex){
+                                var rec = grid.getStore().getAt(rowIndex);
+                                Ext.Msg.warning('确定要批准当前材料改动吗？', function(btnId) {
+                                    if ('yes' == btnId) {
+                                        ajaxUpdate('SupplierMaterialAudit.passUpdateMaterialRequest', {
+                                            id: rec.get('auditId')
+                                        }, 'id', function(obj) {
+                                            showMsg('批准材料改动成功!');
+                                            me.refresh(me.supplier);
+                                        }, true);
+                                    }
+                                });
+                            }
+                        },
+                        {
+                            icon: 'resources/img/supplier_material_disapprove.png',
+                            tooltip: '拒绝材料改动申请',
+                            handler: function (){
+                                
+                            }
+                        }
+                    ]
                 }
             ]
         };
 
+        function fontalize (obj){
+            return '<font style="color:' + obj.color + '">' + obj.content + '</font>';
+        }
+
         function renderAudit(val, meta, rec, index) {
             var newValue = rec.data['audit' + index];
-            var color = {'add':'green','delete':'red','update':'blue'}[rec.data.auditOperation] || '';
-            var concatIcon = '--->';
+            var color = {
+                'add':'green',
+                'delete':'rgb(255, 76, 76);',
+                'update':'rgb(0, 166, 228)'
+            }[rec.data.auditOperation] || '';
+            var concatIcon = '&nbsp;<img src="resources/img/supplier_material_arrow_right.png" />&nbsp;';
 
             val = val === null ? '' : val;
             newValue = newValue === null ? '' : newValue;
 
             if(index === 'id') {
-                newValue = {'add':'-新增','delete':'-删除','update':'-修改'}[rec.data.auditOperation] || '';
+
+                newValue = {
+                    'add': '<img src="resources/img/supplier_material_add.png" alt="添加" />&nbsp;&nbsp;',
+                    'delete': '<img src="resources/img/supplier_material_delete.png" alt="删除" />&nbsp;&nbsp;',
+                    'update': '<img src="resources/img/supplier_material_update.png" alt="修改" />&nbsp;&nbsp;'
+                }[rec.data.auditOperation] || '';
                 concatIcon = '';
             }
             if(index === 'ProfessionType') {
@@ -171,7 +216,15 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
             }
 
             if(color){
-                return '<font color="' + color + '">' + val + concatIcon + newValue + '</font>';
+                if (index == 'id') {
+                    return newValue + val;
+                }
+                else {
+                    return fontalize({
+                        color: color,
+                        content: val + concatIcon + newValue
+                    });
+                }
             }
             return val;
         }
