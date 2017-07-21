@@ -5,7 +5,8 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 		'FamilyDecoration.view.materialrequest.MaterialOrder',
 		'FamilyDecoration.view.materialrequest.EditMaterialOrder',
 		'FamilyDecoration.store.MaterialOrderList',
-		'FamilyDecoration.view.suppliermanagement.SupplierList'
+		'FamilyDecoration.view.suppliermanagement.SupplierList',
+		'FamilyDecoration.view.materialrequest.MaterialOrderTemplate'
 	],
 	// autoScroll: true,
 	layout: 'hbox',
@@ -95,7 +96,8 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						approve: tbar.down('[name="approve"]'),
 						preview: tbar.down('[name="preview"]'),
 						print: tbar.down('[name="print"]'),
-						templatize: tbar.down('[name="templatize"]')
+						templatize: tbar.down('[name="templatize"]'),
+						checkTpl: tbar.down('[name="checkTpl"]')
 					}
 				},
 				initBtn: function () {
@@ -129,6 +131,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 								case 'preview':
 								case 'print':
 								case 'templatize':
+								case 'checkTpl':
 									btn.setDisabled(!resObj.project || !resObj.billRec);
 									break;
 								default:
@@ -501,6 +504,18 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 									swal.close();
 								}, true);
 							});
+						}
+					},
+					{
+						xtype: 'button',
+						text: '订单模板',
+						name: 'checkTpl',
+						disabled: true,
+						handler: function (){
+							var win = Ext.create('FamilyDecoration.view.materialrequest.MaterialOrderTemplate', {
+								
+							});
+							win.show();
 						}
 					}
 				],
