@@ -33,6 +33,11 @@ class SupplierMaterialAuditSvc extends BaseSvc
 		// notNullCheck($q,'@professionType','工种不能为空!');
 		$q['@id'] = $this->getUUID();
 		$q['@operation'] = 'add';
+		$q['@creator'] = $_SESSION['name'];
+		$res = parent::getCount(array('name'=>'','supplierId'=>$q['@supplierId']));
+		if($res['count'] > 0) {
+			throw new BaseException('还有未完成的材料!');
+		}
 		global $mysql;
 		$mysql->begin();
 		$svc = BaseSvc::getSvc('SupplierMaterial');
@@ -112,8 +117,8 @@ class SupplierMaterialAuditSvc extends BaseSvc
 		$request = $request['data'][0];
 		if($request['operation'] == 'delete') {
 			$supplierMaterialSvc->del(array('id'=>$request['materialId']));
-		}
-		if($request['operation'] == 'update') {
+		}else{
+			//add 和 update可能会被修改过
 			$supplierMaterialSvc->update(array(
 				'id'=>$request['materialId'],
 				'@name'=>$request['name'],
