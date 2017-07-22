@@ -228,6 +228,12 @@
                         icon: 'resources/img/total_property_management.png'
                     },
                     {
+                        name: '合同管理',
+                        cmp: 'contractmanagement-index',
+                        leaf: true,
+                        icon: 'resources/img/contract_management.png'
+                    },
+                    {
                         name: '人工对账',
                         cmp: 'manuallycheckbill-index',
                         leaf: true,
@@ -437,6 +443,9 @@
                 flag = User.isAdmin() ? true : false;
             }
             else if (rec.get('cmp') == 'totalpropertymanagement-index') {
+                flag = User.isAdmin() ? true : false;
+            }
+            else if (rec.get('cmp') == 'contractmanagement-index') {
                 flag = User.isAdmin() ? true : false;
             }
             else if (rec.get('cmp') == 'manuallycheckbill-index') {
