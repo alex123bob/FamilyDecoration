@@ -124,7 +124,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                             },
                             validateedit: function (editor, e, opts) {
                                 var rec = e.record;
-                                if (e.field == 'name' || e.field == 'unit' ||  e.field == 'amount' || e.field == 'referenceNumber' || e.field == 'price' || e.field == 'professiontype') {
+                                if (e.field == 'name' || e.field == 'unit' ||  e.field == 'amount' || e.field == 'referenceNumber' || e.field == 'price' || e.field == 'professionType') {
                                     if (isNaN(e.value) || !/^-?\d+(\.\d+)?$/.test(e.value)) {
                                         return false;
                                     }

@@ -152,6 +152,9 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
                         {
                             icon: 'resources/img/supplier_material_approve.png',
                             tooltip: '批准材料改动申请',
+                            isDisabled: function (view, rowIndex, colIndex, item, rec){
+                                return !rec.get('auditOperation');
+                            },
                             handler: function (grid, rowIndex, colIndex){
                                 var rec = grid.getStore().getAt(rowIndex);
                                 Ext.Msg.warning('确定要批准当前材料改动吗？', function(btnId) {
@@ -169,6 +172,9 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
                         {
                             icon: 'resources/img/supplier_material_disapprove.png',
                             tooltip: '拒绝材料改动申请',
+                            isDisabled: function (view, rowIndex, colIndex, item, rec){
+                                return !rec.get('auditOperation');
+                            },
                             handler: function (){
                                 
                             }
