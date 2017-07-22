@@ -31,6 +31,15 @@ class SupplierMaterialSvc extends BaseSvc
 				unset($value['auditCreator']);
 				unset($value['auditCreatorRealName']);
 				unset($value['auditDeleted']);
+				continue;
+			}
+			if($value['auditOperation'] === 'add'){
+				unset($value['unit']);
+				unset($value['name']);
+				unset($value['price']);
+				unset($value['professionType']);
+				unset($value['createTime']);
+				unset($value['deleted']);
 			}
 		}
 		return $res;

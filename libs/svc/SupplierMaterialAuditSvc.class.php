@@ -59,6 +59,8 @@ class SupplierMaterialAuditSvc extends BaseSvc
 		$res = parent::get(array('materialId'=>$q['materialId']));
 		$q['@operation'] = 'delete';
 		if($res['total'] != 0) {
+			$q['@name'] = '';
+			$q['@unit'] = '';
 			$q['@price'] = 0;
 			$q['@professionType'] = '';
 			$res = parent::update($q);
@@ -78,12 +80,12 @@ class SupplierMaterialAuditSvc extends BaseSvc
 		global $mysql;
 		$mysql->begin();
 		$res = parent::get(array('materialId'=>$q['materialId']));
+		$q['@operation'] = 'update';
 		if($res['total'] != 0) {
 			$res = parent::update($q);
 		}else{
 			$q['@id'] = $this->getUUID();
 			$q['@materialId'] = $q['materialId'];
-			$q['@operation'] = 'update';
 			$res = parent::add($q);
 		}
 		$mysql->commit();
