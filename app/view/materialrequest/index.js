@@ -109,6 +109,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 							var btn = btnObj[key];
 							switch (key) {
 								case 'add':
+								case 'checkTpl':
 									btn.setDisabled(!resObj.project || !resObj.project.get('projectName'));
 									break;
 								case 'edit':
@@ -131,7 +132,6 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 								case 'preview':
 								case 'print':
 								case 'templatize':
-								case 'checkTpl':
 									btn.setDisabled(!resObj.project || !resObj.billRec);
 									break;
 								default:
