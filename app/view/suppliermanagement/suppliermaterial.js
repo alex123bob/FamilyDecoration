@@ -204,7 +204,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
                 val = FamilyDecoration.store.WorkCategory.renderer(val);
                 newValue = FamilyDecoration.store.WorkCategory.renderer(newValue);
             }
-            if(!val || !newValue) {
+            if(!newValue) {
                 concatIcon = '';
             }
             if(rec.data.auditOperation == 'delete'){
