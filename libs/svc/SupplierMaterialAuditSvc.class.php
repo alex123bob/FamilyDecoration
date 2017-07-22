@@ -66,14 +66,17 @@ class SupplierMaterialAuditSvc extends BaseSvc
 		notNullCheck($q,'materialId','材料ID(materialId)不能为空!');
 		global $mysql;
 		$mysql->begin();
-		//先撤销之前所有修改
-		parent::del(array('materialId'=>$q['materialId']));
-		//再新增此次修改
+		$res = parent::get(array('materialId'=>$q['materialId']));
 		$q['@id'] = $this->getUUID();
 		$q['@operation'] = 'update';
 		$q['@materialId'] = $q['materialId'];
-		unset($q['materialId']);
-		$res = parent::add($q);
+		if($res['total'] != 0) {
+			// for update just  after add.
+			$q['@operation'] = $res['data'][0]['operation'];
+			$res = parent::update($q);
+		}else{
+			$res = parent::add($q);
+		}
 		$mysql->commit();
 		return $res;
 	}
