@@ -64,7 +64,6 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                     var grid = me.down('gridpanel'),
                         st = grid.getStore(),
                         content = {
-                            name: ' ',
                             supplierId: me.supplier.getId(),
                             price: 0
                         };
@@ -124,11 +123,13 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                             },
                             validateedit: function (editor, e, opts) {
                                 var rec = e.record;
-                                if (e.field == 'name' || e.field == 'unit' ||  e.field == 'amount' || e.field == 'referenceNumber' || e.field == 'price' || e.field == 'professionType') {
-                                    if (isNaN(e.value) || !/^-?\d+(\.\d+)?$/.test(e.value)) {
+                                if ( e.field == 'amount' || e.field == 'referenceNumber' || e.field == 'price') {
+                                    if (isNaN(e.value) || !/^-?\d+(\.\d+)?$/.test(e.value) || e.value == e.originalValue) {
                                         return false;
                                     }
-                                    else if (e.value == e.originalValue) {
+                                }
+                                else if (e.field == 'name' || e.field == 'unit' || e.field == 'professionType') {
+                                    if (e.field == e.originalValue) {
                                         return false;
                                     }
                                 }
