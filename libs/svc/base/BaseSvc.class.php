@@ -63,6 +63,14 @@ class BaseSvc{
 		$q['@updateTime'] = 'now()';
 		return BaseSvc::update($q);
 	}
+	public function hardDelete($q){
+		global $TableMapping;
+		global $mysql;
+		$conditionObj = array();
+		$where = $this->parseWhereSql('',$q,$conditionObj,null,true);
+		$affect = $mysql->DBHardDelete($this->tableName,$where,$conditionObj);
+		return array('status'=>'successful','affect'=>$affect, 'errMsg' => '','where'=>$conditionObj);
+	}
 	//增加
 	public function add($q){
 		global $mysql;

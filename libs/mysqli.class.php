@@ -514,6 +514,49 @@
 			}
 		}
 
+		//硬删除操作，不是数字类型的字段，更新后的值要加引号
+		public function DBHardDelete($tableValue, $condition , $conditionValues = null){
+			if(!contains($tableValue,"`"))
+				$tableValue = '`'.$tableValue.'`';
+			$sql = " delete from $tableValue ";
+			$count = substr_count($condition,"?");
+			$count2 = count($conditionValues);
+			if($count != $count2){
+				throw new Exception("sql:$condition need $count values but get $count2 !");
+			}
+			$i = 0;
+			$index = 0;
+			for(;$i<$count;$i++){
+				$value = $conditionValues[$i];
+				$type = gettype($value);
+				switch($type){
+					case "boolean":
+						$value = ($value ? "true" : "false");
+						break;
+					case "integer":
+					case "double":
+						break;
+					case "string":
+						$value = myStrEscape($value);
+						break;
+					default:
+						throw new Exception("unknown type:".$type." of value:".$value);
+						break;
+				}
+				$condition = str_replace_once($condition,"?",$value);
+			}
+			if($condition != "" && trim($condition) != ""){
+				$sql .= (contains($condition,"where") ? "" : " where " ).$condition;
+			}
+			$this->dbSQL = $sql;
+			$this->DBExecute($this->dbSQL);
+			if($this->dbResult){
+				return mysqli_affected_rows($this->dbConn);
+			}else{
+				return -1;
+			}
+		}
+
 		//利用系统自带的call方法吸收错误的方法，参数$errorMethodValue错误的方法，参数$errorValue是错误的值
 		//该方法产生的错误的值是以数组的形式呈现出来的，所以打印错误的值的时候利用print_r()函数
 		public function __call($errorMethodValue, $errorValue){

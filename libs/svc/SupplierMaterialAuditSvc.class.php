@@ -49,6 +49,7 @@ class SupplierMaterialAuditSvc extends BaseSvc
 		$mysql->commit();
 		return $res;
 	}
+
 	/*
 		供应商申请删除某个材料
 	*/
@@ -56,15 +57,18 @@ class SupplierMaterialAuditSvc extends BaseSvc
 		notNullCheck($q,'materialId','材料ID(materialId)不能为空!');
 		global $mysql;
 		$mysql->begin();
-		$res = parent::get(array('materialId'=>$q['materialId']));
-		$q['@operation'] = 'delete';
+		$res = parent::get(array('materialId'=>$q['materialId'],'approved' => 'false'));
 		if($res['total'] != 0) {
-			$q['@name'] = '';
-			$q['@unit'] = '';
-			$q['@price'] = 0;
-			$q['@professionType'] = '';
-			$res = parent::update($q);
+			$request = $res['data'][0];
+			if($request['operation'] == 'add'){
+				throw new BaseException('当前材料刚添加还未通过审核,无法删除,您可以将其撤销!');
+			} else if($request['operation'] == 'delete'){
+				throw new BaseException('当前材料已申请删除,还未通过审核,请勿重复操作!');
+			}else{//$request['operation'] == 'update'
+				throw new BaseException('当前材料已申请修改,还未通过审核,您可以将其撤销后再申请删除!');
+			}
 		}else{
+			$q['@operation'] = 'delete';
 			$q['@id'] = $this->getUUID();
 			$q['@materialId'] = $q['materialId'];
 			$res = parent::add($q);
@@ -79,12 +83,15 @@ class SupplierMaterialAuditSvc extends BaseSvc
 		notNullCheck($q,'materialId','材料ID(materialId)不能为空!');
 		global $mysql;
 		$mysql->begin();
-		$q['approved'] = 'false';
-		$res = parent::get(array('materialId'=>$q['materialId']));
-		$q['@operation'] = 'update';
+		$res = parent::get(array('materialId'=>$q['materialId'],'approved' => 'false'));
 		if($res['total'] != 0) {
+			$request = $res['data'][0];
+			if($request['operation'] == 'delete'){
+				throw new BaseException('当前材料已申请删除,无法修改,您可以撤销删除操作后再修改!');
+			}
 			$res = parent::update($q);
 		}else{
+			$q['@operation'] = 'update';
 			$q['@id'] = $this->getUUID();
 			$q['@materialId'] = $q['materialId'];
 			$res = parent::add($q);
@@ -99,9 +106,11 @@ class SupplierMaterialAuditSvc extends BaseSvc
 		notNullCheck($q,'id','修改记录Id(id)不能为空!');
 		global $mysql;
 		$mysql->begin();
-		$q['approved'] = 'false';
-		$res = parent::get($q);
-		if($res['total'] == 1 && $res['data'][0]['operation'] == 'add') {
+		$res = parent::get(array('id'=>$q['id'],'approved'=>'false'));
+		if($res['total'] == 0){
+			throw new BaseException('未找到id为'.$q['id'].'的申请单!');
+		}
+		if($res['data'][0]['operation'] == 'add') {
 			$svc = BaseSvc::getSvc('SupplierMaterial');
 			$svc->del(array('id'=>$res['data'][0]['materialId']));
 		}

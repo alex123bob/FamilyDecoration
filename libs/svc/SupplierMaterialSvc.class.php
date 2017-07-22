@@ -14,7 +14,7 @@ class SupplierMaterialSvc extends BaseSvc
 		$this->appendSelect = ', a.id as auditId, a.name as auditName, a.unit as auditUnit,a.isDeleted as auditDeleted,'
 			.' a.price as auditPrice, a.operation as auditOperation, a.professionType as auditProfessionType,'
 			.' a.createTime as auditCreateTime, a.creator as auditCreator, u.realname as auditCreatorRealName, a.approved as auditApproved';
-		$this->appendJoin = 'left join supplier_material_audit a on a.materialId = supplier_material.id  and ( a.isDeleted = \'false\' or a.isDeleted is null) '
+		$this->appendJoin = 'left join supplier_material_audit a on a.materialId = supplier_material.id  and ( a.isDeleted = \'false\' or a.isDeleted is null) and a.approved = \'false\' '
 			.' left join user u on u.name = a.creator ';
 		$this->appendWhere = " and ( u.isDeleted = 'false' or u.isDeleted is null) ";
 		$q['orderby'] = ' auditId desc , supplier_material.id desc ';
