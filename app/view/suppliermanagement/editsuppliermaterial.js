@@ -129,7 +129,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                                     }
                                 }
                                 else if (e.field == 'name' || e.field == 'unit' || e.field == 'professionType') {
-                                    if (e.field == e.originalValue) {
+                                    if (e.value == e.originalValue) {
                                         return false;
                                     }
                                 }
