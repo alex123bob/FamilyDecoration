@@ -16,23 +16,10 @@ class SupplierMaterialSvc extends BaseSvc
 			.' a.createTime as auditCreateTime, a.creator as auditCreator, u.realname as auditCreatorRealName';
 		$this->appendJoin = 'left join supplier_material_audit a on a.materialId = supplier_material.id'
 			.' left join user u on u.name = a.creator ';
-		$this->appendWhere = " and ( u.isDeleted = 'false' or u.isDeleted is null)";
+		$this->appendWhere = " and ( u.isDeleted = 'false' or u.isDeleted is null)  and ( a.isDeleted = 'false' or a.isDeleted is null) ";
 		$q['orderby'] = ' auditId desc , supplier_material.id desc ';
 		$res = parent::get($q);
 		foreach ($res['data'] as $key => &$value) {
-			if($value['auditDeleted'] === 'true'){
-				unset($value['auditId']);
-				unset($value['auditUnit']);
-				unset($value['auditName']);
-				unset($value['auditPrice']);
-				unset($value['auditOperation']);
-				unset($value['auditProfessionType']);
-				unset($value['auditCreateTime']);
-				unset($value['auditCreator']);
-				unset($value['auditCreatorRealName']);
-				unset($value['auditDeleted']);
-				continue;
-			}
 			if($value['auditOperation'] === 'add'){
 				unset($value['unit']);
 				unset($value['name']);
