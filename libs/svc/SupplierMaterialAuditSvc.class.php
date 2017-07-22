@@ -79,6 +79,7 @@ class SupplierMaterialAuditSvc extends BaseSvc
 		notNullCheck($q,'materialId','材料ID(materialId)不能为空!');
 		global $mysql;
 		$mysql->begin();
+		$q['approved'] = 'false';
 		$res = parent::get(array('materialId'=>$q['materialId']));
 		$q['@operation'] = 'update';
 		if($res['total'] != 0) {
@@ -98,6 +99,7 @@ class SupplierMaterialAuditSvc extends BaseSvc
 		notNullCheck($q,'id','修改记录Id(id)不能为空!');
 		global $mysql;
 		$mysql->begin();
+		$q['approved'] = 'false';
 		$res = parent::get($q);
 		if($res['total'] == 1 && $res['data'][0]['operation'] == 'add') {
 			$svc = BaseSvc::getSvc('SupplierMaterial');
@@ -116,6 +118,7 @@ class SupplierMaterialAuditSvc extends BaseSvc
 		$supplierMaterialSvc = BaseSvc::getSvc('SupplierMaterial');
 		global $mysql;
 		$mysql->begin();
+		$q['approved'] = 'false';
 		$request = parent::get($q);
 		if($request['total'] != 1){
 			throw new BaseException('没有id为' .$q['id'].'的修改请求.');
