@@ -17,6 +17,7 @@ class SupplierMaterialSvc extends BaseSvc
 		$this->appendJoin = 'left join supplier_material_audit a on a.materialId = supplier_material.id'
 			.' left join user u on u.name = a.creator ';
 		$this->appendWhere = " and ( u.isDeleted = 'false' or u.isDeleted is null)";
+		$q['orderby'] = ' auditId desc , supplier_material.id desc ';
 		$res = parent::get($q);
 		foreach ($res['data'] as $key => &$value) {
 			if($value['auditDeleted'] === 'true'){

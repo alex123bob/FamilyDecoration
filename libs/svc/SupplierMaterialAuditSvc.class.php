@@ -33,10 +33,12 @@ class SupplierMaterialAuditSvc extends BaseSvc
 		// notNullCheck($q,'@professionType','工种不能为空!');
 		$q['@id'] = $this->getUUID();
 		$q['@operation'] = 'add';
+		if(!isset($q['name']))
+			$q['@name'] = '';
 		$q['@creator'] = $_SESSION['name'];
-		$res = parent::getCount(array('name'=>'','supplierId'=>$q['@supplierId']));
+		$res = parent::getCount(array('name'=>'','supplierId'=>$q['@supplierId'],'operation'=>'!delete'));
 		if($res['count'] > 0) {
-			throw new BaseException('还有未完成的材料!');
+			throw new BaseException('还有未命名的材料!');
 		}
 		global $mysql;
 		$mysql->begin();
@@ -54,13 +56,17 @@ class SupplierMaterialAuditSvc extends BaseSvc
 		notNullCheck($q,'materialId','材料ID(materialId)不能为空!');
 		global $mysql;
 		$mysql->begin();
-		//先撤销之前所有修改
-		parent::del(array('materialId'=>$q['materialId']));
-		//再新增此次修改
-		$q['@id'] = $this->getUUID();
+		$res = parent::get(array('materialId'=>$q['materialId']));
 		$q['@operation'] = 'delete';
-		$q['@materialId'] = $q['materialId'];
-		$res = parent::add($q);
+		if($res['total'] != 0) {
+			$q['@price'] = 0;
+			$q['@professionType'] = '';
+			$res = parent::update($q);
+		}else{
+			$q['@id'] = $this->getUUID();
+			$q['@materialId'] = $q['materialId'];
+			$res = parent::add($q);
+		}
 		$mysql->commit();
 		return $res;
 	}
@@ -72,14 +78,12 @@ class SupplierMaterialAuditSvc extends BaseSvc
 		global $mysql;
 		$mysql->begin();
 		$res = parent::get(array('materialId'=>$q['materialId']));
-		$q['@id'] = $this->getUUID();
-		$q['@operation'] = 'update';
-		$q['@materialId'] = $q['materialId'];
 		if($res['total'] != 0) {
-			// for update just  after add.
-			$q['@operation'] = $res['data'][0]['operation'];
 			$res = parent::update($q);
 		}else{
+			$q['@id'] = $this->getUUID();
+			$q['@materialId'] = $q['materialId'];
+			$q['@operation'] = 'update';
 			$res = parent::add($q);
 		}
 		$mysql->commit();
