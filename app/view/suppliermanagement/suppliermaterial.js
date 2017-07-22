@@ -107,7 +107,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
                     text: '序号',
                     dataIndex: 'id',
                     renderer: function (val, meta, rec) {
-                        return renderAudit(val, meta, rec, 'Id');
+                        return renderId(val, meta, rec);
                     }
                 },
                 {
@@ -200,15 +200,6 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
             val = val === null ? '' : val;
             newValue = newValue === null ? '' : newValue;
 
-            if(index === 'Id') {
-
-                newValue = {
-                    'add': '<img src="resources/img/supplier_material_add.png" alt="添加" />&nbsp;&nbsp;',
-                    'delete': '<img src="resources/img/supplier_material_delete.png" alt="删除" />&nbsp;&nbsp;',
-                    'update': '<img src="resources/img/supplier_material_update.png" alt="修改" />&nbsp;&nbsp;'
-                }[rec.data.auditOperation] || '';
-                concatIcon = '';
-            }
             if(index === 'ProfessionType') {
                 val = FamilyDecoration.store.WorkCategory.renderer(val);
                 newValue = FamilyDecoration.store.WorkCategory.renderer(newValue);
@@ -216,23 +207,36 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
             if(!val || !newValue) {
                 concatIcon = '';
             }
-            // if(!( index === 'Id' || rec.data.auditOperation == 'update')){
-            //     newValue = '';
-            //     concatIcon = '';
-            // }
-
+            if(rec.data.auditOperation == 'delete'){
+                newValue = '';
+                concatIcon = '';
+            }
+            if(rec.data.auditOperation == 'add'){
+                val = newValue;
+                newValue = '';
+                concatIcon = '';
+            }
             if(color){
-                if (index == 'Id') {
-                    return newValue + val;
-                }
-                else {
-                    return fontalize({
-                        color: color,
-                        content: val + concatIcon + newValue
-                    });
-                }
+                return fontalize({
+                    color: color,
+                    content: val + concatIcon + newValue
+                });
             }
             return val;
+        }
+        function renderId(val, meta, rec) {
+            var newValue = rec.data['auditId'];
+            var color = {
+                'add':'green',
+                'delete':'rgb(255, 76, 76);',
+                'update':'rgb(0, 166, 228)'
+            }[rec.data.auditOperation] || '';
+            newValue = {
+                'add': '<img src="resources/img/supplier_material_add.png" alt="添加" />&nbsp;&nbsp;',
+                'delete': '<img src="resources/img/supplier_material_delete.png" alt="删除" />&nbsp;&nbsp;',
+                'update': '<img src="resources/img/supplier_material_update.png" alt="修改" />&nbsp;&nbsp;'
+            }[rec.data.auditOperation] || '';
+            return newValue + val;
         }
 
         this.callParent();
