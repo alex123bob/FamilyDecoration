@@ -107,7 +107,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
                     text: '序号',
                     dataIndex: 'id',
                     renderer: function (val, meta, rec) {
-                        return renderAudit(val, meta, rec, 'id');
+                        return renderAudit(val, meta, rec, 'Id');
                     }
                 },
                 {
@@ -194,7 +194,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
             val = val === null ? '' : val;
             newValue = newValue === null ? '' : newValue;
 
-            if(index === 'id') {
+            if(index === 'Id') {
 
                 newValue = {
                     'add': '<img src="resources/img/supplier_material_add.png" alt="添加" />&nbsp;&nbsp;',
@@ -210,13 +210,13 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
             if(!val || !newValue) {
                 concatIcon = '';
             }
-            if(!( index === 'id' || rec.data.auditOperation == 'update')){
-                newValue = '';
-                concatIcon = '';
-            }
+            // if(!( index === 'Id' || rec.data.auditOperation == 'update')){
+            //     newValue = '';
+            //     concatIcon = '';
+            // }
 
             if(color){
-                if (index == 'id') {
+                if (index == 'Id') {
                     return newValue + val;
                 }
                 else {

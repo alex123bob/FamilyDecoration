@@ -23,6 +23,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.CheckBusiness": "app/controller/checkbusiness.js",
   "FamilyDecoration.controller.CheckLog": "app/controller/checklog.js",
   "FamilyDecoration.controller.CheckSignBusiness": "app/controller/checksignbusiness.js",
+  "FamilyDecoration.controller.ContractManagement": "app/controller/contractmanagement.js",
   "FamilyDecoration.controller.CostAnalysis": "app/controller/costanalysis.js",
   "FamilyDecoration.controller.DeadBusiness": "app/controller/deadbusiness.js",
   "FamilyDecoration.controller.EntryNExit": "app/controller/entrynexit.js",
@@ -71,6 +72,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.model.Chart": "app/model/chart.js",
   "FamilyDecoration.model.ChartDetail": "app/model/chartdetail.js",
   "FamilyDecoration.model.Community": "app/model/community.js",
+  "FamilyDecoration.model.ContractType": "app/model/contracttype.js",
   "FamilyDecoration.model.CostAnalysis": "app/model/costanalysis.js",
   "FamilyDecoration.model.CostComposition": "app/model/costcomposition.js",
   "FamilyDecoration.model.DiaryBill": "app/model/diarybill.js",
@@ -82,6 +84,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.model.MainMaterial": "app/model/mainmaterial.js",
   "FamilyDecoration.model.MaterialOrderItem": "app/model/materialorderitem.js",
   "FamilyDecoration.model.MaterialOrderList": "app/model/materialorderlist.js",
+  "FamilyDecoration.model.MaterialOrderTemplate": "app/model/materialordertemplate.js",
   "FamilyDecoration.model.MemberList": "app/model/memberlist.js",
   "FamilyDecoration.model.Message": "app/model/message.js",
   "FamilyDecoration.model.Msg": "app/model/msg.js",
@@ -135,6 +138,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.store.Chart": "app/store/chart.js",
   "FamilyDecoration.store.ChartDetail": "app/store/chartdetail.js",
   "FamilyDecoration.store.Community": "app/store/community.js",
+  "FamilyDecoration.store.ContractType": "app/store/contracttype.js",
   "FamilyDecoration.store.CostAnalysis": "app/store/costanalysis.js",
   "FamilyDecoration.store.CostComposition": "app/store/costcomposition.js",
   "FamilyDecoration.store.DiaryBill": "app/store/diarybill.js",
@@ -146,6 +150,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.store.MainMaterial": "app/store/mainmaterial.js",
   "FamilyDecoration.store.MaterialOrderItem": "app/store/materialorderitem.js",
   "FamilyDecoration.store.MaterialOrderList": "app/store/materialorderlist.js",
+  "FamilyDecoration.store.MaterialOrderTemplate": "app/store/materialordertemplate.js",
   "FamilyDecoration.store.MemberList": "app/store/memberlist.js",
   "FamilyDecoration.store.Message": "app/store/message.js",
   "FamilyDecoration.store.Msg": "app/store/msg.js",
@@ -219,6 +224,8 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.checklog.UserLogList": "app/view/checklog/userloglist.js",
   "FamilyDecoration.view.checksignbusiness.Index": "app/view/checksignbusiness/index.js",
   "FamilyDecoration.view.checksignbusiness.TransferToProject": "app/view/checksignbusiness/transfertoproject.js",
+  "FamilyDecoration.view.contractmanagement.Index": "app/view/contractmanagement/index.js",
+  "FamilyDecoration.view.contractmanagement.ProjectContract": "app/view/contractmanagement/projectcontract.js",
   "FamilyDecoration.view.costanalysis.CostAnalysis": "app/view/costanalysis/costanalysis.js",
   "FamilyDecoration.view.costanalysis.Index": "app/view/costanalysis/index.js",
   "FamilyDecoration.view.costanalysis.TotalCost": "app/view/costanalysis/totalcost.js",
@@ -247,6 +254,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.materialrequest.EditMaterialOrder": "app/view/materialrequest/editmaterialorder.js",
   "FamilyDecoration.view.materialrequest.Index": "app/view/materialrequest/index.js",
   "FamilyDecoration.view.materialrequest.MaterialOrder": "app/view/materialrequest/materialorder.js",
+  "FamilyDecoration.view.materialrequest.MaterialOrderTemplate": "app/view/materialrequest/materialordertemplate.js",
   "FamilyDecoration.view.msg.Index": "app/view/msg/index.js",
   "FamilyDecoration.view.mybusiness.DispatchCsStaff": "app/view/mybusiness/dispatchcsstaff.js",
   "FamilyDecoration.view.mybusiness.EditClient": "app/view/mybusiness/editclient.js",
@@ -1215,6 +1223,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.CheckBusiness": [],
   "FamilyDecoration.controller.CheckLog": [],
   "FamilyDecoration.controller.CheckSignBusiness": [],
+  "FamilyDecoration.controller.ContractManagement": [],
   "FamilyDecoration.controller.CostAnalysis": [],
   "FamilyDecoration.controller.DeadBusiness": [],
   "FamilyDecoration.controller.EntryNExit": [],
@@ -1263,6 +1272,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.model.Chart": [],
   "FamilyDecoration.model.ChartDetail": [],
   "FamilyDecoration.model.Community": [],
+  "FamilyDecoration.model.ContractType": [],
   "FamilyDecoration.model.CostAnalysis": [],
   "FamilyDecoration.model.CostComposition": [],
   "FamilyDecoration.model.DiaryBill": [],
@@ -1274,6 +1284,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.model.MainMaterial": [],
   "FamilyDecoration.model.MaterialOrderItem": [],
   "FamilyDecoration.model.MaterialOrderList": [],
+  "FamilyDecoration.model.MaterialOrderTemplate": [],
   "FamilyDecoration.model.MemberList": [],
   "FamilyDecoration.model.Message": [],
   "FamilyDecoration.model.Msg": [],
@@ -1327,6 +1338,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.store.Chart": [],
   "FamilyDecoration.store.ChartDetail": [],
   "FamilyDecoration.store.Community": [],
+  "FamilyDecoration.store.ContractType": [],
   "FamilyDecoration.store.CostAnalysis": [],
   "FamilyDecoration.store.CostComposition": [],
   "FamilyDecoration.store.DiaryBill": [],
@@ -1338,6 +1350,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.store.MainMaterial": [],
   "FamilyDecoration.store.MaterialOrderItem": [],
   "FamilyDecoration.store.MaterialOrderList": [],
+  "FamilyDecoration.store.MaterialOrderTemplate": [],
   "FamilyDecoration.store.MemberList": [],
   "FamilyDecoration.store.Message": [],
   "FamilyDecoration.store.Msg": [],
@@ -1411,6 +1424,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.checklog.UserLogList": [],
   "FamilyDecoration.view.checksignbusiness.Index": [],
   "FamilyDecoration.view.checksignbusiness.TransferToProject": [],
+  "FamilyDecoration.view.contractmanagement.Index": [],
+  "FamilyDecoration.view.contractmanagement.ProjectContract": [],
   "FamilyDecoration.view.costanalysis.CostAnalysis": [],
   "FamilyDecoration.view.costanalysis.Index": [],
   "FamilyDecoration.view.costanalysis.TotalCost": [],
@@ -1439,6 +1454,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.materialrequest.EditMaterialOrder": [],
   "FamilyDecoration.view.materialrequest.Index": [],
   "FamilyDecoration.view.materialrequest.MaterialOrder": [],
+  "FamilyDecoration.view.materialrequest.MaterialOrderTemplate": [],
   "FamilyDecoration.view.msg.Index": [],
   "FamilyDecoration.view.mybusiness.DispatchCsStaff": [],
   "FamilyDecoration.view.mybusiness.EditClient": [],
@@ -2572,6 +2588,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.CheckBusiness": [],
   "FamilyDecoration.controller.CheckLog": [],
   "FamilyDecoration.controller.CheckSignBusiness": [],
+  "FamilyDecoration.controller.ContractManagement": [],
   "FamilyDecoration.controller.CostAnalysis": [],
   "FamilyDecoration.controller.DeadBusiness": [],
   "FamilyDecoration.controller.EntryNExit": [],
@@ -2620,6 +2637,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.model.Chart": [],
   "FamilyDecoration.model.ChartDetail": [],
   "FamilyDecoration.model.Community": [],
+  "FamilyDecoration.model.ContractType": [],
   "FamilyDecoration.model.CostAnalysis": [],
   "FamilyDecoration.model.CostComposition": [],
   "FamilyDecoration.model.DiaryBill": [],
@@ -2631,6 +2649,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.model.MainMaterial": [],
   "FamilyDecoration.model.MaterialOrderItem": [],
   "FamilyDecoration.model.MaterialOrderList": [],
+  "FamilyDecoration.model.MaterialOrderTemplate": [],
   "FamilyDecoration.model.MemberList": [],
   "FamilyDecoration.model.Message": [],
   "FamilyDecoration.model.Msg": [],
@@ -2684,6 +2703,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.store.Chart": [],
   "FamilyDecoration.store.ChartDetail": [],
   "FamilyDecoration.store.Community": [],
+  "FamilyDecoration.store.ContractType": [],
   "FamilyDecoration.store.CostAnalysis": [],
   "FamilyDecoration.store.CostComposition": [],
   "FamilyDecoration.store.DiaryBill": [],
@@ -2695,6 +2715,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.store.MainMaterial": [],
   "FamilyDecoration.store.MaterialOrderItem": [],
   "FamilyDecoration.store.MaterialOrderList": [],
+  "FamilyDecoration.store.MaterialOrderTemplate": [],
   "FamilyDecoration.store.MemberList": [],
   "FamilyDecoration.store.Message": [],
   "FamilyDecoration.store.Msg": [],
@@ -2838,6 +2859,12 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.checksignbusiness.TransferToProject": [
     "widget.checksignbusiness-transfertoproject"
   ],
+  "FamilyDecoration.view.contractmanagement.Index": [
+    "widget.contractmanagement-index"
+  ],
+  "FamilyDecoration.view.contractmanagement.ProjectContract": [
+    "widget.contractmanagement-projectcontract"
+  ],
   "FamilyDecoration.view.costanalysis.CostAnalysis": [
     "widget.costanalysis-costanalysis"
   ],
@@ -2921,6 +2948,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.materialrequest.MaterialOrder": [
     "widget.materialrequest-materialorder"
+  ],
+  "FamilyDecoration.view.materialrequest.MaterialOrderTemplate": [
+    "widget.materialrequest-materialordertemplate"
   ],
   "FamilyDecoration.view.msg.Index": [
     "widget.msg-index"
