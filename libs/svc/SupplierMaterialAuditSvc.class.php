@@ -133,7 +133,7 @@ class SupplierMaterialAuditSvc extends BaseSvc
 				'@professionType'=>$request['professionType']
 			));
 		}
-		$res = parent::del(array('id'=>$request['id']));
+		$res = parent::update(array('@approved'=>'true','@approver'=>$_SESSION['name'],'id'=>$request['id']));
 		$mysql->commit();
 		return $res;
 	}

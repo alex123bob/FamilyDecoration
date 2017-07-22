@@ -29,7 +29,7 @@
 		'msg_log'=>array('id','sender','reciever','recieverPhone','status','result','content'),  //短信发送
 		'supplier'=>array('id','name','boss','address','email','phone'),
 		'supplier_material'=>array('id','supplierId','name','unit','price','professionType'),
-		'supplier_material_audit'=>array('id','materialId','name','unit','price','professionType','operation','creator'),
+		'supplier_material_audit'=>array('approver','approved','id','materialId','name','unit','price','professionType','operation','creator'),
 		'supplier_order'=>array('id','projectName','paymentId','status','totalFee','projectId','supplierId','creator','payee','payedTimes','projectProgress'),
 		'supplier_order_item'=>array('id','referenceNumber','amount','billId','supplierId','materialId','billItemName','unit','unitPrice','professionType'),
 		"versions"=>array('id','desc'),
