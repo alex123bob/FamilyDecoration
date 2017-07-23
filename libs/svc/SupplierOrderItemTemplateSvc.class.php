@@ -26,6 +26,11 @@ class SupplierOrderItemTemplateSvc extends BaseSvc
 			.' left join profession_type p on p.value = m.professionType ';
 		$this->appendWhere = " and m.isDeleted = 'false' ";
 		$res = parent::get($q);
+		$sql = 'select s.name,s.id from supplier_order_template t left join supplier s on s.id = t.supplierId where t.id = \'?\'';
+		global $mysql;
+		$supplier = $mysql->DBGetAsOneArray($sql,$q['templateId']);
+		$res['supplierName'] = $supplier[0];
+		$res['supplierId'] = $supplier[1];
 		return $res;
 	}
 }
