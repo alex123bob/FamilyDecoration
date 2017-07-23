@@ -11,18 +11,22 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrderTemplate', {
         height: '100%'
     },
     maximizable: true,
-    width: 500,
-    height: 300,
+    width: 600,
+    height: 400,
     modal: true,
     initComponent: function () {
         var me = this;
 
         function _getRes (){
             var list = me.getComponent('templateList'),
-                content = me.getComponent('templateContent');
+                content = me.getComponent('templateContent'),
+                listSelModel = list.getSelectionModel(),
+                tpl = listSelModel.getSelection()[0];
 
             return {
                 list: list,
+                listSelModel: listSelModel,
+                tpl: tpl,
                 content: content
             };
         }
@@ -70,7 +74,16 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrderTemplate', {
             {
                 text: '从模板创建',
                 handler: function (){
-                    
+                    var resObj = _getRes();
+                    if (resObj.tpl) {
+
+                    }
+                }
+            },
+            {
+                text: '关闭',
+                handler: function (){
+                    me.close();
                 }
             }
         ];
