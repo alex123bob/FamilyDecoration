@@ -175,8 +175,18 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
                             isDisabled: function (view, rowIndex, colIndex, item, rec){
                                 return !rec.get('auditOperation');
                             },
-                            handler: function (){
-                                
+                            handler: function (grid, rowIndex, colIndex){
+                                var rec = grid.getStore().getAt(rowIndex);
+                                Ext.Msg.warning('确定要拒绝当前材料改动吗？', function(btnId) {
+                                    if ('yes' == btnId) {
+                                        ajaxUpdate('SupplierMaterialAudit.revertUpdateMaterial', {
+                                            id: rec.get('auditId')
+                                        }, 'id', function(obj) {
+                                            showMsg('材料变动申请已否决!');
+                                            me.refresh(me.supplier);
+                                        }, true);
+                                    }
+                                });
                             }
                         }
                     ]
