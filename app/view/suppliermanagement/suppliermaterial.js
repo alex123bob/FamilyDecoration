@@ -192,7 +192,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
             var newValue = rec.data['audit' + index];
             var color = {
                 'add':'green',
-                'delete':'rgb(255, 76, 76);',
+                'delete':'rgb(255, 76, 76)',
                 'update':'rgb(0, 166, 228)'
             }[rec.data.auditOperation] || '';
             var concatIcon = '&nbsp;<img src="resources/img/supplier_material_arrow_right.png" />&nbsp;';

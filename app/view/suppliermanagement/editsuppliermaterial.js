@@ -36,6 +36,19 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                     }
                 }
             });
+        
+        /**
+         * returns polished html font tag by passing operational type and displayed content.
+         * @param {*Object} obj includes type and content
+         */
+        function fontalize (obj){
+            var colorMap = {
+                add: 'green',
+                update: 'rgb(0, 166, 228)',
+                delete: 'rgb(255, 76, 76)'
+            };
+            return '<font style="color:' + colorMap[obj.type] + '">' + obj.content + '</font>';
+        }
 
         me.refresh = function () {
             var grid = this.down('gridpanel'),
@@ -81,6 +94,18 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
             }
         ];
 
+        function materialRenderer (val, rec, dataIndex){
+            if (rec.get(dataIndex)) {
+                return fontalize({
+                    type: rec.get('auditOperation'),
+                    content: rec.get(dataIndex)
+                });
+            }
+            else {
+                return val;
+            }
+        }
+
         me.items = [
             {
                 xtype: 'gridpanel',
@@ -98,6 +123,14 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                     Ext.create('Ext.grid.plugin.CellEditing', {
                         clicksToEdit: 1,
                         listeners: {
+                            beforeedit: function (editor, e, opts){
+                                var field = e.field,
+                                    rec = e.record;
+                                field = field.charAt(0).toUpperCase() + field.slice(1);
+                                if (rec.get('auditOperation') && rec.get('audit' + field)) {
+                                    e.value = rec.get('audit' + field);
+                                }
+                            },
                             edit: function (editor, e) {
                                 Ext.suspendLayouts();
 
@@ -111,7 +144,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                                 };
                                 updateObj[e.field] = e.value;
                                 User.isSupplier() ? ajaxUpdate('SupplierMaterialAudit.updateMaterial', updateObj, 'materialId', function(obj) {
-                                    showMsg('申请材料修改已提交，请等待审批！');
+                                    showMsg('申请材料修改已提交，请等待审批！更新的材料值请在关闭本窗口或刷新表格后看到!');
                                     me.isDirty = true;
                                 }, true) : ajaxUpdate('SupplierMaterial', updateObj, 'id', function (obj) {
                                     showMsg('更新成功！');
@@ -182,7 +215,10 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                             allowBlank: false
                         },
                         flex: 1,
-                        align: 'center'
+                        align: 'center',
+                        renderer: function (val, meta, rec){
+                            return materialRenderer(val, rec, 'auditName');
+                        }
                     },
                     {
                         text: '单位',
@@ -192,7 +228,10 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                             allowBlank: false
                         },
                         flex: 1,
-                        align: 'center'
+                        align: 'center',
+                        renderer: function (val, meta, rec){
+                            return materialRenderer(val, rec, 'auditUnit');
+                        }
                     },
                     {
                         text: '数量',
@@ -219,7 +258,10 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                             allowBlank: false
                         },
                         flex: 1,
-                        align: 'center'
+                        align: 'center',
+                        renderer: function (val, meta, rec){
+                            return materialRenderer(val, rec, 'auditPrice');
+                        }
                     },
                     {
                         text: '工种',
@@ -235,8 +277,35 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                         flex: 1,
                         align: 'center',
                         renderer: function (val, meta, rec) {
-                            if (val) {
+                            var content;
+                            if (rec.get('auditProfessionType')) {
+                                content = FamilyDecoration.store.WorkCategory.renderer(rec.get('auditProfessionType'));
+                                return fontalize({
+                                    type: rec.get('auditOperation'),
+                                    content: content
+                                });
+                            }
+                            else if (val) {
                                 return FamilyDecoration.store.WorkCategory.renderer(val);
+                            }
+                            else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        text: '状态',
+                        dataIndex: 'auditApproved',
+                        flex: 1,
+                        align: 'center',
+                        renderer: function (val, meta, rec){
+                            var operationObj = {
+                                add: fontalize({type: 'add', content: '申请添加'}),
+                                update: fontalize({type: 'update', content: '申请修改'}),
+                                delete: fontalize({type: 'delete', content: '申请删除'})
+                            };
+                            if (val && 'false' == val) {
+                                return operationObj[rec.get('auditOperation')];
                             }
                             else {
                                 return '';
