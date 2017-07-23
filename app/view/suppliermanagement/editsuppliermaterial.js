@@ -173,7 +173,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                 columns: [
                     {
                         xtype: 'actioncolumn',
-                        width: 25,
+                        width: 50,
                         items: [
                             {
                                 icon: 'resources/img/delete.png',
@@ -195,6 +195,27 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                                                 me.refresh();
                                                 me.isDirty = true;
                                             });
+                                        }
+                                    });
+                                }
+                            },
+                            {
+                                icon: 'resources/img/revert.png',
+                                tooltip: '撤销',
+                                isDisabled: function (view, rowIndex, colIndex, item, rec){
+                                    return !User.isSupplier() || !rec.get('auditId');
+                                },
+                                handler: function (grid, rowIndex, colIndex){
+                                    var rec = grid.getStore().getAt(rowIndex);
+                                    Ext.Msg.warning('确定要删撤销当前改动吗?', function (btnId) {
+                                        if ('yes' == btnId) {
+                                            ajaxUpdate('SupplierMaterialAudit.revertUpdateMaterial', {
+                                                id: rec.get('auditId')
+                                            }, 'id', function(obj) {
+                                                showMsg('材料改动已经撤销!');
+                                                me.refresh();
+                                                me.isDirty = true;
+                                            }, true);
                                         }
                                     });
                                 }

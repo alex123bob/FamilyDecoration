@@ -492,6 +492,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						xtype: 'button',
 						text: '置为模板',
 						name: 'templatize',
+						icon: 'resources/img/material_order_insert_template.png',
 						disabled: true,
 						handler: function (){
 							var resObj = _getRes();
@@ -510,6 +511,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						xtype: 'button',
 						text: '订单模板',
 						name: 'checkTpl',
+						icon: 'resources/img/material_order_template_list.png',
 						disabled: true,
 						handler: function (){
 							var win = Ext.create('FamilyDecoration.view.materialrequest.MaterialOrderTemplate', {

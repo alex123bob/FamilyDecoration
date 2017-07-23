@@ -66,6 +66,15 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrderTemplate', {
             }
         ];
 
+        me.buttons = [
+            {
+                text: '从模板创建',
+                handler: function (){
+                    
+                }
+            }
+        ];
+
         this.callParent();
     }
 });
