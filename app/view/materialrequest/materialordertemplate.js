@@ -58,7 +58,10 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrderTemplate', {
                 },
                 listeners: {
                     selectionchange: function (selModel, sels, opts){
-                        
+                        var resObj = _getRes();
+                        if (resObj.tpl) {
+                            resObj.content.previewTemplate(resObj.tpl.getId());
+                        }
                     }
                 }
             },
@@ -66,7 +69,15 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrderTemplate', {
                 xtype: 'materialrequest-materialorder',
                 previewMode: true,
                 flex: 4,
-                itemId: 'templateContent'
+                itemId: 'templateContent',
+                listeners: {
+                    beforerender: function (ct){
+                        var grid = ct.down('gridpanel'),
+                            pagingtoolbar = grid.getDockedItems('[dock="bottom"]');
+
+                        grid.removeDocked(pagingtoolbar[0]);
+                    }
+                }
             }
         ];
 
@@ -76,7 +87,6 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrderTemplate', {
                 handler: function (){
                     var resObj = _getRes();
                     if (resObj.tpl) {
-
                     }
                 }
             },

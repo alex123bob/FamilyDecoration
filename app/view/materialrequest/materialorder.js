@@ -128,6 +128,19 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 			}
 		}
 
+		me.previewTemplate = function (templateId){
+			ajaxGet('SupplierOrderItemTemplate', false, {
+				templateId: templateId
+			}, function (obj){
+				var frm = _getFrmField(),
+					grid = me.down('gridpanel'),
+					st = grid.getStore();
+				frm.supplier.setValue(obj.supplierName);
+				st.removeAll();
+				st.add(obj.data);
+			});
+		}
+
 		function _setTotalFee() {
 			var frm = _getFrmField();
 			ajaxGet('SupplierOrder', 'getTotalFee', {
