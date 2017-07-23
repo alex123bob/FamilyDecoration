@@ -3,7 +3,8 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrderTemplate', {
     alias: 'widget.materialrequest-materialordertemplate',
     requires: [
         'FamilyDecoration.view.materialrequest.MaterialOrder',
-        'FamilyDecoration.store.MaterialOrderTemplate'
+        'FamilyDecoration.store.MaterialOrderTemplate',
+        'FamilyDecoration.view.materialrequest.EditMaterialOrder'
     ],
     layout: 'hbox',
     title: '订单模板',
@@ -14,6 +15,8 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrderTemplate', {
     width: 600,
     height: 400,
     modal: true,
+    project: undefined,
+
     initComponent: function () {
         var me = this;
 
@@ -87,6 +90,32 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrderTemplate', {
                 handler: function (){
                     var resObj = _getRes();
                     if (resObj.tpl) {
+                        ajaxUpdate('SupplierOrderTemplate.template2Order', {
+                            templateId: resObj.tpl.getId(),
+                            projectId: me.project.getId()
+                        }, 'templateId', function (obj){
+                            showMsg('创建成功!');
+                            var data = obj.data[0];
+                            // var win = Ext.create('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
+                            //     project: me.project,
+                            //     order: Ext.create('FamilyDecoration.model.MaterialOrderList', obj.data),
+                            //     callback: function () {
+                            //         var resObj = _getRes();
+                            //         resObj.billRecPaneSt.reload({
+                            //             callback: function (recs, ope, success) {
+                            //                 if (success) {
+                            //                     var index = resObj.billRecPaneSt.indexOf(resObj.billRec);
+                            //                     if (-1 != index) {
+                            //                         resObj.billRecPaneSelModel.deselectAll();
+                            //                         resObj.billRecPaneSelModel.select(index);
+                            //                     }
+                            //                 }
+                            //             }
+                            //         });
+                            //     }
+                            // });
+                            win.show();
+                        }, true);
                     }
                 }
             },

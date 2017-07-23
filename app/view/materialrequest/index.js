@@ -514,8 +514,9 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						icon: 'resources/img/material_order_template_list.png',
 						disabled: true,
 						handler: function (){
+							var resObj = _getRes();
 							var win = Ext.create('FamilyDecoration.view.materialrequest.MaterialOrderTemplate', {
-								
+								project: resObj.project
 							});
 							win.show();
 						}
