@@ -21,9 +21,8 @@ class SupplierOrderItemTemplateSvc extends BaseSvc
 	}
 
 	public function get($q){
-		$this->appendSelect = ', m.name as billItemName, m.unit, m.price, m.professionType,p.cname as professionTypeName ';
-		$this->appendJoin = 'left join supplier_material m on m.id = supplier_order_item_template.materialId '
-			.' left join profession_type p on p.value = m.professionType ';
+		$this->appendSelect = ', m.name as billItemName, m.unit, m.price as unitPrice ';
+		$this->appendJoin = 'left join supplier_material m on m.id = supplier_order_item_template.materialId ';
 		$this->appendWhere = " and m.isDeleted = 'false' ";
 		$res = parent::get($q);
 		$sql = 'select s.name,s.id from supplier_order_template t left join supplier s on s.id = t.supplierId where t.id = \'?\'';
