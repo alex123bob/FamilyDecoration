@@ -49,7 +49,8 @@ class BaseSvc{
 	public $appendWhere = '';
 	public $appendSelect = '';
 	public $appendJoin = '';
-	public $lastUUID = '';
+	public $recentUUIDs = array();
+	public $recentUUIDTime = '';
 
 	/*
 	xxx=value 表示xxx字段严格匹配
@@ -93,11 +94,21 @@ class BaseSvc{
 	}
 
 	public function getUUID(){
-		$uuid = $this->lastUUID;
-		while($uuid == $this->lastUUID){
+		$now = date("YmdHis").str_pad(microtime_float2(),3,0,STR_PAD_LEFT);
+		if($now != $this->recentUUIDTime){
+			$this->recentUUIDs = array();
+		}
+		if($this->recentUUIDTime == '' || $now != $this->recentUUIDTime) {
+			$this->recentUUIDTime = $now;
+			$uuid =	$now.str_pad(rand(0, 999), 3, rand(0, 9), STR_PAD_LEFT);
+			array_push($this->recentUUIDs, $uuid);
+			return $uuid;
+		}
+		$uuid =	$now.str_pad(rand(0, 999), 3, rand(0, 9), STR_PAD_LEFT);
+		while(in_array($uuid, $this->recentUUIDs)){
 			$uuid =	date("YmdHis").str_pad(microtime_float2(),3,0,STR_PAD_LEFT).str_pad(rand(0, 999), 3, rand(0, 9), STR_PAD_LEFT);
 		}
-		$this->lastUUID = $uuid;
+		array_push($this->recentUUIDs, $uuid);
 		return $uuid;
 	}
 
