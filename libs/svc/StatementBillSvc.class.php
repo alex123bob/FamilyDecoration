@@ -157,8 +157,10 @@ class StatementBillSvc extends BaseSvc
 		if($bills[0]['status'] == 'paid') throw new BaseException("已付款,无法更改状态.");
 	
 		$bill = $bills[0];
-		if($bill['status'] != $q['currentStatus'])
-			throw new Exception("出错啦!请联系管理员.");
+		if($bill['status'] != $q['currentStatus']){
+			$msg = "订单最新状态为:".(StatementBillSvc::$ALL_STATUS[$bill['status']]).',请刷新后操作.'.$bill['status'].'-'.$q['currentStatus'];
+			throw new Exception($msg);
+		}
 		$q['@status'] = (int)$q['@status'];
 		$targetStatus = $this->getStatusTransferChain($bill['billType'],$bill['status'],$q['@status']);
 		// 1:forward -1:backward

@@ -11,7 +11,7 @@ class StatementBasicItemSvc extends BaseSvc
 		}
 		if(isset($q['@unitPrice'])){
 			if(!is_numeric($q['@unitPrice'])){
-				throw new Exception('单价必须为数字:'.$q['@amount']);
+				throw new Exception('单价必须为数字:'.$q['@unitPrice']);
 			}else{
 				$q['@unitPrice'] = round($q['@unitPrice'],3);
 			}
