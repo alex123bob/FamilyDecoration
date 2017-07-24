@@ -7,8 +7,8 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
     ],
     modal: true,
     title: '编辑供应商材料',
-    width: 600,
-    height: 400,
+    width: 700,
+    height: 600,
     bodyPadding: 5,
     maximizable: true,
     layout: 'fit',
@@ -56,10 +56,13 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                 selModel = grid.getSelectionModel(),
                 selRec = selModel.getSelection()[0],
                 index = st.indexOf(selRec);
-            st.reload({
+            st.loadPage(st.currentPage, {
                 callback: function (recs, ope, success) {
                     if (success) {
-                        if (index != -1) {
+                        if (recs.length <= 0 && st.currentPage > 1) {
+                            st.previousPage();
+                        }
+                        else if (index != -1) {
                             selModel.deselectAll();
                             selModel.select(index);
                         }

@@ -48,10 +48,10 @@ class SupplierOrderTemplateSvc extends BaseSvc
 			'@payedTimes'=>isset($q['@payedTimes']) ? $q['@payedTimes'] : '',
 			'@projectProgress'=>isset($q['@projectProgress']) ? $q['@projectProgress'] : '',
 			));
-		$order = $order['data'];
+		$orderObj = $order['data'];
 		foreach ($templateItems as $key => $item) {
 			$supplierOrderItemSvc->add(array(
-					'@billId' => $order['id'],
+					'@billId' => $orderObj['id'],
 					'@supplierId' => $item['supplierId'],
 					'@materialId' => $item['materialId'],
 					'@billItemName' => $item['name'],
