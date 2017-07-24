@@ -28,12 +28,12 @@
 		foreach ($res['data'] as $key => &$item) {
 			if(is_array($item)) {
 				foreach ($item as $key => &$value) {
-					if($value == null || $value == ''){
+					if(!is_array($value) && ($value == null || $value == '')){
 						unset($item[$key]);
 					}
 				}
 			} else {
-				if($value == null || $value == ''){
+				if(!is_array($value) && ($value == null || $value == '')){
 					unset($item[$key]);
 				}
 			}
