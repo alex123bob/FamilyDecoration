@@ -44,11 +44,12 @@ Class Proxy extends BaseSvc{
 
 class BaseSvc{
 
-	public $tableName="";
+	public $tableName = '';
 	public $fields = array();
-	public $appendWhere="";
-	public $appendSelect="";
-	public $appendJoin="";
+	public $appendWhere = '';
+	public $appendSelect = '';
+	public $appendJoin = '';
+	public $lastUUID = '';
 
 	/*
 	xxx=value 表示xxx字段严格匹配
@@ -92,8 +93,12 @@ class BaseSvc{
 	}
 
 	public function getUUID(){
-		//return uniqid().str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT);
-		return date("YmdHis").str_pad(microtime_float2(),4,0,STR_PAD_LEFT).str_pad(rand(0, 99), 2, rand(0, 9), STR_PAD_LEFT);
+		$uuid = $this->lastUUID;
+		while($uuid == $this->lastUUID){
+			$uuid =	date("YmdHis").str_pad(microtime_float2(),3,0,STR_PAD_LEFT).str_pad(rand(0, 999), 3, rand(0, 9), STR_PAD_LEFT);
+		}
+		$this->lastUUID = $uuid;
+		return $uuid;
 	}
 
 	public static function parseLimitSql($q){
