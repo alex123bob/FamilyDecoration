@@ -53,6 +53,21 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 			}
 		});
 
+		function _refreshBillRecPane (){
+			var resObj = _getRes();
+			resObj.billRecPaneSt.loadPage(resObj.billRecPaneSt.currentPage, {
+				callback: function (recs, ope, success) {
+					if (success) {
+						var index = resObj.billRecPaneSt.indexOf(resObj.billRec);
+						if (-1 != index) {
+							resObj.billRecPaneSelModel.deselectAll();
+							resObj.billRecPaneSelModel.select(index);
+						}
+					}
+				}
+			});
+		}
+
 		me.items = [
 			{
 				xtype: 'progress-projectlistbycaptain',
@@ -251,18 +266,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 															project: resObj.project,
 															order: Ext.create('FamilyDecoration.model.MaterialOrderList', obj.data),
 															callback: function () {
-																var resObj = _getRes();
-																resObj.billRecPaneSt.reload({
-																	callback: function (recs, ope, success) {
-																		if (success) {
-																			var index = resObj.billRecPaneSt.indexOf(resObj.billRec);
-																			if (-1 != index) {
-																				resObj.billRecPaneSelModel.deselectAll();
-																				resObj.billRecPaneSelModel.select(index);
-																			}
-																		}
-																	}
-																});
+																_refreshBillRecPane();
 															}
 														});
 														win.show();
@@ -303,17 +307,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 									project: resObj.project,
 									order: resObj.billRec,
 									callback: function () {
-										resObj.billRecPaneSt.reload({
-											callback: function (recs, ope, success) {
-												if (success) {
-													var index = resObj.billRecPaneSt.indexOf(resObj.billRec);
-													if (-1 != index) {
-														resObj.billRecPaneSelModel.deselectAll();
-														resObj.billRecPaneSelModel.select(index);
-													}
-												}
-											}
-										});
+										_refreshBillRecPane();
 									}
 								});
 								win.show();
@@ -516,7 +510,8 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						handler: function (){
 							var resObj = _getRes();
 							var win = Ext.create('FamilyDecoration.view.materialrequest.MaterialOrderTemplate', {
-								project: resObj.project
+								project: resObj.project,
+								callback: _refreshBillRecPane
 							});
 							win.show();
 						}

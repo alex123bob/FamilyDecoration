@@ -16,6 +16,7 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrderTemplate', {
     height: 400,
     modal: true,
     project: undefined,
+    callback: Ext.emptyFn, // this callback is used for EditMaterialOrder window's callback after finishing editing or adding material order.
 
     initComponent: function () {
         var me = this;
@@ -95,25 +96,12 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrderTemplate', {
                             projectId: me.project.getId()
                         }, 'templateId', function (obj){
                             showMsg('创建成功!');
-                            var data = obj.data[0];
-                            // var win = Ext.create('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
-                            //     project: me.project,
-                            //     order: Ext.create('FamilyDecoration.model.MaterialOrderList', obj.data),
-                            //     callback: function () {
-                            //         var resObj = _getRes();
-                            //         resObj.billRecPaneSt.reload({
-                            //             callback: function (recs, ope, success) {
-                            //                 if (success) {
-                            //                     var index = resObj.billRecPaneSt.indexOf(resObj.billRec);
-                            //                     if (-1 != index) {
-                            //                         resObj.billRecPaneSelModel.deselectAll();
-                            //                         resObj.billRecPaneSelModel.select(index);
-                            //                     }
-                            //                 }
-                            //             }
-                            //         });
-                            //     }
-                            // });
+                            me.close();
+                            var win = Ext.create('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
+                                project: me.project,
+                                order: Ext.create('FamilyDecoration.model.MaterialOrderList', obj.data),
+                                callback: me.callback
+                            });
                             win.show();
                         }, true);
                     }
