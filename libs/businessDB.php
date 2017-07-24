@@ -188,10 +188,24 @@
 		$sql .= " order by IF(ISNULL(`level`), 1, 0), `level` , id desc ";
 		// echo $sql;
 		// var_dump($params);
+		$needPaging = false;
 		if (isset($data["needPaging"]) && $data["needPaging"] == 'true' && isset($data["limit"])) {
-			$sql .= " LIMIT ".$data["limit"];
+			$needPaging = true;
+			$sqlWithoutPaging = $sql;
+			$sql .= " LIMIT ".$data["start"].', '.$data["limit"];
 		}
-		return $mysql->DBGetAsMap($sql,$params);
+		$data = $mysql->DBGetAsMap($sql,$params);
+		if ($needPaging == 'true' ) {
+			$total = $mysql->DBGetAsMap($sqlWithoutPaging, $params);
+			$total = count($total);
+			return array(
+				"data" => $data,
+				"total" => $total
+			);
+		}
+		else {
+			return $data;
+		}
 	}
 	
 	
@@ -339,7 +353,8 @@
 			'isFrozen' => 'false',
 			// 'isWaiting' => 'false',
 			'needPaging' => 'true',
-			'limit' => $data['start'].', '.$data['limit']
+			'start' => $data['start'],
+			'limit' => $data['limit']
 		);
 		$filterSql = "";
 		$params = array();
@@ -359,6 +374,7 @@
 		$list = getBusiness(
 			$searchArr
 		);
+		$list = $list["data"];
 		$total = $mysql->DBGetAsMap("select count(*) as totalBusiness from business where isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' ".$filterSql, $params);
 		$total = $total[0]["totalBusiness"];
 		$B = $mysql->DBGetAsMap("select count(*) as totalB from business where level = 'B' and isDeleted = 'false' and isTransfered = 'false' and isFrozen = 'false' and isDead = 'false' ".$filterSql, $params);

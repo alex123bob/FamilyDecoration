@@ -473,14 +473,27 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						text: '打印预览',
 						name: 'preview',
 						icon: 'resources/img/material_request_preview.png',
-						disabled: true
+						disabled: true,
+						handler: function (){
+							var resObj = _getRes();
+							if (resObj.billRec) {
+								var win = window.open('fpdf/material_order.php?id=' + resObj.billRec.getId(), '打印', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+							}
+						}
 					},
 					{
 						xtype: 'button',
 						text: '打印订购单',
 						name: 'print',
 						icon: 'resources/img/material_request_print.png',
-						disabled: true
+						disabled: true,
+						handler: function (){
+							var resObj = _getRes();
+							if (resObj.billRec) {
+								var win = window.open('fpdf/material_order.php?id=' + resObj.billRec.getId(), '打印', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+								win.print();
+							}
+						}
 					},
 					{
 						xtype: 'button',
