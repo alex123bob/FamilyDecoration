@@ -202,7 +202,7 @@
 	function addBusiness($post){
 		$businesss = getBusinessByAddress($post["address"], $post["regionId"]);
 		if(count($businesss) != 0){
-			throw new Exception("business with address:".$post["address"]." already exist in region:".$post["regionId"]." !");
+			throw new Exception("该地址已经存在业务中:".$post["address"]."!");
 		}
 		//必填字段
 		$obj = array("id"=>date("YmdHis").str_pad(rand(0, 9999), 4, rand(0, 9), STR_PAD_LEFT),
