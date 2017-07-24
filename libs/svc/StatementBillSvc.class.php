@@ -74,6 +74,9 @@ class StatementBillSvc extends BaseSvc
 			//预付款 总金额就是领取金额
 			$q['@claimAmount'] = $q['@totalFee'];
 		}
+		if(isset($q['@projectProgress']) && !is_numeric($q['@projectProgress'])){
+			throw new BaseException("工程进度请填数字百分比.".$q['@projectProgress']);
+		}
 		if(isset($q['@status']) && $q['@status'] == 'paid'){
 			if(!isset($q['@payer']))
 				$q['@payer'] = $_SESSION['name'];
