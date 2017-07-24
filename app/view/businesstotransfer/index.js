@@ -21,9 +21,16 @@ Ext.define('FamilyDecoration.view.businesstotransfer.Index', {
                 isDeleted: 'false',
                 isWaiting: 'true',
                 isFrozen: 'false',
-                isDead: 'false'
+                isDead: 'false',
+                needPaging: true
+            },
+            reader: {
+                type: 'json',
+                root: 'data',
+                totalProperty: 'total'
             }
         });
+        st.setProxy(proxy);
         st.load();
 
         me.items = [
@@ -54,7 +61,7 @@ Ext.define('FamilyDecoration.view.businesstotransfer.Index', {
                                                     var obj = Ext.decode(res.responseText);
                                                     if ('successful' == obj.status) {
                                                         showMsg('锁定业务成功!');
-                                                        st.reload();
+                                                        st.loadPage(st.currentPage);
                                                         grid.getSelectionModel().deselectAll();
                                                     }
                                                 }
@@ -110,7 +117,9 @@ Ext.define('FamilyDecoration.view.businesstotransfer.Index', {
                                                             if (obj.status === 'successful') {
                                                                 showMsg('分配成功，分配后的业务不再处于等待业务区，请到对应业务员下进行查验');
                                                                 win.close();
-                                                                grid.getStore().reload();
+                                                                var st = grid.getStore();
+                                                                st.loadPage(st.currentPage);
+                                                                grid.getSelectionModel().deselectAll();
                                                             }
                                                         }
                                                     }
@@ -146,6 +155,14 @@ Ext.define('FamilyDecoration.view.businesstotransfer.Index', {
                         }
                     }
                 },
+                dockedItems: [
+                    {
+                        xtype: 'pagingtoolbar',
+                        store: st,   // same store GridPanel is using
+                        dock: 'bottom',
+                        displayInfo: true
+                    }
+                ],
                 store: st,
                 columns: {
                     defaults: {
