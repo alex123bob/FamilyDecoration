@@ -60,12 +60,14 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                 bbar: [
                     {
                         text: '添加',
+                        icon: 'resources/img/contract_add.png',
                         handler: function (){
 
                         }
                     },
                     {
                         text: '编辑',
+                        icon: 'resources/img/contract_edit.png',
                         handler: function (){
                             
                         }
