@@ -17,12 +17,15 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             {
                 layout: 'anchor',
                 defaults: {
-                    anchor: '100%'
+                    anchor: '100%',
+                    layout: 'hbox'
                 },
                 padding: '10px',
+                defaultType: 'fieldcontainer',
                 items: [
                     {
                         xtype: 'displayfield',
+                        layout: 'auto',
                         value: '佳诚装饰装修合同',
                         hideLabel: true,
                         style: {
@@ -33,10 +36,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         }
                     },
                     {
-                        xtype: 'fieldcontainer',
-                        layout: 'hbox',
                         defaults: {
-                            flex: 1
+                            flex: 1,
+                            margin: '0 4 0 0'
                         },
                         items: [
                             {
@@ -50,10 +52,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         ]
                     },
                     {
-                        xtype: 'fieldcontainer',
-                        layout: 'hbox',
                         defaults: {
-                            flex: 1
+                            flex: 1,
+                            margin: '0 4 0 0'
                         },
                         items: [
                             {
@@ -67,10 +68,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         ]
                     },
                     {
-                        xtype: 'fieldcontainer',
-                        layout: 'hbox',
                         defaults: {
-                            flex: 1
+                            flex: 1,
+                            margin: '0 4 0 0'
                         },
                         items: [
                             {
@@ -88,10 +88,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         fieldLabel: '联系地址'
                     },
                     {
-                        xtype: 'fieldcontainer',
-                        layout: 'hbox',
                         defaults: {
-                            flex: 1
+                            flex: 1,
+                            margin: '0 4 0 0'
                         },
                         items: [
                             {
@@ -109,16 +108,15 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         ]
                     },
                     {
-                        xtype: 'fieldcontainer',
-                        layout: 'hbox',
                         defaults: {
                             flex: 1,
-                            labelWidth: 50
+                            labelWidth: 30,
+                            margin: '0 4 0 0'
                         },
                         items: [
                             {
                                 xtype: 'displayfield',
-                                flex: 0.2,
+                                flex: 0.1,
                                 hideLabel: true,
                                 value: '工期:'
                             },
@@ -128,11 +126,13 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             },
                             {
                                 xtype: 'datefield',
-                                fieldLabel: '结束'
+                                fieldLabel: '结束',
+                                margin: '0 8 0 8'
                             },
                             {
                                 xtype: 'displayfield',
                                 flex: 0.5,
+                                labelWidth: 50,
                                 fieldLabel: '总工期'
                             }
                         ]
@@ -140,6 +140,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                     {
                         xtype: 'textfield',
                         fieldLabel: '合同总额'
+                    },
+                    {
                     }
                 ]
             }
