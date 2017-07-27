@@ -45,7 +45,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
             var colorMap = {
                 add: 'green',
                 update: 'rgb(0, 166, 228)',
-                delete: 'rgb(255, 76, 76)'
+                del: 'rgb(255, 76, 76)'
             };
             return '<font style="color:' + colorMap[obj.type] + '">' + obj.content + '</font>';
         }
@@ -326,7 +326,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplierMaterial', {
                             var operationObj = {
                                 add: fontalize({type: 'add', content: '申请添加'}),
                                 update: fontalize({type: 'update', content: '申请修改'}),
-                                delete: fontalize({type: 'delete', content: '申请删除'})
+                                del: fontalize({type: 'del', content: '申请删除'})
                             };
                             if (val && 'false' == val) {
                                 return operationObj[rec.get('auditOperation')];

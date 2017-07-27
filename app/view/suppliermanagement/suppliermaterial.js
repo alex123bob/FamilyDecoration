@@ -202,7 +202,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
             var newValue = rec.data['audit' + index];
             var color = {
                 'add':'green',
-                'delete':'rgb(255, 76, 76)',
+                'del':'rgb(255, 76, 76)',
                 'update':'rgb(0, 166, 228)'
             }[rec.data.auditOperation] || '';
             var concatIcon = '&nbsp;<img src="resources/img/supplier_material_arrow_right.png" />&nbsp;';
@@ -217,7 +217,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
             if(!newValue) {
                 concatIcon = '';
             }
-            if(rec.data.auditOperation == 'delete'){
+            if(rec.data.auditOperation == 'del'){
                 newValue = '';
                 concatIcon = '';
             }
@@ -238,12 +238,12 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierMaterial', {
             var newValue = rec.data['auditId'];
             var color = {
                 'add':'green',
-                'delete':'rgb(255, 76, 76);',
+                'del':'rgb(255, 76, 76);',
                 'update':'rgb(0, 166, 228)'
             }[rec.data.auditOperation] || '';
             newValue = {
                 'add': '<img src="resources/img/supplier_material_add.png" alt="添加" />&nbsp;&nbsp;',
-                'delete': '<img src="resources/img/supplier_material_delete.png" alt="删除" />&nbsp;&nbsp;',
+                'del': '<img src="resources/img/supplier_material_delete.png" alt="删除" />&nbsp;&nbsp;',
                 'update': '<img src="resources/img/supplier_material_update.png" alt="修改" />&nbsp;&nbsp;'
             }[rec.data.auditOperation] || '';
             return newValue + val;

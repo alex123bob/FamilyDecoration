@@ -15,7 +15,14 @@ Ext.define('FamilyDecoration.model.SupplierMaterial', {
         'auditCreatorRealName',
         'auditId',
         {name: 'auditName', type: 'string'},
-        'auditOperation',
+        {name: 'auditOperation', convert: function (val, rec){
+            if (val === 'delete') {
+                return 'del'
+            }
+            else {
+                return val;
+            }
+        }},
         'auditPrice',
         'auditProfessionType',
         {name: 'auditUnit', type: 'string'},
