@@ -33,7 +33,7 @@
     <link href="./favicon.ico" type="image/x-icon" rel="shortcut icon" /> 
     <meta http-equiv="content-type" content="text/html;charset=utf-8">
     <script type="text/javascript">
-        var DEBUG = <?php echo $isLocal ?> ? true : false;
+        var DEBUG = <?php echo $isLocal; ?> ? true : false;
         if (<?php echo isset($_GET["force_debug"]) ? "true" : "false"; ?> == true) {
             DEBUG = true;
         }
