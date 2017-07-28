@@ -54,7 +54,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                 layout: 'fit',
                 items: [
                     {
-                        xtype: 'contractmanagement-projectcontract'
+                        xtype: 'contractmanagement-projectcontract',
+                        preview: true
                     }
                 ],
                 bbar: [
