@@ -13,8 +13,62 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
     initComponent: function () {
         var me = this;
 
+        /**
+         * create payment area for four installments respectively. 
+         * @param {*installment} index the ?st installment
+         */
+        function createPaymentArea (index){
+            var titleArr = ['首期工程款', '二期工程款', '三期工程款', '尾款'];
+            return {
+                xtype: 'fieldset',
+                title: titleArr[index],
+                layout: 'vbox',
+                defaults: {
+                    flex: 1,
+                    width: '100%'
+                },
+                defaultType: 'fieldcontainer',
+                items: [
+                    {
+                        layout: 'hbox',
+                        defaults: {
+                            flex: 1,
+                            margin: '0 4 0 0'
+                        },
+                        items: [
+                            {
+                                xtype: 'datefield',
+                                fieldLabel: '日期'
+                            },
+                            {
+                                xtype: 'textfield',
+                                fieldLabel: '金额',
+                                readOnly: true
+                            }
+                        ]
+                    },
+                    {
+                        xtype: 'displayfield',
+                        fieldLabel: '第一笔',
+                        value: 'xxxxx'
+                    },
+                    {
+                        xtype: 'displayfield',
+                        fieldLabel: '第二笔',
+                        value: 'xxxxx'
+                    },
+                    {
+                        xtype: 'displayfield',
+                        fieldLabel: '第三笔',
+                        value: 'xxxxx'
+                    }
+                ]
+            };
+        }
+
         me.items = [
             {
+                autoScroll: true,
                 layout: 'anchor',
                 defaults: {
                     anchor: '100%',
@@ -139,9 +193,80 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                     },
                     {
                         xtype: 'textfield',
-                        fieldLabel: '合同总额'
+                        fieldLabel: '合同总额',
+                        anchor: '40%'
+                    },
+                    createPaymentArea(0),
+                    createPaymentArea(1),
+                    createPaymentArea(2),
+                    createPaymentArea(3),
+                    {
+                        xtype: 'fieldset',
+                        title: '附加条款',
+                        layout: 'vbox',
+                        defaultType: 'fieldcontainer',
+                        defaults: {
+                            flex: 1,
+                            width: '100%'
+                        },
+                        items: [
+                            {
+                                layout: 'hbox',
+                                defaults: {
+                                },
+                                items: [
+                                    {
+                                        xtype: 'displayfield',
+                                        fieldLabel: '1',
+                                        value: 'xxxxx',
+                                        flex: 1
+                                    },
+                                    {
+                                        xtype: 'button',
+                                        text: '编辑',
+                                        width: 50
+                                    },
+                                    {
+                                        xtype: 'button',
+                                        text: '删除',
+                                        width: 50
+                                    }
+                                ]
+                            },
+                            {
+                                layout: 'hbox',
+                                defaults: {
+                                },
+                                items: [
+                                    {
+                                        xtype: 'displayfield',
+                                        fieldLabel: '2',
+                                        value: 'xxxxx',
+                                        flex: 1
+                                    },
+                                    {
+                                        xtype: 'button',
+                                        text: '编辑',
+                                        width: 50
+                                    },
+                                    {
+                                        xtype: 'button',
+                                        text: '删除',
+                                        width: 50
+                                    }
+                                ]
+                            },
+                            {
+                                xtype: 'button',
+                                text: '添加',
+                                width: 50
+                            }
+                        ]
                     },
                     {
+                        xtype: 'button',
+                        text: '添加附件',
+                        anchor: '12%'
                     }
                 ]
             }

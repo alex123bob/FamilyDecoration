@@ -14,9 +14,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
     initComponent: function () {
         var me = this;
 
-        me.items = DEBUG ? [{
-            html: '正在開發中'
-        }] : [
+        me.items = [
             {
                 hideHeaders: true,
                 title: '合同种类',

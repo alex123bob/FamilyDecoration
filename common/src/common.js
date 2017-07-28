@@ -161,6 +161,7 @@ Ext.require('Ext.form.field.Date', function () {
     Ext.override(Ext.form.field.Date, {
         cleanBtn: false, // config parameter, if you need, just set it as true. then a clean button will pop up beside today button used to clean value in inputEl.
         cleanHandler: Ext.emptyFn,
+        editable: false,
         onTriggerClick: function () {
             var me = this;
             me.callParent(arguments);
