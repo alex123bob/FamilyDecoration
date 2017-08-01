@@ -37,6 +37,11 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                             dataIndex: 'name'
                         }
                     ]
+                },
+                listeners: {
+                    selectionchange: function (cmp, sels, opts){
+
+                    }
                 }
             },
             {

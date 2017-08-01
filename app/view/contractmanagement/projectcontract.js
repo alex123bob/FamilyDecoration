@@ -1,5 +1,5 @@
 Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
-    extend: 'Ext.container.Container',
+    extend: 'Ext.panel.Panel',
     alias: 'widget.contractmanagement-projectcontract',
     requires: [
 
@@ -8,11 +8,25 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
     },
     defaultType: 'form',
     layout: 'fit',
+    header: false,
     preview: false, // whether current contract is editable or not.
 
     initComponent: function () {
         var me = this,
             preview = me.preview;
+
+        me.tbar = [
+            '->',
+            {
+                hidden: preview,
+                xtype: 'button',
+                text: '折扣',
+                icon: 'resources/img/contract_discount.png',
+                handler: function (){
+
+                }
+            }
+        ];
 
         /**
          * create payment area for four installments respectively. 
