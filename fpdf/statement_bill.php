@@ -26,28 +26,24 @@ $projectSvc = BaseSvc::getSvc('Project');
 $billAuditSvc = BaseSvc::getSvc('StatementBillAudit');
 $professionTypeSvc = BaseSvc::getSvc('ProfessionType');
 
-$bill = $billSvc->get($_REQUEST);
-if($bill['total'] == 1 && $bill['data'][0]['billType'] == 'mtf'){
+$bills = $billSvc->get($_REQUEST);
+if($bills['total'] == 0){
+	echo '<html><script type="text/javascript">document.write(decodeURIComponent("%E6%89%BE%E4%B8%8D%E5%88%B0%E5%AF%B9%E5%BA%94%E7%9A%84%E5%8D%95%E6%8D%AE!"));</script></html>';
+	die();
+}else if($bills['total'] == 1 && $bills['data'][0]['billType'] == 'rbm') {
+	echo '<html><script type="text/javascript">location.href = location.href.replace(\'statement_bill.php\', \'rbm_bill.php\')</script></html>';
+	die();
+}else if($bills['total'] == 1 && $bills['data'][0]['billType'] == 'mtf'){
 	echo '<html><script type="text/javascript">location.href = location.href.replace(\'statement_bill.php\', \'material_order_pay.php\')</script></html>';
 	die();
 }
-
-$bill = $billSvc->get($_REQUEST);
-if(count($bill['data']) == 0){
-	$bills = $billSvc->get($_REQUEST);
-	if($bills['total'] == 1 && $bills['data'][0]['billType'] == 'rbm') {
-		echo '<html><script type="text/javascript">location.href = location.href.replace(\'statement_bill.php\', \'rbm_bill.php\')</script></html>';
-	} else {
-		echo '<html><script type="text/javascript">document.write(decodeURIComponent("%E6%89%BE%E4%B8%8D%E5%88%B0%E5%AF%B9%E5%BA%94%E7%9A%84%E5%8D%95%E6%8D%AE!"));</script></html>';
-	}
-	die();
-}
-$bill = $bill['data'][0];
+$bill = $bills['data'][0];
 $billId = $bill['id'];
 $name = str2GBK($bill['payee']);
 $phone = $bill['phoneNumber'];
 $projects = $projectSvc->get(array('projectId'=>$bill['projectId']));
-$captain = str2GBK($projects['data'][0]['captain']);
+
+$captain = str2GBK($projects['total'] > 0 ? $projects['data'][0]['captain'] : 'unknown');
 $times = $bill['payedTimes'];
 $address = str2GBK($bill['projectName']);
 $totalFee = $bill['totalFee'];
