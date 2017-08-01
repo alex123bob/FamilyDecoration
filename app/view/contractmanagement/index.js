@@ -4,7 +4,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
     requires: [
         'FamilyDecoration.view.progress.ProjectListByCaptain',
         'FamilyDecoration.store.ContractType',
-        'FamilyDecoration.view.contractmanagement.ProjectContract'
+        'FamilyDecoration.view.contractmanagement.ProjectContract',
+        'FamilyDecoration.view.contractmanagement.EditContract'
     ],
     layout: 'hbox',
     defaults: {
@@ -63,7 +64,10 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                         text: '添加',
                         icon: 'resources/img/contract_add.png',
                         handler: function (){
-
+                            var win = Ext.create('FamilyDecoration.view.contractmanagement.EditContract', {
+                                
+                            });
+                            win.show();
                         }
                     },
                     {

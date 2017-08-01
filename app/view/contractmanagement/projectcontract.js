@@ -265,6 +265,17 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         text: '添加附件',
                         anchor: '12%',
                         hidden: preview
+                    },
+                    {
+                        xtype: 'fieldset',
+                        title: '折扣信息',
+                        layout: 'vbox',
+                        name: 'discount',
+                        defaultType: 'textfield',
+                        defaults: {
+                            flex: 1,
+                            width: '100%'
+                        }
                     }
                 ]
             }
