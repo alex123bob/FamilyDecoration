@@ -93,6 +93,12 @@
 		$res = is_null($str) ? "" : mb_convert_encoding($str,"gbk","utf-8");
 		return $res;
 	};
+	function str2UTF8($str){
+		$res = '';
+		#$res = is_null($str) ? "" : iconv("UTF-8","GB2312//IGNORE",$str);  //平方米等utf8单位会丢失
+		$res = is_null($str) ? "" : mb_convert_encoding($str,"utf-8","gbk");
+		return $res;
+	};
 	set_error_handler("ErrorHandler");
 	set_exception_handler("ExceptionHandler");
 	

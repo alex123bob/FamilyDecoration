@@ -52,8 +52,13 @@ $professionTypeName = str2GBK($professionTypeSvc->get(array('_fields'=>'cname','
 $requiredFee = $bill['claimAmount'];
 $cny = str2GBK(cny($requiredFee));
 
-$billItems = $billItemSvc->get(array('billId'=>$_REQUEST['id']));
-$billItems = $billItems['data'];
+if($bill['billType'] == 'qgd') { //质保金
+	$billItems =  array();
+	array_push($billItems, array('serialNumber'=>'0', 'billItemName'=>str2UTF8('质保金'), 'unit'=>str2UTF8('元'), 'amount'=>'1', 'unitPrice'=>$bill['totalFee'], 'subtotal'=>$bill['totalFee']));
+} else {
+	$billItems = $billItemSvc->get(array('billId'=>$_REQUEST['id']));
+	$billItems = $billItems['data'];
+}
 $action = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "view";
 $pdf=new PDF('P','mm', 'A4'); //创建新的FPDF对象 
 $pdf->AddGBFont(); //设置中文字体 
