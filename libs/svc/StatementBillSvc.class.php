@@ -19,18 +19,18 @@ class StatementBillSvc extends BaseSvc
 	);
 
 	public function get($q){
-		$this->appendSelect = ', p.projectName , p.captain ';
-		$this->appendJoin = 'left join project p on p.projectId = statement_bill.projectId ';
-		$this->appendWhere = " and ( p.isDeleted = 'false' or p.isDeleted is null)";
+		$this->appendSelect = ', p.projectName , p.captain,u1.realName as payerRealName, u2.realName as creatorRealName, u3.realName as checkerRealName ';
+		$this->appendJoin = 'left join project p on p.projectId = statement_bill.projectId '
+						  . 'left join user u1 on u1.name = statement_bill.payer '
+						  . 'left join user u2 on u2.name = statement_bill.creator '
+						  . 'left join user u3 on u3.name = statement_bill.checker ';
+		$this->appendWhere .= " and ( p.isDeleted = 'false' or p.isDeleted is null)";
 		$res = parent::get($q);
 		foreach ($res['data'] as &$value) {
 			$value['statusName'] = self::$ALL_STATUS[$value['status']];
 			$value['billTypeName'] = self::$BILLTYPE[$value['billType']];
 			$value['totalFeeUppercase'] = cny($value['totalFee']);
 		}
-		BaseSvc::getSvc('User')->appendRealName($res['data'],'payer');
-		BaseSvc::getSvc('User')->appendRealName($res['data'],'creator');
-		BaseSvc::getSvc('User')->appendRealName($res['data'],'checker');
 		return $res;
 	}
 
@@ -251,19 +251,28 @@ class StatementBillSvc extends BaseSvc
 	}
 
 	public function getLaborAndPrePaid($q){
-		$q['billType'] = 'reg';
-		$this->appendSelect = ",tp.cname as professionTypeName ";
-		$this->appendJoin = "left join profession_type tp on tp.value = $this->tableName.professionType";
+		$this->appendSelect = ',tp.cname as professionTypeName, u.realName as checkerRealName';
+		$this->appendJoin = ' left join profession_type tp on tp.value = statement_bill.professionType'
+						  .	' left join user u on u.name = statement_bill.checker '
+						  . ' left join project p on p.projectId = statement_bill.projectId ';
 		$data = $this->get($q);
 
-		$userSvc = parent::getSvc('User');
-		$userSvc->appendRealName($data['data'],'checker');
-
-		//查预付款
+		//查所有预付款
 		global $TableMapping;
 		global $mysql;
-		$sql = 'select count(1) as count,sum(totalFee) as totalPreFee,projectId,payee,professionType from statement_bill where billType = \'ppd\' and isDeleted = \'false\' group by projectId,payee,professionType;';
-		$rows = $mysql->DBGetAsMap($sql);
+		$sql = 'select count(1) as count,sum(totalFee) as totalPreFee,projectId,payee,professionType from statement_bill ';
+		$where = ' where billType = \'ppd\' and isDeleted = \'false\' ';
+		$groupby = ' group by projectId,payee,professionType ;';
+		$params = array();
+		if(isset($q['projectId'])){
+			$where .= ' and projectId = \'?\'';
+			array_push($params, $q['projectId']);
+		}
+		if(isset($q['professionType'])){
+			$where .= ' and professionType = \'?\'';
+			array_push($params, $q['professionType']);
+		}
+		$rows = $mysql->DBGetAsMap($sql.$where.$groupby, $params);
 		$map2 = array();
 		foreach ($rows as $item) {
 			$combinedkey = $item['projectId'].'-'.$item['payee'].'-'.$item['professionType'];
@@ -271,7 +280,7 @@ class StatementBillSvc extends BaseSvc
 		}
 
 		foreach ($data['data'] as &$item) {
-			if($item['billType']!='reg'){
+			if($item['billType'] != 'reg'){
 				$item['billName'] = $item['billName']."(".self::$BILLTYPE[$item['billType']].")";
 				continue;
 			}
@@ -285,19 +294,6 @@ class StatementBillSvc extends BaseSvc
 				$item['remainingTotalFee'] = '';
 				$item['prePaidFee'] = '';
 			}
-		}
-		$projectSvc = parent::getSvc('Project');
-		$projectSvc->appendCaptain($data['data']);
-		
-		//追加预付款单子
-		$q['billType'] = 'ppd';
-		$this->appendSelect = ",tp.cname as professionTypeName ";
-		$this->appendJoin = "left join profession_type tp on tp.value = $this->tableName.professionType";
-		$data2 = $this->get($q);
-		$userSvc->appendRealName($data2['data'],'checker');
-		$projectSvc->appendCaptain($data2['data']);
-		foreach ($data2['data'] as $key => $value) {
-			array_push($data['data'], $value);
 		}
 		return $data;
 	}

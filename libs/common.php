@@ -123,13 +123,14 @@
 		}
 		$sessionId = session_id();
 		$userName = $_SESSION["name"];
-		$res = $mysql->DBGetOneRow("`online_user`", "count(*) as count", "`userName` = '$userName'  and `sessionId` = '$sessionId' and `offlineTime` is null ");
-		if($res["count"] != 1){
-			header('HTTP/1.1 401 already login else');
-			session_unset();
-			session_destroy();
-			throw new BaseException($userName."已在别处登陆！");
-		}
+		// 同时登陆暂不顶下去.
+		// $res = $mysql->DBGetOneRow("`online_user`", "count(*) as count", "`userName` = '$userName'  and `sessionId` = '$sessionId' and `offlineTime` is null ");
+		// if($res["count"] != 1){
+		// 	header('HTTP/1.1 401 already login else');
+		// 	session_unset();
+		// 	session_destroy();
+		// 	throw new BaseException($userName."已在别处登陆！");
+		// }
 		$mysql->DBUpdate("online_user",array('lastUpdateTime'=>'now()'),"`userName` = '?'  and `sessionId` = '?' and `offlineTime` is null ",array($userName,$sessionId));
 		return array("status" => "ok","errMsg" =>"");
 	}

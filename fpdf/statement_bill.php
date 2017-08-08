@@ -109,19 +109,24 @@ $pdf->Cell(175,5,'','RB','','L');
 
 
 $pdf->Ln();
-$audits = $billAuditSvc->get(array('billId'=>$billId));
 $auditstr = array();
-foreach ($audits['data'] as $key => $item) {
-	if($item['newStatus'] == 'new' || $item['orignalStatus'] == 'new') {
-		continue;
-	}
-	$s = str2GBK($item['operatorRealName'].'('.$item['newStatusName'].')');
-	if($item['drt'] == -1){
-		array_pop($auditstr);
-	} else {
-		array_push($auditstr, $s);
+if($bill['billType'] == 'qgd') { //质保金
+	array_push($auditstr, str2GBK($bill['checkerRealName']));
+} else {
+	$audits = $billAuditSvc->get(array('billId'=>$billId));
+	foreach ($audits['data'] as $key => $item) {
+		if($item['newStatus'] == 'new' || $item['orignalStatus'] == 'new') {
+			continue;
+		}
+		$s = str2GBK($item['operatorRealName'].'('.$item['newStatusName'].')');
+		if($item['drt'] == -1){
+			array_pop($auditstr);
+		} else {
+			array_push($auditstr, $s);
+		}
 	}
 }
+
 $pdf->Cell(11,21,"审核人 : ".join($auditstr,'→'));
 $pdf->Ln();
 $pdf->Output($address.".pdf", $action == "view" ? "I" : "D" );
