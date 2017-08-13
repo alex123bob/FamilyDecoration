@@ -16,6 +16,19 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             preview = me.preview;
 
         me.tbar = [
+            {
+                hidden: preview,
+                xtype: 'button',
+                text: '添加工程款',
+                icon: 'resources/img/contract_add_projectfee.png',
+                handler: function (){
+                    var index = getAppendixIndex(),
+                        form = this.up('panel').down('form');
+                    if (index !== -1) {
+                        form.insert(index, createPaymentArea(countProjectPaymentArea()));
+                    }
+                }
+            },
             '->',
             {
                 hidden: preview,
@@ -28,20 +41,45 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             }
         ];
 
+        function getAppendixIndex (){
+            var form = me.down('form'),
+                index;
+            form.items.each(function (item, i, self){
+                if (item.name === 'appendix') {
+                    index = i;
+                    return false;
+                }
+            });
+
+            return (index ? index : -1);
+        }
+
+        function countProjectPaymentArea (){
+            var form = me.down('form'),
+                count = 0;
+            form.items.each(function (item, i, self){
+                if (item.name === 'projectPaymentArea') {
+                    count++;
+                }
+            });
+            return count;
+        }
+
         /**
          * create payment area for four installments respectively. 
          * @param {*installment} index the ?st installment
          */
         function createPaymentArea(index) {
-            var titleArr = ['首期工程款', '二期工程款', '三期工程款', '尾款'];
+            var title = NoToChinese(index + 1) + '期工程款';
             return {
                 xtype: 'fieldset',
-                title: titleArr[index],
+                title: title,
                 layout: 'vbox',
                 defaults: {
                     flex: 1,
                     width: '100%'
                 },
+                name: 'projectPaymentArea',
                 defaultType: 'fieldcontainer',
                 items: [
                     {
@@ -61,21 +99,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 readOnly: true
                             }
                         ]
-                    },
-                    {
-                        xtype: 'displayfield',
-                        fieldLabel: '第一笔',
-                        value: 'xxxxx'
-                    },
-                    {
-                        xtype: 'displayfield',
-                        fieldLabel: '第二笔',
-                        value: 'xxxxx'
-                    },
-                    {
-                        xtype: 'displayfield',
-                        fieldLabel: '第三笔',
-                        value: 'xxxxx'
                     }
                 ]
             };
@@ -241,10 +264,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         fieldLabel: '合同总额',
                         anchor: '40%'
                     },
-                    createPaymentArea(0),
-                    createPaymentArea(1),
-                    createPaymentArea(2),
-                    createPaymentArea(3),
                     {
                         xtype: 'fieldset',
                         title: '附加条款',

@@ -140,7 +140,7 @@ Ext.require('Ext.window.MessageBox', function () {
                 fn(inputValue);
             });
         },
-        success: function (msg, fn, scope){
+        success: function (msg, fn, scope) {
             return swal({
                 title: '成功',
                 text: msg.replace(/\n/gi, '<br />'),
@@ -172,7 +172,7 @@ Ext.require('Ext.form.field.Date', function () {
                     handler: function () {
                         me.setValue('');
                         me.triggerBlur(); // this is private functionality, not recommended. any better idea?
-                        if (typeof me.cleanHandler == 'function'){
+                        if (typeof me.cleanHandler == 'function') {
                             me.cleanHandler();
                         }
                     }
@@ -188,9 +188,9 @@ Ext.require('Ext.toolbar.Toolbar', function () {
     Ext.toolbar.Toolbar.prototype.enableOverflow = true;
 });
 
-Ext.require('Ext.grid.Panel', function() {
+Ext.require('Ext.grid.Panel', function () {
     Ext.override(Ext.grid.Panel, {
-        focusRow: function(row) {
+        focusRow: function (row) {
             var selModel = this.getSelectionModel(),
                 gridView = this.getView(),
                 st = this.getStore(),
@@ -615,7 +615,7 @@ Ext.require('Ext.Ajax', function () {
             Ext.defer(function () {
                 Ext.Msg.error(obj.errMsg, logoutWithoutCleanningSession);
                 // logout ten seconds after detecting user logined in another device.
-                Ext.defer(function (){
+                Ext.defer(function () {
                     logoutWithoutCleanningSession();
                 }, 10000);
             }, 300);
@@ -790,6 +790,30 @@ function accDiv(arg1, arg2) {
 Number.prototype.div = function (arg) {
     return accDiv(this, arg);
 };
+
+function NoToChinese(num) {
+    if (!/^\d*(\.\d*)?$/.test(num)) { alert("Number is wrong!"); return "Number is wrong!"; }
+    var AA = new Array("零", "一", "二", "三", "四", "五", "六", "七", "八", "九");
+    var BB = new Array("", "十", "百", "千", "万", "亿", "点", "");
+    var a = ("" + num).replace(/(^0*)/g, "").split("."), k = 0, re = "";
+    for (var i = a[0].length - 1; i >= 0; i--) {
+        switch (k) {
+            case 0: re = BB[7] + re; break;
+            case 4: if (!new RegExp("0{4}\\d{" + (a[0].length - i - 1) + "}$").test(a[0]))
+                re = BB[4] + re; break;
+            case 8: re = BB[5] + re; BB[7] = BB[5]; k = 0; break;
+        }
+        if (k % 4 == 2 && a[0].charAt(i + 2) != 0 && a[0].charAt(i + 1) == 0) re = AA[0] + re;
+        if (a[0].charAt(i) != 0) re = AA[a[0].charAt(i)] + BB[k % 4] + re; k++;
+    }
+
+    if (a.length > 1) //加上小数部分(如果有小数部分) 
+    {
+        re += BB[6];
+        for (var i = 0; i < a[1].length; i++) re += AA[a[1].charAt(i)];
+    }
+    return re;
+}
 
 function requestChannel(receiver, content) {
     if (privateChannel) {
@@ -1165,35 +1189,35 @@ Ext.require('Ext.form.field.VTypes', function () {
             return function (v) {
                 return re.test(v);
             };
-        } (),
+        }(),
         'phoneText': '手机号码错误, 例如: 123-456-7890 (破折号可选) 或者 (123) 456-7890',
         'fax': function () {
             var re = /^[\(\)\.\- ]{0,}[0-9]{3}[\(\)\.\- ]{0,}[0-9]{3}[\(\)\.\- ]{0,}[0-9]{4}[\(\)\.\- ]{0,}$/;
             return function (v) {
                 return re.test(v);
             };
-        } (),
+        }(),
         'faxText': 'The fax format is wrong',
         'zipCode': function () {
             var re = /^\d{5}(-\d{4})?$/;
             return function (v) {
                 return re.test(v);
             };
-        } (),
+        }(),
         'zipCodeText': 'The zip code format is wrong, e.g., 94105-0011 or 94105',
         'ssn': function () {
             var re = /^\d{3}-\d{2}-\d{4}$/;
             return function (v) {
                 return re.test(v);
             };
-        } (),
+        }(),
         'ssnText': 'The SSN format is wrong, e.g., 123-45-6789',
         'mail': function () {
             var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
             return function (v) {
                 return re.test(v);
             }
-        } (),
+        }(),
         'mailText': '邮箱格式错误，请重新输入'
     });
 });
