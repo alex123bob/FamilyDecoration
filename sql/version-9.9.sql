@@ -3,7 +3,6 @@ begin;
 CREATE TABLE `contract_engineering` (
   `id` varchar(20) NOT NULL DEFAULT '',
   `businessId` varchar(20) DEFAULT NULL COMMENT '业务ID',
-  `customer` varchar(20) DEFAULT NULL COMMENT '客户',
   `totalPrice` float(10,2) DEFAULT NULL COMMENT '合同总价',
   `discount` float(10,2) DEFAULT NULL COMMENT '打折',
   `isDeleted` varchar(5) DEFAULT 'false',
