@@ -10,6 +10,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
     layout: 'fit',
     header: false,
     preview: false, // whether current contract is editable or not.
+    business: undefined,
+    type: undefined,
 
     initComponent: function () {
         var me = this,
@@ -163,7 +165,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         items: [
                             {
                                 xtype: 'displayfield',
-                                fieldLabel: '客户姓名'
+                                fieldLabel: '客户姓名',
+                                value: me.business.get('customer')
                             },
                             {
                                 hidden: preview,
@@ -180,7 +183,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         items: [
                             {
                                 xtype: 'displayfield',
-                                fieldLabel: '客户联系'
+                                fieldLabel: '客户联系',
+                                value: me.business.get('custContact')
                             },
                             {
                                 xtype: preview ? 'displayfield' : 'textfield',
@@ -217,11 +221,13 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         items: [
                             {
                                 xtype: 'displayfield',
-                                fieldLabel: '设计师'
+                                fieldLabel: '设计师',
+                                value: me.business.get('designer')
                             },
                             {
                                 xtype: 'displayfield',
-                                fieldLabel: '业务员'
+                                fieldLabel: '业务员',
+                                value: me.business.get('salesman')
                             },
                             {
                                 xtype: preview ? 'displayfield' : 'textfield',
