@@ -13,6 +13,10 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditContract', {
     maximizable: true,
     modal: true,
 
+    business: undefined,
+    type: undefined,
+    project: undefined,
+
     initComponent: function (){
         var me = this;
 
@@ -20,6 +24,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditContract', {
 
         me.items = [
             {
+                business: me.business,
+                type: me.type,
                 xtype: 'contractmanagement-projectcontract'
             }
         ];
