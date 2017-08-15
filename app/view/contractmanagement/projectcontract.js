@@ -133,6 +133,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             return {
                 layout: 'hbox',
                 name: 'appendix',
+                updateIndex: function (index){
+                    this.down('displayfield').setFieldLabel((index + 1).toString());
+                },
                 defaults: {
                 },
                 items: [
@@ -150,9 +153,15 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                     },
                     {
                         xtype: 'button',
-                        text: '删除',
-                        width: 50,
-                        hidden: preview
+                        text: 'X',
+                        width: 30,
+                        hidden: preview,
+                        handler: function (){
+                            var hbox = this.ownerCt,
+                                fieldset = hbox.ownerCt;
+                            fieldset.remove(hbox);
+                            updateAppendix();
+                        }
                     }
                 ]
             }
@@ -160,7 +169,15 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
 
         function countAppendix (){
             return Ext.ComponentQuery.query('[name="appendix"]').length;
-        } 
+        }
+        
+        function updateAppendix (){
+            var ct = me.down('[name="appendixCt"]'),
+                group = ct.items.items.slice(1);
+            Ext.each(group, function (fc, index){
+                fc.updateIndex(index);
+            });
+        }
 
         me.getValues = function (){
             return {
@@ -414,7 +431,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                         ct = btn.ownerCt;
                                     Ext.Msg.read('请输入附加条款内容', function (txt){
                                         var config = createAppendix(countAppendix() + 1, txt),
-                                            index = config.items.length - 1;
+                                            index = config.items.length;
                                         ct.insert(index, config);
                                         swal.close();
                                     });
