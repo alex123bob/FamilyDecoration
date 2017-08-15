@@ -47,7 +47,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             var form = me.down('form'),
                 index;
             form.items.each(function (item, i, self){
-                if (item.name === 'appendix') {
+                if (item.name === 'appendixCt') {
                     index = i;
                     return false;
                 }
@@ -81,6 +81,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                     flex: 1,
                     width: '100%'
                 },
+                updateTitle: function (index){
+                    this.setTitle(NoToChinese(index + 1) + '期工程款');
+                },
                 name: 'projectPaymentArea',
                 defaultType: 'fieldcontainer',
                 items: [
@@ -99,6 +102,18 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 xtype: preview ? 'displayfield' : 'textfield',
                                 fieldLabel: '金额',
                                 readOnly: true
+                            },
+                            preview ? {} : {
+                                xtype: 'button',
+                                text: 'X',
+                                flex: null,
+                                width: 30,
+                                handler: function (){
+                                    var form = me.down('form'),
+                                        cmp = this.ownerCt.ownerCt;
+                                    form.remove(cmp);
+                                    updatePaymentArea();
+                                }
                             }
                         ]
                     }
@@ -106,9 +121,18 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             };
         }
 
+        function updatePaymentArea (){
+            var form = me.down('form'),
+                group = Ext.ComponentQuery.query('[name="projectPaymentArea"]');
+            Ext.each(group, function (fieldset, index){
+                fieldset.updateTitle(index);
+            });
+        }
+
         function createAppendix(index, content) {
             return {
                 layout: 'hbox',
+                name: 'appendix',
                 defaults: {
                 },
                 items: [
@@ -133,6 +157,10 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                 ]
             }
         }
+
+        function countAppendix (){
+            return Ext.ComponentQuery.query('[name="appendix"]').length;
+        } 
 
         me.getValues = function (){
             return {
@@ -369,7 +397,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         xtype: 'fieldset',
                         title: '附加条款',
                         layout: 'vbox',
-                        name: 'appendix',
+                        name: 'appendixCt',
                         defaultType: 'fieldcontainer',
                         defaults: {
                             flex: 1,
@@ -385,7 +413,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                     var btn = this,
                                         ct = btn.ownerCt;
                                     Ext.Msg.read('请输入附加条款内容', function (txt){
-                                        var config = createAppendix('N', txt),
+                                        var config = createAppendix(countAppendix() + 1, txt),
                                             index = config.items.length - 1;
                                         ct.insert(index, config);
                                         swal.close();
