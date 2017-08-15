@@ -134,6 +134,22 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             }
         }
 
+        me.getValues = function (){
+            return {
+                businessId: me.business.getId(),
+                totalPrice: 100,
+                sid: '330523199011061810',
+                address: 'address ts',
+                stages: [
+                    {
+                        stage: {
+                            
+                        }
+                    }
+                ]
+            }
+        }
+
         me.items = [
             {
                 autoScroll: true,
