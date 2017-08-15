@@ -246,6 +246,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             {
                                 xtype: preview ? 'displayfield' : 'textfield',
                                 fieldLabel: '签约代表',
+                                readOnly: true,
                                 listeners: {
                                     focus: function (cmp, evt, opts){
                                         var win = Ext.create('FamilyDecoration.view.contractmanagement.PickUser', {
@@ -277,16 +278,67 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             },
                             {
                                 xtype: preview ? 'displayfield' : 'datefield',
-                                fieldLabel: '开始'
+                                fieldLabel: '开始',
+                                itemId: 'startTime',
+                                validator: function (val){
+                                    var ownerCt = this.ownerCt,
+                                        startTime = this,
+                                        endTime = ownerCt.getComponent('endTime'),
+                                        totalProjectTime = ownerCt.getComponent('totalProjectTime'),
+                                        total = endTime.getValue() - startTime.getValue();
+
+                                    if (total < 0) {
+                                        totalProjectTime.setValue('');
+                                        return '开始时间不能大于结束时间';
+                                    }
+                                    else {
+                                        totalProjectTime.setValue(total / 1000 / 60 / 60 / 24 + '天');
+                                        endTime.clearInvalid();
+                                        return true;
+                                    }
+                                },
+                                listeners: {
+                                    change: function (cmp, newVal, oldVal, opts){
+                                        var ownerCt = cmp.ownerCt,
+                                            startTime = this,
+                                            endTime = ownerCt.getComponent('endTime');   
+                                    }
+                                }
                             },
                             {
                                 xtype: preview ? 'displayfield' : 'datefield',
                                 fieldLabel: '结束',
-                                margin: '0 8 0 8'
+                                itemId: 'endTime',
+                                margin: '0 8 0 8',
+                                validator: function (val){
+                                    var ownerCt = this.ownerCt,
+                                        endTime = this,
+                                        startTime = ownerCt.getComponent('startTime'),
+                                        totalProjectTime = ownerCt.getComponent('totalProjectTime'),
+                                        total = endTime.getValue() - startTime.getValue();
+
+                                    if (total < 0) {
+                                        totalProjectTime.setValue('');
+                                        return '开始时间不能大于结束时间';
+                                    }
+                                    else {
+                                        totalProjectTime.setValue(total / 1000 / 60 / 60 / 24 + '天');
+                                        startTime.clearInvalid();
+                                        return true;
+                                    }
+                                },
+                                listeners: {
+                                    change: function (cmp, newVal, oldVal, opts){
+                                        var ownerCt = cmp.ownerCt,
+                                            endTime = this,
+                                            startTime = ownerCt.getComponent('startTime');
+                                    }
+                                }
                             },
                             {
                                 xtype: 'displayfield',
                                 flex: 0.5,
+                                itemId: 'totalProjectTime',
                                 labelWidth: 50,
                                 fieldLabel: '总工期'
                             }
