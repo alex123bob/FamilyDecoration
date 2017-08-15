@@ -132,7 +132,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                                             {
                                                 header: false,
                                                 xtype: 'businessaggregation-businesslist',
-                                                needFilter: false,
                                                 itemDblClick: Ext.emptyFn
                                             }
                                         ],

@@ -2,7 +2,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.contractmanagement-projectcontract',
     requires: [
-
+        'FamilyDecoration.view.contractmanagement.PickUser'
     ],
     defaults: {
     },
@@ -201,7 +201,21 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             {
                                 xtype: preview ? 'displayfield' : 'textfield',
                                 fieldLabel: '项目经理',
-                                readOnly: true
+                                readOnly: true,
+                                listeners: {
+                                    focus: function (cmp, evt, opts){
+                                        var win = Ext.create('FamilyDecoration.view.contractmanagement.PickUser', {
+                                            userFilter: /^003-\d{3}$/i,
+                                            callback: function (rec){
+                                                cmp.setValue(rec.get('realname'));
+                                                cmp.nextSibling().setValue(rec.get('phone'));
+                                                win.close();
+                                            }
+                                        });
+
+                                        win.show();
+                                    }
+                                }
                             },
                             {
                                 xtype: 'displayfield',
@@ -231,7 +245,20 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             },
                             {
                                 xtype: preview ? 'displayfield' : 'textfield',
-                                fieldLabel: '签约代表'
+                                fieldLabel: '签约代表',
+                                listeners: {
+                                    focus: function (cmp, evt, opts){
+                                        var win = Ext.create('FamilyDecoration.view.contractmanagement.PickUser', {
+                                            // userFilter: /^003-\d{3}$/i,
+                                            callback: function (rec){
+                                                cmp.setValue(rec.get('realname'));
+                                                win.close();
+                                            }
+                                        });
+
+                                        win.show();
+                                    }
+                                }
                             }
                         ]
                     },
