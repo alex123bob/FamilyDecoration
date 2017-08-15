@@ -37,18 +37,12 @@ class ContractEngineeringSvc extends BaseSvc
 
 	public function add($q){
 		$q['@id'] = $this->getUUID();
-		notNullCheck($q,'@accountId','账户编号不能为空!');
-		notNullCheck($q,'@type','类型不能为空!');
-		notNullCheck($q,'@amount','金额不能为空!');
-		notNullCheck($q,'@balance','余额不能为空!');
-		notNullCheck($q,'@refId','关联单据编号不能为空!');
-		notNullCheck($q,'@refType','关联单据类型不能为空!');
-		$q['@operator'] = $_SESSION['name'];
+		notNullCheck($q,'@businessId','业务ID不能为空!');
+		notNullCheck($q,'@totalPrice','合同总价不能为空!');
+		notNullCheck($q,'@sid','身份证号不能为空!');
+		notNullCheck($q,'@address','装修地址不能为空!');
+		notNullCheck($q,'@stages','合同期不能为空!');
 		return parent::add($q);
-	}
-
-	public function update($q){
-		return parent::update(array('id'=>$q['id'],'@refId'=>$q['@refId']));
 	}
 }
 
