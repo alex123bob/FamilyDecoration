@@ -122,8 +122,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                                 // project contract
                                 if (type && !project) {
                                     var win = Ext.create('Ext.window.Window', {
-                                        width: 500,
-                                        height: 400,
+                                        width: 800,
+                                        height: 600,
                                         layout: 'fit',
                                         title: '选择业务',
                                         maximizable: true,
@@ -132,12 +132,16 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                                             {
                                                 header: false,
                                                 xtype: 'businessaggregation-businesslist',
-                                                itemDblClick: Ext.emptyFn
+                                                itemDblClick: function (view, rec, item, index, evt, opts){
+                                                    var btn = win.down('[name="button-selectBusiness"]');
+                                                    btn.handler();
+                                                }
                                             }
                                         ],
                                         buttons: [
                                             {
                                                 text: '确定',
+                                                name: 'button-selectBusiness',
                                                 handler: function (){
                                                     var businessList = win.down('businessaggregation-businesslist'),
                                                         business = businessList.getSelectionModel().getSelection()[0];

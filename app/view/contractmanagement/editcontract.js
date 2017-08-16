@@ -35,11 +35,13 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditContract', {
                 text: '确定',
                 handler: function (){
                     var contract = me.down('contractmanagement-projectcontract');
-                    ajaxAdd('ContractEngineering', contract.getValues(), function (){
-
-                    }, function (){
-
-                    });
+                    if (contract.getValues()) {
+                        ajaxAdd('ContractEngineering', contract.getValues(), function (){
+    
+                        }, function (){
+    
+                        });
+                    }
                 }
             },
             {

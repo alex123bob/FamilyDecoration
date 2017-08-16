@@ -1218,7 +1218,14 @@ Ext.require('Ext.form.field.VTypes', function () {
                 return re.test(v);
             }
         }(),
-        'mailText': '邮箱格式错误，请重新输入'
+        'mailText': '邮箱格式错误，请重新输入',
+        'idcard': function (){
+            var re = /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}[0-9Xx]$)/i;
+            return function (v){
+                return re.test(v);
+            }
+        }(),
+        'idcardText': '身份证号码错误，请重新输入'
     });
 });
 
