@@ -231,7 +231,7 @@ class AccountSvc extends BaseSvc
 			throw new BaseException("没有找到id为".$q['id']."的已审核账单，请确认订单存在并且已通过审核！");
 
 		//更新记录
-		parent::getSvc('AccountLog')->add(array('@desc'=>$BILL_TYPE_MAPPING_TABLE[$q['type']],'@accountId'=>$accountId,'@amount'=>$q['@fee'],'@type'=>'out','@refId'=>$q['id'],'@refType'=>$q['type'],'@balance'=>$newBalance));
+		parent::getSvc('AccountLog')->add(array('@desc'=>self::$BILL_TYPE_MAPPING_TABLE[$q['type']],'@accountId'=>$accountId,'@amount'=>$q['@fee'],'@type'=>'out','@refId'=>$q['id'],'@refType'=>$q['type'],'@balance'=>$newBalance));
 		//更新余额
 		$mysql->DBExecute("update account set balance = $newBalance where id = '".$accountId."';");
 		
