@@ -15,7 +15,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
 
     initComponent: function () {
         var me = this,
-            preview = me.preview;
+            preview = me.preview,
+            joinSymbol = '/**/';
 
         me.tbar = [
             '->',
@@ -257,10 +258,20 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                 Ext.each(valueObj.paymentDate, function (d, index, self){
                     self[index] = Ext.Date.format(d, timeFormat);
                 });
+                valueObj.paymentDate = valueObj.paymentDate.join(joinSymbol);
+                Ext.each(valueObj.paymentApproval, function (a, index, self){
+                    if (!a) {
+                        self[index] = valueObj.paymentFee[index];
+                    }
+                });
+                valueObj.paymentFee = valueObj.paymentFee.join(joinSymbol);
+                valueObj.paymentApproval = valueObj.paymentApproval.join(joinSymbol);
                 if (Ext.isArray(valueObj.extraPaymentDate)) {
                     Ext.each(valueObj.extraPaymentDate, function (d, index, self){
                         self[index] = Ext.Date.format(d, timeFormat);
                     });
+                    valueObj.extraPaymentDate = valueObj.extraPaymentDate.join(joinSymbol);
+                    valueObj.extraPaymentFee = valueObj.extraPaymentFee.join(joinSymbol);
                 }
                 else if (Ext.isDate(valueObj.extraPaymentDate)) {
                     valueObj.extraPaymentDate = Ext.Date.format(valueObj.extraPaymentDate, timeFormat);

@@ -208,6 +208,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.bulletin.BulletinInspection": "app/view/bulletin/bulletininspection.js",
   "FamilyDecoration.view.bulletin.EditBulletin": "app/view/bulletin/editbulletin.js",
   "FamilyDecoration.view.bulletin.Index": "app/view/bulletin/index.js",
+  "FamilyDecoration.view.businessaggregation.BusinessList": "app/view/businessaggregation/businesslist.js",
   "FamilyDecoration.view.businessaggregation.Index": "app/view/businessaggregation/index.js",
   "FamilyDecoration.view.businesstotransfer.Index": "app/view/businesstotransfer/index.js",
   "FamilyDecoration.view.chart.AddCategory": "app/view/chart/addcategory.js",
@@ -224,7 +225,9 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.checklog.UserLogList": "app/view/checklog/userloglist.js",
   "FamilyDecoration.view.checksignbusiness.Index": "app/view/checksignbusiness/index.js",
   "FamilyDecoration.view.checksignbusiness.TransferToProject": "app/view/checksignbusiness/transfertoproject.js",
+  "FamilyDecoration.view.contractmanagement.EditContract": "app/view/contractmanagement/editcontract.js",
   "FamilyDecoration.view.contractmanagement.Index": "app/view/contractmanagement/index.js",
+  "FamilyDecoration.view.contractmanagement.PickUser": "app/view/contractmanagement/pickuser.js",
   "FamilyDecoration.view.contractmanagement.ProjectContract": "app/view/contractmanagement/projectcontract.js",
   "FamilyDecoration.view.costanalysis.CostAnalysis": "app/view/costanalysis/costanalysis.js",
   "FamilyDecoration.view.costanalysis.Index": "app/view/costanalysis/index.js",
@@ -1408,6 +1411,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.bulletin.BulletinInspection": [],
   "FamilyDecoration.view.bulletin.EditBulletin": [],
   "FamilyDecoration.view.bulletin.Index": [],
+  "FamilyDecoration.view.businessaggregation.BusinessList": [],
   "FamilyDecoration.view.businessaggregation.Index": [],
   "FamilyDecoration.view.businesstotransfer.Index": [],
   "FamilyDecoration.view.chart.AddCategory": [],
@@ -1424,7 +1428,9 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.checklog.UserLogList": [],
   "FamilyDecoration.view.checksignbusiness.Index": [],
   "FamilyDecoration.view.checksignbusiness.TransferToProject": [],
+  "FamilyDecoration.view.contractmanagement.EditContract": [],
   "FamilyDecoration.view.contractmanagement.Index": [],
+  "FamilyDecoration.view.contractmanagement.PickUser": [],
   "FamilyDecoration.view.contractmanagement.ProjectContract": [],
   "FamilyDecoration.view.costanalysis.CostAnalysis": [],
   "FamilyDecoration.view.costanalysis.Index": [],
@@ -2811,6 +2817,9 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.bulletin.Index": [
     "widget.bulletin-index"
   ],
+  "FamilyDecoration.view.businessaggregation.BusinessList": [
+    "widget.businessaggregation-businesslist"
+  ],
   "FamilyDecoration.view.businessaggregation.Index": [
     "widget.businessaggregation-index"
   ],
@@ -2859,8 +2868,14 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.view.checksignbusiness.TransferToProject": [
     "widget.checksignbusiness-transfertoproject"
   ],
+  "FamilyDecoration.view.contractmanagement.EditContract": [
+    "widget.contractmanagement-editcontract"
+  ],
   "FamilyDecoration.view.contractmanagement.Index": [
     "widget.contractmanagement-index"
+  ],
+  "FamilyDecoration.view.contractmanagement.PickUser": [
+    "widget.contractmanagement-PickUser"
   ],
   "FamilyDecoration.view.contractmanagement.ProjectContract": [
     "widget.contractmanagement-projectcontract"
