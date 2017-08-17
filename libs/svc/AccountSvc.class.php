@@ -4,6 +4,17 @@ class AccountSvc extends BaseSvc
 
 	public static $ACCOUNT_TYPE = array('CASH'=>'现金','CYBER'=>'网银账户','ALI'=>'支付宝账户','OTHER'=>'其他种类','WECHAT'=>'微信');
 
+	public static $BILL_TYPE_MAPPING_TABLE = array(
+		'companyBonus' => '公司福利',
+		'qualityGuaranteeDeposit' => '质保金',
+		'workerSalary' => '工人工资',
+		'materialPayment' => '材料付款',
+		'reimbursementItems' => '报销款项',
+		'tax' => '税费',
+		'financialFee' => '财务费用',
+		'staffSalary' => '员工工资'
+	);
+
 	public function del($q){
 		global $mysql;
 		$q['@isDeleted'] = 'true';
@@ -220,7 +231,7 @@ class AccountSvc extends BaseSvc
 			throw new BaseException("没有找到id为".$q['id']."的已审核账单，请确认订单存在并且已通过审核！");
 
 		//更新记录
-		parent::getSvc('AccountLog')->add(array('@desc'=>$q['type'],'@accountId'=>$accountId,'@amount'=>$q['@fee'],'@type'=>'out','@refId'=>$q['id'],'@refType'=>$q['type'],'@balance'=>$newBalance));
+		parent::getSvc('AccountLog')->add(array('@desc'=>$BILL_TYPE_MAPPING_TABLE[$q['type']],'@accountId'=>$accountId,'@amount'=>$q['@fee'],'@type'=>'out','@refId'=>$q['id'],'@refType'=>$q['type'],'@balance'=>$newBalance));
 		//更新余额
 		$mysql->DBExecute("update account set balance = $newBalance where id = '".$accountId."';");
 		
