@@ -656,8 +656,14 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 width: 50,
                                 hidden: preview,
                                 handler: function (){
+                                    var btn = this,
+                                        ct = btn.ownerCt;
                                     var win = Ext.create('FamilyDecoration.view.contractmanagement.EditAppendix', {
-
+                                        callback: function (content){
+                                            var config = createAppendix(countAppendix() + 1, content);
+                                            ct.add(config);
+                                            win.close();
+                                        }
                                     });
                                     win.show();
                                     // var btn = this,

@@ -15,6 +15,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
     title: '添加附件条款',
     appendix: undefined,
     bodyPadding: 4,
+    callback: Ext.emptyFn,
 
     initComponent: function () {
         var me = this;
@@ -32,22 +33,68 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
                         fieldLabel: '内容',
                         xtype: 'textarea',
                         name: 'content',
+                        itemId: 'content',
                         height: 100,
                     },
                     {
                         fieldLabel: '调整工期',
                         xtype: 'datefield',
-                        name: 'projectPeriod'
+                        name: 'projectPeriod',
+                        itemId: 'projectPeriod'
                     },
                     {
                         fieldLabel: '调整项目经理',
                         readOnly: true,
-                        name: 'captain'
+                        name: 'captain',
+                        itemId: 'captain',
+                        listeners: {
+                            focus: function (cmp, evt, opts){
+                                var win = Ext.create('FamilyDecoration.view.contractmanagement.PickUser', {
+                                    userFilter: /^003-\d{3}$/i,
+                                    callback: function (rec){
+                                        var ct = cmp.ownerCt,
+                                            captainName = ct.getComponent('captainName');
+                                        cmp.setValue(rec.get('realname'));
+                                        captainName.setValue(rec.get('name'));
+                                        win.close();
+                                    }
+                                });
+
+                                win.show();
+                            }
+                        }
+                    },
+                    {
+                        xtype: 'hiddenfield',
+                        itemId: 'captainName',
+                        name: 'captainName'
                     },
                     {
                         fieldLabel: '调整设计师',
                         readOnly: true,
-                        name: 'designer'
+                        name: 'designer',
+                        itemId: 'designer',
+                        listeners: {
+                            focus: function (cmp, evt, opts){
+                                var win = Ext.create('FamilyDecoration.view.contractmanagement.PickUser', {
+                                    userFilter: /^002-\d{3}$/i,
+                                    callback: function (rec){
+                                        var ct = cmp.ownerCt,
+                                            designerName = ct.getComponent('designerName');
+                                        cmp.setValue(rec.get('realname'));
+                                        designerName.setValue(rec.get('name'));
+                                        win.close();
+                                    }
+                                });
+
+                                win.show();
+                            }
+                        }
+                    },
+                    {
+                        xtype: 'hiddenfield',
+                        itemId: 'designerName',
+                        name: 'designerName'
                     }
                 ]
             }
@@ -57,7 +104,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
             {
                 text: '确定',
                 handler: function (){
-
+                    var frm = me.down('form'),
+                        content = frm.getComponent('content');
+                    me.callback(content.getValue());
                 }
             },
             {
