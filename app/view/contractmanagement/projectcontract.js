@@ -110,7 +110,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             return {
                 layout: 'hbox',
                 name: 'appendix',
-                itemId: 'appendix',
+                // itemId: 'appendix',
                 updateIndex: function (index){
                     this.down('displayfield').setFieldLabel((index + 1).toString());
                 },
@@ -658,9 +658,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                     var btn = this,
                                         ct = btn.ownerCt;
                                     Ext.Msg.read('请输入附加条款内容', function (txt){
-                                        var config = createAppendix(countAppendix() + 1, txt),
-                                            index = config.items.length;
-                                        // ct.insert(index, config);
+                                        var config = createAppendix(countAppendix() + 1, txt);
                                         ct.add(config);
                                         swal.close();
                                     });
