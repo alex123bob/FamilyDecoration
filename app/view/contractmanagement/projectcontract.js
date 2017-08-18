@@ -18,6 +18,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             preview = me.preview,
             joinSymbol = '/**/';
 
+        me.percentages = [0.35, 0.30, 0.30, 0.05];
         me.tbar = [
             '->',
             {
@@ -47,8 +48,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
          * @param {*installment} index the ?st installment
          */
         function createProjectPaymentArea(index) {
-            var title = '',
-                percentages = ['35%', '30%', '30%', '5%'];
+            var title = '';
             if (index === 0) {
                 title = '首期工程款';
             }
@@ -86,7 +86,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             },
                             {
                                 xtype: preview ? 'displayfield' : 'textfield',
-                                fieldLabel: '金额(元)' + percentages[index],
+                                fieldLabel: '金额(元)' + me.percentages[index],
                                 name: 'paymentFee',
                                 readOnly: true
                             },
@@ -208,7 +208,10 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                     {
                         xtype: preview ? 'displayfield' : 'numberfield',
                         fieldLabel: '金额(元)',
-                        name: 'extraPaymentFee'
+                        name: 'extraPaymentFee',
+                        listeners : {
+                            change : calculateTotalPayments
+                        }
                     },
                     {
                         xtype: 'button',
@@ -220,10 +223,30 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 ct = area.ownerCt;
                             ct.remove(area);
                             updateExtraPaymentArea();
+                            calculateTotalPayments();
                         }
                     }
                 ]
             };
+        }
+
+        function calculateTotalPayments (){
+           var frm = me.down('form'),
+                totalPrice = frm.getComponent('totalPrice').getValue(),
+                extraPaymentCt = frm.down('[name="extraPaymentCt"]'),
+                payments = extraPaymentCt.items,
+                total = 0;
+            for(var i = 1; i < payments.length ; i++) {
+                total += payments.get(i).items.get(1).getValue();
+            }
+            var font = total == totalPrice ? '<font>' : '<font style="color:red">';
+            if(total > totalPrice) {
+                extraPaymentCt.setTitle(font + '工程款, 总计:'+total+', 多了'+(total - totalPrice)+'</font>');
+            }else if(total < totalPrice){
+                extraPaymentCt.setTitle(font + '工程款, 总计:'+total+', 少了'+(totalPrice - total)+'</font>');
+            }else{
+                extraPaymentCt.setTitle(font + '工程款, 总计:'+total+'</font>');
+            }
         }
 
         /**
@@ -231,19 +254,27 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
          */
         function calculateInstallments (){
             var frm = me.down('form'),
-                totalPriceCmp = frm.getComponent('totalPrice'),
-                percentages = [0.35, 0.30, 0.30, 0.05],
-                totalPrice = totalPriceCmp.getValue(),
-                form = totalPriceCmp.ownerCt,
-                payments = [];
-            if (Ext.isNumber(totalPrice)) {
-                for (var i = 1; i <= 4; i++) {
-                    payments.push(totalPriceCmp.ownerCt.getComponent('projectPaymentArea' + i));
-                }
-                Ext.each(payments, function (payment, index, self){
-                    payment.down('[name="paymentFee"]').setValue(totalPrice.mul(percentages[index]));
-                });
-            }
+                totalPrice = frm.getComponent('totalPrice').getValue(),
+                percentageTitles = [],
+                percentageValues = [];
+            [10, 20, 30 , 35, 40 , 45, 50].every(function(ele, index) {
+                percentageTitles.push(ele+'%');
+                percentageValues.push(Math.round((totalPrice * ele) * 0.01));
+                return true;
+            });
+            var tdstart1 = '<tr><td style="min-width: 60px;font-size: 10px;border: #999 1px solid; color: #999; padding: 1px 5px">',
+                tdstart2 = '</td><td style="min-width: 60px;font-size: 10px;border: #999 1px solid; color: #999; padding: 1px 5px">',
+                str = '<table style="border-collapse: collapse;text-align: right">' 
+                        + tdstart1 + percentageTitles.join(tdstart2)+'</td></tr>'
+                        + tdstart1 + percentageValues.join(tdstart2)+'</td></tr>'
+                    +'</table>';
+            frm.down('[name="displayPercentage"]').setValue(str);
+            var extraPaymentCt = frm.down('[name="extraPaymentCt"]'),
+                payments = extraPaymentCt.items;
+            payments.get(1) && payments.get(1).items.get(1).setValue(Math.round(me.percentages[0] * totalPrice));
+            payments.get(2) && payments.get(2).items.get(1).setValue(Math.round(me.percentages[1] * totalPrice));
+            payments.get(3) && payments.get(3).items.get(1).setValue(Math.round(me.percentages[2] * totalPrice));
+            payments.get(4) && payments.get(4).items.get(1).setValue(Math.round(me.percentages[3] * totalPrice));
         }
 
 
@@ -255,28 +286,24 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             if (frm.isValid()) {
                 valueObj.startTime = Ext.Date.format(valueObj.startTime, timeFormat);
                 valueObj.endTime = Ext.Date.format(valueObj.endTime, timeFormat);
-                Ext.each(valueObj.paymentDate, function (d, index, self){
-                    self[index] = Ext.Date.format(d, timeFormat);
-                });
-                valueObj.paymentDate = valueObj.paymentDate.join(joinSymbol);
-                Ext.each(valueObj.paymentApproval, function (a, index, self){
-                    if (!a) {
-                        self[index] = valueObj.paymentFee[index];
-                    }
-                });
-                valueObj.paymentFee = valueObj.paymentFee.join(joinSymbol);
-                valueObj.paymentApproval = valueObj.paymentApproval.join(joinSymbol);
+                var stages = [];
                 if (Ext.isArray(valueObj.extraPaymentDate)) {
                     Ext.each(valueObj.extraPaymentDate, function (d, index, self){
-                        self[index] = Ext.Date.format(d, timeFormat);
+                        stages.push(Ext.Date.format(d, timeFormat) + ':' + valueObj.extraPaymentFee[index]);
                     });
-                    valueObj.extraPaymentDate = valueObj.extraPaymentDate.join(joinSymbol);
-                    valueObj.extraPaymentFee = valueObj.extraPaymentFee.join(joinSymbol);
                 }
                 else if (Ext.isDate(valueObj.extraPaymentDate)) {
-                    valueObj.extraPaymentDate = Ext.Date.format(valueObj.extraPaymentDate, timeFormat);
+                    stages.push(Ext.Date.format(d, timeFormat) + ':' + valueObj.extraPaymentDate[index]);
                 }
 
+                valueObj.stages = stages.join(joinSymbol);
+                delete valueObj.paymentDate;
+                delete valueObj.paymentFee;
+                delete valueObj.paymentApproval;
+                delete valueObj.extraPaymentDate;
+                delete valueObj.extraPaymentFee;
+                delete valueObj.displayPercentage;
+                
                 Ext.apply(valueObj, {
                     businessId: me.business.getId()
                 });
@@ -565,18 +592,25 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         name: 'totalPrice',
                         itemId: 'totalPrice',
                         listeners: {
-                            blur: function (cmp, evt, opts){
+                            change: function (cmp, evt, opts){
                                 calculateInstallments();
                             }
                         }
                     },
-                    createProjectPaymentArea(0),
-                    createProjectPaymentArea(1),
-                    createProjectPaymentArea(2),
-                    createProjectPaymentArea(3),
+                    {
+                        xtype: 'displayfield',
+                        fieldLabel: '',
+                        name: 'displayPercentage',
+                        name: 'displayPercentage',
+                        readOnly: true
+                    },
+                    // createProjectPaymentArea(0),
+                    // createProjectPaymentArea(1),
+                    // createProjectPaymentArea(2),
+                    // createProjectPaymentArea(3),
                     {
                         xtype: 'fieldset',
-                        title: '额外付款',
+                        title: '工程款',
                         layout: 'vbox',
                         name: 'extraPaymentCt',
                         itemId: 'extraPaymentCt',
@@ -594,10 +628,13 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 handler: function (){
                                     var index = countExtraPaymentArea(),
                                         extraPaymentCt = this.up('[name="extraPaymentCt"]');
-                                    // extraPaymentCt.insert(index, createExtraPayment(index));
                                     extraPaymentCt.add(createExtraPayment(index));
                                 }
-                            }
+                            },
+                            createExtraPayment(0),
+                            createExtraPayment(1),
+                            createExtraPayment(2),
+                            createExtraPayment(3)
                         ]
                     },
                     {
