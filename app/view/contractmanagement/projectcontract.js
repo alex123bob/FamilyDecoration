@@ -2,7 +2,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.contractmanagement-projectcontract',
     requires: [
-        'FamilyDecoration.view.contractmanagement.PickUser'
+        'FamilyDecoration.view.contractmanagement.PickUser',
+        'FamilyDecoration.view.contractmanagement.EditAppendix'
     ],
     defaults: {
     },
@@ -655,13 +656,17 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 width: 50,
                                 hidden: preview,
                                 handler: function (){
-                                    var btn = this,
-                                        ct = btn.ownerCt;
-                                    Ext.Msg.read('请输入附加条款内容', function (txt){
-                                        var config = createAppendix(countAppendix() + 1, txt);
-                                        ct.add(config);
-                                        swal.close();
+                                    var win = Ext.create('FamilyDecoration.view.contractmanagement.EditAppendix', {
+
                                     });
+                                    win.show();
+                                    // var btn = this,
+                                    //     ct = btn.ownerCt;
+                                    // Ext.Msg.read('请输入附加条款内容', function (txt){
+                                    //     var config = createAppendix(countAppendix() + 1, txt);
+                                    //     ct.add(config);
+                                    //     swal.close();
+                                    // });
                                 }
                             }
                         ]
