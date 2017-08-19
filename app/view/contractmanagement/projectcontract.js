@@ -294,7 +294,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
 
 
         me.getValues = function (){
-            debugger
             var frm = me.down('form'),
                 valueObj = frm.getValues(false, false, false, true),
                 timeFormat = 'Y-m-d';
