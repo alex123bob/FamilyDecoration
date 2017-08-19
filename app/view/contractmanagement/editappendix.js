@@ -48,12 +48,27 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
                         },
                         items: [
                             {
-                                // fieldLabel: '调整工期',
+                                fieldLabel: '开始',
                                 xtype: 'datefield',
-                                name: 'projectPeriod',
-                                itemId: 'projectPeriod'
+                                name: 'startTime',
+                                itemId: 'startTime'
+                            },
+                            {
+                                fieldLabel: '结束',
+                                xtype: 'datefield',
+                                name: 'endTime',
+                                itemId: 'endTime'
                             }
-                        ]
+                        ],
+                        listeners: {
+                            expand: function (fst){
+                                var frm = fst.ownerCt,
+                                    captainFst = frm.getComponent('fieldset-captain'),
+                                    designerFst = frm.getComponent('fieldset-designer');
+                                captainFst.collapse();
+                                designerFst.collapse();
+                            }
+                        }
                     },
                     {
                         xtype: 'fieldset',
@@ -95,7 +110,16 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
                                 itemId: 'captainName',
                                 name: 'captainName'
                             }
-                        ]
+                        ],
+                        listeners: {
+                            expand: function (fst){
+                                var frm = fst.ownerCt,
+                                    projectPeriodFst = frm.getComponent('fieldset-projectPeriod'),
+                                    designerFst = frm.getComponent('fieldset-designer');
+                                projectPeriodFst.collapse();
+                                designerFst.collapse();
+                            }
+                        }
                     },
                     {
                         xtype: 'fieldset',
@@ -137,7 +161,16 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
                                 itemId: 'designerName',
                                 name: 'designerName'
                             }
-                        ]
+                        ],
+                        listeners: {
+                            expand: function (fst){
+                                var frm = fst.ownerCt,
+                                    projectPeriodFst = frm.getComponent('fieldset-projectPeriod'),
+                                    captainFst = frm.getComponent('fieldset-captain');
+                                projectPeriodFst.collapse();
+                                captainFst.collapse();
+                            }
+                        }
                     }
                 ]
             }
