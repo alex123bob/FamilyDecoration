@@ -21,6 +21,18 @@ Ext.define('FamilyDecoration.view.contractmanagement.PickUser', {
             {
                 xtype: 'gridpanel',
                 itemId: 'gridpanel-personnelList',
+                listeners: {
+                    itemdblclick: function() {
+                        var grid = me.getComponent('gridpanel-personnelList'),
+                            rec = grid.getSelectionModel().getSelection()[0];
+                        if (rec) {
+                            me.callback && me.callback(rec);
+                        }
+                        else {
+                            showMsg('请选择人员!');
+                        }
+                    }
+                },
                 columns: [
                     {
                         text: '姓名',
