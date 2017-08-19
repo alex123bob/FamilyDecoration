@@ -190,6 +190,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
         }
 
         function createExtraPayment (index){
+            var fixedArr = [0, 1, 2, 3],
+                labelStr = (fixedArr.indexOf(index) !== -1) ? NoToChinese(index + 1) + '期工程款:' : '额外付款:';
             return {
                 layout: 'hbox',
                 defaults: {
@@ -200,6 +202,13 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                 name: 'extraPaymentArea',
                 itemIndex: index,
                 items: [
+                    {
+                        xtype: 'displayfield',
+                        hideLabel: true,
+                        width: 70,
+                        value: labelStr,
+                        flex: null
+                    },
                     {
                         xtype: preview ? 'displayfield' : 'datefield',
                         fieldLabel: '付款日期',
@@ -218,6 +227,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         xtype: 'button',
                         width: 35,
                         flex: null,
+                        hidden: fixedArr.indexOf(index) !== -1,
                         text: 'X',
                         handler: function (){
                             var area = this.ownerCt,
