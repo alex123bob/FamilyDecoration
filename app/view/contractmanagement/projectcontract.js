@@ -204,7 +204,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             else {
                 labelStr = (fixedArr.indexOf(index) !== -1) ? NoToChinese(index + 1) + '期工程款(' + installmentPercentage[index] + '):' : '额外付款:';
             }
-            debugger
             return {
                 layout: 'hbox',
                 defaults: {
