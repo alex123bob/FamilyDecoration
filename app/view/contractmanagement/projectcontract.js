@@ -284,10 +284,11 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             frm.down('[name="displayPercentage"]').setValue(str);
             var extraPaymentCt = frm.down('[name="extraPaymentCt"]'),
                 payments = extraPaymentCt.items;
-            payments.get(1) && payments.get(1).items.get(1).setValue(Math.round(me.percentages[0] * totalPrice));
-            payments.get(2) && payments.get(2).items.get(1).setValue(Math.round(me.percentages[1] * totalPrice));
-            payments.get(3) && payments.get(3).items.get(1).setValue(Math.round(me.percentages[2] * totalPrice));
-            payments.get(4) && payments.get(4).items.get(1).setValue(Math.round(me.percentages[3] * totalPrice));
+            payments.get(1)
+            payments.get(1) && payments.get(1).items.get(2).setValue(Math.round(me.percentages[0] * totalPrice));
+            payments.get(2) && payments.get(2).items.get(2).setValue(Math.round(me.percentages[1] * totalPrice));
+            payments.get(3) && payments.get(3).items.get(2).setValue(Math.round(me.percentages[2] * totalPrice));
+            payments.get(4) && payments.get(4).items.get(2).setValue(Math.round(me.percentages[3] * totalPrice));
         }
 
 
