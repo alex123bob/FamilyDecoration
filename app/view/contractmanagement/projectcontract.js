@@ -192,7 +192,19 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
 
         function createExtraPayment (index){
             var fixedArr = [0, 1, 2, 3],
-                labelStr = (fixedArr.indexOf(index) !== -1) ? NoToChinese(index + 1) + '期工程款:' : '额外付款:';
+                installmentPercentage = Ext.clone(me.percentages),
+                isDesignerDeposit = index === 4,
+                labelStr;
+            Ext.each(installmentPercentage, function (p, index, self){
+                self[index] = p.mul(100) + '%';
+            });
+            if (isDesignerDeposit) {
+                labelStr = '设计定金:';
+            }
+            else {
+                labelStr = (fixedArr.indexOf(index) !== -1) ? NoToChinese(index + 1) + '期工程款(' + installmentPercentage[index] + '):' : '额外付款:';
+            }
+            debugger
             return {
                 layout: 'hbox',
                 defaults: {
@@ -206,7 +218,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                     {
                         xtype: 'displayfield',
                         hideLabel: true,
-                        width: 80,
+                        width: 110,
                         value: labelStr,
                         flex: null
                     },
@@ -214,14 +226,17 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         xtype: preview ? 'displayfield' : 'datefield',
                         fieldLabel: '付款日期',
                         submitFormat: 'Y-m-d H:i:s',
+                        format: 'Y-m-d H:i:s',
                         labelWidth: 60,
-                        name: 'extraPaymentDate'
+                        name: 'extraPaymentDate',
+                        value: isDesignerDeposit && me.designerDeposit ? me.designerDeposit['paidTime'] : ''
                     },
                     {
                         xtype: preview ? 'displayfield' : 'numberfield',
                         fieldLabel: '金额(元)',
                         labelWidth: 60,
                         name: 'extraPaymentFee',
+                        value: isDesignerDeposit && me.designerDeposit ? me.designerDeposit['paidAmount'] : '',
                         listeners : {
                             change : calculateTotalPayments
                         }
@@ -230,7 +245,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         xtype: 'button',
                         width: 35,
                         flex: null,
-                        hidden: fixedArr.indexOf(index) !== -1,
+                        hidden: fixedArr.indexOf(index) !== -1 || isDesignerDeposit,
                         text: 'X',
                         handler: function (){
                             var area = this.ownerCt,
@@ -533,6 +548,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 itemId: 'startTime',
                                 name: 'startTime',
                                 submitFormat: 'Y-m-d H:i:s',
+                                format: 'Y-m-d H:i:s',
                                 validator: function (val){
                                     var ownerCt = this.ownerCt,
                                         startTime = this,
@@ -710,6 +726,23 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                 ]
             }
         ];
+
+        me.addListener(
+            {
+                render: function (cmp, opts){
+                    ajaxGet('StatementBill', undefined, {
+                        billType: 'dsdpst',
+                        businessId: me.business.getId()
+                    }, function (obj){
+                        var extraPaymentCt = me.down('[name="extraPaymentCt"]');
+                        if (obj.data.length > 0) {
+                            me.designerDeposit = obj.data[0];
+                            extraPaymentCt.add(createExtraPayment(4));
+                        }
+                    });
+                }
+            }
+        );
 
         this.callParent();
     }
