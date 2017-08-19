@@ -250,7 +250,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                 payments = extraPaymentCt.items,
                 total = 0;
             for(var i = 1; i < payments.length ; i++) {
-                total += payments.get(i).items.get(1).getValue();
+                total += payments.get(i).items.get(2).getValue();
             }
             var font = total == totalPrice ? '<font>' : '<font style="color:red">';
             if(total > totalPrice) {
@@ -265,9 +265,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
         /**
          * @desc calculate each installment's fee.
          */
-        function calculateInstallments (){
+        function calculateInstallments (cmp, newVal, oldVal, opts){
             var frm = me.down('form'),
-                totalPrice = frm.getComponent('totalPrice').getValue(),
+                totalPrice = newVal,
                 percentageTitles = [],
                 percentageValues = [];
             [10, 20, 30 , 35, 40 , 45, 50].every(function(ele, index) {
@@ -284,7 +284,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             frm.down('[name="displayPercentage"]').setValue(str);
             var extraPaymentCt = frm.down('[name="extraPaymentCt"]'),
                 payments = extraPaymentCt.items;
-            payments.get(1)
             payments.get(1) && payments.get(1).items.get(2).setValue(Math.round(me.percentages[0] * totalPrice));
             payments.get(2) && payments.get(2).items.get(2).setValue(Math.round(me.percentages[1] * totalPrice));
             payments.get(3) && payments.get(3).items.get(2).setValue(Math.round(me.percentages[2] * totalPrice));
@@ -606,9 +605,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         name: 'totalPrice',
                         itemId: 'totalPrice',
                         listeners: {
-                            change: function (cmp, evt, opts){
-                                calculateInstallments();
-                            }
+                            change: calculateInstallments
                         }
                     },
                     {
