@@ -205,7 +205,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                     {
                         xtype: 'displayfield',
                         hideLabel: true,
-                        width: 70,
+                        width: 80,
                         value: labelStr,
                         flex: null
                     },
@@ -213,11 +213,13 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         xtype: preview ? 'displayfield' : 'datefield',
                         fieldLabel: '付款日期',
                         submitFormat: 'Y-m-d H:i:s',
+                        labelWidth: 60,
                         name: 'extraPaymentDate'
                     },
                     {
                         xtype: preview ? 'displayfield' : 'numberfield',
                         fieldLabel: '金额(元)',
+                        labelWidth: 60,
                         name: 'extraPaymentFee',
                         listeners : {
                             change : calculateTotalPayments
