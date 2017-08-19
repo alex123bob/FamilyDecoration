@@ -122,6 +122,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         xtype: 'displayfield',
                         fieldLabel: index.toString(),
                         value: content,
+                        name: 'additionals',
                         flex: 1
                     },
                     {
@@ -293,6 +294,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
 
 
         me.getValues = function (){
+            debugger
             var frm = me.down('form'),
                 valueObj = frm.getValues(false, false, false, true),
                 timeFormat = 'Y-m-d';
@@ -310,6 +312,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                 }
 
                 valueObj.stages = stages.join(joinSymbol);
+                valueObj.additionals = valueObj.additionals.join(joinSymbol);
                 delete valueObj.paymentDate;
                 delete valueObj.paymentFee;
                 delete valueObj.paymentApproval;
