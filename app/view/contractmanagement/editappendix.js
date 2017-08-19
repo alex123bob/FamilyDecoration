@@ -25,7 +25,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
         me.items = [
             {
                 xtype: 'form',
-                defaultType: 'textfield',
                 layout: 'form',
                 autoScroll: true,
                 items: [
@@ -37,64 +36,108 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
                         height: 100,
                     },
                     {
-                        fieldLabel: '调整工期',
-                        xtype: 'datefield',
-                        name: 'projectPeriod',
-                        itemId: 'projectPeriod'
-                    },
-                    {
-                        fieldLabel: '调整项目经理',
-                        readOnly: true,
-                        name: 'captain',
-                        itemId: 'captain',
-                        listeners: {
-                            focus: function (cmp, evt, opts){
-                                var win = Ext.create('FamilyDecoration.view.contractmanagement.PickUser', {
-                                    userFilter: /^003-\d{3}$/i,
-                                    callback: function (rec){
-                                        var ct = cmp.ownerCt,
-                                            captainName = ct.getComponent('captainName');
-                                        cmp.setValue(rec.get('realname'));
-                                        captainName.setValue(rec.get('name'));
-                                        win.close();
-                                    }
-                                });
-
-                                win.show();
+                        checkboxToggle: true,
+                        xtype: 'fieldset',
+                        collapsed: true,
+                        layout: 'hbox',
+                        title: '调整工期',
+                        itemId: 'fieldset-projectPeriod',
+                        defaults: {
+                            flex: 1,
+                            margin: 4
+                        },
+                        items: [
+                            {
+                                // fieldLabel: '调整工期',
+                                xtype: 'datefield',
+                                name: 'projectPeriod',
+                                itemId: 'projectPeriod'
                             }
-                        }
+                        ]
                     },
                     {
-                        xtype: 'hiddenfield',
-                        itemId: 'captainName',
-                        name: 'captainName'
-                    },
-                    {
-                        fieldLabel: '调整设计师',
-                        readOnly: true,
-                        name: 'designer',
-                        itemId: 'designer',
-                        listeners: {
-                            focus: function (cmp, evt, opts){
-                                var win = Ext.create('FamilyDecoration.view.contractmanagement.PickUser', {
-                                    userFilter: /^002-\d{3}$/i,
-                                    callback: function (rec){
-                                        var ct = cmp.ownerCt,
-                                            designerName = ct.getComponent('designerName');
-                                        cmp.setValue(rec.get('realname'));
-                                        designerName.setValue(rec.get('name'));
-                                        win.close();
+                        xtype: 'fieldset',
+                        collapsed: true,
+                        checkboxToggle: true,
+                        layout: 'hbox',
+                        title: '调整项目经理',
+                        itemId: 'fieldset-captain',
+                        defaults: {
+                            flex: 1,
+                            margin: 4
+                        },
+                        items: [
+                            {
+                                fieldLabel: '项目经理',
+                                readOnly: true,
+                                name: 'captain',
+                                itemId: 'captain',
+                                xtype: 'textfield',
+                                listeners: {
+                                    focus: function (cmp, evt, opts){
+                                        var win = Ext.create('FamilyDecoration.view.contractmanagement.PickUser', {
+                                            userFilter: /^003-\d{3}$/i,
+                                            callback: function (rec){
+                                                var ct = cmp.ownerCt,
+                                                    captainName = ct.getComponent('captainName');
+                                                cmp.setValue(rec.get('realname'));
+                                                captainName.setValue(rec.get('name'));
+                                                win.close();
+                                            }
+                                        });
+        
+                                        win.show();
                                     }
-                                });
-
-                                win.show();
+                                }
+                            },
+                            {
+                                xtype: 'hiddenfield',
+                                itemId: 'captainName',
+                                name: 'captainName'
                             }
-                        }
+                        ]
                     },
                     {
-                        xtype: 'hiddenfield',
-                        itemId: 'designerName',
-                        name: 'designerName'
+                        xtype: 'fieldset',
+                        collapsed: true,
+                        checkboxToggle: true,
+                        layout: 'hbox',
+                        title: '调整设计师',
+                        defaults: {
+                            flex: 1,
+                            margin: 4
+                        },
+                        itemId: 'fieldset-designer',
+                        items: [
+                            {
+                                fieldLabel: '设计师',
+                                readOnly: true,
+                                xtype: 'textfield',
+                                name: 'designer',
+                                itemId: 'designer',
+                                listeners: {
+                                    focus: function (cmp, evt, opts){
+                                        var win = Ext.create('FamilyDecoration.view.contractmanagement.PickUser', {
+                                            userFilter: /^002-\d{3}$/i,
+                                            callback: function (rec){
+                                                var ct = cmp.ownerCt,
+                                                    designerName = ct.getComponent('designerName');
+                                                cmp.setValue(rec.get('realname'));
+                                                designerName.setValue(rec.get('name'));
+                                                win.close();
+                                            }
+                                        });
+        
+                                        win.show();
+                                    }
+                                }
+                            },
+                            {
+                                xtype: 'hiddenfield',
+                                itemId: 'designerName',
+                                name: 'designerName'
+                            }
+                        ]
                     }
                 ]
             }
