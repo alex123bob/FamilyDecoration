@@ -325,7 +325,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                 }
 
                 valueObj.stages = stages.join(joinSymbol);
-                valueObj.additionals = valueObj.additionals.join(joinSymbol);
+                valueObj.additionals = (valueObj.additionals.join ? valueObj.additionals.join(joinSymbol) : valueObj.additionals);
                 delete valueObj.paymentDate;
                 delete valueObj.paymentFee;
                 delete valueObj.paymentApproval;
@@ -547,7 +547,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 itemId: 'startTime',
                                 name: 'startTime',
                                 submitFormat: 'Y-m-d H:i:s',
-                                format: 'Y-m-d H:i:s',
                                 validator: function (val){
                                     var ownerCt = this.ownerCt,
                                         startTime = this,
