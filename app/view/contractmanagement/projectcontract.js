@@ -129,12 +129,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                     },
                     {
                         xtype: 'button',
-                        text: '编辑',
-                        width: 50,
-                        hidden: preview
-                    },
-                    {
-                        xtype: 'button',
                         text: 'X',
                         width: 30,
                         hidden: preview,
@@ -328,7 +322,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                 delete valueObj.displayPercentage;
                 
                 Ext.apply(valueObj, {
-                    businessId: me.business.getId()
+                    businessId: me.business.getId(),
+                    businessName: me.business.get('regionName') + ' ' + me.business.get('address')
                 });
 
                 return valueObj;
@@ -373,7 +368,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 fieldLabel: '客户姓名',
                                 name: 'customer',
                                 itemId: 'customer',
-                                value: me.business.get('customer')
+                                value: me.business && me.business.get('customer')
                             },
                             {
                                 hidden: preview,
@@ -396,7 +391,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 fieldLabel: '客户联系',
                                 name: 'custContact',
                                 itemId: 'custContact',
-                                value: me.business.get('custContact')
+                                value: me.business && me.business.get('custContact')
                             },
                             {
                                 xtype: preview ? 'displayfield' : 'textfield',
@@ -468,26 +463,26 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             {
                                 xtype: 'displayfield',
                                 fieldLabel: '设计师',
-                                value: me.business.get('designer'),
+                                value: me.business && me.business.get('designer'),
                                 itemId: 'designer',
                                 name: 'designer'
                             },
                             {
                                 xtype: 'hiddenfield',
-                                value: me.business.get('designerName'),
+                                value: me.business && me.business.get('designerName'),
                                 itemId: 'designerName',
                                 name: 'designerName'
                             },
                             {
                                 xtype: 'displayfield',
                                 fieldLabel: '业务员',
-                                value: me.business.get('salesman'),
+                                value: me.business && me.business.get('salesman'),
                                 itemId: 'salesman',
                                 name: 'salesman'
                             },
                             {
                                 xtype: 'hiddenfield',
-                                value: me.business.get('salesmanName'),
+                                value: me.business && me.business.get('salesmanName'),
                                 itemId: 'salesmanName',
                                 name: 'salesmanName'
                             },
@@ -736,7 +731,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
         me.addListener(
             {
                 render: function (cmp, opts){
-                    ajaxGet('StatementBill', undefined, {
+                    !preview && ajaxGet('StatementBill', undefined, {
                         billType: 'dsdpst',
                         businessId: me.business.getId()
                     }, function (obj){

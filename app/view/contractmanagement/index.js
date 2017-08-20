@@ -34,6 +34,20 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                     detail: contractDetail
                 };
             };
+        
+        // load contract according to selected project and contract type.
+        function loadContract (){
+            var resObj = getRes();
+            if (resObj.listRec && resObj.typeRec && resObj.listRec.get('projectName')) {
+                // project contract
+                if ('0001' === resObj.typeRec.getId()) {
+                    // ajaxGet('ContractEngineering')
+                }
+            }
+            else {
+                // do nothing.
+            }
+        }
 
         me.items = [
             {
@@ -60,8 +74,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                     ]
                 },
                 listeners: {
-                    selectionchange: function (cmp, sels, opts){
-                        
+                    selectionchange: function (selModel, sels, opts){
+                        loadContract();
                     }
                 }
             },
@@ -73,6 +87,11 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                 flex: 1.3,
                 style: {
                     borderRight: '1px solid #cccccc'
+                },
+                listeners: {
+                    selectionchange: function (selModel, sels, opts){
+                        loadContract();
+                    }
                 }
             },
             {
@@ -82,10 +101,10 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                 flex: 6,
                 layout: 'fit',
                 items: [
-                    // {
-                    //     xtype: 'contractmanagement-projectcontract',
-                    //     preview: true
-                    // }
+                    {
+                        xtype: 'contractmanagement-projectcontract',
+                        preview: true
+                    }
                 ],
                 bbar: [
                     {
