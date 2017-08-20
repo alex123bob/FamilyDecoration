@@ -186,7 +186,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             });
         }
 
-        function createExtraPayment (index){
+        function createExtraPayment (index, obj){
             var fixedArr = [0, 1, 2, 3],
                 installmentPercentage = Ext.clone(me.percentages),
                 labelStr;
@@ -217,13 +217,15 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         submitFormat: 'Y-m-d H:i:s',
                         format: 'Y-m-d H:i:s',
                         labelWidth: 60,
-                        name: 'extraPaymentDate'
+                        name: 'extraPaymentDate',
+                        value: obj ? obj.time : ''
                     },
                     {
                         xtype: preview ? 'displayfield' : 'numberfield',
                         fieldLabel: '金额(元)',
                         labelWidth: 60,
                         name: 'extraPaymentFee',
+                        value: obj ? obj.amount : '',
                         listeners : {
                             change : calculateTotalPayments
                         }
@@ -370,7 +372,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 fieldLabel: '客户姓名',
                                 name: 'customer',
                                 itemId: 'customer',
-                                value: me.business && me.business.get('customer')
+                                value: me.contract ? (me.contract.customer) : (me.business && me.business.get('customer'))
                             },
                             {
                                 hidden: preview,
@@ -393,7 +395,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 fieldLabel: '客户联系',
                                 name: 'custContact',
                                 itemId: 'custContact',
-                                value: me.business && me.business.get('custContact')
+                                value: me.contract ? (me.contract.custContact) : (me.business && me.business.get('custContact'))
                             },
                             {
                                 xtype: preview ? 'displayfield' : 'textfield',
@@ -401,6 +403,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 vtype: 'idcard',
                                 name: 'sid',
                                 itemId: 'sid',
+                                value: me.contract ? me.contract.sid : ''
                             }
                         ]
                     },
@@ -417,6 +420,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 itemId: 'captain',
                                 name: 'captain',
                                 readOnly: true,
+                                value: me.contract ? me.contract.captain : '',
                                 listeners: {
                                     focus: function (cmp, evt, opts){
                                         var win = Ext.create('FamilyDecoration.view.contractmanagement.PickUser', {
@@ -445,7 +449,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 xtype: 'displayfield',
                                 fieldLabel: '联系方式',
                                 itemId: 'phone',
-                                name: 'phone'
+                                name: 'phone',
+                                value: me.contract ? me.contract.captainPhone : ''
                             }
                         ]
                     },
@@ -453,7 +458,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         xtype: preview ? 'displayfield' : 'textfield',
                         fieldLabel: '联系地址(客户)',
                         name: 'address',
-                        itemId: 'address'
+                        itemId: 'address',
+                        value: me.contract ? me.contract.address : ''
                     },
                     {
                         defaults: {
@@ -465,7 +471,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             {
                                 xtype: 'displayfield',
                                 fieldLabel: '设计师',
-                                value: me.business && me.business.get('designer'),
+                                value: me.contract ? (me.contract.designer) : (me.business && me.business.get('designer')),
                                 itemId: 'designer',
                                 name: 'designer'
                             },
@@ -478,7 +484,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             {
                                 xtype: 'displayfield',
                                 fieldLabel: '业务员',
-                                value: me.business && me.business.get('salesman'),
+                                value: me.contract ? (me.contract.salesman) : (me.business && me.business.get('salesman')),
                                 itemId: 'salesman',
                                 name: 'salesman'
                             },
@@ -616,6 +622,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 fieldLabel: '合同总额(元)',
                                 name: 'totalPrice',
                                 itemId: 'totalPrice',
+                                value: me.contract ? me.contract.totalPrice : '',
                                 listeners: {
                                     change: calculateInstallments
                                 }
@@ -650,7 +657,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             flex: 1,
                             width: '100%'
                         },
-                        items: [
+                        items: preview ? me.contract.stages.map(function (obj, index){
+                            return createExtraPayment(index, obj);
+                        }) : [
                             {
                                 xtype: 'button',
                                 text: '添加',
@@ -679,7 +688,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             flex: 1,
                             width: '100%'
                         },
-                        items: [
+                        items: preview ? me.contract.additionals.map(function (obj, index){
+                            return createAppendix(index + 1, obj);
+                        }) : [
                             {
                                 xtype: 'button',
                                 text: '添加',
@@ -697,13 +708,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                         }
                                     });
                                     win.show();
-                                    // var btn = this,
-                                    //     ct = btn.ownerCt;
-                                    // Ext.Msg.read('请输入附加条款内容', function (txt){
-                                    //     var config = createAppendix(countAppendix() + 1, txt);
-                                    //     ct.add(config);
-                                    //     swal.close();
-                                    // });
                                 }
                             }
                         ]
