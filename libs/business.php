@@ -1,11 +1,11 @@
 <?php
-	include_once "conn.php";
-	include_once "userDB.php";
-	include_once "businessDB.php";
-	include_once "potentialBusinessDB.php";
-	include_once "businessDetailDB.php";
-	include_once "regionDB.php";
-	
+	require_once "conn.php";
+	require_once "userDB.php";
+	require_once "businessDB.php";
+	require_once "potentialBusinessDB.php";
+	require_once "businessDetailDB.php";
+	require_once "regionDB.php";
+
 	$action = $_REQUEST["action"];
 	$res = "";
 	switch($action){
