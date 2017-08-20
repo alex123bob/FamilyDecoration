@@ -44,12 +44,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                     ajaxGet('ContractEngineering', false, {
                         projectId: resObj.listRec.getId()
                     }, function (obj){
-                        var treeSt = resObj.list.getStore();
-                        delete treeSt.proxy.extraParams.captainName;
-                        treeSt.proxy.extraParams.action = 'getProjectCaptains';
-                        treeSt.reload({
-                            node: resObj.list.getRootNode()
-                        });
+                        console.log(obj);
                     });
                 }
             }
@@ -172,12 +167,42 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                                                 name: 'button-selectBusiness',
                                                 handler: function (){
                                                     var businessList = win.down('businessaggregation-businesslist'),
-                                                        business = businessList.getSelectionModel().getSelection()[0];
+                                                        business = businessList.getSelectionModel().getSelection()[0],
+                                                        resObj = getRes();
                                                     if (business) {
                                                         win.close();
                                                         var contractWin = Ext.create('FamilyDecoration.view.contractmanagement.EditContract', {
                                                             type: type,
-                                                            business: business
+                                                            business: business,
+                                                            callback: function (obj){
+                                                                if ('successful' === obj.status) {
+                                                                    var treeSt = resObj.list.getStore(),
+                                                                        contract = obj.data;
+                                                                    delete treeSt.proxy.extraParams.captainName;
+                                                                    treeSt.proxy.extraParams.action = 'getProjectCaptains';
+                                                                    treeSt.reload({
+                                                                        node: resObj.list.getRootNode(),
+                                                                        callback: function (recs, ope, success){
+                                                                            if (success) {
+                                                                                Ext.each(recs, function (rec, index, self) {
+                                                                                    if (contract.captainName === rec.get('captainName')) {
+                                                                                        rec.expand(false, function (nodes) {
+                                                                                            Ext.each(nodes, function (node, i, self){
+                                                                                                if (node.getId() === contract.projectId) {
+                                                                                                    resObj.listSelModel.select(node);
+                                                                                                }
+                                                                                            });
+                                                                                        });
+                                                                                    }
+                                                                                });
+                                                                            }
+                                                                        }
+                                                                    });
+                                                                }
+                                                                else {
+                                                                    showMsg(obj.errMsg);
+                                                                }
+                                                            }
                                                         });
                                                         contractWin.show();
                                                     }

@@ -12,6 +12,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditContract', {
     height: 500,
     maximizable: true,
     modal: true,
+    callback: Ext.emptyFn,
 
     business: undefined,
     type: undefined,
@@ -39,6 +40,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditContract', {
                         ajaxAdd('ContractEngineering', contract.getValues(), function (obj){
                             showMsg('添加成功!');
                             me.close();
+                            me.callback(obj);
                         });
                     }
                 }
