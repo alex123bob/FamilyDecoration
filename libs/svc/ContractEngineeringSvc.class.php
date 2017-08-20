@@ -2,9 +2,12 @@
 class ContractEngineeringSvc extends BaseSvc
 { 
   public function get($q){
-    $this->appendSelect = ', b.customer, b.custContact ';
-    $this->appendJoin = 'left join business b on b.id = contract_engineering.businessId ';
-    $this->appendWhere .= " and ( b.isDeleted = 'false' or b.isDeleted is null)";
+    $this->appendSelect = ', b.customer, b.custContact, p.projectId ';
+    $this->appendJoin = 'left join business b on b.id = contract_engineering.businessId and ( b.isDeleted = \'false\' or b.isDeleted is null )'
+                      . 'left join project p on p.businessId = b.id and ( p.isDeleted = \'false\' or p.isDeleted is null )';
+    if(isset($q['projectId'])){
+      $this->appendWhere .= " and p.projectId = '".$q['projectId']."' ";
+    }
     $res = parent::get($q);
     foreach ($res['data'] as $key => &$value) {
       $this->transformStage($value);
