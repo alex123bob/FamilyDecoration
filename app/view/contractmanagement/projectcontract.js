@@ -14,6 +14,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
     business: undefined,
     type: undefined,
 
+    contract: undefined, // is edit or not.
+
     initComponent: function () {
         var me = this,
             preview = me.preview,
@@ -690,6 +692,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                     var btn = this,
                                         ct = btn.ownerCt;
                                     var win = Ext.create('FamilyDecoration.view.contractmanagement.EditAppendix', {
+                                        isEdit: me.contract ? true : false,
                                         callback: function (content){
                                             var config = createAppendix(countAppendix() + 1, content);
                                             ct.add(config);

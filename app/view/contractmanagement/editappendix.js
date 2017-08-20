@@ -16,6 +16,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
     appendix: undefined,
     bodyPadding: 4,
     callback: Ext.emptyFn,
+    isEdit: false,
 
     initComponent: function () {
         var me = this;
@@ -70,6 +71,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
                         layout: 'hbox',
                         title: '调整工期',
                         itemId: 'fieldset-projectPeriod',
+                        disabled: !me.isEdit,
                         defaults: {
                             flex: 1,
                             margin: 4,
@@ -108,6 +110,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
                         layout: 'hbox',
                         title: '调整项目经理',
                         itemId: 'fieldset-captain',
+                        disabled: !me.isEdit,
                         defaults: {
                             flex: 1,
                             margin: 4,
@@ -156,6 +159,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
                         checkboxToggle: true,
                         layout: 'hbox',
                         title: '调整设计师',
+                        disabled: !me.isEdit,
                         defaults: {
                             flex: 1,
                             margin: 4,
