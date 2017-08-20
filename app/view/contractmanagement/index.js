@@ -41,7 +41,16 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
             if (resObj.listRec && resObj.typeRec && resObj.listRec.get('projectName')) {
                 // project contract
                 if ('0001' === resObj.typeRec.getId()) {
-                    // ajaxGet('ContractEngineering')
+                    ajaxGet('ContractEngineering', false, {
+                        projectId: resObj.listRec.getId()
+                    }, function (obj){
+                        var treeSt = resObj.list.getStore();
+                        delete treeSt.proxy.extraParams.captainName;
+                        treeSt.proxy.extraParams.action = 'getProjectCaptains';
+                        treeSt.reload({
+                            node: resObj.list.getRootNode()
+                        });
+                    });
                 }
             }
             else {

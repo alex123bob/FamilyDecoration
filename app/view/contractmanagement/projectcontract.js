@@ -313,7 +313,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                 }
 
                 valueObj.stages = stages.join(joinSymbol);
-                valueObj.additionals = (valueObj.additionals.join ? valueObj.additionals.join(joinSymbol) : valueObj.additionals);
+                if (valueObj.additionals) {
+                    valueObj.additionals = (valueObj.additionals.join ? valueObj.additionals.join(joinSymbol) : valueObj.additionals);
+                }
                 delete valueObj.paymentDate;
                 delete valueObj.paymentFee;
                 delete valueObj.paymentApproval;
