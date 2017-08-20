@@ -33,7 +33,7 @@
 		'supplier_order'=>array('id','projectName','paymentId','status','totalFee','projectId','supplierId','creator','payee','payedTimes','projectProgress'),
 		'supplier_order_item'=>array('id','referenceNumber','amount','billId','supplierId','materialId','billItemName','unit','unitPrice','professionType'),
 		"versions"=>array('id','desc'),
-		"contract_engineering"=>array('id','signatoryRepName','signatoryRepName','businessId' ,'totalPrice','discount','additionalProvisions','sid', 'address', 'stages','additionals'),
+		"contract_engineering"=>array('id','signatoryRepName','signatoryRep','businessId' ,'totalPrice','discount','additionalProvisions','sid', 'address', 'stages','additionals'),
 		"supplier_order_template"=>array('id','supplierId','templateName','supplierId'),
 		"supplier_order_item_template"=>array('id','templateId','materialId','referenceNumber'),
 		"statement_bill_tag"=>array('id','tag','billId','committer'));
