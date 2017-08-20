@@ -515,7 +515,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
 
                                         win.show();
                                     }
-                                }
+                                },
+                                value: me.contract ? me.contract.signatoryRep : ''
                             },
                             {
                                 xtype: 'hiddenfield',
