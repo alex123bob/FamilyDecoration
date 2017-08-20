@@ -2,7 +2,7 @@
 class ContractEngineeringSvc extends BaseSvc
 { 
   public function get($q){
-    $this->appendSelect = ', b.customer, b.custContact, p.projectId, p.period, p.projectName, p.designer, p.designerName,
+    $this->appendSelect = ', left(p.period,10) as startTime,right(p.period,10) as endTime, TIMESTAMPDIFF(DAY,left(p.period,10),right(p.period,10)) as totalDays, b.customer, b.custContact, p.projectId, p.period, p.projectName, p.designer, p.designerName,
     p.captain, p.captainName , p.salesman, p.salesmanName, u.phone as captainPhone ';
     $this->appendJoin = 'left join business b on b.id = contract_engineering.businessId and ( b.isDeleted = \'false\' or b.isDeleted is null )'
                       . 'left join project p on p.businessId = b.id and ( p.isDeleted = \'false\' or p.isDeleted is null )'
