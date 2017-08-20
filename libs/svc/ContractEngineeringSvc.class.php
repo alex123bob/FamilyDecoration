@@ -60,6 +60,8 @@ class ContractEngineeringSvc extends BaseSvc
       require_once "businessDB.php";
       $res = transferBusinessToProject(array(
         'businessId' => $q['@businessId'],
+        'customer' => $q['@customer'],
+        'custContact' => $q['@custContact'],
         'period' => $q["@startTime"].":".$q["@endTime"],
         'projectTime' => date("Y-m-d"),
         'projectName' => $q['@businessName'],
