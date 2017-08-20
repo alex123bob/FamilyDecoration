@@ -22,6 +22,33 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
 
         me.setTitle(me.appendix ? '编辑附加条款' : '添加附加条款');
 
+        function _getRes (){
+            var frm = me.down('form'),
+                content = frm.getComponent('content'),
+                projectPeriodFst = frm.getComponent('fieldset-projectPeriod'),
+                startTime = projectPeriodFst.getComponent('startTime'),
+                endTime = projectPeriodFst.getComponent('endTime'),
+                captainFst = frm.getComponent('fieldset-captain'),
+                captain = captainFst.getComponent('captain'),
+                captainName = captainFst.getComponent('captainName'),
+                designerFst = frm.getComponent('fieldset-designer'),
+                designer = designerFst.getComponent('designer'),
+                designerName = designerFst.getComponent('designerName');
+
+            return {
+                content: content,
+                projectPeriodFst: projectPeriodFst,
+                startTime: startTime,
+                endTime: endTime,
+                captainFst: captainFst,
+                captain: captain,
+                captainName: captainName,
+                designerFst: designerFst,
+                designer: designer,
+                designerName: designerName
+            };
+        }
+
         me.items = [
             {
                 xtype: 'form',
@@ -34,6 +61,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
                         name: 'content',
                         itemId: 'content',
                         height: 100,
+                        allowBlank: false
                     },
                     {
                         checkboxToggle: true,
@@ -44,29 +72,32 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
                         itemId: 'fieldset-projectPeriod',
                         defaults: {
                             flex: 1,
-                            margin: 4
+                            margin: 4,
+                            allowBlank: false
                         },
                         items: [
                             {
                                 fieldLabel: '开始',
                                 xtype: 'datefield',
                                 name: 'startTime',
-                                itemId: 'startTime'
+                                itemId: 'startTime',
+                                submitFormat: 'Y-m-d',
+                                format: 'Y-m-d'
                             },
                             {
                                 fieldLabel: '结束',
                                 xtype: 'datefield',
                                 name: 'endTime',
-                                itemId: 'endTime'
+                                itemId: 'endTime',
+                                submitFormat: 'Y-m-d',
+                                format: 'Y-m-d'
                             }
                         ],
                         listeners: {
                             expand: function (fst){
-                                var frm = fst.ownerCt,
-                                    captainFst = frm.getComponent('fieldset-captain'),
-                                    designerFst = frm.getComponent('fieldset-designer');
-                                captainFst.collapse();
-                                designerFst.collapse();
+                                var resObj = _getRes();
+                                resObj.captainFst.collapse();
+                                resObj.designerFst.collapse();
                             }
                         }
                     },
@@ -79,7 +110,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
                         itemId: 'fieldset-captain',
                         defaults: {
                             flex: 1,
-                            margin: 4
+                            margin: 4,
+                            allowBlank: false
                         },
                         items: [
                             {
@@ -93,10 +125,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
                                         var win = Ext.create('FamilyDecoration.view.contractmanagement.PickUser', {
                                             userFilter: /^003-\d{3}$/i,
                                             callback: function (rec){
-                                                var ct = cmp.ownerCt,
-                                                    captainName = ct.getComponent('captainName');
+                                                var resObj = _getRes();
                                                 cmp.setValue(rec.get('realname'));
-                                                captainName.setValue(rec.get('name'));
+                                                resObj.captainName.setValue(rec.get('name'));
                                                 win.close();
                                             }
                                         });
@@ -113,11 +144,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
                         ],
                         listeners: {
                             expand: function (fst){
-                                var frm = fst.ownerCt,
-                                    projectPeriodFst = frm.getComponent('fieldset-projectPeriod'),
-                                    designerFst = frm.getComponent('fieldset-designer');
-                                projectPeriodFst.collapse();
-                                designerFst.collapse();
+                                var resObj = _getRes();
+                                resObj.projectPeriodFst.collapse();
+                                resObj.designerFst.collapse();
                             }
                         }
                     },
@@ -129,7 +158,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
                         title: '调整设计师',
                         defaults: {
                             flex: 1,
-                            margin: 4
+                            margin: 4,
+                            allowBlank: false
                         },
                         itemId: 'fieldset-designer',
                         items: [
@@ -144,10 +174,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
                                         var win = Ext.create('FamilyDecoration.view.contractmanagement.PickUser', {
                                             userFilter: /^002-\d{3}$/i,
                                             callback: function (rec){
-                                                var ct = cmp.ownerCt,
-                                                    designerName = ct.getComponent('designerName');
+                                                var resObj = _getRes();
                                                 cmp.setValue(rec.get('realname'));
-                                                designerName.setValue(rec.get('name'));
+                                                resObj.designerName.setValue(rec.get('name'));
                                                 win.close();
                                             }
                                         });
@@ -164,11 +193,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
                         ],
                         listeners: {
                             expand: function (fst){
-                                var frm = fst.ownerCt,
-                                    projectPeriodFst = frm.getComponent('fieldset-projectPeriod'),
-                                    captainFst = frm.getComponent('fieldset-captain');
-                                projectPeriodFst.collapse();
-                                captainFst.collapse();
+                                var resObj = _getRes();
+                                resObj.projectPeriodFst.collapse();
+                                resObj.captainFst.collapse();
                             }
                         }
                     }
@@ -180,9 +207,34 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
             {
                 text: '确定',
                 handler: function (){
-                    var frm = me.down('form'),
-                        content = frm.getComponent('content');
-                    me.callback(content.getValue());
+                    var resObj = _getRes(),
+                        str = '';
+                    if (resObj.content.isValid()) {
+                        if (!resObj.projectPeriodFst.collapsed) {
+                            if (resObj.startTime.isValid() && resObj.endTime.isValid()) {
+                                if (resObj.startTime.getValue() > resObj.endTime.getValue()) {
+                                    showMsg('开始时间不能晚于结束时间');
+                                }
+                                else {
+                                    str = '调整项目工期，项目工期时间为：' + Ext.Date.format(resObj.startTime.getValue(), 'Y-m-d') + '~' + Ext.Date.format(resObj.endTime.getValue(), 'Y-m-d') + '，更改原因：' + resObj.content.getValue();
+                                }
+                            }
+                        }
+                        else if (!resObj.captainFst.collapsed) {
+                            if (resObj.captain.isValid()) {
+                                str = '调整项目经理，新项目经理为：' + resObj.captain.getValue() + '，调整原因：' + resObj.content.getValue();
+                            }
+                        }
+                        else if (!resObj.designerFst.collapsed) {
+                            if (resObj.designer.isValid()) {
+                                str = '调整设计师，新设计师为：' + resObj.designer.getValue() + '，调整原因：' + resObj.content.getValue();
+                            }
+                        }
+                        else {
+                            str = resObj.content.getValue();
+                        }
+                        me.callback(str);
+                    }
                 }
             },
             {
