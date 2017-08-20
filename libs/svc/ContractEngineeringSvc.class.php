@@ -55,8 +55,8 @@ class ContractEngineeringSvc extends BaseSvc
       require_once "businessDB.php";
       transferBusinessToProject(array(
         'businessId' => $q['@businessId'],
-        'customer' => 'zzz',
-        'custContact' => 'zzz',
+        'customer' => $q['@customer'],
+        'custContact' => $q['@custContact'],
         'period' => $q["@startTime"].":".$q["@endTime"],
         'projectTime' => date("Y-m-d"),
         'projectName' => $q['@businessName'],
@@ -67,8 +67,24 @@ class ContractEngineeringSvc extends BaseSvc
         'salesman' => $q['@salesman'],
         'salesmanName' => $q['@salesmanName'],
         'isWaiting' => 'false',
-        'isLocked' => 'false',
+        'isLocked' => 'false'
       ));
+    } else if($res['count'] == 1){
+      $projectSvc->update(array(
+        'businessId' => $q['@businessId'],
+        '@customer' => $q['@customer'],
+        '@custContact' => $q['@custContact'],
+        '@period' => $q["@startTime"].":".$q["@endTime"],
+        '@projectName' => $q['@businessName'],
+        '@designer' => $q['@designer'],
+        '@designerName' => $q['@designerName'],
+        '@captain' => $q['@captain'],
+        '@captainName' => $q['@captainName'],
+        '@salesman' => $q['@salesman'],
+        '@salesmanName' => $q['@salesmanName']
+      ));
+    } else {
+      throw new BaseException('该业务有多个有效工程,请联系管理员!');
     }
     $res = parent::add($q);
     $mysql->commit();
