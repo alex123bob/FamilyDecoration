@@ -544,6 +544,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 itemId: 'startTime',
                                 name: 'startTime',
                                 submitFormat: 'Y-m-d H:i:s',
+                                value: me.contract ? me.contract.startTime : '',
                                 validator: function (val){
                                     var ownerCt = this.ownerCt,
                                         startTime = this,
@@ -576,6 +577,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 name: 'endTime',
                                 margin: '0 8 0 8',
                                 submitFormat: 'Y-m-d H:i:s',
+                                value: me.contract ? me.contract.endTime : '',
                                 validator: function (val){
                                     var ownerCt = this.ownerCt,
                                         endTime = this,
@@ -607,7 +609,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 itemId: 'totalProjectTime',
                                 name: 'totalProjectTime',
                                 labelWidth: 50,
-                                fieldLabel: '总工期'
+                                fieldLabel: '总工期',
+                                value: me.contract ? me.contract.totalDays : ''
                             }
                         ]
                     },
