@@ -2,7 +2,7 @@
 class ContractEngineeringSvc extends BaseSvc
 { 
   public function get($q){
-    $this->appendSelect = ', b.customer, b.custContact, p.projectId, p.customer, p.custContact, p.period, p.projectName, p.designer, p.designerName,
+    $this->appendSelect = ', b.customer, b.custContact, p.projectId, p.period, p.projectName, p.designer, p.designerName,
     p.captain, p.captainName , p.salesman, p.salesmanName ';
     $this->appendJoin = 'left join business b on b.id = contract_engineering.businessId and ( b.isDeleted = \'false\' or b.isDeleted is null )'
                       . 'left join project p on p.businessId = b.id and ( p.isDeleted = \'false\' or p.isDeleted is null )';
@@ -60,8 +60,6 @@ class ContractEngineeringSvc extends BaseSvc
       require_once "businessDB.php";
       $res = transferBusinessToProject(array(
         'businessId' => $q['@businessId'],
-        'customer' => $q['@customer'],
-        'custContact' => $q['@custContact'],
         'period' => $q["@startTime"].":".$q["@endTime"],
         'projectTime' => date("Y-m-d"),
         'projectName' => $q['@businessName'],
@@ -78,8 +76,6 @@ class ContractEngineeringSvc extends BaseSvc
     } else if($res['total'] == 1){
       $projectSvc->update(array(
         'businessId' => $q['@businessId'],
-        '@customer' => $q['@customer'],
-        '@custContact' => $q['@custContact'],
         '@period' => $q["@startTime"].":".$q["@endTime"],
         '@projectName' => $q['@businessName'],
         '@designer' => $q['@designer'],
