@@ -283,11 +283,6 @@
 		$businessId = $data['businessId'];
 		$obj = array('customer'=>$data['customer'],"custContact"=>$data["custContact"],"businessId"=>$businessId);
 		//可选字段
-		$fields = array("projectTime","projectName","designer","designerName","captain","captainName","salesman","supervisor","supervisorName","salesmanName","isWaiting","isLocked");
-		foreach($fields as $field){
-			if(isset($data[$field]))
-				$obj[$field] = $data[$field];
-		}
 		if(isset($data["startTime"])){
 			$obj["period"] = $data["startTime"];
 		}else{
@@ -295,6 +290,11 @@
 		}
 		if(isset($data["endTime"])){
 			$obj["period"] = $obj["period"].":".$data["endTime"];
+		}
+		$fields = array("projectTime","period","projectName","designer","designerName","captain","captainName","salesman","supervisor","supervisorName","salesmanName","isWaiting","isLocked");
+		foreach($fields as $field){
+			if(isset($data[$field]))
+				$obj[$field] = $data[$field];
 		}	
 		include_once "projectDB.php";
 		$res = addProject($obj);

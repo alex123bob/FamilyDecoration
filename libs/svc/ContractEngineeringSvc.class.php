@@ -52,6 +52,7 @@ class ContractEngineeringSvc extends BaseSvc
       throw new BaseException('该业务已有合同!');
     }
     $projectSvc = BaseSvc::getSvc('Project');
+    $businessSvc = BaseSvc::getSvc('Business');
     $res = $projectSvc->get(array('businessId' => $q['@businessId']));
     global $mysql;
     $mysql->begin();
@@ -76,6 +77,10 @@ class ContractEngineeringSvc extends BaseSvc
         'isLocked' => 'false'
       ));
       $projectId = $res['projectId'];
+      $businessSvc->update(array(
+        'id' => $q['@businessId'],
+        '@isTransfered' => 'true'
+      ));
     } else if($res['total'] == 1){
       $projectSvc->update(array(
         'businessId' => $q['@businessId'],
