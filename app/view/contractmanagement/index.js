@@ -44,7 +44,14 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                     ajaxGet('ContractEngineering', false, {
                         projectId: resObj.listRec.getId()
                     }, function (obj){
-                        console.log(obj);
+                        resObj.detail.removeAll();
+                        if (obj.data.length > 0) {
+                            resObj.detail.add({
+                                xtype: 'contractmanagement-projectcontract',
+                                preview: true,
+                                contract: obj.data[0]
+                            });
+                        }
                     });
                 }
             }
@@ -105,10 +112,10 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                 flex: 6,
                 layout: 'fit',
                 items: [
-                    {
-                        xtype: 'contractmanagement-projectcontract',
-                        preview: true
-                    }
+                    // {
+                    //     xtype: 'contractmanagement-projectcontract',
+                    //     preview: true
+                    // }
                 ],
                 bbar: [
                     {
