@@ -3,9 +3,10 @@ class ContractEngineeringSvc extends BaseSvc
 { 
   public function get($q){
     $this->appendSelect = ', b.customer, b.custContact, p.projectId, p.period, p.projectName, p.designer, p.designerName,
-    p.captain, p.captainName , p.salesman, p.salesmanName ';
+    p.captain, p.captainName , p.salesman, p.salesmanName, u.phone as captainPhone ';
     $this->appendJoin = 'left join business b on b.id = contract_engineering.businessId and ( b.isDeleted = \'false\' or b.isDeleted is null )'
-                      . 'left join project p on p.businessId = b.id and ( p.isDeleted = \'false\' or p.isDeleted is null )';
+                      . 'left join project p on p.businessId = b.id and ( p.isDeleted = \'false\' or p.isDeleted is null )'
+                      . 'left join user u on p.captainName = u.name and ( u.isDeleted = \'false\' or u.isDeleted is null )';
     if(isset($q['projectId'])){
       $this->appendWhere .= " and p.projectId = '".$q['projectId']."' ";
     }
