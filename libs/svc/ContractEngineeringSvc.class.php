@@ -2,7 +2,8 @@
 class ContractEngineeringSvc extends BaseSvc
 { 
   public function get($q){
-    $this->appendSelect = ', b.customer, b.custContact, p.projectId ';
+    $this->appendSelect = ', b.customer, b.custContact, p.projectId, p.customer, p.custContact, p.period, p.projectName, p.designer, p.designerName,
+    p.captain, p.captainName , p.salesman, p.salesmanName ';
     $this->appendJoin = 'left join business b on b.id = contract_engineering.businessId and ( b.isDeleted = \'false\' or b.isDeleted is null )'
                       . 'left join project p on p.businessId = b.id and ( p.isDeleted = \'false\' or p.isDeleted is null )';
     if(isset($q['projectId'])){
@@ -50,13 +51,14 @@ class ContractEngineeringSvc extends BaseSvc
       throw new BaseException('该业务已有合同!');
     }
     $projectSvc = BaseSvc::getSvc('Project');
-    $res = $projectSvc->getCount(array('businessId' => $q['@businessId']));
+    $res = $projectSvc->get(array('businessId' => $q['@businessId']));
     global $mysql;
     $mysql->begin();
-    if($res['count'] == 0){
+    $projectId = '';
+    if($res['total'] == 0){
       //没有project,新建.
       require_once "businessDB.php";
-      transferBusinessToProject(array(
+      $res = transferBusinessToProject(array(
         'businessId' => $q['@businessId'],
         'customer' => $q['@customer'],
         'custContact' => $q['@custContact'],
@@ -72,7 +74,8 @@ class ContractEngineeringSvc extends BaseSvc
         'isWaiting' => 'false',
         'isLocked' => 'false'
       ));
-    } else if($res['count'] == 1){
+      $projectId = $res['projectId'];
+    } else if($res['total'] == 1){
       $projectSvc->update(array(
         'businessId' => $q['@businessId'],
         '@customer' => $q['@customer'],
@@ -86,10 +89,14 @@ class ContractEngineeringSvc extends BaseSvc
         '@salesman' => $q['@salesman'],
         '@salesmanName' => $q['@salesmanName']
       ));
+      $projectId = $res['data'][0]['projectId'];
     } else {
       throw new BaseException('该业务有多个有效工程,请联系管理员!');
     }
     $res = parent::add($q);
+    $res['data']['projectId'] = $projectId;
+    $res['data']['captainName'] = $q['@captainName'];
+    $res['data']['captain'] = $q['@captain'];
     $mysql->commit();
     return $res;
   }
