@@ -12,13 +12,13 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
     header: false,
     preview: false, // whether current contract is editable or not.
     business: undefined,
-    type: undefined,
 
     contract: undefined, // is edit or not.
 
     initComponent: function () {
         var me = this,
             preview = me.preview,
+            editMode = me.contract ? true : false,
             joinSymbol = '/**/';
 
         me.percentages = [0.35, 0.30, 0.30, 0.05];
@@ -106,7 +106,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
         }
 
         function countAppendix (){
-            return Ext.ComponentQuery.query('[name="appendix"]').length;
+            var form = me.down('form'),
+                appendixCt = form.getComponent('appendixCt');
+            return appendixCt.query('[name="appendix"]').length;
         }
 
         function createAppendix(index, content) {
@@ -423,20 +425,22 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 value: me.contract ? me.contract.captain : '',
                                 listeners: {
                                     focus: function (cmp, evt, opts){
-                                        var win = Ext.create('FamilyDecoration.view.contractmanagement.PickUser', {
-                                            userFilter: /^003-\d{3}$/i,
-                                            callback: function (rec){
-                                                var ct = cmp.ownerCt,
-                                                    captainName = ct.getComponent('captainName'),
-                                                    phone = ct.getComponent('phone');
-                                                cmp.setValue(rec.get('realname'));
-                                                captainName.setValue(rec.get('name'));
-                                                phone.setValue(rec.get('phone'));
-                                                win.close();
-                                            }
-                                        });
-
-                                        win.show();
+                                        if (!editMode && !preview) {
+                                            var win = Ext.create('FamilyDecoration.view.contractmanagement.PickUser', {
+                                                userFilter: /^003-\d{3}$/i,
+                                                callback: function (rec){
+                                                    var ct = cmp.ownerCt,
+                                                        captainName = ct.getComponent('captainName'),
+                                                        phone = ct.getComponent('phone');
+                                                    cmp.setValue(rec.get('realname'));
+                                                    captainName.setValue(rec.get('name'));
+                                                    phone.setValue(rec.get('phone'));
+                                                    win.close();
+                                                }
+                                            });
+    
+                                            win.show();
+                                        }
                                     }
                                 }
                             },
@@ -502,18 +506,20 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 itemId: 'signatoryRep',
                                 listeners: {
                                     focus: function (cmp, evt, opts){
-                                        var win = Ext.create('FamilyDecoration.view.contractmanagement.PickUser', {
-                                            // userFilter: /^003-\d{3}$/i,
-                                            callback: function (rec){
-                                                var ct = cmp.ownerCt,
-                                                    repName = ct.getComponent('signatoryRepName');
-                                                cmp.setValue(rec.get('realname'));
-                                                repName.setValue(rec.get('name'));
-                                                win.close();
-                                            }
-                                        });
-
-                                        win.show();
+                                        if (!editMode && !preview) {
+                                            var win = Ext.create('FamilyDecoration.view.contractmanagement.PickUser', {
+                                                // userFilter: /^003-\d{3}$/i,
+                                                callback: function (rec){
+                                                    var ct = cmp.ownerCt,
+                                                        repName = ct.getComponent('signatoryRepName');
+                                                    cmp.setValue(rec.get('realname'));
+                                                    repName.setValue(rec.get('name'));
+                                                    win.close();
+                                                }
+                                            });
+    
+                                            win.show();
+                                        }
                                     }
                                 },
                                 value: me.contract ? me.contract.signatoryRep : ''
@@ -540,7 +546,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 value: '工期:'
                             },
                             {
-                                xtype: preview ? 'displayfield' : 'datefield',
+                                xtype: preview || editMode ? 'displayfield' : 'datefield',
                                 fieldLabel: '开始',
                                 itemId: 'startTime',
                                 name: 'startTime',
@@ -572,7 +578,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 }
                             },
                             {
-                                xtype: preview ? 'displayfield' : 'datefield',
+                                xtype: preview || editMode ? 'displayfield' : 'datefield',
                                 fieldLabel: '结束',
                                 itemId: 'endTime',
                                 name: 'endTime',
@@ -661,9 +667,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             flex: 1,
                             width: '100%'
                         },
-                        items: preview ? me.contract.stages.map(function (obj, index){
-                            return createExtraPayment(index, obj);
-                        }) : [
+                        items: [
                             {
                                 xtype: 'button',
                                 text: '添加',
@@ -674,12 +678,15 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                         extraPaymentCt = this.up('[name="extraPaymentCt"]');
                                     extraPaymentCt.add(createExtraPayment(index));
                                 }
-                            },
+                            }
+                        ].concat(preview || editMode ? me.contract.stages.map(function (obj, index){
+                            return createExtraPayment(index, obj);
+                        }) : [
                             createExtraPayment(0),
                             createExtraPayment(1),
                             createExtraPayment(2),
                             createExtraPayment(3)
-                        ]
+                        ])
                     },
                     {
                         xtype: 'fieldset',
@@ -692,9 +699,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             flex: 1,
                             width: '100%'
                         },
-                        items: preview ? me.contract.additionals.map(function (obj, index){
-                            return createAppendix(index + 1, obj);
-                        }) : [
+                        items: [
                             {
                                 xtype: 'button',
                                 text: '添加',
@@ -704,7 +709,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                     var btn = this,
                                         ct = btn.ownerCt;
                                     var win = Ext.create('FamilyDecoration.view.contractmanagement.EditAppendix', {
-                                        isEdit: me.contract ? true : false,
+                                        isEdit: editMode,
                                         callback: function (content){
                                             var config = createAppendix(countAppendix() + 1, content);
                                             ct.add(config);
@@ -714,7 +719,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                     win.show();
                                 }
                             }
-                        ]
+                        ].concat(preview || editMode ? me.contract.additionals.map(function (obj, index){
+                            return createAppendix(index + 1, obj);
+                        }) : [])
                     },
                     {
                         xtype: 'button',
@@ -741,18 +748,20 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
         me.addListener(
             {
                 render: function (cmp, opts){
-                    !preview && ajaxGet('StatementBill', undefined, {
-                        billType: 'dsdpst',
-                        businessId: me.business.getId()
-                    }, function (obj){
-                        var extraPaymentCt = me.down('[name="extraPaymentCt"]'),
-                            frm = me.down('form'),
-                            designDeposit = frm.down('[name="designDeposit"]');
-                        if (obj.data.length > 0) {
-                            me.designDeposit = obj.data[0];
-                            designDeposit.setValue('(设计定金: ' + me.designDeposit['paidAmount'] + '元, 收款时间:' + me.designDeposit['paidTime'] + ')');
-                        }
-                    });
+                    if (!preview && !editMode) {
+                        ajaxGet('StatementBill', undefined, {
+                            billType: 'dsdpst',
+                            businessId: me.business.getId()
+                        }, function (obj){
+                            var extraPaymentCt = me.down('[name="extraPaymentCt"]'),
+                                frm = me.down('form'),
+                                designDeposit = frm.down('[name="designDeposit"]');
+                            if (obj.data.length > 0) {
+                                me.designDeposit = obj.data[0];
+                                designDeposit.setValue('(设计定金: ' + me.designDeposit['paidAmount'] + '元, 收款时间:' + me.designDeposit['paidTime'] + ')');
+                            }
+                        });
+                    }
                 }
             }
         );

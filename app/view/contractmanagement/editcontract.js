@@ -7,7 +7,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditContract', {
     defaults: {
     },
     layout: 'fit',
-    contract: undefined,
     width: 700,
     height: 500,
     maximizable: true,
@@ -18,16 +17,20 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditContract', {
     type: undefined,
     project: undefined,
 
-    initComponent: function (){
-        var me = this;
+    // edit contract or add.
+    contract: undefined,
 
-        me.title = me.contract ? '编辑合同' : '添加合同';
+    initComponent: function (){
+        var me = this,
+            isEdit = me.contract ? true : false;
+
+        me.title = isEdit ? '编辑合同' : '添加合同';
 
         me.items = [
             {
                 business: me.business,
-                type: me.type,
-                xtype: 'contractmanagement-projectcontract'
+                xtype: 'contractmanagement-projectcontract',
+                contract: isEdit ? me.contract : false
             }
         ];
 
@@ -35,13 +38,23 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditContract', {
             {
                 text: '确定',
                 handler: function (){
-                    var contract = me.down('contractmanagement-projectcontract');
-                    if (contract.getValues()) {
-                        ajaxAdd('ContractEngineering', contract.getValues(), function (obj){
-                            showMsg('添加成功!');
-                            me.close();
-                            me.callback(obj);
-                        });
+                    var contractCmp;
+                    // project contract
+                    if (me.type === '0001') {
+                        contractCmp = me.down('contractmanagement-projectcontract');
+                        if (isEdit) {
+                            showMsg('edit contract interface is under development.');
+                        }
+                        else {
+                            // add contract
+                            if (contractCmp.getValues()) {
+                                ajaxAdd('ContractEngineering', contractCmp.getValues(), function (obj){
+                                    showMsg('添加成功!');
+                                    me.close();
+                                    me.callback(obj);
+                                });
+                            }
+                        }
                     }
                 }
             },

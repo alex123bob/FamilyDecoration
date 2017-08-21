@@ -16,7 +16,25 @@ Ext.define('FamilyDecoration.view.contractmanagement.PickUser', {
     callback: Ext.emptyFn,
 
     initComponent: function () {
-        var me = this;
+        var me = this,
+            userSt = Ext.create('FamilyDecoration.store.User', {
+                autoLoad: true,
+                filters: [
+                    function (item) {
+                        if (me.userFilter) {
+                            if (me.userFilter.test(item.get('level'))) {
+                                return true;
+                            }
+                            else {
+                                return false;
+                            }
+                        }
+                        else {
+                            return true;
+                        }
+                    }
+                ]
+            });
         me.items = [
             {
                 xtype: 'gridpanel',
@@ -33,6 +51,20 @@ Ext.define('FamilyDecoration.view.contractmanagement.PickUser', {
                         }
                     }
                 },
+                dockedItems: [
+                    {
+                        dock: 'top',
+                        xtype: 'toolbar',
+                        items: [
+                            {
+                                xtype: 'searchfield',
+                                store: userSt,
+                                flex: 1,
+                                paramName: 'realname'
+                            }
+                        ]
+                    }
+                ],
                 columns: [
                     {
                         text: '姓名',
@@ -56,24 +88,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.PickUser', {
                         }
                     }
                 ],
-                store: Ext.create('FamilyDecoration.store.User', {
-                    autoLoad: true,
-                    filters: [
-                        function (item) {
-                            if (me.userFilter) {
-                                if (me.userFilter.test(item.get('level'))) {
-                                    return true;
-                                }
-                                else {
-                                    return false;
-                                }
-                            }
-                            else {
-                                return true;
-                            }
-                        }
-                    ]
-                }),
+                store: userSt,
                 autoScroll: true
             }
         ];

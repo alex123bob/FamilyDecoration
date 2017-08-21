@@ -33,7 +33,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                     listRec: contractListRec,
                     detail: contractDetail
                 };
-            };
+            },
+            contractSelected;
         
         // load contract according to selected project and contract type.
         function loadContract (){
@@ -46,11 +47,15 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                     }, function (obj){
                         resObj.detail.removeAll();
                         if (obj.data.length > 0) {
+                            contractSelected = obj.data[0];
                             resObj.detail.add({
                                 xtype: 'contractmanagement-projectcontract',
                                 preview: true,
                                 contract: obj.data[0]
                             });
+                        }
+                        else {
+                            contractSelected = undefined;
                         }
                     });
                 }
@@ -241,7 +246,46 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                         text: '编辑',
                         icon: 'resources/img/contract_edit.png',
                         handler: function (){
-                            
+                            var resObj = getRes();
+                            if (contractSelected) {
+                                var contractWin = Ext.create('FamilyDecoration.view.contractmanagement.EditContract', {
+                                    type: resObj.typeRec.getId(),
+                                    contract: contractSelected,
+                                    callback: function (obj){
+                                        // if ('successful' === obj.status) {
+                                        //     var treeSt = resObj.list.getStore(),
+                                        //         contract = obj.data;
+                                        //     delete treeSt.proxy.extraParams.captainName;
+                                        //     treeSt.proxy.extraParams.action = 'getProjectCaptains';
+                                        //     treeSt.reload({
+                                        //         node: resObj.list.getRootNode(),
+                                        //         callback: function (recs, ope, success){
+                                        //             if (success) {
+                                        //                 Ext.each(recs, function (rec, index, self) {
+                                        //                     if (contract.captainName === rec.get('captainName')) {
+                                        //                         rec.expand(false, function (nodes) {
+                                        //                             Ext.each(nodes, function (node, i, self){
+                                        //                                 if (node.getId() === contract.projectId) {
+                                        //                                     resObj.listSelModel.select(node);
+                                        //                                 }
+                                        //                             });
+                                        //                         });
+                                        //                     }
+                                        //                 });
+                                        //             }
+                                        //         }
+                                        //     });
+                                        // }
+                                        // else {
+                                        //     showMsg(obj.errMsg);
+                                        // }
+                                    }
+                                });
+                                contractWin.show();
+                            }
+                            else {
+                                showMsg('请选择要编辑的合同');
+                            }
                         }
                     }
                 ]
