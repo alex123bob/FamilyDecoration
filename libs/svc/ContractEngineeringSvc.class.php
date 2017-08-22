@@ -19,7 +19,16 @@ class ContractEngineeringSvc extends BaseSvc
   }
 
   private function transformAddtionals(&$item) {
-    $item['additionals']  = isset($item['additionals']) ? explode('/**/', trim($item['additionals'],'/**/')) : array();
+    $additionals  = isset($item['additionals']) ? explode('/**/', trim($item['additionals'],'/**/')) : array();
+    $item['additionals'] = array();
+    foreach ($additionals as $k => $v) {
+      $ex = explode(':', $v);
+      array_push($item['additionals'], array(
+        'content'=> $ex[0],
+        'type'=>count($ex) == 1 ? 'default' : $ex[1]
+      ));
+    }
+    ;
   }
 
   private function transformStage(&$item) {
@@ -101,6 +110,70 @@ class ContractEngineeringSvc extends BaseSvc
     $res['data']['projectId'] = $projectId;
     $res['data']['captainName'] = $q['@captainName'];
     $res['data']['captain'] = $q['@captain'];
+    $mysql->commit();
+    return $res;
+  }
+
+  function addAddtional($q) {
+    global $mysql;
+    $mysql->begin();
+    $projectSvc = BaseSvc::getSvc('Project');
+    switch ($q['@type']) {
+      case 'default':
+        // do nothing;
+        break;
+      case 'gongqi':
+        $projectSvc->update(array(
+          'projectId' => $q['projectId'],
+          '@period' => $q['@beginTime'].':'.$q['@endTime']
+        ));
+        break;
+      case 'captain':
+        $projectSvc->update(array(
+          'projectId' => $q['projectId'],
+          '@captain' => $q['@captain'],
+          '@captainName' => $q['@captainName']
+        ));
+        break;
+      case 'designer':
+        $projectSvc->update(array(
+          'projectId' => $q['projectId'],
+          '@designer' => $q['@designer'],
+          '@disignerName' => $q['@disignerName']
+        ));
+        break;
+      default:
+        throw new BaseException("unknow @type:", $q['@type']);
+    }
+    $sql = "update contract_engineering set additionals = concat(additionals, '/**/','".$q['@additional'].":".$q['@type']."') where id = '".$q['id']."'";
+    $res = $mysql->DBExecute($sql);
+    $mysql->commit();
+    return $res;
+  }
+
+  function deleteAddtional($q) {
+    global $mysql;
+    $mysql->begin();
+    $res = parent::get(array('id'=>$q['id']));
+    if($res['total'] != 1) {
+      throw new BaseException("没有对应id的合同.", $q['id']);
+    }
+    $contract = $res['data'][0];
+    $additionals = explode('/**/', $contract['additionals']);
+    if(count($additionals) < $q['index'] ||  $q['index'] < 0 ){
+      throw new BaseException("没有第".$q['index']."条附加条款.");
+    }
+    $additional = $additionals[$q['index']];
+    $tmp = explode(':', $additional);
+    if(count($tmp) == 2 && $tmp[1] != 'default') {
+      throw new BaseException("非普通附加条款,不允许删除!".$tmp[1]);
+    }
+    if($tmp[0] != $q['addtional']) {
+      throw new BaseException("请勿重复提交!");
+    }
+    unset($additionals[$q['index']]);
+    $sql = "update contract_engineering set additionals = '".join($additionals,'/**/')."' where id = '".$q['id']."'";
+    $res = $mysql->DBExecute($sql);
     $mysql->commit();
     return $res;
   }
