@@ -36,6 +36,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditContract', {
 
         me.buttons = [
             {
+                hidden: isEdit,
                 text: '确定',
                 handler: function (){
                     var contractCmp;
