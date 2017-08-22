@@ -30,7 +30,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditContract', {
             {
                 business: me.business,
                 xtype: 'contractmanagement-projectcontract',
-                contract: isEdit ? me.contract : false
+                contract: isEdit ? me.contract : false,
+                project: me.project
             }
         ];
 

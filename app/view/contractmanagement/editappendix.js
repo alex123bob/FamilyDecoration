@@ -15,6 +15,11 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
     title: '添加附件条款',
     appendix: undefined,
     bodyPadding: 4,
+
+    contract: undefined,
+    project: undefined,
+    business: undefined,
+
     callback: Ext.emptyFn,
     isEdit: false,
 
@@ -212,32 +217,75 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
                 text: '确定',
                 handler: function (){
                     var resObj = _getRes(),
-                        str = '';
+                        str = '',
+                        isCmpValid = true,
+                        type,
+                        extraParams = {};
                     if (resObj.content.isValid()) {
                         if (!resObj.projectPeriodFst.collapsed) {
                             if (resObj.startTime.isValid() && resObj.endTime.isValid()) {
                                 if (resObj.startTime.getValue() > resObj.endTime.getValue()) {
                                     showMsg('开始时间不能晚于结束时间');
+                                    isCmpValid = false;
                                 }
                                 else {
                                     str = '调整项目工期，项目工期时间为：' + Ext.Date.format(resObj.startTime.getValue(), 'Y-m-d') + '~' + Ext.Date.format(resObj.endTime.getValue(), 'Y-m-d') + '，更改原因：' + resObj.content.getValue();
+                                    type = 'gongqi';
+                                    Ext.apply(extraParams, {
+                                        beginTime: Ext.Date.format(resObj.startTime.getValue(), 'Y-m-d'),
+                                        endTime: Ext.Date.format(resObj.endTime.getValue(), 'Y-m-d')
+                                    });
                                 }
+                            }
+                            else {
+                                isCmpValid = false;
                             }
                         }
                         else if (!resObj.captainFst.collapsed) {
                             if (resObj.captain.isValid()) {
-                                str = '调整项目经理，新项目经理为：' + resObj.captain.getValue() + '，调整原因：' + resObj.content.getValue();
+                                str = '调整项目经理，原项目经理为：' + me.contract.captain + '，新项目经理为：' + resObj.captain.getValue() + '，调整原因：' + resObj.content.getValue();
+                                type = 'captain';
+                                Ext.apply(extraParams, {
+                                    captain: resObj.captain.getValue(),
+                                    captainName: resObj.captainName.getValue()
+                                });
+                            }
+                            else {
+                                isCmpValid = false;
                             }
                         }
                         else if (!resObj.designerFst.collapsed) {
                             if (resObj.designer.isValid()) {
-                                str = '调整设计师，新设计师为：' + resObj.designer.getValue() + '，调整原因：' + resObj.content.getValue();
+                                str = '调整设计师，原设计师为：' + me.contract.designer + '，新设计师为：' + resObj.designer.getValue() + '，调整原因：' + resObj.content.getValue();
+                                type = 'designer';
+                                Ext.apply(extraParams, {
+                                    designer: resObj.designer.getValue(),
+                                    designerName: resObj.designerName.getValue()
+                                });
+                            }
+                            else {
+                                isCmpValid = false;
                             }
                         }
                         else {
                             str = resObj.content.getValue();
+                            type = 'default';
                         }
-                        me.callback(str);
+                        if (isCmpValid){
+                            if (me.isEdit) {
+                                ajaxUpdate('ContractEngineering.addAdditional', Ext.apply({
+                                    id: me.contract.id,
+                                    additional: str,
+                                    type: type,
+                                    projectId: me.project.getId()
+                                }, extraParams), ['projectId', 'id'], function (obj){
+                                    console.log(obj);
+                                }, true);
+                            }
+                            else {
+                                me.callback(str);
+                            }
+                        }
                     }
                 }
             },

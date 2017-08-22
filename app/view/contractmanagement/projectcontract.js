@@ -12,6 +12,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
     header: false,
     preview: false, // whether current contract is editable or not.
     business: undefined,
+    project: undefined,
 
     contract: undefined, // is edit or not.
 
@@ -111,7 +112,10 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             return appendixCt.query('[name="appendix"]').length;
         }
 
-        function createAppendix(index, content) {
+        function createAppendix(index, obj) {
+            if (!obj.type) {
+                obj.type = 'default';
+            }
             return {
                 layout: 'hbox',
                 name: 'appendix',
@@ -125,7 +129,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                     {
                         xtype: 'displayfield',
                         fieldLabel: index.toString(),
-                        value: content,
+                        value: obj.content,
                         name: 'additionals',
                         flex: 1
                     },
@@ -133,13 +137,18 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         xtype: 'button',
                         text: 'X',
                         width: 30,
-                        hidden: preview,
+                        hidden: preview || obj.type !== 'default',
                         handler: function (){
                             var hbox = this.ownerCt,
                                 fieldset = hbox.ownerCt;
                             fieldset.remove(hbox);
                             updateAppendix();
                         }
+                    },
+                    {
+                        xtype: 'hiddenfield',
+                        name: 'type',
+                        value: obj.type
                     }
                 ]
             }
@@ -710,8 +719,11 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                         ct = btn.ownerCt;
                                     var win = Ext.create('FamilyDecoration.view.contractmanagement.EditAppendix', {
                                         isEdit: editMode,
+                                        contract: me.contract,
+                                        project: me.project,
+                                        business: me.business,
                                         callback: function (content){
-                                            var config = createAppendix(countAppendix() + 1, content);
+                                            var config = createAppendix(countAppendix() + 1, {content: content});
                                             ct.add(config);
                                             win.close();
                                         }

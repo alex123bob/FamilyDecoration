@@ -186,6 +186,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                                                         var contractWin = Ext.create('FamilyDecoration.view.contractmanagement.EditContract', {
                                                             type: type,
                                                             business: business,
+                                                            project: resObj.listRec,
                                                             callback: function (obj){
                                                                 if ('successful' === obj.status) {
                                                                     var treeSt = resObj.list.getStore(),
@@ -250,6 +251,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                             if (contractSelected) {
                                 var contractWin = Ext.create('FamilyDecoration.view.contractmanagement.EditContract', {
                                     type: resObj.typeRec.getId(),
+                                    project: resObj.listRec,
                                     contract: contractSelected,
                                     callback: function (obj){
                                         // if ('successful' === obj.status) {
