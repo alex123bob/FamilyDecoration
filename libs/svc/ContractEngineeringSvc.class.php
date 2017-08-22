@@ -114,7 +114,7 @@ class ContractEngineeringSvc extends BaseSvc
     return $res;
   }
 
-  function addAddtional($q) {
+  function addAdditional($q) {
     global $mysql;
     $mysql->begin();
     $projectSvc = BaseSvc::getSvc('Project');
