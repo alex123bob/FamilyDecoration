@@ -253,34 +253,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                                     type: resObj.typeRec.getId(),
                                     project: resObj.listRec,
                                     contract: contractSelected,
-                                    callback: function (obj){
-                                        // if ('successful' === obj.status) {
-                                        //     var treeSt = resObj.list.getStore(),
-                                        //         contract = obj.data;
-                                        //     delete treeSt.proxy.extraParams.captainName;
-                                        //     treeSt.proxy.extraParams.action = 'getProjectCaptains';
-                                        //     treeSt.reload({
-                                        //         node: resObj.list.getRootNode(),
-                                        //         callback: function (recs, ope, success){
-                                        //             if (success) {
-                                        //                 Ext.each(recs, function (rec, index, self) {
-                                        //                     if (contract.captainName === rec.get('captainName')) {
-                                        //                         rec.expand(false, function (nodes) {
-                                        //                             Ext.each(nodes, function (node, i, self){
-                                        //                                 if (node.getId() === contract.projectId) {
-                                        //                                     resObj.listSelModel.select(node);
-                                        //                                 }
-                                        //                             });
-                                        //                         });
-                                        //                     }
-                                        //                 });
-                                        //             }
-                                        //         }
-                                        //     });
-                                        // }
-                                        // else {
-                                        //     showMsg(obj.errMsg);
-                                        // }
+                                    callback: function (){
+                                        resObj.listSelModel.deselectAll();
+                                        resObj.listSelModel.select(resObj.listRec);
                                     }
                                 });
                                 contractWin.show();

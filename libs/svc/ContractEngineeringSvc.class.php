@@ -151,7 +151,7 @@ class ContractEngineeringSvc extends BaseSvc
     return $res;
   }
 
-  function deleteAddtional($q) {
+  function deleteAdditional($q) {
     global $mysql;
     $mysql->begin();
     $res = parent::get(array('id'=>$q['id']));
@@ -168,7 +168,7 @@ class ContractEngineeringSvc extends BaseSvc
     if(count($tmp) == 2 && $tmp[1] != 'default') {
       throw new BaseException("非普通附加条款,不允许删除!".$tmp[1]);
     }
-    if($tmp[0] != $q['addtional']) {
+    if($tmp[0] != $q['additional']) {
       throw new BaseException("请勿重复提交!");
     }
     unset($additionals[$q['index']]);

@@ -36,6 +36,23 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             }
         ];
 
+        function sync (){
+            var syncDeferred = jQuery.Deferred();
+
+            ajaxGet('ContractEngineering', false, {
+                id: me.contract.id
+            }, function(obj) {
+                if (obj.data.length > 0) {
+                    syncDeferred.resolve(obj.data[0]);
+                }
+                else {
+                    syncDeferred.reject(obj);
+                }
+            });
+
+            return syncDeferred.promise();
+        }
+
         function countProjectPaymentArea (){
             var form = me.down('form'),
                 count = 0;
@@ -123,6 +140,10 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                 updateIndex: function (index){
                     this.down('displayfield').setFieldLabel((index + 1).toString());
                 },
+                __appendixIndex: (index - 1),
+                getAppendixIndex: function (){
+                    return this.__appendixIndex;
+                },
                 defaults: {
                 },
                 items: [
@@ -130,7 +151,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         xtype: 'displayfield',
                         fieldLabel: index.toString(),
                         value: obj.content,
-                        name: 'additionals',
+                        name: 'additional',
+                        itemId: 'additional',
                         flex: 1
                     },
                     {
@@ -140,14 +162,35 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         hidden: preview || obj.type !== 'default',
                         handler: function (){
                             var hbox = this.ownerCt,
-                                fieldset = hbox.ownerCt;
-                            fieldset.remove(hbox);
-                            updateAppendix();
+                                fieldset = hbox.ownerCt,
+                                additional = hbox.getComponent('additional'),
+                                type = hbox.getComponent('type');
+                            if (editMode) {
+                                Ext.Msg.warning('确定要删除当前附加条款吗?', function (btnId){
+                                    if ('yes' == btnId) {
+                                        ajaxUpdate('ContractEngineering.deleteAdditional', {
+                                            id: me.contract.id,
+                                            index: hbox.getAppendixIndex(),
+                                            additional: additional.getValue()
+                                        }, ['id', 'index', 'additional'], function (obj){
+                                            showMsg('删除成功!');
+                                            sync().then(function (obj){
+                                                fieldset.sync(obj);
+                                            });
+                                        }, true);
+                                    }
+                                });
+                            }
+                            else {
+                                fieldset.remove(hbox);
+                                updateAppendix();
+                            }
                         }
                     },
                     {
                         xtype: 'hiddenfield',
                         name: 'type',
+                        itemId: 'type',
                         value: obj.type
                     }
                 ]
@@ -305,8 +348,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             payments.get(3) && payments.get(3).items.get(2).setValue(Math.round(me.percentages[2] * totalPrice));
             payments.get(4) && payments.get(4).items.get(2).setValue(Math.round(me.percentages[3] * totalPrice));
         }
-
-
 
         me.getValues = function (){
             var frm = me.down('form'),
@@ -541,6 +582,18 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         ]
                     },
                     {
+                        itemId: 'gongqi',
+                        name: 'gongqi',
+                        sync: function (obj){
+                            var startTime = this.getComponent('startTime'),
+                                endTime = this.getComponent('endTime'),
+                                totalProjectTime = this.getComponent('totalProjectTime');
+                            if (editMode && obj) {
+                                startTime.setValue(obj.startTime);
+                                endTime.setValue(obj.endTime);
+                                totalProjectTime.setValue(obj.totalDays + '天');
+                            }
+                        },
                         defaults: {
                             flex: 1,
                             labelWidth: 30,
@@ -626,7 +679,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 name: 'totalProjectTime',
                                 labelWidth: 50,
                                 fieldLabel: '总工期',
-                                value: me.contract ? me.contract.totalDays : ''
+                                value: me.contract ? me.contract.totalDays + '天' : ''
                             }
                         ]
                     },
@@ -708,6 +761,19 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             flex: 1,
                             width: '100%'
                         },
+                        sync: function (obj){
+                            var appendixCt = this,
+                                appendixes = appendixCt.query('[name="appendix"]');
+
+                            if (editMode && obj) {
+                                Ext.each(appendixes, function (appendix, index, self){
+                                    appendixCt.remove(appendix);
+                                });
+                                Ext.each(obj.additionals, function (additional, index, self){
+                                    appendixCt.add(createAppendix(countAppendix() + 1, additional));
+                                });
+                            }
+                        },
                         items: [
                             {
                                 xtype: 'button',
@@ -722,9 +788,24 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                         contract: me.contract,
                                         project: me.project,
                                         business: me.business,
-                                        callback: function (content){
-                                            var config = createAppendix(countAppendix() + 1, {content: content});
-                                            ct.add(config);
+                                        // obj: Object contains content and type.
+                                        callback: function (obj){
+                                            var frm = me.down('form'),
+                                                gongqi = frm.getComponent('gongqi'),
+                                                appendixCt = frm.getComponent('appendixCt');
+                                            if (editMode) {
+                                                sync().then(function (data){
+                                                    if (obj.type === 'gongqi') {
+                                                        gongqi.sync(data);
+                                                    }
+                                                    appendixCt.sync(data);
+                                                });
+                                            }
+                                            else {
+                                                var config = createAppendix(countAppendix() + 1, {content: obj.content});
+                                                ct.add(config);
+                                            }
+                                            showMsg('添加成功!');
                                             win.close();
                                         }
                                     });

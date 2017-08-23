@@ -63,6 +63,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditContract', {
             {
                 text: '取消',
                 handler: function (){
+                    if (isEdit) {
+                        me.callback();
+                    }
                     me.close();
                 }
             }

@@ -229,7 +229,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
                                     isCmpValid = false;
                                 }
                                 else {
-                                    str = '调整项目工期，项目工期时间为：' + Ext.Date.format(resObj.startTime.getValue(), 'Y-m-d') + '~' + Ext.Date.format(resObj.endTime.getValue(), 'Y-m-d') + '，更改原因：' + resObj.content.getValue();
+                                    str = '调整项目工期，项目工期时间为[' + Ext.Date.format(resObj.startTime.getValue(), 'Y-m-d') + '~' + Ext.Date.format(resObj.endTime.getValue(), 'Y-m-d') + ']，更改原因[' + resObj.content.getValue() + ']';
                                     type = 'gongqi';
                                     Ext.apply(extraParams, {
                                         beginTime: Ext.Date.format(resObj.startTime.getValue(), 'Y-m-d'),
@@ -243,7 +243,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
                         }
                         else if (!resObj.captainFst.collapsed) {
                             if (resObj.captain.isValid()) {
-                                str = '调整项目经理，原项目经理为：' + me.contract.captain + '，新项目经理为：' + resObj.captain.getValue() + '，调整原因：' + resObj.content.getValue();
+                                str = '调整项目经理，原项目经理为[' + me.contract.captain + ']，新项目经理为[' + resObj.captain.getValue() + ']，调整原因[' + resObj.content.getValue() + ']';
                                 type = 'captain';
                                 Ext.apply(extraParams, {
                                     captain: resObj.captain.getValue(),
@@ -256,7 +256,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
                         }
                         else if (!resObj.designerFst.collapsed) {
                             if (resObj.designer.isValid()) {
-                                str = '调整设计师，原设计师为：' + me.contract.designer + '，新设计师为：' + resObj.designer.getValue() + '，调整原因：' + resObj.content.getValue();
+                                str = '调整设计师，原设计师为[' + me.contract.designer + ']，新设计师为[' + resObj.designer.getValue() + ']，调整原因[' + resObj.content.getValue() + ']';
                                 type = 'designer';
                                 Ext.apply(extraParams, {
                                     designer: resObj.designer.getValue(),
@@ -279,11 +279,18 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditAppendix', {
                                     type: type,
                                     projectId: me.project.getId()
                                 }, extraParams), ['projectId', 'id'], function (obj){
-                                    console.log(obj);
+                                    if ('successful' == obj.status) {
+                                        me.callback({
+                                            content: str,
+                                            type: type
+                                        });
+                                    }
                                 }, true);
                             }
                             else {
-                                me.callback(str);
+                                me.callback({
+                                    content: str
+                                });
                             }
                         }
                     }
