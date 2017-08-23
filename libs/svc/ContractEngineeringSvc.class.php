@@ -139,7 +139,7 @@ class ContractEngineeringSvc extends BaseSvc
         $projectSvc->update(array(
           'projectId' => $q['projectId'],
           '@designer' => $q['@designer'],
-          '@disignerName' => $q['@disignerName']
+          '@designerName' => $q['@designerName']
         ));
         break;
       default:

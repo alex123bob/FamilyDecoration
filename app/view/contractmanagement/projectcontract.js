@@ -465,6 +465,18 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             margin: '0 4 0 0',
                             allowBlank: false
                         },
+                        name: 'captainFst',
+                        itemId: 'captainFst',
+                        sync: function (obj){
+                            var captain = this.getComponent('captain'),
+                                captainName = this.getComponent('captainName'),
+                                phone = this.getComponent('phone');
+                            if (editMode && obj) {
+                                captain.setValue(obj.captain);
+                                captainName.setValue(obj.captainName);
+                                phone.setValue(obj.captainPhone);
+                            }
+                        },
                         items: [
                             {
                                 xtype: preview ? 'displayfield' : 'textfield',
@@ -521,13 +533,24 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             margin: '0 4 0 0',
                             allowBlank: false
                         },
+                        name: 'projectPersonnels',
+                        itemId: 'projectPersonnels',
                         items: [
                             {
                                 xtype: 'displayfield',
                                 fieldLabel: '设计师',
                                 value: me.contract ? (me.contract.designer) : (me.business && me.business.get('designer')),
                                 itemId: 'designer',
-                                name: 'designer'
+                                name: 'designer',
+                                sync: function (obj){
+                                    var ownerCt = this.ownerCt,
+                                        designer = this,
+                                        designerName = ownerCt.getComponent('designerName');
+                                    if (editMode && obj) {
+                                        designer.setValue(obj.designer);
+                                        designerName.setValue(obj.designerName);
+                                    }
+                                }
                             },
                             {
                                 xtype: 'hiddenfield',
@@ -792,11 +815,19 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                         callback: function (obj){
                                             var frm = me.down('form'),
                                                 gongqi = frm.getComponent('gongqi'),
+                                                captainFst = frm.getComponent('captainFst'),
+                                                designerField = frm.getComponent('projectPersonnels').getComponent('designer'),
                                                 appendixCt = frm.getComponent('appendixCt');
                                             if (editMode) {
                                                 sync().then(function (data){
                                                     if (obj.type === 'gongqi') {
                                                         gongqi.sync(data);
+                                                    }
+                                                    else if (obj.type === 'captain') {
+                                                        captainFst.sync(data);
+                                                    }
+                                                    else if (obj.type === 'designer') {
+                                                        designerField.sync(data);
                                                     }
                                                     appendixCt.sync(data);
                                                 });
