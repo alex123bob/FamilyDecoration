@@ -220,6 +220,10 @@ tr.priority-general .x-grid-td {
     text-align:right;
 }
 
+.dhtmlx_message_area {
+    z-index: 99999999;
+}
+
 /*html { 
   -webkit-filter: grayscale(100%); 
   -moz-filter: grayscale(100%); 

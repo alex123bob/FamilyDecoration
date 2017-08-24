@@ -455,7 +455,37 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 vtype: 'idcard',
                                 name: 'sid',
                                 itemId: 'sid',
-                                value: me.contract ? me.contract.sid : ''
+                                readOnly: editMode ? true : false,
+                                value: me.contract ? me.contract.sid : '',
+                                listeners: {
+                                    blur: function (cmp, evt, opts){
+                                        if (cmp.isValid() && !cmp.readOnly) {
+                                            ajaxUpdate('ContractEngineering', {
+                                                sid: cmp.getValue(),
+                                                id: me.contract.id
+                                            }, ['id'], function (obj){
+                                                showMsg('更新成功!');
+                                                cmp.setReadOnly(true);
+                                            });
+                                        }
+                                    },
+                                    render: function (cmp, opts){
+                                        if (editMode) {
+                                            cmp.getEl().on('dblclick', function (){
+                                                cmp.setReadOnly(false);
+                                            });
+                                        }
+                                    },
+                                    afterrender: function (cmp, opts){
+                                        if (editMode) {
+                                            var tip = Ext.create('Ext.tip.ToolTip', {
+                                                target: cmp.id,
+                                                trackMouse: true,
+                                                html: '双击进行编辑'
+                                            });
+                                        }
+                                    }
+                                }
                             }
                         ]
                     },

@@ -48,9 +48,9 @@
         <!-- </x-bootstrap> -->
         <script src="app.js"></script>
     <!-- </x-compile> -->
-    <link href="resources/css/global.css" rel="stylesheet" />
     <link rel="stylesheet" href="tools/dhtmlx/codebase/themes/message_solid.css" />
     <link rel="stylesheet" href="tools/sweetalert/dist/sweetalert.css" />
+    <link href="resources/css/global.css" rel="stylesheet" />
     <script type="text/javascript" src="resources/locale/ext-lang-zh_CN.js"></script>
     <script src="https://channel.sinaapp.com/api.js" type="text/javascript"></script>
     <!-- for Christmas effect -->
