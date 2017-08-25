@@ -301,7 +301,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                         id: me.contract.id
                                     }, ['id'], function (obj){
                                         showMsg('更新成功!');
-                                        cmp.setReadOnly(true);
                                     });
                                 }
                             }
@@ -313,9 +312,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         labelWidth: 60,
                         name: 'extraPaymentFee',
                         value: obj ? obj.amount : '',
-                        listeners : {
-                            change : calculateTotalPayments
-                        },
                         listeners: {
                             blur: function (cmp, evt, opts){
                                 if (cmp.isValid() && editMode) {
@@ -325,24 +321,45 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                         id: me.contract.id
                                     }, ['id'], function (obj){
                                         showMsg('更新成功!');
-                                        cmp.setReadOnly(true);
                                     });
                                 }
-                            }
+                            },
+                            change : calculateTotalPayments
                         }
                     },
                     {
                         xtype: 'button',
                         width: 35,
                         flex: null,
-                        hidden: fixedArr.indexOf(index) !== -1,
+                        hidden: preview || fixedArr.indexOf(index) !== -1,
                         text: 'X',
                         handler: function (){
                             var area = this.ownerCt,
-                                ct = area.ownerCt;
-                            ct.remove(area);
-                            updateExtraPaymentArea();
-                            calculateTotalPayments();
+                                ct = area.ownerCt,
+                                frm = me.down('form'),
+                                totalPriceCmp = frm.down('[name="totalPrice"]'),
+                                extraPaymentCt = frm.getComponent('extraPaymentCt');
+                            if (editMode) {
+                                ct.remove(area);
+                                updateExtraPaymentArea();
+                                ajaxUpdate('ContractEngineering', {
+                                    id: me.contract.id,
+                                    stages: getStages()
+                                }, ['id'], function (obj){
+                                    sync().then(function (data){
+                                        totalPriceCmp.sync(data);
+                                        while(extraPaymentCt.items.length > 1) {
+                                            extraPaymentCt.remove(extraPaymentCt.items.last());
+                                        }
+                                        Ext.each(data.stages, function (obj, index, self){
+                                            extraPaymentCt.add(createExtraPayment(index, obj));
+                                        });
+                                    });
+                                });
+                            }
+                            else {
+                                calculateTotalPayments();
+                            }
                         }
                     }
                 ]
@@ -351,7 +368,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
 
         function calculateTotalPayments (){
            var frm = me.down('form'),
-                totalPrice = frm.down('[name="totalPrice"]').getValue(),
+                totalPriceCmp = frm.down('[name="totalPrice"]'),
+                totalPrice = totalPriceCmp.getValue(),
                 extraPaymentCt = frm.down('[name="extraPaymentCt"]'),
                 payments = extraPaymentCt.items,
                 total = 0;
@@ -825,6 +843,11 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 name: 'totalPrice',
                                 itemId: 'totalPrice',
                                 value: me.contract ? me.contract.totalPrice : '',
+                                sync: function (obj){
+                                    if (editMode && obj) {
+                                        this.setValue(obj.totalPrice);
+                                    }
+                                },
                                 listeners: {
                                     change: calculateInstallments,
                                     blur: function (cmp, evt, opts){
@@ -836,7 +859,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                                 id: me.contract.id
                                             }, ['id'], function (obj){
                                                 showMsg('更新成功!');
-                                                cmp.setReadOnly(true);
                                             });
                                         }
                                     }
