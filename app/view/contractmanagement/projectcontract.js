@@ -240,6 +240,25 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             });
         }
 
+        function getStages (){
+            var stages = [],
+                frm = me.down('form'),
+                timeFormat = 'Y-m-d',
+                valueObj = frm.getValues(false, false, false, true);
+            if (Ext.isArray(valueObj.extraPaymentDate)) {
+                Ext.each(valueObj.extraPaymentDate, function (d, index, self){
+                    stages.push(Ext.Date.format(d, timeFormat) + ':' + valueObj.extraPaymentFee[index]);
+                });
+            }
+            else if (Ext.isDate(valueObj.extraPaymentDate)) {
+                stages.push(Ext.Date.format(d, timeFormat) + ':' + valueObj.extraPaymentDate[index]);
+            }
+
+            stages = stages.join(joinSymbol);
+
+            return stages;
+        }
+
         function createExtraPayment (index, obj){
             var fixedArr = [0, 1, 2, 3],
                 installmentPercentage = Ext.clone(me.percentages),
@@ -272,7 +291,21 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         format: 'Y-m-d H:i:s',
                         labelWidth: 60,
                         name: 'extraPaymentDate',
-                        value: obj ? obj.time : ''
+                        value: obj ? obj.time : '',
+                        listeners: {
+                            blur: function (cmp, evt, opts){
+                                if (cmp.isValid() && editMode) {
+                                    var stages = getStages();
+                                    ajaxUpdate('ContractEngineering', {
+                                        stages: stages,
+                                        id: me.contract.id
+                                    }, ['id'], function (obj){
+                                        showMsg('更新成功!');
+                                        cmp.setReadOnly(true);
+                                    });
+                                }
+                            }
+                        }
                     },
                     {
                         xtype: preview ? 'displayfield' : 'numberfield',
@@ -282,6 +315,20 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         value: obj ? obj.amount : '',
                         listeners : {
                             change : calculateTotalPayments
+                        },
+                        listeners: {
+                            blur: function (cmp, evt, opts){
+                                if (cmp.isValid() && editMode) {
+                                    var stages = getStages();
+                                    ajaxUpdate('ContractEngineering', {
+                                        stages: stages,
+                                        id: me.contract.id
+                                    }, ['id'], function (obj){
+                                        showMsg('更新成功!');
+                                        cmp.setReadOnly(true);
+                                    });
+                                }
+                            }
                         }
                     },
                     {
@@ -555,7 +602,37 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         fieldLabel: '联系地址(客户)',
                         name: 'address',
                         itemId: 'address',
-                        value: me.contract ? me.contract.address : ''
+                        value: me.contract ? me.contract.address : '',
+                        readOnly: editMode ? true : false,
+                        listeners: {
+                            blur: function (cmp, evt, opts){
+                                if (cmp.isValid() && !cmp.readOnly) {
+                                    ajaxUpdate('ContractEngineering', {
+                                        address: cmp.getValue(),
+                                        id: me.contract.id
+                                    }, ['id'], function (obj){
+                                        showMsg('更新成功!');
+                                        cmp.setReadOnly(true);
+                                    });
+                                }
+                            },
+                            render: function (cmp, opts){
+                                if (editMode) {
+                                    cmp.getEl().on('dblclick', function (){
+                                        cmp.setReadOnly(false);
+                                    });
+                                }
+                            },
+                            afterrender: function (cmp, opts){
+                                if (editMode) {
+                                    var tip = Ext.create('Ext.tip.ToolTip', {
+                                        target: cmp.id,
+                                        trackMouse: true,
+                                        html: '双击进行编辑'
+                                    });
+                                }
+                            }
+                        }
                     },
                     {
                         defaults: {
@@ -749,7 +826,20 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 itemId: 'totalPrice',
                                 value: me.contract ? me.contract.totalPrice : '',
                                 listeners: {
-                                    change: calculateInstallments
+                                    change: calculateInstallments,
+                                    blur: function (cmp, evt, opts){
+                                        if (cmp.isValid() && editMode) {
+                                            var stages = getStages();
+                                            ajaxUpdate('ContractEngineering', {
+                                                totalPrice: cmp.getValue(),
+                                                stages: stages,
+                                                id: me.contract.id
+                                            }, ['id'], function (obj){
+                                                showMsg('更新成功!');
+                                                cmp.setReadOnly(true);
+                                            });
+                                        }
+                                    }
                                 }
                             },
                             {
