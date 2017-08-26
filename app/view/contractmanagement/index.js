@@ -104,6 +104,26 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                 style: {
                     borderRight: '1px solid #cccccc'
                 },
+                tools: [
+                    {
+                        type: 'refresh',
+                        tooltip: '刷新工程列表',
+                        callback: function (){
+                            var resObj = getRes(),
+                                treeSt = resObj.list.getStore();
+                            delete treeSt.proxy.extraParams.captainName;
+                            treeSt.proxy.extraParams.action = 'getProjectCaptains';
+                            treeSt.reload({
+                                node: resObj.list.getRootNode(),
+                                callback: function (recs, ope, success){
+                                    if (success) {
+                                        resObj.listSelModel.deselectAll();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                ],
                 listeners: {
                     selectionchange: function (selModel, sels, opts){
                         loadContract();
