@@ -186,7 +186,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 					var grid = me.getComponent('gridpanel-budgetContent'),
 						colMgm = grid.getColumnManager(),
 						columns = colMgm.getColumns(),
-						visibleColIndex = [1,2,3,4];
+						visibleColIndex = [1,2,3,4,5];
 					Ext.each(columns, function (col, index, self){
 						if (viewMode === 'classic') {
 							col.setVisible(visibleColIndex.indexOf(index) !== -1);
@@ -1059,7 +1059,37 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			            		var rec = e.record,
 			            			field = e.field;
 
-			            		if (field == 'itemAmount') {
+			            		if (field == 'amountSource') {
+			            			var source = rec.get('amountSource'),
+			            				result;
+			            			try {
+				            			result = eval(source);
+			            			} catch (e) {
+			            				showMsg('公式不正确！');
+			            				return ;
+			            			}
+			            			Ext.Ajax.request({
+				            			url: './libs/budget.php?action=editItem',
+				            			method: 'POST',
+				            			params: {
+				            				budgetItemId: rec.getId(),
+				            				itemAmount: result,
+				            				amountSource: source
+				            			},
+				            			callback: function (opts, success, res){
+				            				if (success) {
+				            					var obj = Ext.decode(res.responseText);
+				            					if (obj.status == 'successful') {
+				            						showMsg('编辑成功！');
+				            					}
+				            					else {
+				            						showMsg(obj.errMsg);
+				            					}
+				            				}
+				            			}
+				            		});
+			            		}
+			            		else if (field == 'itemAmount') {
 			            			Ext.Ajax.request({
 				            			url: './libs/budget.php?action=editItem',
 				            			method: 'POST',
@@ -1290,6 +1320,19 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 	                	align: 'center',
 	                	sortable: false,
 	                	menuDisabled: true
+			        },
+			        {
+			        	text: '数量（公式）',
+			        	flex: 0.5, 
+			        	dataIndex: 'amountSource',
+	                	draggable: false,
+	                	align: 'center',
+	                	editor: me.isForPreview ? null : {
+	                		xtype: 'textfield'
+	                	},
+	                	sortable: false,
+	                	menuDisabled: true,
+	                	renderer: me.columnRenderer
 			        },
 			        {
 			        	text: '数量',

@@ -174,7 +174,7 @@
 				return array("status"=>"failing", 'errMsg'=>'已经存在小项名称，请重新填写空白项名称！');
 			}
 		}
-		$fields = array('itemName','budgetId','itemUnit','itemAmount','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','lossPercent','remark','workCategory','basicItemId','basicSubItemId','isCustomized');
+		$fields = array('amountSource','itemName','budgetId','itemUnit','itemAmount','mainMaterialPrice','auxiliaryMaterialPrice','manpowerPrice','machineryPrice','lossPercent','remark','workCategory','basicItemId','basicSubItemId','isCustomized');
 		$obj = array('budgetItemId'=>$post["budgetItemId"]);
 		foreach($fields as $field){
 			if(isset($post[$field]))

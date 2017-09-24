@@ -7,6 +7,7 @@ CREATE TABLE `contract_engineering` (
   `discount` float(10,2) DEFAULT NULL COMMENT '打折',
   `isDeleted` varchar(5) DEFAULT 'false',
   `sid` VARCHAR(18) default null COMMENT '身份证号',
+  `customer` VARCHAR(512) default null COMMENT '',
   `address` VARCHAR(512) default null COMMENT '装修地址',
   `stages` text default null COMMENT 'n期工程款,/**/分割,格式: /**/2017-09-08:17500/**/2017-09-18:27500/**/',
   `additionals` text default null COMMENT 'n条附加条款,/**/分割,格式: /**/条款1/**/条款2/**/条款n/**/',

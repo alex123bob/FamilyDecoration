@@ -6,6 +6,7 @@ Ext.define('FamilyDecoration.model.BudgetItem', {
 		{name: 'itemCode', type: 'string'},
 		{name: 'itemName', type: 'string'},
 		{name: 'itemUnit', type: 'string'},
+		{name: 'amountSource', type: 'string'},
 		{name: 'itemAmount', type: 'float'},
 		{name: 'mainMaterialPrice', type: 'float'},
 		{name: 'mainMaterialTotalPrice', type: 'float'},
