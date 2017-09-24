@@ -157,27 +157,6 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 
 		me.tbar = [
 			{
-				text: '计算器',
-				handler: function (){
-					var win = Ext.create('Ext.window.Window', {
-						width: 200,
-						height: 280,
-						layout: 'fit',
-						modal: true,
-						html: '<center><table style="border-width: thin thin thin thin; border-style: solid solid solid solid; border-color: black black black black; background-color: white;"><tbody><thead><tr><th><center><font face="arial" size="+1"><b>Calculator</b></center></font></th></tr></thead><tr><td><form name="calculator_jCzpHZ" action=""><input type="hidden" name="memory" /><input type="hidden" name="accumulator" /><input type="hidden" name="reset" value="0" /><table><tr><td align="center" colspan="4"><input type="text" name="display" readonly="readonly" size="20" /></td></tr><tr><td align="center"><input type="button" style="width:32px" value="m+" onclick="calculator_jCzpHZ.memory.value = eval(calculator_jCzpHZ.memory.value + \' + \' + calculator_jCzpHZ.display.value);" /></td><td align="center"><input type="button" style="width:32px" value="m-" onclick="calculator_jCzpHZ.memory.value = eval(calculator_jCzpHZ.memory.value + \' - \' + calculator_jCzpHZ.display.value);" /></td><td align="center"><input type="button" style="width:32px" value="mc" onclick="calculator_jCzpHZ.memory.value = \'\';" /></td><td align="center"><input type="button" style="width:32px" value="mr" onclick="calculator_jCzpHZ.display.value = calculator_jCzpHZ.memory.value;" /></td></tr><tr><td align="center"><input type="button" style="width:32px" value="1" onclick="if(calculator_jCzpHZ.reset.value == \'1\') { calculator_jCzpHZ.display.value = \'\'; calculator_jCzpHZ.reset.value = \'0\'; } calculator_jCzpHZ.display.value += \'1\';" /></td><td align="center"><input type="button" style="width:32px" value="2" onclick="if(calculator_jCzpHZ.reset.value == \'1\') { calculator_jCzpHZ.display.value = \'\'; calculator_jCzpHZ.reset.value = \'0\'; } calculator_jCzpHZ.display.value += \'2\';" /></td><td align="center"><input type="button" style="width:32px" value="3" onclick="if(calculator_jCzpHZ.reset.value == \'1\') { calculator_jCzpHZ.display.value = \'\'; calculator_jCzpHZ.reset.value = \'0\'; } calculator_jCzpHZ.display.value += \'3\';" /></td><td align="center"><input type="button" style="width:32px" value="+" onclick="calculator_jCzpHZ.display.value = calculator_jCzpHZ.accumulator.value = eval(calculator_jCzpHZ.accumulator.value + calculator_jCzpHZ.display.value); calculator_jCzpHZ.accumulator.value += \' + \'; calculator_jCzpHZ.reset.value = \'1\';" /></td></tr><tr><td align="center"><input type="button" style="width:32px" value="4" onclick="if(calculator_jCzpHZ.reset.value == \'1\') { calculator_jCzpHZ.display.value = \'\'; calculator_jCzpHZ.reset.value = \'0\'; } calculator_jCzpHZ.display.value += \'4\';" /></td><td align="center"><input type="button" style="width:32px" value="5" onclick="if(calculator_jCzpHZ.reset.value == \'1\') { calculator_jCzpHZ.display.value = \'\'; calculator_jCzpHZ.reset.value = \'0\'; } calculator_jCzpHZ.display.value += \'5\';" /></td><td align="center"><input type="button" style="width:32px" value="6" onclick="if(calculator_jCzpHZ.reset.value == \'1\') { calculator_jCzpHZ.display.value = \'\'; calculator_jCzpHZ.reset.value = \'0\'; } calculator_jCzpHZ.display.value += \'6\';" /></td><td align="center"><input type="button" style="width:32px" value="-" onclick="calculator_jCzpHZ.display.value = calculator_jCzpHZ.accumulator.value = eval(calculator_jCzpHZ.accumulator.value + calculator_jCzpHZ.display.value); calculator_jCzpHZ.accumulator.value += \' - \'; calculator_jCzpHZ.reset.value = \'1\';" /></td></tr><tr><td align="center"><input type="button" style="width:32px" value="7" onclick="if(calculator_jCzpHZ.reset.value == \'1\') { calculator_jCzpHZ.display.value = \'\'; calculator_jCzpHZ.reset.value = \'0\'; } calculator_jCzpHZ.display.value += \'7\';" /></td><td align="center"><input type="button" style="width:32px" value="8" onclick="if(calculator_jCzpHZ.reset.value == \'1\') { calculator_jCzpHZ.display.value = \'\'; calculator_jCzpHZ.reset.value = \'0\'; } calculator_jCzpHZ.display.value += \'8\';" /></td><td align="center"><input type="button" style="width:32px" value="9" onclick="if(calculator_jCzpHZ.reset.value == \'1\') { calculator_jCzpHZ.display.value = \'\'; calculator_jCzpHZ.reset.value = \'0\'; } calculator_jCzpHZ.display.value += \'9\';" /></td><td align="center"><input type="button" style="width:32px" value="x" onclick="calculator_jCzpHZ.display.value = calculator_jCzpHZ.accumulator.value = eval(calculator_jCzpHZ.accumulator.value + calculator_jCzpHZ.display.value); calculator_jCzpHZ.accumulator.value += \' * \'; calculator_jCzpHZ.reset.value = \'1\';" /></td></tr><tr><td align="center"><input type="button" style="width:32px" value="c" onclick="calculator_jCzpHZ.accumulator.value = \'\'; calculator_jCzpHZ.display.value = \'\'; calculator_jCzpHZ.reset.value = \'0\';" /></td><td align="center"><input type="button" style="width:32px" value="0" onclick="if(calculator_jCzpHZ.reset.value == \'1\') { calculator_jCzpHZ.display.value = \'\'; calculator_jCzpHZ.reset.value = \'0\'; } calculator_jCzpHZ.display.value += \'0\';" /></td><td align="center"><input type="button" style="width:32px" value="=" onclick="calculator_jCzpHZ.display.value = eval(calculator_jCzpHZ.accumulator.value + calculator_jCzpHZ.display.value); calculator_jCzpHZ.accumulator.value = \'\'; calculator_jCzpHZ.reset.value = \'1\';" /></td><td align="center"><input type="button" style="width:32px" value="/" onclick="calculator_jCzpHZ.display.value = calculator_jCzpHZ.accumulator.value = eval(calculator_jCzpHZ.accumulator.value + calculator_jCzpHZ.display.value); calculator_jCzpHZ.accumulator.value += \' / \'; calculator_jCzpHZ.reset.value = \'1\';" /></td></tr></table></form></td></tr><tfoot><tr><td><div style="text-align: right;"><font face="arial" size="-3"><a href="http://www.joeswebtools.com/widgets/calculator/" title="Get a calculator widget for your website">Joe\'s</a></font></div></td></tr></tfoot></tbody></table></center>',
-						buttons: [
-							{
-								text: '输入',
-								handler: function (){
-									win.close();
-								}
-							}
-						]
-					});
-					win.show();
-				}
-			},
-			{
 				text: '切换模式',
 				tooltip: '精简与原始预算界面切换',
 				icon: './resources/img/switch_convolution.png',
@@ -1143,13 +1122,16 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				            			var grid = me.getComponent('gridpanel-budgetContent'),
 				            				view = grid.getView(),
 				            				st = grid.getStore(),
-				            				itemCount = st.getCount();
+											itemCount = st.getCount(),
+											rowIndex = st.indexOf(rec);
 				            			grid.getSelectionModel().select(rec);
 				            			view.focusRow(rec, 200);
 				            			if (field == 'itemAmount') {
-			            					var rowIndex = st.indexOf(rec);
-				            				editor.startEditByPosition({row: rowIndex + 1, column: 4});	
-			            				}
+				            				editor.startEditByPosition({row: rowIndex + 1, column: 5});	
+										}
+										else if (field === 'amountSource') {
+											editor.startEditByPosition({row: rowIndex + 1, column: 4});
+										}
 				            		});
 			            		}
 			            		else {
@@ -1327,7 +1309,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 	                	menuDisabled: true
 			        },
 			        {
-			        	text: '数量（公式）',
+			        	text: '公式',
 			        	flex: 0.5, 
 			        	dataIndex: 'amountSource',
 	                	draggable: false,
