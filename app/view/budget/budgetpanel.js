@@ -1021,7 +1021,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			            listeners: {
 			            	beforeedit: function (editor, e) {
 			            		var rec = e.record;
-			            		if (e.field == 'itemAmount') {
+			            		if (e.field == 'itemAmount' || e.field == 'amountSource') {
 									if (rec.get('basicSubItemId') || 'true' == rec.get('isCustomized')) {
 										return true;
 									}
@@ -1092,7 +1092,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			            		else if (field == 'itemAmount') {
 			            			Ext.Ajax.request({
 				            			url: './libs/budget.php?action=editItem',
-				            			method: 'POST',
+				            			method: 'POST',	
 				            			params: {
 				            				budgetItemId: rec.getId(),
 				            				itemAmount: rec.get('itemAmount')
@@ -1165,6 +1165,11 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 				            			return false;
 				            		}
 				            		else if (e.value == e.originalValue) {
+				            			return false;
+				            		}
+			            		}
+			            		else if (e.field == 'amountSource') {
+			            			if (e.value == e.originalValue || (e.value || '').trim() == '') {
 				            			return false;
 				            		}
 			            		}
