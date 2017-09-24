@@ -240,6 +240,25 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             });
         }
 
+        function getStages (){
+            var stages = [],
+                frm = me.down('form'),
+                timeFormat = 'Y-m-d',
+                valueObj = frm.getValues(false, false, false, true);
+            if (Ext.isArray(valueObj.extraPaymentDate)) {
+                Ext.each(valueObj.extraPaymentDate, function (d, index, self){
+                    stages.push(Ext.Date.format(d, timeFormat) + ':' + valueObj.extraPaymentFee[index]);
+                });
+            }
+            else if (Ext.isDate(valueObj.extraPaymentDate)) {
+                stages.push(Ext.Date.format(d, timeFormat) + ':' + valueObj.extraPaymentDate[index]);
+            }
+
+            stages = stages.join(joinSymbol);
+
+            return stages;
+        }
+
         function createExtraPayment (index, obj){
             var fixedArr = [0, 1, 2, 3],
                 installmentPercentage = Ext.clone(me.percentages),
@@ -272,7 +291,20 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         format: 'Y-m-d H:i:s',
                         labelWidth: 60,
                         name: 'extraPaymentDate',
-                        value: obj ? obj.time : ''
+                        value: obj ? obj.time : '',
+                        listeners: {
+                            blur: function (cmp, evt, opts){
+                                if (cmp.isValid() && editMode) {
+                                    var stages = getStages();
+                                    ajaxUpdate('ContractEngineering', {
+                                        stages: stages,
+                                        id: me.contract.id
+                                    }, ['id'], function (obj){
+                                        showMsg('更新成功!');
+                                    });
+                                }
+                            }
+                        }
                     },
                     {
                         xtype: preview ? 'displayfield' : 'numberfield',
@@ -280,7 +312,18 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         labelWidth: 60,
                         name: 'extraPaymentFee',
                         value: obj ? obj.amount : '',
-                        listeners : {
+                        listeners: {
+                            blur: function (cmp, evt, opts){
+                                if (cmp.isValid() && editMode) {
+                                    var stages = getStages();
+                                    ajaxUpdate('ContractEngineering', {
+                                        stages: stages,
+                                        id: me.contract.id
+                                    }, ['id'], function (obj){
+                                        showMsg('更新成功!');
+                                    });
+                                }
+                            },
                             change : calculateTotalPayments
                         }
                     },
@@ -288,14 +331,35 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         xtype: 'button',
                         width: 35,
                         flex: null,
-                        hidden: fixedArr.indexOf(index) !== -1,
+                        hidden: preview || fixedArr.indexOf(index) !== -1,
                         text: 'X',
                         handler: function (){
                             var area = this.ownerCt,
-                                ct = area.ownerCt;
-                            ct.remove(area);
-                            updateExtraPaymentArea();
-                            calculateTotalPayments();
+                                ct = area.ownerCt,
+                                frm = me.down('form'),
+                                totalPriceCmp = frm.down('[name="totalPrice"]'),
+                                extraPaymentCt = frm.getComponent('extraPaymentCt');
+                            if (editMode) {
+                                ct.remove(area);
+                                updateExtraPaymentArea();
+                                ajaxUpdate('ContractEngineering', {
+                                    id: me.contract.id,
+                                    stages: getStages()
+                                }, ['id'], function (obj){
+                                    sync().then(function (data){
+                                        totalPriceCmp.sync(data);
+                                        while(extraPaymentCt.items.length > 1) {
+                                            extraPaymentCt.remove(extraPaymentCt.items.last());
+                                        }
+                                        Ext.each(data.stages, function (obj, index, self){
+                                            extraPaymentCt.add(createExtraPayment(index, obj));
+                                        });
+                                    });
+                                });
+                            }
+                            else {
+                                calculateTotalPayments();
+                            }
                         }
                     }
                 ]
@@ -304,7 +368,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
 
         function calculateTotalPayments (){
            var frm = me.down('form'),
-                totalPrice = frm.down('[name="totalPrice"]').getValue(),
+                totalPriceCmp = frm.down('[name="totalPrice"]'),
+                totalPrice = totalPriceCmp.getValue(),
                 extraPaymentCt = frm.down('[name="extraPaymentCt"]'),
                 payments = extraPaymentCt.items,
                 total = 0;
@@ -555,7 +620,37 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         fieldLabel: '联系地址(客户)',
                         name: 'address',
                         itemId: 'address',
-                        value: me.contract ? me.contract.address : ''
+                        value: me.contract ? me.contract.address : '',
+                        readOnly: editMode ? true : false,
+                        listeners: {
+                            blur: function (cmp, evt, opts){
+                                if (cmp.isValid() && !cmp.readOnly) {
+                                    ajaxUpdate('ContractEngineering', {
+                                        address: cmp.getValue(),
+                                        id: me.contract.id
+                                    }, ['id'], function (obj){
+                                        showMsg('更新成功!');
+                                        cmp.setReadOnly(true);
+                                    });
+                                }
+                            },
+                            render: function (cmp, opts){
+                                if (editMode) {
+                                    cmp.getEl().on('dblclick', function (){
+                                        cmp.setReadOnly(false);
+                                    });
+                                }
+                            },
+                            afterrender: function (cmp, opts){
+                                if (editMode) {
+                                    var tip = Ext.create('Ext.tip.ToolTip', {
+                                        target: cmp.id,
+                                        trackMouse: true,
+                                        html: '双击进行编辑'
+                                    });
+                                }
+                            }
+                        }
                     },
                     {
                         defaults: {
@@ -748,8 +843,25 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 name: 'totalPrice',
                                 itemId: 'totalPrice',
                                 value: me.contract ? me.contract.totalPrice : '',
+                                sync: function (obj){
+                                    if (editMode && obj) {
+                                        this.setValue(obj.totalPrice);
+                                    }
+                                },
                                 listeners: {
-                                    change: calculateInstallments
+                                    change: calculateInstallments,
+                                    blur: function (cmp, evt, opts){
+                                        if (cmp.isValid() && editMode) {
+                                            var stages = getStages();
+                                            ajaxUpdate('ContractEngineering', {
+                                                totalPrice: cmp.getValue(),
+                                                stages: stages,
+                                                id: me.contract.id
+                                            }, ['id'], function (obj){
+                                                showMsg('更新成功!');
+                                            });
+                                        }
+                                    }
                                 }
                             },
                             {

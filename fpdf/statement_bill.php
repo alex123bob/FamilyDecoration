@@ -96,8 +96,18 @@ $pdf->Cell(175,5,'','R','','L');
 $pdf->ln();
 
 $pdf->Cell(10,5,'','L','','L');
-$pdf->Cell(115,5,'大写金额: '.str2GBK(cny($totalBillCount)),'','','L');
+$pdf->Cell(115,5,'今收到以上工程款: '.str2GBK(cny($totalBillCount)).'。','','','L');
+$pdf->Cell(60,5,'','R','','L');
+$pdf->ln();
+$pdf->Cell(10,5,'','L','','L');
+$pdf->Cell(115,5,'','','','L');
 $pdf->Cell(60,5,'领款人(签字):','R','','L');
+
+$pdf->ln();
+$pdf->Cell(10,5,'','L','','L');
+$pdf->Cell(115,5,'现金 □     转账 □','','','L');
+$pdf->Cell(60,5,'','R','','L');
+
 $pdf->ln();
 
 $pdf->Cell(10,5,'','L','','L');
