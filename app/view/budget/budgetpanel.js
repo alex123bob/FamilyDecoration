@@ -152,9 +152,36 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 	},
 
 	initComponent: function (){
-		var me = this;
+		var me = this,
+			viewMode = 'classic';
 
 		me.tbar = [
+			{
+				text: '切换模式',
+				tooltip: '精简与原始预算界面切换',
+				icon: './resources/img/switch_convolution.png',
+				name: 'button-switchMode',
+				handler: function (){
+					var grid = me.getComponent('gridpanel-budgetContent'),
+						colMgm = grid.getColumnManager(),
+						columns = colMgm.getColumns(),
+						visibleColIndex = [1,2,3,4];
+					Ext.each(columns, function (col, index, self){
+						if (viewMode === 'classic') {
+							col.setVisible(visibleColIndex.indexOf(index) !== -1);
+						}
+						else if (viewMode === 'simplified') {
+							col.setVisible(true);
+						}
+					});
+					if (viewMode === 'classic') {
+						viewMode = 'simplified';
+					}
+					else if (viewMode === 'simplified') {
+						viewMode = 'classic';
+					}
+				}
+			},
 			{
 				text: '预算细则',
 				icon: './resources/img/detail.png',
