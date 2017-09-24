@@ -61,7 +61,7 @@
 
 	function getProjectYears (){
 		global $mysql;
-		$sql = "select distinct YEAR(`projectTime`) as `projectYear` from project where `isDeleted` = 'false' and `isFrozen` = 1 ORDER BY projectYear DESC ";
+		$sql = "select distinct YEAR(`projectTime`) as `projectYear` from project where `isDeleted` = 'false' ORDER BY projectYear DESC ";
 		return $mysql->DBGetAsMap($sql);
 	}
 	function getProjectCaptains ($captainName){
@@ -110,7 +110,7 @@
 
 	function getProjectMonths ($year){
 		global $mysql;
-		$sql = "select distinct MONTH(`projectTime`) as `projectMonth` from project where YEAR(`projectTime`) = '?' and `isDeleted` = 'false' and `isFrozen` = 1 ORDER BY `projectMonth` DESC ";
+		$sql = "select distinct MONTH(`projectTime`) as `projectMonth` from project where YEAR(`projectTime`) = '?' and `isDeleted` = 'false' ORDER BY `projectMonth` DESC ";
 		return $mysql->DBGetAsMap($sql,$year);
 	}
 
