@@ -85,6 +85,51 @@ Ext.define('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
                                         autoScroll: true,
                                         dockedItems: [
                                             {
+                                                xtype: 'toolbar',
+                                                dock: 'top',
+                                                layout: 'fit',
+                                                items: [
+                                                    {
+                                                        xtype: 'textfield',
+                                                        emptyText: '请输入材料名称，按回车进行过滤',
+                                                        enableKeyEvents: true,
+                                                        listeners: {
+                                                            keydown: function (cmp, e, opts){
+                                                                if (e.keyCode === 13) {
+                                                                    var grid = cmp.up('window').down('gridpanel'),
+                                                                        st = grid.getStore();
+                                                                    st.setProxy({
+                                                                        type: 'rest',
+                                                                        url: './libs/api.php',
+                                                                        reader: {
+                                                                            type: 'json',
+                                                                            root: 'data',
+                                                                            totalProperty: 'total'
+                                                                        },
+                                                                        extraParams: {
+                                                                            action: 'SupplierMaterial.get',
+                                                                            supplierId: me.order.get('supplierId'),
+                                                                            queryName: cmp.getValue()
+                                                                        }
+                                                                    });
+                                                                    st.loadPage(1);
+                                                                }
+                                                            },
+                                                            change: function (txt, newVal, oldVal, opts){
+                                                                var grid = txt.up('window').down('gridpanel'),
+                                                                    st = grid.getStore(),
+                                                                    proxy = st.getProxy();
+                                                                if (newVal === '') {
+                                                                    delete proxy.extraParams.queryName;
+                                                                    st.setProxy(proxy);
+                                                                    st.loadPage(1);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            {
                                                 xtype: 'pagingtoolbar',
                                                 store: st,
                                                 dock: 'bottom',
