@@ -905,25 +905,25 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			else if (!rec.get('basicItemId') && !rec.get('basicSubItemId') && rec.get('itemCode') == '') {
 				switch (colIndex) {
 					// 数量
-					case 4:
-					// 主单
 					case 5:
+					// 主单
+					case 6:
 					// 辅单
-					case 7:
+					case 8:
 					// 人单
-					case 9:
+					case 10:
 					// 机单
-					case 11:
+					case 12:
 					// 损耗
-					case 13:
+					case 14:
 					val = '';
 					break;
 					// 人成本
-					case 15:
+					case 16:
 					val = rec.get('manpowerTotalCost');
 					break;
 					// 主成本
-					case 16:
+					case 17:
 					val = rec.get('mainMaterialTotalCost');
 					break;
 				}

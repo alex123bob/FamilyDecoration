@@ -225,6 +225,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.checklog.UserLogList": "app/view/checklog/userloglist.js",
   "FamilyDecoration.view.checksignbusiness.Index": "app/view/checksignbusiness/index.js",
   "FamilyDecoration.view.checksignbusiness.TransferToProject": "app/view/checksignbusiness/transfertoproject.js",
+  "FamilyDecoration.view.contractmanagement.EditAppendix": "app/view/contractmanagement/editappendix.js",
   "FamilyDecoration.view.contractmanagement.EditContract": "app/view/contractmanagement/editcontract.js",
   "FamilyDecoration.view.contractmanagement.Index": "app/view/contractmanagement/index.js",
   "FamilyDecoration.view.contractmanagement.PickUser": "app/view/contractmanagement/pickuser.js",
@@ -1428,6 +1429,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.checklog.UserLogList": [],
   "FamilyDecoration.view.checksignbusiness.Index": [],
   "FamilyDecoration.view.checksignbusiness.TransferToProject": [],
+  "FamilyDecoration.view.contractmanagement.EditAppendix": [],
   "FamilyDecoration.view.contractmanagement.EditContract": [],
   "FamilyDecoration.view.contractmanagement.Index": [],
   "FamilyDecoration.view.contractmanagement.PickUser": [],
@@ -2867,6 +2869,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.checksignbusiness.TransferToProject": [
     "widget.checksignbusiness-transfertoproject"
+  ],
+  "FamilyDecoration.view.contractmanagement.EditAppendix": [
+    "widget.contractmanagement-editappendix"
   ],
   "FamilyDecoration.view.contractmanagement.EditContract": [
     "widget.contractmanagement-editcontract"
