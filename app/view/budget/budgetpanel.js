@@ -1309,7 +1309,7 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 	                	menuDisabled: true
 			        },
 			        {
-			        	text: '公式',
+			        	text: '计算式',
 			        	flex: 0.5, 
 			        	dataIndex: 'amountSource',
 	                	draggable: false,
