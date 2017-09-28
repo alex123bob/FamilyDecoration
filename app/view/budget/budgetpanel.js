@@ -871,31 +871,31 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 			// 特殊项
 			else if ('NOPQRS'.indexOf(rec.get('itemCode')) != -1 && rec.get('itemCode') != '') {
 				switch (colIndex) {
-					case 4:
+					case 5:
 					if ('NS'.indexOf(rec.get('itemCode')) != -1) {
 						val = '';
 					}
 					break;
 					// 主单
-					case 5:
+					case 6:
 					// 辅单
-					case 7:
-					// 辅总
 					case 8:
-					// 人单
+					// 辅总
 					case 9:
-					// 人总
+					// 人单
 					case 10:
-					// 机单
+					// 人总
 					case 11:
-					// 机总
+					// 机单
 					case 12:
-					// 损耗
+					// 机总
 					case 13:
+					// 损耗
+					case 14:
 					// 人成本
-					case 15:
-					// 主成本
 					case 16:
+					// 主成本
+					case 17:
 					val = '';
 					break;
 				}
@@ -1539,19 +1539,19 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 									if (val) {
 										switch (cellIndex) {
 											// 主单
-											case 5:
+											case 6:
 											val = val + '<br />' + rec.get('orgMainMaterialPrice');
 											break;
 											// 辅单
-											case 7:
+											case 8:
 											val = val + '<br />' + rec.get('orgAuxiliaryMaterialPrice');
 											break;
 											// 人单
-											case 9:
+											case 10:
 											val = val + '<br />' + rec.get('orgManpowerPrice');
 											break;
 											// 机单
-											case 11:
+											case 12:
 											val = val + '<br />' + rec.get('orgMachineryPrice');
 											break;
 											default:
