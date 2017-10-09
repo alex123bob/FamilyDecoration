@@ -397,5 +397,13 @@ class StatementBillSvc extends BaseSvc
 		$res = array('status'=>'successful','data'=>$data,'total'=>$count);
 		return $res;
 	}
+
+	public function getPreviousPaidTotalAmountByPayee($q) {
+		global $mysql;
+		$sql = "select sum(paidAmount) from Statement_Bill where projectId = '?' and isDeleted = 'false' and payee = '?' and status = 'paid' and id < '?'";
+		$count = $mysql->DBGetAsOneArray($sql,$q['projectId'],$q['payee'],$q['id']);
+		$res = $count[0];
+		return empty($res) ? 0 : $res;
+	}
 }
 ?>

@@ -8,7 +8,7 @@ if(strpos($_SERVER["HTTP_USER_AGENT"],"Safari") && !strpos($_SERVER["HTTP_USER_A
 	$UserBrowserClient = 'default';
 }
 
-global $name,$phone,$times,$address,$totalFee,$captain,$finishPercentage,$requiredFee,$cny,$professionTypeName,$billId; 
+global $paidTotalAmount,$name,$phone,$times,$address,$totalFee,$captain,$finishPercentage,$requiredFee,$cny,$professionTypeName,$billId; 
 
 $lineHeight 	= 6;
 //全局字体
@@ -38,6 +38,7 @@ if($bills['total'] == 0){
 	die();
 }
 $bill = $bills['data'][0];
+$paidTotalAmount = $billSvc->getPreviousPaidTotalAmountByPayee($bill);
 $billId = $bill['id'];
 $name = str2GBK($bill['payee']);
 $phone = $bill['phoneNumber'];
@@ -92,11 +93,11 @@ $pdf->Cell(10,5,'','L','','L');
 $pdf->Cell(175,5,'','R','','L');
 $pdf->ln();
 $pdf->Cell(10,5,'','L','','L');
-$pdf->Cell(175,5,'','R','','L');
+$pdf->Cell(175,5,'本工程总工程款: '.str2GBK(cny($totalFee)).'。','R','','L');
 $pdf->ln();
 
 $pdf->Cell(10,5,'','L','','L');
-$pdf->Cell(115,5,'今收到以上工程款: '.str2GBK(cny($totalBillCount)).'。','','','L');
+$pdf->Cell(115,5,'今收到工程款: '.str2GBK(cny($totalBillCount)).'。','','','L');
 $pdf->Cell(60,5,'','R','','L');
 $pdf->ln();
 $pdf->Cell(10,5,'','L','','L');
