@@ -160,15 +160,11 @@ Ext.define('FamilyDecoration.view.progress.ProjectList', {
 	            			}
 	            			else if (me.isForBudgetProjectList) {
 	            				if (node.get('projectName')) {
-	            					if (node.get('budgetFinished') == 'false') {
-	            						node.set({
-	            							leaf: true,
-	            							icon: 'resources/img/project.png'
-	            						});
-	            					}
-	            					else {
-	            						return false;
-	            					}
+									node.set({
+										leaf: true,
+										icon: 'resources/img/project.png',
+										text: node.get('budgetFinished') == 'false' ? node.get('text') : node.get('text') + ' <font color="green"><strong>[预算完成]</strong></font>'
+									});
 	            				}
 	            				else if (node.get('projectMonth')) {
 	            					node.set({
