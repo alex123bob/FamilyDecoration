@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'dva';
-import styles from './IndexPage.css';
+import styles from './IndexPage.less';
+import { Button } from 'antd-mobile';
 
 function IndexPage() {
   return (
@@ -11,6 +12,7 @@ function IndexPage() {
         <li>To get started, edit <code>src/index.js</code> and save to reload.</li>
         <li><a href="https://github.com/dvajs/dva-docs/blob/master/v1/en-us/getting-started.md">Getting Started</a></li>
       </ul>
+      <Button type="primary">default</Button>
     </div>
   );
 }

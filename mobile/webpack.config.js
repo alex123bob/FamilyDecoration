@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
+// const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
 
 module.exports = (webpackConfig, env) => {
   webpackConfig.entry = {
@@ -42,28 +42,6 @@ module.exports = (webpackConfig, env) => {
       // })
     ],
   );
-  webpackConfig.module.rules = webpackConfig.module.rules.concat(
-    [
-      {
-        test: /\.(sass|scss)$/,
-        use: [
-          'style-loader',
-          'css-loader',
-          'sass-loader',
-        ],
-      },
-      {
-        test: /\.less$/,
-        use: [
-          'style-loader',
-          'css-loader',
-          'less-loader',
-        ],
-      },
-    ],
-  );
-
-  // console.log(webpackConfig.module.rules);
 
   return webpackConfig;
 };

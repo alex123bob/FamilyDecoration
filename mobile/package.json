@@ -2,14 +2,15 @@
   "private": true,
   "scripts": {
     "start": "roadhog server",
-    "build": "roadhog build",
-    "lint": "eslint --ext .js src test",
-    "precommit": "npm run lint"
+    "build": "roadhog build"
+    // "lint": "eslint --ext .js src test"
+    // "precommit": "npm run lint"
   },
   "engines": {
     "install-node": "6.11.1"
   },
   "dependencies": {
+    "antd-mobile": "^2.0.0-rc.1",
     "babel-runtime": "^6.9.2",
     "dva": "^2.0.3",
     "react": "^15.4.0",
@@ -18,6 +19,7 @@
   "devDependencies": {
     "babel-eslint": "^7.1.1",
     "babel-plugin-dva-hmr": "^0.3.2",
+    "babel-plugin-import": "^1.6.1",
     "babel-plugin-transform-runtime": "^6.9.0",
     "eslint": "^3.12.2",
     "eslint-config-airbnb": "^13.0.0",
