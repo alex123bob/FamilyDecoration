@@ -29,8 +29,6 @@ const TabCt = () => (
         我的
       </div>
     </Tabs>
-    <WhiteSpace />
-    <WhiteSpace />
   </div>
 );
 
