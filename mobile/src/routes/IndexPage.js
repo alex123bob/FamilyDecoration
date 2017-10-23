@@ -3,13 +3,30 @@ import styles from './IndexPage.less';
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import TabCt from '../components/tabct';
+import { withRouter } from 'react-router-dom';
 
 class IndexPage extends Component {
   render() {
-    return (
-      <TabCt />
+    const { match, location, history } = this.props;
+
+    const tabs = (
+      <TabCt
+        onTabClick={
+          (tab, index) => {
+            console.log(history);
+          }
+        }
+        onTabChange={() => { }}
+      />
     );
+    return tabs;
   }
 }
 
-export default connect()(IndexPage);
+IndexPage.propTypes = {
+  match: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+};
+
+export default connect()(withRouter(IndexPage));

@@ -1,5 +1,6 @@
 import { Tabs, WhiteSpace, Badge } from 'antd-mobile';
 import React, { Component } from 'react';
+import { PropTypes } from 'prop-types';
 
 const tabs = [
   { title: <Badge text={'3'}>员工工资</Badge> },
@@ -13,8 +14,8 @@ class TabCt extends Component {
       <div>
         <Tabs tabs={tabs}
           initialPage={1}
-          onChange={(tab, index) => { console.log('onChange', index, tab); }}
-          onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }}
+          onChange={this.props.onTabChange.bind(this)}
+          onTabClick={this.props.onTabClick.bind(this)}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: document.documentElement.clientHeight, backgroundColor: '#fff' }}>
             员工工资
@@ -32,7 +33,8 @@ class TabCt extends Component {
 }
 
 TabCt.propTypes = {
-
+  onTabClick: PropTypes.func.isRequired,
+  onTabChange: PropTypes.func,
 };
 
 export default TabCt;
