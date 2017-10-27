@@ -7,16 +7,22 @@ import { withRouter } from 'react-router-dom';
 
 class IndexPage extends Component {
   render() {
-    const { match, location, history } = this.props;
+    const { match, location, history, dispatch, example } = this.props;
+    debugger
 
     const tabs = (
       <TabCt
         onTabClick={
           (tab, index) => {
-            console.log(history);
+            dispatch({
+              type: 'example/fetch',
+              payload: {
+                test: 1
+              }
+            });
           }
         }
-        onTabChange={() => { }}
+        example={example}
       />
     );
     return tabs;
