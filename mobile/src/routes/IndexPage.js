@@ -8,7 +8,6 @@ import { withRouter } from 'react-router-dom';
 class IndexPage extends Component {
   render() {
     const { match, location, history, dispatch, example } = this.props;
-    debugger
 
     const tabs = (
       <TabCt
@@ -17,7 +16,8 @@ class IndexPage extends Component {
             dispatch({
               type: 'example/fetch',
               payload: {
-                test: 1
+                index: index,
+                sub: tab.sub
               }
             });
           }
@@ -35,4 +35,10 @@ IndexPage.propTypes = {
   location: PropTypes.object.isRequired,
 };
 
-export default connect()(withRouter(IndexPage));
+function mapStateToProps (state){
+  return {
+    example: state.example
+  };
+}
+
+export default connect(mapStateToProps)(withRouter(IndexPage));

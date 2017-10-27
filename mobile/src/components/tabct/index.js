@@ -19,13 +19,13 @@ class TabCt extends Component {
           onTabClick={this.props.onTabClick.bind(this)}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: document.documentElement.clientHeight, backgroundColor: '#fff' }}>
-            {this.props.example}
+            {this.props.example.index} : {this.props.example.sub}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: document.documentElement.clientHeight, backgroundColor: '#fff' }}>
             待开发
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: document.documentElement.clientHeight, backgroundColor: '#fff' }}>
-            我的
+          {this.props.example.index}
           </div>
         </Tabs>
       </div>
