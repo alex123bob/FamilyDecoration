@@ -15,16 +15,16 @@ class PDF extends PDF_Chinese{
 		//$this->Image('../resources/img/logo.jpg',60,4,30,30); //增加一张图片，文件名为sight.jpg 
 		$this->Image('../resources/img/logo.jpg',50,4,22.5,22.5); //增加一张图片，文件名为sight.jpg 
 		$this->Text(80,15,'佳诚装饰');
-		$this->Text(80,22,'工程材付款单 ');
+		$this->Text(80,22,'工程材订购单 ');
 		$this->SetFont('GB','',8); 
 		$this->Text(158,30,"公司联-$billId");
 		$this->Ln(5); //换行
 		$this->SetFont('GB','',10); 
 		$this->Text(35,40,'项目经理:');
 		$this->Text(53,40,$captain);
-		$this->Text(35,48,"第$times 次领款");
+		$this->Text(35,48,"第$times 次采购");
 		$this->Text(80,40,'完成情况:');
-		$this->Text(97,40,$finishPercentage);
+		$this->Text(97,40,$finishPercentage.(contains($finishPercentage.'','%') ?  '' : '%'));
 		$this->Text(130,40,'工程地址:');
 		$this->Text(148,40,$address);
 		$this->Text(80,48,'总金额:');

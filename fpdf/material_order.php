@@ -38,7 +38,7 @@ $supplier = $supplierSvc->get(array('id'=>$bill['supplierId']))['data'][0];
 //var_dump($bill);
 //var_dump($supplier);
 $name = str2GBK($supplier['name']);
-$phone = str2GBK($bill['phoneNumber']);
+$phone = preg_match_all("/\d+/", $bill['phoneNumber'], $_tmp) ? $_tmp[0][0] : '';
 $projects = $projectSvc->get(array('projectId'=>$bill['projectId']));
 $captain = str2GBK($projects['data'][0]['captain']);
 $times = $bill['payedTimes'];
@@ -61,9 +61,10 @@ $widths = array(10,80,20,20,20,35);
 $aligns = array('C','C','C','C','C','C');
 $pdf->writeCellLine($widths,$titles,'LTBR','','C',6,10,$fontStyles = array());
 $totalBillCount = 0;
+$index = 0;
 foreach($billItems as $value) {
 	$data = array();
-	$data[0] = $value['referenceNumber'];
+	$data[0] = ++$index;//$value['referenceNumber'];
 	$data[1] = str2GBK($value['billItemName']);
 	$data[2] = str2GBK($value['unit']);
 	$data[3] = $value['amount'];
@@ -87,7 +88,7 @@ $pdf->ln();
 
 $pdf->Cell(10,5,'','L','','L');
 $pdf->Cell(115,5,'大写金额: '.str2GBK(cny($totalBillCount)),'','','L');
-$pdf->Cell(60,5,'领款人(签字):','R','','L');
+$pdf->Cell(60,5,'供应商(签字):','R','','L');
 $pdf->ln();
 
 $pdf->Cell(10,5,'','L','','L');

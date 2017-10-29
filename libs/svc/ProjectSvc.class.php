@@ -153,7 +153,7 @@ class ProjectSvc extends BaseSvc
 				round(sum(i.unitPrice * i.amount),2) as v
 			FROM
 				supplier_order_item i
-			LEFT JOIN supplier_order o ON o.id = i.supplierId
+			LEFT JOIN supplier_order o ON o.id = i.billId
 			WHERE
 				o.isDeleted = 'false' AND i.isDeleted = 'false' and o.projectId in ($projectIds)
 			GROUP BY
