@@ -1040,9 +1040,9 @@ Ext.define('FamilyDecoration.view.budget.BudgetPanel', {
 
 			            		if (field == 'amountSource') {
 			            			var source = rec.get('amountSource'),
-			            				result;
+										result;
 			            			try {
-				            			result = eval(source);
+				            			result = eval(source.replace(/（/gi,'(').replace(/）/gi,')').replace(/\[[\S\s]*\]/gi,''));
 			            			} catch (e) {
 			            				showMsg('公式不正确！');
 			            				return ;
