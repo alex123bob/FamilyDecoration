@@ -146,7 +146,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditBelongedItem', {
                                             value: 'salesFee'
                                         },
                                         {
-                                            name: '财物费用',
+                                            name: '财务费用',
                                             value: 'financialFee'
                                         }
                                     ]
