@@ -190,6 +190,12 @@
                         icon: 'resources/img/order.png'
                     },
                     {
+                        name: '人工对账',
+                        cmp: 'manuallycheckbill-index',
+                        leaf: true,
+                        icon: 'resources/img/bill.png'
+                    },
+                    {
                         name: '材料申购',
                         cmp: 'materialrequest-index',
                         leaf: true,
@@ -216,13 +222,13 @@
                 icon: 'resources/img/finance-parent.png',
                 children: [
                     {
-                        name: '工程财物管理',
+                        name: '工程财务管理',
                         cmp: 'projectfinancemanagement-index',
                         leaf: true,
                         icon: 'resources/img/project_finance_management.png'
                     },
                     {
-                        name: '总财物管理',
+                        name: '总财务管理',
                         cmp: 'totalpropertymanagement-index',
                         leaf: true,
                         icon: 'resources/img/total_property_management.png'
@@ -232,12 +238,6 @@
                         cmp: 'contractmanagement-index',
                         leaf: true,
                         icon: 'resources/img/contract_management.png'
-                    },
-                    {
-                        name: '人工对账',
-                        cmp: 'manuallycheckbill-index',
-                        leaf: true,
-                        icon: 'resources/img/bill.png'
                     },
                     {
                         name: '对账项目编辑',
@@ -258,7 +258,7 @@
                         icon: 'resources/img/entrynexit.png'
                     },
                     {
-                        name: '付款申请',
+                        name: '报销',
                         cmp: 'paymentrequest-index',
                         leaf: true,
                         icon: 'resources/img/payment_request.png'

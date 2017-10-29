@@ -33,10 +33,12 @@ if(count($bill['data']) == 0){
 }
 $bill = $bill['data'][0];
 $billId = $bill['id'];
-$supplier = $supplierSvc->get(array('id'=>$bill['supplierId']))['data'][0];
-
-//var_dump($bill);
-//var_dump($supplier);
+$supplier = $supplierSvc->get(array('id'=>$bill['supplierId']))['data'];
+if(count($supplier) == 0){
+	echo '<html><script type="text/javascript">document.write(decodeURIComponent("%E6%89%BE%E4%B8%8D%E5%88%B0%E5%AF%B9%E5%BA%94%E4%BE%9B%E5%BA%94%E5%95%86%EF%BC%81"));</script></html>';
+	die();
+}
+$supplier = $supplier[0];
 $name = str2GBK($supplier['name']);
 $phone = preg_match_all("/\d+/", $bill['phoneNumber'], $_tmp) ? $_tmp[0][0] : '';
 $projects = $projectSvc->get(array('projectId'=>$bill['projectId']));

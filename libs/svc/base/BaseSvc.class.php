@@ -241,6 +241,9 @@ class BaseSvc{
 		if($onlyCount){
 			return array('status'=>'successful', 'count'=>$count[0],'errMsg' => '');
 		}
+		if($count[0] == 0){
+			return array('total'=>0,'data'=>array());
+		}
 		$select = $this->parseSelectSql($q);
 		$sql = $select.' '.$this->appendJoin.' '.$where.$this->appendWhere.$orderBy.$limit;
 		$row = $mysql->DBGetAsMap($sql,$params);

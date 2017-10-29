@@ -204,6 +204,7 @@ class SupplierOrderSvc extends BaseSvc
 		$StatementBillSvc = BaseSvc::getSvc('StatementBill');
 		$this->appendSelect = ",sp.name as supplier,sp.email as email,sp.phone as phoneNumber,p.projectName,p.captain as creatorRealName";
 		$this->appendJoin = "left join supplier sp on sp.id = supplier_order.supplierId left join project p on p.projectId = supplier_order.projectId";
+		$this->appendWhere = " and sp.isDeleted = 'false' and p.isDeleted = 'false'";
 		$data = $this->get($q);
 		foreach ($data['data'] as &$item ) {
 			$item['totalFee'] = round($item['totalFee'],3);
