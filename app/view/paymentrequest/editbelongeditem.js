@@ -80,7 +80,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditBelongedItem', {
                                 value: 'dailyPurchase'
                             },
                             {
-                                name: '公司内部管理费用',
+                                name: '公司内部费用',
                                 value: 'internalManagementFee'
                             }
                         ]
@@ -385,11 +385,11 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditBelongedItem', {
                                         res += resObj.detailedItem.get('name');
                                     }
                                     else {
-                                        errorInfo = '请选择公司内部管理费用信息!';
+                                        errorInfo = '请选择公司内部费用信息!';
                                     }
                                 }
                                 else {
-                                    errorInfo = '请选择公司内部管理费用类别!';
+                                    errorInfo = '请选择公司内部费用类别!';
                                 }
                                 break;
                             default:
