@@ -40,8 +40,8 @@ foreach($logs as $value) {
 	$data = array();
 	$data[0] = $i++;
 	$data[1] = $value['createTime'];
-	$data[2] = $value['type'] == 'in' ? $value['amount'] : '';
-	$data[3] = $value['type'] == 'in' ? '' : $value['amount'];
+	$data[2] = $value['type'] == 'in' || $value['type'] == 'add' ? $value['amount'] : '';
+	$data[3] = $value['type'] == 'out' ? $value['amount'] : '';
 	$data[4] = $value['balance'];
 	$data[5] = str2GBK($value['desc']);
 	$data[6] = str2GBK($value['operatorRealName']);
