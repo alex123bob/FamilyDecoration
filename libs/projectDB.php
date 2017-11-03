@@ -69,7 +69,7 @@
 		$needRdyck1BillCount = isset($_REQUEST["needRdyck1BillCount"]) ? $_REQUEST["needRdyck1BillCount"] : "";
 		$needMaterialOrderCount = isset($_REQUEST["needMaterialOrderCount"]) ? $_REQUEST["needMaterialOrderCount"] : "";
 		$statementBillSql = "select count(*) as num from `statement_bill` b left join `project` p on b.projectId = p.projectId where p.captainName = '?' and b.status = 'rdyck1' and b.isDeleted = 'false' and p.isDeleted = 'false' and p.isFrozen = 0 ";
-		$materialOrderSql = "select count(*) as num from `supplier_order` sp left join `project` p on sp.projectId = p.projectId where p.captainName = '?' and sp.status = 'rdyck1' and sp.isDeleted = 'false' and p.isDeleted = 'false' and p.isFrozen = 0";
+		$materialOrderSql = "select count(*) as num from `supplier_order` sp left join `project` p on sp.projectId = p.projectId where p.captainName = '?' and sp.status = 'rdyck' and sp.isDeleted = 'false' and p.isDeleted = 'false' and p.isFrozen = 0";
 		if ($captainName != "") {
 			$res = $mysql->DBGetAsMap("select distinct `captainName`, `captain` from project where `isDeleted` = 'false' and `captainName` = '$captainName' ");
 		}
@@ -205,11 +205,11 @@
 				$projects[$key]["rdyck4BillCount"] = isset($res['rdyck4']) ? $res['rdyck4'] : 0;
 			}
 			if ($needMaterialOrderCount == 'true') {
-				$res = $mysql->DBGetAsKeyValueList("select count(*) as v, status as k from supplier_order where projectId = '?' and isDeleted = 'false' group by status = 'rdyck1' ", $projectId);
-				$projects[$key]["rdyck1MaterialOrderCount"] = isset($res['rdyck1']) ? $res['rdyck1'] : 0;
-				$projects[$key]["rdyck2MaterialOrderCount"] = isset($res['rdyck2']) ? $res['rdyck2'] : 0;
-				$projects[$key]["rdyck3MaterialOrderCount"] = isset($res['rdyck3']) ? $res['rdyck3'] : 0;
-				$projects[$key]["rdyck4MaterialOrderCount"] = isset($res['rdyck4']) ? $res['rdyck4'] : 0;
+				$res = $mysql->DBGetAsKeyValueList("select count(*) as v, status as k from supplier_order where projectId = '?' and isDeleted = 'false' group by status = 'rdyck' ", $projectId);
+				$projects[$key]["rdyck1MaterialOrderCount"] = isset($res['rdyck']) ? $res['rdyck'] : 0;
+				$projects[$key]["rdyck2MaterialOrderCount"] = isset($res['chk']) ? $res['chk'] : 0;
+				$projects[$key]["rdyck3MaterialOrderCount"] = isset($res['checked']) ? $res['checked'] : 0;
+				$projects[$key]["rdyck4MaterialOrderCount"] = isset($res['applied']) ? $res['applied'] : 0;
 			}
 		}
 		return $projects;
