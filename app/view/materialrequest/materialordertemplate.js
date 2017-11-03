@@ -60,6 +60,30 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrderTemplate', {
                         }
                     ]
                 },
+                tbar: [
+                    {
+                        text: '删除',
+                        icon: 'resources/img/delete.png',
+                        handler: function (){
+                            var resObj = _getRes();
+                            if (resObj.tpl) {
+                                Ext.Msg.warning('确定要删除当前模板吗?', function (btnId){
+                                    if ('yes' == btnId) {
+                                        ajaxDel('SupplierOrderTemplate', {
+                                            id: resObj.tpl.getId()
+                                        }, function (obj){
+                                            showMsg('删除成功!');
+                                            resObj.list.getStore().reload();
+                                        });
+                                    }
+                                });
+                            }
+                            else {
+                                showMsg('请选择要删除的模板!');
+                            }
+                        }
+                    }
+                ],
                 listeners: {
                     selectionchange: function (selModel, sels, opts){
                         var resObj = _getRes();
