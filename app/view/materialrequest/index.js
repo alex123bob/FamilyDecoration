@@ -109,6 +109,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						submit: tbar.down('[name="submit"]'),
 						verifyPassed: tbar.down('[name="verifyPassed"]'),
 						approve: tbar.down('[name="approve"]'),
+						returnMaterialOrder: tbar.down('[name="returnMaterialOrder"]'),
 						preview: tbar.down('[name="preview"]'),
 						print: tbar.down('[name="print"]'),
 						templatize: tbar.down('[name="templatize"]'),
@@ -142,6 +143,12 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 											// && 'chk' != resObj.billRec.get('status')
 											// && 'checked' != resObj.billRec.get('status')
 										)
+									);
+									break;
+								case 'returnMaterialOrder':
+									// 新创建订购单和已申请付款的订购单，不支持退回上一状态
+									btn.setDisabled(
+										!resObj.project || !resObj.billRec || ('new' == resObj.billRec.get('status')) || ('applied' == resObj.billRec.get('status'))
 									);
 									break;
 								case 'preview':
@@ -466,6 +473,19 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 									break;
 							}
 							resObj.billPane.changeStatus('+1', msg, successMsg, callback);
+						}
+					},
+					{
+						xtype: 'button',
+						text: '退回订单',
+						name: 'returnMaterialOrder',
+						icon: 'resources/img/return_material_order.png',
+						tooltip: '将当前订单退回至上一状态',
+						disabled: true,
+						hidden: User.isAdmin() ? false : true,
+						handler: function (){
+							var resObj = _getRes();
+							resObj.billPane.changeStatus('-1', '确定将订单退回到上一状态吗?', '退回成功!');
 						}
 					},
 					{
