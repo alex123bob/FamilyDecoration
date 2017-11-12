@@ -99,6 +99,7 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 									|| User.isSupervisor() 
 									|| User.isAdministrationManager() 
 									|| User.isFinanceManager() 
+									|| User.isFinanceCashier() 
 									|| User.isBudgetManager() 
 									|| User.isBudgetStaff()
 								) {
@@ -215,7 +216,16 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 								needMaterialOrderCount: me.needMaterialOrderCount,
 								settled: me.settled
 							}
-							if (User.isAdmin() || User.isProjectManager() || User.isSupervisor() || User.isProjectStaff() || User.isAdministrationManager() || User.isFinanceManager() || User.isBudgetManager() || User.isBudgetStaff()) {
+							if (User.isAdmin() 
+								|| User.isProjectManager() 
+								|| User.isSupervisor() 
+								|| User.isProjectStaff() 
+								|| User.isAdministrationManager() 
+								|| User.isFinanceManager() 
+								|| User.isFinanceCashier() 
+								|| User.isBudgetManager() 
+								|| User.isBudgetStaff()
+							) {
 								st.proxy.extraParams = params;
 							}
 							else {

@@ -380,7 +380,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						name: 'approve',
 						icon: 'resources/img/material_request_approve.png',
 						disabled: true,
-						hidden: User.isAdmin() || User.isProjectManager() ? false : true,
+						hidden: User.isAdmin() || User.isProjectManager() || User.isFinanceManager() ? false : true,
 						handler: function () {
 							var resObj = _getRes(),
 								msg, successMsg, callback = Ext.emptyFn;
