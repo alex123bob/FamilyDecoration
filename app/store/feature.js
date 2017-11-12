@@ -314,6 +314,12 @@
                         cmp: 'personnel-index',
                         leaf: true,
                         icon: 'resources/img/statistics.png'
+                    },
+                    {
+                        name: '员工工资',
+                        cmp: 'staffsalary-index',
+                        leaf: true,
+                        icon: 'resources/img/staff_salary.png'
                     }
                 ]
             },

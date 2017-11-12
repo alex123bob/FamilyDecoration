@@ -51,7 +51,8 @@ Ext.define('FamilyDecoration.Application', {
         'TotalPropertyManagement',
         'BusinessAggregation',
         'BusinessToTransfer',
-        'ContractManagement'
+        'ContractManagement',
+        'StaffSalary'
     ],
 
     stores: [
