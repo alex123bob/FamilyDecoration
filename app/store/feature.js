@@ -317,7 +317,7 @@
                     },
                     {
                         name: '员工工资',
-                        cmp: 'staffsalary-index',
+                        cmp: DEBUG ? 'staffsalary-index' : '',
                         leaf: true,
                         icon: 'resources/img/staff_salary.png'
                     }
