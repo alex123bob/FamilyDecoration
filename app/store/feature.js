@@ -422,8 +422,8 @@
                 flag = User.isGeneral() || User.isSupplier() ? false : true;
             }
             else if (rec.get('cmp') == 'telemarket-index') {
-                // flag = User.isGeneral() || User.isSupplier() ? false : true;
-                flag = false; // temporarily close.
+                flag = User.isGeneral() || User.isSupplier() ? false : true;
+                // flag = false; // reopen since security checking is lifted.
             }
             else if (rec.get('cmp') == 'mybusiness-index') {
                 flag = User.isGeneral() || User.isSupplier() ? false : true;
