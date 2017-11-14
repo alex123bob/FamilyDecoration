@@ -355,7 +355,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						name: 'submit',
 						icon: 'resources/img/material_request_submit.png',
 						disabled: true,
-						hidden: User.isProjectStaff() || User.isAdmin() || User.isFinanceCashier() ? false : true,
+						hidden: User.isProjectStaff() || User.isAdmin() || User.isProjectManager() || User.isFinanceCashier() ? false : true,
 						handler: function () {
 							var resObj = _getRes();
 							resObj.billPane.changeStatus('+1', '递交后不可再进行修改单据，确定要递交单据吗？', '递交成功!');
@@ -366,7 +366,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						text: '验收通过',
 						name: 'verifyPassed',
 						icon: 'resources/img/material_request_apply.png',
-						hidden: User.isProjectStaff() || User.isAdmin() ? false : true,
+						hidden: User.isProjectStaff() || User.isAdmin() || User.isFinanceManager() ? false : true,
 						disabled: true,
 						handler: function () {
 							var resObj = _getRes();
@@ -482,7 +482,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						icon: 'resources/img/return_material_order.png',
 						tooltip: '将当前订单退回至上一状态',
 						disabled: true,
-						hidden: User.isAdmin() ? false : true,
+						hidden: User.isAdmin() || User.isFinanceManager() ? false : true,
 						handler: function (){
 							var resObj = _getRes();
 							resObj.billPane.changeStatus('-1', '确定将订单退回到上一状态吗?', '退回成功!');
