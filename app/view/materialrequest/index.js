@@ -355,7 +355,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						name: 'submit',
 						icon: 'resources/img/material_request_submit.png',
 						disabled: true,
-						hidden: User.isProjectStaff() || User.isAdmin() ? false : true,
+						hidden: User.isProjectStaff() || User.isAdmin() || User.isFinanceCashier() ? false : true,
 						handler: function () {
 							var resObj = _getRes();
 							resObj.billPane.changeStatus('+1', '递交后不可再进行修改单据，确定要递交单据吗？', '递交成功!');
