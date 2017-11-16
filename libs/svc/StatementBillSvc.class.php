@@ -19,7 +19,7 @@ class StatementBillSvc extends BaseSvc
 	);
 
 	public function get($q){
-		$this->appendSelect = ', p.projectName , p.captain,u1.realName as payerRealName, u2.realName as creatorRealName, u3.realName as checkerRealName ';
+		$this->appendSelect = ', p.captain,u1.realName as payerRealName, u2.realName as creatorRealName, u3.realName as checkerRealName ';
 		$this->appendJoin = 'left join project p on p.projectId = statement_bill.projectId '
 						  . 'left join user u1 on u1.name = statement_bill.payer '
 						  . 'left join user u2 on u2.name = statement_bill.creator '

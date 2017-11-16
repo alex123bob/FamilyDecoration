@@ -347,34 +347,34 @@
             // get department according to user level value
             renderDepartment: function (level){
                 var department = '';
-                if (/^001-\d{3}$/i.test(level)) {
+                if (/^001(-\d{3})?$/i.test(level)) {
                     department = '总经办';
                 }
-                else if (/^002-\d{3}$/i.test(level)) {
+                else if (/^002(-\d{3})?$/i.test(level)) {
                     department = '设计部';
                 }
-                else if (/^003-\d{3}$/i.test(level)) {
+                else if (/^003(-\d{3})?$/i.test(level)) {
                     department = '工程部';
                 }
-                else if (/^004-\d{3}$/i.test(level)) {
+                else if (/^004(-\d{3})?$/i.test(level)) {
                     department = '市场部';
                 }
-                else if (/^005-\d{3}$/i.test(level)) {
+                else if (/^005(-\d{3})?$/i.test(level)) {
                     department = '人事行政部';
                 }
-                else if (/^006-\d{3}$/i.test(level)) {
+                else if (/^006(-\d{3})?$/i.test(level)) {
                     department = '游客';
                 }
-                else if (/^007-\d{3}$/i.test(level)) {
+                else if (/^007(-\d{3})?$/i.test(level)) {
                     department = '宣传部';
                 }
-                else if (/^008-\d{3}$/i.test(level)) {
+                else if (/^008(-\d{3})?$/i.test(level)) {
                     department = '财务部';
                 }
-                else if (/^009-\d{3}$/i.test(level)) {
+                else if (/^009(-\d{3})?$/i.test(level)) {
                     department = '预决算部';
                 }
-                else if (/^010-\d{3}$/i.test(level)) {
+                else if (/^010(-\d{3})?$/i.test(level)) {
                     department = '供应商';
                 }
                 else {

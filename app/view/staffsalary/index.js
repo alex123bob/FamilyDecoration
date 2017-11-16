@@ -2,8 +2,8 @@ Ext.define('FamilyDecoration.view.staffsalary.Index', {
     extend: 'Ext.container.Container',
     alias: 'widget.staffsalary-index',
     requires: [
-        'FamilyDecoration.view.checklog.MemberList',
-        'FamilyDecoration.view.staffsalary.DetailedSalary'
+        'FamilyDecoration.view.staffsalary.DetailedSalary',
+        'FamilyDecoration.view.staffsalary.DepaList'
     ],
     layout: 'hbox',
     defaults: {
@@ -14,13 +14,14 @@ Ext.define('FamilyDecoration.view.staffsalary.Index', {
 
         me.items = [
             {
-                title: '成员列表',
-                xtype: 'checklog-memberlist',
+                title: '部门',
+                xtype: 'staffsalary-depalist',
                 width: 200,
                 style: {
                     borderRightStyle: 'solid',
                     borderRightWidth: '1px'
-                }
+                },
+                hideHeaders: true
             },
             {
                 xtype: 'staffsalary-detailedsalary',
