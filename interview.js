@@ -54,63 +54,69 @@ var requestUserProfile = function (uidList) {  // uidList 是一个数组，最�
  * Which means status has to be restored once request is finished, so does `pendingReqs`.
  * @param {*User Id} uid 
  */
+
+var cache = {};
+var last = {
+    timer: -1,
+    data:[],
+    promises: {}
+};
 var getUserProfile = function (uid) {
-    // This global accessed object is just for simulating.
-    var reqCluster = window.reqCluster || {
-        pendingReqs: [], // Due to requesting status, we have to push requests newly arrived into this array for next round of bulk requesting.
-        requestingThreads: [], // Threads currently sending to backend to retrieve data; This array will be emptied once response's been sent from server.
-        status: 'pending', // Indicator of requesting status: pending, requesting.
-        promise: null // Attach invoked promise reference to reqCluster object for requests comes while requesting is ongoing.
-    },
-    promise;
-
-    !window.reqCluster && (window.reqCluster = reqCluster);
-
-    // Push newly arrived request into pending array.
-    reqCluster.pendingReqs.push(uid);
-
-    return new Promise(function (resolve, reject){
-        setTimeout(function (){
-            if (reqCluster.status === 'pending') {
-                // Clone pending requests elements into requesting threads.
-                // We can't directly copy array, coz this is a reference value,
-                // all modifications on top of array will be bilaterally reflected 
-                // to the other.
-                reqCluster.requestingThreads = reqCluster.pendingReqs.slice(0);
-                // Empty pending array.
-                reqCluster.pendingReqs = [];
-                // Mark status as 'requesting'
-                reqCluster.status = 'requesting';
+    if(cache.hasOwnProperty(uid)){
+        if(cache[uid] instanceof Promise){
+            return cache[uid];
+        }else{
+            return new Promise(function(resolve){
+                resolve(cache[uid]);
+            });
+        }
         
-                // Requesting.
-                promise = requestUserProfile(reqCluster.requestingThreads);
-                reqCluster.promise = promise;
-        
-                promise.then(function (profileList){
-    
-                    reqCluster.status = 'pending';
-    
-                    var profileArr = profileList.filter(function (profile){
-                        return profile.uid === uid;
+    }else{
+        var promise = new Promise(function(resolve, reject){
+            window.setTimeout(function(){
+                promise.resolve = resolve;
+                promise.reject = reject;
+            });
+            window.clearTimeout(last.timer);
+            last.data.push(uid);
+            last.timer = window.setTimeout(function(){
+                cache[uid] = new Promise(function(rs, rj){
+                    requestUserProfile(last.data).then(function(rlist){
+                        
+                        for(var i=0; i<rlist.length; i++){
+                            cache[rlist[i].uid] = rlist[i];
+                            
+                            if(last.promises[rlist[i].uid]){
+                                last.promises[rlist[i].uid].resolve(rlist[i]);
+                                delete last.promises[rlist[i].uid];
+                            }
+                            
+                        }
+                    })
+                    .catch(function (reason){
+                        for (var pro in last.promises) {
+                            last.promises[pro].reject();
+                        }
+                        last.promises = {};
+                        last.data = [];
                     });
-                    resolve(profileArr[0]);
-    
-                    return profileList;
+                    last.data = [];
                 });
-            }
-            else if (reqCluster.status === 'requesting') {
-                reqCluster.promise.then(function (profileList){
-                    resolve(profileList.filter(function (profile){;
-                        return profile.uid === uid;
-                    })[0]);
-    
-                    return profileList;
-                });
-            }
-        }, 1000);
-    });
+            }, 100);
+        });
+        last.promises[uid] = promise;
+        return last.promises[uid];
+    }
 }
 
 getUserProfile(1).then(function (profile){console.log(profile)});
-getUserProfile(2).then(function (profile){console.log(profile)});
-getUserProfile(3).then(function (profile){console.log(profile)});
+setTimeout(function (){
+    getUserProfile(2).then(function (profile){console.log(profile)});
+}, 90);
+setTimeout(function (){
+    getUserProfile(3).then(function (profile){console.log(profile)});
+}, 120);
+
+setTimeout(function (){
+    getUserProfile(4).then(function (profile){console.log(profile)});
+}, 240);

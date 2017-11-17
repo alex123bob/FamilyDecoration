@@ -41,6 +41,18 @@ Ext.define('FamilyDecoration.view.staffsalary.DetailedSalary', {
                     text: '合计'
                 },
                 {
+                    text: '五险'
+                },
+                {
+                    text: '公积金'
+                },
+                {
+                    text: '个税'
+                },
+                {
+                    text: '其他'
+                },
+                {
                     text: '实发'
                 }
             ]
