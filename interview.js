@@ -58,7 +58,8 @@ var getUserProfile = function (uid) {
             });
         }
     } else {
-        var _resolve;
+        var _resolve,
+            _reject;
         var promise = new Promise(function (resolve, reject) {
             /**
              * Combine request's user Id.
@@ -69,16 +70,18 @@ var getUserProfile = function (uid) {
              */
             clearTimeout(last.timer);
             _resolve = resolve;
+            _reject = reject;
             last.data.push(uid);
             last.timer = window.setTimeout(function () {
                 cache[uid] = requestUserProfile(last.data)
                     .then(function (profileList) {
                         for (var i = 0; i < profileList.length; i++) {
-                            var userId = profileList[i].uid;
-                            cache[userId] = profileList[i];
+                            var profile = profileList[i],
+                                userId = profile.uid;
+                            cache[userId] = profile;
 
                             if (last.promises[userId]) {
-                                last.promises[userId]._resolve(profileList[i]);
+                                last.promises[userId]._resolve(profile);
                                 delete last.promises[userId];
                             }
 
@@ -86,7 +89,7 @@ var getUserProfile = function (uid) {
                     })
                     .catch(function (reason) {
                         for (var pro in last.promises) {
-                            last.promises[pro].reject();
+                            last.promises[pro]._reject(reason);
                         }
                         last.promises = {};
                         last.data = [];
@@ -96,6 +99,7 @@ var getUserProfile = function (uid) {
             }, 100);
         });
         promise._resolve = _resolve;
+        promise._reject = _reject;
         last.promises[uid] = promise;
         return promise;
     }
@@ -114,5 +118,7 @@ setTimeout(function () {
 }, 240);
 
 setTimeout(function (){
-    getUserProfile(1).then(profile => console.log(profile));
-}, 2000);
+    getUserProfile(2).then(profile => {
+        console.log(profile)
+    });
+}, 3000);
