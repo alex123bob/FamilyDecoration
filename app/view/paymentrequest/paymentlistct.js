@@ -42,7 +42,8 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                 edit: me.down('[name="button-editRequest"]'),
                 del: me.down('[name="button-deleteRequest"]'),
                 submit: me.down('[name="button-submitRequest"]'),
-                pass: me.down('[name="button-passRequest"]')
+                pass: me.down('[name="button-passRequest"]'),
+                returnBill: me.down('[name="button-returnBill"]')
             };
         }
 
@@ -85,6 +86,8 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                         case "pass":
                             btn.setDisabled(!resObj.request || resObj.request.get('status') == 'new' || resObj.request.get('status') == 'chk' || resObj.request.get('status') == 'paid');
                             break;
+                        case "returnBill":
+                            btn.setDisabled(!resObj.request || resObj.request.get('status') == 'new' || resObj.request.get('status') == 'paid');
                         default:
                             break;
                     }
@@ -181,13 +184,13 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                         disabled: true,
                         hidden: !User.isAdmin(),
                         icon: 'resources/img/pass_request.png',
-                        changeStatus: function (cfmMsg, successMsg) {
+                        changeStatus: function (cfmMsg, successMsg, status) {
                             var resObj = _getRes();
                             if (resObj.request) {
                                 function request(validateCode) {
                                     var params = {
                                         id: resObj.request.getId(),
-                                        status: '+1',
+                                        status: !status ? '+1' : status,
                                         currentStatus: resObj.request.get('status')
                                     }, arr = ['id', 'currentStatus'],
                                         index = resObj.requestSt.indexOf(resObj.request);
@@ -242,6 +245,16 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
                         },
                         handler: function () {
                             this.changeStatus('确定要将当前申请置为本级通过吗？', '审核通过！');
+                        }
+                    },
+                    {
+                        name: 'button-returnBill',
+                        text: '退回',
+                        tooltip: '将当前单据退回到上一状态',
+                        hidden: !User.isAdmin() && !User.isFinanceManager(),
+                        icon: 'resources/img/returnBill.png',
+                        handler: function (){
+                            this.previousSibling().changeStatus('确定要将当前请求单据退回到上一状态吗?', '退回成功!', '-1');
                         }
                     }
                 ],
