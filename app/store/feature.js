@@ -454,7 +454,7 @@
                 flag = User.isAdmin() ? true : false;
             }
             else if (rec.get('cmp') == 'contractmanagement-index') {
-                flag = User.isAdmin() ? true : false;
+                flag = User.isAdmin() || User.isFinanceManager() ? true : false;
             }
             else if (rec.get('cmp') == 'manuallycheckbill-index') {
                 flag = User.isAdmin() || User.isFinanceManager() || User.isFinanceAccountant() || User.isProjectManager() || User.isProjectStaff() || User.isBudgetManager() || User.isBudgetStaff() ? true : false;
