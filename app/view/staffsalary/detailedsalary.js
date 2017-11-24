@@ -2,7 +2,7 @@ Ext.define('FamilyDecoration.view.staffsalary.DetailedSalary', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.staffsalary-detailedsalary',
     requires: [
-        
+        'FamilyDecoration.view.staffsalary.Month'
     ],
     layout: 'fit',
     title: '工资详情',
@@ -10,6 +10,19 @@ Ext.define('FamilyDecoration.view.staffsalary.DetailedSalary', {
     },
     initComponent: function () {
         var me = this;
+
+        me.tbar = [
+            {
+                xtype: 'staffsalary-monthfield',
+                format: 'm/Y',
+                value: new Date(),
+                listeners: {
+                    change: function (cmp, newVal, oldVal, opts){
+                        
+                    }
+                }
+            }
+        ];
 
         me.columns = {
             defaults: {

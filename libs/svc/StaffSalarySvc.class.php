@@ -30,12 +30,7 @@
         public function get ($q) {
             global $mysql;
             $arr = $this->checkSalaryByDepaMonthYear($q);
-            if (count($arr) <= 0) {
-                // insert
-            }
-            else {
-                return $res;
-            }
+            return $arr;
         }
     }
-    ?>
+?>
