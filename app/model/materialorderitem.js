@@ -8,6 +8,7 @@ Ext.define('FamilyDecoration.model.MaterialOrderItem', {
 		{name: 'amount', type: 'float'},
 		{name: 'unitPrice', type: 'float'},
 		{name: 'subtotal', type: 'float'},
+		{name: 'remark', type: 'string'},
 		{name: 'professionType', type: 'string'},
 		{name: 'createTime', type: 'string'},
 		{name: 'updateTime', type: 'string'},

@@ -59,6 +59,9 @@ CREATE TABLE `staff_salary` (
 ALTER TABLE `staff_salary`
   ADD PRIMARY KEY (`id`);
 
+-- Add remark in supplier material order item table.
+ALTER TABLE `supplier_order_item` ADD `remark` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL AFTER `unitPrice`;
+
 insert into `versions`(`id`) values ('version-9.13');
 COMMIT;
 

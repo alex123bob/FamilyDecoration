@@ -344,6 +344,15 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 										me.halfRefresh(true);
 									});
 								}
+								else if (e.field == 'remark') {
+									ajaxUpdate('SupplierOrderItem', {
+										remark: e.record.get('remark'),
+										id: e.record.getId()
+									}, 'id', function (obj) {
+										showMsg('编辑成功！');
+										me.halfRefresh(true);
+									});
+								}
 
 								Ext.resumeLayouts();
 							},
@@ -423,6 +432,16 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 						dataIndex: 'referenceNumber',
 						align: 'center',
 						flex: 1
+					},
+					{
+						text: '备注',
+						dataIndex: 'remark',
+						align: 'center',
+						flex: 1,
+						editor: me.previewMode ? false : {
+							xtype: 'textfield',
+							allowBlank: false
+						}
 					},
 					{
 						text: '工种',
