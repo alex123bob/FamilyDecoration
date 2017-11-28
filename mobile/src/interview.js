@@ -34,7 +34,7 @@ class App extends Component {
                 <span>{this.state.counts}</span>
                 <button onClick={this.handleClick}>增加 {this.props.increment}</button>
                 <Remark>
-                    {remark => remark === null ? <span>无说明</span> : <span>说明:&nbsp;{remark}</span>}
+                    {remark => remark === null ? <span>Loading...</span> : <span>说明:&nbsp;{remark}</span>}
                 </Remark>
                 {
                     this.props.list.map((obj, index) => {
