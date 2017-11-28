@@ -8,6 +8,7 @@ Ext.define('FamilyDecoration.view.staffsalary.DetailedSalary', {
     title: '工资详情',
     defaults: {
     },
+    selChange: Ext.emptyFn,
     initComponent: function () {
         var me = this;
 
@@ -18,11 +19,21 @@ Ext.define('FamilyDecoration.view.staffsalary.DetailedSalary', {
                 value: new Date(),
                 listeners: {
                     change: function (cmp, newVal, oldVal, opts){
-                        
+                        me.selChange();
                     }
                 }
             }
         ];
+
+        me.getTime = function (){
+            var month = this.down('staffsalary-monthfield'),
+                val = month.getValue();
+            Ext.isDate(val) && (val = Ext.Date.format(val, 'm/Y'));
+            return val ? {
+                year: val.split('/')[1],
+                month: val.split('/')[0]
+            } : -1;
+        };
 
         me.columns = {
             defaults: {

@@ -24,7 +24,7 @@
             $depa = $q["depa"];
             $sql = "SELECT * FROM `staff_salary` WHERE SUBSTR(`staffLevel`, 1, 3) = '?' and YEAR(`salaryDate`) = '?' and MONTH(`salaryDate`) = '?'";
             $res = $mysql->DBGetAsMap($sql, $depa, $year, $month);
-            return $res;
+            return array("status" => "successful", "data" => $res, "total" => count($res));
         }
 
         public function get ($q) {
