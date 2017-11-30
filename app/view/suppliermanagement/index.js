@@ -128,6 +128,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.Index', {
 					var tbar = this.getDockedItems('toolbar[dock="top"]'),
 						bbar = this.getDockedItems('toolbar[dock="bottom"]'),
 						obj = {};
+					bbar.splice(0, 1);
 					tbar = tbar[0].items.items;
 					bbar = bbar[0].items.items;
 					obj[tbar[0].name] = tbar[0];
