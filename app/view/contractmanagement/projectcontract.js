@@ -726,7 +726,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 xtype: 'hiddenfield',
                                 itemId: 'signatoryRepName',
                                 name: 'signatoryRepName'
-                            },
+                            }
                         ]
                     },
                     {

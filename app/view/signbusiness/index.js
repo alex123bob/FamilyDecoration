@@ -751,7 +751,7 @@ Ext.define('FamilyDecoration.view.signbusiness.Index', {
 																					url: './libs/user.php?action=getuserbylevel',
 																					method: 'GET',
 																					params: {
-																						level: '003-001',
+																						level: '003-001'
 																					},
 																					callback: function(opts, success, res) {
 																						if (success) {
