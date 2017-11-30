@@ -30,6 +30,15 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierList', {
             }
         ];
 
+        me.dockedItems = [
+            {
+                xtype: 'pagingtoolbar',
+                store: st,
+                dock: 'bottom',
+                displayInfo: true
+            }
+        ];
+
         me.addListener({
             afterrender: function (grid, opts) {
                 var view = grid.getView();
