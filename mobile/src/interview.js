@@ -30,7 +30,7 @@ class App extends Component {
     render() {
         console.log(this.state.counts, 'render');
         return (
-            <div>
+            <div onClick={this.divClickHanlder}>
                 <span>{this.state.counts}</span>
                 <button onClick={this.handleClick}>增加 {this.props.increment}</button>
                 <Remark>
@@ -45,7 +45,20 @@ class App extends Component {
         );
     }
 
-    handleClick() {
+    bodyClickHandler(e) {
+        console.log('body click event', this);
+        e.stopPropagation(); // native event happens before React's synthetic events. we stop propagation at native elements level then the following react events won't be triggered.
+        // e.preventDefault();
+    }
+
+    divClickHanlder(e) {
+        console.log('react click event on wrapper div', e);
+    }
+
+    handleClick(e) {
+        console.log('react click event ', e);
+        e.preventDefault();
+        // e.stopPropagation();
         this.setState((prevState, props) => {
             return {counts: prevState.counts + parseInt(props.increment, 10)};
         });
@@ -63,10 +76,12 @@ class App extends Component {
         // under this circumstatnce, React won't spend extra time to create a new function by just attaching current Class context to its component.
         // every time it RE-RENDER its own component.
         this.handleClick = this.handleClick.bind(this);
+        this.divClickHanlder = this.divClickHanlder.bind(this);
         this.windowResizeHandler = this.windowResizeHandler.bind(window);
         this.state = {
             counts: 0
         };
+        document.body.addEventListener('click', this.bodyClickHandler);
     }
 
     componentDidMount() {
@@ -79,6 +94,7 @@ class App extends Component {
     }
 
     componentWillUnmount() {
+        document.body.removeEventListener('click', this.bodyClickHandler);
         window.removeEventListener('resize', this.windowResizeHandler)
     }
 }
