@@ -48,6 +48,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.controller.RegionMgm": "app/controller/regionmgm.js",
   "FamilyDecoration.controller.Setting": "app/controller/setting.js",
   "FamilyDecoration.controller.SignBusiness": "app/controller/signbusiness.js",
+  "FamilyDecoration.controller.StaffSalary": "app/controller/staffsalary.js",
   "FamilyDecoration.controller.SupplierManagement": "app/controller/suppliermanagement.js",
   "FamilyDecoration.controller.TargetSetting": "app/controller/targetsetting.js",
   "FamilyDecoration.controller.TaskAssign": "app/controller/taskassign.js",
@@ -75,6 +76,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.model.ContractType": "app/model/contracttype.js",
   "FamilyDecoration.model.CostAnalysis": "app/model/costanalysis.js",
   "FamilyDecoration.model.CostComposition": "app/model/costcomposition.js",
+  "FamilyDecoration.model.DepaList": "app/model/depalist.js",
   "FamilyDecoration.model.DiaryBill": "app/model/diarybill.js",
   "FamilyDecoration.model.Feature": "app/model/feature.js",
   "FamilyDecoration.model.FinanceAggregation": "app/model/financeaggregation.js",
@@ -141,6 +143,7 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.store.ContractType": "app/store/contracttype.js",
   "FamilyDecoration.store.CostAnalysis": "app/store/costanalysis.js",
   "FamilyDecoration.store.CostComposition": "app/store/costcomposition.js",
+  "FamilyDecoration.store.DepaList": "app/store/depalist.js",
   "FamilyDecoration.store.DiaryBill": "app/store/diarybill.js",
   "FamilyDecoration.store.Feature": "app/store/feature.js",
   "FamilyDecoration.store.FinanceAggregation": "app/store/financeaggregation.js",
@@ -331,6 +334,10 @@ Ext.Loader.addClassPathMappings({
   "FamilyDecoration.view.signbusiness.EditDesignStatus": "app/view/signbusiness/editdesignstatus.js",
   "FamilyDecoration.view.signbusiness.GradeSignBusiness": "app/view/signbusiness/gradesignbusiness.js",
   "FamilyDecoration.view.signbusiness.Index": "app/view/signbusiness/index.js",
+  "FamilyDecoration.view.staffsalary.DepaList": "app/view/staffsalary/depalist.js",
+  "FamilyDecoration.view.staffsalary.DetailedSalary": "app/view/staffsalary/detailedsalary.js",
+  "FamilyDecoration.view.staffsalary.Index": "app/view/staffsalary/index.js",
+  "FamilyDecoration.view.staffsalary.Month": "app/view/staffsalary/month.js",
   "FamilyDecoration.view.suppliermanagement.ApplyForPayment": "app/view/suppliermanagement/applyforpayment.js",
   "FamilyDecoration.view.suppliermanagement.EditSupplier": "app/view/suppliermanagement/editsupplier.js",
   "FamilyDecoration.view.suppliermanagement.EditSupplierMaterial": "app/view/suppliermanagement/editsuppliermaterial.js",
@@ -1252,6 +1259,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.controller.RegionMgm": [],
   "FamilyDecoration.controller.Setting": [],
   "FamilyDecoration.controller.SignBusiness": [],
+  "FamilyDecoration.controller.StaffSalary": [],
   "FamilyDecoration.controller.SupplierManagement": [],
   "FamilyDecoration.controller.TargetSetting": [],
   "FamilyDecoration.controller.TaskAssign": [],
@@ -1279,6 +1287,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.model.ContractType": [],
   "FamilyDecoration.model.CostAnalysis": [],
   "FamilyDecoration.model.CostComposition": [],
+  "FamilyDecoration.model.DepaList": [],
   "FamilyDecoration.model.DiaryBill": [],
   "FamilyDecoration.model.Feature": [],
   "FamilyDecoration.model.FinanceAggregation": [],
@@ -1345,6 +1354,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.store.ContractType": [],
   "FamilyDecoration.store.CostAnalysis": [],
   "FamilyDecoration.store.CostComposition": [],
+  "FamilyDecoration.store.DepaList": [],
   "FamilyDecoration.store.DiaryBill": [],
   "FamilyDecoration.store.Feature": [],
   "FamilyDecoration.store.FinanceAggregation": [],
@@ -1535,6 +1545,14 @@ Ext.ClassManager.addNameAlternateMappings({
   "FamilyDecoration.view.signbusiness.EditDesignStatus": [],
   "FamilyDecoration.view.signbusiness.GradeSignBusiness": [],
   "FamilyDecoration.view.signbusiness.Index": [],
+  "FamilyDecoration.view.staffsalary.DepaList": [],
+  "FamilyDecoration.view.staffsalary.DetailedSalary": [],
+  "FamilyDecoration.view.staffsalary.Index": [],
+  "FamilyDecoration.view.staffsalary.Month": [
+    "Ext.form.field.Month",
+    "Ext.form.MonthField",
+    "Ext.form.Month"
+  ],
   "FamilyDecoration.view.suppliermanagement.ApplyForPayment": [],
   "FamilyDecoration.view.suppliermanagement.EditSupplier": [],
   "FamilyDecoration.view.suppliermanagement.EditSupplierMaterial": [],
@@ -2621,6 +2639,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.controller.RegionMgm": [],
   "FamilyDecoration.controller.Setting": [],
   "FamilyDecoration.controller.SignBusiness": [],
+  "FamilyDecoration.controller.StaffSalary": [],
   "FamilyDecoration.controller.SupplierManagement": [],
   "FamilyDecoration.controller.TargetSetting": [],
   "FamilyDecoration.controller.TaskAssign": [],
@@ -2648,6 +2667,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.model.ContractType": [],
   "FamilyDecoration.model.CostAnalysis": [],
   "FamilyDecoration.model.CostComposition": [],
+  "FamilyDecoration.model.DepaList": [],
   "FamilyDecoration.model.DiaryBill": [],
   "FamilyDecoration.model.Feature": [],
   "FamilyDecoration.model.FinanceAggregation": [],
@@ -2714,6 +2734,7 @@ Ext.ClassManager.addNameAliasMappings({
   "FamilyDecoration.store.ContractType": [],
   "FamilyDecoration.store.CostAnalysis": [],
   "FamilyDecoration.store.CostComposition": [],
+  "FamilyDecoration.store.DepaList": [],
   "FamilyDecoration.store.DiaryBill": [],
   "FamilyDecoration.store.Feature": [],
   "FamilyDecoration.store.FinanceAggregation": [],
@@ -3187,6 +3208,18 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "FamilyDecoration.view.signbusiness.Index": [
     "widget.signbusiness-index"
+  ],
+  "FamilyDecoration.view.staffsalary.DepaList": [
+    "widget.staffsalary-depalist"
+  ],
+  "FamilyDecoration.view.staffsalary.DetailedSalary": [
+    "widget.staffsalary-detailedsalary"
+  ],
+  "FamilyDecoration.view.staffsalary.Index": [
+    "widget.staffsalary-index"
+  ],
+  "FamilyDecoration.view.staffsalary.Month": [
+    "widget.staffsalary-monthfield"
   ],
   "FamilyDecoration.view.suppliermanagement.ApplyForPayment": [
     "widget.suppliermanagement-applyforpayment"
