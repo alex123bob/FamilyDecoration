@@ -7,14 +7,13 @@ import { withRouter } from 'react-router-dom';
 
 class IndexPage extends Component {
   render() {
-    const { match, location, history, dispatch, example } = this.props;
-
+    const { match, location, history, dispatch, project } = this.props;
     const tabs = (
       <TabCt
         onTabClick={
           (tab, index) => {
             dispatch({
-              type: 'example/fetch',
+              type: 'project/fetch',
               payload: {
                 index: index,
                 sub: tab.sub
@@ -22,7 +21,7 @@ class IndexPage extends Component {
             });
           }
         }
-        example={example}
+        project={project}
       />
     );
     return tabs;
@@ -37,7 +36,7 @@ IndexPage.propTypes = {
 
 function mapStateToProps (state){
   return {
-    example: state.example
+    project: state.project
   };
 }
 

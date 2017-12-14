@@ -50,6 +50,8 @@
 		!strpos($_SERVER["REQUEST_URI"], "api.php?action=Mail.cron")
 		&&
 		!strpos($_SERVER["REQUEST_URI"], "fpdf/plan.php?id=")
+		&&
+		!strpos($_SERVER["REQUEST_URI"], "debug=true")
 	){
 		checkUserOnlineUniqueness();
 	}
