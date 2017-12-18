@@ -18,14 +18,18 @@ class TabCt extends Component {
           /* onChange={this.props.onTabChange.bind(this)} */
           onTabClick={this.props.onTabClick.bind(this)}
         >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: document.documentElement.clientHeight, backgroundColor: '#fff' }}>
-            {this.props.example.index} : {this.props.example.sub}
+          <div style={{ display: 'flex', 'flex-direction': 'column', alignItems: 'center', justifyContent: 'flex-start', height: document.documentElement.clientHeight, backgroundColor: '#fff' }}>
+            {
+              this.props.project.projects.data && this.props.project.projects.data.map((obj, index) => {
+                return <div key={index}>{obj.projectName}</div>
+              })
+            }
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: document.documentElement.clientHeight, backgroundColor: '#fff' }}>
             待开发
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: document.documentElement.clientHeight, backgroundColor: '#fff' }}>
-          {this.props.example.index}
+            {this.props.project.index} : {this.props.project.sub}
           </div>
         </Tabs>
       </div>
@@ -36,7 +40,7 @@ class TabCt extends Component {
 TabCt.propTypes = {
   onTabClick: PropTypes.func.isRequired,
   onTabChange: PropTypes.func,
-  example: PropTypes.object
+  project: PropTypes.object
 };
 
 export default TabCt;

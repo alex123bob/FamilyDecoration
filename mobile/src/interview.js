@@ -47,7 +47,7 @@ class App extends Component {
 
     bodyClickHandler(e) {
         console.log('body click event', this);
-        e.stopPropagation(); // native event happens before React's synthetic events. we stop propagation at native elements level then the following react events won't be triggered.
+        // e.stopPropagation(); // native event happens before React's synthetic events. we stop propagation at native elements level then the following react events won't be triggered.
         // e.preventDefault();
     }
 
@@ -60,7 +60,11 @@ class App extends Component {
         e.preventDefault();
         // e.stopPropagation();
         this.setState((prevState, props) => {
-            return {counts: prevState.counts + parseInt(props.increment, 10)};
+            return {
+                counts: this.state.counts + parseInt(this.props.increment, 10)
+            };
+        }, () => {
+            console.log(this);
         });
         // setState asynchronously invoked by reactjs.
         console.log(this.state.counts, 'handleClick');

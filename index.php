@@ -962,7 +962,7 @@
          * for Christmas snow effect
          */
         // just close the snow coz now it's spring in China. -_-||
-        // createSnow('resources/img/snow/', 100);
+        createSnow('resources/img/snow/', 500);
 
         // for firework effect.
         // $(function (){

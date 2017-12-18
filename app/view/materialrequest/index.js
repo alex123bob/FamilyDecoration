@@ -482,7 +482,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						icon: 'resources/img/return_material_order.png',
 						tooltip: '将当前订单退回至上一状态',
 						disabled: true,
-						hidden: User.isAdmin() || User.isFinanceManager() ? false : true,
+						hidden: User.isAdmin() || User.isFinanceManager() || User.isFinanceCashier() ? false : true,
 						handler: function (){
 							var resObj = _getRes();
 							resObj.billPane.changeStatus('-1', '确定将订单退回到上一状态吗?', '退回成功!');
