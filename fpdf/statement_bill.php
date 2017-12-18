@@ -36,7 +36,12 @@ if($bills['total'] == 0){
 }else if($bills['total'] == 1 && $bills['data'][0]['billType'] == 'mtf'){
 	echo '<html><script type="text/javascript">location.href = location.href.replace(\'statement_bill.php\', \'material_order_pay.php\')</script></html>';
 	die();
+}else if($bills['total'] == 1 && $bills['data'][0]['billType'] == 'wlf'){
+	//¹«Ë¾¸£Àû
+	echo '<html><script type="text/javascript">location.href = location.href.replace(\'statement_bill.php\', \'wlf.php\')</script></html>';
+	die();
 }
+//echo $bills['data'][0]['billType'] ;
 $bill = $bills['data'][0];
 $paidTotalAmount = $billSvc->getPreviousPaidTotalAmountByPayee($bill);
 $billId = $bill['id'];
