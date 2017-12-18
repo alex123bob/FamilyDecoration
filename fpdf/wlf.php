@@ -8,7 +8,7 @@ if(strpos($_SERVER["HTTP_USER_AGENT"],"Safari") && !strpos($_SERVER["HTTP_USER_A
 	$UserBrowserClient = 'default';
 }
 
-global $bill, $auditstr; 
+global $bill; 
 
 $lineHeight 	= 6;
 //全局字体
@@ -53,7 +53,7 @@ $pdf->Ln();
 $auditA = array();
 $audits = $billAuditSvc->get(array('billId'=>$bill['id']));
 foreach ($audits['data'] as $key => $item) {
-	if($item['newStatus'] == 'new' || $item['orignalStatus'] == 'new') {
+	if($item['newStatus'] == 'new') {
 		continue;
 	}
 	$s = str2GBK($item['operatorRealName'].'('.$item['newStatusName'].')');
@@ -64,6 +64,8 @@ foreach ($audits['data'] as $key => $item) {
 	}
 }
 $auditstr = join($auditA,'→');
+$pdf->Text(83,60,'审核人:');
+$pdf->Text(95,60,($auditstr));
 $pdf->Ln();
 $pdf->Output($bill['id'].'-'.$bill['creatorRealName'].'报销单.pdf', $action == "view" ? "I" : "D" );
 ?>  

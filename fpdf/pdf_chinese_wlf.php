@@ -24,23 +24,18 @@ class PDF extends PDF_Chinese{
 		$this->SetFont('GB','',10); 
 		$this->Text(35,40,'报销人:');
 		$this->Text(50,40,str2GBK($bill['creatorRealName']));
-		$this->Text(80,40,'报销事项:');
+		$this->Text(83,40,'报销事项:');
 		$this->Text(100,40,str2GBK($bill['projectName']));
 		$this->Text(140,40,'申领金额:');
 		$this->Text(160,40,str2GBK($bill['claimAmount']).' (元)');
 		$this->Text(35,50,'归属:');
-		$this->Text(50,50,str2GBK($bill['reimbursementReason']));
+		$this->Text(45,50,str2GBK($bill['reimbursementReason']));
 		$this->Text(140,50,'大写:');
 		$this->Text(150,50,str2GBK(cny($bill['claimAmount'])));
 		$this->Text(35,60,'申请时间:');
-		$this->Text(50,60,str2GBK(substr($bill['createTime'],0,10)));
-		$this->Text(80,60,'审核人:');
-		//$this->Text(155,60,str2GBK($bill['checkerRealName']));
-		$this->Text(100,60,str2GBK($auditstr));
+		$this->Text(52,60,str2GBK(substr($bill['createTime'],0,10)));
 		$this->Text(35,70,'备注:');
 		$this->Text(50,70,str2GBK($bill['descpt']));
-		
-		//$this->Line(10,50,280,50);
 		$this->Ln(45);
 	} 
 	function Footer(){ //设置页脚  
