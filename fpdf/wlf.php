@@ -53,7 +53,7 @@ $pdf->Ln();
 $auditA = array();
 $audits = $billAuditSvc->get(array('billId'=>$bill['id']));
 foreach ($audits['data'] as $key => $item) {
-	if($item['newStatus'] == 'new') {
+	if($item['newStatus'] == 'new'|| $item['orignalStatus'] == 'new') {
 		continue;
 	}
 	$s = str2GBK($item['operatorRealName'].'('.$item['newStatusName'].')');
