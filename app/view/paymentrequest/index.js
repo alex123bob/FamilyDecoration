@@ -72,7 +72,8 @@ Ext.define('FamilyDecoration.view.paymentrequest.Index', {
                                     },
                                     url: './libs/user.php?action=getFullUserListByDepartment',
                                     extraParams: {
-                                        department: newVal
+                                        department: newVal,
+                                        queryStatementBill: true
                                     }
                                 });
                                 st.load();
@@ -88,7 +89,15 @@ Ext.define('FamilyDecoration.view.paymentrequest.Index', {
                     items: [
                         {
                             text: '姓名',
-                            dataIndex: 'realname'
+                            dataIndex: 'realname',
+                            renderer: function (val, meta, rec){
+                                if (Ext.isNumber(rec.raw.billNumberToAudit)) {
+                                    return val + '&nbsp;<font color="red"><strong>[' + rec.raw.billNumberToAudit + ']</strong></font>';
+                                }
+                                else {
+                                    return val;
+                                }
+                            }
                         },
                         {
                             text: '部门',
