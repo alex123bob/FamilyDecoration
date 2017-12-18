@@ -414,9 +414,32 @@
 		return $userList;
 	}
 
-	function getFullUserListByDepartment ($department) {
+	function getFullUserListByDepartment ($q) {
+		$department = $q["department"];
+		$qryBill = isset($_REQUEST['queryStatementBill']);
 		global $mysql;
 		$userList = $mysql->DBGetAsMap("select u.*, p.projectName, s.name as supplierName from `user` u left join project p on p.projectId = u.projectId left join supplier s on u.supplierId = s.id where u.`level` like '%?-%' and u.`isDeleted` = 'false' ", $department);
+		//财务模块-报销 需要显示待审核的单子数量
+		if($qryBill){
+			$names = array();
+			foreach ($userList as $key => $value) {
+				array_push($names, '\''.$value['name'].'\'');
+			}
+			$sql = "select count(*) as count, payee from statement_bill "
+		."where isdeleted = 'false' and status in ('rdyck1','rdyck2','rdyck3','rdyck4','rdyck') "
+		.'and payee in ('.join($names,',').') '
+		."group by payee, `status` ; ";
+			$res = $mysql->DBGetAsMap($sql);
+			$format = array();
+			foreach ($res as $key => $value) {
+				$format[$value['payee']] = $value['count'];
+			}
+			foreach ($userList as $key => &$value) {
+				if(isset($format[$value['name']])) {
+					$value['billNumberToAudit'] =  (int)$format[$value['name']];
+				}
+			}
+		}
 		return $userList;
 	}
 

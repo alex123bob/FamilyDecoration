@@ -49,7 +49,7 @@
 		case "getUserOnlineInfo":			$res = getUserOnlineInfo();break;
 		//TODO
 		case "getUserDepartments":			$res = getUserDepartments();break;
-		case "getFullUserListByDepartment": $res = getFullUserListByDepartment($_REQUEST["department"]);break;
+		case "getFullUserListByDepartment": $res = getFullUserListByDepartment($_REQUEST);break;
 		case "getUserListByDepartment":		$res = getUserListByDepartment($_REQUEST["department"]);break;
 		case "getAdminMembers":				$res = getAdminMembers();break;
 		case "getValidateCode": 			$res = getValidateCode();break;
