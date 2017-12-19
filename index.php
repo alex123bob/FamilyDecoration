@@ -54,7 +54,7 @@
     <script type="text/javascript" src="resources/locale/ext-lang-zh_CN.js"></script>
     <script src="https://channel.sinaapp.com/api.js" type="text/javascript"></script>
     <!-- for Christmas effect -->
-    <script src="tools/snow.min.js" type="text/javascript"></script>
+    <!-- <script src="tools/snow.min.js" type="text/javascript"></script> -->
     <script type="text/javascript" src="tools/jquery-1.11.1.min.js"></script>
 </head>
 <body>
@@ -962,7 +962,7 @@
          * for Christmas snow effect
          */
         // just close the snow coz now it's spring in China. -_-||
-        createSnow('resources/img/snow/', 500);
+        // createSnow('resources/img/snow/', 500);
 
         // for firework effect.
         // $(function (){
