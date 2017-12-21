@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <title>佳诚装饰</title>
+    <script type="text/javascript" src="../tools/jquery-1.11.1.min.js"></script>
+</head>
+<body style="margin: 50px;text-align: center;">
+	<form action="upload.php?rawResult=true" method="post" enctype="multipart/form-data">
+	导入材料订购单：
+	<input type="file" name="photo[]" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+	<input type="text" name="type" style="width:0px; visibility: hidden;" value="materialorder"/>
+	<input type="submit" value="导入"/>
+	<input type="button" onclick="window.open('材料订购单模板.xlsx')" value="模板下载">
+	</form>
+</body>
+</html>
