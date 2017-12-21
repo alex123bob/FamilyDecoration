@@ -14,7 +14,7 @@ $filename = handleFiles($tmpNames,$names)[0];
 require_once 'PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php';
 require_once $_REQUEST['type'].'.php';
 $reader = PHPExcel_IOFactory::createReader('Excel2007');
-$sql = parseContent($reader->load($filename));
+$sql = parseContent($reader->load($filename), $filename);
 
 echo $sql;
 
@@ -48,7 +48,6 @@ function handleFiles($tmpNames,$names){
 			throw new Exception("文件夹创建失败!".$directory);
 		for ($i = 0; $i < count($names); $i++) {
 			$file_new_name = date("YmdHis").'.'.$ext_arr[$i];
-			$file_new_name = '0.'.$ext_arr[$i];
 			$tName = $tmpNames[$i];
 			$oName = $names[$i];
 			if (!move_uploaded_file ($tName,$directory.$file_new_name)) {

@@ -15,7 +15,7 @@
     }
   }
 
-  function parseContent($PHPExcel) {
+  function parseContent($PHPExcel, $filename) {
     $workTypeMap = array(
       '贴砖泥工'=>'0001',
       '木工'=>'0002',
@@ -62,7 +62,7 @@
       $allSuccess = false;
     }
 
-    $uuid = $supplierOrderSvc->getUUID();
+    $uuid = $filename;
 
     $res = $allSuccess ? $supplierOrderSvc->add(array(
       '@projectId' => $projectId,
