@@ -34,13 +34,13 @@ function handleFiles($tmpNames,$names){
 		$st = new SaeStorage();
 		$attr = array('encoding'=>'gzip');
 		for ($i = 0; $i < count($names); $i++) {
-			$file_new_name = 'imports'.date("YmdHis").'.'.$ext_arr[$i];
+			$file_new_name = 'imports/'.date("YmdHis").'.'.$ext_arr[$i];
 			$oName = $names[$i];
 			$fileSize = filesize($_FILES['photo']['tmp_name'][$i]);
 			if(!$st->upload('dqjczs',$file_new_name, $_FILES['photo']['tmp_name'][$i] , $attr, true)){
 				throw new Exception("文件".$names[$i]."上传失败！");
 			}
-			array_push($res, $file_new_name);
+			array_push($res, $_FILES['photo']['tmp_name'][$i]);
 		}
 	}else{
 		$directory = "../resources/imports/";
