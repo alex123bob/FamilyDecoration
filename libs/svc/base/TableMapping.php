@@ -31,7 +31,7 @@
 		'supplier'=>array('id','name','boss','address','email','phone'),
 		'supplier_material'=>array('id','supplierId','name','unit','price','professionType'),
 		'supplier_material_audit'=>array('approver','approved','id','materialId','name','unit','price','professionType','operation','creator'),
-		'supplier_order'=>array('id','projectName','paymentId','status','totalFee','projectId','supplierId','creator','payee','payedTimes','projectProgress'),
+		'supplier_order'=>array('id','projectName','paymentId','status','totalFee','projectId','supplierId','creator','payee','payedTimes','projectProgress', 'desc'),
 		'supplier_order_item'=>array('id','referenceNumber','amount','billId','supplierId','materialId','billItemName','unit','unitPrice','remark','professionType'),
 		"versions"=>array('id','desc'),
 		"contract_engineering"=>array('id','signatoryRepName','signatoryRep','businessId' ,'totalPrice','discount','additionalProvisions','sid', 'address', 'stages','additionals'),

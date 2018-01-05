@@ -420,7 +420,7 @@
 		global $mysql;
 		$userList = $mysql->DBGetAsMap("select u.*, p.projectName, s.name as supplierName from `user` u left join project p on p.projectId = u.projectId left join supplier s on u.supplierId = s.id where u.`level` like '%?-%' and u.`isDeleted` = 'false' ", $department);
 		//财务模块-报销 需要显示待审核的单子数量
-		if($qryBill){
+		if($qryBill && count($userList) > 0){
 			$names = array();
 			foreach ($userList as $key => $value) {
 				array_push($names, '\''.$value['name'].'\'');

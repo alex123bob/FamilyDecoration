@@ -50,7 +50,11 @@
 		if(isset($_REQUEST['debug'])){
 			$res['executedSqls'] = $mysql != null ? $mysql->executedSqls : 'mysql not inited.';
 		}
-		echo (json_encode($res));
+		if(isset($_REQUEST['rawResult'])){
+			print_r($res);
+		}else{
+			echo (json_encode($res));
+		}
 		die();
 	}
 	
