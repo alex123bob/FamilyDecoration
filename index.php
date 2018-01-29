@@ -32,6 +32,8 @@
 <head>
     <link href="./favicon.ico" type="image/x-icon" rel="shortcut icon" /> 
     <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <script src="https://js.fundebug.cn/fundebug.0.3.4.min.js"
+        apikey="d510992e63e0cca337ddc0ab882c90f49a89c07acfd0a5b633c80c78412edccd"></script>
     <script type="text/javascript">
         var DEBUG = <?php echo $isLocal; ?> ? true : false;
         if (<?php echo isset($_GET["force_debug"]) ? "true" : "false"; ?> == true) {
