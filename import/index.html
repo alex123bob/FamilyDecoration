@@ -4,14 +4,54 @@
     <meta http-equiv="content-type" content="text/html;charset=utf-8">
     <title>佳诚装饰</title>
     <script type="text/javascript" src="../tools/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="enhance.js"></script>
 </head>
 <body style="margin: 50px;text-align: center;">
-	<form action="upload.php?type=materialorder" method="post" enctype="multipart/form-data">
-	导入材料订购单：
-	<input type="file" name="photo[]" multiple="multiple" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
-	<input type="submit" value="导入"/>
-	<input type="button" onclick="window.open('materialorder-read-me.html')" value="说明">
-	<input type="button" onclick="window.open('材料订购单模板.xlsx')" value="模板下载">
-	</form>
+  <form enctype="multipart/form-data">
+  导入材料订购单：
+  <input type="file" name="photo[]" multiple="multiple" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+  <input type="button" value="导入" onclick="uploadFile(this, 'materialorder')"/>
+  <input type="button" onclick="window.open('materialorder-read-me.html')" value="说明">
+  <input type="button" onclick="window.open('材料订购单模板.xlsx')" value="模板下载">
+  </form>
+  <div id="result" ></div>
 </body>
+<script type="text/javascript">
+function uploadFile(btn, type){
+  $("#result").html('');
+  var files = $(btn).parents('form').find('input[type="file"]')[0].files;
+  if(files.length === 0) {
+   alert('必须选中至少一个文件！');
+  }
+  var fd = new FormData();
+  for(var i = 0; i< files.length; i++) {
+    if(!files[i].name.endsWith('xlsx')){
+      alert('必须为xlsx文件！--->' + files[i].name);
+      return false;
+    }
+    fd.append('files[]', files[i]);
+  }
+    $.ajax({
+        url:"upload.php?type=" + type,
+        type:"post",
+        data: fd,
+        cache: false,
+        contentType: false,
+        processData: false,
+        complete:function(res){
+          var data = res.responseText;
+          if(data.contains('<html>')){
+            $("#result").html(data);
+          }else{
+            try{
+              alert(JSON.parse(data).errMsg);
+            }catch(e){
+              alert(data);
+            }
+          }
+        }
+    });
+    return false;          
+}
+</script>
 </html>

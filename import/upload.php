@@ -4,11 +4,11 @@ include_once "../libs/conn.php";
 global $IS_SAE;
 $IS_SAE = defined("SAE_MYSQL_HOST_M");
 
-if(!isset($_FILES) || !isset($_FILES['photo']) || !isset($_FILES['photo']['tmp_name']) || $_FILES['photo']['tmp_name'][0] =="") 
-  throw new Exception("没有文件或者文件太大！");
+if(!isset($_FILES) || !isset($_FILES['files']) || !isset($_FILES['files']['tmp_name']) || !$_FILES['files']['name']) 
+  throw new Exception("文件太大！");
 
-$names = $_FILES['photo']['name'];
-$tmpNames = $_FILES['photo']['tmp_name'];
+$names = $_FILES['files']['name'];
+$tmpNames = $_FILES['files']['tmp_name'];
 
 $filenames = handleFiles($tmpNames,$names);
 require_once 'PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php';
