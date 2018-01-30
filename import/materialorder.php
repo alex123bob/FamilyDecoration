@@ -58,7 +58,7 @@
     ));
 
     if($res['total'] != 0){
-      echo "<font style='color:red'>已存在 订购商：$supplierName $projectName 第$times 次申购 完成情况 $percentage% 申请人 $creator 的订购单。 请勿重复导入。</font><br /><br /><br />";
+      echo "<font style='color:red'>已存在 订购商：$supplierName $projectName 第$times 次申购 完成情况 $percentage% 申请人 $creator 的订购单。 请勿重复导入。</font><br /><br />";
       $allSuccess = false;
     }
 
@@ -198,14 +198,15 @@ html;
       echo '<td>'.$value[4].'</td>';
       echo '<td></td></tr>';
     }
-    echo "</table><br/><br/><br/>";
+    echo "</table>";
     if($allSuccess){
       echo $mysql->commit();
-      echo "<div style='width: 100%; text-align:center;'>导入成功！</div>";
+      echo "<div style='margin-top: 10px;width: 100%; text-align:center;'>导入成功！</div>";
     }else{
       $mysql->rollback();
-      echo "<font style='color:red;font-size:20px;' >请修改红色单元格后重新录入！</font>";
+      echo "<div style='margin-top: 10px;color:red;' >请修改红色单元格后重新录入！</div>";
     }
+    return $allSuccess;
   }
 ?>
 <style>
