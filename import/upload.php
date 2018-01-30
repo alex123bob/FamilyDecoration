@@ -14,13 +14,14 @@ $filenames = handleFiles($tmpNames,$names);
 require_once 'PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php';
 require_once $_REQUEST['type'].'.php';
 $reader = PHPExcel_IOFactory::createReader('Excel2007');
+global $IS_SAE;
 
 $count = 0;
 foreach ($filenames as $filename) {
   echo "<div style='margin-top: 20px;'>";
   echo '第'.(++$count) . '个文件：'.$filename['oname'];
   echo "<div style='border:#666 1px solid;'>";
-  $success = parseContent($reader->load($filename['name']), $filename['name']);
+  $success = parseContent($reader->load($filename[$IS_SAE ? 'tname' : 'nname']), $filename['nname']);
   echo "</div></div>";
 }
 
@@ -46,7 +47,7 @@ function handleFiles($tmpNames,$names){
       if(!$st->upload('dqjczs',$file_new_name, $_FILES['files']['tmp_name'][$i] , $attr, true)){
         throw new Exception("文件".$names[$i]."上传失败！");
       }
-      array_push($res, array("name" => $_FILES['files']['tmp_name'][$i], "oname"=>$oName));
+      array_push($res, array("tname" => $_FILES['files']['tmp_name'][$i], "oname"=>$oName, "nname"=>$file_new_name));
     }
   }else{
     $directory = "../resources/imports/";
@@ -59,7 +60,7 @@ function handleFiles($tmpNames,$names){
       if (!move_uploaded_file ($tName,$directory.$file_new_name)) {
         throw new Exception("文件$oName上传失败！");
       }
-      array_push($res, array("name" => $directory.$file_new_name, "oname"=>$oName));
+      array_push($res, array("tname" => $tName, "oname"=>$oName, "nname"=>$directory.$file_new_name));
     }
   }
   return $res;
