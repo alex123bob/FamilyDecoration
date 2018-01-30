@@ -42,11 +42,11 @@ function handleFiles($tmpNames,$names){
     for ($i = 0; $i < count($names); $i++) {
       $file_new_name = 'imports/'.date("YmdHis").'.'.$ext_arr[$i];
       $oName = $names[$i];
-      $fileSize = filesize($_FILES['photo']['tmp_name'][$i]);
-      if(!$st->upload('dqjczs',$file_new_name, $_FILES['photo']['tmp_name'][$i] , $attr, true)){
+      $fileSize = filesize($_FILES['files']['tmp_name'][$i]);
+      if(!$st->upload('dqjczs',$file_new_name, $_FILES['files']['tmp_name'][$i] , $attr, true)){
         throw new Exception("文件".$names[$i]."上传失败！");
       }
-      array_push($res, array("name" => $_FILES['photo']['tmp_name'][$i], "oname"=>$oName));
+      array_push($res, array("name" => $_FILES['files']['tmp_name'][$i], "oname"=>$oName));
     }
   }else{
     $directory = "../resources/imports/";
