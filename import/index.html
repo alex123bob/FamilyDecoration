@@ -29,34 +29,41 @@ function uploadFile(btn, type){
    alert('必须选中至少一个文件！');
   }
   var fd = new FormData();
+  var totalSize = 0;
   for(var i = 0; i< files.length; i++) {
     if(!files[i].name.endsWith('xlsx')){
       alert('必须为xlsx文件！--->' + files[i].name);
       return false;
     }
+    totalSize += files[i].size;
     fd.append('files[]', files[i]);
   }
-    $.ajax({
-        url:"upload.php?type=" + type,
-        type:"post",
-        data: fd,
-        cache: false,
-        contentType: false,
-        processData: false,
-        complete:function(res){
-          var data = res.responseText;
-          if(data.contains('<html>')){
-            $("#result").html(data);
-          }else{
-            try{
-              alert(JSON.parse(data).errMsg);
-            }catch(e){
-              alert(data);
-            }
+  if(totalSize > 9 * 1024 * 1024) {
+    //实际限制10M
+    alert('上传文件共'+(totalSize >> 10)/1000+'MB, 新浪云限制最大上传大小9MB，请减少文件数量！');
+    return false;
+  }
+  $.ajax({
+      url:"upload.php?type=" + type,
+      type:"post",
+      data: fd,
+      cache: false,
+      contentType: false,
+      processData: false,
+      complete:function(res){
+        var data = res.responseText;
+        if(data.contains('<html>')){
+          $("#result").html(data);
+        }else{
+          try{
+            alert(JSON.parse(data).errMsg);
+          }catch(e){
+            alert(data);
           }
         }
-    });
-    return false;          
+      }
+  });
+  return false;          
 }
 </script>
 </html>
