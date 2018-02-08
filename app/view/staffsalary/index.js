@@ -45,7 +45,24 @@ Ext.define('FamilyDecoration.view.staffsalary.Index', {
                     if (obj.total === 0) {
                         Ext.Msg.warning(msg, function (btnId){
                             if ('yes' === btnId) {
-
+                                ajaxAdd('StaffSalary', {
+                                    depa: resObj.depa.get('name'),
+                                    month: resObj.selTime.month,
+                                    year: resObj.selTime.year
+                                }, function (obj){
+                                    showMsg('初始化成功!');
+                                    resObj.detailedSt.reload();
+                                });
+                            }
+                        });
+                    }
+                    else {
+                        resObj.detailedSt.load({
+                            params: {
+                                action: 'StaffSalary.get',
+                                depa: resObj.depa.get('name'),
+                                month: resObj.selTime.month,
+                                year: resObj.selTime.year
                             }
                         });
                     }

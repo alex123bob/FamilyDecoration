@@ -2,7 +2,8 @@ Ext.define('FamilyDecoration.view.staffsalary.DetailedSalary', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.staffsalary-detailedsalary',
     requires: [
-        'FamilyDecoration.view.staffsalary.Month'
+        'FamilyDecoration.view.staffsalary.Month',
+        'FamilyDecoration.store.StaffSalary'
     ],
     layout: 'fit',
     title: '工资详情',
@@ -41,7 +42,8 @@ Ext.define('FamilyDecoration.view.staffsalary.DetailedSalary', {
             },
             items: [
                 {
-                    text: '姓名'
+                    text: '姓名',
+                    dataIndex: 'staffName'
                 },
                 {
                     text: '职务'
@@ -81,6 +83,8 @@ Ext.define('FamilyDecoration.view.staffsalary.DetailedSalary', {
                 }
             ]
         }
+
+        me.store = Ext.create('FamilyDecoration.store.StaffSalary');
         
         this.callParent();
     }
