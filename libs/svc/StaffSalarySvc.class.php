@@ -46,6 +46,8 @@
         public function get ($q) {
             global $mysql;
             $arr = $this->checkSalaryByDepaMonthYear($q);
+            $userSvc = parent::getSvc('User');
+            $userSvc->appendRealName($arr["data"], "staffName");
             return $arr;
         }
     }

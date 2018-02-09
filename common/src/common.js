@@ -236,7 +236,7 @@ function ajaxGet(className, actionName, params, callback) {
 
 // isCustomAction: if true, className will be the classical className + actionName. 
 // combined by developer before invoke this function.
-function ajaxUpdate(className, params, conditionParams, callback, isCustomAction) {
+function ajaxUpdate(className, params, conditionParams, callback, isCustomAction, silentRequest) {
     if (Ext.isObject(params) && !Ext.Object.isEmpty(params)) {
         if (isCustomAction == true) {
             var url = './libs/api.php?action=' + className;
@@ -263,6 +263,7 @@ function ajaxUpdate(className, params, conditionParams, callback, isCustomAction
             url: url,
             method: 'POST',
             params: p,
+            silent: silentRequest === true ? true : false,
             callback: function (opts, success, res) {
                 if (success) {
                     var obj = Ext.decode(res.responseText);

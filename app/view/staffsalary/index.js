@@ -51,7 +51,13 @@ Ext.define('FamilyDecoration.view.staffsalary.Index', {
                                     year: resObj.selTime.year
                                 }, function (obj){
                                     showMsg('初始化成功!');
-                                    resObj.detailedSt.reload();
+                                    resObj.detailedSt.reload({
+                                        params: {
+                                            depa: resObj.depa.get('name'),
+                                            month: resObj.selTime.month,
+                                            year: resObj.selTime.year
+                                        }
+                                    });
                                 });
                             }
                         });

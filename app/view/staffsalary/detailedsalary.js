@@ -3,7 +3,8 @@ Ext.define('FamilyDecoration.view.staffsalary.DetailedSalary', {
     alias: 'widget.staffsalary-detailedsalary',
     requires: [
         'FamilyDecoration.view.staffsalary.Month',
-        'FamilyDecoration.store.StaffSalary'
+        'FamilyDecoration.store.StaffSalary',
+        'Ext.form.field.Number'
     ],
     layout: 'fit',
     title: '工资详情',
@@ -35,51 +36,117 @@ Ext.define('FamilyDecoration.view.staffsalary.DetailedSalary', {
                 month: val.split('/')[0]
             } : -1;
         };
+        
+        me.plugins = [
+            Ext.create('Ext.grid.plugin.RowEditing', {
+                clicksToEdit: 2,
+                listeners: {
+                    edit: function(editor, e) {
+                        var field = e.field,
+                            rec = e.record,
+                            newValues = e.newValues,
+                            params = {};
+                        Ext.apply(newValues, {
+                            id: rec.getId()
+                        });
+                        for (var pro in newValues) {
+                            switch (pro) {
+                                case 'staffRealName':
+                                case 'staffLevel':
+                                case 'commission':
+                                case 'actualPaid':
+                                    continue;
+                                    break;
+                            
+                                default:
+                                    params[pro] = newValues[pro];
+                                    break;
+                            }
+                        }
+                        ajaxUpdate('StaffSalary', params, ['id'], function (obj){
+                            var pickedTime = me.getTime();
+                            showMsg(newValues.staffRealName + pickedTime.year + '年' + pickedTime.month + '月工资信息编辑成功！');
+                        }, false, true);
+                        e.record.commit();
+                    }
+                }
+            })
+        ];
 
         me.columns = {
             defaults: {
-                flex: 1
+                flex: 1,
+                align: 'center',
+                editor: {
+                    xtype: 'numberfield',
+                    allowBlank: false,
+                    allowDecimals: true
+                },
+                xtype: 'numbercolumn',
+                format: '¥ 0,000.00'
             },
             items: [
                 {
                     text: '姓名',
-                    dataIndex: 'staffName'
+                    dataIndex: 'staffRealName',
+                    xtype: 'gridcolumn',
+                    editor: null
                 },
                 {
-                    text: '职务'
+                    text: '职务',
+                    dataIndex: 'staffLevel',
+                    renderer: function (val){
+                        return User.renderRole(val);
+                    },
+                    xtype: 'gridcolumn',
+                    editor: null
                 },
                 {
-                    text: '底薪'
+                    text: '底薪',
+                    dataIndex: 'basicSalary'
                 },
                 {
-                    text: '提成'
+                    text: '提成',
+                    dataIndex: 'commission',
+                    editor: null
                 },
                 {
-                    text: '全勤'
+                    text: '全勤',
+                    dataIndex: 'fullAttendanceBonus'
                 },
                 {
-                    text: '奖励'
+                    text: '奖励',
+                    dataIndex: 'bonus'
                 },
                 {
-                    text: '违扣'
+                    text: '违扣',
+                    dataIndex: 'deduction'
                 },
                 {
-                    text: '合计'
+                    text: '合计',
+                    dataIndex: 'total',
+                    editor: null
                 },
                 {
-                    text: '五险'
+                    text: '五险',
+                    dataIndex: 'insurance'
                 },
                 {
-                    text: '公积金'
+                    text: '公积金',
+                    dataIndex: 'houseFunding'
                 },
                 {
-                    text: '个税'
+                    text: '个税',
+                    dataIndex: 'incomeTax'
                 },
                 {
-                    text: '其他'
+                    text: '其他',
+                    dataIndex: 'others'
                 },
                 {
-                    text: '实发'
+                    text: '实发',
+                    dataIndex: 'actualPaid',
+                    editor: null
                 }
             ]
         }
