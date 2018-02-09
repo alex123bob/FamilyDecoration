@@ -24,6 +24,14 @@ Ext.define('FamilyDecoration.view.staffsalary.DetailedSalary', {
                         me.selChange();
                     }
                 }
+            },
+            {
+                xtype: 'button',
+                text: '同步',
+                handler: function (){
+                    var st = me.getStore();
+                    st.reload();
+                }
             }
         ];
 
@@ -65,7 +73,7 @@ Ext.define('FamilyDecoration.view.staffsalary.DetailedSalary', {
                         }
                         ajaxUpdate('StaffSalary', params, ['id'], function (obj){
                             var pickedTime = me.getTime();
-                            showMsg(newValues.staffRealName + pickedTime.year + '年' + pickedTime.month + '月工资信息编辑成功！');
+                            showMsg(newValues.staffRealName + pickedTime.year + '年' + pickedTime.month + '月工资信息编辑成功！合计与实发信息需点击[同步]按钮获取。');
                         }, false, true);
                         e.record.commit();
                     }
@@ -133,7 +141,7 @@ Ext.define('FamilyDecoration.view.staffsalary.DetailedSalary', {
                 },
                 {
                     text: '公积金',
-                    dataIndex: 'houseFunding'
+                    dataIndex: 'housingFund'
                 },
                 {
                     text: '个税',

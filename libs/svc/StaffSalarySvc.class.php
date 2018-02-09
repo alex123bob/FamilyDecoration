@@ -50,5 +50,11 @@
             $userSvc->appendRealName($arr["data"], "staffName");
             return $arr;
         }
+
+        public function update ($q) {
+            $q["@total"] = (isset($q["@basicSalary"]) ? $q["@basicSalary"] : 0) + (isset($q["@fullAttendanceBonus"]) ? $q["@fullAttendanceBonus"] : 0) + (isset($q["@bonus"]) ? $q["@bonus"] : 0) - (isset($q["@deduction"]) ? $q["@deduction"] : 0);
+            $q["@actualPaid"] = $q["@total"] - (isset($q["@insurance"]) ? $q["@insurance"] : 0) - (isset($q["@housingFund"]) ? $q["@housingFund"] : 0) - (isset($q["@incomeTax"]) ? $q["@incomeTax"] : 0) - (isset($q["@others"]) ? $q["@others"] : 0);
+            parent::update($q);
+        }
     }
 ?>

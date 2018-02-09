@@ -12,7 +12,7 @@ Ext.define('FamilyDecoration.model.StaffSalary', {
         {name: 'deduction', type: 'string'},
         {name: 'total', type: 'string'},
         {name: 'insurance', type: 'string'},
-        {name: 'houseFunding', type: 'string'},
+        {name: 'housingFund', type: 'string'},
         {name: 'incomeTax', type: 'string'},
         {name: 'others', type: 'string'},
         {name: 'actualPaid', type: 'string'},
