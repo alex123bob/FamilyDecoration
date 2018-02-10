@@ -95,6 +95,21 @@ Ext.define('FamilyDecoration.view.staffsalary.DetailedSalary', {
             },
             items: [
                 {
+                    xtype: 'actioncolumn',
+                    width: 25,
+                    flex: null,
+                    items: [
+                        {
+                            icon: 'resources/img/commission.png',
+                            tooltip: '编辑提成',
+                            handler: function (){
+
+                            }
+                        }
+                    ],
+                    editor: null
+                },
+                {
                     text: '姓名',
                     dataIndex: 'staffRealName',
                     xtype: 'gridcolumn',
