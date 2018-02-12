@@ -46,7 +46,9 @@ Ext.define('FamilyDecoration.model.Project', {
         {name: 'rdyck1MaterialOrderCountForCaptain', type: 'string'},
         {name: 'rdyck2MaterialOrderCountForCaptain', type: 'string'},
         {name: 'rdyck3MaterialOrderCountForCaptain', type: 'string'},
-        {name: 'rdyck4MaterialOrderCountForCaptain', type: 'string'}
+        {name: 'rdyck4MaterialOrderCountForCaptain', type: 'string'},
+        // this is used when left join with contract_engineering table, if project is transferred from business, and contract is already created based on that business.
+        {name: 'contractTotalPrice', mapping: 'totalPrice', type: 'string'}
     ],
     idProperty: 'projectId',
     proxy: {

@@ -38,7 +38,8 @@
 		"supplier_order_template"=>array('id','supplierId','templateName','supplierId'),
 		"supplier_order_item_template"=>array('id','templateId','materialId','referenceNumber'),
 		"statement_bill_tag"=>array('id','tag','billId','committer'),
-		"staff_salary"=>array("id", "staffName", "staffLevel", "basicSalary", "commission", "fullAttendanceBonus", "bonus", "deduction", "total", "insurance", "housingFund", "incomeTax", "others", "actualPaid", "salaryDate")
+		"staff_salary"=>array("id", "staffName", "staffLevel", "basicSalary", "commission", "fullAttendanceBonus", "bonus", "deduction", "total", "insurance", "housingFund", "incomeTax", "others", "actualPaid", "salaryDate"),
+		"staff_salary_commission"=>array("id", "staffSalaryId", "projectId", "commissionAmount", "staffName", "staffRealName", "commissionTime")
 	);
 
 	foreach ($TableMapping as $key => &$value) {

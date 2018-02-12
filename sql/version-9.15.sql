@@ -20,4 +20,7 @@ CREATE TABLE `staff_salary_commission` (
 ALTER TABLE `staff_salary_commission`
   ADD PRIMARY KEY (`id`);
 
+
+ALTER TABLE `staff_salary_commission` ADD `staffRealName` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'staffRealName, we don\'t need to join table, coz this info should be snapshotted.' AFTER `staffName`;
+
 insert into `versions`(`id`) values ('version-9.15');

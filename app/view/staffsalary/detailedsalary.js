@@ -4,7 +4,8 @@ Ext.define('FamilyDecoration.view.staffsalary.DetailedSalary', {
     requires: [
         'FamilyDecoration.view.staffsalary.Month',
         'FamilyDecoration.store.StaffSalary',
-        'Ext.form.field.Number'
+        'Ext.form.field.Number',
+        'FamilyDecoration.view.staffsalary.EditCommission'
     ],
     layout: 'fit',
     title: '工资详情',
@@ -103,7 +104,10 @@ Ext.define('FamilyDecoration.view.staffsalary.DetailedSalary', {
                             icon: 'resources/img/commission.png',
                             tooltip: '编辑提成',
                             handler: function (){
+                                var win = Ext.create('FamilyDecoration.view.staffsalary.EditCommission', {
 
+                                });
+                                win.show();
                             }
                         }
                     ],
