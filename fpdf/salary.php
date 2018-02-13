@@ -50,6 +50,6 @@ foreach($salaries['data'] as $record) {
 	);
 	$pdf->writeCellLine($widths,$data,'LTBR','',$aligns,12,10,$fontStyles = array());
 }
-$name = '佳诚装饰'.$_REQUEST['year'].'年'.$_REQUEST['month'].'月'.str2GBK($_REQUEST['depasName']).'月工资表.pdf';
+$name = '佳诚装饰'.$_REQUEST['year'].'年'.$_REQUEST['month'].'月'.str2GBK($_REQUEST['depasName']).'工资表.pdf';
 $pdf->Output($name, $action == "view" ? "I" : "D" );
 ?>  
