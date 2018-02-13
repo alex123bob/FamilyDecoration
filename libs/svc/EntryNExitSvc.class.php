@@ -70,11 +70,11 @@ class EntryNExitSvc{
         return $res;
       case 'tax': 
       case 'staffSalary': 
-        $qry = BaseSvc::getSvc('salary')->get($q);
+        $qry = BaseSvc::getSvc('StatementBill')->get($q);
         BaseSvc::getSvc('User')->appendRealName($qry['data'],'payee');
         array_push($res, array('k'=>'领款人','v'=>$qry['data'][0]['payeeRealName']));
-        array_push($res, array('k'=>'款项名称','v'=>$qry['data'][0]['period'].'工资'));
-        array_push($res, array('k'=>'核算工资','v'=>$qry['data'][0]['balance'].'元'));
+        array_push($res, array('k'=>'款项名称','v'=>$qry['data'][0]['projectName']));
+        array_push($res, array('k'=>'核算工资','v'=>$qry['data'][0]['claimAmount'].'元'));
         return $res;
       default:throw new Exception("unknown type:  ".$q['type']);
     }
@@ -195,22 +195,22 @@ class EntryNExitSvc{
 
   private function staffSalary($q){
     global $mysql;
-    $sql = "select s.id as c0, ".
-          "u.level as c1, ".
+    $sql = "select b.id as c0, ".
+          "s.staffLevel as c1, ".
           "u.realName as c2, ".
           "s.basicSalary as c3, ".
-          "s.positionSalary as c4, ".
-          "s.meritSalary as c5, ".
-          "s.socialTax as c6, ".
-          "s.balance as c7, ".
-          "s.amount as c8, ".
+          "s.basicSalary as c4, ".
+          "s.commission as c5, ".
+          "(s.insurance + s.housingFund + s.incomeTax + s.others) as c6, ".
+          "s.actualPaid as c7, ".
+          "b.paidAmount as c8, ".
           "'' as c9, ".
-          "s.paidTime as c10, ".
-          "u2.realName as c11, ".
-          "s.status ".
-          "from salary s left join user u on u.name = s.payee left join user u2 on u2.name = s.payer where s.isDeleted = 'false' and ( s.status = 'paid' or s.status = 'chk')";
+          "b.paidTime as c10, ".
+          "u1.realName as c11, ".
+          "b.status ".
+          "from statement_bill b left join staff_salary s on b.staffSalaryId = s.id left join user u on u.name = b.payee left join user u1 on b.payer = u1.name where b.isDeleted = 'false' and b.billType='stfs' and ( b.status = 'paid' or b.status = 'chk')";
     if(isset($q['c0']) && $q['c0'] != ""){
-      $sql .= ' and s.id like \'%'.$q['c0'].'%\'';
+      $sql .= ' and b.id like \'%'.$q['c0'].'%\'';
     }
     if(isset($q['payee']) && $q['payee'] != ""){
       $sql .= ' and u.realName like \'%'.$q['payee'].'%\'';

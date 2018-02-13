@@ -16,6 +16,10 @@ Ext.define('FamilyDecoration.model.StaffSalary', {
         {name: 'incomeTax', type: 'string'},
         {name: 'others', type: 'string'},
         {name: 'actualPaid', type: 'string'},
+        // 当前工资record对应statement_bill表中，对应账单的审核状态，若未提交，则为空
+        {name: 'billStatus', type: 'string'},
+        // 对应statement bill record的id
+        {name: 'statementBillId', type: 'string'},
         {name: 'salaryDate', type: 'string'},
         {name: 'createTime', type: 'string'},
         {name: 'updateTime', type: 'string'},

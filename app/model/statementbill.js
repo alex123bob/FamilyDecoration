@@ -57,6 +57,10 @@ Ext.define('FamilyDecoration.model.StatementBill', {
 
 		// for mtf
 		{name: 'supplierId', type: 'string'},
-		{name: 'supplier', type: 'string'}
+		{name: 'supplier', type: 'string'},
+
+		{name: 'businessId', type: 'string'},
+		// for stfs 员工工资对应某年某月某员工的工资记录id
+		{name: 'staffSalaryId', type: 'string'}
 	]
 });

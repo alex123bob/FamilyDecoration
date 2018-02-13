@@ -209,6 +209,7 @@ class AccountSvc extends BaseSvc
 			case 'companyBonus':
 			case 'qualityGuaranteeDeposit':
 			case 'workerSalary':
+			case 'staffSalary':
 			case 'materialPayment':
 			case 'reimbursementItems':
 			case 'tax':
@@ -218,9 +219,9 @@ class AccountSvc extends BaseSvc
 			case 'financialFee':
 				$affect = parent::getSvc('loan')->update(array('@amount'=>$q['@fee'],'@status'=>'paid','id'=>$q['id'],'status'=>'!paid'))['affect'];
 				break;
-			case 'staffSalary':
-				$affect = parent::getSvc('salary')->update(array('@amount'=>$q['@fee'],'@status'=>'paid','id'=>$q['id'],'status'=>'chk'))['affect'];
-				break;
+			// case 'staffSalary':
+			// 	$affect = parent::getSvc('salary')->update(array('@amount'=>$q['@fee'],'@status'=>'paid','id'=>$q['id'],'status'=>'chk'))['affect'];
+			// 	break;
 			//入账 case 'designDeposit': return $this->designDeposit($q);
 			//入账 case 'projectFee': return $this->projectFee($q);
 			//入账 case 'loan': return $this->loan($q);  //贷款入账

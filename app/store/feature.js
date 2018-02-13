@@ -317,7 +317,7 @@
                     },
                     {
                         name: '员工工资',
-                        cmp: DEBUG ? 'staffsalary-index' : '',
+                        cmp: 'staffsalary-index',
                         leaf: true,
                         icon: 'resources/img/staff_salary.png'
                     }
@@ -405,6 +405,9 @@
             }
             else if (rec.get('cmp') == 'personnel-index') {
                 flag = User.isAdmin() || User.isAdministrationManager() || User.isAdministrationStaff() ? true : false;
+            }
+            else if (rec.get('cmp') == 'staffsalary-index') {
+                flag = User.isAdmin() ? true : false;
             }
             else if (rec.get('cmp') == 'setting-index') {
                 flag = User.isGeneral() || User.isSupplier() ? false : true;

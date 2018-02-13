@@ -129,7 +129,11 @@
             supplierId: '<?php echo (isset($_SESSION["supplierId"]) ? $_SESSION["supplierId"] : false); ?>',
 
             isAdmin: function (){
-                return this.level == '001-001' || this.level == '001-002';
+                return this.level == '001-001' || this.level == '001-002' || this.isAdminAssistant();
+            },
+
+            isAdminAssistant: function (){
+                return this.level == '001-003';
             },
 
             isManager: function (){
@@ -237,6 +241,9 @@
             }, {
                 name: '副总经理',
                 value: '001-002'
+            }, {
+                name: '总经理助理',
+                value: '001-003'
             }, {
                 name: '设计部主管',
                 value: '002-001'
@@ -395,6 +402,9 @@
                     }
                     else if (roleStr == '002') {
                         role = '副总经理';
+                    }
+                    else if (roleStr == '003') {
+                        role = '总经理助理';
                     }
                 }
                 // design department

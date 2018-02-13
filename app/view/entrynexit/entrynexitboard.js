@@ -94,7 +94,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                                 extraParams: {
                                     action: 'EntryNExit.get',
                                     type: resObj.category.get('name'),
-                                    c0: txt.previousSibling().getValue(),
+                                    c1: txt.previousSibling().getValue(),
                                     payee: txt.getValue()
                                 }
                             });
@@ -105,7 +105,8 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                         var resObj = _getRes(),
                             oldProxy = resObj.st.getProxy();
                         if (newVal == '' && resObj.category) {
-                            delete oldProxy.extraParams.c0;
+                            delete oldProxy.extraParams.c1;
+                            delete oldProxy.extraParams.payee;
                             resObj.st.setProxy(oldProxy);
                             resObj.st.loadPage(1);
                         }
