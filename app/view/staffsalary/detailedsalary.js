@@ -89,7 +89,8 @@ Ext.define('FamilyDecoration.view.staffsalary.DetailedSalary', {
                 editor: {
                     xtype: 'numberfield',
                     allowBlank: false,
-                    allowDecimals: true
+                    allowDecimals: true,
+                    minValue: 0
                 },
                 xtype: 'numbercolumn',
                 format: '¥ 0,000.00'
@@ -103,9 +104,19 @@ Ext.define('FamilyDecoration.view.staffsalary.DetailedSalary', {
                         {
                             icon: 'resources/img/commission.png',
                             tooltip: '编辑提成',
-                            handler: function (){
+                            handler: function (grid, rowIndex, colIndex){
+                                var timeObj = me.getTime(),
+                                    rec = grid.getStore().getAt(rowIndex);
                                 var win = Ext.create('FamilyDecoration.view.staffsalary.EditCommission', {
-
+                                    data: {
+                                        staffName: rec.get('staffName'),
+                                        staffRealName: rec.get('staffRealName'),
+                                        salaryTime: timeObj,
+                                        rec: rec
+                                    },
+                                    callbackAfterEdit: function (){
+                                        me.getStore().reload();
+                                    }
                                 });
                                 win.show();
                             }

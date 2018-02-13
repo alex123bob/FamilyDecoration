@@ -2,7 +2,7 @@ Ext.define('FamilyDecoration.model.StaffSalary', {
     extend: 'Ext.data.Model',
     fields: [
         'id',
-        {name: 'staff', type: 'string'},
+        {name: 'staffName', type: 'string'},
         {name: 'staffRealName', type: 'string', mapping: 'staffNameRealName'},
         {name: 'staffLevel', type: 'string'},
         {name: 'basicSalary', type: 'string'},

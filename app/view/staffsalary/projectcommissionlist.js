@@ -9,8 +9,11 @@ Ext.define('FamilyDecoration.view.staffsalary.ProjectCommissionList', {
     layout: 'border',
     title: '工程提成信息',
     modal: true,
-    width: 700,
+    width: 800,
     height: 400,
+    // get from parent component: data {staffName, staffRealName, salaryTime: {year, month}, rec}
+    data: null,
+    callbackAfterAdded: Ext.emptyFn,
     initComponent: function () {
         var me = this,
             projectListSt = Ext.create('Ext.data.Store', {
@@ -39,7 +42,7 @@ Ext.define('FamilyDecoration.view.staffsalary.ProjectCommissionList', {
                 projectList = get('gridpanel-projectList'),
                 projectListSt = projectList.getStore(),
                 projectListSelModel = projectList.getSelectionModel(),
-                project = projectListSelModel.getSelection()[0],
+                projects = projectListSelModel.getSelection(),
 
                 commissionList = get('gridpanel-commissionList'),
                 commissionListSt = commissionList.getStore(),
@@ -50,12 +53,14 @@ Ext.define('FamilyDecoration.view.staffsalary.ProjectCommissionList', {
                 projectList: projectList,
                 projectListSt: projectListSt,
                 projectListSelModel: projectListSelModel,
-                project: project,
+                projects: projects,
 
                 commissionList: commissionList,
                 commissionListSt: commissionListSt,
                 commissionListSelModel: commissionListSelModel,
-                commission: commission
+                commission: commission,
+
+                add: me.down('[itemId="add"]')
             };
         }
 
@@ -63,13 +68,9 @@ Ext.define('FamilyDecoration.view.staffsalary.ProjectCommissionList', {
             {
                 xtype: 'gridpanel',
                 itemId: 'gridpanel-projectList',
-                collapsible: true,
-                collapseDirection: 'left',
                 width: 300,
                 flex: null,
                 region: 'west',
-                title: '工程列表',
-                hideHeaders: true,
                 dockedItems: [
                     {
                         xtype: 'pagingtoolbar',
@@ -78,18 +79,23 @@ Ext.define('FamilyDecoration.view.staffsalary.ProjectCommissionList', {
                         displayInfo: true
                     }
                 ],
+                selModel: {
+                    mode: 'SIMPLE'
+                },
+                selType: 'checkboxmodel',
                 store: projectListSt,
                 columns: {
                     defaults: {
-                        flex: 1,
                         align: 'center'
                     },
                     items: [
                         {
+                            flex: 1,
                             text: '工程名称',
                             dataIndex: 'projectName'
                         },
                         {
+                            flex: 1,
                             text: '合同总额',
                             dataIndex: 'contractTotalPrice',
                             xtype: 'numbercolumn',
@@ -98,13 +104,22 @@ Ext.define('FamilyDecoration.view.staffsalary.ProjectCommissionList', {
                     ]
                 },
                 listeners: {
-                    itemclick: function (grid, rec){
-                        var selObj = _getRes();
-                        selObj.commissionListSt.reload({
+                    selectionchange: function (grid, sels){
+                        var recs = sels,
+                            selObj = _getRes();
+                        recs.length > 0 ? selObj.commissionListSt.reload({
                             params: {
-                                projectId: rec.get('projectId')
+                                projectId: (function() {
+                                    var arr = [];
+                                    Ext.each(recs, function (rec){
+                                        arr.push(rec.get('projectId'));
+                                    });
+                                    arr = arr.join(',');
+                                    return arr;
+                                })()
                             }
-                        });
+                        }) : selObj.commissionListSt.removeAll();
+                        selObj.add.setDisabled(recs.length <= 0);
                     }
                 }
             },
@@ -125,7 +140,9 @@ Ext.define('FamilyDecoration.view.staffsalary.ProjectCommissionList', {
                         },
                         {
                             text: '提成金额',
-                            dataIndex: 'commissionAmount'
+                            dataIndex: 'commissionAmount',
+                            xtype: 'numbercolumn',
+                            format: '¥ 0,000.00'
                         },
                         {
                             text: '提成时间',
@@ -135,6 +152,10 @@ Ext.define('FamilyDecoration.view.staffsalary.ProjectCommissionList', {
                                     res = Ext.Date.format(d, 'Y-m');
                                 return res;
                             }
+                        },
+                        {
+                            text: '工程名称',
+                            dataIndex: 'projectName'
                         }
                     ]
                 }
@@ -144,7 +165,29 @@ Ext.define('FamilyDecoration.view.staffsalary.ProjectCommissionList', {
         me.buttons = [
             {
                 text: '添加',
+                itemId: 'add',
+                disabled: true,
                 handler: function (){
+                    var selObj = _getRes();
+                    ajaxAdd('StaffSalaryCommission', {
+                        staffSalaryId: me.data.rec.getId(),
+                        projectIds: (function (){
+                            var arr = [];
+                            Ext.each(selObj.projects, function (project){
+                                arr.push(project.getId());
+                            });
+                            return arr.join(',');
+                        })(),
+                        staffName: me.data.staffName,
+                        staffRealName: me.data.staffRealName,
+                        commissionTime: [me.data.salaryTime.year, me.data.salaryTime.month, '01'].join('-')
+                    }, function (obj){
+                        showMsg('添加成功!');
+                        me.close();
+                        me.callbackAfterAdded();
+                    }, function (obj){
+                        Ext.Msg.error(obj.errMsg);
+                    })
                     me.close();
                 }
             },

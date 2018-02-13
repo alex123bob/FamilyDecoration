@@ -4,6 +4,7 @@ Ext.define('FamilyDecoration.model.StaffSalaryCommission', {
         'id',
         {name: 'staffSalaryId', type: 'string'},
         {name: 'projectId', type: 'string'},
+        {name: 'projectName', type: 'string'},
         {name: 'commissionAmount', type: 'string'},
         {name: 'staffName', type: 'string'},
         {name: 'staffRealName', type: 'string'},
