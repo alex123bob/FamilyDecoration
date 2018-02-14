@@ -42,7 +42,8 @@ Ext.define('FamilyDecoration.view.staffsalary.DetailedSalary', {
                     add: me.down('[name="createBill"]'),
                     request: me.down('[name="requestCheck"]'),
                     pass: me.down('[name="checkPassed"]'),
-                    reject: me.down('[name="returnBill"]')
+                    reject: me.down('[name="returnBill"]'),
+                    print: me.down('[name="printBill"]')
                 },
                 st = me.getStore(),
                 selModel = me.getSelectionModel(),
@@ -52,6 +53,7 @@ Ext.define('FamilyDecoration.view.staffsalary.DetailedSalary', {
             btnObj.request.setDisabled(!(rec && status === 'new'));
             btnObj.pass.setDisabled(!(rec && status === 'rdyck'));
             btnObj.reject.setDisabled(!(rec && status === 'rdyck'));
+            btnObj.print.setDisabled(!rec);
         }
 
         function changeBillStatus (cfmMsg, successMsg, status){
@@ -199,6 +201,30 @@ Ext.define('FamilyDecoration.view.staffsalary.DetailedSalary', {
                 hidden: User.isAdminAssistant() || !User.isAdmin(),
                 handler: function (){
                     changeBillStatus('确定要将当前请求单据退回到上一状态吗?', '返回成功!', '-1');
+                }
+            },
+            {
+                xtype: 'button',
+                name: 'printBill',
+                text: '打印',
+                icon: 'resources/img/print.png',
+                hidden: !User.isAdmin(),
+                handler: function (){
+                    var st = me.getStore(),
+                        selModel = me.getSelectionModel(),
+                        rec = selModel.getSelection()[0],
+                        pickedTime = me.getTime(),
+                        params = {};
+                    if (rec) {
+                        params = {
+                            depa: rec.get('staffLevel').slice(0, 3),
+                            depasName: User.renderDepartment(rec.get('staffLevel')),
+                            year: pickedTime.year,
+                            month: pickedTime.month
+                        };
+                        params = Ext.Object.toQueryString(params);
+                        var win = window.open('fpdf/salary.php?' + params, '打印', 'height=650,width=700,top=10,left=10,toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no');
+                    }
                 }
             }
         ]
