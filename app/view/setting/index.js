@@ -81,20 +81,37 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 				text: '照片',
 				flex: 0.3,
 				dataIndex: 'profileImage',
-				renderer: function (val){
-					if (val) {
-						return '<img src="' + val + '" width="30" height="30" />';
+				renderer: function (val, meta, rec){
+					if (rec.get('name')) {
+						return val ? '<img src="' + val + '" width="30" height="30" />' : '无';
 					}
 					else {
-						return '无';
+						return '';
 					}
 				}
 			}, {
 				text: '锁定',
 				flex: 0.3,
 				dataIndex: 'isLocked',
-				renderer: function(val) {
-					return val === 'true' ? '<font color="red">是</font>' : '否';
+				renderer: function(val, meta, rec) {
+					if (rec.get('name')) {
+						return val === 'true' ? '<font color="red">是</font>' : '否';
+					}
+					else {
+						return '';
+					}
+				}
+			}, {
+				text: '工资',
+				flex: 0.3,
+				dataIndex: 'isInStaffSalary',
+				renderer: function (val, meta, rec){
+					if (rec.get('name')) {
+						return val === 'true' ? '<font color="green">是</font>' : '<font color="red">否</font>';
+					}
+					else {
+						return '';
+					}
 				}
 			}],
 			rootVisible: false,
@@ -351,6 +368,40 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 						var win = Ext.create('FamilyDecoration.view.setting.UserList');
 						win.show();
 					}
+				},
+				{
+					text: '工资系统配置',
+					hidden: !User.isAdmin(),
+					icon: './resources/img/salary_permission_setting.png',
+					name: 'button-excludeFromStaffSalaryModule',
+					id: 'button-excludeFromStaffSalaryModule',
+					handler: function (){
+						var treepanel = me.down('treepanel'),
+							rec = treepanel.getSelectionModel().getSelection()[0];
+						Ext.Msg.warning('确定要对当前员工工资系统权限进行配置切换？', function (btnId){
+							if ('yes' == btnId) {
+								Ext.Ajax.request({
+									url: './libs/user.php?action=setStaffSalaryPermission',
+									method: 'POST',
+									params: {
+										name: rec.get('name')
+									},
+									callback: function (opts, success, res){
+										if (success) {
+											var obj = Ext.decode(res.responseText);
+											if ('successful' == obj.status) {
+												showMsg('设置成功!');
+												me.down('treepanel').refresh();
+											}
+											else {
+												showMsg(obj.errMsg);
+											}
+										}
+									}
+								})
+							}
+						});
+					}
 				}
 			],
 			listeners: {
@@ -360,7 +411,8 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 						reset = Ext.getCmp('button-resetaccount'),
 						del = Ext.getCmp('button-deleteaccount'),
 						upload = Ext.getCmp('button-uploadProfileImage'),
-						lockAccount = Ext.getCmp('button-lockAccount');
+						lockAccount = Ext.getCmp('button-lockAccount'),
+						excludeSalary = Ext.getCmp('button-excludeFromStaffSalaryModule');
 
 					if (rec && rec.get('name')) {
 						edit.enable();
@@ -368,6 +420,7 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 						upload.enable();
 						del.setDisabled(rec.get('level') == 1);
 						lockAccount.enable();
+						excludeSalary.enable();
 					}
 					else {
 						edit.disable();
@@ -375,6 +428,7 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 						del.disable();
 						upload.disable();
 						lockAccount.disable();
+						excludeSalary.disable();
 					}
 				},
 				cellclick: function (view, td, cellIndex, rec, tr, rowIndex, ev, opts){

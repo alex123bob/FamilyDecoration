@@ -77,6 +77,18 @@ Ext.define('FamilyDecoration.view.staffsalary.ProjectCommissionList', {
                         store: projectListSt,
                         dock: 'bottom',
                         displayInfo: true
+                    },
+                    {
+                        dock: 'top',
+                        xtype: 'toolbar',
+                        items: [
+                            {
+                                xtype: 'searchfield',
+                                flex: 1,
+                                store: projectListSt,
+                                paramName: 'projectName'
+                            }
+                        ]
                     }
                 ],
                 selModel: {

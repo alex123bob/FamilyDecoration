@@ -16,6 +16,7 @@ Ext.define('FamilyDecoration.model.User', {
 		{name: 'profileImage', type: 'string'},
 		{name: 'priority', type: 'string'},
 		{name: 'priorityTitle', type: 'string'},
+		{name: 'isInStaffSalary', type: 'string'},
 		{name: 'isLocked', type: 'string'}
 	]
 });

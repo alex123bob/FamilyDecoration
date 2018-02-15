@@ -38,7 +38,7 @@
             $year = $q["year"];
             $month = $q["month"];
             $depa = $q["depa"];
-            $sql = "SELECT s.*, b.status as billStatus, b.id as statementBillId FROM `staff_salary` s left join `statement_bill` b on s.id = b.staffSalaryId WHERE SUBSTR(s.`staffLevel`, 1, 3) = '?' and YEAR(s.`salaryDate`) = '?' and MONTH(s.`salaryDate`) = '?' and s.`isDeleted` = 'false'";
+            $sql = "SELECT s.*, u.isInStaffSalary, b.status as billStatus, b.id as statementBillId FROM `staff_salary` s left join `statement_bill` b on s.id = b.staffSalaryId left join user u on s.staffName = u.name WHERE SUBSTR(s.`staffLevel`, 1, 3) = '?' and YEAR(s.`salaryDate`) = '?' and MONTH(s.`salaryDate`) = '?' and s.`isDeleted` = 'false' and u.`isInStaffSalary` = 'true' ";
             $res = $mysql->DBGetAsMap($sql, $depa, $year, $month);
             return array("status" => "successful", "data" => $res, "total" => count($res));
         }

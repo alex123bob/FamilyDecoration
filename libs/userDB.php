@@ -469,4 +469,14 @@
 		$arr = $mysql->DBGetSomeRows("`user`", "*" ,"where `name` = '$name' and `isDeleted` = 'false' ");
 		return ($arr);
 	}
+
+	function setStaffSalaryPermission ($name){
+		global $mysql;
+		$user = getUserByName($name);
+		$isInStaffSalary = $user[0]["isInStaffSalary"];
+		// echo $isInStaffSalary;
+		$newVal = ($isInStaffSalary == "true" ? "false" : "true");
+		$mysql->DBUpdate('user',array('isInStaffSalary'=>$newVal),"`name`='?'",array($name));
+		return (array('status'=>'successful', 'errMsg' => ''));
+	}
 ?>

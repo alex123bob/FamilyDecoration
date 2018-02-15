@@ -92,6 +92,28 @@ Ext.define('FamilyDecoration.view.staffsalary.EditCommission', {
                     },
                     items: [
                         {
+                            xtype: 'actioncolumn',
+                            flex: null,
+                            width: 20,
+                            items: [
+                                {
+                                    icon: 'resources/img/delete.png',
+                                    handler: function (grid, rowIndex, colIndex){
+                                        var rec = grid.getStore().getAt(rowIndex);
+                                        Ext.Msg.warning('确定要删除当前提成信息吗？', function (btnId){
+                                            if ('yes' === btnId) {
+                                                ajaxDel('StaffSalaryCommission', {
+                                                    id: rec.getId()
+                                                }, function (obj){
+                                                    st.reload();
+                                                });
+                                            }
+                                        });
+                                    }
+                                }
+                            ]
+                        },
+                        {
                             text: '工程地址',
                             dataIndex: 'projectName'
                         },

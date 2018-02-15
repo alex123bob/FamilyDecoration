@@ -23,6 +23,7 @@
 		case "modifyProfileImage":		$res = modifyProfileImage();break;
 		case "modifyPriority":			$res = modifyPriority();break;
 		case "getUserByName":			$res = getUserByName($_GET["name"]);break;
+		case "setStaffSalaryPermission":	$res = setStaffSalaryPermission($_POST["name"]);break;
 		//TODO   user.php?action=getOnlineUsers&page=xxx&limit=xxx&orderBy=xxx&order=desc/asc
 		//user.php?action=getOnlineUsers&beginTime=xxx&endTime=xxx&page=xxx&limit=xxx&orderBy=xxx&order=desc/asc
 
