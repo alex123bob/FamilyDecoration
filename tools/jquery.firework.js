@@ -287,8 +287,10 @@
             close: function () {
                 clearInterval(launchIntervallId);
                 clearInterval(loopIntervalId);
-                audio.pause();
-                audio.currentTime = 0;
+                if (audio) {
+                    audio.pause();
+                    audio.currentTime = 0;
+                }
                 $(fireworksField).remove();
             }
         });
