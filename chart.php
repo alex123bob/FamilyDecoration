@@ -27,7 +27,7 @@
         }
     </style>
     <title>FamilyDecoration Data Analyses</title>
-    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="chart/d3.v3.min.js"></script>
     <script src="chart/Donut3D.js"></script>
 </head>
 <body>
@@ -54,7 +54,7 @@
             return color;
         }
 
-        var svg = d3.select("body").append("svg").attr("width",5000).attr("height",3000);
+        var svg = d3.select("body").append("svg").attr("width",2000).attr("height",1000);
 
         svg.append("g").attr("id","salesDonut");
         svg.append("g").attr("id","quotesDonut");
@@ -92,7 +92,7 @@
                     regions.push(obj);
                 }
             }
-            Donut3D.draw("salesDonut", regions, 1000, 600, 980, 580, 30, 0.4);
+            Donut3D.draw("salesDonut", regions, 1000, 400, 700, 300, 30, 0.4);
         })
     </script>
     <input type="button" value="change data" onclick="changeData()" />

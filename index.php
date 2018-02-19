@@ -977,22 +977,25 @@
         // createSnow('resources/img/snow/', 500);
 
         // for firework effect.
-        // $(function (){
-        //     var $fireworkCanvas = $('<div class="fireworkCanvas" style="z-index: 99999999; width: 100%; height: 100%; position: fixed;">');
-        //     $('body').append($fireworkCanvas);
-        //     $fireworkCanvas.append($('<div class="closeBtn" style="font-size: 20px; position: absolute; right: 10px; top: 10px; cursor: pointer; color: #fff; z-index: 100000000;">X</div>'));
-        //     var fireworkField = $('.fireworkCanvas').fireworks({ 
-        //         sound: true, // 声音效果
-        //         opacity: 0.9, 
-        //         width: '100%', 
-        //         height: '100%'
-        //     });
-        //     $('.closeBtn').on('click', function (){
-        //         $fireworkCanvas.fadeOut(2500, function (){
-        //             fireworkField.close();
-        //         });
-        //     });
-        // });
+        $(function (){
+            setTimeout(function (){
+                var $fireworkCanvas = $('<div class="fireworkCanvas" style="z-index: 99999999; width: 100%; height: 100%; position: fixed;">');
+                $('body').append($fireworkCanvas);
+                $fireworkCanvas.append($('<div class="closeBtn" style="font-size: 20px; position: absolute; right: 10px; top: 10px; cursor: pointer; color: #fff; z-index: 100000000;">X</div>'));
+                var fireworkField = $('.fireworkCanvas').fireworks({ 
+                    // sound: true, // 声音效果
+                    opacity: 0.9, 
+                    width: '100%', 
+                    height: '100%',
+                    text: '瑞狗迎春，开门大吉'
+                });
+                $('.closeBtn').on('click', function (){
+                    $fireworkCanvas.fadeOut(2500, function (){
+                        fireworkField.close();
+                    });
+                });
+            }, 3000);
+        });
         // end of firework effect.
         
     </script>
@@ -1004,6 +1007,6 @@
     <script type="text/javascript" src="tools/dhtmlx/codebase/message.js"></script>
     <script type="text/javascript" src="tools/sweetalert/dist/sweetalert.min.js"></script>
     <script type="text/javascript" src="tools/md5.min.js"></script>
-    <!--<script type="text/javascript" src="tools/jquery.firework.js"></script>-->
+    <script type="text/javascript" src="tools/jquery.firework.js"></script>
 </body>
 </html>
