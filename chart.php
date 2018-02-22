@@ -6,12 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>FamilyDecoration Data Analyses</title>
     <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
     <script src="https://code.highcharts.com/highcharts-3d.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
 </head>
 <body>
     <div id="regionCountPie" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
     <div id="communityCountByLevel" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+    <div id="communityCountByTime" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
     <script>
         let regionMap = {}, regions = [];
         // Radialize the colors
@@ -106,6 +108,7 @@
                             events: {
                                 click: function () {
                                     buildDonutByCommunityLevel(this.regionId);
+                                    buildLineChartForCommunitiesByTime(this.regionId);
                                 }
                             }
                         },
@@ -122,6 +125,89 @@
                 series: [{
                     name: 'Community Counts',
                     data: regions
+                }]
+            });
+        }
+
+        function buildLineChartForCommunitiesByTime (regionId){
+            if (Object.keys(regionMap).length === 0 && regionMap.constructor === Object) {
+                return false;
+            }
+            let communities = regionMap[regionId].communities,
+                map = {},
+                arr = [],
+                xAxis = [],
+                data = [];
+            communities.forEach(obj => {
+                const d = obj.createTime.slice(0, 10);
+                if (map[d]) {
+                    map[d].count++;
+                }
+                else {
+                    map[d] = {
+                        x: d,
+                        count: 1
+                    };
+                }
+            });
+            for (const key in map) {
+                if (map.hasOwnProperty(key)) {
+                    const el = map[key];
+                    arr.push(el);
+                }
+            }
+            arr.sort((a, b) => {
+                a = new Date(a.x);
+                b = new Date(b.x);
+                return a - b;
+            });
+            arr.forEach(obj => {
+                xAxis.push(obj.x);
+                data.push(obj.count);
+            });
+            Highcharts.chart('communityCountByTime', {
+                chart: {
+                    type: 'spline'
+                },
+                title: {
+                    text: 'Community Count By CreateTime'
+                },
+                subtitle: {
+                    text: 'FamilyDecoration Statistical Analyses'
+                },
+                xAxis: {
+                    categories: xAxis
+                },
+                yAxis: {
+                    title: {
+                        text: 'Community Count'
+                    },
+                    labels: {
+                        formatter: function () {
+                            return this.value;
+                        }
+                    }
+                },
+                tooltip: {
+                    crosshairs: true,
+                    shared: true
+                },
+                plotOptions: {
+                    spline: {
+                        marker: {
+                            radius: 4,
+                            lineColor: '#666666',
+                            lineWidth: 1
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Community Count',
+                    marker: {
+                        symbol: 'square',
+                        radius: 2
+                    },
+                    data: data
                 }]
             });
         }
