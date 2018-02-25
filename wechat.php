@@ -12,7 +12,22 @@
 </head>
 <body>
     <div id="regionCountPie" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+    <button onclick="sortByDate()">sort by date</button>
+    <button onclick="sortByCount()">sort by count</button>
     <script>
+        let list = [];
+        const itemPerTime = 30;
+
+        function sortByDate (){
+            list.sort((a, b) => a.sendtime - b.sendtime);
+            buildPieByRegionalCommunities(list.slice(0, itemPerTime));
+        }
+
+        function sortByCount (){
+            list.sort((a, b) => a.y - b.y);
+            buildPieByRegionalCommunities(list.slice(0, itemPerTime));
+        }
+
         Highcharts.setOptions({
             colors: Highcharts.map(Highcharts.getOptions().colors, function (color) {
                 return {
@@ -68,7 +83,7 @@
         const promise = new Promise((resolve, reject) => {
             fetch('./libs/wechat.php?debug=true&action=get').then(res => res.json())
             .then(arr => {
-                let map = {}, list = [];
+                let map = {};
                 if (arr.length > 0) {
                     arr.forEach((obj, index) => {
                         const content = obj['messagecontent'].toLowerCase();
@@ -79,7 +94,8 @@
                             else {
                                 map[content] = {
                                     y: 1,
-                                    name: content
+                                    name: content,
+                                    sendtime: new Date(obj['sendtime'])
                                 }
                             }
                         }
@@ -98,16 +114,15 @@
             });  
         });
         promise.then((list) => {
-            const itemPerTime = 30;
             let count = Math.ceil(list.length / itemPerTime);
             while (count > 0) {
-                let span = document.createElement('span');
-                span.setAttribute('index', count);
-                span.setAttribute('class', 'switchGroup');
-                span.setAttribute('style', 'cursor: pointer');
+                let button = document.createElement('button');
+                button.setAttribute('index', count);
+                button.setAttribute('class', 'switchGroup');
+                button.setAttribute('style', 'cursor: pointer');
                 let text = document.createTextNode(count + ' ');
-                span.appendChild(text);
-                document.body.insertBefore(span, document.body.firstChild);
+                button.appendChild(text);
+                document.body.insertBefore(button, document.body.firstChild);
                 count--;
             }
             document.body.onclick = function (evt){

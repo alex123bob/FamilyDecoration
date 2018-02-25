@@ -79,6 +79,9 @@
         <copy todir="${build.dir}" overwrite="true">
             <fileset dir="${app.dir}" includes="chart.php" />
         </copy>
+        <copy todir="${build.dir}" overwrite="true">
+            <fileset dir="${app.dir}" includes="wechat.php" />
+        </copy>
         <!-- <copy todir="${build.dir}/config">
             <fileset dir="${app.dir}/config" />
         </copy>
