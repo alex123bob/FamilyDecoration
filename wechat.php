@@ -5,16 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>FamilyDecoration Data Analyses</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.2/fullcalendar.min.css" />
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/series-label.js"></script>
     <script src="https://code.highcharts.com/highcharts-3d.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="tools/jquery-1.11.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.2/fullcalendar.min.js"></script>
+    <style>
+        .background-red {
+            background-color: red;
+        }
+    </style>
 </head>
 <body>
     <div id="regionCountPie" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
     <button onclick="sortByDate()">sort by date</button>
     <button onclick="sortByCount()">sort by count</button>
+    <div id="calendar"></div>
     <script>
+        function formatDate (d, includeTime = true){
+            if (d instanceof Date) {
+                let year = d.getFullYear(),
+                    month = d.getMonth() + 1,
+                    day = d.getDate(),
+                    hours = d.getHours(),
+                    minutes = d.getMinutes(),
+                    seconds = d.getSeconds();
+                year = year.toString();
+                month = month > 9 ? month.toString() : '0' + month;
+                day = day > 9 ? day.toString() : '0' + day;
+                hours = hours > 9 ? hours.toString() : '0' + hours;
+                minutes = minutes > 9 ? minutes.toString() : '0' + minutes;
+                seconds = seconds > 9 ? seconds.toString() : '0' + seconds;
+                const dateStr = year + '-' + month + '-' + day;
+                return includeTime === true ? (dateStr + ' ' + hours + ':' + minutes + ':' + seconds) : (dateStr);
+            }
+            else {
+                return false;
+            }
+        }
+        
         let list = [];
         const itemPerTime = 30;
 
@@ -137,6 +169,32 @@
         }, (err) => {
             console.log(err);
         })
+
+        $(function (){
+            $('#calendar').fullCalendar({
+                dayClick: function(date, jsEvent, view) {
+
+                    let cluster = [];
+
+                    cluster = list.filter(obj => formatDate(obj.sendtime, false) == date.format());
+
+                    console.log(cluster);
+
+                    buildPieByRegionalCommunities(cluster);
+
+                    console.log('Clicked on: ' + date.format());
+
+                    console.log('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+
+                    console.log('Current view: ' + view.name);
+
+                    // change the day's background color just for fun
+                    // $(this).toggleClass('background-red');
+
+                }
+            });
+        });
+        
     </script>
 </body>
 </html>
