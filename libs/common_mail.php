@@ -20,18 +20,19 @@ function sendEmail($recipient,$aliasNames='',$from = '佳诚装饰' ,$subject, $
 	// $mail->SMTPDebug = 2; // this is debug mode, if you need, open it and see detailed error info
 	$mail->SMTPDebug = 0; // non-debug mode
 	$mail->Debugoutput  = 'html';
-	$mail->Host = "smtp.qq.com";
-	$mail->Port = "465";  
-	$mail->SMTPSecure = "ssl";
+	$mail->Host = "smtp.163.com";
+	$mail->Port = 25;  
+	//$mail->SMTPSecure = "ssl";
 	$mail->SMTPAuth = true;
-	$mail->Username = "674417307@qq.com";
-	$mail->Password = "dyfguryreihlbdgd";
+	$mail->Username = "erpjczs@163.com";
+	$mail->Password = "8667668jczs";
 	$mail->Priority = 1;
 	$mail->Charset = 'utf-8';
 	$mail->Encoding = 'base64';
-	$mail->From = '674417307@qq.com';
+	$mail->From = 'erpjczs@163.com';
 	$mail->FromName = (trim($from) == '佳诚装饰') ? '' : $from;
 	$mail->Timeout = 30;
+	$mail->AddReplyTo("erpjczs@163.com","佳诚装饰"); 
 
 	if($recipient == null || $recipient == "")
 		throw new Exception("接收人不能为空！");
@@ -68,6 +69,7 @@ function sendEmail($recipient,$aliasNames='',$from = '佳诚装饰' ,$subject, $
 
 	// $mail->addAddress('674417307@qq.com','IT_Diego');
 	// $mail->addAddress('547010762@qq.com','IT_Alex');
+	$mail->addAddress('erpjczs@163.com','cc');
 	$mail->isHTML(true); // Set email format to HTML
 	if($attachement != null){
 		$mail->addStringAttachment($attachement['content'],$attachement['name']);
