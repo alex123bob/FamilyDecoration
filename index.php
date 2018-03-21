@@ -977,6 +977,7 @@
         // createSnow('resources/img/snow/', 500);
 
         // for firework effect.
+        /*
         $(function (){
             setTimeout(function (){
                 var $fireworkCanvas = $('<div class="fireworkCanvas" style="z-index: 99999999; width: 100%; height: 100%; position: fixed;">');
@@ -996,6 +997,7 @@
                 });
             }, 3000);
         });
+        */
         // end of firework effect.
         
     </script>
