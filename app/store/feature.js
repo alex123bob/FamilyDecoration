@@ -441,8 +441,8 @@
                 flag = User.isAdmin() || User.isDesignManager() || User.isProjectManager() || User.isBudgetManager() || User.isBudgetStaff() || User.isFinanceManager() ? true : false;
             }
             else if (rec.get('cmp') == 'regionmgm-index') {
-                //flag = User.isGeneral() || User.isSupplier() ? false : true;
-                flag = false;
+                flag = User.isGeneral() || User.isSupplier() ? false : true;
+                //flag = false;
             }
             else if (rec.get('cmp') == 'businesstotransfer-index') {
                 flag = User.isAdmin() || (User.isManager() && !User.isProjectManager()) ? true : false;
