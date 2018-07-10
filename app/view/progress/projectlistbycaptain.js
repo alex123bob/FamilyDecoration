@@ -10,6 +10,7 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 	alias: 'widget.progress-projectlistbycaptain',
 	isForChart: false,
 	isForAddCategory: false,
+	isForCompensation: false,
 	includeFrozen: false, // this is used to load frozen project. coz in manuallycheckbill module, we need frozen project as well.
 
 	loadAll: true,
@@ -191,7 +192,7 @@ Ext.define('FamilyDecoration.view.progress.ProjectListByCaptain', {
 							needRdyck1BillCount: me.needStatementBillCount,
 							needMaterialOrderCount: me.needMaterialOrderCount
 						}
-						if (User.isProjectStaff()) {
+						if (!me.isForCompensation && User.isProjectStaff()) {
 							Ext.apply(p, {
 								captainName: User.getName()
 							});

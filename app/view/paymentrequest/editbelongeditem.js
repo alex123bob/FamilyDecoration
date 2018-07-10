@@ -107,6 +107,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditBelongedItem', {
                         xtype: 'progress-projectlistbycaptain',
                         flex: 2,
                         searchFilter: true,
+                        isForCompensation: true,
                         hidden: true,
                         listeners: {
                             selectionchange: function (selModel, sels, opts) {
