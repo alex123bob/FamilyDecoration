@@ -91,11 +91,11 @@
     </target>
 
     <target name="-before-init">
-        <tstamp>
+        <!-- <tstamp>
             <format property="tstamp.full" pattern="yyyyMMddHHmmss"/>
         </tstamp>
 
         <property name="build.classes.name"
-                  value="all-${tstamp.full}.js"/>
+                  value="all-${tstamp.full}.js"/> -->
     </target>
 </project>
