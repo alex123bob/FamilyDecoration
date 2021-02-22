@@ -134,6 +134,12 @@
                         icon: 'resources/img/addbudget.png'
                     },
                     {
+                        name: '清单项目编辑',
+                        cmp: 'costlistitem-index',
+                        leaf: true,
+                        icon: 'resources/img/basicitem.png'
+                    },
+                    {
                         name: "基础项目添加",
                         cmp: 'basicitem-index',
                         leaf: true,

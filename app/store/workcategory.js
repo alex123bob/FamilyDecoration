@@ -4,7 +4,7 @@ Ext.define('FamilyDecoration.store.WorkCategory', {
 
 	data: [
 		{
-			name: '贴砖泥工',
+			name: '装饰泥工',
 			value: '0001'
 		},
 		{
@@ -12,8 +12,12 @@ Ext.define('FamilyDecoration.store.WorkCategory', {
 			value: '0006'
 		},
 		{
-			name: '木工',
+			name: '装饰木工',
 			value: '0002'
+		},
+		{
+			name: '基础木工',
+			value: '0010'
 		},
 		{
 			name: '油漆工',
@@ -22,6 +26,10 @@ Ext.define('FamilyDecoration.store.WorkCategory', {
 		{
 			name: '水电工',
 			value: '0004'
+		},
+		{
+			name: '钢筋电焊工',
+			value: '0011'
 		},
 		{
 			name: '力工',

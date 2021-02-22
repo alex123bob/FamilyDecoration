@@ -52,7 +52,8 @@ Ext.define('FamilyDecoration.Application', {
         'BusinessAggregation',
         'BusinessToTransfer',
         'ContractManagement',
-        'StaffSalary'
+        'StaffSalary',
+        'CostListItem'
     ],
 
     stores: [
