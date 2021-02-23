@@ -14,7 +14,7 @@
 			if($mysql != null && $mysql->isTransactions()){
 				$mysql->rollback(true);
 			}	
-		}catch(Exception $e){}
+		}catch(Exception | Error $e){}
 		$error = array('@file'=>$errorFile,
 							'@line'=>$errorLine,
 							'@detail'=>$errstr,
@@ -27,8 +27,8 @@
 							'@useragent'=>isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '');
 		try{
 			BaseSvc::getSvc('ErrorLog')->add($error);
-		}catch(Exception $e){
-			//var_dump($e);
+		}catch(Exception | Error $e){
+			// var_dump($e);
 		}
 		try{
 			//非业务异常，邮件通知
@@ -38,7 +38,7 @@
 				$mailSvc->add(array('@mailSubject'=>'有系统异常啦！'.$errstr,'@mailContent'=>$mailContent,'@mailSender'=>'系统提醒','@mailReceiver'=>'674417307@qq.com','@receiverAddress'=>'674417307@qq.com'));
 				$mailSvc->add(array('@mailSubject'=>'有系统异常啦！'.$errstr,'@mailContent'=>$mailContent,'@mailSender'=>'系统提醒','@mailReceiver'=>'547010762@qq.com','@receiverAddress'=>'547010762@qq.com'));
 			}
-		}catch(Exception $e){
+		}catch(Exception | Error $e){
 			//var_dump($e);
 		}
 		$res = array(

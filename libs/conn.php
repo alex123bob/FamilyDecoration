@@ -1,11 +1,13 @@
 <?php
 	header("Content-type: text/html; charset=utf-8");
 	header("message-queue: 1");
-	header( 'Access-Control-Allow-Origin:'.$_SERVER['HTTP_ORIGIN']);
+	if(isset($_SERVER['HTTP_ORIGIN '])){
+		header( 'Access-Control-Allow-Origin:'.$_SERVER['HTTP_ORIGIN']);
+	}
 	header( 'Access-Control-Allow-Credentials:true');
 	header( 'Access-Control-Allow-Headers:Origin, X-Requested-With, Content-Type, Accept');
 
-	$isLocal = $_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1';
+	$isLocal = $_SERVER['SERVER_NAME'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1';
     if(!$isLocal && $_SERVER['HTTPS'] != 'on') {
         header('HTTP/1.1 301 Moved Permanently');
         header('Location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
@@ -27,7 +29,7 @@
 	if (defined("SAE_MYSQL_HOST_M")) {
 		$GLOBALS['mysql'] = new mysql(SAE_MYSQL_HOST_M, SAE_MYSQL_USER, SAE_MYSQL_PASS, SAE_MYSQL_DB, 'utf8',SAE_MYSQL_PORT);
 	} else {
-		$GLOBALS['mysql'] = new mysql('127.0.0.1', 'root', 'root1234', 'familydecoration', 'utf8');
+		$GLOBALS['mysql'] = new mysql('127.0.0.1', 'root', 'root', 'app_dqjczs', 'utf8');
 	}
 	if(!strpos($_SERVER["REQUEST_URI"],"user.php?action=log") 
 		&& 
