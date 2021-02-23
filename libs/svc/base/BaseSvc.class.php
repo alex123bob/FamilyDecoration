@@ -75,7 +75,7 @@ class BaseSvc{
 	}
 	//增加
 	public function add($q){
-		global $mysql;
+		$mysql = $GLOBALS['mysql'];
 		$obj = array();
 		foreach ($this->fields as $f) {
 			if(isset($q['@'.$f])){
