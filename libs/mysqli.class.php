@@ -23,7 +23,7 @@
 
 		private $dbSQL;           //所要执行的SQL语句
 
-		private $dbResult;        //执行mysql_query()函数后产生的结果
+		private $dbResult;        //执行mysqli_query()函数后产生的结果
 
 		private $dbFields;        //数据库中的某个字段
 
@@ -61,7 +61,7 @@
 			$this->dbConn = mysqli_connect($this->dbHost,$this->dbUser,$this->dbPassword, $this->dbSelect,$this->port);		//打开一个到 MySQL 服务器的连接
 			if (!$this->dbConn)		//如果没有数据库连接的标志
 				throw new Exception("database connect error !");
-			mysqli_query($this->dbConn, "SET NAMES '".$this->dbEncode."'");			//连接数据库的编码方式，mysql_query表示发送一条mysql查询
+			mysqli_query($this->dbConn, "SET NAMES '".$this->dbEncode."'");			//连接数据库的编码方式，mysqli_query表示发送一条mysql查询
 		}
 		/**
 		单事务：
@@ -168,7 +168,7 @@
 			$this->dbSQL = $sqlValue;
 			//然后执行SQL语句
 			if (!$this->dbResult = mysqli_query($this->dbConn, $this->dbSQL)){
-				$errorMsg = mysql_error();
+				$errorMsg = mysqli_error();
 				if($errorMsg == "")
 					$errorMsg = $this->dbConn->error." sql:".$this->dbSQL;
 				if(contains($errorMsg,'Duplicate entry')){
