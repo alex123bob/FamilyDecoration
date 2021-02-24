@@ -12,7 +12,7 @@ Ext.define('FamilyDecoration.model.CostListItem', {
         type: 'rest',
         url : './libs/api.php',
         extraParams: {
-            action: 'CostListItem.get'
+            action: 'CostListItem.update'
         }
     }
 });

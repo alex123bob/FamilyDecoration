@@ -14,7 +14,7 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 		var me = this;
 
 		var costItemSt = Ext.create('FamilyDecoration.store.CostListItem', {
-			autoLoad: false
+			autoLoad: true
 		});
 
 		var bsiSt = Ext.create('FamilyDecoration.store.BasicSubItem', {
@@ -37,10 +37,20 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 									rec = e.record,
 									newValues = e.newValues,
 									params = {};
-
-								ajaxAdd('CostListItem', newValues, function() {
-									showMsg('添加成功！');
-								});
+								if (rec.getId()) {
+									ajaxUpdate('CostListItem', Ext.apply(newValues, {
+										id: rec.getId()
+									}), ['id'], function() {
+										showMsg('更新成功!');
+										rec.commit();
+									});
+								}
+								else {
+									ajaxAdd('CostListItem', newValues, function() {
+										showMsg('添加成功！');
+										rec.commit();
+									});
+								}
 							}
 						}
 					})
