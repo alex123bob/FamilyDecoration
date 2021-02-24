@@ -8,7 +8,7 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 
 	requires: ['FamilyDecoration.store.CostListItem', 'FamilyDecoration.view.basicitem.AddBasicItem', 'FamilyDecoration.store.BasicSubItem',
 		'FamilyDecoration.view.basicitem.SubItemTable', 'FamilyDecoration.view.basicitem.AddBasicSubItem', 'Ext.ux.form.SearchField',
-		'Ext.form.ComboBox', 'FamilyDecoration.store.WorkCategory'],
+		'Ext.form.ComboBox', 'FamilyDecoration.store.WorkCategory', 'Ext.grid.plugin.DragDrop'],
 
 	initComponent: function () {
 		var me = this;
@@ -53,8 +53,18 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 								}
 							}
 						}
-					})
+					}),
 				],
+				viewConfig: {
+					plugins: [
+						{
+							ptype: 'gridviewdragdrop',
+							dragText: '拖动了',
+							dragGroup: 'costlistitem-dragzone',
+							dropGroup: 'normcost-dropzone'
+						}
+					],
+				},
 				columns: {
 					defaults: {
 						flex: 1,
@@ -237,6 +247,16 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 					mode: 'SIMPLE'
 				},
 				selType: 'checkboxmodel',
+				viewConfig: {
+					plugins: [
+						{
+							ptype: 'gridviewdragdrop',
+							dragText: '拖动了',
+							dropGroup: 'costlistitem-dragzone',
+							dragGroup: 'normcost-dropzone'
+						}
+					],
+				},
 				dockedItems: [{
 					dock: 'top',
 					xtype: 'toolbar',
