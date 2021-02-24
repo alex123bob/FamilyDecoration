@@ -31,6 +31,18 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 					Ext.create('Ext.grid.plugin.RowEditing', {
 						clicksToEdit: 1,
 						clicksToMoveEditor: 1,
+						listeners: {
+							edit: function(editor, e) {
+								var field = e.field,
+									rec = e.record,
+									newValues = e.newValues,
+									params = {};
+
+								ajaxAdd('CostListItem', newValues, function() {
+									showMsg('添加成功！');
+								});
+							}
+						}
 					})
 				],
 				columns: {
@@ -57,6 +69,19 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 								queryMode: 'local',
 								displayField: 'name',
 								valueField: 'value'
+							},
+							renderer: function(val, meta, rec) {
+								return FamilyDecoration.store.WorkCategory.renderer(val);
+							}
+						},
+						{
+							text: '人工',
+							dataIndex: 'isLabour',
+							editor: {
+								xtype: 'checkbox'
+							},
+							renderer: function(val){
+								return val ? '是' : '否';
 							}
 						},
 						{
