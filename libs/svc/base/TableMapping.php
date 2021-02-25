@@ -42,7 +42,7 @@
 		"staff_salary_commission"=>array("id", "staffSalaryId", "projectId", "commissionAmount", "staffName", "staffRealName", "commissionTime"),
 		"cost_list_item"=>array("id", "name", "unit", "professionType", "isLabour", "remark"),
 		"cost_norm"=>array("id", "name", "remark"),
-		"cost_ref_norm_item"=>array("norm_id", "item_id", "version"),
+		"cost_ref_norm_item"=>array("normId", "itemId", "version"),
 	);
 
 	foreach ($TableMapping as $key => &$value) {

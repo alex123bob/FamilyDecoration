@@ -168,7 +168,7 @@
 			$this->dbSQL = $sqlValue;
 			//然后执行SQL语句
 			if (!$this->dbResult = mysqli_query($this->dbConn, $this->dbSQL)){
-				$errorMsg = mysqli_error();
+				$errorMsg = mysqli_error($this->dbConn);
 				if($errorMsg == "")
 					$errorMsg = $this->dbConn->error." sql:".$this->dbSQL;
 				if(contains($errorMsg,'Duplicate entry')){
