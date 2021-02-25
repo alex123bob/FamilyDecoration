@@ -11,16 +11,17 @@ CREATE TABLE `cost_norm` (
 drop table if exists  `cost_ref_norm_item`;
 CREATE TABLE `cost_ref_norm_item` (
   `normId` varchar(20) NOT NULL COMMENT 'cost_norm id',
-  `itemIId` varchar(20) NOT NULL COMMENT 'cost_list_item id',
+  `itemId` varchar(20) NOT NULL COMMENT 'cost_list_item id',
   `version` INT(100) NOT NULL COMMENT 'cost_list_item version',
   `createTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `isDeleted` varchar(5) NOT NULL DEFAULT 'false'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+alter table `cost_norm` ADD PRIMARY KEY (`id`);
+alter table `cost_ref_norm_item` ADD CONSTRAINT pk PRIMARY KEY(`normId`, `itemId`, `version`);
+
 alter table `cost_list_item` drop PRIMARY KEY;
 alter table `cost_list_item` ADD CONSTRAINT pk PRIMARY KEY(`id`, `version`);
-alter table `cost_norm` ADD PRIMARY KEY (`id`);
-alter table `cost_ref_norm_item` ADD CONSTRAINT pk PRIMARY KEY(`norm_id`, `item_id`, `version`);
 
 insert into `versions`(`id`) values ('version-10.03');
