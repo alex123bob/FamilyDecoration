@@ -100,7 +100,7 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 								xtype: 'checkbox'
 							},
 							renderer: function(val){
-								return val ? '是' : '否';
+								return val === 'true' ? '是' : '否';
 							}
 						},
 						{
