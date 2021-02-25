@@ -35,8 +35,7 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 							edit: function(editor, e) {
 								var field = e.field,
 									rec = e.record,
-									newValues = e.newValues,
-									params = {};
+									newValues = e.newValues;
 								if (rec.getId()) {
 									ajaxUpdate('CostListItem', Ext.apply(newValues, {
 										id: rec.getId()
