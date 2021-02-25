@@ -32,20 +32,20 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 						clicksToEdit: 1,
 						clicksToMoveEditor: 1,
 						listeners: {
-							edit: function(editor, e) {
+							edit: function (editor, e) {
 								var field = e.field,
 									rec = e.record,
 									newValues = e.newValues;
 								if (rec.getId()) {
 									ajaxUpdate('CostListItem', Ext.apply(newValues, {
 										id: rec.getId()
-									}), ['id'], function() {
+									}), ['id'], function () {
 										showMsg('更新成功!');
 										rec.commit();
 									});
 								}
 								else {
-									ajaxAdd('CostListItem', newValues, function() {
+									ajaxAdd('CostListItem', newValues, function () {
 										showMsg('添加成功！');
 										rec.commit();
 									});
@@ -89,7 +89,7 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 								displayField: 'name',
 								valueField: 'value'
 							},
-							renderer: function(val, meta, rec) {
+							renderer: function (val, meta, rec) {
 								return FamilyDecoration.store.WorkCategory.renderer(val);
 							}
 						},
@@ -99,13 +99,34 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 							editor: {
 								xtype: 'checkbox'
 							},
-							renderer: function(val){
+							renderer: function (val) {
 								return val === 'true' ? '是' : '否';
 							}
 						},
 						{
 							text: '备注',
 							dataIndex: 'remark'
+						},
+						{
+							xtype: 'actioncolumn',
+							editor: null,
+							width: 25,
+							flex: null,
+							items: [
+								{
+									icon: 'resources/img/delete1.png',
+									tooltip: '删除',
+									handler: function (grid, rowIndex, colIndex) {
+										var rec = grid.getStore().getAt(rowIndex);
+										ajaxDel('CostListItem', {
+											id: rec.getId()
+										}, function () {
+											showMsg('已删除!');
+											costItemSt.reload();
+										});
+									}
+								},
+							]
 						}
 					]
 				},
@@ -123,113 +144,23 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 				margin: '0 1 0 0',
 				store: costItemSt,
 				allowDeselect: true,
-				tbar: [{
-					text: '添加',
-					icon: './resources/img/add2.png',
-					handler: function () {
-						var rowEditing = this.ownerCt.ownerCt.plugins[0];
-						costItemSt.add(
-							{
-								name: '',
-								unit: '',
-								professionType: '',
-								remark: ''
-							}
-						);
-					}
-				}, {
-					text: '修改',
-					disabled: true,
-					icon: './resources/img/edit2.png',
-					id: 'button-editBasicItem',
-					name: 'button-editBasicItem',
-					handler: function () {
-						var grid = Ext.getCmp('gridpanel-basicitem'),
-							st = grid.getStore(),
-							item = grid.getSelectionModel().getSelection()[0],
-							id = item.getId();
-
-						function editBasicItemName() {
-							Ext.Msg.prompt('修改名称', '输入新项目名称', function (btnId, newName) {
-								if (btnId == 'ok') {
-									if (!Ext.isEmpty(newName)) {
-										Ext.Ajax.request({
-											url: './libs/basicitem.php?action=editbasicitem',
-											method: 'POST',
-											params: {
-												itemId: id,
-												itemName: newName
-											},
-											callback: function (opts, success, res) {
-												if (success) {
-													var obj = Ext.decode(res.responseText);
-													if (obj.status == 'successful') {
-														showMsg('修改成功！');
-														st.reload();
-													}
-												}
-											}
-										});
-									}
-									else {
-										Ext.Msg.info('名称不能为空！');
-									}
+				tbar: [
+					{
+						text: '添加',
+						icon: './resources/img/add2.png',
+						handler: function () {
+							var rowEditing = this.ownerCt.ownerCt.plugins[0];
+							costItemSt.add(
+								{
+									name: '',
+									unit: '',
+									professionType: '',
+									remark: ''
 								}
-							}, window, false, item.get('itemName'));
-						}
-
-						if (User.isBudgetStaff()) {
-							Ext.Msg.prompt('提示', '请输入主管密码', function (btnId, pwd) {
-								if (btnId == 'ok') {
-									if (pwd == 'woshizzn963963') {
-										editBasicItemName();
-									}
-									else {
-										showMsg('密码不正确！请联系管理员取得密码后再进行编辑。');
-									}
-								}
-							});
-						}
-						else {
-							editBasicItemName();
+							);
 						}
 					}
-				}],
-				bbar: [{
-					text: '删除',
-					icon: './resources/img/delete2.png',
-					disabled: true,
-					hidden: User.isBudgetStaff() ? true : false,
-					id: 'button-deleteBasicItem',
-					name: 'button-deleteBasicItem',
-					handler: function () {
-						var grid = Ext.getCmp('gridpanel-basicitem'),
-							st = grid.getStore(),
-							item = grid.getSelectionModel().getSelection()[0],
-							id = item.getId();
-
-						Ext.Msg.warning('【注意】：删除基础大项会删除其下的所有小项目！<br />确定要删除此项目吗？', function (btnId) {
-							if (btnId == 'yes') {
-								Ext.Ajax.request({
-									url: './libs/basicitem.php?action=deletebasicitem',
-									method: 'POST',
-									params: {
-										itemId: id
-									},
-									callback: function (opts, success, res) {
-										if (success) {
-											var obj = Ext.decode(res.responseText);
-											if (obj.status == 'successful') {
-												showMsg('删除成功！');
-												st.reload();
-											}
-										}
-									}
-								})
-							}
-						});
-					}
-				}],
+				],
 				listeners: {
 					selectionchange: function (selModel, items, opts) {
 
