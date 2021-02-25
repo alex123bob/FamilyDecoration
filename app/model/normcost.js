@@ -1,13 +1,12 @@
-Ext.define('FamilyDecoration.model.CostListItem', {
+Ext.define('FamilyDecoration.model.NormCost', {
 	extend: 'Ext.data.Model',
 	fields: [
 		{name: 'id', type: 'string'},
-		{name: 'name', type: 'string'},
-		{name: 'unit', type: 'string'},
-        {name: 'professionType', type: 'string'},
-        {name: 'isLabour', type: 'string'},
+        {name: 'name', type: 'string'},
         {name: 'remark', type: 'string'},
-        {name: 'version', type: 'int'}
+		{name: 'costListItems', convert: function(value, record) {
+            // todo.
+        }}
     ],
     proxy: {
         type: 'rest',
