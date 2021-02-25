@@ -114,7 +114,7 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 							flex: null,
 							items: [
 								{
-									icon: 'resources/img/delete1.png',
+									icon: 'resources/img/flaticon-delete.svg',
 									tooltip: '删除',
 									handler: function (grid, rowIndex, colIndex) {
 										var rec = grid.getStore().getAt(rowIndex);
@@ -147,7 +147,7 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 				tbar: [
 					{
 						text: '添加',
-						icon: './resources/img/add2.png',
+						icon: './resources/img/flaticon-add.svg',
 						handler: function () {
 							var rowEditing = this.ownerCt.ownerCt.plugins[0];
 							costItemSt.add(
