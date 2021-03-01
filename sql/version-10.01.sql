@@ -4,7 +4,7 @@ CREATE TABLE `cost_list_item` (
   `unit` varchar(20) NOT NULL COMMENT 'unit',
   `professionType` varchar(20) COMMENT 'reference table profession type.',
   `isLabour` varchar(20) NOT NULL,
-  `remark` varchar(512) NOT NULL,
+  `remark` varchar(512) NULL DEFAULT null,
   `createTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `isDeleted` varchar(5) NOT NULL DEFAULT 'false'
