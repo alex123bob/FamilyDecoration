@@ -40,7 +40,7 @@
 		"statement_bill_tag"=>array('id','tag','billId','committer'),
 		"staff_salary"=>array("id", "staffName", "staffLevel", "basicSalary", "commission", "fullAttendanceBonus", "bonus", "deduction", "total", "insurance", "housingFund", "incomeTax", "others", "actualPaid", "salaryDate"),
 		"staff_salary_commission"=>array("id", "staffSalaryId", "projectId", "commissionAmount", "staffName", "staffRealName", "commissionTime"),
-		"cost_list_item"=>array("id", "name", "unit", "professionType", "isLabour", "remark"),
+		"cost_list_item"=>array("id", "name", "unit", "professionType", "isLabour", "remark", "version"),
 		"cost_norm"=>array("id", "name", "remark"),
 		"cost_ref_norm_item"=>array("normId", "itemId", "version"),
 	);
