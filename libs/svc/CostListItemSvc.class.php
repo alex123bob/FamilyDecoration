@@ -16,7 +16,7 @@ class CostListItemSvc extends BaseSvc
 		notNullCheck($q,'@unit','单位不能为空!');
 		notNullCheck($q,'@professionType','工种不能为空!');
 		$q['@version'] = intval($q['version']) + 1;
-		$q['@id'] = intval($q['id']) + 1;
+		$q['@id'] = intval($q['id']);
 		return parent::add($q);
 	}
 }
