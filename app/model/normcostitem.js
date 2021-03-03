@@ -1,5 +1,6 @@
 Ext.define('FamilyDecoration.model.NormCostItem', {
-	extend: 'Ext.data.Model',
+    extend: 'Ext.data.Model',
+    idProperty: 'itemId',
 	fields: [
 		{name: 'normId', type: 'string'},
         {name: 'itemId', type: 'string'},

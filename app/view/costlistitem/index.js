@@ -30,6 +30,15 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 				name: 'gridpanel-costlistitem',
 				xtype: 'gridpanel',
 				flex: 1,
+				tools: [
+					{
+						type: 'refresh',
+						tooltip: '刷新当前应用',
+						callback: function (){
+							costItemSt.reload();
+						}
+					}
+				],
 				plugins: [
 					Ext.create('Ext.grid.plugin.RowEditing', {
 						clicksToEdit: 2,
@@ -46,14 +55,13 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 									}), ['id', 'version'], function () {
 										showMsg('更新成功!');
 										rec.commit();
-										costItemSt.reload();
 									});
 								}
 								else {
-									ajaxAdd('CostListItem', newValues, function () {
+									ajaxAdd('CostListItem', newValues, function (res) {
 										showMsg('添加成功！');
+										rec.setId(res.data.id);
 										rec.commit();
-										costItemSt.reload();
 									});
 								}
 							}
@@ -70,7 +78,7 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 							dragGroup: 'costlistitem-dragzone',
 							dropGroup: 'normcost-dropzone',
 						}
-					],
+					]
 				},
 				selModel: {
 					mode: 'MULTI'
@@ -154,7 +162,6 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 				title: '清单项目',
 				margin: '0 1 0 0',
 				store: costItemSt,
-				allowDeselect: true,
 				tbar: [
 					{
 						text: '添加',
@@ -189,6 +196,26 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 						id: 'gridpanel-normCostEditor',
 						name: 'gridpanel-normCostEditor',
 						normCostId: null,
+						loadItems: function(normCost) {
+							if (normCost) {
+								var proxy = normCostItemSt.getProxy();
+								Ext.override(proxy, {
+									extraParams: {
+										action: 'CostRefNormItem.get',
+										normId: normCost.getId()
+									},
+								});
+								normCostItemSt.setProxy(proxy);
+								this.normCostId = normCost.getId();
+								normCost.get('name') && this.setTitle(('编辑:' + `<font color="red">${normCost.get('name')}</font>`));
+								normCost && normCostItemSt.reload();
+							}
+							else {
+								this.normCostId = null;
+								this.setTitle('编辑成本定额');
+								normCostItemSt.removeAll();
+							}
+						},
 						flex: 1,
 						xtype: 'gridpanel',
 						title: '编辑成本定额',
@@ -200,23 +227,14 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 									ptype: 'gridviewdragdrop',
 									dragText: '移除清单项目',
 									dropGroup: 'costlistitem-dragzone',
-									dragGroup: 'normcost-dropzone',
+									// dragGroup: 'normcost-dropzone',
 								}
 							],
 							listeners: {
 								beforedrop: function(node, data, overModel, dropPosition, dropHandlers, eOpts) {
 									var editor = Ext.getCmp('gridpanel-normCostEditor');
 									// 添加清单项目
-									function addItems(recs, normId) {
-										var proxy = normCostItemSt.getProxy();
-										Ext.override(proxy, {
-											extraParams: {
-												action: 'CostRefNormItem.get',
-												normId: editor.normCostId
-											},
-										});
-										normCostItemSt.setProxy(proxy);
-
+									function addItems(recs, normId, normName) {
 										// bulk add
 										if (recs.length > 1) {
 											ajaxAdd('CostRefNormItem.bulkAdd', {
@@ -229,7 +247,10 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 												}).join(',')
 											}, function() {
 												showMsg('添加成功!');
-												normCostItemSt.reload();
+												editor.loadItems(Ext.create(FamilyDecoration.model.NormCost, {
+													id: normId,
+													name: normName
+												}));
 											}, function() {
 												// error handler
 											}, true);
@@ -241,7 +262,10 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 												version: recs[0].get('version')
 											}, function() {
 												showMsg('添加成功!');
-												normCostItemSt.reload();
+												editor.loadItems(Ext.create(FamilyDecoration.model.NormCost, {
+													id: normId,
+													name: normName
+												}));
 											})
 										}
 									}
@@ -256,14 +280,14 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 												editor.normCostId = res.data.id;
 												editor.setTitle('编辑:' + `<font color="red">${name}</font>`);
 												normCostSt.reload();
-												addItems(data.records, editor.normCostId);
+												addItems(data.records, editor.normCostId, name);
 											});
 										});
 										return false;
 									}
 									else {
 										if (data.records.length > 0) {
-											addItems(data.records, editor.normCostId);
+											addItems(data.records, editor.normCostId, name);
 										}
 									}
 								}
@@ -310,9 +334,10 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 						name: 'gridpanel-normcost',
 						title: '成本定额',
 						store: normCostSt,
-						// selModel: {
-						// 	mode: 'SIMPLE'
-						// },
+						selModel: {
+							mode: 'SINGLE',
+							allowDeselect: true
+						},
 						// selType: 'checkboxmodel',
 						dockedItems: [{
 							dock: 'top',
@@ -338,17 +363,8 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 						listeners: {
 							selectionchange: function (selModel, sels, opts) {
 								var rec = sels[0];
-								if (rec) {
-									var proxy = normCostItemSt.getProxy();
-									Ext.override(proxy, {
-										extraParams: {
-											action: 'CostRefNormItem.get',
-											normId: rec.getId()
-										},
-									});
-									normCostItemSt.setProxy(proxy);
-									normCostItemSt.reload();
-								}
+								var editor = Ext.getCmp('gridpanel-normCostEditor');
+								editor.loadItems(rec);
 							}
 						}
 					}
