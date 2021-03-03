@@ -32,7 +32,7 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 				flex: 1,
 				plugins: [
 					Ext.create('Ext.grid.plugin.RowEditing', {
-						clicksToEdit: 1,
+						clicksToEdit: 2,
 						clicksToMoveEditor: 1,
 						listeners: {
 							edit: function (editor, e) {
@@ -66,11 +66,14 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 					plugins: [
 						{
 							ptype: 'gridviewdragdrop',
-							dragText: '拖动了',
+							dragText: '添加清单项目',
 							dragGroup: 'costlistitem-dragzone',
 							dropGroup: 'normcost-dropzone',
 						}
 					],
+				},
+				selModel: {
+					mode: 'MULTI'
 				},
 				columns: {
 					defaults: {
@@ -162,8 +165,7 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 								{
 									name: '',
 									unit: '',
-									professionType: '',
-									remark: ''
+									professionType: ''
 								}
 							);
 						}
@@ -196,7 +198,7 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 							plugins: [
 								{
 									ptype: 'gridviewdragdrop',
-									dragText: '拖动了',
+									dragText: '移除清单项目',
 									dropGroup: 'costlistitem-dragzone',
 									dragGroup: 'normcost-dropzone',
 								}
@@ -204,6 +206,45 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 							listeners: {
 								beforedrop: function(node, data, overModel, dropPosition, dropHandlers, eOpts) {
 									var editor = Ext.getCmp('gridpanel-normCostEditor');
+									// 添加清单项目
+									function addItems(recs, normId) {
+										var proxy = normCostItemSt.getProxy();
+										Ext.override(proxy, {
+											extraParams: {
+												action: 'CostRefNormItem.get',
+												normId: editor.normCostId
+											},
+										});
+										normCostItemSt.setProxy(proxy);
+
+										// bulk add
+										if (recs.length > 1) {
+											ajaxAdd('CostRefNormItem.bulkAdd', {
+												normIds: Array(recs.length).fill(normId).join(','),
+												itemIds: recs.map(function(rec) {
+													return rec.getId();
+												}).join(','),
+												versions: recs.map(function(rec) {
+													return rec.get('version')
+												}).join(',')
+											}, function() {
+												showMsg('添加成功!');
+												normCostItemSt.reload();
+											}, function() {
+												// error handler
+											}, true);
+										}
+										else {
+											ajaxAdd('CostRefNormItem', {
+												normId: editor.normCostId,
+												itemId: recs[0].getId(),
+												version: recs[0].get('version')
+											}, function() {
+												showMsg('添加成功!');
+												normCostItemSt.reload();
+											})
+										}
+									}
 									if (!editor.normCostId) {
 										Ext.Msg.read('请输入要创建的成本定额名称:', function(name) {
 											ajaxAdd('CostNorm', {
@@ -215,20 +256,15 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 												editor.normCostId = res.data.id;
 												editor.setTitle('编辑:' + `<font color="red">${name}</font>`);
 												normCostSt.reload();
+												addItems(data.records, editor.normCostId);
 											});
 										});
 										return false;
 									}
 									else {
-										Ext.Array.forEach(data.records, function(rec){
-											ajaxAdd('CostRefNormItem', {
-												normId: editor.normCostId,
-												itemId: rec.getId(),
-												version: rec.get('version')
-											}, function() {
-												showMsg('添加成功!');
-											});
-										});
+										if (data.records.length > 0) {
+											addItems(data.records, editor.normCostId);
+										}
 									}
 								}
 							}
@@ -240,29 +276,29 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 							items: [
 								{
 									text: '名称',
-									dataIndex: 'name',
+									dataIndex: 'itemName',
 								},
 								{
 									text: '单位',
-									dataIndex: 'unit',
+									dataIndex: 'itemUnit',
 								},
 								{
 									text: '工种',
-									dataIndex: 'professionType',
+									dataIndex: 'itemProfessionType',
 									renderer: function (val, meta, rec) {
 										return FamilyDecoration.store.WorkCategory.renderer(val);
 									}
 								},
 								{
 									text: '人工',
-									dataIndex: 'isLabour',
+									dataIndex: 'itemIsLabour',
 									renderer: function (val) {
 										return val === 'true' ? '是' : '否';
 									}
 								},
 								{
 									text: '备注',
-									dataIndex: 'remark'
+									dataIndex: 'itemRemark'
 								}
 							]
 						}
@@ -301,6 +337,18 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 						},
 						listeners: {
 							selectionchange: function (selModel, sels, opts) {
+								var rec = sels[0];
+								if (rec) {
+									var proxy = normCostItemSt.getProxy();
+									Ext.override(proxy, {
+										extraParams: {
+											action: 'CostRefNormItem.get',
+											normId: rec.getId()
+										},
+									});
+									normCostItemSt.setProxy(proxy);
+									normCostItemSt.reload();
+								}
 							}
 						}
 					}

@@ -38,6 +38,7 @@ class CostRefNormItemSvc extends BaseSvc
         }
         $mysql->commit();
         $res['total'] = count($res['data']);
+        $res["status"] = "successful";
         return $res;
     }
 
@@ -67,6 +68,6 @@ class CostRefNormItemSvc extends BaseSvc
             unset($v['version']);
             $res[$key]['norm'] = $v;
         }
-        return array('total' => $res1['total'], 'data' => array_values($res));
+        return array('total' => $res1['total'], 'data' => array_values($res), "status" => "successful");
     }
 }
