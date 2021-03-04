@@ -70,6 +70,7 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 				],
 				viewConfig: {
 					stripeRows: true,
+					allowCopy: true,
 					copy: true,
 					plugins: [
 						{
@@ -78,7 +79,24 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 							dragGroup: 'costlistitem-dragzone',
 							dropGroup: 'normcost-dropzone',
 						}
-					]
+					],
+					listeners: {
+						beforedrop: function(node, data, overModel, dropPosition, dropHandlers, eOpts) {
+							var editor = Ext.getCmp('gridpanel-normCostEditor');
+							var rec = data.records[0];
+							ajaxDel('CostRefNormItem', {
+								normId: rec.get('normId'),
+								itemId: rec.getId(),
+								version: rec.get('version')
+							}, function() {
+								showMsg('删除成功!');
+								costItemSt.reload();
+								editor.loadItems(Ext.create(FamilyDecoration.model.NormCost, {
+									id: rec.get('normId'),
+								}));
+							});
+						}
+					}
 				},
 				selModel: {
 					mode: 'MULTI'
@@ -221,13 +239,14 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 						title: '编辑成本定额',
 						store: normCostItemSt,
 						viewConfig: {
+							copy: true,
 							allowCopy: true,
 							plugins: [
 								{
 									ptype: 'gridviewdragdrop',
 									dragText: '移除清单项目',
 									dropGroup: 'costlistitem-dragzone',
-									// dragGroup: 'normcost-dropzone',
+									dragGroup: 'normcost-dropzone',
 								}
 							],
 							listeners: {
