@@ -303,8 +303,8 @@ function ajaxAdd(className, params, callback, errorHandler, isCustomAction) {
                 params: params,
                 method: 'POST',
                 callback: function (opts, success, res) {
+                    var obj = Ext.decode(res.responseText);
                     if (success) {
-                        var obj = Ext.decode(res.responseText);
                         if ('successful' == obj.status) {
                             callback(obj);
                         }
@@ -313,6 +313,11 @@ function ajaxAdd(className, params, callback, errorHandler, isCustomAction) {
                             if (typeof errorHandler == 'function') {
                                 errorHandler(obj);
                             }
+                        }
+                    }
+                    else {
+                        if (typeof errorHandler == 'function') {
+                            errorHandler(obj);
                         }
                     }
                 }

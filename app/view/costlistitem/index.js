@@ -271,7 +271,7 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 													name: normName
 												}));
 											}, function() {
-												// error handler
+												normCostItemSt.reload();
 											}, true);
 										}
 										else {
@@ -285,6 +285,8 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 													id: normId,
 													name: normName
 												}));
+											}, function() {
+												normCostItemSt.reload();
 											})
 										}
 									}
