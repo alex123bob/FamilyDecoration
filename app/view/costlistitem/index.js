@@ -217,7 +217,7 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 						tbar: [
 							{
 								text: '完结',
-								// icon: './resources/img/flaticon-checkmark.svg',
+								icon: './resources/img/flaticon-checkmark.svg',
 								handler: function () {
 									this.ownerCt.ownerCt.loadItems();
 								}
