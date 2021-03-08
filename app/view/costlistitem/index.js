@@ -214,6 +214,15 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 						id: 'gridpanel-normCostEditor',
 						name: 'gridpanel-normCostEditor',
 						normCostId: null,
+						tbar: [
+							{
+								text: '完结',
+								// icon: './resources/img/flaticon-checkmark.svg',
+								handler: function () {
+									this.ownerCt.ownerCt.loadItems();
+								}
+							}
+						],
 						loadItems: function(normCost) {
 							if (normCost) {
 								var proxy = normCostItemSt.getProxy();
@@ -378,6 +387,27 @@ Ext.define('FamilyDecoration.view.costlistitem.Index', {
 								{
 									text: '名称',
 									dataIndex: 'name'
+								},
+								{
+									xtype: 'actioncolumn',
+									editor: null,
+									width: 25,
+									flex: null,
+									items: [
+										{
+											icon: 'resources/img/flaticon-delete.svg',
+											tooltip: '删除',
+											handler: function (grid, rowIndex, colIndex) {
+												var rec = grid.getStore().getAt(rowIndex);
+												ajaxDel('CostNorm', {
+													id: rec.getId()
+												}, function () {
+													showMsg('已删除!');
+													normCostSt.reload();
+												});
+											}
+										},
+									]
 								}
 							]
 						},
