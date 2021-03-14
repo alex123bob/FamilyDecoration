@@ -9,7 +9,8 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
         'FamilyDecoration.view.signbusiness.Index', 'FamilyDecoration.view.mybusiness.Index',
         'FamilyDecoration.view.checklog.Index', 'FamilyDecoration.view.taskassign.Index',
         'FamilyDecoration.view.checksignbusiness.Index', 'FamilyDecoration.view.mytask.Index',
-        'FamilyDecoration.view.msg.Index', 'FamilyDecoration.view.bulletin.BulletinInspection'
+        'FamilyDecoration.view.msg.Index', 'FamilyDecoration.view.bulletin.BulletinInspection',
+        'FamilyDecoration.store.BidProject',
     ],
     autoScroll: true,
     layout: 'vbox',
@@ -64,6 +65,10 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                     type: 'json'
                 }
             }
+        });
+
+        var bidProject = Ext.create('FamilyDecoration.store.BidProject', {
+            autoLoad: false
         });
 
         me.items = [
@@ -640,11 +645,91 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 flex: 1,
                 xtype: 'gridpanel',
                 title: '开标情况',
-                columns: [
+                id: 'gridpanel-bidproject',
+                name: 'gridpanel-bidproject',
+                bbar: [
                     {
-                        text: '工程'
+                        text: '添加',
+						icon: './resources/img/flaticon-add.svg',
+						handler: function () {
+							bidProject.add(
+								{
+                                    startTime: '',
+                                    specificTime: '',
+                                    name: '',
+                                    requirement: '',
+                                    location: '',
+                                    depositProperty: '',
+								}
+							);
+						}
                     }
-                ]
+                ],
+                columns: {
+                    defaults: {
+                        flex: 1,
+                    },
+                    items: [
+                        {
+                            text: '开标时间',
+                            dataIndex: 'startTime'
+                        },
+                        {
+                            text: '具体时间',
+                            dataIndex: 'specificTime',
+                        },
+                        {
+                            text: '工程名称',
+                            dataIndex: 'name',
+                        },
+                        {
+                            text: '项目负责人要求',
+                            dataIndex: 'requirement',
+                            flex: 2
+                        },
+                        {
+                            text: '开标地点',
+                            dataIndex: 'location',
+                        },
+                        {
+                            text: '保证金属性',
+                            dataIndex: 'depositProperty',
+                        },
+                        {
+                            text: '保证金付款情况',
+                            dataIndex: 'statementBillId',
+                            flex: 2
+                        },
+                        {
+                            text: '代理机构',
+                            dataIndex: 'agency',
+                        },
+                        {
+                            text: '投标人及项目经理佳诚',
+                            dataIndex: 'bidderA',
+                        },
+                        {
+                            text: '投标人及项目经理康凯',
+                            dataIndex: 'bidderB',
+                        },
+                        {
+                            text: '预算造价',
+                            dataIndex: 'budgetCost',
+                        },
+                        {
+                            text: '中标人',
+                            dataIndex: 'preferredBidder',
+                        },
+                        {
+                            text: '中标价',
+                            dataIndex: 'bidPrice',
+                        },
+                        {
+                            text: '下浮率',
+                            dataIndex: 'floatDownRate',
+                        },
+                    ]
+                }
             }
         ];
 
