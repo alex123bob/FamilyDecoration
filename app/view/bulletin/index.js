@@ -67,7 +67,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
             }
         });
 
-        var bidProject = Ext.create('FamilyDecoration.store.BidProject', {
+        var bidProjectSt = Ext.create('FamilyDecoration.store.BidProject', {
             autoLoad: false
         });
 
@@ -647,20 +647,19 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 title: '开标情况',
                 id: 'gridpanel-bidproject',
                 name: 'gridpanel-bidproject',
+                store: bidProjectSt,
                 bbar: [
                     {
                         text: '添加',
 						icon: './resources/img/flaticon-add.svg',
 						handler: function () {
-							bidProject.add(
-								{
-                                    startTime: '',
-                                    specificTime: '',
-                                    name: '',
-                                    requirement: '',
-                                    location: '',
-                                    depositProperty: '',
-								}
+                            var fields = bidProjectSt.model.getFields(),
+                                valObj = {};
+                            Ext.each(fields, function(field, index, self) {
+                                valObj[field.name] = ''
+                            });
+							bidProjectSt.add(
+								valObj
 							);
 						}
                     }
