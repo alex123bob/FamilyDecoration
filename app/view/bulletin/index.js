@@ -10,7 +10,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
         'FamilyDecoration.view.checklog.Index', 'FamilyDecoration.view.taskassign.Index',
         'FamilyDecoration.view.checksignbusiness.Index', 'FamilyDecoration.view.mytask.Index',
         'FamilyDecoration.view.msg.Index', 'FamilyDecoration.view.bulletin.BulletinInspection',
-        'FamilyDecoration.store.BidProject', 'FamilyDecoration.view.widgets.GridPanel'
+        'FamilyDecoration.store.BidProject', 'FamilyDecoration.view.widgets.GridPanel', 'FamilyDecoration.view.bulletin.BidDepositForm'
     ],
     autoScroll: true,
     layout: 'vbox',
@@ -652,6 +652,28 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                         editor: 'textfield'
                     },
                     items: [
+                        {
+                            xtype: 'actioncolumn',
+                            editor: null,
+                            width: 25,
+                            flex: null,
+                            items: [
+                                {
+                                    icon: 'resources/img/add.png',
+                                    tooltip: '申请投标保证金',
+                                    handler: function(grid, rowIndex, colIndex) {
+                                        var st = grid.getStore();
+                                        var rec = st.getAt(rowIndex);
+                                        if (!rec.getId()) {
+                                            var win = Ext.create('FamilyDecoration.view.bulletin.BidDepositForm', {
+                                                isEdit: true,
+                                            });
+                                            win.show();
+                                        }
+                                    }
+                                }
+                            ]
+                        },
                         {
                             text: '开标时间',
                             dataIndex: 'startTime',
