@@ -10,7 +10,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
         'FamilyDecoration.view.checklog.Index', 'FamilyDecoration.view.taskassign.Index',
         'FamilyDecoration.view.checksignbusiness.Index', 'FamilyDecoration.view.mytask.Index',
         'FamilyDecoration.view.msg.Index', 'FamilyDecoration.view.bulletin.BulletinInspection',
-        'FamilyDecoration.store.BidProject',
+        'FamilyDecoration.store.BidProject', 'FamilyDecoration.view.widgets.GridPanel'
     ],
     autoScroll: true,
     layout: 'vbox',
@@ -65,10 +65,6 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                     type: 'json'
                 }
             }
-        });
-
-        var bidProjectSt = Ext.create('FamilyDecoration.store.BidProject', {
-            autoLoad: false
         });
 
         me.items = [
@@ -643,39 +639,28 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
             {
                 width: '100%',
                 flex: 1,
-                xtype: 'gridpanel',
+                xtype: 'widgets-gridpanel',
                 title: '开标情况',
                 id: 'gridpanel-bidproject',
                 name: 'gridpanel-bidproject',
-                store: bidProjectSt,
-                bbar: [
-                    {
-                        text: '添加',
-						icon: './resources/img/flaticon-add.svg',
-						handler: function () {
-                            var fields = bidProjectSt.model.getFields(),
-                                valObj = {};
-                            Ext.each(fields, function(field, index, self) {
-                                valObj[field.name] = ''
-                            });
-							bidProjectSt.add(
-								valObj
-							);
-						}
-                    }
-                ],
+                backendSvc: 'BidProject',
+                canDelete: true,
+                canEdit: true,
                 columns: {
                     defaults: {
                         flex: 1,
+                        editor: 'textfield'
                     },
                     items: [
                         {
                             text: '开标时间',
-                            dataIndex: 'startTime'
+                            dataIndex: 'startTime',
+                            editor: 'datefield',
                         },
                         {
                             text: '具体时间',
                             dataIndex: 'specificTime',
+                            editor: 'datefield',
                         },
                         {
                             text: '工程名称',
@@ -714,6 +699,10 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                         {
                             text: '预算造价',
                             dataIndex: 'budgetCost',
+                            editor: 'numberfield',
+                            renderer: function(val){
+                                return Ext.util.Format.currency(val, '￥');
+                            }
                         },
                         {
                             text: '中标人',
@@ -722,6 +711,10 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                         {
                             text: '中标价',
                             dataIndex: 'bidPrice',
+                            editor: 'numberfield',
+                            renderer: function(val){
+                                return Ext.util.Format.currency(val, '￥');
+                            }
                         },
                         {
                             text: '下浮率',
