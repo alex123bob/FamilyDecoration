@@ -443,8 +443,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                 delete valueObj.displayPercentage;
                 
                 Ext.apply(valueObj, {
-                    businessId: me.business.getId(),
-                    businessName: me.business.get('regionName') + ' ' + me.business.get('address')
+                    businessId: me.business && me.business.getId(),
+                    businessName: me.business && me.business.get('regionName') + ' ' + me.business.get('address')
                 });
 
                 return valueObj;
@@ -485,18 +485,24 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         },
                         items: [
                             {
-                                xtype: 'displayfield',
-                                fieldLabel: '客户姓名',
+                                xtype: 'textfield',
+                                fieldLabel: '甲方名称',
                                 name: 'customer',
                                 itemId: 'customer',
                                 value: me.contract ? (me.contract.customer) : (me.business && me.business.get('customer'))
                             },
                             {
-                                hidden: preview,
                                 xtype: 'textfield',
-                                name: 'customerConfirm',
-                                itemId: 'customerConfirm',
-                                fieldLabel: '确认'
+                                name: 'customerInCharge',
+                                itemId: 'customerInCharge',
+                                fieldLabel: '甲方负责人'
+                            },
+                            {
+                                xtype: 'textfield',
+                                fieldLabel: '联系方式',
+                                itemId: 'phone',
+                                name: 'phone',
+                                value: me.contract ? me.contract.phone : ''
                             }
                         ]
                     },
@@ -508,49 +514,14 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         },
                         items: [
                             {
-                                xtype: 'displayfield',
-                                fieldLabel: '客户联系',
-                                name: 'custContact',
-                                itemId: 'custContact',
-                                value: me.contract ? (me.contract.custContact) : (me.business && me.business.get('custContact'))
+                                xtype: 'textfield',
+                                fieldLabel: '工程地址',
+                                itemId: 'projectAddress',
                             },
                             {
-                                xtype: preview ? 'displayfield' : 'textfield',
-                                fieldLabel: '身份证号码',
-                                vtype: 'idcard',
-                                name: 'sid',
-                                itemId: 'sid',
-                                readOnly: editMode ? true : false,
-                                value: me.contract ? me.contract.sid : '',
-                                listeners: {
-                                    blur: function (cmp, evt, opts){
-                                        if (cmp.isValid() && !cmp.readOnly) {
-                                            ajaxUpdate('ContractEngineering', {
-                                                sid: cmp.getValue(),
-                                                id: me.contract.id
-                                            }, ['id'], function (obj){
-                                                showMsg('更新成功!');
-                                                cmp.setReadOnly(true);
-                                            });
-                                        }
-                                    },
-                                    render: function (cmp, opts){
-                                        if (editMode) {
-                                            cmp.getEl().on('dblclick', function (){
-                                                cmp.setReadOnly(false);
-                                            });
-                                        }
-                                    },
-                                    afterrender: function (cmp, opts){
-                                        if (editMode) {
-                                            var tip = Ext.create('Ext.tip.ToolTip', {
-                                                target: cmp.id,
-                                                trackMouse: true,
-                                                html: '双击进行编辑'
-                                            });
-                                        }
-                                    }
-                                }
+                                xtype: 'textfield',
+                                fieldLabel: '工程名称',
+                                itemId: 'projectName',
                             }
                         ]
                     },
@@ -564,12 +535,10 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         itemId: 'captainFst',
                         sync: function (obj){
                             var captain = this.getComponent('captain'),
-                                captainName = this.getComponent('captainName'),
-                                phone = this.getComponent('phone');
+                                captainName = this.getComponent('captainName');
                             if (editMode && obj) {
                                 captain.setValue(obj.captain);
                                 captainName.setValue(obj.captainName);
-                                phone.setValue(obj.captainPhone);
                             }
                         },
                         items: [
@@ -607,50 +576,12 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 name: 'captainName'
                             },
                             {
-                                xtype: 'displayfield',
-                                fieldLabel: '联系方式',
-                                itemId: 'phone',
-                                name: 'phone',
-                                value: me.contract ? me.contract.captainPhone : ''
-                            }
+                                xtype: 'textfield',
+                                fieldLabel: '签约代表',
+                                itemId: 'signatoryRep',
+                                value: me.contract ? me.contract.signatoryRep : ''
+                            },
                         ]
-                    },
-                    {
-                        xtype: preview ? 'displayfield' : 'textfield',
-                        fieldLabel: '联系地址(客户)',
-                        name: 'address',
-                        itemId: 'address',
-                        value: me.contract ? me.contract.address : '',
-                        readOnly: editMode ? true : false,
-                        listeners: {
-                            blur: function (cmp, evt, opts){
-                                if (cmp.isValid() && !cmp.readOnly) {
-                                    ajaxUpdate('ContractEngineering', {
-                                        address: cmp.getValue(),
-                                        id: me.contract.id
-                                    }, ['id'], function (obj){
-                                        showMsg('更新成功!');
-                                        cmp.setReadOnly(true);
-                                    });
-                                }
-                            },
-                            render: function (cmp, opts){
-                                if (editMode) {
-                                    cmp.getEl().on('dblclick', function (){
-                                        cmp.setReadOnly(false);
-                                    });
-                                }
-                            },
-                            afterrender: function (cmp, opts){
-                                if (editMode) {
-                                    var tip = Ext.create('Ext.tip.ToolTip', {
-                                        target: cmp.id,
-                                        trackMouse: true,
-                                        html: '双击进行编辑'
-                                    });
-                                }
-                            }
-                        }
                     },
                     {
                         defaults: {
@@ -696,37 +627,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 itemId: 'salesmanName',
                                 name: 'salesmanName'
                             },
-                            {
-                                xtype: preview ? 'displayfield' : 'textfield',
-                                fieldLabel: '签约代表',
-                                readOnly: true,
-                                name: 'signatoryRep',
-                                itemId: 'signatoryRep',
-                                listeners: {
-                                    focus: function (cmp, evt, opts){
-                                        if (!editMode && !preview) {
-                                            var win = Ext.create('FamilyDecoration.view.contractmanagement.PickUser', {
-                                                // userFilter: /^003-\d{3}$/i,
-                                                callback: function (rec){
-                                                    var ct = cmp.ownerCt,
-                                                        repName = ct.getComponent('signatoryRepName');
-                                                    cmp.setValue(rec.get('realname'));
-                                                    repName.setValue(rec.get('name'));
-                                                    win.close();
-                                                }
-                                            });
-    
-                                            win.show();
-                                        }
-                                    }
-                                },
-                                value: me.contract ? me.contract.signatoryRep : ''
-                            },
-                            {
-                                xtype: 'hiddenfield',
-                                itemId: 'signatoryRepName',
-                                name: 'signatoryRepName'
-                            }
                         ]
                     },
                     {
@@ -1017,7 +917,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                     if (!preview && !editMode) {
                         ajaxGet('StatementBill', undefined, {
                             billType: 'dsdpst',
-                            businessId: me.business.getId()
+                            businessId: me.business && me.business.getId()
                         }, function (obj){
                             var extraPaymentCt = me.down('[name="extraPaymentCt"]'),
                                 frm = me.down('form'),
