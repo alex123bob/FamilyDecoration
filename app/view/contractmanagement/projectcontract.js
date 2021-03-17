@@ -28,10 +28,24 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             {
                 hidden: preview,
                 xtype: 'button',
-                text: '折扣',
-                icon: 'resources/img/contract_discount.png',
+                text: '已有业务匹配',
                 handler: function (){
-
+                    var win = Ext.create('Ext.window.Window', {
+                        layout: 'fit',
+                        width: 800,
+                        height: 600,
+                        modal: true,
+                        items: [
+                            {
+                                xtype: 'businessaggregation-businesslist',
+                                header: false,
+                                itemDblClick: function (view, rec, item, index, evt, opts){
+                                    console.log(rec);
+                                }
+                            }
+                        ]
+                    });
+                    win.show();
                 }
             }
         ];
