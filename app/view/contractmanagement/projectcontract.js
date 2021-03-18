@@ -22,7 +22,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             editMode = me.contract ? true : false,
             joinSymbol = '/**/';
 
-        me.percentages = [0.35, 0.30, 0.30, 0.05];
         me.tbar = [
             '->',
             {
@@ -67,76 +66,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             return syncDeferred.promise();
         }
 
-        function countProjectPaymentArea (){
-            var form = me.down('form'),
-                count = 0;
-            form.items.each(function (item, i, self){
-                if (item.name === 'projectPaymentArea') {
-                    count++;
-                }
-            });
-            return count;
-        }
-
-        /**
-         * create payment area for four installments respectively. 
-         * @param {*installment} index the ?st installment
-         */
-        function createProjectPaymentArea(index) {
-            var title = '';
-            if (index === 0) {
-                title = '首期工程款';
-            }
-            else if (index === 3) {
-                title = '尾款';
-            }
-            else {
-                title = NoToChinese(index + 1) + '期工程款';
-            }
-            return {
-                xtype: 'fieldset',
-                title: title,
-                layout: 'vbox',
-                defaults: {
-                    flex: 1,
-                    width: '100%'
-                },
-                name: 'projectPaymentArea',
-                itemId: 'projectPaymentArea' + (index + 1),
-                defaultType: 'fieldcontainer',
-                items: [
-                    {
-                        layout: 'hbox',
-                        defaults: {
-                            flex: 1,
-                            margin: '0 4 0 0',
-                            allowBlank: false
-                        },
-                        items: [
-                            {
-                                xtype: preview ? 'displayfield' : 'datefield',
-                                fieldLabel: '付款日期',
-                                submitFormat: 'Y-m-d H:i:s',
-                                name: 'paymentDate'
-                            },
-                            {
-                                xtype: preview ? 'displayfield' : 'textfield',
-                                fieldLabel: '金额(元)' + me.percentages[index],
-                                name: 'paymentFee',
-                                readOnly: true
-                            },
-                            {
-                                xtype: preview ? 'displayfield' : 'numberfield',
-                                fieldLabel: '确认',
-                                name: 'paymentApproval',
-                                allowBlank: true
-                            }
-                        ]
-                    }
-                ]
-            };
-        }
-
         function countAppendix (){
             var form = me.down('form'),
                 appendixCt = form.getComponent('appendixCt');
@@ -171,7 +100,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                     },
                     {
                         xtype: 'button',
-                        text: 'X',
+                        text: '×',
                         width: 30,
                         hidden: preview || obj.type !== 'default',
                         handler: function (){
@@ -209,19 +138,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                     }
                 ]
             }
-        }
-
-        function getAppendixIndex (){
-            var form = me.down('form'),
-                index;
-            form.items.each(function (item, i, self){
-                if (item.name === 'appendixCt') {
-                    index = i;
-                    return false;
-                }
-            });
-
-            return (index ? index : -1);
         }
         
         function updateAppendix (){
@@ -273,30 +189,44 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             return stages;
         }
 
-        function createExtraPayment (index, obj){
-            var fixedArr = [0, 1, 2, 3],
-                installmentPercentage = Ext.clone(me.percentages),
-                labelStr;
-            Ext.each(installmentPercentage, function (p, index, self){
-                self[index] = p.mul(100) + '%';
-            });
-            labelStr = (fixedArr.indexOf(index) !== -1) ? NoToChinese(index + 1) + '期工程款(' + installmentPercentage[index] + '):' : '额外付款:';
+        function createExtraPayment (obj){
+            var totalPrice = me.down('form').getComponent('totalPrice');
             return {
                 layout: 'hbox',
                 defaults: {
                     flex: 1,
-                    margin: '0 4 0 0',
+                    margin: '0 2 0 0',
                     allowBlank: false
                 },
                 name: 'extraPaymentArea',
-                itemIndex: index,
                 items: [
                     {
                         xtype: 'displayfield',
                         hideLabel: true,
-                        width: 110,
-                        value: labelStr,
-                        flex: null
+                        flex: null,
+                        itemId: 'percentage',
+                        width: 26
+                    },
+                    {
+                        flex: null,
+                        width: 80,
+                        xtype: 'slider',
+                        value: 0,
+                        increment: 1,
+                        minValue: 0,
+                        maxValue: 100,
+                        tipText: function(thumb){
+                            return Ext.String.format('<b>{0}%</b>', thumb.value);
+                        },
+                        listeners: {
+                            change: function(slider, newVal, thumb) {
+                                var ct = slider.ownerCt;
+                                var name = ct.getComponent('percentage'),
+                                    fee = ct.getComponent('fee');
+                                name.setValue(newVal + '%');
+                                fee.setValue(totalPrice.getValue().mul(newVal.div(100)));
+                            }
+                        }
                     },
                     {
                         xtype: preview ? 'displayfield' : 'datefield',
@@ -325,79 +255,24 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         fieldLabel: '金额(元)',
                         labelWidth: 60,
                         name: 'extraPaymentFee',
+                        itemId: 'fee',
                         value: obj ? obj.amount : '',
-                        listeners: {
-                            blur: function (cmp, evt, opts){
-                                if (cmp.isValid() && editMode) {
-                                    var stages = getStages();
-                                    ajaxUpdate('ContractEngineering', {
-                                        stages: stages,
-                                        id: me.contract.id
-                                    }, ['id'], function (obj){
-                                        showMsg('更新成功!');
-                                    });
-                                }
-                            },
-                            change : calculateTotalPayments
-                        }
+                        readOnly: true,
                     },
                     {
                         xtype: 'button',
                         width: 35,
                         flex: null,
-                        hidden: preview || fixedArr.indexOf(index) !== -1,
-                        text: 'X',
+                        hidden: preview,
+                        text: '×',
                         handler: function (){
                             var area = this.ownerCt,
-                                ct = area.ownerCt,
-                                frm = me.down('form'),
-                                totalPriceCmp = frm.down('[name="totalPrice"]'),
-                                extraPaymentCt = frm.getComponent('extraPaymentCt');
-                            if (editMode) {
-                                ct.remove(area);
-                                updateExtraPaymentArea();
-                                ajaxUpdate('ContractEngineering', {
-                                    id: me.contract.id,
-                                    stages: getStages()
-                                }, ['id'], function (obj){
-                                    sync().then(function (data){
-                                        totalPriceCmp.sync(data);
-                                        while(extraPaymentCt.items.length > 1) {
-                                            extraPaymentCt.remove(extraPaymentCt.items.last());
-                                        }
-                                        Ext.each(data.stages, function (obj, index, self){
-                                            extraPaymentCt.add(createExtraPayment(index, obj));
-                                        });
-                                    });
-                                });
-                            }
-                            else {
-                                calculateTotalPayments();
-                            }
+                                ct = area.ownerCt;
+                            ct.remove(area);
                         }
                     }
                 ]
             };
-        }
-
-        function calculateTotalPayments (){
-           var frm = me.down('form'),
-                totalPriceCmp = frm.down('[name="totalPrice"]'),
-                totalPrice = totalPriceCmp.getValue(),
-                extraPaymentCt = frm.down('[name="extraPaymentCt"]'),
-                payments = extraPaymentCt.items,
-                total = 0;
-            for(var i = 1; i < payments.length ; i++) {
-                total += payments.get(i).items.get(2).getValue();
-            }
-            var font = total == totalPrice ? '<font>' : '<font style="color:red">';
-            if(total > totalPrice) {
-                extraPaymentCt.setTitle(font + '工程款, 总计:'+total+', 多了'+(total - totalPrice)+'</font>');
-            }else if(total < totalPrice){
-                extraPaymentCt.setTitle(font + '工程款, 总计:'+total+', 少了'+(totalPrice - total)+'</font>');
-            }else{
-                extraPaymentCt.setTitle(font + '工程款, 总计:'+total+'</font>');
-            }
         }
 
         /**
@@ -420,12 +295,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         + tdstart1 + percentageValues.join(tdstart2)+'</td></tr>'
                     +'</table>';
             frm.down('[name="displayPercentage"]').setValue(str);
-            var extraPaymentCt = frm.down('[name="extraPaymentCt"]'),
-                payments = extraPaymentCt.items;
-            payments.get(1) && payments.get(1).items.get(2).setValue(Math.round(me.percentages[0] * totalPrice));
-            payments.get(2) && payments.get(2).items.get(2).setValue(Math.round(me.percentages[1] * totalPrice));
-            payments.get(3) && payments.get(3).items.get(2).setValue(Math.round(me.percentages[2] * totalPrice));
-            payments.get(4) && payments.get(4).items.get(2).setValue(Math.round(me.percentages[3] * totalPrice));
         }
 
         me.getValues = function (){
@@ -746,45 +615,31 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         ]
                     },
                     {
-                        defaults: {
-                            flex: 1
-                        },
-                        layout: 'hbox',
-                        items: [
-                            {
-                                xtype: preview ? 'displayfield' : 'numberfield',
-                                fieldLabel: '合同总额(元)',
-                                name: 'totalPrice',
-                                itemId: 'totalPrice',
-                                value: me.contract ? me.contract.totalPrice : '',
-                                sync: function (obj){
-                                    if (editMode && obj) {
-                                        this.setValue(obj.totalPrice);
-                                    }
-                                },
-                                listeners: {
-                                    change: calculateInstallments,
-                                    blur: function (cmp, evt, opts){
-                                        if (cmp.isValid() && editMode) {
-                                            var stages = getStages();
-                                            ajaxUpdate('ContractEngineering', {
-                                                totalPrice: cmp.getValue(),
-                                                stages: stages,
-                                                id: me.contract.id
-                                            }, ['id'], function (obj){
-                                                showMsg('更新成功!');
-                                            });
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                xtype: 'displayfield',
-                                hideLabel: true,
-                                name: 'designDeposit',
-                                itemId: 'designDeposit'
+                        xtype: preview ? 'displayfield' : 'numberfield',
+                        fieldLabel: '合同总额(元)',
+                        name: 'totalPrice',
+                        itemId: 'totalPrice',
+                        value: me.contract ? me.contract.totalPrice : '',
+                        sync: function (obj){
+                            if (editMode && obj) {
+                                this.setValue(obj.totalPrice);
                             }
-                        ]
+                        },
+                        listeners: {
+                            change: calculateInstallments,
+                            blur: function (cmp, evt, opts){
+                                if (cmp.isValid() && editMode) {
+                                    var stages = getStages();
+                                    ajaxUpdate('ContractEngineering', {
+                                        totalPrice: cmp.getValue(),
+                                        stages: stages,
+                                        id: me.contract.id
+                                    }, ['id'], function (obj){
+                                        showMsg('更新成功!');
+                                    });
+                                }
+                            }
+                        }
                     },
                     {
                         xtype: 'displayfield',
@@ -793,10 +648,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         name: 'displayPercentage',
                         readOnly: true
                     },
-                    // createProjectPaymentArea(0),
-                    // createProjectPaymentArea(1),
-                    // createProjectPaymentArea(2),
-                    // createProjectPaymentArea(3),
                     {
                         xtype: 'fieldset',
                         title: '工程款',
@@ -817,16 +668,12 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 handler: function (){
                                     var index = countExtraPaymentArea(),
                                         extraPaymentCt = this.up('[name="extraPaymentCt"]');
-                                    extraPaymentCt.add(createExtraPayment(index));
+                                    extraPaymentCt.add(createExtraPayment());
                                 }
                             }
                         ].concat(preview || editMode ? me.contract.stages.map(function (obj, index){
-                            return createExtraPayment(index, obj);
+                            return createExtraPayment(obj);
                         }) : [
-                            createExtraPayment(0),
-                            createExtraPayment(1),
-                            createExtraPayment(2),
-                            createExtraPayment(3)
                         ])
                     },
                     {
@@ -903,24 +750,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             return createAppendix(index + 1, obj);
                         }) : [])
                     },
-                    {
-                        xtype: 'button',
-                        text: '添加附件',
-                        anchor: '12%',
-                        hidden: preview
-                    },
-                    {
-                        xtype: 'fieldset',
-                        title: '折扣信息',
-                        layout: 'vbox',
-                        name: 'discountCt',
-                        itemId: 'discountCt',
-                        defaultType: 'textfield',
-                        defaults: {
-                            flex: 1,
-                            width: '100%'
-                        }
-                    }
                 ]
             }
         ];
