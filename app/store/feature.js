@@ -137,7 +137,13 @@
                         name: '清单项目编辑',
                         cmp: 'costlistitem-index',
                         leaf: true,
-                        icon: 'resources/img/basicitem.png'
+                        icon: 'resources/img/to-do.svg'
+                    },
+                    {
+                        name: '成本制作',
+                        cmp: 'costmake-index',
+                        leaf: true,
+                        icon: 'resources/img/budget.svg'
                     },
                     {
                         name: "基础项目添加",

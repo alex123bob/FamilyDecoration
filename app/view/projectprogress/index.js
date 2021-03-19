@@ -987,6 +987,28 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                             }
                         });
                         */
+                    },
+                    celldblclick: function(grid, td, cellIndex, record, tr, rowIndex, e, eOpts ){
+                        var dataIndex = grid.getGridColumns()[cellIndex].dataIndex;
+                        var resObj = me.getRes();
+                        var win;
+                        if (dataIndex === 'practicalProgress') {
+                            win = Ext.create('FamilyDecoration.view.projectprogress.EditProgress', {
+                                project: resObj.pro,
+                                progress: resObj.progress,
+                                progressGrid: resObj.progressGrid
+                            });
+                            win.show();
+                        }
+                        else if (dataIndex === 'supervisorComment'){
+                            win = Ext.create('FamilyDecoration.view.projectprogress.EditProgress', {
+                                project: resObj.pro,
+                                progress: resObj.progress,
+                                progressGrid: resObj.progressGrid,
+                                isComment: true
+                            });
+                            win.show();
+                        }
                     }
                 }
             }
