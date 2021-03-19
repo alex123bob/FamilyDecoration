@@ -29,7 +29,7 @@
 	if (defined("SAE_MYSQL_HOST_M")) {
 		$GLOBALS['mysql'] = new mysql(SAE_MYSQL_HOST_M, SAE_MYSQL_USER, SAE_MYSQL_PASS, SAE_MYSQL_DB, 'utf8',SAE_MYSQL_PORT);
 	} else {
-		$GLOBALS['mysql'] = new mysql('127.0.0.1', 'root', 'anjiLiJia5093308', 'familydecoration', 'utf8');
+		$GLOBALS['mysql'] = new mysql('127.0.0.1', 'root', 'root', 'app_dqjczs', 'utf8');
 	}
 	if(!strpos($_SERVER["REQUEST_URI"],"user.php?action=log") 
 		&& 

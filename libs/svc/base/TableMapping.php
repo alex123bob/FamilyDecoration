@@ -43,6 +43,7 @@
 		"cost_list_item"=>array("id", "name", "unit", "professionType", "isLabour", "remark", "version"),
 		"cost_norm"=>array("id", "name", "remark"),
 		"cost_ref_norm_item"=>array("normId", "itemId", "version"),
+		"bid_project"=>array("id", "name", "startTime", "specificTime", "requirement", "location", "depositProperty", "statementBillId", "agency", "bidderA", "bidderB", "budgetCost", "perferredBidder", "bidPrice", "floatDownRate"),
 	);
 
 	foreach ($TableMapping as $key => &$value) {
