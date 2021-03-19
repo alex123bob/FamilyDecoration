@@ -477,7 +477,7 @@
 			}
 			$sql = substr($sql, 0, -1);
 			$count = substr_count($condition,"?");
-			$count2 = count($conditionValues);
+			$count2 = count(is_countable($conditionValues) ? $conditionValues : []);
 			if($count != $count2){
 				throw new Exception("sql:$condition need $count values but get $count2 !");
 			}
