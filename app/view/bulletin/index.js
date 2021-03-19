@@ -677,12 +677,22 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                         {
                             text: '开标时间',
                             dataIndex: 'startTime',
-                            editor: 'datefield',
+                            editor: {
+                                xtype: 'datefield',
+                                submitFormat: 'Y-m-d',
+                                format: 'Y-m-d',
+                            },
+                            renderer: Ext.util.Format.dateRenderer('Y-m-d')
                         },
                         {
                             text: '具体时间',
                             dataIndex: 'specificTime',
-                            editor: 'datefield',
+                            editor: {
+                                xtype: 'datefield',
+                                submitFormat: 'Y-m-d',
+                                format: 'Y-m-d'
+                            },
+                            renderer: Ext.util.Format.dateRenderer('Y-m-d')
                         },
                         {
                             text: '工程名称',

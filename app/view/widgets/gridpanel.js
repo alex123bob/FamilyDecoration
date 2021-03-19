@@ -14,8 +14,20 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
         var st = Ext.create('FamilyDecoration.store.'+me.backendSvc, {
             autoLoad: true
         });
-
         me.store = st;
+
+        me.tools = me.tools || [];
+
+        me.tools.push(
+            {
+                type: 'refresh',
+                tooltip: '刷新当前应用',
+                callback: function (){
+                    me.store.reload();
+                }
+            }
+        );
+
 
         // Create, Update
         if (me.canEdit) {
@@ -47,7 +59,23 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
                         edit: function (editor, e) {
                             var field = e.field,
                                 rec = e.record,
-                                newValues = e.newValues;
+                                newValues = e.newValues,
+                                editorItems = editor.getEditor().items.items;
+                            for (var pro in newValues) {
+                                switch (newValues[pro] && newValues[pro].constructor) {
+                                    case Date:
+                                        var item = editorItems.find(function(el){
+                                            return el.name === pro;
+                                        });
+                                        if (item.format) {
+                                            newValues[pro] = Ext.Date.format(newValues[pro], 'Y-m-d');
+                                        }
+                                        break;
+                                
+                                    default:
+                                        break;
+                                }
+                            }
                             if (rec.getId()) {
                                 ajaxUpdate(me.backendSvc, Ext.apply(newValues, {
                                     id: rec.getId(),
