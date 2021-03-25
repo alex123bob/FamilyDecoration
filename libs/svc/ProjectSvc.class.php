@@ -29,7 +29,7 @@ class ProjectSvc extends BaseSvc
 			foreach($data['data'] as $key => $value){
 				array_push($projects,$value['projectId']);
 			}
-			$projectIds = join($projects,',');
+			$projectIds = join(',', $projects);
 		}
 		//人力及材料预算成本
 		$map = $this->getCostBudget($projectIds);

@@ -63,7 +63,7 @@ foreach ($audits['data'] as $key => $item) {
 		array_push($auditA, $s);
 	}
 }
-$auditstr = join($auditA,'¡ú');
+$auditstr = join('¡ú', $auditA);
 $pdf->Text(83,60,'ÉóºËÈË:');
 $pdf->Text(95,60,($auditstr));
 $pdf->Ln();

@@ -113,7 +113,7 @@ foreach ($audits['data'] as $key => $item) {
 		array_push($auditstr, $s);
 	}
 }
-$pdf->Cell(0,8,"ÉóºËÈË : ".join($auditstr,'¡ú'));
+$pdf->Cell(0,8,"ÉóºËÈË : ".join('¡ú', $auditstr));
 
 $pdf->Ln();
 $pdf->Cell(11,21,"");

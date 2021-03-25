@@ -172,7 +172,7 @@ class ContractEngineeringSvc extends BaseSvc
       throw new BaseException("请勿重复提交!");
     }
     unset($additionals[$q['index']]);
-    $sql = "update contract_engineering set additionals = '".join($additionals,'/**/')."' where id = '".$q['id']."'";
+    $sql = "update contract_engineering set additionals = '".join('/**/', $additionals)."' where id = '".$q['id']."'";
     $res = $mysql->DBExecute($sql);
     $mysql->commit();
     return $res;

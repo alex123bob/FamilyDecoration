@@ -427,7 +427,7 @@
 			}
 			$sql = "select count(*) as count, payee from statement_bill "
 		."where isdeleted = 'false' and status in ('rdyck1','rdyck2','rdyck3','rdyck4','rdyck') "
-		.'and payee in ('.join($names,',').') '
+		.'and payee in ('.join(',', $names).') '
 		."group by payee, `status` ; ";
 			$res = $mysql->DBGetAsMap($sql);
 			$format = array();

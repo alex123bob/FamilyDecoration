@@ -55,7 +55,7 @@ class StatementBillItemSvc extends BaseSvc
 		}
 		$billMarkMapping = array();
 		if(count($billItemIds) > 0){
-			$ids = join($billItemIds,',');
+			$ids = join(',', $billItemIds);
 			global $mysql;
 			$data = $mysql->DBGetAsMap("select committer,id,content,createTime,refId from statement_bill_item_remark where refId in ($ids) and isDeleted = 'false'; ");
 			BaseSvc::getSvc('User')->appendRealName($data,'committer');

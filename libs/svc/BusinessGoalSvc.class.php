@@ -56,7 +56,7 @@ class BusinessGoalSvc extends BaseSvc
 			return;
 		$left = strlen($ym);
 		global $mysql;
-		$users = '\''.join($users,'\',\'').'\'';
+		$users = '\''.join('\',\'', $users).'\'';
 		$sql = "select count(1) as ctn,designerName as user from business where designerName in ($users) and left(signTime,$left) = '$ym' group by designerName,left(signTime,$left) "; 
 		$signRateData = $this->objectListToKeyList($mysql->DBGetAsMap($sql),'user');
 		foreach ($dataArray as &$value) {
@@ -80,7 +80,7 @@ class BusinessGoalSvc extends BaseSvc
 			return;
 		global $mysql;
 		$left = strlen($ym);
-		$users = '\''.join($users,'\',\'').'\'';
+		$users = '\''.join('\',\'', $users).'\'';
 		$sql = "select count(1)  as ctn,committer as user from potential_business_detail where left(createTime,$left) = '$ym' and committer in ( $users ) group by committer,left(createTime,$left) ";
 		$telemarketingData = $this->objectListToKeyList($mysql->DBGetAsMap($sql),'user');
 

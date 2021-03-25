@@ -143,7 +143,7 @@ if($bill['billType'] == 'qgd') { //质保金
 	}
 }
 
-$pdf->Cell(11,21,"审核人 : ".join($auditstr,'→'));
+$pdf->Cell(11,21,"审核人 : ".join('→', $auditstr));
 $pdf->Ln();
 $pdf->Output($address.".pdf", $action == "view" ? "I" : "D" );
 ?>  

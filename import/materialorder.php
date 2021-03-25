@@ -137,7 +137,7 @@
       array_push($tmp, $key);
     }
     $supplierOrderSvc->update(array('@totalFee' => $totalFee, 'id' => $supplierOrderId));
-    echo '可填工种：'.join($tmp, ',  ').'<br /><br />';
+    echo '可填工种：'.join(',  ', $tmp).'<br /><br />';
 
 $template = <<< html
 <table cellpadding="0" cellspacing="0">

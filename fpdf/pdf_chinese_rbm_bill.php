@@ -26,7 +26,7 @@ class PDF extends PDF_Chinese{
 		$this->Text(30,56,'付款人:');
 		$this->Text(46,56,$payee);
 		$this->Text(30,64,"审核人:");
-		$this->Text(46,64,join($auditstr,'→'));
+		$this->Text(46,64,join('→', $auditstr));
 		$this->Text(75,40,'报销金额:');
 		$this->Text(92,40,$totalFee.'(元)');
 		$this->Text(125,40,'大写:');

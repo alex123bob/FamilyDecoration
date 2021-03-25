@@ -407,7 +407,7 @@ class EntryNExitSvc{
       if($value['projectId'] != null && $value['projectId'] != "" )
         array_push($projectIds, $value['projectId']);
     }
-    $projectIds = join($projectIds,",");
+    $projectIds = join(",", $projectIds);
     if($projectIds == null || $projectIds == ""){
       return $res;
     }
