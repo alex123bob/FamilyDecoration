@@ -664,9 +664,10 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                     handler: function(grid, rowIndex, colIndex) {
                                         var st = grid.getStore();
                                         var rec = st.getAt(rowIndex);
-                                        if (!rec.getId()) {
+                                        if (rec.getId()) {
                                             var win = Ext.create('FamilyDecoration.view.bulletin.BidDepositForm', {
                                                 isEdit: true,
+                                                rec: rec
                                             });
                                             win.show();
                                         }

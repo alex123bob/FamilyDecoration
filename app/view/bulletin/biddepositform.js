@@ -16,6 +16,7 @@ Ext.define('FamilyDecoration.view.bulletin.BidDepositForm', {
     title: '申请投标保证金',
     
     bodyPadding: 10,
+    rec: null,
 
     initComponent: function() {
         var me = this;
@@ -35,12 +36,14 @@ Ext.define('FamilyDecoration.view.bulletin.BidDepositForm', {
                     {
                         fieldLabel: '工程名称',
                         name: 'name',
-                        readOnly: true
+                        readOnly: true,
+                        value: me.rec.get('name')
                     },
                     {
                         fieldLabel: '开标时间',
                         name: 'startTime',
-                        readOnly: true
+                        readOnly: true,
+                        value: me.rec.get('startTime')
                     },
                     {
                         fieldLabel: '保证金金额',
@@ -69,7 +72,7 @@ Ext.define('FamilyDecoration.view.bulletin.BidDepositForm', {
                     },
                     {
                         fieldLabel: '申请人',
-                        name: 'operator',
+                        name: 'applicant',
                         value: User.getRealName(),
                         readOnly: true
                     },
