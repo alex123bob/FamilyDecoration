@@ -35,28 +35,28 @@ Ext.define('FamilyDecoration.view.bulletin.BidDepositForm', {
                 items: [
                     {
                         fieldLabel: '工程名称',
-                        name: 'name',
+                        name: 'projectName',
                         readOnly: true,
                         value: me.rec.get('name')
                     },
                     {
                         fieldLabel: '开标时间',
-                        name: 'startTime',
+                        name: 'bidTime',
                         readOnly: true,
                         value: me.rec.get('startTime')
                     },
                     {
                         fieldLabel: '保证金金额',
-                        name: 'deposit',
+                        name: 'claimAmount',
                         xtype: 'numberfield',
                     },
                     {
                         fieldLabel: '联系人',
-                        name: 'contact'
+                        name: 'payee'
                     },
                     {
                         fieldLabel: '联系方式',
-                        name: 'contactWay'
+                        name: 'phoneNumber'
                     },
                     {
                         fieldLabel: '账号名称',
@@ -72,7 +72,7 @@ Ext.define('FamilyDecoration.view.bulletin.BidDepositForm', {
                     },
                     {
                         fieldLabel: '申请人',
-                        name: 'applicant',
+                        name: 'creator',
                         value: User.getRealName(),
                         readOnly: true
                     },
@@ -84,7 +84,16 @@ Ext.define('FamilyDecoration.view.bulletin.BidDepositForm', {
             {
                 text: '申请',
                 handler: function() {
-
+                    var frm = me.down('form'),
+                        obj = frm.getValues();
+                    Ext.apply(obj, {
+                        billType: 'bidbond'
+                    });
+                    ajaxAdd('StatementBill', obj, function (obj) {
+                        showMsg('申请成功！');
+                        me.close();
+                        // me.callback();
+                    });
                 }
             },
             {

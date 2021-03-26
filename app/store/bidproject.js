@@ -1,6 +1,6 @@
-Ext.define('FamilyDecoration.store.Deposit', {
-	extend: 'Ext.data.Store',
-	model: 'FamilyDecoration.model.Deposit',
+Ext.define('FamilyDecoration.store.BidProject', {
+    extend: 'Ext.data.Store',
+    model: 'FamilyDecoration.model.BidProject',
     proxy: {
         type: 'rest',
         url: './libs/api.php',
@@ -9,7 +9,7 @@ Ext.define('FamilyDecoration.store.Deposit', {
             root: 'data'
         },
         extraParams: {
-            action: 'Deposit.get'
+            action: 'BidProject.get'
         }
     }
 });
