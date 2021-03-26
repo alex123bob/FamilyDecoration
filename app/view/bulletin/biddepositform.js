@@ -72,7 +72,7 @@ Ext.define('FamilyDecoration.view.bulletin.BidDepositForm', {
                     },
                     {
                         fieldLabel: '申请人',
-                        name: 'operator',
+                        name: 'applicant',
                         value: User.getRealName(),
                         readOnly: true
                     },
