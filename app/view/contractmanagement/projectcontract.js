@@ -49,22 +49,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             }
         ];
 
-        function sync (){
-            var syncDeferred = jQuery.Deferred();
-
-            ajaxGet('ContractEngineering', false, {
-                id: me.contract.id
-            }, function(obj) {
-                if (obj.data.length > 0) {
-                    syncDeferred.resolve(obj.data[0]);
-                }
-                else {
-                    syncDeferred.reject(obj);
-                }
-            });
-
-            return syncDeferred.promise();
-        }
 
         function countExtraPaymentArea (){
             var form = me.down('form'),
@@ -140,7 +124,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         xtype: preview ? 'displayfield' : 'datefield',
                         fieldLabel: '付款日期',
                         submitFormat: 'Y-m-d H:i:s',
-                        format: 'Y-m-d H:i:s',
+                        format: 'Y-m-d',
                         labelWidth: 60,
                         name: 'extraPaymentDate',
                         value: obj ? obj.time : '',
@@ -260,7 +244,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                     {
                         xtype: 'displayfield',
                         layout: 'auto',
-                        value: '佳诚装饰装修合同',
+                        value: '佳诚装饰工程合同',
                         hideLabel: true,
                         style: {
                             textAlign: 'center'
@@ -278,22 +262,23 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             {
                                 xtype: 'textfield',
                                 fieldLabel: '甲方名称',
-                                name: 'customer',
-                                itemId: 'customer',
-                                value: me.contract ? (me.contract.customer) : (me.business && me.business.get('customer'))
+                                name: 'AParty',
+                                itemId: 'AParty',
+                                value: me.contract ? (me.contract.AParty) : ''
                             },
                             {
                                 xtype: 'textfield',
-                                name: 'customerInCharge',
-                                itemId: 'customerInCharge',
-                                fieldLabel: '甲方负责人'
+                                name: 'APartyPrincipal',
+                                itemId: 'APartyPrincipal',
+                                fieldLabel: '甲方负责人',
+                                value: me.contract ? (me.contract.APartyPrincipal) : ''
                             },
                             {
                                 xtype: 'textfield',
                                 fieldLabel: '联系方式',
-                                itemId: 'phone',
-                                name: 'phone',
-                                value: me.contract ? me.contract.phone : ''
+                                itemId: 'APartyContact',
+                                name: 'APartyContact',
+                                value: me.contract ? me.contract.APartyContact : ''
                             }
                         ]
                     },
@@ -307,12 +292,14 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             {
                                 xtype: 'textfield',
                                 fieldLabel: '工程地址',
-                                itemId: 'projectAddress',
+                                itemId: 'address',
+                                name: 'address',
                             },
                             {
                                 xtype: 'textfield',
                                 fieldLabel: '工程名称',
                                 itemId: 'projectName',
+                                name: 'projectName'
                             }
                         ]
                     },
@@ -347,11 +334,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                                 userFilter: /^003-\d{3}$/i,
                                                 callback: function (rec){
                                                     var ct = cmp.ownerCt,
-                                                        captainName = ct.getComponent('captainName'),
-                                                        phone = ct.getComponent('phone');
+                                                        captainName = ct.getComponent('captainName');
                                                     cmp.setValue(rec.get('realname'));
                                                     captainName.setValue(rec.get('name'));
-                                                    phone.setValue(rec.get('phone'));
                                                     win.close();
                                                 }
                                             });
@@ -364,13 +349,21 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             {
                                 xtype: 'hiddenfield',
                                 itemId: 'captainName',
-                                name: 'captainName'
+                                name: 'captainName',
+                                value: me.contract ? me.contract.captainName : ''
                             },
                             {
                                 xtype: 'textfield',
                                 fieldLabel: '签约代表',
                                 itemId: 'signatoryRep',
+                                name: 'signatoryRep',
                                 value: me.contract ? me.contract.signatoryRep : ''
+                            },
+                            {
+                                xtype: 'hiddenfield',
+                                itemId: 'signatoryRepName',
+                                name: 'signatoryRepName',
+                                value: me.contract ? me.contract.signatoryRepName : ''
                             },
                         ]
                     },

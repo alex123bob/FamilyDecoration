@@ -63,7 +63,7 @@ Ext.define('FamilyDecoration.model.StatementBill', {
 		// for stfs 员工工资对应某年某月某员工的工资记录id
 		{name: 'staffSalaryId', type: 'string'},
 
-		// for bidbond
+		// for bidbond, pmbond.
 		{name: 'bidTime', type: 'string'}, //开标时间
 		{name: 'accountName', type: 'string'}, //账号名称
 		{name: 'bank', type: 'string'}, //开户行

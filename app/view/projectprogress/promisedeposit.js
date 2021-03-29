@@ -40,12 +40,6 @@ Ext.define('FamilyDecoration.view.projectprogress.PromiseDeposit', {
                         value: me.rec.get('projectName')
                     },
                     {
-                        fieldLabel: '开标时间',
-                        name: 'bidTime',
-                        readOnly: true,
-                        value: me.rec.get('projectTime')
-                    },
-                    {
                         fieldLabel: '保证金金额',
                         name: 'claimAmount',
                         xtype: 'numberfield',
@@ -87,7 +81,7 @@ Ext.define('FamilyDecoration.view.projectprogress.PromiseDeposit', {
                     var frm = me.down('form'),
                         obj = frm.getValues();
                     Ext.apply(obj, {
-                        billType: 'bidbond'
+                        billType: 'pmbond'
                     });
                     ajaxAdd('StatementBill', obj, function (obj) {
                         showMsg('申请成功！');

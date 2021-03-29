@@ -953,6 +953,7 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                                 st = resObj.proSt,
                                 pro = resObj.pro;
                             var win = Ext.create('FamilyDecoration.view.projectprogress.PromiseDeposit', {
+                                isEdit: true,
                                 rec: pro
                             });
                             win.show();

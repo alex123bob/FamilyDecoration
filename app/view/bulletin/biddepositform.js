@@ -87,8 +87,10 @@ Ext.define('FamilyDecoration.view.bulletin.BidDepositForm', {
                     var frm = me.down('form'),
                         obj = frm.getValues();
                     Ext.apply(obj, {
-                        billType: 'bidbond'
+                        billType: 'bidbond',
+                        refId: me.rec.getId()
                     });
+                    obj.creator = User.getName();
                     ajaxAdd('StatementBill', obj, function (obj) {
                         showMsg('申请成功！');
                         me.close();
