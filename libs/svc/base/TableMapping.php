@@ -44,6 +44,8 @@
 		"cost_norm"=>array("id", "name", "remark"),
 		"cost_ref_norm_item"=>array("normId", "itemId", "version"),
 		"bid_project"=>array("id", "name", "startTime", "specificTime", "requirement", "location", "depositProperty", "statementBillId", "agency", "bidderA", "bidderB", "budgetCost", "perferredBidder", "bidPrice", "floatDownRate"),
+		"contracte_engineering_changelog"=>array("id", "contractId", "changeContent", "creator", "creatorName"),
+		"contracte_engineering_notice_order"=>array("id", "title", "contractId", "content", "price", "creator", "creatorName"),
 	);
 
 	foreach ($TableMapping as $key => &$value) {
@@ -51,4 +53,3 @@
 		array_push($value, 'isDeleted');
 		array_push($value, 'updateTime');
 	}
-?>

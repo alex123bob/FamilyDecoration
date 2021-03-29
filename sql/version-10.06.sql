@@ -1,6 +1,4 @@
-alter table contract_engineering add column `AParty` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL default null  comment '甲方名称';
-alter table contract_engineering add column `APartyPrincipal` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL default null  comment '甲方负责人';
-alter table contract_engineering add column `APartyContact` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL default null  comment '甲方联系方式';
+alter table business add column `custRemark` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL default null  comment '客户其他信息';
 
 CREATE TABLE `contracte_engineering_changelog` (
     `id` varchar(20) NOT NULL,

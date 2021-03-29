@@ -80,8 +80,9 @@ class ContractEngineeringSvc extends BaseSvc
     $res = $businessSvc->add(array(
       '@address' => $q['@address'],
       '@reginId' => $q['@projectName'],
-      '@customer' => $q['@AParty'].$q['@APartyPrincipal'],
-      '@custContact' => $q['@APartyContact'],
+      '@customer' => $q['@customer'],
+      '@custContact' => $q['@custContact'],
+      '@custRemark' => $q['@custRemark'],
       '@salesman' => $q['@salesman'],
       '@salesmanName' => $q['@salesmanName'],
       '@designer' => $q['@designer'],
