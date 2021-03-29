@@ -4,6 +4,7 @@ alter table contract_engineering add column `APartyContact` VARCHAR(200) CHARACT
 
 CREATE TABLE `contracte_engineering_changelog` (
     `id` varchar(20) NOT NULL,
+    `contractId` varchar(20) NOT NULL COMMENT '合同id',
     `changeContent` text NOT NULL COMMENT '变更内容',
     `creator` varchar(512) NULL DEFAULT null,
     `creatorName` varchar(512) NULL DEFAULT null,
@@ -14,6 +15,7 @@ CREATE TABLE `contracte_engineering_changelog` (
 
 CREATE TABLE `contracte_engineering_notice_order` (
     `id` varchar(20) NOT NULL,
+    `contractId` varchar(20) NOT NULL COMMENT '合同id',
     `title` text NOT NULL COMMENT '变更内容',
     `content` varchar(512) NULL DEFAULT null,
     `price` varchar(512) NULL DEFAULT null,
