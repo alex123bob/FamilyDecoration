@@ -10,6 +10,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.EditContract', {
     width: 700,
     height: 500,
     maximizable: true,
+    maximized: true,
     modal: true,
     callback: Ext.emptyFn,
 
