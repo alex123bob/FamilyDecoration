@@ -56,9 +56,6 @@ class StatementBillSvc extends BaseSvc
 		}else{
 			$q['@payee'] = isset($q["@payee"]) ? $q["@payee"] : $_SESSION['name'];
 		}
-		if($q['@billType'] == 'bidbond' && !isset($q['@projectId'])){
-			$q['@projectId'] = '-1';
-		}
 		// 是否完工标志位用来判断，当前工程是否要进行监理意见检测。如果完工的工程，是不需要判断当前监理意见是否填写的。
 		if($q['@billType'] == 'reg' && $q["@isFrozen"] == "0")
 			parent::getSvc('ProjectProgressAudit')->checkAuditPassed($q['@professionType'],$q['@projectId']);
@@ -70,6 +67,9 @@ class StatementBillSvc extends BaseSvc
 			if($res['data'][0]['settled'] != 0){
 				throw new BaseException('项目'.$res['data'][0]['projectName'].' 已被标记为结算完成,无法添加单据!');
 			}
+		}
+		if($q['@billType'] == 'bidbond' && !isset($q['@projectId'])){
+			$q['@projectId'] = '-1';
 		}
 		$res = parent::add($q);
 		return $res;
