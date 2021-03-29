@@ -49,42 +49,77 @@ class ContractEngineeringSvc extends BaseSvc
     $item['stages'] = $newArray;
   }
 
+
+  private function addDefaultProject($q){
+    require_once "businessDB.php";
+    $res = transferBusinessToProject(array(
+      'businessId' => $q['@businessId'],
+      'customer' => $q['@customer'],
+      'custContact' => $q['@custContact'],
+      'period' => $q["@startTime"].":".$q["@endTime"],
+      'projectTime' => date("Y-m-d"),
+      'projectName' => $q['@businessName'],
+      'designer' => $q['@designer'],
+      'designerName' => $q['@designerName'],
+      'captain' => $q['@captain'],
+      'captainName' => $q['@captainName'],
+      'salesman' => $q['@salesman'],
+      'salesmanName' => $q['@salesmanName'],
+      'isWaiting' => 'false',
+      'isLocked' => 'false'
+    ));
+    return $res;
+  }
+
+
+  // 投标合同
+  private function addDefaultBusinessForBidContract($q){
+    global $mysql;  
+    $mysql->begin();
+    $businessSvc = BaseSvc::getSvc('Business');
+    $res = $businessSvc->add(array(
+      '@address' => $q['@address'],
+      '@reginId' => $q['@projectName'],
+      '@customer' => $q['@AParty'].$q['@APartyPrincipal'],
+      '@custContact' => $q['@APartyContact'],
+      '@salesman' => $q['@salesman'],
+      '@salesmanName' => $q['@salesmanName'],
+      '@designer' => $q['@designer'],
+      '@designerName' => $q['@designerName'],
+      '@captain' => $q['@captain'],
+      '@captainName' => $q['@captainName'],
+      '@salesman' => $q['@salesman'],
+      '@salesmanName' => $q['@salesmanName']
+    ));
+    return $res;
+  }
+
   public function add($q){
     $q['@id'] = $this->getUUID();
-    notNullCheck($q,'@businessId','业务ID不能为空!');
-    notNullCheck($q,'@totalPrice','合同总价不能为空!');
-    notNullCheck($q,'@sid','身份证号不能为空!');
     notNullCheck($q,'@address','装修地址不能为空!');
     notNullCheck($q,'@stages','合同期不能为空!');
-    $res = $this->getCount(array('businessId' => $q['@businessId']));
-    if($res['count'] > 0){
-      throw new BaseException('该业务已有合同!');
-    }
+    notNullCheck($q,'@totalPrice','合同总价不能为空!');
+  
+    global $mysql;  
+    $mysql->begin();
     $projectSvc = BaseSvc::getSvc('Project');
     $businessSvc = BaseSvc::getSvc('Business');
-    $res = $projectSvc->get(array('businessId' => $q['@businessId']));
-    global $mysql;
-    $mysql->begin();
+  
+    if(!isset($q['@businessId'])) {
+      $newBusisness = $this->addDefaultBusinessForBidContract($q);
+      $q['@businessId'] = $newBusisness['data'][0]['id'];
+    }else{
+      notNullCheck($q,'@sid','身份证号不能为空!');
+      $res = $this->getCount(array('businessId' => $q['@businessId']));
+      if($res['count'] > 0){
+        throw new BaseException('该业务已有合同!');
+      }
+    }
+    $res = $projectSvc->get(array('businessId' => $q['@businessId']));    
     $projectId = '';
     if($res['total'] == 0){
       //没有project,新建.
-      require_once "businessDB.php";
-      $res = transferBusinessToProject(array(
-        'businessId' => $q['@businessId'],
-        'customer' => $q['@customer'],
-        'custContact' => $q['@custContact'],
-        'period' => $q["@startTime"].":".$q["@endTime"],
-        'projectTime' => date("Y-m-d"),
-        'projectName' => $q['@businessName'],
-        'designer' => $q['@designer'],
-        'designerName' => $q['@designerName'],
-        'captain' => $q['@captain'],
-        'captainName' => $q['@captainName'],
-        'salesman' => $q['@salesman'],
-        'salesmanName' => $q['@salesmanName'],
-        'isWaiting' => 'false',
-        'isLocked' => 'false'
-      ));
+      $res = $this->addDefaultProject($q);
       $projectId = $res['projectId'];
       $businessSvc->update(array(
         'id' => $q['@businessId'],
@@ -178,5 +213,3 @@ class ContractEngineeringSvc extends BaseSvc
     return $res;
   }
 }
-
-?>
