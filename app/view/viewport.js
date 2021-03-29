@@ -26,6 +26,7 @@ Ext.define('FamilyDecoration.view.Viewport', {
                 }
             }
         });
+        var isLocal = /localhost/.test(location.href);
 
         this.items = [{
             xtype: 'treepanel',
@@ -121,7 +122,7 @@ Ext.define('FamilyDecoration.view.Viewport', {
                 });
             }
 
-            if (User.isAdmin()) {
+            if (!isLocal && User.isAdmin()) {
                 Ext.defer(heartBeat, 2000);
                 // Heartbeat
                 setInterval(heartBeat, 60000);

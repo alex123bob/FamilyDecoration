@@ -6,7 +6,7 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
         'FamilyDecoration.view.progress.ProjectList', 'FamilyDecoration.view.projectprogress.EditProgress',
         'FamilyDecoration.view.budget.BudgetPanel', 'FamilyDecoration.model.Progress',
         'FamilyDecoration.store.BusinessDetail', 'FamilyDecoration.view.progress.ProjectListByCaptain',
-        'FamilyDecoration.view.projectprogress.ProgressTable'
+        'FamilyDecoration.view.projectprogress.ProgressTable', 'FamilyDecoration.view.projectprogress.PromiseDeposit'
     ],
     // autoScroll: true,
     layout: 'border',
@@ -941,6 +941,20 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                                 ]
                             });
 
+                            win.show();
+                        }
+                    },
+                    {
+                        text: '履约保证金',
+                        name: 'button-promisedeposit',
+                        handler: function() {
+                            var resObj = me.getRes(),
+                                treePanel = resObj.proPanel,
+                                st = resObj.proSt,
+                                pro = resObj.pro;
+                            var win = Ext.create('FamilyDecoration.view.projectprogress.PromiseDeposit', {
+                                rec: pro
+                            });
                             win.show();
                         }
                     }

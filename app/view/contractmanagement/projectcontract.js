@@ -66,88 +66,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             return syncDeferred.promise();
         }
 
-        function countAppendix (){
-            var form = me.down('form'),
-                appendixCt = form.getComponent('appendixCt');
-            return appendixCt.query('[name="appendix"]').length;
-        }
-
-        function createAppendix(index, obj) {
-            if (!obj.type) {
-                obj.type = 'default';
-            }
-            return {
-                layout: 'hbox',
-                name: 'appendix',
-                // itemId: 'appendix',
-                updateIndex: function (index){
-                    this.down('displayfield').setFieldLabel((index + 1).toString());
-                },
-                __appendixIndex: (index - 1),
-                getAppendixIndex: function (){
-                    return this.__appendixIndex;
-                },
-                defaults: {
-                },
-                items: [
-                    {
-                        xtype: 'displayfield',
-                        fieldLabel: index.toString(),
-                        value: obj.content,
-                        name: 'additional',
-                        itemId: 'additional',
-                        flex: 1
-                    },
-                    {
-                        xtype: 'button',
-                        text: '×',
-                        width: 30,
-                        hidden: preview || obj.type !== 'default',
-                        handler: function (){
-                            var hbox = this.ownerCt,
-                                fieldset = hbox.ownerCt,
-                                additional = hbox.getComponent('additional'),
-                                type = hbox.getComponent('type');
-                            if (editMode) {
-                                Ext.Msg.warning('确定要删除当前附加条款吗?', function (btnId){
-                                    if ('yes' == btnId) {
-                                        ajaxUpdate('ContractEngineering.deleteAdditional', {
-                                            id: me.contract.id,
-                                            index: hbox.getAppendixIndex(),
-                                            additional: additional.getValue()
-                                        }, ['id', 'index', 'additional'], function (obj){
-                                            showMsg('删除成功!');
-                                            sync().then(function (obj){
-                                                fieldset.sync(obj);
-                                            });
-                                        }, true);
-                                    }
-                                });
-                            }
-                            else {
-                                fieldset.remove(hbox);
-                                updateAppendix();
-                            }
-                        }
-                    },
-                    {
-                        xtype: 'hiddenfield',
-                        name: 'type',
-                        itemId: 'type',
-                        value: obj.type
-                    }
-                ]
-            }
-        }
-        
-        function updateAppendix (){
-            var ct = me.down('[name="appendixCt"]'),
-                group = ct.items.items.slice(1);
-            Ext.each(group, function (fc, index){
-                fc.updateIndex(index);
-            });
-        }
-
         function countExtraPaymentArea (){
             var form = me.down('form'),
                 ct = form.down('[name="extraPaymentCt"]'),
@@ -158,16 +76,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                 }
             });
             return count;
-        }
-
-        function updateExtraPaymentArea (){
-            var form = me.down('form'),
-                ct = form.down('[name="extraPaymentCt"]');
-            ct.items.each(function (item, i, self){
-                if (item.name === 'extraPaymentArea') {
-                    item.itemIndex =  i - 1;
-                }
-            });
         }
 
         function getStages (){
@@ -675,80 +583,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             return createExtraPayment(obj);
                         }) : [
                         ])
-                    },
-                    {
-                        xtype: 'fieldset',
-                        title: '附加条款',
-                        layout: 'vbox',
-                        name: 'appendixCt',
-                        itemId: 'appendixCt',
-                        defaultType: 'fieldcontainer',
-                        defaults: {
-                            flex: 1,
-                            width: '100%'
-                        },
-                        sync: function (obj){
-                            var appendixCt = this,
-                                appendixes = appendixCt.query('[name="appendix"]');
-
-                            if (editMode && obj) {
-                                Ext.each(appendixes, function (appendix, index, self){
-                                    appendixCt.remove(appendix);
-                                });
-                                Ext.each(obj.additionals, function (additional, index, self){
-                                    appendixCt.add(createAppendix(countAppendix() + 1, additional));
-                                });
-                            }
-                        },
-                        items: [
-                            {
-                                xtype: 'button',
-                                text: '添加',
-                                width: 50,
-                                hidden: preview,
-                                handler: function (){
-                                    var btn = this,
-                                        ct = btn.ownerCt;
-                                    var win = Ext.create('FamilyDecoration.view.contractmanagement.EditAppendix', {
-                                        isEdit: editMode,
-                                        contract: me.contract,
-                                        project: me.project,
-                                        business: me.business,
-                                        // obj: Object contains content and type.
-                                        callback: function (obj){
-                                            var frm = me.down('form'),
-                                                gongqi = frm.getComponent('gongqi'),
-                                                captainFst = frm.getComponent('captainFst'),
-                                                designerField = frm.getComponent('projectPersonnels').getComponent('designer'),
-                                                appendixCt = frm.getComponent('appendixCt');
-                                            if (editMode) {
-                                                sync().then(function (data){
-                                                    if (obj.type === 'gongqi') {
-                                                        gongqi.sync(data);
-                                                    }
-                                                    else if (obj.type === 'captain') {
-                                                        captainFst.sync(data);
-                                                    }
-                                                    else if (obj.type === 'designer') {
-                                                        designerField.sync(data);
-                                                    }
-                                                    appendixCt.sync(data);
-                                                });
-                                            }
-                                            else {
-                                                var config = createAppendix(countAppendix() + 1, {content: obj.content});
-                                                ct.add(config);
-                                            }
-                                            showMsg('添加成功!');
-                                            win.close();
-                                        }
-                                    });
-                                    win.show();
-                                }
-                            }
-                        ].concat(preview || editMode ? me.contract.additionals.map(function (obj, index){
-                            return createAppendix(index + 1, obj);
-                        }) : [])
                     },
                 ]
             }
