@@ -33,8 +33,8 @@
 					}
 				}
 			} else {
-				if(!is_array($value) && ($value == null || $value == '')){
-					unset($item[$key]);
+				if($item == null || $item == ''){
+					unset($res['data'][$key]);
 				}
 			}
 			

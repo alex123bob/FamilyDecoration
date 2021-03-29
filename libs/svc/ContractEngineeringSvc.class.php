@@ -213,4 +213,61 @@ class ContractEngineeringSvc extends BaseSvc
     $mysql->commit();
     return $res;
   }
+
+  function update($q){
+    notNullCheck($q, 'id', 'id不能为空!');
+    global $mysql;  
+    $mysql->begin();
+    // record change
+    $changes = array();
+    $oldValue = $this->get($q)['data'][0];
+    foreach($oldValue as $key=> $value) {
+      if(isset($q['@'.$key]) && trim($q['@'.$key]) != trim($value)){
+        array_push($changes, Array('field'=> $key, 'old'=> trim($value), 'new'=> trim($q['@'.$key])));
+      }
+    }
+    $res = BaseSvc::getSvc('ContractEngineeringChangelog')->add(array(
+      '@contractId' => $q['id'],
+      '@changeContent' => json_encode($changes)
+    ));
+
+    //get all updated values;
+    $toUpdate = array();
+    foreach($q as $key=> $value) {
+      if($key[0] === '@'){
+        $toUpdate[$key] = $value;
+      }
+    }
+    
+    // update project
+    try{
+      $toUpdate['projectId'] = $oldValue['projectId'];
+      BaseSvc::getSvc('Project')->update($toUpdate);
+    }catch(Exception $e){
+      if(!contains($e->getMessage(), 'no update field') && !contains($e->getMessage(), 'no where condition')) {
+        throw $e;
+      }
+    }
+
+    // update business
+    try{
+      $toUpdate['id'] = $oldValue['businessId'];
+      BaseSvc::getSvc('Business')->update($toUpdate);
+    }catch(Exception $e){
+      if(!contains($e->getMessage(), 'no update field') && !contains($e->getMessage(), 'no where condition')) {
+        throw $e;
+      }
+    }
+
+    // update contract
+    try{
+      parent::update($q);
+    }catch(Exception $e){
+      if(!contains($e->getMessage(), 'no update field') && !contains($e->getMessage(), 'no where condition')) {
+        throw $e;
+      }
+    }
+    $mysql->commit();
+    return $res;
+  }
 }
