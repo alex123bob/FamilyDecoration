@@ -110,7 +110,6 @@ class ContractEngineeringSvc extends BaseSvc
       $newBusisness = $this->addDefaultBusinessForBidContract($q);
       $q['@businessId'] = $newBusisness['data'][0]['id'];
     }else{
-      notNullCheck($q,'@sid','身份证号不能为空!');
       $res = $this->getCount(array('businessId' => $q['@businessId']));
       if($res['count'] > 0){
         throw new BaseException('该业务已有合同!');

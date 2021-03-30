@@ -262,23 +262,23 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             {
                                 xtype: 'textfield',
                                 fieldLabel: '甲方名称',
-                                name: 'AParty',
-                                itemId: 'AParty',
-                                value: me.contract ? (me.contract.AParty) : ''
+                                name: 'custRemark',
+                                itemId: 'custRemark',
+                                value: me.contract ? (me.contract.custRemark) : ''
                             },
                             {
                                 xtype: 'textfield',
-                                name: 'APartyPrincipal',
-                                itemId: 'APartyPrincipal',
+                                name: 'customer',
+                                itemId: 'customer',
                                 fieldLabel: '甲方负责人',
-                                value: me.contract ? (me.contract.APartyPrincipal) : ''
+                                value: me.contract ? (me.contract.customer) : ''
                             },
                             {
                                 xtype: 'textfield',
                                 fieldLabel: '联系方式',
-                                itemId: 'APartyContact',
-                                name: 'APartyContact',
-                                value: me.contract ? me.contract.APartyContact : ''
+                                itemId: 'custContact',
+                                name: 'custContact',
+                                value: me.contract ? me.contract.custContact : ''
                             }
                         ]
                     },
@@ -357,7 +357,23 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 fieldLabel: '签约代表',
                                 itemId: 'signatoryRep',
                                 name: 'signatoryRep',
-                                value: me.contract ? me.contract.signatoryRep : ''
+                                readOnly: true,
+                                value: me.contract ? me.contract.signatoryRep : '',
+                                listeners: {
+                                    focus: function(cmp, evt, opts) {
+                                        var win = Ext.create('FamilyDecoration.view.contractmanagement.PickUser', {
+                                            callback: function (rec){
+                                                var ct = cmp.ownerCt,
+                                                    signatoryRepName = ct.getComponent('signatoryRepName');
+                                                cmp.setValue(rec.get('realname'));
+                                                signatoryRepName.setValue(rec.get('name'));
+                                                win.close();
+                                            }
+                                        });
+
+                                        win.show();
+                                    }
+                                }
                             },
                             {
                                 xtype: 'hiddenfield',
