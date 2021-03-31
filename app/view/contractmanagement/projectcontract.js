@@ -82,7 +82,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
         }
 
         function createExtraPayment (obj){
-            var totalPrice = me.down('form').getComponent('totalPrice');
+            var totalPrice = me.contract ? me.contract.totalPrice : me.down('form').getComponent('totalPrice');
             return {
                 layout: 'hbox',
                 defaults: {

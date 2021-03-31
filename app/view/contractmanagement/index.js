@@ -50,9 +50,41 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                         if (obj.data.length > 0) {
                             contractSelected = obj.data[0];
                             resObj.detail.add({
-                                xtype: 'contractmanagement-projectcontract',
-                                preview: true,
-                                contract: obj.data[0]
+                                xtype: 'container',
+                                layout: {
+                                    type: 'vbox',
+                                    align: 'stretch'
+                                },
+                                items: [
+                                    {
+                                        xtype: 'contractmanagement-projectcontract',
+                                        preview: true,
+                                        contract: obj.data[0],
+                                        flex: 2
+                                    },
+                                    {
+                                        xtype: 'container',
+                                        layout: {
+                                            type: 'hbox',
+                                            align: 'stretch'
+                                        },
+                                        flex: 1,
+                                        items: [
+                                            {
+                                                xtype: 'panel',
+                                                contentEl: 'change log',
+                                                title: '改动记录',
+                                                flex: 1,
+                                            },
+                                            {
+                                                xtype: 'panel',
+                                                title: '联系单',
+                                                contentEl: 'notice order',
+                                                flex: 1,
+                                            }
+                                        ]
+                                    }
+                                ]
                             });
                         }
                         else {
