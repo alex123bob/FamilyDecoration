@@ -6,7 +6,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
         'FamilyDecoration.store.ContractType',
         'FamilyDecoration.view.contractmanagement.ProjectContract',
         'FamilyDecoration.view.contractmanagement.EditContract',
-        'FamilyDecoration.view.businessaggregation.BusinessList'
+        'FamilyDecoration.view.businessaggregation.BusinessList',
+        'FamilyDecoration.view.contractmanagement.NoticeOrderEditor'
     ],
     layout: 'hbox',
     defaults: {
@@ -241,6 +242,22 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                             else {
                                 showMsg('请选择要编辑的合同');
                             }
+                        }
+                    },
+                    {
+                        text: '联系单',
+                        handler: function() {
+                            var win = Ext.create('FamilyDecoration.view.contractmanagement.NoticeOrderEditor', {
+                                width: 500,
+                                height: 300,
+                                title: '工程联系单',
+                                contract: {
+                                    getId() {
+                                        return 'test'
+                                    }
+                                }
+                            });
+                            win.show();
                         }
                     }
                 ]

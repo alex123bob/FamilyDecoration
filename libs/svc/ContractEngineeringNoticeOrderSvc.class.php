@@ -1,5 +1,5 @@
 <?php
-class ContracteEngineeringNoticeOrderSvc extends BaseSvc
+class ContractEngineeringNoticeOrderSvc extends BaseSvc
 {
 
     public function add($q)
