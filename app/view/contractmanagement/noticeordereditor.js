@@ -19,7 +19,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.NoticeOrderEditor', {
                 xtype: 'form',
                 layout: 'anchor',
                 defaults: {
-                    anchor: '100%'
+                    anchor: '100%',
+                    allowBlank: false,
                 },
 
                 // The fields
@@ -84,10 +85,12 @@ Ext.define('FamilyDecoration.view.contractmanagement.NoticeOrderEditor', {
                 text: '确定',
                 handler: function() {
                     var form = me.down('form');
-                    ajaxAdd('ContractEngineeringNoticeOrder', form.getValues(), function (obj){
-                        showMsg('添加成功！');
-                        me.close();
-                    });
+                    if (form.isValid()) {
+                        ajaxAdd('ContractEngineeringNoticeOrder', form.getValues(), function (obj){
+                            showMsg('添加成功！');
+                            me.close();
+                        });
+                    }
                 }
             }
         ]
