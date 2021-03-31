@@ -260,21 +260,21 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         },
                         items: [
                             {
-                                xtype: 'textfield',
+                                xtype: preview ? 'displayfield' : 'textfield',
                                 fieldLabel: '甲方名称',
                                 name: 'custRemark',
                                 itemId: 'custRemark',
                                 value: me.contract ? (me.contract.custRemark) : ''
                             },
                             {
-                                xtype: 'textfield',
+                                xtype: preview ? 'displayfield' : 'textfield',
                                 name: 'customer',
                                 itemId: 'customer',
                                 fieldLabel: '甲方负责人',
                                 value: me.contract ? (me.contract.customer) : ''
                             },
                             {
-                                xtype: 'textfield',
+                                xtype: preview ? 'displayfield' : 'textfield',
                                 fieldLabel: '联系方式',
                                 itemId: 'custContact',
                                 name: 'custContact',
@@ -290,16 +290,18 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         },
                         items: [
                             {
-                                xtype: 'textfield',
+                                xtype: preview ? 'displayfield' : 'textfield',
                                 fieldLabel: '工程地址',
                                 itemId: 'address',
                                 name: 'address',
+                                value: me.contract ? me.contract.address : ''
                             },
                             {
-                                xtype: 'textfield',
+                                xtype: preview ? 'displayfield' : 'textfield',
                                 fieldLabel: '工程名称',
                                 itemId: 'projectName',
-                                name: 'projectName'
+                                name: 'projectName',
+                                value: me.contract ? me.contract.projectName : ''
                             }
                         ]
                     },
@@ -353,7 +355,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 value: me.contract ? me.contract.captainName : ''
                             },
                             {
-                                xtype: 'textfield',
+                                xtype: preview ? 'displayfield' : 'textfield',
                                 fieldLabel: '签约代表',
                                 itemId: 'signatoryRep',
                                 name: 'signatoryRep',

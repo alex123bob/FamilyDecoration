@@ -55,6 +55,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                                     type: 'vbox',
                                     align: 'stretch'
                                 },
+                                defaults: {
+                                    width: '100%',
+                                },
                                 items: [
                                     {
                                         xtype: 'contractmanagement-projectcontract',
@@ -72,14 +75,12 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                                         items: [
                                             {
                                                 xtype: 'panel',
-                                                contentEl: 'change log',
                                                 title: '改动记录',
                                                 flex: 1,
                                             },
                                             {
                                                 xtype: 'panel',
                                                 title: '联系单',
-                                                contentEl: 'notice order',
                                                 flex: 1,
                                             }
                                         ]
@@ -170,10 +171,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                 flex: 6,
                 layout: 'fit',
                 items: [
-                    // {
-                    //     xtype: 'contractmanagement-projectcontract',
-                    //     preview: true
-                    // }
                 ],
                 bbar: [
                     {
