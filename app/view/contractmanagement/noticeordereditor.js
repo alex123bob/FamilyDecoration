@@ -92,6 +92,12 @@ Ext.define('FamilyDecoration.view.contractmanagement.NoticeOrderEditor', {
                         });
                     }
                 }
+            },
+            {
+                text: '取消',
+                handler: function() {
+                    me.close();
+                }
             }
         ]
 
