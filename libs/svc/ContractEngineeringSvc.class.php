@@ -58,7 +58,7 @@ class ContractEngineeringSvc extends BaseSvc
       'custContact' => $q['@custContact'],
       'period' => $q["@startTime"].":".$q["@endTime"],
       'projectTime' => date("Y-m-d"),
-      'projectName' => $q['@businessName'],
+      'projectName' => $q['@projectName'] ?? $q['@businessName'],
       'designer' => $q['@designer'],
       'designerName' => $q['@designerName'],
       'captain' => $q['@captain'],
@@ -74,12 +74,10 @@ class ContractEngineeringSvc extends BaseSvc
 
   // 投标合同
   private function addDefaultBusinessForBidContract($q){
-    global $mysql;  
-    $mysql->begin();
     $businessSvc = BaseSvc::getSvc('Business');
     $res = $businessSvc->add(array(
       '@address' => $q['@address'],
-      '@reginId' => $q['@projectName'],
+      '@regionId' => '000000000000000001',
       '@customer' => $q['@customer'],
       '@custContact' => $q['@custContact'],
       '@custRemark' => $q['@custRemark'],
@@ -92,7 +90,7 @@ class ContractEngineeringSvc extends BaseSvc
       '@salesman' => $q['@salesman'],
       '@salesmanName' => $q['@salesmanName']
     ));
-    return $res;
+    return $res['data'];
   }
 
   public function add($q){
@@ -106,9 +104,9 @@ class ContractEngineeringSvc extends BaseSvc
     $projectSvc = BaseSvc::getSvc('Project');
     $businessSvc = BaseSvc::getSvc('Business');
   
-    if(!isset($q['@businessId'])) {
+    if(!isset($q['@businessId']) || $q['@businessId'] == '') {
       $newBusisness = $this->addDefaultBusinessForBidContract($q);
-      $q['@businessId'] = $newBusisness['data'][0]['id'];
+      $q['@businessId'] = $newBusisness['id'];
     }else{
       $res = $this->getCount(array('businessId' => $q['@businessId']));
       if($res['count'] > 0){
@@ -129,7 +127,7 @@ class ContractEngineeringSvc extends BaseSvc
       $projectSvc->update(array(
         'businessId' => $q['@businessId'],
         '@period' => $q["@startTime"].":".$q["@endTime"],
-        '@projectName' => $q['@businessName'],
+        '@projectName' => $q['@projectName'] ?? $q['@businessName'],
         '@designer' => $q['@designer'],
         '@designerName' => $q['@designerName'],
         '@captain' => $q['@captain'],
