@@ -476,8 +476,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                         return '开始时间不能大于结束时间';
                                     }
                                     else {
-                                        totalProjectTime.setValue(total / 1000 / 60 / 60 / 24 + '天');
-                                        endTime.clearInvalid();
                                         return true;
                                     }
                                 },
@@ -485,8 +483,26 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                     change: function (cmp, newVal, oldVal, opts){
                                         var ownerCt = cmp.ownerCt,
                                             startTime = this,
-                                            endTime = ownerCt.getComponent('endTime');   
+                                            endTime = ownerCt.getComponent('endTime'),
+                                            totalProjectTime = ownerCt.getComponent('totalProjectTime'),
+                                            total = endTime.getValue() - startTime.getValue();
 
+                                        if (total < 0) {
+                                            totalProjectTime.setValue('');
+                                        }
+                                        else {
+                                            if (me.contract) {
+                                                // start time updated.
+                                                ajaxUpdate('ContractEngineering', Ext.apply({}, {
+                                                    id: me.contract.id,
+                                                    startTime: Ext.Date.format(newVal, 'Y-m-d'),
+                                                }), ['id'], function(obj) {
+                                                    showMsg('更新成功!');
+                                                });
+                                            }
+                                            totalProjectTime.setValue(total / 1000 / 60 / 60 / 24 + '天');
+                                            endTime.clearInvalid();
+                                        }
                                     }
                                 }
                             },
@@ -510,8 +526,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                         return '开始时间不能大于结束时间';
                                     }
                                     else {
-                                        totalProjectTime.setValue(total / 1000 / 60 / 60 / 24 + '天');
-                                        startTime.clearInvalid();
                                         return true;
                                     }
                                 },
@@ -519,7 +533,26 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                     change: function (cmp, newVal, oldVal, opts){
                                         var ownerCt = cmp.ownerCt,
                                             endTime = this,
-                                            startTime = ownerCt.getComponent('startTime');
+                                            startTime = ownerCt.getComponent('startTime'),
+                                            totalProjectTime = ownerCt.getComponent('totalProjectTime'),
+                                            total = endTime.getValue() - startTime.getValue();
+
+                                        if (total < 0) {
+                                            totalProjectTime.setValue('');
+                                        }
+                                        else {
+                                            if (me.contract) {
+                                                // start time updated.
+                                                ajaxUpdate('ContractEngineering', Ext.apply({}, {
+                                                    id: me.contract.id,
+                                                    endTime: Ext.Date.format(newVal, 'Y-m-d'),
+                                                }), ['id'], function(obj) {
+                                                    showMsg('更新成功!');
+                                                });
+                                            }
+                                            totalProjectTime.setValue(total / 1000 / 60 / 60 / 24 + '天');
+                                            startTime.clearInvalid();
+                                        }
                                     }
                                 }
                             },
