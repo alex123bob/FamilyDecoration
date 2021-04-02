@@ -1010,5 +1010,6 @@
     <script type="text/javascript" src="tools/sweetalert/dist/sweetalert.min.js"></script>
     <script type="text/javascript" src="tools/md5.min.js"></script>
     <script type="text/javascript" src="tools/jquery.firework.js"></script>
+    <script type="text/javascript" src="tools/lodash.js"></script>
 </body>
 </html>

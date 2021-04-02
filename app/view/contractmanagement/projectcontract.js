@@ -61,10 +61,31 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             return count;
         }
 
+
+        function updateStages() {
+            var extraPaymentCt = me.down('form').down('[name="extraPaymentCt"]'),
+                extraPaymentAreas = Ext.ComponentQuery.query('[name="extraPaymentArea"]', extraPaymentCt),
+                params = {
+                    stages: []
+                };
+            Ext.Array.each(extraPaymentAreas, function(area, index) {
+                var datefield = area.down('[name="extraPaymentDate"]'),
+                    fee = area.down('[name="extraPaymentFee"]');
+                params.stages.push([Ext.Date.format(datefield.getValue(), 'Y-m-d'), fee.getValue()].join(':'));
+            });
+            params.stages = params.stages.join(joinSymbol);
+            ajaxUpdate('ContractEngineering', Ext.apply({
+                id: me.contract.id
+            }, params), ['id'], function(obj) {
+                showMsg('更新成功!');
+            });
+        }
+
         function createExtraPayment (obj){
             var totalPrice = me.contract ? me.contract.totalPrice : me.down('form').getComponent('totalPrice').getValue();
             totalPrice = parseFloat(totalPrice);
-            var percent = me.contract ? parseFloat(obj.amount).div(totalPrice).mul(100) : 0;
+            var percent = me.contract ? parseFloat(obj && obj.amount || 0).div(totalPrice).mul(100) : 0;
+
             return {
                 layout: 'hbox',
                 defaults: {
@@ -83,6 +104,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         value: percent + '%'
                     },
                     {
+                        name: 'sliderPercentage',
                         flex: null,
                         width: 80,
                         xtype: 'slider',
@@ -95,13 +117,21 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             return Ext.String.format('<b>{0}%</b>', thumb.value);
                         },
                         listeners: {
-                            change: function(slider, newVal, thumb) {
-                                var ct = slider.ownerCt;
-                                var name = ct.getComponent('percentage'),
-                                    fee = ct.getComponent('fee');
-                                name.setValue(newVal + '%');
-                                fee.setValue(totalPrice.mul(newVal.div(100)));
-                            }
+                            change: _.debounce(function(slider, newVal, thumb) {
+                                if (newVal) {
+                                    var ct = slider.ownerCt;
+                                    var name = ct.getComponent('percentage'),
+                                        fee = ct.getComponent('fee');
+                                    var totalPrice = me.down('form').getComponent('totalPrice').getValue();
+                                    name.setValue(newVal + '%');
+                                    if (totalPrice) {
+                                        fee.setValue(totalPrice.mul(newVal.div(100)));
+                                    }
+
+                                    // update stages to change log and related dbs.
+                                    updateStages();
+                                }
+                            }, 500)
                         }
                     },
                     {
@@ -113,6 +143,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         name: 'extraPaymentDate',
                         value: obj ? obj.time : '',
                         listeners: {
+                            change: function() {
+                                updateStages();
+                            }
                         }
                     },
                     {
@@ -134,6 +167,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                             var area = this.ownerCt,
                                 ct = area.ownerCt;
                             ct.remove(area);
+
+                            updateStages();
                         }
                     }
                 ]
@@ -574,7 +609,31 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         itemId: 'totalPrice',
                         value: me.contract ? me.contract.totalPrice : '',
                         listeners: {
-                            change: calculateInstallments
+                            change: _.debounce(function (cmp, newVal, oldVal, opts){
+                                if (newVal) {
+                                    calculateInstallments(cmp, newVal);
+                                    var ct = cmp.ownerCt,
+                                        extraPaymentCt = ct.getComponent('extraPaymentCt'),
+                                        extraPaymentAreas = Ext.ComponentQuery.query('[name="extraPaymentArea"]', extraPaymentCt),
+                                        params = {
+                                            totalPrice: newVal,
+                                            stages: []
+                                        };
+                                    Ext.Array.each(extraPaymentAreas, function(area, index) {
+                                        var slider = area.down('[name="sliderPercentage"]'),
+                                            datefield = area.down('[name="extraPaymentDate"]'),
+                                            fee = area.down('[name="extraPaymentFee"]');
+                                        fee.setValue( newVal.mul( slider.getValue()).div(100) );
+                                        params.stages.push([Ext.Date.format(datefield.getValue(), 'Y-m-d'), fee.getValue()].join(':'));
+                                    });
+                                    params.stages = params.stages.join(joinSymbol);
+                                    ajaxUpdate('ContractEngineering', Ext.apply({
+                                        id: me.contract.id
+                                    }, params), ['id'], function(obj) {
+                                        showMsg('更新成功!');
+                                    });
+                                }
+                            }, 500)
                         }
                     },
                     {
