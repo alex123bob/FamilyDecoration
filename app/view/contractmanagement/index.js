@@ -7,7 +7,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
         'FamilyDecoration.view.contractmanagement.ProjectContract',
         'FamilyDecoration.view.contractmanagement.EditContract',
         'FamilyDecoration.view.businessaggregation.BusinessList',
-        'FamilyDecoration.view.contractmanagement.NoticeOrderEditor'
+        'FamilyDecoration.view.contractmanagement.NoticeOrderEditor',
+        'FamilyDecoration.store.ContractEngineeringChangelog',
+        'FamilyDecoration.store.ContractEngineeringNoticeOrder'
     ],
     layout: 'hbox',
     defaults: {
@@ -49,6 +51,34 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                         resObj.detail.removeAll();
                         if (obj.data.length > 0) {
                             contractSelected = obj.data[0];
+                            var changeLogSt = Ext.create('FamilyDecoration.store.ContractEngineeringChangelog', {
+                                autoLoad: false
+                            });
+                            var noticeOrderSt = Ext.create('FamilyDecoration.store.ContractEngineeringNoticeOrder', {
+                                autoLoad: false
+                            });
+                            // change log proxy setup
+                            var changeLogProxy = changeLogSt.getProxy();
+                            Ext.override(changeLogProxy, {
+                                extraParams: {
+                                    action: 'ContractEngineeringChangelog.get',
+                                    contractId: obj.data[0].id
+                                }
+                            });
+                            changeLogSt.setProxy(changeLogProxy);
+                            changeLogSt.load();
+
+                            // notice order proxy setup
+                            var noticeOrderProxy = noticeOrderSt.getProxy();
+                            Ext.override(noticeOrderProxy, {
+                                extraParams: {
+                                    action: 'ContractEngineeringNoticeOrder.get',
+                                    contractId: obj.data[0].id
+                                }
+                            });
+                            noticeOrderSt.setProxy(noticeOrderProxy);
+                            noticeOrderSt.load();
+
                             resObj.detail.add({
                                 xtype: 'container',
                                 layout: {
@@ -74,14 +104,56 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                                         flex: 1,
                                         items: [
                                             {
-                                                xtype: 'panel',
+                                                xtype: 'gridpanel',
                                                 title: '改动记录',
                                                 flex: 1,
+                                                store: changeLogSt,
+                                                columns: {
+                                                    defaults: {
+                                                        flex: 1
+                                                    },
+                                                    items: [
+                                                        {
+                                                            text: '更改内容',
+                                                            dataIndex: 'changeContent'
+                                                        },
+                                                        {
+                                                            flex: null,
+                                                            width: 100,
+                                                            text: '操作人',
+                                                            dataIndex: 'creator'
+                                                        }
+                                                    ]
+                                                }
                                             },
                                             {
-                                                xtype: 'panel',
+                                                xtype: 'gridpanel',
                                                 title: '联系单',
                                                 flex: 1,
+                                                store: noticeOrderSt,
+                                                columns: {
+                                                    defaults: {
+                                                        flex: 1
+                                                    },
+                                                    items: [
+                                                        {
+                                                            text: '标题',
+                                                            dataIndex: 'title'
+                                                        },
+                                                        {
+                                                            text: '内容',
+                                                            dataIndex: 'content'
+                                                        },
+                                                        {
+                                                            text: '价格',
+                                                            dataIndex: 'price'
+                                                        },
+                                                        {
+                                                            text: '操作人',
+                                                            dataIndex: 'creator'
+                                                        }
+                                                    ]
+                                                }
                                             }
                                         ]
                                     }
@@ -276,17 +348,19 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                     {
                         text: '联系单',
                         handler: function() {
-                            var win = Ext.create('FamilyDecoration.view.contractmanagement.NoticeOrderEditor', {
-                                width: 500,
-                                height: 300,
-                                title: '工程联系单',
-                                contract: {
-                                    getId() {
-                                        return 'test'
-                                    }
-                                }
-                            });
-                            win.show();
+                            var resObj = getRes();
+                            if (contractSelected) {
+                                var win = Ext.create('FamilyDecoration.view.contractmanagement.NoticeOrderEditor', {
+                                    width: 500,
+                                    height: 300,
+                                    title: '工程联系单',
+                                    contract: contractSelected,
+                                });
+                                win.show();
+                            }
+                            else {
+                                showMsg('请选择要编辑的合同');
+                            }
                         }
                     }
                 ]

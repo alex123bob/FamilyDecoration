@@ -31,7 +31,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.NoticeOrderEditor', {
                         xtype: 'hiddenfield',
                         name: 'contractId',
                         itemId: 'contractId',
-                        value: me.contract.getId()
+                        value: me.contract.id
                     },
                     {
                         fieldLabel: '标题',

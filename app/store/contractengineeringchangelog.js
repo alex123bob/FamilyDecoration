@@ -1,6 +1,6 @@
-Ext.define('FamilyDecoration.store.ContractEngineeringNoticeOrder', {
+Ext.define('FamilyDecoration.store.ContractEngineeringChangelog', {
 	extend: 'Ext.data.Store',
-	model: 'FamilyDecoration.model.ContractEngineeringNoticeOrder',
+	model: 'FamilyDecoration.model.ContractEngineeringChangelog',
     proxy: {
         type: 'rest',
         url: './libs/api.php',
@@ -9,7 +9,7 @@ Ext.define('FamilyDecoration.store.ContractEngineeringNoticeOrder', {
             root: 'data'
         },
         extraParams: {
-            action: 'ContractEngineeringNoticeOrder.get'
+            action: 'ContractEngineeringChangelog.get'
         }
     }
 });
