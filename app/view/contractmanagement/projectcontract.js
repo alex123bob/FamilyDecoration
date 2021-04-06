@@ -11,8 +11,6 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
     layout: 'fit',
     header: false,
     preview: false, // whether current contract is editable or not.
-    business: undefined,
-    project: undefined,
 
     contract: undefined, // is edit or not.
 
@@ -21,10 +19,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             preview = me.preview,
             joinSymbol = '/**/';
 
-        me.tbar = [
+        me.tbar = preview || me.contract ? null : [
             '->',
             {
-                hidden: preview,
                 xtype: 'button',
                 text: '已有业务匹配',
                 handler: function (){
@@ -38,7 +35,19 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 xtype: 'businessaggregation-businesslist',
                                 header: false,
                                 itemDblClick: function (view, rec, item, index, evt, opts){
-                                    console.log(rec);
+                                    var personnels = me.down('form').getComponent('projectPersonnels');
+                                    Ext.Array.each(personnels.items.items, function(item) {
+                                        if (item.name === 'businessName') {
+                                            item.setValue(rec.get('regionName') + ' ' + rec.get('address'));
+                                        }
+                                        else if (item.name === 'businessId') {
+                                            item.setValue(rec.getId());
+                                        }
+                                        else {
+                                            item.setValue(rec.get(item.name));
+                                        }
+                                    });
+                                    win.close();
                                 }
                             }
                         ]
@@ -85,6 +94,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             var totalPrice = me.contract ? me.contract.totalPrice : me.down('form').getComponent('totalPrice').getValue();
             totalPrice = parseFloat(totalPrice);
             var percent = me.contract ? parseFloat(obj && obj.amount || 0).div(totalPrice).mul(100) : 0;
+            percent = percent.toFixed(2);
 
             return {
                 layout: 'hbox',
@@ -100,7 +110,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         hideLabel: true,
                         flex: preview ? 1 :null,
                         itemId: 'percentage',
-                        width: 26,
+                        width: 50,
                         value: percent + '%'
                     },
                     {
@@ -129,7 +139,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                     }
 
                                     // update stages to change log and related dbs.
-                                    updateStages();
+                                    if (me.contract) {
+                                        updateStages();
+                                    }
                                 }
                             }, 500)
                         }
@@ -144,7 +156,9 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         value: obj ? obj.time : '',
                         listeners: {
                             change: function() {
-                                updateStages();
+                                if (me.contract) {
+                                    updateStages();
+                                }
                             }
                         }
                     },
@@ -168,7 +182,10 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 ct = area.ownerCt;
                             ct.remove(area);
 
-                            updateStages();
+                            if (me.contract) {
+                                updateStages();
+                            }
+
                         }
                     }
                 ]
@@ -215,20 +232,13 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                 }
 
                 valueObj.stages = stages.join(joinSymbol);
-                if (valueObj.additionals) {
-                    valueObj.additionals = (valueObj.additionals.join ? valueObj.additionals.join(joinSymbol) : valueObj.additionals);
-                }
+                valueObj.additionals = frm.down('[name="additionals"]').getValue();
                 delete valueObj.paymentDate;
                 delete valueObj.paymentFee;
                 delete valueObj.paymentApproval;
                 delete valueObj.extraPaymentDate;
                 delete valueObj.extraPaymentFee;
                 delete valueObj.displayPercentage;
-                
-                Ext.apply(valueObj, {
-                    businessId: me.business && me.business.getId(),
-                    businessName: me.business && me.business.get('regionName') + ' ' + me.business.get('address')
-                });
 
                 return valueObj;
             }
@@ -449,28 +459,40 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         itemId: 'projectPersonnels',
                         items: [
                             {
+                                xtype: 'hiddenfield',
+                                name: 'businessId',
+                                itemId: 'businessId',
+                                value: me.contract ? me.contract.businessId : '',
+                            },
+                            {
+                                xtype: 'hiddenfield',
+                                name: 'businessName',
+                                itemId: 'businessName',
+                                value: me.contract ? me.contract.businessName : '',
+                            },
+                            {
                                 xtype: 'displayfield',
                                 fieldLabel: '设计师',
-                                value: me.contract ? (me.contract.designer) : (me.business && me.business.get('designer')),
+                                value: me.contract ? me.contract.designer : '',
                                 itemId: 'designer',
                                 name: 'designer',
                             },
                             {
                                 xtype: 'hiddenfield',
-                                value: me.business && me.business.get('designerName'),
+                                value: me.contract ? me.contract.designerName : '',
                                 itemId: 'designerName',
                                 name: 'designerName'
                             },
                             {
                                 xtype: 'displayfield',
                                 fieldLabel: '业务员',
-                                value: me.contract ? (me.contract.salesman) : (me.business && me.business.get('salesman')),
+                                value: me.contract ? me.contract.salesman : '',
                                 itemId: 'salesman',
                                 name: 'salesman'
                             },
                             {
                                 xtype: 'hiddenfield',
-                                value: me.business && me.business.get('salesmanName'),
+                                value: me.contract ? me.contract.salesmanName : '',
                                 itemId: 'salesmanName',
                                 name: 'salesmanName'
                             },
@@ -627,11 +649,13 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                         params.stages.push([Ext.Date.format(datefield.getValue(), 'Y-m-d'), fee.getValue()].join(':'));
                                     });
                                     params.stages = params.stages.join(joinSymbol);
-                                    ajaxUpdate('ContractEngineering', Ext.apply({
-                                        id: me.contract.id
-                                    }, params), ['id'], function(obj) {
-                                        showMsg('更新成功!');
-                                    });
+                                    if (me.contract) {
+                                        ajaxUpdate('ContractEngineering', Ext.apply({
+                                            id: me.contract.id
+                                        }, params), ['id'], function(obj) {
+                                            showMsg('更新成功!');
+                                        });
+                                    }
                                 }
                             }, 500)
                         }
@@ -671,26 +695,117 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                         }) : [
                         ])
                     },
+                    {
+                        xtype: 'fieldset',
+                        title: '附加条款',
+                        layout: 'vbox',
+                        defaults: {
+                            flex: 1,
+                            width: '100%'
+                        },
+                        items: [
+                            {
+                                xtype: 'textfield',
+                                hidden: preview,
+                                enableKeyEvents: true,
+                                listeners: {
+                                    keydown: function(txt, evt, opts) {
+                                        if (evt.keyCode == 13) {
+                                            var additionalsWdiget = txt.nextSibling('[name="additionals"]'),
+                                                additionals = additionalsWdiget.getAdditionals();
+                                            additionals.push(txt.getValue());
+                                            additionalsWdiget.renderItems(additionals);
+                                            txt.setValue('');
+                                            if (me.contract) {
+                                                ajaxUpdate('ContractEngineering', Ext.apply({
+                                                    id: me.contract.id
+                                                }, {
+                                                    additionals: additionalsWdiget.getValue()
+                                                }), ['id'], function(obj) {
+                                                    showMsg('更新成功!');
+                                                });
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                xtype: 'fieldcontainer',
+                                name: 'additionals',
+                                itemId: 'additionals',
+                                layout: 'vbox',
+                                defaults: {
+                                    flex: 1,
+                                    width: '100%',
+                                },
+                                renderItems: function(arr){
+                                    this.removeAll();
+                                    this.add(arr.map(function(val, idx) {
+                                        var container = {
+                                            xtype: 'fieldcontainer',
+                                            index: idx,
+                                            layout: 'hbox',
+                                            defaults: {
+                                                flex: 1,
+                                            },
+                                            items: [
+                                                {
+                                                    xtype: 'button',
+                                                    flex: null,
+                                                    width: 35,
+                                                    hidden: preview,
+                                                    text: '×',
+                                                    handler: function() {
+                                                        var ct = this.ownerCt,
+                                                            additionalsWdiget = ct.ownerCt,
+                                                            idx = ct.index,
+                                                            additionals = additionalsWdiget.getAdditionals();
+                                                        additionals.splice(idx, 1);
+                                                        additionalsWdiget.renderItems(additionals);
+                                                        if (me.contract) {
+                                                            ajaxUpdate('ContractEngineering', Ext.apply({
+                                                                id: me.contract.id
+                                                            }, {
+                                                                additionals: additionalsWdiget.getValue()
+                                                            }), ['id'], function(obj) {
+                                                                showMsg('更新成功!');
+                                                            });
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    xtype: 'displayfield',
+                                                    value: val
+                                                }
+                                            ]
+                                        };
+                                        return container;
+                                    }));
+                                },
+                                getAdditionals: function() {
+                                    var items = this.items && this.items.items ? this.items.items : [];
+                                    return items.map(function(item) {
+                                        return item.down('displayfield').getValue()
+                                    });
+                                },
+                                getValue: function() {
+                                    return this.getAdditionals().join(joinSymbol);
+                                },
+                                items: []
+                            }
+                        ]
+                    }
                 ]
             }
         ];
 
         me.addListener(
             {
-                render: function (cmp, opts){
-                    if (!preview) {
-                        ajaxGet('StatementBill', undefined, {
-                            billType: 'dsdpst',
-                            businessId: me.business && me.business.getId()
-                        }, function (obj){
-                            var extraPaymentCt = me.down('[name="extraPaymentCt"]'),
-                                frm = me.down('form'),
-                                designDeposit = frm.down('[name="designDeposit"]');
-                            if (obj.data.length > 0) {
-                                me.designDeposit = obj.data[0];
-                                designDeposit.setValue('(设计定金: ' + me.designDeposit['paidAmount'] + '元, 收款时间:' + me.designDeposit['paidTime'] + ')');
-                            }
-                        });
+                afterrender: function(cmp, opts){
+                    if (this.contract) {
+                        this.down('form').down('[name="additionals"]').renderItems(me.contract.additionals.map(function(item){
+                            return item.content;
+                        }));
                     }
                 }
             }

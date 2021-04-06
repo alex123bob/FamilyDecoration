@@ -19,7 +19,7 @@ class ContractEngineeringSvc extends BaseSvc
   }
 
   private function transformAddtionals(&$item) {
-    $additionals  = isset($item['additionals']) ? explode('/**/', trim($item['additionals'],'/**/')) : array();
+    $additionals  = !empty($item['additionals']) ? explode('/**/', trim($item['additionals'],'/**/')) : array();
     $item['additionals'] = array();
     foreach ($additionals as $k => $v) {
       $ex = explode(':', $v);
