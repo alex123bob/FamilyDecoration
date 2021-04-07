@@ -20,19 +20,23 @@ class ContractEngineeringSvc extends BaseSvc
 
   private function transformAddtionals(&$item) {
     $additionals  = !empty($item['additionals']) ? explode('/**/', trim($item['additionals'],'/**/')) : array();
-    $item['additionals'] = array();
-    foreach ($additionals as $k => $v) {
-      $ex = explode(':', $v);
-      array_push($item['additionals'], array(
-        'content'=> $ex[0],
-        'type'=>count($ex) == 1 ? 'default' : $ex[1]
-      ));
-    }
-    ;
+    $item['additionals'] = $additionals;
+    // foreach ($additionals as $k => $v) {
+    //   $ex = explode(':', $v);
+    //   array_push($item['additionals'], array(
+    //     'content'=> $ex[0],
+    //     'type'=>count($ex) == 1 ? 'default' : $ex[1]
+    //   ));
+    // }
+    // ;
   }
 
   private function transformStage(&$item) {
-    $stages = isset($item['stages']) ? explode('/**/', trim($item['stages'],'/**/')) : array();
+    $item['stages'] =  isset($item['stages']) ? $this->transformStageString($item['stages']) : array();
+  }
+
+  private function transformStageString($stagesString) {
+    $stages =  explode('/**/', trim($stagesString,'/**/'));
     $s = array('一','二','三','四','五','六','七','八','九','十');
     $newArray = array();
     $i = 0;
@@ -46,7 +50,7 @@ class ContractEngineeringSvc extends BaseSvc
       ));
       ++ $i;
     }
-    $item['stages'] = $newArray;
+    return $newArray;
   }
 
 
@@ -147,83 +151,105 @@ class ContractEngineeringSvc extends BaseSvc
     return $res;
   }
 
-  function addAdditional($q) {
-    global $mysql;
-    $mysql->begin();
-    $projectSvc = BaseSvc::getSvc('Project');
-    switch ($q['@type']) {
-      case 'default':
-        // do nothing;
-        break;
-      case 'gongqi':
-        $projectSvc->update(array(
-          'projectId' => $q['projectId'],
-          '@period' => $q['@beginTime'].':'.$q['@endTime']
-        ));
-        break;
-      case 'captain':
-        $projectSvc->update(array(
-          'projectId' => $q['projectId'],
-          '@captain' => $q['@captain'],
-          '@captainName' => $q['@captainName']
-        ));
-        break;
-      case 'designer':
-        $projectSvc->update(array(
-          'projectId' => $q['projectId'],
-          '@designer' => $q['@designer'],
-          '@designerName' => $q['@designerName']
-        ));
-        break;
-      default:
-        throw new BaseException("unknow @type:", $q['@type']);
-    }
-    $sql = "update contract_engineering set additionals = concat(additionals, '/**/','".$q['@additional'].":".$q['@type']."') where id = '".$q['id']."'";
-    $res = $mysql->DBExecute($sql);
-    $mysql->commit();
-    return $res;
-  }
+  // function addAdditional($q) {
+  //   global $mysql;
+  //   $mysql->begin();
+  //   $projectSvc = BaseSvc::getSvc('Project');
+  //   switch ($q['@type']) {
+  //     case 'default':
+  //       // do nothing;
+  //       break;
+  //     case 'gongqi':
+  //       $projectSvc->update(array(
+  //         'projectId' => $q['projectId'],
+  //         '@period' => $q['@beginTime'].':'.$q['@endTime']
+  //       ));
+  //       break;
+  //     case 'captain':
+  //       $projectSvc->update(array(
+  //         'projectId' => $q['projectId'],
+  //         '@captain' => $q['@captain'],
+  //         '@captainName' => $q['@captainName']
+  //       ));
+  //       break;
+  //     case 'designer':
+  //       $projectSvc->update(array(
+  //         'projectId' => $q['projectId'],
+  //         '@designer' => $q['@designer'],
+  //         '@designerName' => $q['@designerName']
+  //       ));
+  //       break;
+  //     default:
+  //       throw new BaseException("unknow @type:", $q['@type']);
+  //   }
+  //   $sql = "update contract_engineering set additionals = concat(additionals, '/**/','".$q['@additional'].":".$q['@type']."') where id = '".$q['id']."'";
+  //   $res = $mysql->DBExecute($sql);
+  //   $mysql->commit();
+  //   return $res;
+  // }
 
-  function deleteAdditional($q) {
-    global $mysql;
-    $mysql->begin();
-    $res = parent::get(array('id'=>$q['id']));
-    if($res['total'] != 1) {
-      throw new BaseException("没有对应id的合同.", $q['id']);
-    }
-    $contract = $res['data'][0];
-    $additionals = explode('/**/', $contract['additionals']);
-    if(count($additionals) < $q['index'] ||  $q['index'] < 0 ){
-      throw new BaseException("没有第".$q['index']."条附加条款.");
-    }
-    $additional = $additionals[$q['index']];
-    $tmp = explode(':', $additional);
-    if(count($tmp) == 2 && $tmp[1] != 'default') {
-      throw new BaseException("非普通附加条款,不允许删除!".$tmp[1]);
-    }
-    if($tmp[0] != $q['additional']) {
-      throw new BaseException("请勿重复提交!");
-    }
-    unset($additionals[$q['index']]);
-    $sql = "update contract_engineering set additionals = '".join('/**/', $additionals)."' where id = '".$q['id']."'";
-    $res = $mysql->DBExecute($sql);
-    $mysql->commit();
-    return $res;
-  }
+  // function deleteAdditional($q) {
+  //   global $mysql;
+  //   $mysql->begin();
+  //   $res = parent::get(array('id'=>$q['id']));
+  //   if($res['total'] != 1) {
+  //     throw new BaseException("没有对应id的合同.", $q['id']);
+  //   }
+  //   $contract = $res['data'][0];
+  //   $additionals = explode('/**/', $contract['additionals']);
+  //   if(count($additionals) < $q['index'] ||  $q['index'] < 0 ){
+  //     throw new BaseException("没有第".$q['index']."条附加条款.");
+  //   }
+  //   $additional = $additionals[$q['index']];
+  //   $tmp = explode(':', $additional);
+  //   if(count($tmp) == 2 && $tmp[1] != 'default') {
+  //     throw new BaseException("非普通附加条款,不允许删除!".$tmp[1]);
+  //   }
+  //   if($tmp[0] != $q['additional']) {
+  //     throw new BaseException("请勿重复提交!");
+  //   }
+  //   unset($additionals[$q['index']]);
+  //   $sql = "update contract_engineering set additionals = '".join('/**/', $additionals)."' where id = '".$q['id']."'";
+  //   $res = $mysql->DBExecute($sql);
+  //   $mysql->commit();
+  //   return $res;
+  // }
 
   function update($q){
     notNullCheck($q, 'id', 'id不能为空!');
-    global $mysql;  
-    $mysql->begin();
     // record change
     $changes = array();
-    $oldValue = $this->get($q)['data'][0];
+    $res = $this->get($q);
+    if($res['total'] === 0) {
+      throw new Exception('找不到id为'.$q['id'].'的合同。');
+    }
+    $oldValue = $res['data'][0];
     foreach($oldValue as $key=> $value) {
-      if(isset($q['@'.$key]) && trim($q['@'.$key]) != trim($value)){
-        array_push($changes, Array('field'=> $key, 'old'=> trim($value), 'new'=> trim($q['@'.$key])));
+      if(isset($q['@'.$key])){
+        $oldFieldValue = json_encode($value);
+        $newFieldValue = json_encode($q['@'.$key]);
+        if( $key === 'stages') {
+          $newFieldValue = json_encode($this->transformStageString($q['@'.$key]));
+        }
+        if($key === 'totalPrice') {
+          $oldFieldValue = (float)$value;
+          $newFieldValue = (float)$q['@'.$key];
+        }
+        if($key === 'additionals') {
+          $newFieldValue  = json_encode(explode('/**/', trim($q['@'.$key] ?? '','/**/')));
+        }
+        if($oldFieldValue !== $newFieldValue) {
+          array_push($changes, Array('field'=> $key, 'old'=> $oldFieldValue, 'new'=> $newFieldValue));
+        }
       }
     }
-    $res = BaseSvc::getSvc('ContractEngineeringChangelog')->add(array(
+    if(count($changes) === 0) {
+      return $res;
+    }
+
+    global $mysql;  
+    $mysql->begin();
+    $changed = BaseSvc::getSvc('ContractEngineeringChangelog')->add(array(
       '@contractId' => $q['id'],
       '@changeContent' => json_encode($changes)
     ));
@@ -238,8 +264,11 @@ class ContractEngineeringSvc extends BaseSvc
     
     // update project
     try{
-      $toUpdate['projectId'] = $oldValue['projectId'];
-      BaseSvc::getSvc('Project')->update($toUpdate);
+      $projectId = $q['@projectId'] ?? $oldValue['projectId'] ?? 0;
+      if($projectId) {
+        $toUpdate['projectId'] = $projectId;
+        BaseSvc::getSvc('Project')->update($toUpdate);
+      }
     }catch(Exception $e){
       if(!contains($e->getMessage(), 'no update field') && !contains($e->getMessage(), 'no where condition')) {
         throw $e;
@@ -248,8 +277,11 @@ class ContractEngineeringSvc extends BaseSvc
 
     // update business
     try{
-      $toUpdate['id'] = $oldValue['businessId'];
-      BaseSvc::getSvc('Business')->update($toUpdate);
+      $businessId = $q['@businessId'] ?? $oldValue['businessId'] ?? 0;
+      if($businessId){
+        $toUpdate['id'] = $businessId;
+        BaseSvc::getSvc('Business')->update($toUpdate);  
+      }
     }catch(Exception $e){
       if(!contains($e->getMessage(), 'no update field') && !contains($e->getMessage(), 'no where condition')) {
         throw $e;
@@ -264,6 +296,8 @@ class ContractEngineeringSvc extends BaseSvc
         throw $e;
       }
     }
+    $res = $this->get($q);
+    $res['data'][0]['changed'] = $changed['data'];
     $mysql->commit();
     return $res;
   }
