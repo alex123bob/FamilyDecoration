@@ -25,6 +25,7 @@
 		$res['executedSqls'] = $mysql->executedSqls;
 	}
 	if(isset($res['data']) && is_array($res['data'])){
+		$res['status'] = $res['status'] ?? 'successful';
 		foreach ($res['data'] as $key => &$item) {
 			if(is_array($item)) {
 				foreach ($item as $key => &$value) {
