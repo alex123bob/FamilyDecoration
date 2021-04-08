@@ -8,7 +8,8 @@ Ext.define('FamilyDecoration.model.ContractEngineeringChangelog', {
             return arr.map(function(el){
                 var field = el.field,
                     oldVal = el.old,
-                    newVal = el.new;
+                    newVal = el.new,
+                    content;
                 var fieldMap = {
                     address: '工程地址',
                     captain: "项目经理",
@@ -25,8 +26,23 @@ Ext.define('FamilyDecoration.model.ContractEngineeringChangelog', {
                     startTime: "工程开始时间",
                     totalDays: "总工期",
                     totalPrice: "合同总额",
+                    additionals: '附加条款'
+                };
+                switch (field) {
+                    case 'additionals':
+                        content = '从 "' + JSON.parse(oldVal).join(', ') + '" 到 "' + JSON.parse(newVal).join(', ') + '"';
+                        break;
+
+                    case 'captain':
+                    case 'signatoryRep':
+                        content = '从 "' + JSON.parse(oldVal) + '" 到 "' + JSON.parse(newVal) + '"';
+                        break;
+                
+                    default:
+                        content = '从 "' + oldVal + '" 到 "' + newVal + '"';
+                        break;
                 }
-                return '更改"' + fieldMap[field] + '", 从"' + oldVal + '"到"' + newVal + '"';
+                return '更改"' + fieldMap[field] + '", ' + content;
             }).join('<br />');
         }},
         {name: 'creator', type: 'string'},

@@ -106,6 +106,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                                             {
                                                 xtype: 'gridpanel',
                                                 title: '改动记录',
+                                                cls: 'gridpanel-contractengineering-changelog',
                                                 flex: 1,
                                                 store: changeLogSt,
                                                 columns: {
