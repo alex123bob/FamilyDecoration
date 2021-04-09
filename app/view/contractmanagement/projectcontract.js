@@ -249,7 +249,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
 
         function updateContractField(field, evt) {
             if (me.contract) {
-                if (field.isDirty()) {
+                if (field.isDirty() && field.isValid()) {
                     ajaxUpdate('ContractEngineering', Ext.apply({}, {
                         id: me.contract.id,
                         [field.getName()]: field.getValue()
@@ -316,6 +316,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 fieldLabel: '联系方式',
                                 itemId: 'custContact',
                                 name: 'custContact',
+                                vtype: 'phone',
                                 value: me.contract ? me.contract.custContact : '',
                                 listeners: {
                                     blur: updateContractField

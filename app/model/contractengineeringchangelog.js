@@ -37,7 +37,26 @@ Ext.define('FamilyDecoration.model.ContractEngineeringChangelog', {
                     case 'signatoryRep':
                         content = '从 "' + JSON.parse(oldVal) + '" 到 "' + JSON.parse(newVal) + '"';
                         break;
-                
+
+                    case 'stages':
+                        content = '<br/>更改之前:<br/>';
+                        oldVal = JSON.parse(oldVal);
+                        content += oldVal.map(function(item){
+                            return item.name + ': ' + item.amount + ' [' + item.time + '].';
+                        }).join('<br/>');
+                        content += '<br/>更改之之后:<br/>';
+                        newVal = JSON.parse(newVal);
+                        content += newVal.map(function(item){
+                            return item.name + ': ' + item.amount + ' [' + item.time + '].';
+                        }).join('<br/>');
+                        break;
+
+                    case 'custRemark':
+                    case 'customer':
+                    case 'projectName':
+                        content = '从 "' + JSON.parse(oldVal) + '" 到 "' + JSON.parse(newVal) + '"';
+                        break;
+
                     default:
                         content = '从 "' + oldVal + '" 到 "' + newVal + '"';
                         break;
