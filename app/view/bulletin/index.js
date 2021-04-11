@@ -644,8 +644,8 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 id: 'gridpanel-bidproject',
                 name: 'gridpanel-bidproject',
                 backendSvc: 'BidProject',
-                canDelete: true,
-                canEdit: true,
+                canDelete: User.isAdmin(),
+                canEdit: User.isAdmin(),
                 columns: {
                     defaults: {
                         flex: 1,

@@ -104,6 +104,15 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                                         flex: 1,
                                         items: [
                                             {
+                                                tools: [
+                                                    {
+                                                        type: 'refresh',
+                                                        tooltip: '刷新',
+                                                        callback: function (){
+                                                            this.up('gridpanel').getStore().reload();
+                                                        }
+                                                    }
+                                                ],
                                                 xtype: 'gridpanel',
                                                 title: '改动记录',
                                                 cls: 'gridpanel-contractengineering-changelog',
@@ -128,6 +137,15 @@ Ext.define('FamilyDecoration.view.contractmanagement.Index', {
                                                 }
                                             },
                                             {
+                                                tools: [
+                                                    {
+                                                        type: 'refresh',
+                                                        tooltip: '刷新',
+                                                        callback: function (){
+                                                            this.up('gridpanel').getStore().reload();
+                                                        }
+                                                    }
+                                                ],
                                                 xtype: 'gridpanel',
                                                 title: '联系单',
                                                 flex: 1,
