@@ -114,11 +114,19 @@ table.pros td{
 /* entry and exit module class */
 
 tr.bill-paid .x-grid-td {
-    /*background-color: lightyellow;*/
+    background-color: #dedede;
+}
+
+tr.bill-paid.x-grid-row-over .x-grid-td {
+    background-color: #dff5fe;
+}
+
+tr.bill-paid.x-grid-row-selected .x-grid-td {
+    background-color: lightblue;
 }
 
 tr.bill-unpaid .x-grid-td {
-    background-color: lightblue;
+    /* background-color: lightblue; */
 }
 
 /* end of entry and exit module class */

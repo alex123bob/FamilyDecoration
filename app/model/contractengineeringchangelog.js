@@ -54,7 +54,15 @@ Ext.define('FamilyDecoration.model.ContractEngineeringChangelog', {
                     case 'custRemark':
                     case 'customer':
                     case 'projectName':
-                        content = '从 "' + JSON.parse(oldVal) + '" 到 "' + JSON.parse(newVal) + '"';
+                        try {
+                            oldVal = JSON.parse(oldVal);
+                            newVal = JSON.parse(newVal);
+                        }
+                        catch(e) {
+                            oldVal = oldVal;
+                            newVal = newVal;
+                        }
+                        content = '从 "' + oldVal + '" 到 "' + newVal + '"';
                         break;
 
                     default:

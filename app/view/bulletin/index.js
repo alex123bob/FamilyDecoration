@@ -665,11 +665,17 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                         var st = grid.getStore();
                                         var rec = st.getAt(rowIndex);
                                         if (rec.getId()) {
-                                            var win = Ext.create('FamilyDecoration.view.bulletin.BidDepositForm', {
-                                                isEdit: true,
-                                                rec: rec
+                                            ajaxGet('StatementBill', 'get', {
+                                                refId: rec.getId(),
+                                                billType: 'bidbond'
+                                            }, function(obj){
+                                                var win = Ext.create('FamilyDecoration.view.bulletin.BidDepositForm', {
+                                                    isEdit: true,
+                                                    bidProject: rec,
+                                                    rec: obj.data[0]
+                                                });
+                                                win.show();
                                             });
-                                            win.show();
                                         }
                                     }
                                 }
@@ -713,9 +719,10 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                             dataIndex: 'depositProperty',
                         },
                         {
-                            text: '保证金付款情况',
+                            text: '付款情况',
                             dataIndex: 'statementBillId',
-                            flex: 2
+                            flex: 1,
+                            editor: null
                         },
                         {
                             text: '代理机构',
