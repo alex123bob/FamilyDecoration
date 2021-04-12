@@ -720,9 +720,38 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                         },
                         {
                             text: '付款情况',
-                            dataIndex: 'statementBillId',
+                            dataIndex: 'billStatus',
                             flex: 1,
-                            editor: null
+                            editor: null,
+                            renderer: function(status){
+                                var statusName;
+                                switch (status) {
+                                    case 'new':
+                                        statusName = '未提交';
+                                        break;
+                    
+                                    case 'rdyck':
+                                        statusName = '已提交';
+                                        break;
+                    
+                                    case 'chk':
+                                        statusName = '<font color="green">已审核</font>';
+                                        break;
+                    
+                                    case 'paid':
+                                        statusName = '<font color="darkblue">已付款</font>';;
+                                        break;
+                    
+                                    case 'arch':
+                                        statusName = '<font color="darkgray">已归档</font>';
+                                        break;
+                                
+                                    default:
+                                        statusName = '';
+                                        break;
+                                }
+                                return statusName;
+                            }
                         },
                         {
                             text: '代理机构',
