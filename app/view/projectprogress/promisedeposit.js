@@ -11,7 +11,6 @@ Ext.define('FamilyDecoration.view.projectprogress.PromiseDeposit', {
     resizable: false,
     width: 500,
     height: 400,
-    isEdit: false,
     
     title: '申请履约保证金',
     
@@ -19,7 +18,8 @@ Ext.define('FamilyDecoration.view.projectprogress.PromiseDeposit', {
     rec: null,
 
     initComponent: function() {
-        var me = this;
+        var me = this,
+            rec = me.rec;
 
         me.items = [
             {
@@ -29,7 +29,7 @@ Ext.define('FamilyDecoration.view.projectprogress.PromiseDeposit', {
                 defaults: {
                     anchor: '100%',
                     allowBlank: false,
-                    readOnly: !me.isEdit,
+                    readOnly: rec ? true : false
                 },
 
                 items: [
@@ -37,7 +37,7 @@ Ext.define('FamilyDecoration.view.projectprogress.PromiseDeposit', {
                         fieldLabel: '工程名称',
                         name: 'projectName',
                         readOnly: true,
-                        value: me.rec.get('projectName')
+                        value: rec.projectName
                     },
                     {
                         fieldLabel: '保证金金额',
@@ -76,6 +76,7 @@ Ext.define('FamilyDecoration.view.projectprogress.PromiseDeposit', {
 
         me.buttons = [
             {
+                hidden: rec ? rec.status !== 'new' : false,
                 text: '申请',
                 handler: function() {
                     var frm = me.down('form'),
@@ -91,6 +92,7 @@ Ext.define('FamilyDecoration.view.projectprogress.PromiseDeposit', {
                 }
             },
             {
+                hidden: !( (User.isAdmin() || User.isFinanceManager()) && rec && rec.status === 'rdyck' ),
                 text: '批准',
                 handler: function() {
 

@@ -489,8 +489,9 @@
             else if (rec.get('cmp') == 'account-index') {
                 flag = User.isAdmin() ? true : false;
             }
+            // no quality guarantee deposit modules anymore.
             else if (rec.get('cmp') == 'qualityguaranteedepositmgm-index') {
-                flag = User.isAdmin() ? true : false;
+                flag = false;
             }
             else if (rec.get('cmp') == 'planlabor-index') {
                 flag = User.isGeneral() || User.isSupplier() ? false : true;

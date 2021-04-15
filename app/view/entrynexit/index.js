@@ -93,9 +93,13 @@ Ext.define('FamilyDecoration.view.entrynexit.Index', {
                                     value: '税费'
                                 },
                                 {
-                                    name: 'qualityGuaranteeDeposit',
-                                    value: '质保金'
+                                    name: 'deposit:out',
+                                    value: '保证金（出账）'
                                 }
+                                // {
+                                //     name: 'qualityGuaranteeDeposit',
+                                //     value: '质保金'
+                                // }
                             ],
                             proxy: {
                                 type: 'memory',
@@ -122,6 +126,10 @@ Ext.define('FamilyDecoration.view.entrynexit.Index', {
                             fields: ['name', 'value'],
                             data: [
                                 {
+                                    name: 'deposit:in',
+                                    value: '保证金（入账）'
+                                },
+                                {
                                     name: 'designDeposit',
                                     value: '设计定金'
                                 },
@@ -136,7 +144,7 @@ Ext.define('FamilyDecoration.view.entrynexit.Index', {
                                 {
                                     name: 'other',
                                     value: '其他'
-                                }
+                                },
                             ],
                             proxy: {
                                 type: 'memory',

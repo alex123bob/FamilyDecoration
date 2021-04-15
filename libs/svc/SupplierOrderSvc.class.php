@@ -178,7 +178,7 @@ class SupplierOrderSvc extends BaseSvc
  			//两小时内不用重复校验.
  			return array('status'=>'successful','type' =>'checked','errMsg' => '','hint' => '您已校验过手机验证码,2小时内无需重复校验.');
 		}
-		$limit = $mysql->DBGetAsOneArray("select paramValue*10000 from system where paramName = 'msg_notice_value_limit' ");
+		$limit = $mysql->DBGetAsOneArray("select paramValue*10000 from `system` where paramName = 'msg_notice_value_limit' ");
 		if($limit[0] <= $bill['totalFee']){
 			if(!isset($_SESSION['phone']) || strlen($_SESSION['phone']) != 11){
 				throw new BaseException('手机号不对,请联系管理员修改!');

@@ -249,7 +249,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
 
         function updateContractField(field, evt) {
             if (me.contract) {
-                if (field.isDirty()) {
+                if (field.isDirty() && field.isValid()) {
                     ajaxUpdate('ContractEngineering', Ext.apply({}, {
                         id: me.contract.id,
                         [field.getName()]: field.getValue()
@@ -316,6 +316,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                 fieldLabel: '联系方式',
                                 itemId: 'custContact',
                                 name: 'custContact',
+                                vtype: 'phone',
                                 value: me.contract ? me.contract.custContact : '',
                                 listeners: {
                                     blur: updateContractField
@@ -381,8 +382,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                                         if (rec.get('name') != captainName.getValue()) {
                                                             ajaxUpdate('ContractEngineering', Ext.apply({}, {
                                                                 id: me.contract.id,
-                                                                captainName: captainName.getValue(),
-                                                                captain: cmp.getValue()
+                                                                captainName: rec.get('name'),
+                                                                captain: rec.get('realname')
                                                             }), ['id'], function(obj) {
                                                                 showMsg('更新成功!');
                                                             });
@@ -424,8 +425,8 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
                                                     if (rec.get('name') != signatoryRepName.getValue()) {
                                                         ajaxUpdate('ContractEngineering', Ext.apply({}, {
                                                             id: me.contract.id,
-                                                            signatoryRepName: signatoryRepName.getValue(),
-                                                            signatoryRep: cmp.getValue()
+                                                            signatoryRepName: rec.get('name'),
+                                                            signatoryRep: rec.get('realname')
                                                         }), ['id'], function(obj) {
                                                             showMsg('更新成功!');
                                                         });
@@ -803,9 +804,7 @@ Ext.define('FamilyDecoration.view.contractmanagement.ProjectContract', {
             {
                 afterrender: function(cmp, opts){
                     if (this.contract) {
-                        this.down('form').down('[name="additionals"]').renderItems(me.contract.additionals.map(function(item){
-                            return item.content;
-                        }));
+                        this.down('form').down('[name="additionals"]').renderItems(me.contract.additionals);
                     }
                 }
             }

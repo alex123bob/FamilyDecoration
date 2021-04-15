@@ -109,7 +109,7 @@ class StatementBillSvc extends BaseSvc
  			//两小时内不用重复校验.
  			return array('status'=>'successful','type' =>'checked','errMsg' => '','hint' => '您已校验过手机验证码,2小时内无需重复校验.');
 		}
-		$limit = $mysql->DBGetAsOneArray("select paramValue*10000 from system where paramName = 'msg_notice_value_limit' ");
+		$limit = $mysql->DBGetAsOneArray("select paramValue*10000 from `system` where paramName = 'msg_notice_value_limit' ");
 		if($limit[0] <= $bill['totalFee']){
 			if(!isset($_SESSION['phone']) || strlen($_SESSION['phone']) != 11){
 				throw new BaseException('手机号不对,请联系管理员修改!');
@@ -136,7 +136,7 @@ class StatementBillSvc extends BaseSvc
  			return;
 		}
 		global $mysql;
-		$limit = $mysql->DBGetAsOneArray("select paramValue*10000 from system where paramName = 'msg_notice_value_limit' ");
+		$limit = $mysql->DBGetAsOneArray("select paramValue*10000 from `system` where paramName = 'msg_notice_value_limit' ");
 		if($limit[0] <= $bill['totalFee']){
 			//需要短信验证
 			if($q['validateCode'] !=  $_SESSION['validateCode']){
@@ -169,8 +169,8 @@ class StatementBillSvc extends BaseSvc
 		$q['@status'] = (int)$q['@status'];
 		$targetStatus = $this->getStatusTransferChain($bill['billType'],$bill['status'],$q['@status']);
 		// 1:forward -1:backward
-		//检查额度,检查安全密码,如果超过一定额度要检查短信  质保金暂不检查
-		if($bill['billType'] != 'qgd')
+		//检查额度,检查安全密码,如果超过一定额度要检查短信  质保金,投标保证金，履约保证集暂不检查
+		if (!in_array($bill['billType'], ['qgd', 'bidbond', 'pmbond']))
 			$this->checkLimit($q,$bill);
 
 		$auditRecord = array();
@@ -211,7 +211,7 @@ class StatementBillSvc extends BaseSvc
 		$newStatus = $q['@status'];
 		$newStatusCh = StatementBillSvc::$ALL_STATUS[$newStatus];
 		//获取短信模板,及需要提前几天提醒的天数
-		$text = $mysql->DBGetAsOneArray("select paramValue from system where paramName = 'msg_notice_bill_status_change'");
+		$text = $mysql->DBGetAsOneArray("select paramValue from `system` where paramName = 'msg_notice_bill_status_change'");
 		$text = $text[0];
 		//您好,{申请人}的财务订单{单号}已被{某人}变更文{现状态}!
 		$text = str_replace('{申请人}',$bill['payee'],$text);

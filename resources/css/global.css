@@ -68,7 +68,7 @@ table.pros td{
 .gridpanel-entrynexitboard .x-grid-cell-inner, .gridpanel-requestGrid .x-grid-cell-inner,
 .gridpanel-historyGrid .x-grid-cell-inner, .gridpanel-qgdList .x-grid-cell-inner,
 .gridpanel-editbillitemremark .x-grid-cell-inner, .gridpanel-materialorderlist .x-grid-cell-inner,
-.gridpanel-paymentbillcheck .x-grid-cell-inner {
+.gridpanel-paymentbillcheck .x-grid-cell-inner, .gridpanel-contractengineering-changelog .x-grid-cell-inner {
   white-space: normal;
   word-wrap: break-word;
 }
@@ -114,11 +114,19 @@ table.pros td{
 /* entry and exit module class */
 
 tr.bill-paid .x-grid-td {
-    /*background-color: lightyellow;*/
+    background-color: #dedede;
+}
+
+tr.bill-paid.x-grid-row-over .x-grid-td {
+    background-color: #dff5fe;
+}
+
+tr.bill-paid.x-grid-row-selected .x-grid-td {
+    background-color: lightblue;
 }
 
 tr.bill-unpaid .x-grid-td {
-    background-color: lightblue;
+    /* background-color: lightblue; */
 }
 
 /* end of entry and exit module class */
