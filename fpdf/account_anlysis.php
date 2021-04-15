@@ -27,7 +27,6 @@ $logs = $logs['data'];
 $action = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "view";
 $pdf=new PDF('P','mm', 'A4'); //创建新的FPDF对象 
 $pdf->AddGBFont(); //设置中文字体 
-$pdf->Open(); //开始创建PDF 
 $pdf->AddPage(); //增加一页 
 $pdf->SetFont("GB",$GfontStyle,$GfontSize); //设置字体样式 
 $pdf->AliasNbPages("__totalPage__");
