@@ -67,8 +67,7 @@ class StatementBillSvc extends BaseSvc
 			if($res['data'][0]['settled'] != 0){
 				throw new BaseException('项目'.$res['data'][0]['projectName'].' 已被标记为结算完成,无法添加单据!');
 			}
-		}
-		if($q['@billType'] == 'bidbond' && !isset($q['@projectId'])){
+		}else{
 			$q['@projectId'] = '-1';
 		}
 		$res = parent::add($q);

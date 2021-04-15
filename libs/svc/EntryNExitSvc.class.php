@@ -83,6 +83,12 @@ class EntryNExitSvc{
 
   private function parseData($sql,$q){
     global $mysql;
+    if(isset($q['startTime']) && $q['startTime'] != '') {
+      $sql .= ' and b.createTime >= "'.$q['startTime'].'"'; 
+    }
+    if(isset($q['endTime']) && $q['endTime'] != '') {
+      $sql .= ' and b.createTime <= "'.$q['endTime'].'"'; 
+    }
     $count = $mysql->DBGetAsOneArray("select count(1) as cnt from ( $sql ) as temp limit 0,1 ")[0];
     $thisSql = $sql;
     //sort:[{"property":"c0","direction":"ASC"}]
@@ -115,7 +121,7 @@ class EntryNExitSvc{
       $sql .= ' and b.id like \'%'.$q['c0'].'%\'';
     }
     if(isset($q['payee']) && $q['payee'] != ""){
-      $sql .= ' and b.payee like \'%'.$q['payee'].'%\'';
+      $sql .= ' and (b.payee like \'%'.$q['payee'].'%\' or u2.realName like \'%'.$q['payee'].'%\' or b.projectName like \'%'.$q['payee'].'%\')';
     }
     return $this->parseData($sql,$q);
   }
@@ -140,7 +146,7 @@ class EntryNExitSvc{
       $sql .= ' and b.id like \'%'.$q['c0'].'%\'';
     }
     if(isset($q['payee']) && $q['payee'] != ""){
-      $sql .= ' and b.payee like \'%'.$q['payee'].'%\'';
+      $sql .= ' and (b.payee like \'%'.$q['payee'].'%\' or b.projectName like \'%'.$q['payee'].'%\' or u2.realName like \'%'.$q['payee'].'%\' )';
     }
     return $this->parseData($sql,$q);
   }
@@ -158,6 +164,12 @@ class EntryNExitSvc{
             "b.descpt as c8, ".
             "b.status  ".
         "FROM statement_bill b left join user u on u.name = b.payer WHERE b.isDeleted = 'false' AND b.billType = 'qgd' and (status = 'paid' or status = 'chk') ";
+    if(isset($q['c0']) && $q['c0'] != ""){
+      $sql .= ' and b.id like \'%'.$q['c0'].'%\'';
+    }
+    if(isset($q['payee']) && $q['payee'] != ""){
+      $sql .= ' and b.payee like \'%'.$q['payee'].'%\'';
+    }
     $res = $this->parseData($sql,$q);
     return $res;
   }
@@ -177,13 +189,17 @@ class EntryNExitSvc{
           "paidTime as c10, ".
           "b.status, ".
           "u.realName as c11 from statement_bill b left join profession_type t on b.professionType = t.value left join user u on u.name = b.payer ". 
-          "where b.isDeleted = 'false' and (b.billType = 'reg' or b.billType = 'ppd') and ( b.status = 'paid' or b.status = 'chk') ";
+          "where b.isDeleted = 'false' and (b.billType = 'reg' or b.billType = 'ppd') ";
+    $appendStatus = " and ( b.status = 'paid' or b.status = 'chk')";
     if(isset($q['c0']) && $q['c0'] != ""){
       $sql .= ' and b.id like \'%'.$q['c0'].'%\'';
+      $appendStatus = '';
     }
     if(isset($q['payee']) && $q['payee'] != ""){
       $sql .= ' and b.payee like \'%'.$q['payee'].'%\'';
+      $appendStatus = '';
     }
+    $sql .= $appendStatus;
     if(!isset($q['sort']))
       $q['sort'] = '[{"property":"status","direction":"asc"}]';
     $res = $this->parseData($sql,$q);
@@ -246,7 +262,7 @@ class EntryNExitSvc{
       $sql .= ' and b.id like \'%'.$q['c0'].'%\'';
     }
     if(isset($q['payee']) && $q['payee'] != ""){
-      $sql .= ' and b.payee like \'%'.$q['payee'].'%\'';
+      $sql .= ' and ( b.payee like \'%'.$q['payee'].'%\' or s.name like \'%'.$q['payee'].'%\')';
     }
     return $this->parseData($sql,$q);
   }
@@ -265,13 +281,21 @@ class EntryNExitSvc{
           "b.reimbursementReason as c9, ".
           "b.status ".
           "from statement_bill b left join user u on u.name = b.payer left join user u2 on u2.name = b.payee  ".
-          "where b.billType = 'rbm' and b.isDeleted = 'false' and  ( b.status = 'paid' or b.status = 'chk')";
+          "where b.billType = 'rbm' and b.isDeleted = 'false' ";
+    $appendStatus = " and ( b.status = 'paid' or b.status = 'chk')";
     if(isset($q['c0']) && $q['c0'] != ""){
       $sql .= ' and b.id like \'%'.$q['c0'].'%\'';
+      $appendStatus = '';
     }
     if(isset($q['payee']) && $q['payee'] != ""){
-      $sql .= ' and b.payee like \'%'.$q['payee'].'%\'';
+      $sql .= ' and (b.payee like \'%'.$q['payee'].'%\' or u2.realName like \'%'.$q['payee'].'%\') ';
+      $appendStatus = '';
     }
+    if(isset($q['status']) && $q['status'] != ""){
+      $appendStatus = " and b.status = '".$q['status']."'";
+    }
+
+    $sql .=  $appendStatus;
     return $this->parseData($sql,$q);
   }
   //贷款出账

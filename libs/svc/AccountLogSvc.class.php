@@ -18,6 +18,21 @@ class AccountLogSvc extends BaseSvc
 		'add'=>'新增账户',
 		'self'=>'转账',
 		'other'=>'其他');
+
+	public function getLogInfos($q){
+		notNullCheck($q,'id','记录编号不能为空!');
+		$res = $this->get($q);
+		if($res['total'] == 0) {
+			throw new BaseException('找不到记录!');
+		}
+		$log = $res['data'][0];
+		if($log['refType'] === 'loan'){
+			$res = parent::getSvc('Loan')->get(array('id'=> $log['refId']));
+		}else{
+			$res = parent::getSvc('StatementBill')->get(array('id'=> $log['refId']));
+		}
+		return $res;		
+	}
 	
 	public function get($q){
 		if(!isset($q['orderby'])){
