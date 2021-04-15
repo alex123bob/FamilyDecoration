@@ -12,16 +12,16 @@ $FirstCellWidth=array(11,46,8,12,107);
 $CellWidth 	= $FirstCellWidth;
 $lineHeight 	= 6;
 $titleLeft      = array(17,42,72.5,82,141);
-//È«¾Ö×ÖÌå
+//È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 $GfontSize		= 10;
 $GfontStyle		= ''; // B bold,U:underline
-//´óÏî×ÖÌå
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 $bigItemFontSize = 11;
 $bigItemFontStyles = array_fill(0,14,'B');
-//Ð¡¼Æ×ÖÌå
+//Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 $smallCountFontSize = 10;
 $smallCountFontStyles = array_fill(0,14,'');
-//OPQRST×ÖÌåÑùÊ½
+//OPQRSTï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½
 $NOPQRSTFontSize = 10;
 $NOPQRSTFontStyles = array_fill(0,14,'');
 
@@ -44,11 +44,10 @@ $projectComments = str2GBK(urldecode($budget[0]["comments"]));
 $action = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "download";
 $rows = 5;
 $budgetItems = getBudgetItemsByBudgetId($_REQUEST["budgetId"],true);
-$pdf=new PDF('P','mm', 'A4'); //´´½¨ÐÂµÄFPDF¶ÔÏó 
-$pdf->AddGBFont(); //ÉèÖÃÖÐÎÄ×ÖÌå 
-$pdf->Open(); //¿ªÊ¼´´½¨PDF 
-$pdf->AddPage(); //Ôö¼ÓÒ»Ò³ 
-$pdf->SetFont("GB",$GfontStyle,$GfontSize); //ÉèÖÃ×ÖÌåÑùÊ½ 
+$pdf=new PDF('P','mm', 'A4'); //ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½FPDFï¿½ï¿½ï¿½ï¿½ 
+$pdf->AddGBFont(); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
+$pdf->AddPage(); //ï¿½ï¿½ï¿½ï¿½Ò»Ò³ 
+$pdf->SetFont("GB",$GfontStyle,$GfontSize); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ 
 $pdf->AliasNbPages("__totalPage__");
 //echo $custName.":".$projectName;
 foreach($budgetItems as $bItem){
@@ -61,25 +60,25 @@ foreach($budgetItems as $bItem){
 	$amount = $bItem["itemAmount"];
 	$itemCode = $bItem["itemCode"];
 	$itemName = $bItem["itemName"];
-	if($itemName == 'Ð¡¼Æ' || in_array($itemCode,array('N','O','P','Q','R','S'))){
+	if($itemName == 'Ð¡ï¿½ï¿½' || in_array($itemCode,array('N','O','P','Q','R','S'))){
 		continue;
 	}
 	$remark = trim($bItem["remark"], '<br />');
 	
 	$data = array($itemCode,$itemName,$bItem["itemUnit"],$amount,$remark);
 	$fontStyles = array_fill(0,$rows,$GfontStyle);
-	$fontSizes = array_fill(0,$rows-1,$GfontSize); //14ÁÐ,ÕâÀï13ÁÐ×ÖÌåÒ»ÖÂ,14ÁÐ±¸×¢ÉÔÐ¡
+	$fontSizes = array_fill(0,$rows-1,$GfontSize); //14ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½13ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½,14ï¿½Ð±ï¿½×¢ï¿½ï¿½Ð¡
 	array_push($fontSizes,8);
 	$borders = array('LB','LB','LB','LB','LBR');
 	$align = array('C','L','C','C','L');
 	
 
-	//Êä³ö´óÏî
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	if(strlen($itemCode) == 1){
 		$fontSizes = array_fill(0,$rows,$bigItemFontSize);
 		$fontStyles = $bigItemFontStyles;
 	}
-	//Ð¡¼ÆºóÃæ¿ÕÐÐ
+	//Ð¡ï¿½Æºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	if ($itemCode != "A" && $bItem["basicItemId"] != "" && $bItem["basicSubItemId"] == "") {
 		$pdf->writeCellLine($CellWidth,array("","","","",""),$borders,0,$align,$rows,$fontSizes);
 	}

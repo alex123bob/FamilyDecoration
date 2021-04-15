@@ -123,6 +123,7 @@ function GetStringWidth($s)
 
 function GetMBStringWidth($s){
 	// Multi-byte version of GetStringWidth()
+	$s = $s.'';
 	$l = 0;
 	$cw = &$this->CurrentFont['cw'];
 	$nb = strlen($s);
@@ -141,7 +142,7 @@ function GetMBStringWidth($s){
 	return $res;
 }
 
-function MultiCell($w, $h, $txt, $border=0, $align='L', $fill=0,$thisLineHeight)
+function MultiCell($w, $h, $txt, $border=0, $align='L', $fill=0, $thisLineHeight)
 {
 	if($this->CurrentFont['type']=='Type0'){
 		return $this->MBMultiCell($w,$h,$txt,$border,$align,$fill,$thisLineHeight);

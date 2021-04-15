@@ -9,7 +9,7 @@ if(strpos($_SERVER["HTTP_USER_AGENT"],"Safari") && !strpos($_SERVER["HTTP_USER_A
 }
 
 $lineHeight 	= 6;
-//È«¾Ö×ÖÌå
+//È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 $GfontSize		= 10;
 $GfontStyle		= ''; // B bold,U:underline
 
@@ -21,14 +21,13 @@ include_once 'pdf_chinese_salary.php';
 $salarySvc = BaseSvc::getSvc('StaffSalary');
 $salaries = $salarySvc->get($_REQUEST);
 $action = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "view";
-$pdf=new PDF('P','mm', 'A4'); //´´½¨ÐÂµÄFPDF¶ÔÏó 
-$pdf->AddGBFont(); //ÉèÖÃÖÐÎÄ×ÖÌå 
-$pdf->Open(); //¿ªÊ¼´´½¨PDF 
-$pdf->AddPage(); //Ôö¼ÓÒ»Ò³ 
-$pdf->SetFont("GB",$GfontStyle,$GfontSize); //ÉèÖÃ×ÖÌåÑùÊ½ 
+$pdf=new PDF('P','mm', 'A4'); //ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½FPDFï¿½ï¿½ï¿½ï¿½ 
+$pdf->AddGBFont(); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
+$pdf->AddPage(); //ï¿½ï¿½ï¿½ï¿½Ò»Ò³ 
+$pdf->SetFont("GB",$GfontStyle,$GfontSize); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ 
 $pdf->AliasNbPages("__totalPage__");
 $pdf->ln();
-$titles = array('ÐÕÃû','µ×Ð½','Ìá³É','È«ÇÚ','½±Àø','Î¥¿Û','ºÏ¼Æ','ÎåÏÕ','¹«»ý½ð','¸öË°','ÆäËû','Êµ·¢');
+$titles = array('ï¿½ï¿½ï¿½ï¿½','ï¿½ï¿½Ð½','ï¿½ï¿½ï¿½','È«ï¿½ï¿½','ï¿½ï¿½ï¿½ï¿½','Î¥ï¿½ï¿½','ï¿½Ï¼ï¿½','ï¿½ï¿½ï¿½ï¿½','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½','ï¿½ï¿½Ë°','ï¿½ï¿½ï¿½ï¿½','Êµï¿½ï¿½');
 $widths = array(20,15,15,15,15,15,15,15,15,15,15,15,15);
 $aligns = array('C','C','C','C','C','C','C','C','C','C','C','C');
 $pdf->writeCellLine($widths,$titles,'LTBR','',$aligns,12,10,$fontStyles = array());
@@ -50,6 +49,6 @@ foreach($salaries['data'] as $record) {
 	);
 	$pdf->writeCellLine($widths,$data,'LTBR','',$aligns,12,10,$fontStyles = array());
 }
-$name = '¼Ñ³Ï×°ÊÎ'.$_REQUEST['year'].'Äê'.$_REQUEST['month'].'ÔÂ'.str2GBK($_REQUEST['depasName']).'¹¤×Ê±í.pdf';
+$name = 'ï¿½Ñ³ï¿½×°ï¿½ï¿½'.$_REQUEST['year'].'ï¿½ï¿½'.$_REQUEST['month'].'ï¿½ï¿½'.str2GBK($_REQUEST['depasName']).'ï¿½ï¿½ï¿½Ê±ï¿½.pdf';
 $pdf->Output($name, $action == "view" ? "I" : "D" );
 ?>  

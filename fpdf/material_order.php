@@ -11,7 +11,7 @@ if(strpos($_SERVER["HTTP_USER_AGENT"],"Safari") && !strpos($_SERVER["HTTP_USER_A
 global $name,$phone,$times,$address,$totalFee,$captain,$finishPercentage,$cny,$billId; 
 
 $lineHeight 	= 6;
-//È«¾Ö×ÖÌå
+//È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 $GfontSize		= 10;
 $GfontStyle		= ''; // B bold,U:underline
 
@@ -52,13 +52,12 @@ $cny = str2GBK(cny($totalFee));
 $billItems = $billItemSvc->get(array('billId'=>$_REQUEST['id']));
 $billItems = $billItems['data'];
 $action = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "view";
-$pdf=new PDF('P','mm', 'A4'); //´´½¨ÐÂµÄFPDF¶ÔÏó 
-$pdf->AddGBFont(); //ÉèÖÃÖÐÎÄ×ÖÌå 
-$pdf->Open(); //¿ªÊ¼´´½¨PDF 
-$pdf->AddPage(); //Ôö¼ÓÒ»Ò³ 
-$pdf->SetFont("GB",$GfontStyle,$GfontSize); //ÉèÖÃ×ÖÌåÑùÊ½ 
+$pdf=new PDF('P','mm', 'A4'); //ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½FPDFï¿½ï¿½ï¿½ï¿½ 
+$pdf->AddGBFont(); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
+$pdf->AddPage(); //ï¿½ï¿½ï¿½ï¿½Ò»Ò³ 
+$pdf->SetFont("GB",$GfontStyle,$GfontSize); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ 
 $pdf->AliasNbPages("__totalPage__");
-$titles = array('ÐòºÅ','ÏîÄ¿','µ¥Î»','ÊýÁ¿','µ¥¼Û(Ôª)','Ð¡¼Æ(Ôª)');
+$titles = array('ï¿½ï¿½ï¿½','ï¿½ï¿½Ä¿','ï¿½ï¿½Î»','ï¿½ï¿½ï¿½ï¿½','ï¿½ï¿½ï¿½ï¿½(Ôª)','Ð¡ï¿½ï¿½(Ôª)');
 $widths = array(10,80,20,20,20,35);
 $aligns = array('C','C','C','C','C','C');
 $pdf->writeCellLine($widths,$titles,'LTBR','','C',6,10,$fontStyles = array());
@@ -78,7 +77,7 @@ foreach($billItems as $value) {
 global $lineHeight;
 $before = $lineHeight;
 $lineHeight = 12;
-$pdf->writeCellLine($widths,array('','ºÏ¼Æ','','','',$totalBillCount),'LTBR','','C',6,10,$fontStyles = array());
+$pdf->writeCellLine($widths,array('','ï¿½Ï¼ï¿½','','','',$totalBillCount),'LTBR','','C',6,10,$fontStyles = array());
 $lineHeight = $before;
 
 $pdf->Cell(10,5,'','L','','L');
@@ -89,13 +88,13 @@ $pdf->Cell(175,5,'','R','','L');
 $pdf->ln();
 
 $pdf->Cell(10,5,'','L','','L');
-$pdf->Cell(115,5,'´óÐ´½ð¶î: '.str2GBK(cny($totalBillCount)),'','','L');
-$pdf->Cell(60,5,'¹©Ó¦ÉÌ(Ç©×Ö):','R','','L');
+$pdf->Cell(115,5,'ï¿½ï¿½Ð´ï¿½ï¿½ï¿½: '.str2GBK(cny($totalBillCount)),'','','L');
+$pdf->Cell(60,5,'ï¿½ï¿½Ó¦ï¿½ï¿½(Ç©ï¿½ï¿½):','R','','L');
 $pdf->ln();
 
 $pdf->Cell(10,5,'','L','','L');
 $pdf->Cell(145,5,'','','','L');
-$pdf->Cell(30,5,'Äê     ÔÂ      ÈÕ','R','','L');
+$pdf->Cell(30,5,'ï¿½ï¿½     ï¿½ï¿½      ï¿½ï¿½','R','','L');
 $pdf->ln();
 $pdf->Cell(10,5,'','LB','','L');
 $pdf->Cell(175,5,'','RB','','L');
@@ -113,7 +112,7 @@ foreach ($audits['data'] as $key => $item) {
 		array_push($auditstr, $s);
 	}
 }
-$pdf->Cell(0,8,"ÉóºËÈË : ".join('¡ú', $auditstr));
+$pdf->Cell(0,8,"ï¿½ï¿½ï¿½ï¿½ï¿½ : ".join('ï¿½ï¿½', $auditstr));
 
 $pdf->Ln();
 $pdf->Cell(11,21,"");
