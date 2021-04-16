@@ -112,8 +112,12 @@ class BaseSvc{
 		return $uuid;
 	}
 
-	public static function parseLimitSql($q){
-		return isset($q['limit']) && trim($q['limit']) != "" ? " limit ".$q['start'].",".$q['limit'] : "";
+	public static function parseLimitSql($q, $qryResultCount = 100){
+		$res = isset($q['limit']) && trim($q['limit']) != "" ? " limit ".$q['start'].",".$q['limit'] : "";
+		if($qryResultCount > 100 && $res === '') {
+			$res = 'limit 0, 25';
+		}
+		return $res;
 	}
 
 	public function parseSelectSql($q,$tableName = ""){
@@ -232,7 +236,6 @@ class BaseSvc{
 		$limit = "";
 		$params = array();
 		$where = $this->parseWhereSql($this->tableName.'.',$q,$params);
-		$limit = $this->parseLimitSql($q);
 		$orderBy = $this->parseOrderBySql($q);	
 
 		$select = 'select count(1) as count from '.$this->tableName;
@@ -244,6 +247,7 @@ class BaseSvc{
 		if($count[0] == 0){
 			return array('total'=>0,'data'=>array());
 		}
+		$limit = $this->parseLimitSql($q, $count[0]);
 		$select = $this->parseSelectSql($q);
 		$sql = $select.' '.$this->appendJoin.' '.$where.$this->appendWhere.$orderBy.$limit;
 		$row = $mysql->DBGetAsMap($sql,$params);

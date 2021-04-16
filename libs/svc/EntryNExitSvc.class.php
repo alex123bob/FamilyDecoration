@@ -17,15 +17,37 @@ class EntryNExitSvc{
       case 'projectFee': return $this->projectFee($q);
       case 'loan': return $this->loan($q);  //贷款入账
       case 'financialFee': return $this->financialFee($q); //贷款出账
+      case 'depositOut': return $this->depositOut($q);   //投标保证金出账
+      case 'depositIn': return $this->depositIn($q);   //投标保证金入账
       case 'other': return $this->other($q);
       default:throw new Exception("unknown type:  ".$q['type']);
     }
+  }
+
+  private function depositOut($q){
+    $q['billType'] = 'bidbond';
+    return BaseSvc::getSvc('StatementBill')->get($q);
+  }
+
+  private function depositIn($q){
+    $q['billType'] = 'bidbondBk';
+    return BaseSvc::getSvc('StatementBill')->get($q);
   }
 
   public function getpayheader($q){
     global $mysql;
     $res = array();
     switch($q['type']){
+      case 'depositOut':
+      case 'depositIn':
+        $qry = BaseSvc::getSvc('StatementBill')->get($q);
+        array_push($res, array('k'=>'工程名称','v'=>$qry['data'][0]['projectName']));
+        array_push($res, array('k'=>'申请人','v'=>$qry['data'][0]['creatorRealName']));
+        array_push($res, array('k'=>'领款人','v'=>$qry['data'][0]['accountName'].' '.$qry['data'][0]['bank'].'('.$qry['data'][0]['accountNumber'].')'));
+        array_push($res, array('k'=>'付款时间','v'=>$qry['data'][0]['paidTime']));
+        array_push($res, array('k'=>'联系人','v'=> $qry['data'][0]['payee']));
+        array_push($res, array('k'=>'联系方式','v'=>$qry['data'][0]['phoneNumber']));
+        return $res;
       case 'financialFee': return $this->financialFee($q); //贷款出账
       case 'companyBonus': 
         $sql = "select u.realName,u.phone,b.claimAmount,b.reimbursementReason,b.projectName from statement_bill b left join user u on u.name = b.payee where b.id = '?' ";
@@ -102,6 +124,8 @@ class EntryNExitSvc{
     $res = array('status'=>'successful','data'=>$data,'total'=>$count);
     return $res;
   }
+
+  
   private function companyBonus($q){
     global $mysql;
     $sql = "select b.id as c0, ".

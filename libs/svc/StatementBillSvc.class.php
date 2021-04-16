@@ -1,13 +1,13 @@
 <?php
 class StatementBillSvc extends BaseSvc
 {
-	//账单类型  dsdpst:设计定金，pjtf:工程款，贷款(loan表)，other:其他四个是入账。其他都是出账
+	//账单类型  dsdpst:设计定金，pjtf:工程款，贷款(loan表)，other:其他, bidbondBk:投标保证金（退回）四个是入账。其他都是出账
 	public static $BILLTYPE = array('bidbond'=> '投标保证金', 'ppd'=>'预付款','reg'=>'工人工资','stfs'=>'员工工资','dsdpst'=>'设计定金','qgd'=>'质量保证金','fdf'=>'财务费用(TODO)','pjtf'=>'工程款','mtf'=>'材料付款','rbm'=>'报销','wlf'=>'福利','tax'=>'公司税务','other'=>'其他');
 	public static $ALL_STATUS = array('applied'=>'已申请付款','new'=>'未提交','checked'=>'验收通过','rdyck'=>'待审核','rdyck1'=>'待一审','rdyck2'=>'待二审','rdyck3'=>'待三审','rdyck4'=>'待四审','rdyck5'=>'待五审','chk'=>'审核通过','paid'=>'已付款','returned'=>'已退单','accepted'=>'已收款','arch'=>'已归档');
 
 	//账单状态变化
 	public static $STATUSMAPPING = array(
-		'dsdpst'=> array('new','accepted','returned'),
+		'dsdpst'=> array('new','accepted','returned', 'arch'),
 		'ppd'=> array('new','rdyck1','rdyck2','rdyck3','rdyck4','chk','paid','arch'),
 		'mtf'=>array('rdyck1','rdyck2','chk','paid','arch'),
 		'reg'=> array('new','rdyck1','rdyck2','rdyck3','rdyck4','chk','paid','arch'),
@@ -17,7 +17,8 @@ class StatementBillSvc extends BaseSvc
 		'tax'=> array('new','rdyck','chk','paid','arch'),
 		'splo'=> array('new','rdyck','chk','checked','applied'),
 		'stfs'=>array('new','rdyck','chk','paid','arch'),
-		'bidbond'=>array('new','rdyck','chk','paid','arch'),
+		'bidbond'=>array('new','rdyck','chk','paid','returned', 'arch'), //投标保证金
+		'bidbondBk'=>array('new','rdyck','chk','paid','arch'), //投标保证金（退回）
 	);
 
 	public function get($q){
