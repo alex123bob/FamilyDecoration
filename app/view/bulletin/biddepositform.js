@@ -70,7 +70,7 @@ Ext.define('FamilyDecoration.view.bulletin.BidDepositForm', {
                         fieldLabel: '账号名称',
                         name: 'accountName',
                         readOnly: rec ? true : false,
-                        value: rec ? rec.accountNumber : ''
+                        value: rec ? rec.accountName : ''
                     },
                     {
                         fieldLabel: '开户行',
