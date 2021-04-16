@@ -353,6 +353,10 @@ Ext.define('FamilyDecoration.view.account.Index', {
                             },
                             items: [
                                 {
+                                    dataIndex: 'billName',
+                                    text: '名称'
+                                },
+                                {
                                     dataIndex: 'billTypeName',
                                     text: '类型'
                                 },

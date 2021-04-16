@@ -2,6 +2,7 @@ Ext.define('FamilyDecoration.model.AccountLogInfo', {
     extend: 'Ext.data.Model',
     fields: [
         { name: 'id', type: 'string' },
+        { name: 'billName', type: 'string' },
         { name: 'billType', type: 'string' },
         { name: 'billTypeName', type: 'string' },
         { name: 'checker', type: 'string' },
