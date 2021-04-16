@@ -9,7 +9,8 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
         'FamilyDecoration.view.entrynexit.ReceivementProjectFee',
         'FamilyDecoration.view.entrynexit.ReceivementOther',
         'FamilyDecoration.view.entrynexit.ReceivementLoan',
-        'FamilyDecoration.view.paymentrequest.AttachmentManagement'
+        'FamilyDecoration.view.paymentrequest.AttachmentManagement',
+        'FamilyDecoration.view.entrynexit.ReceivementDepositIn'
     ],
     // viewConfig: {
     //     emptyText: '请选择条目进行加载',
@@ -161,6 +162,16 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                             });
                             win.show();
                             break;
+                        case 'depositIn':
+                            var win = Ext.create('FamilyDecoration.view.entrynexit.ReceivementDepositIn', {
+                                category: resObj.category,
+                                item: resObj.item,
+                                callback: function () {
+                                    me.refresh(resObj.category, false);
+                                }
+                            });
+                            win.show();
+                            break;
                         case 'other':
                             var win = Ext.create('FamilyDecoration.view.entrynexit.ReceivementOther', {
                                 category: resObj.category,
@@ -304,6 +315,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             }
             switch (rec.get('name')) {
                 case 'designDeposit':
+                case 'depositIn':
                 case 'projectFee':
                 case 'other':
                 case 'loan':
@@ -334,6 +346,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             }
             switch (rec.get('name')) {
                 case 'designDeposit':
+                case 'depositIn':
                 case 'projectFee':
                 case 'other':
                 case 'loan':
@@ -354,8 +367,8 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
             'companyBonus': ['单号:1', '项目名称:0.8', '款项归属:0.8', '申请人:0.7', '联系方式:0.8', '申请金额:0.8', '付款金额:0.8', '付款人:0.7', '付款日期:0.8', '备注'],
             'tax': ['单号:1', '项目名称:0.8', '款项归属:0.8', '申请人:0.7', '领款人:0.7', '联系方式:0.8', '申请金额:0.8', '付款金额:0.8', '付款人:0.7', '付款日期:0.8', '备注'],
             'qualityGuaranteeDeposit': ['单号:1', '工程名称:0.8', '领款人:0.7', '联系方式:0.8', '应付金额:0.8', '实付金额:0.8', '付款日期:0.8', '付款人:0.7', '备注'],
-            'depositOut': ['单号:1', '工程名称:1', '领款人:1', '申请人:1', '付款时间:1', '联系人:1', '联系方式:1'],
-            'depositIn': ['单号:1', '工程名称:1', '领款人:1', '申请人:1', '付款时间:1', '联系人:1', '联系方式:1'],
+            'depositOut': ['单号:1','工程名称:1','保证金金额:1', '领款人:1', '申请人:1', '付款时间:1', '联系人:1', '联系方式:1'],
+            'depositIn': ['单号:1', '项目名称:0.8', '入账单位:0.8', '交款人:0.7', '联系方式:0.8', '收款金额:0.8', '收款人:0.7', '收款时间:0.8', '款项归属:0.8'],
             'designDeposit': ['单号:1', '业务名称:0.8', '工程名称:0.8', '业务员:0.7', '设计师:0.7', '客户姓名:0.8', '联系方式:0.8', '收款额:0.7', '收款人:0.7'],
             'projectFee': ['单号:1', '工程名称:0.8', '项目经理:0.8', '设计师:0.7', '客户姓名:0.8', '联系方式:0.8', '预算总额:0.8', '应交款:0.7', '已交款:0.7', '款项', '收款时间:0.8'],
             'loan': ['单号:1', '项目名称:0.8', '银行', '交办人:0.7', '联系方式:0.8', '收款金额:0.8', '收款人:0.7', '收款时间:0.8', '当前利率:0.8', '期限', '贷款时间:0.8'],
