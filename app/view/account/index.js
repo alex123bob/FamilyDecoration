@@ -7,7 +7,8 @@ Ext.define('FamilyDecoration.view.account.Index', {
         'FamilyDecoration.store.AccountLog',
         'FamilyDecoration.view.account.DateRangeFilter',
         'FamilyDecoration.view.account.EditAccount',
-        'FamilyDecoration.view.account.Transfer'
+        'FamilyDecoration.view.account.Transfer',
+        'FamilyDecoration.store.AccountLogInfo'
     ],
     layout: 'hbox',
     defaults: {
@@ -19,11 +20,15 @@ Ext.define('FamilyDecoration.view.account.Index', {
         var me = this,
             accountLogSt = Ext.create('FamilyDecoration.store.AccountLog', {
                 autoLoad: false
+            }),
+            accountLogInfoSt = Ext.create('FamilyDecoration.store.AccountLogInfo', {
+                autoLoad: false
             });
 
         function _getRes() {
             var accountGrid = me.getComponent('gridpanel-account'),
-                accountLogGrid = me.getComponent('gridpanel-accountLog'),
+                mainContainer = me.getComponent('container-main'),
+                accountLogGrid = mainContainer.getComponent('gridpanel-accountLog'),
                 accountSelModel = accountGrid.getSelectionModel(),
                 account = accountSelModel.getSelection()[0],
                 accountSt = accountGrid.getStore(),
@@ -177,143 +182,247 @@ Ext.define('FamilyDecoration.view.account.Index', {
                 }
             },
             {
-                title: '账户纪录',
+                itemId: 'container-main',
+                xtype: 'container',
+                layout: 'vbox',
                 flex: 4,
-                itemId: 'gridpanel-accountLog',
-                refresh: function () {
-                    var resObj = _getRes();
-
-                    resObj.filter.clean();
-                    if (resObj.account) {
-                        resObj.accountLogSt.setProxy({
-                            type: 'rest',
-                            url: './libs/api.php',
-                            reader: {
-                                type: 'json',
-                                root: 'data'
-                            },
-                            extraParams: {
-                                accountId: resObj.account.getId(),
-                                action: 'AccountLog.get',
-                                orderBy: 'createTime DESC'
-                            }
-                        });
-                        resObj.accountLogSt.loadPage(1);
-                    }
-                    else {
-                        resObj.accountLogSt.removeAll();
-                    }
+                defaults: {
+                    width: '100%',
                 },
-                dockedItems: [
+                items: [
                     {
-                        xtype: 'account-daterangefilter',
-                        dock: 'top',
-                        filterFn: function (obj) {
-                            var resObj = _getRes(),
-                                p = {};
+                        xtype: 'gridpanel',
+                        title: '账户纪录',
+                        flex: 3,
+                        itemId: 'gridpanel-accountLog',
+                        refresh: function () {
+                            var resObj = _getRes();
+        
+                            resObj.filter.clean();
                             if (resObj.account) {
-                                p = { accountId: resObj.account.getId() };
-                                if (obj.startTime && obj.endTime) {
-                                    Ext.apply(p, {
-                                        createTimeMin: Ext.Date.format(obj.startTime, 'Y-m-d 00:00:00'),
-                                        createTimeMax: Ext.Date.format(obj.endTime, 'Y-m-d 23:59:59')
-                                    });
-                                }
                                 resObj.accountLogSt.setProxy({
                                     type: 'rest',
                                     url: './libs/api.php',
                                     reader: {
                                         type: 'json',
-                                        root: 'data',
-                                        totalProperty: 'total'
+                                        root: 'data'
                                     },
-                                    extraParams: Ext.apply(p, {
+                                    extraParams: {
+                                        accountId: resObj.account.getId(),
                                         action: 'AccountLog.get',
                                         orderBy: 'createTime DESC'
-                                    })
-                                })
-                                resObj.accountLogSt.loadPage(1);
-                            }
-                            else {
-                                showMsg('请选择具体账户后再进行过滤！');
-                            }
-                        },
-                        clearFn: function () {
-                            var resObj = _getRes(),
-                                p = {};
-                            if (resObj.account) {
-                                p = { accountId: resObj.account.getId() };
-                                resObj.accountLogSt.setProxy({
-                                    type: 'rest',
-                                    url: './libs/api.php',
-                                    reader: {
-                                        type: 'json',
-                                        root: 'data',
-                                        totalProperty: 'total'
-                                    },
-                                    extraParams: Ext.apply(p, {
-                                        action: 'AccountLog.get',
-                                        orderBy: 'createTime DESC'
-                                    })
+                                    }
                                 });
                                 resObj.accountLogSt.loadPage(1);
                             }
                             else {
-                                showMsg('请选择具体账户后再进行过滤！');
+                                resObj.accountLogSt.removeAll();
+                            }
+                        },
+                        dockedItems: [
+                            {
+                                xtype: 'account-daterangefilter',
+                                dock: 'top',
+                                filterFn: function (obj) {
+                                    var resObj = _getRes(),
+                                        p = {};
+                                    if (resObj.account) {
+                                        p = { accountId: resObj.account.getId() };
+                                        if (obj.startTime && obj.endTime) {
+                                            Ext.apply(p, {
+                                                createTimeMin: Ext.Date.format(obj.startTime, 'Y-m-d 00:00:00'),
+                                                createTimeMax: Ext.Date.format(obj.endTime, 'Y-m-d 23:59:59')
+                                            });
+                                        }
+                                        resObj.accountLogSt.setProxy({
+                                            type: 'rest',
+                                            url: './libs/api.php',
+                                            reader: {
+                                                type: 'json',
+                                                root: 'data',
+                                                totalProperty: 'total'
+                                            },
+                                            extraParams: Ext.apply(p, {
+                                                action: 'AccountLog.get',
+                                                orderBy: 'createTime DESC'
+                                            })
+                                        })
+                                        resObj.accountLogSt.loadPage(1);
+                                    }
+                                    else {
+                                        showMsg('请选择具体账户后再进行过滤！');
+                                    }
+                                },
+                                clearFn: function () {
+                                    var resObj = _getRes(),
+                                        p = {};
+                                    if (resObj.account) {
+                                        p = { accountId: resObj.account.getId() };
+                                        resObj.accountLogSt.setProxy({
+                                            type: 'rest',
+                                            url: './libs/api.php',
+                                            reader: {
+                                                type: 'json',
+                                                root: 'data',
+                                                totalProperty: 'total'
+                                            },
+                                            extraParams: Ext.apply(p, {
+                                                action: 'AccountLog.get',
+                                                orderBy: 'createTime DESC'
+                                            })
+                                        });
+                                        resObj.accountLogSt.loadPage(1);
+                                    }
+                                    else {
+                                        showMsg('请选择具体账户后再进行过滤！');
+                                    }
+                                }
+                            },
+                            {
+                                xtype: 'pagingtoolbar',
+                                store: accountLogSt,
+                                dock: 'bottom',
+                                displayInfo: true
+                            }
+                        ],
+                        columns: {
+                            defaults: {
+                                flex: 1,
+                                align: 'center'
+                            },
+                            items: [
+                                {
+                                    text: '日期',
+                                    flex: 1.2,
+                                    dataIndex: 'createTime'
+                                },
+                                {
+                                    text: '出账',
+                                    dataIndex: 'amount',
+                                    renderer: function (val, meta, rec) {
+                                        return rec.get('type') == 'out' ? '-'+val : '';
+                                    }
+                                },
+                                {
+                                    text: '入账',
+                                    dataIndex: 'amount',
+                                    renderer: function (val, meta, rec) {
+                                        return rec.get('type') == 'in' ? '+'+val : '';
+                                    }
+                                },
+                                {
+                                    text: '事由',
+                                    dataIndex: 'refTypeCn'
+                                },
+                                {
+                                    text: '余额(元)',
+                                    dataIndex: 'balance'
+                                },
+                                {
+                                    text: '经办人',
+                                    dataIndex: 'operatorRealName'
+                                },
+                                {
+                                    text: '修改记录',
+                                    dataIndex: 'desc'
+                                }
+                            ]
+                        },
+                        store: accountLogSt,
+                        listeners: {
+                            selectionchange: function (selModel, sels, opts) {
+                                var item = sels[0];
+                                item ? accountLogInfoSt.load({
+                                    params: {
+                                        id: item.getId()
+                                    }
+                                }) : accountLogInfoSt.removeAll();
                             }
                         }
                     },
                     {
-                        xtype: 'pagingtoolbar',
-                        store: accountLogSt,
-                        dock: 'bottom',
-                        displayInfo: true
-                    }
-                ],
-                columns: {
-                    defaults: {
+                        xtype: 'gridpanel',
+                        title: '详细',
+                        store: accountLogInfoSt,
+                        cls: 'gridpanel-accountloginfo',
                         flex: 1,
-                        align: 'center'
-                    },
-                    items: [
-                        {
-                            text: '日期',
-                            flex: 1.2,
-                            dataIndex: 'createTime'
-                        },
-                        {
-                            text: '出账',
-                            dataIndex: 'amount',
-                            renderer: function (val, meta, rec) {
-                                return rec.get('type') == 'out' ? '-'+val : '';
-                            }
-                        },
-                        {
-                            text: '入账',
-                            dataIndex: 'amount',
-                            renderer: function (val, meta, rec) {
-                                return rec.get('type') == 'in' ? '+'+val : '';
-                            }
-                        },
-                        {
-                            text: '事由',
-                            dataIndex: 'refTypeCn'
-                        },
-                        {
-                            text: '余额(元)',
-                            dataIndex: 'balance'
-                        },
-                        {
-                            text: '经办人',
-                            dataIndex: 'operatorRealName'
-                        },
-                        {
-                            text: '修改记录',
-                            dataIndex: 'desc'
+                        columns: {
+                            defaults: {
+                                flex: 1,
+                                align: 'center'
+                            },
+                            items: [
+                                {
+                                    dataIndex: 'billName',
+                                    text: '名称'
+                                },
+                                {
+                                    dataIndex: 'billTypeName',
+                                    text: '类型'
+                                },
+                                {
+                                    dataIndex: 'checkerRealName',
+                                    text: '审核人'
+                                },
+                                {
+                                    dataIndex: 'claimAmount',
+                                    text: '申请金额'
+                                },
+                                {
+                                    dataIndex: 'creatorRealName',
+                                    text: '创建人'
+                                },
+                                {
+                                    dataIndex: 'descpt',
+                                    text: '描述'
+                                },
+                                {
+                                    dataIndex: 'paidAmount',
+                                    text: '付款金额'
+                                },
+                                {
+                                    dataIndex: 'paidTime',
+                                    text: '付款时间'
+                                },
+                                {
+                                    dataIndex: 'payerRealName',
+                                    text: '账单类型'
+                                },
+                                {
+                                    dataIndex: 'payeeRealName',
+                                    text: '收款人'
+                                },
+                                {
+                                    dataIndex: 'professionType',
+                                    text: '工种',
+                                    renderer: function(val) {
+                                        return FamilyDecoration.store.WorkCategory.renderer(val);
+                                    }
+                                },
+                                {
+                                    dataIndex: 'projectName',
+                                    text: '工程'
+                                },
+                                {
+                                    dataIndex: 'reimbursementReason',
+                                    text: '报销原因'
+                                },
+                                {
+                                    dataIndex: 'projectProgress',
+                                    text: '进度'
+                                },
+                                {
+                                    dataIndex: 'statusName',
+                                    text: '状态'
+                                },
+                                {
+                                    dataIndex: 'totalFee',
+                                    text: '总金额'
+                                },
+                            ]
                         }
-                    ]
-                },
-                store: accountLogSt
+                    }
+                ]
             }
         ];
 

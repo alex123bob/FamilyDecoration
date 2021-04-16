@@ -12,6 +12,7 @@ Ext.define('FamilyDecoration.model.AccountLog', {
         {name: 'operatorRealName', type: 'string'},
         {name: 'desc', type: 'string'},
         'balance', // 操作后余额
+        {name: 'logInfos', type: 'auto'}, // detailed log infos
         {name: 'isDeleted', type: 'string'},
         {name: 'createTime', type: 'string'},
         {name: 'updateTime', type: 'string'}
