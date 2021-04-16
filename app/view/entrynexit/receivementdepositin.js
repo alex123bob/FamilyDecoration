@@ -339,7 +339,11 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementDepositIn', {
                         accountRec = account.findRecord(account.valueField || account.displayField, accountVal);
 
                     if (depositOutItem.length > 1 || depositOutItem.length === 0) {
-                        Ext.Msg.error('关联保证金必须也只能选择一项!');
+                        Ext.Msg.error('关联保证金必须也只能选择一项，并且保证金需支出!');
+                        return;
+                    }
+                    if (depositOutItem[0].get('status') !== 'paid') {
+                        Ext.Msg.error('关联保证金状态需为"已付款"!');
                         return;
                     }
 

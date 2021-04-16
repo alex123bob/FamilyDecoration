@@ -342,7 +342,7 @@ Ext.define('FamilyDecoration.view.entrynexit.EntryNExitBoard', {
                 return;
             }
             if (User.isAdmin() && rec.get('name')) {
-                tbarObj.reject.setDisabled(!item);
+                tbarObj.reject.setDisabled(!item || me.rec.get('name') === 'depositIn' );
             }
             switch (rec.get('name')) {
                 case 'designDeposit':
