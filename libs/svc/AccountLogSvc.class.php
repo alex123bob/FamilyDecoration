@@ -31,6 +31,8 @@ class AccountLogSvc extends BaseSvc
 		}else{
 			$res = parent::getSvc('StatementBill')->get(array('id'=> $log['refId']));
 		}
+		$userSvc = BaseSvc::getSvc('User');
+		$userSvc->appendRealName($res['data'],'payee');
 		return $res;		
 	}
 	
