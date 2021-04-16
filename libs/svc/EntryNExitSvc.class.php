@@ -63,6 +63,7 @@ class EntryNExitSvc{
         'c5'=> $value['paidAmount'].'元',
         'c6'=> $value['creatorRealName'],
         'c7'=> $value['paidTime'],
+        'c8'=>StatementBillSvc::$BILLTYPE[$value['billType']],
         'status'=> $value['status'],
       ));
     }

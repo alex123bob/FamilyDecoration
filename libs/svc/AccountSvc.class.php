@@ -192,7 +192,7 @@ class AccountSvc extends BaseSvc
 				$bill = $statementBillSvc->add($q);
 				$mysql->DBExecute("update account set balance = balance + $amount where id = '".$accountId."';");
 				$account = $mysql->DBGetAsMap("select * from account where id = '".$accountId."';");
-				parent::getSvc('AccountLog')->add(array('@accountId'=>$accountId,'@amount'=>$amount,'@type'=>'in','@refId'=>$bill['data']['id'],'@refType'=>$accountRefType,'@balance'=>$account[0]['balance']));
+				parent::getSvc('AccountLog')->add(array('@accountId'=>$accountId,'@amount'=>$amount,'@type'=>'in','@refId'=>$bill['data']['id'],'@refType'=>$accountRefType,'@desc'=>self::$BILL_TYPE_MAPPING_TABLE[$accountRefType],'@balance'=>$account[0]['balance']));
 				break;
 			case 'other':
 				$statementBillSvc = parent::getSvc('StatementBill');
