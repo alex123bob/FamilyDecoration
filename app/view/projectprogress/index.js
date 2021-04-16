@@ -952,11 +952,20 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                                 treePanel = resObj.proPanel,
                                 st = resObj.proSt,
                                 pro = resObj.pro;
-                            var win = Ext.create('FamilyDecoration.view.projectprogress.PromiseDeposit', {
-                                isEdit: true,
-                                rec: pro
-                            });
-                            win.show();
+                            if (!pro) {
+                                Ext.Msg.error('请选择工程！');
+                                return;
+                            }
+                            ajaxGet('StatementBill', 'get', {
+                                refId: pro.getId(),
+                                billType: 'pmbond'
+                            }, function(res) {
+                                var win = Ext.create('FamilyDecoration.view.projectprogress.PromiseDeposit', {
+                                    project: pro,
+                                    rec: res && res.data && res.data[0]
+                                });
+                                win.show();
+                            })
                         }
                     }
                 ],

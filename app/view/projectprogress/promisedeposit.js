@@ -15,11 +15,13 @@ Ext.define('FamilyDecoration.view.projectprogress.PromiseDeposit', {
     title: '申请履约保证金',
     
     bodyPadding: 10,
+    project: null,
     rec: null,
 
     initComponent: function() {
         var me = this,
-            rec = me.rec;
+            rec = me.rec,
+            dateRenderer = Ext.util.Format.dateRenderer('Y-m-d');
 
         me.items = [
             {
@@ -37,37 +39,43 @@ Ext.define('FamilyDecoration.view.projectprogress.PromiseDeposit', {
                         fieldLabel: '工程名称',
                         name: 'projectName',
                         readOnly: true,
-                        value: rec.projectName
+                        value: rec ? rec.projectName : me.project.get('projectName')
                     },
                     {
                         fieldLabel: '保证金金额',
                         name: 'claimAmount',
                         xtype: 'numberfield',
+                        value: rec ? rec.claimAmount : ''
                     },
                     {
                         fieldLabel: '联系人',
-                        name: 'payee'
+                        name: 'payee',
+                        value: rec ? rec.payee : ''
                     },
                     {
                         fieldLabel: '联系方式',
-                        name: 'phoneNumber'
+                        name: 'phoneNumber',
+                        value: rec ? rec.phoneNumber : ''
                     },
                     {
                         fieldLabel: '账号名称',
-                        name: 'accountName'
+                        name: 'accountName',
+                        value: rec ? rec.accountName : ''
                     },
                     {
                         fieldLabel: '开户行',
-                        name: 'bank'
+                        name: 'bank',
+                        value: rec ? rec.bank : ''
                     },
                     {
                         fieldLabel: '账号',
-                        name: 'accountNumber'
+                        name: 'accountNumber',
+                        value: rec ? rec.accountNumber : ''
                     },
                     {
                         fieldLabel: '申请人',
                         name: 'creator',
-                        value: User.getRealName(),
+                        value: rec ? rec.creatorRealName : User.getRealName(),
                         readOnly: true
                     },
                 ]
@@ -82,12 +90,20 @@ Ext.define('FamilyDecoration.view.projectprogress.PromiseDeposit', {
                     var frm = me.down('form'),
                         obj = frm.getValues();
                     Ext.apply(obj, {
-                        billType: 'pmbond'
+                        billType: 'pmbond',
+                        refId: me.project.getId()
                     });
-                    ajaxAdd('StatementBill', obj, function (obj) {
+                    obj.creator = User.getName();
+                    ajaxAdd('StatementBill', obj, function (res) {
                         showMsg('申请成功！');
-                        me.close();
-                        // me.callback();
+                        ajaxUpdate('StatementBill.changeStatus', {
+                            id: res.data.id,
+                            status: '+1',
+                            currentStatus: 'new'
+                        }, ['id', 'currentStatus'], function(res){
+                            showMsg('申请成功！');
+                            me.close();
+                        }, true);
                     });
                 }
             },
@@ -95,7 +111,14 @@ Ext.define('FamilyDecoration.view.projectprogress.PromiseDeposit', {
                 hidden: !( (User.isAdmin() || User.isFinanceManager()) && rec && rec.status === 'rdyck' ),
                 text: '批准',
                 handler: function() {
-
+                    ajaxUpdate('StatementBill.changeStatus', {
+                        id: rec.id,
+                        status: '+1',
+                        currentStatus: rec.status
+                    }, ['id', 'currentStatus'], function(res){
+                        showMsg('批准成功!');
+                        me.close();
+                    }, true);
                 }
             }
         ]
