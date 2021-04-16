@@ -19,6 +19,8 @@ class StatementBillSvc extends BaseSvc
 		'stfs'=>array('new','rdyck','chk','paid','arch'),
 		'bidbond'=>array('new','rdyck','chk','paid','returned', 'arch'), //投标保证金
 		'bidbondBk'=>array('new','rdyck','chk','paid','arch'), //投标保证金（退回）
+		'pmbond'=>array('new','rdyck','chk','paid','returned', 'arch'), //履约保证金
+		'pmbondBk'=>array('new','rdyck','chk','paid','arch'), //履约保证金（退回）
 	);
 
 	public function get($q){

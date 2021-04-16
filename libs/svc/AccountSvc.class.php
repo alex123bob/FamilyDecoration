@@ -5,6 +5,10 @@ class AccountSvc extends BaseSvc
 	public static $ACCOUNT_TYPE = array('CASH'=>'现金','CYBER'=>'网银账户','ALI'=>'支付宝账户','OTHER'=>'其他种类','WECHAT'=>'微信');
 
 	public static $BILL_TYPE_MAPPING_TABLE = array(
+		'pmbondOut' => '履约保证金',
+		'depositOut' => '投标保证金',
+		'depositIn' => '投标保证金(退)',
+		'pmbondIn' => '履约保证金(退)',
 		'companyBonus' => '公司福利',
 		'qualityGuaranteeDeposit' => '质保金',
 		'workerSalary' => '工人工资',
@@ -170,6 +174,27 @@ class AccountSvc extends BaseSvc
 				$account = $mysql->DBGetAsMap("select * from account where id = '".$accountId."';");
 				parent::getSvc('AccountLog')->add(array('@accountId'=>$accountId,'@amount'=>$amount,'@type'=>'in','@refId'=>$res['data']['id'],'@refType'=>'loan','@balance'=>$account[0]['balance']));
 				break;
+			case 'pmbondIn':
+			case 'depositIn':
+				$statementBillSvc = parent::getSvc('StatementBill');
+				$res = $statementBillSvc->get($q);
+				if($res['total'] !== 1){
+					throw new BaseException(($res['total'] == 0 ? "没有找到":"找到多个")."账单");
+				}
+				$bill = $res['data'][0];
+				$amount = $q['@receiveAmount'];
+				$accountId = $q['@accountId'];
+				$q['@paidTime'] = "now()";
+				$q['@status'] = "accepted";
+				$q['@paidAmount'] = $amount;
+				$q['@payer'] = $_SESSION['name'];
+				$q['@refId'] = $bill['id'];
+				$accountRefType = $q['@billType'] == 'depositIn' ? 'bidbondBk' : 'pmbondBk';
+				$bill = $statementBillSvc->add($q);
+				$mysql->DBExecute("update account set balance = balance + $amount where id = '".$accountId."';");
+				$account = $mysql->DBGetAsMap("select * from account where id = '".$accountId."';");
+				parent::getSvc('AccountLog')->add(array('@accountId'=>$accountId,'@amount'=>$amount,'@type'=>'in','@refId'=>$bill['data']['id'],'@refType'=>$accountRefType,'@balance'=>$account[0]['balance']));
+				break;
 			case 'other':
 				$statementBillSvc = parent::getSvc('StatementBill');
 				$amount = $q['@receiveAmount'];
@@ -183,6 +208,8 @@ class AccountSvc extends BaseSvc
 				$account = $mysql->DBGetAsMap("select * from account where id = '".$accountId."';");
 				parent::getSvc('AccountLog')->add(array('@accountId'=>$accountId,'@amount'=>$amount,'@type'=>'in','@refId'=>$bill['data']['id'],'@refType'=>'projectFee','@balance'=>$account[0]['balance']));
 				break;
+			
+
 			default:
 				# code...
 				break;
@@ -212,6 +239,8 @@ class AccountSvc extends BaseSvc
 			case 'staffSalary':
 			case 'materialPayment':
 			case 'reimbursementItems':
+			case 'depositOut':
+			case 'pmbondOut':
 			case 'tax':
 				$affect = parent::getSvc('StatementBill')->update(array('@paidAmount'=>$q['@fee'],'@status'=>'paid','id'=>$q['id'],'status'=>'chk','@paidTime'=>'now()'))['affect'];
 				parent::getSvc('StatementBillAudit')->add(array('@billId'=>$q['id'],'@newStatus'=>'paid','@orignalStatus'=>'chk','@drt'=>1));

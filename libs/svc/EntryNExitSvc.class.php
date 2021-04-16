@@ -17,21 +17,19 @@ class EntryNExitSvc{
       case 'projectFee': return $this->projectFee($q);
       case 'loan': return $this->loan($q);  //贷款入账
       case 'financialFee': return $this->financialFee($q); //贷款出账
-      case 'deposit:out'://投标保证金出账
-      case 'depositOut': //投标保证金出账
-        $q['billType'] = 'bidbond';
-        return $this->depositInAndOut($q);
-      case 'deposit:in':
-      case 'depositIn': //投标保证金入账
-        $q['billType'] = 'bidbondBk';
-        return $this->depositInAndOut($q);   
+      case 'pmbondOut':  //投标保证金和履约保证金出账
+      case 'depositOut': return $this->depositInAndOut($q, false);
+      case 'pmbondIn': //投标保证金和履约保证金入账
+      case 'depositIn': return $this->depositInAndOut($q, true);
       case 'other': return $this->other($q);
       default:throw new Exception("unknown type:  ".$q['type']);
     }
   }
 
-  private function depositInAndOut($q){
-    $res = BaseSvc::getSvc('StatementBill')->get($q);
+  private function depositInAndOut($q, $isIn){
+    $svc = BaseSvc::getSvc('StatementBill');
+    $svc->appendWhere .= $isIn ? " and ( billType = 'bidbondBk' or billType = 'pmbondBk' )" : " and ( billType = 'bidbond' or billType = 'pmbond' )";
+    $res = $svc->get($q);
     $newData = array();
     foreach($res['data'] as $value){
       array_push($newData, array(
@@ -54,6 +52,8 @@ class EntryNExitSvc{
     $res = array();
     switch($q['type']){
       case 'depositOut':
+      case 'pmbondIn':
+      case 'pmbondOut':
       case 'depositIn':
         $qry = BaseSvc::getSvc('StatementBill')->get($q);
         array_push($res, array('k'=>'工程名称','v'=>$qry['data'][0]['projectName']));
