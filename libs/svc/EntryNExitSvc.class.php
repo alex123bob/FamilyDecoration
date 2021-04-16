@@ -17,16 +17,16 @@ class EntryNExitSvc{
       case 'projectFee': return $this->projectFee($q);
       case 'loan': return $this->loan($q);  //贷款入账
       case 'financialFee': return $this->financialFee($q); //贷款出账
-      case 'depositOut': return $this->depositInAndOut($q, false); //投标保证金和履约保证金出账
-      case 'depositIn': return $this->depositInAndOut($q, true); //投标保证金和履约保证金入账
+      case 'depositOut': return $this->depositOut($q); //投标保证金和履约保证金出账
+      case 'depositIn': return $this->depositIn($q); //投标保证金和履约保证金入账
       case 'other': return $this->other($q);
       default:throw new Exception("unknown type:  ".$q['type']);
     }
   }
 
-  private function depositInAndOut($q, $isIn){
+  private function depositOut($q){
     $svc = BaseSvc::getSvc('StatementBill');
-    $svc->appendWhere .= $isIn ? " and ( billType = 'bidbondBk' or billType = 'pmbondBk' )" : " and ( billType = 'bidbond' or billType = 'pmbond' )"
+    $svc->appendWhere .=  " and ( billType = 'bidbond' or billType = 'pmbond' )"
     ." and statement_bill.isDeleted = 'false' and ( statement_bill.status = 'paid' or statement_bill.status = 'chk')";
     $res = $svc->get($q);
     $newData = array();
@@ -47,16 +47,50 @@ class EntryNExitSvc{
     return $res;
   }
 
+  private function depositIn($q){
+    $svc = BaseSvc::getSvc('StatementBill');
+    $svc->appendWhere .= " and ( billType = 'bidbondBk' or billType = 'pmbondBk' )"
+    ." and statement_bill.isDeleted = 'false' and ( statement_bill.status = 'accepted')";
+    $res = $svc->get($q);
+    $newData = array();
+    foreach($res['data'] as $value){
+      array_push($newData, array(
+        'c0'=> $value['id'],
+        'c1'=> $value['projectName'],
+        'c2'=> $value['reimbursementReason'],
+        'c3'=> $value['payee'],
+        'c4'=> $value['phoneNumber'],
+        'c5'=> $value['paidAmount'].'元',
+        'c6'=> $value['creatorRealName'],
+        'c7'=> $value['paidTime'],
+        'status'=> $value['status'],
+      ));
+    }
+    $res['data'] = $newData;
+    return $res;
+  }
+
   public function getpayheader($q){
     global $mysql;
     $res = array();
     switch($q['type']){
       case 'depositOut':
-      case 'depositIn':
         $svc = BaseSvc::getSvc('StatementBill');
         $svc->appendWhere .= $q['type'] == 'depositIn' ? " and ( billType = 'bidbondBk' or billType = 'pmbondBk' )" : " and ( billType = 'bidbond' or billType = 'pmbond' )";
         $qry = $svc->get($q);
         array_push($res, array('k'=>'金额','v'=>$qry['data'][0]['claimAmount'].'元'));
+        array_push($res, array('k'=>'工程名称','v'=>$qry['data'][0]['projectName']));
+        array_push($res, array('k'=>'申请人','v'=>$qry['data'][0]['creatorRealName']));
+        array_push($res, array('k'=>'领款人','v'=>$qry['data'][0]['accountName'].' '.$qry['data'][0]['bank'].'('.$qry['data'][0]['accountNumber'].')'));
+        array_push($res, array('k'=>'付款时间','v'=>$qry['data'][0]['paidTime']));
+        array_push($res, array('k'=>'联系人','v'=> $qry['data'][0]['payee']));
+        array_push($res, array('k'=>'联系方式','v'=>$qry['data'][0]['phoneNumber']));
+        return $res;
+      case 'depositIn':
+        $svc = BaseSvc::getSvc('StatementBill');
+        $svc->appendWhere .= $q['type'] == 'depositIn' ? " and ( billType = 'bidbondBk' or billType = 'pmbondBk' )" : " and ( billType = 'bidbond' or billType = 'pmbond' )";
+        $qry = $svc->get($q);
+        array_push($res, array('k'=>'金额','v'=>$qry['data'][0]['paidAmount'].'元'));
         array_push($res, array('k'=>'工程名称','v'=>$qry['data'][0]['projectName']));
         array_push($res, array('k'=>'申请人','v'=>$qry['data'][0]['creatorRealName']));
         array_push($res, array('k'=>'领款人','v'=>$qry['data'][0]['accountName'].' '.$qry['data'][0]['bank'].'('.$qry['data'][0]['accountNumber'].')'));

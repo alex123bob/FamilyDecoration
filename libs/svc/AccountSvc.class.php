@@ -174,11 +174,10 @@ class AccountSvc extends BaseSvc
 				$account = $mysql->DBGetAsMap("select * from account where id = '".$accountId."';");
 				parent::getSvc('AccountLog')->add(array('@accountId'=>$accountId,'@amount'=>$amount,'@type'=>'in','@refId'=>$res['data']['id'],'@refType'=>'loan','@balance'=>$account[0]['balance']));
 				break;
-			case 'pmbondIn':
 			case 'depositIn':
-				$statementBillSvc = parent::getSvc('StatementBill', array('id'=> $q['@refId']));
-				$res = $statementBillSvc->get($q);
-				if($res['total'] !== 1){
+				$statementBillSvc = parent::getSvc('StatementBill');
+				$res = $statementBillSvc->get(array('id'=> $q['@refId']));
+				if($res['total'] != 1){
 					throw new BaseException(($res['total'] == 0 ? "没有找到":"找到多个")."账单");
 				}
 				$bill = $res['data'][0];
@@ -188,7 +187,8 @@ class AccountSvc extends BaseSvc
 				$q['@status'] = "accepted";
 				$q['@paidAmount'] = $amount;
 				$q['@payer'] = $_SESSION['name'];
-				$accountRefType = $q['@billType'] == 'depositIn' ? 'bidbondBk' : 'pmbondBk';
+				$accountRefType = $bill['billType'] == 'bidbond' ? 'bidbondBk' : 'pmbondBk';
+				$q['@billType'] = $accountRefType;
 				$bill = $statementBillSvc->add($q);
 				$mysql->DBExecute("update account set balance = balance + $amount where id = '".$accountId."';");
 				$account = $mysql->DBGetAsMap("select * from account where id = '".$accountId."';");
