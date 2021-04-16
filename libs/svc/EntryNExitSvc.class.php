@@ -56,7 +56,7 @@ class EntryNExitSvc{
         $svc = BaseSvc::getSvc('StatementBill');
         $svc->appendWhere .= $q['type'] == 'depositIn' ? " and ( billType = 'bidbondBk' or billType = 'pmbondBk' )" : " and ( billType = 'bidbond' or billType = 'pmbond' )";
         $qry = $svc->get($q);
-        array_push($res, array('k'=>'金额','v'=>$$qry['data'][0]['claimAmount'].'元'));
+        array_push($res, array('k'=>'金额','v'=>$qry['data'][0]['claimAmount'].'元'));
         array_push($res, array('k'=>'工程名称','v'=>$qry['data'][0]['projectName']));
         array_push($res, array('k'=>'申请人','v'=>$qry['data'][0]['creatorRealName']));
         array_push($res, array('k'=>'领款人','v'=>$qry['data'][0]['accountName'].' '.$qry['data'][0]['bank'].'('.$qry['data'][0]['accountNumber'].')'));
