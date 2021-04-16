@@ -345,7 +345,7 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementDepositIn', {
 
                     if (projectName.isValid() && payUnit.isValid() && payer.isValid() && contact.isValid() && fee.isValid() && receiveWay.isValid() && account.isValid() && receiveRemark.isValid()) {
                         ajaxAdd('Account.receipt', {
-                            id: depositOutItem[0].get('c0'),
+                            refId: depositOutItem[0].get('c0'),
                             projectName: projectName.getValue(),
                             billType: 'depositIn',
                             reimbursementReason: payUnit.getValue(),
