@@ -26,7 +26,8 @@ class EntryNExitSvc{
 
   private function depositInAndOut($q, $isIn){
     $svc = BaseSvc::getSvc('StatementBill');
-    $svc->appendWhere .= $isIn ? " and ( billType = 'bidbondBk' or billType = 'pmbondBk' )" : " and ( billType = 'bidbond' or billType = 'pmbond' )";
+    $svc->appendWhere .= $isIn ? " and ( billType = 'bidbondBk' or billType = 'pmbondBk' )" : " and ( billType = 'bidbond' or billType = 'pmbond' )"
+    ." b.isDeleted = 'false' and ( b.status = 'paid' or b.status = 'chk')";
     $res = $svc->get($q);
     $newData = array();
     foreach($res['data'] as $value){
@@ -200,7 +201,8 @@ class EntryNExitSvc{
             "u.realName as c7, ".
             "b.descpt as c8, ".
             "b.status  ".
-        "FROM statement_bill b left join user u on u.name = b.payer WHERE b.isDeleted = 'false' AND b.billType = 'qgd' and (status = 'paid' or status = 'chk') ";
+        "FROM statement_bill b left join user u on u.name = b.payer ".
+        "WHERE b.isDeleted = 'false' AND b.billType = 'qgd' and (status = 'paid' or status = 'chk') ";
     if(isset($q['c0']) && $q['c0'] != ""){
       $sql .= ' and b.id like \'%'.$q['c0'].'%\'';
     }
