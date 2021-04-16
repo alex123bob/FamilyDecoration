@@ -69,7 +69,7 @@ table.pros td{
 .gridpanel-historyGrid .x-grid-cell-inner, .gridpanel-qgdList .x-grid-cell-inner,
 .gridpanel-editbillitemremark .x-grid-cell-inner, .gridpanel-materialorderlist .x-grid-cell-inner,
 .gridpanel-paymentbillcheck .x-grid-cell-inner, .gridpanel-contractengineering-changelog .x-grid-cell-inner,
-.gridpanel-accountloginfo .x-grid-cell-inner {
+.gridpanel-accountloginfo .x-grid-cell-inner, .gridpanel-income .x-grid-cell-inner, .gridpanel-expense .x-grid-cell-inner {
   white-space: normal;
   word-wrap: break-word;
 }

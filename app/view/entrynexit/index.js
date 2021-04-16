@@ -59,6 +59,7 @@ Ext.define('FamilyDecoration.view.entrynexit.Index', {
                 items: [
                     {
                         name: 'gridpanel-expense',
+                        cls: 'gridpanel-expense',
                         title: '出账',
                         flex: 2,
                         store: Ext.create('Ext.data.Store', {
@@ -93,7 +94,7 @@ Ext.define('FamilyDecoration.view.entrynexit.Index', {
                                     value: '税费'
                                 },
                                 {
-                                    name: 'deposit:out',
+                                    name: 'depositOut',
                                     value: '保证金（出账）'
                                 }
                                 // {
@@ -121,12 +122,13 @@ Ext.define('FamilyDecoration.view.entrynexit.Index', {
                     },
                     {
                         name: 'gridpanel-income',
+                        cls: 'gridpanel-income',
                         title: '入账',
                         store: Ext.create('Ext.data.Store', {
                             fields: ['name', 'value'],
                             data: [
                                 {
-                                    name: 'deposit:in',
+                                    name: 'depositIn',
                                     value: '保证金（入账）'
                                 },
                                 {
