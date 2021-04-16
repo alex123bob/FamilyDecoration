@@ -24,7 +24,7 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementDepositIn', {
         var me = this,
             depositOutSt = Ext.create('Ext.data.Store', {
                 autoLoad: true,
-                fields: ['c0', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7'],
+                fields: ['c0', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'status'],
                 proxy: {
                     url: 'libs/api.php',
                     type: 'rest',
@@ -349,6 +349,7 @@ Ext.define('FamilyDecoration.view.entrynexit.ReceivementDepositIn', {
                             projectName: projectName.getValue(),
                             billType: 'depositIn',
                             reimbursementReason: payUnit.getValue(),
+                            phoneNumber: contact.getValue(),
                             payee: payer.getValue(),
                             accountId: accountRec.getId(),
                             receiveAmount: fee.getValue(),
