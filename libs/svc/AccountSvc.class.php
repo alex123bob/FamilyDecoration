@@ -176,7 +176,7 @@ class AccountSvc extends BaseSvc
 				break;
 			case 'pmbondIn':
 			case 'depositIn':
-				$statementBillSvc = parent::getSvc('StatementBill');
+				$statementBillSvc = parent::getSvc('StatementBill', array('id'=> $q['@refId']));
 				$res = $statementBillSvc->get($q);
 				if($res['total'] !== 1){
 					throw new BaseException(($res['total'] == 0 ? "没有找到":"找到多个")."账单");
@@ -188,7 +188,6 @@ class AccountSvc extends BaseSvc
 				$q['@status'] = "accepted";
 				$q['@paidAmount'] = $amount;
 				$q['@payer'] = $_SESSION['name'];
-				$q['@refId'] = $bill['id'];
 				$accountRefType = $q['@billType'] == 'depositIn' ? 'bidbondBk' : 'pmbondBk';
 				$bill = $statementBillSvc->add($q);
 				$mysql->DBExecute("update account set balance = balance + $amount where id = '".$accountId."';");
