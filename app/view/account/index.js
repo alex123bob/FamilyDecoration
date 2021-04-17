@@ -385,10 +385,6 @@ Ext.define('FamilyDecoration.view.account.Index', {
                                     text: '付款时间'
                                 },
                                 {
-                                    dataIndex: 'payerRealName',
-                                    text: '账单类型'
-                                },
-                                {
                                     dataIndex: 'payeeRealName',
                                     text: '收款人'
                                 },
