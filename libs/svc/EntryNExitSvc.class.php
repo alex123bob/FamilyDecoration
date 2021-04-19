@@ -332,8 +332,8 @@ class EntryNExitSvc{
           "u.realName as c12, ".
           "b.status ".
           "from statement_bill b left join supplier s on b.supplierId = s.id ".
-          "left join user u on u.name = b.payer ".
-          "where b.billType = 'mtf' and b.isDeleted = 'false' and ( b.status = 'paid' or b.status = 'chk') and u.isDeleted = 'false' ";
+          "left join user u on u.name = b.payer and u.isDeleted = 'false' ".
+          "where b.billType = 'mtf' and b.isDeleted = 'false' and ( b.status = 'paid' or b.status = 'chk')";
     if(isset($q['c0']) && $q['c0'] != ""){
       $sql .= ' and b.id like \'%'.$q['c0'].'%\'';
     }
