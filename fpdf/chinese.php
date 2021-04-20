@@ -152,6 +152,9 @@ function MultiCell($w, $h, $txt, $border=0, $align='L', $fill=0, $thisLineHeight
 }
 
 function ContainsChinese($string=''){
+	if(is_numeric($string)){
+		return false;
+	}
 	$strLen = strlen($string);
 	for($count = 0;$count < $strLen;$count++){
 		if(ord($string[$count])>=128)

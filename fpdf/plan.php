@@ -10,20 +10,20 @@ if(strpos($_SERVER["HTTP_USER_AGENT"],"Safari") && !strpos($_SERVER["HTTP_USER_A
 
 global $name,$phone,$times,$address,$totalFee,$finishPercentage,$requiredFee,$cny,$start,$end;
 
-//È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//È«¾Ö×ÖÌå
 $GfontSize		= 10; 
 $GfontStyle		= ''; // B bold,U:underline
 
-$titleLineHeight1 = 6;   //ï¿½ï¿½Í·ï¿½Ï°ë²¿ï¿½ï¿½ï¿½Ğ¸ï¿½
-$titleLineHeight2 = 12;   //ï¿½ï¿½Í·ï¿½Â°ë²¿ï¿½ï¿½ï¿½Ğ¸ï¿½
-$height = 6; //ï¿½ï¿½ï¿½İ±ï¿½ï¿½ï¿½Ã¿ï¿½Ğ¸ß¶ï¿½
-$width = array();  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ¿ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½,ï¿½ï¿½Ä¿,ï¿½ï¿½ï¿½ï¿½Ä¿
+$titleLineHeight1 = 6;   //±íÍ·ÉÏ°ë²¿·ÖĞĞ¸ß
+$titleLineHeight2 = 12;   //±íÍ·ÏÂ°ë²¿·ÖĞĞ¸ß
+$height = 6; //Êı¾İ±í¸ñÃ¿ĞĞ¸ß¶È
+$width = array();  //×ó²àÈıÁĞ¿í¶È, ĞòºÅ,ÏîÄ¿,×ÓÏîÄ¿
 $pagetype = isset($_REQUEST['page']) ? $_REQUEST['page'] : 'A4';
-array_push($width, isset($_REQUEST['c1']) ? isset($_REQUEST['c1']) : 5); //ï¿½ï¿½Å¿ï¿½ï¿½ï¿½
-array_push($width, isset($_REQUEST['c2']) ? isset($_REQUEST['c2']) : 40); //ï¿½ï¿½Å¿ï¿½ï¿½ï¿½
-array_push($width, isset($_REQUEST['c3']) ? isset($_REQUEST['c3']) : 50); //ï¿½ï¿½Å¿ï¿½ï¿½ï¿½
-$xuhaoLineHeight = ($titleLineHeight1  + $titleLineHeight2);  //ï¿½ï¿½ï¿½ï¿½Ü¸ß¶ï¿½
-$leftNameWith = $width[0]+$width[1]+$width[2];   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+array_push($width, isset($_REQUEST['c1']) ? isset($_REQUEST['c1']) : 5); //ĞòºÅ¿í¶È
+array_push($width, isset($_REQUEST['c2']) ? isset($_REQUEST['c2']) : 40); //ĞòºÅ¿í¶È
+array_push($width, isset($_REQUEST['c3']) ? isset($_REQUEST['c3']) : 50); //ĞòºÅ¿í¶È
+$xuhaoLineHeight = ($titleLineHeight1  + $titleLineHeight2);  //ĞòºÅ×Ü¸ß¶È
+$leftNameWith = $width[0]+$width[1]+$width[2];   //×ó²àÈıÁĞ
 
 include_once "../libs/conn.php";
 include_once 'chinese.php';
@@ -33,7 +33,7 @@ $planSvc = BaseSvc::getSvc('PlanMaking');
 $plan = $planSvc->get(array('id'=>$_REQUEST['id']));
 if($plan['total'] == 0 ){
 	header("Content-type: text/html; charset=gbk");
-	$msg = 'Ã»ï¿½ï¿½ï¿½Òµï¿½idÎª'.$_REQUEST['id'].'ï¿½Ä¼Æ»ï¿½!';
+	$msg = 'Ã»ÓĞÕÒµ½idÎª'.$_REQUEST['id'].'µÄ¼Æ»®!';
 	echo $msg;
 	throw new Exception($msg);
 }
@@ -43,7 +43,7 @@ $projectSvc = BaseSvc::getSvc('Project');
 $project = $projectSvc->get(array('projectId'=>$plan['projectId']));
 if($project['total'] == 0 ){
 	header("Content-type: text/html; charset=gbk");
-	$msg = 'Ã»ï¿½ï¿½ï¿½Òµï¿½idÎª'.$plan['projectId'].'ï¿½ï¿½ï¿½ï¿½Ä¿!';
+	$msg = 'Ã»ÓĞÕÒµ½idÎª'.$plan['projectId'].'µÄÏîÄ¿!';
 	echo $msg;
 	throw new Exception($msg);
 }
@@ -54,7 +54,7 @@ $address = str2GBK($plan['projectAddress']);
 $planItems = $planSvc->getItems(array('planId'=>$_REQUEST['id']));
 $action = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "view";
 
-//Ä¬ï¿½ï¿½Ê¹ï¿½Ã¼Æ»ï¿½ï¿½ï¿½Ê±ï¿½ä£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿Ê±ï¿½ä£¬ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½
+//Ä¬ÈÏÊ¹ÓÃ¼Æ»®µÄÊ±¼ä£¬Èç¹ûÓĞÏîÄ¿Ê±¼ä£¬ÓÅÏÈÊ¹ÓÃÏîÄ¿µÄ
 $start=$plan['startTime'];
 $end=$plan['endTime'];
 if(isset($project['period']) && $project['period'] != null && $project['period'] != "" && contains($project['period'],":")){
@@ -62,18 +62,18 @@ if(isset($project['period']) && $project['period'] != null && $project['period']
 	$end = explode(":",$project['period'])[1];
 }
 
-$pdf=new PDF('L','mm', $pagetype); //ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½FPDFï¿½ï¿½ï¿½ï¿½ 
-$pdf->AddGBFont(); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
+$pdf=new PDF('L','mm', $pagetype); //´´½¨ĞÂµÄFPDF¶ÔÏó 
+$pdf->AddGBFont(); //ÉèÖÃÖĞÎÄ×ÖÌå 
 $pdf->SetFillColor(125);
-$pdf->AddPage(); //ï¿½ï¿½ï¿½ï¿½Ò»Ò³ 
-$pdf->SetFont("GB",$GfontStyle,$GfontSize); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ 
+$pdf->AddPage(); //Ôö¼ÓÒ»Ò³ 
+$pdf->SetFont("GB",$GfontStyle,$GfontSize); //ÉèÖÃ×ÖÌåÑùÊ½ 
 
 $pdf->AliasNbPages("__totalPage__");
  
 $month = array();
 $days = array();
 $header1Borders = array('LT','LT','LT');
-$timespanWidth = $pdf->w - $leftNameWith - 15 -15;//ï¿½Ò²ï¿½Ê±ï¿½ï¿½ï¿½Õ¼ï¿½Ã¿ï¿½ï¿½ï¿½.  - page margin
+$timespanWidth = $pdf->w - $leftNameWith - 15 -15;//ÓÒ²àÊ±¼ä±íÕ¼ÓÃ¿í¶È.  - page margin
 $daysInTotal = floor((strtotime($end) - strtotime($start))/60/60/24)+1;
 $singleDayWidth = $timespanWidth/$daysInTotal;
 
@@ -94,25 +94,25 @@ for($count = 0;$count<$daysInTotal;$count++){
 }
 
 
-//--------ï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼
-$pdf->Cell($width[0],$xuhaoLineHeight/2,'ï¿½ï¿½','LRT',2,'C',0);
-$pdf->Cell($width[0],$xuhaoLineHeight/2,'ï¿½ï¿½','LRB',0,'C',0);
+//--------±íÍ·Êä³ö¿ªÊ¼
+$pdf->Cell($width[0],$xuhaoLineHeight/2,'Ğò','LRT',2,'C',0);
+$pdf->Cell($width[0],$xuhaoLineHeight/2,'ºÅ','LRB',0,'C',0);
 $pdf->SetXY($pdf->getx(),$pdf->gety()- $xuhaoLineHeight/2);
-$pdf->Cell($width[1],$titleLineHeight1+$titleLineHeight2,'ï¿½ï¿½Ä¿','LTRB',0,'C',0);
-$pdf->Cell($width[2],$titleLineHeight1+$titleLineHeight2,'ï¿½ï¿½ï¿½ï¿½Ä¿','LTRB',0,'C',0);
-foreach ($months as $key => $value) {  //ï¿½ï¿½ï¿½ï¿½Â·ï¿½
+$pdf->Cell($width[1],$titleLineHeight1+$titleLineHeight2,'ÏîÄ¿','LTRB',0,'C',0);
+$pdf->Cell($width[2],$titleLineHeight1+$titleLineHeight2,'×ÓÏîÄ¿','LTRB',0,'C',0);
+foreach ($months as $key => $value) {  //Êä³öÔÂ·İ
 	if(startWith($key,'0'))
 		$key = substr($key, 1);
-	$pdf->Cell($singleDayWidth*$value,$titleLineHeight1,$key.'ï¿½ï¿½','LTRB',0,'C',0);
+	$pdf->Cell($singleDayWidth*$value,$titleLineHeight1,$key.'ÔÂ','LTRB',0,'C',0);
 }
 $pdf->ln();
 $pdf->SetXY($pdf->getx()+$width[0]+$width[1]+$width[2],$pdf->gety());
 $count = 1;
 
-if(count($months)>5)  //ï¿½ï¿½ï¿½ï¿½6ï¿½ï¿½ï¿½ï¿½,Ã¿ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½Ğ¡2ï¿½ï¿½
-	$pdf->SetFont("GB",$GfontStyle,$GfontSize - (count($months)-5)*2); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ 
+if(count($months)>5)  //³¬¹ı6¸öÔÂ,Ã¿¶àÒ»¸öÔÂ,×ÖÌåĞ¡2ºÅ
+	$pdf->SetFont("GB",$GfontStyle,$GfontSize - (count($months)-5)*2); //ÉèÖÃ×ÖÌåÑùÊ½ 
 
-foreach ($days as $key => $value) { //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+foreach ($days as $key => $value) { //Êä³öÈÕÆÚ
 	if(startWith($value,'0'))
 		$value = substr($value, 1);
 	$d1 = $count%2==0 ? $value : '';
@@ -124,11 +124,11 @@ foreach ($days as $key => $value) { //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 }
 $pdf->ln();
 $pdf->SetXY($pdf->getx(),$pdf->gety()+$titleLineHeight2/2);
-$pdf->SetFont("GB",$GfontStyle,$GfontSize); //ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ 
-//--------ï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+$pdf->SetFont("GB",$GfontStyle,$GfontSize); //ÉèÖÃ»Ø×ÖÌå 
+//--------±íÍ·Êä³ö½áÊø
 
 
-//-------Ò»Î¬ï¿½ï¿½ï¿½ï¿½ï¿½É¶ï¿½Î¬ï¿½ï¿½ï¿½ï¿½ --ï¿½ï¿½ï¿½ï¿½list--Ğ¡ï¿½ï¿½list
+//-------Ò»Î¬Êı×é±ä³É¶şÎ¬Êı×é --´óÏîlist--Ğ¡Ïîlist
 $bigItems = array();
 foreach($planItems as &$smallItem) {
 	$parentItemName = $smallItem['parentItemName'];
@@ -139,34 +139,34 @@ foreach($planItems as &$smallItem) {
 	}
 	array_push($bigItems[$parentItemName]['smallItems'], $smallItem);
 }
-//--------ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ¿ï¿½Ê¼
+//--------Êä³öÄÚÈİ¿ªÊ¼
 foreach($bigItems as $key => $bigItem) {
 	$smallItems = $bigItem['smallItems'];
 	$smallCount = count($smallItems);
 	$bigItemName = str2GBK($bigItem['itemName']);
-	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//´óÏîÃûĞèÒªµÄĞĞÊı
 	$bigItemNameLines = $pdf->GetStringShowLines($bigItemName,$width[1]);
-	//ï¿½ï¿½ï¿½ï¿½Ğ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-	$allSmallItemsLines = 0;//ï¿½ï¿½ï¿½ï¿½Ğ¡ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½
+	//ËùÓĞĞ¡ÏîµÄĞĞÊı
+	$allSmallItemsLines = 0;//ËùÓĞĞ¡ÏîÒ»¹²ĞèÒª¼¸ĞĞ
 	foreach ($smallItems as $key => &$item) {
 		$smallItemName = str2GBK($item['itemName']);
-		//ï¿½ï¿½Ç°Ğ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		//µ±Ç°Ğ¡ÏîÃûĞèÒªµÄĞĞÊı
 		$smallItemNameLines = $pdf->GetStringShowLines($smallItemName,$width[2]);
 		$item['linesNeed'] = $smallItemNameLines;
 		$allSmallItemsLines += $smallItemNameLines;
 	}
-	//ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//µ±Ç°´óÏîÃûĞèÒªµÄĞĞÊı
 	$bigItem['itemNamelinesNeed'] = $bigItemNameLines;
-	//ï¿½ï¿½ï¿½ï¿½Ğ¡ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//ËùÓĞĞ¡ÏîĞèÒªµÄ×ÜĞĞÊı
 	$bigItem['smallItemLinesNeed'] = $allSmallItemsLines;
-	//ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//µ±Ç°´óÏîÊµ¼ÊĞèÒªµÄĞĞÊı
 	$itemLines = $bigItemNameLines > $allSmallItemsLines ? $bigItemNameLines : $allSmallItemsLines;
-	//ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½Ê¼Î»ï¿½ï¿½,ï¿½ï¿½ï¿½Â»ï¿½ï¿½Ğ¶ï¿½ï¿½ï¿½
+	//¼ÇÂ¼ÏÂÆğÊ¼Î»ÖÃ,µÈÏÂ»»ĞĞ¶ÔÆë
 	$startX = $pdf->getx();
 	$startY = $pdf->gety();
-	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//Êä³öĞòºÅ
 	$pdf->Cell($width[0],$height*$itemLines,'','LBTR',0,'C',0);
-	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//Êä³ö´óÏîÃû
 	if($bigItem['itemNamelinesNeed'] == $itemLines){
 		$pdf->MultiCell($width[1],$height,$bigItemName,'LBRT','C',false,$height);
 		$pdf->ln();
@@ -182,24 +182,24 @@ foreach($bigItems as $key => $bigItem) {
 		$pdf->setXY($startX+$width[0]+$width[1],$pdf->gety()-$height*$itemLines);
 	}
 	
-	//---ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-	//---ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ¸ï¿½
+	//---Êä³ö´óÏîÃû½áÊø
+	//---Êä³ö×ÓÏî
+	//¼ÆËã×ÓÏîĞĞ¸ß
 	$tmpheight = $height;
 	if($bigItem['itemNamelinesNeed'] > $bigItem['smallItemLinesNeed']){
-		//ï¿½ï¿½ï¿½ï¿½ï¿½ß¶Èµï¿½ï¿½Ú´ï¿½ï¿½ï¿½Ä¸ß¶ï¿½,Òªï¿½ï¿½Ğ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		//Õû¸ö¸ß¶ÈµÈÓÚ´óÏîµÄ¸ß¶È,Òª°ÑĞ¡ÏîÀ­¸ß
 		$tmpheight = $tmpheight*$bigItem['itemNamelinesNeed']/$bigItem['smallItemLinesNeed'];
 	}
-	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿
+	//Êä³ö×ÓÏîÄ¿
 	$lastPageNum = $pdf->page;
 	foreach ($smallItems as $key => &$item) {
 		$startX = $pdf->getx();
 		$startY = $pdf->gety();
-		//ï¿½ï¿½ï¿½Ğ¡ï¿½ï¿½ï¿½ï¿½
+		//Êä³öĞ¡ÏîÃû
 		$pdf->MultiCell($width[2],$tmpheight,str2GBK($item['itemName']),'LBTR','L',false,$height);
 		$pdf->setXY($startX + $width[2],$startY);
-		//---ï¿½ï¿½ï¿½Ğ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		//---Êä³öĞ¡ÏîÃû½áÊø
+		//Êä³öÈÕÆÚÌî³ä
 		$alldaysdata = getdaysfill($item['startTime'],$item['endTime'],$daysInTotal);
 		for($smallCount = 0;$smallCount < $daysInTotal ;$smallCount++){
 

@@ -11,26 +11,26 @@ if(strpos($_SERVER["HTTP_USER_AGENT"],"Safari") && !strpos($_SERVER["HTTP_USER_A
 global $phone,$times,$totalFee,$finishPercentage,$requiredFee,$cny,$start,$end,$professionTypes;
 
 $professionTypes = array(
-		"0001"=>"ÔøΩÔøΩ◊©ÔøΩ‡π§",
-		"0006"=>"ÔøΩÔøΩÔøΩÔøΩÔøΩ‡π§",
-		"0002"=>"ƒæÔøΩÔøΩ",
-		"0003"=>"ÔøΩÔøΩÔøΩ·π§",
-		"0004"=>"ÀÆÔøΩÁπ§",
-		"0005"=>"ÔøΩÔøΩÔøΩÔøΩ",
-		"0009"=>"ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ"
+		"0001"=>"Ã˘◊©ƒ‡π§",
+		"0006"=>"ª˘¥°ƒ‡π§",
+		"0002"=>"ƒæπ§",
+		"0003"=>"”Õ∆·π§",
+		"0004"=>"ÀÆµÁπ§",
+		"0005"=>"¡¶π§",
+		"0009"=>"∆‰À˚π§÷÷"
 	);
-//»´ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ
+//»´æ÷◊÷ÃÂ
 $GfontSize		= 10; 
 $GfontStyle		= ''; // B bold,U:underline
 
-$titleLineHeight1 = 6;   //ÔøΩÔøΩÕ∑ÔøΩœ∞Î≤øÔøΩÔøΩÔøΩ–∏ÔøΩ
-$titleLineHeight2 = 8;   //ÔøΩÔøΩÕ∑ÔøΩ¬∞Î≤øÔøΩÔøΩÔøΩ–∏ÔøΩ
-$height = 6; //ÔøΩÔøΩÔøΩ›±ÔøΩÔøΩÔøΩ√øÔøΩ–∏ﬂ∂ÔøΩ
-$width = array();  //ÔøΩÔøΩÔøΩ1ÔøΩ–øÔøΩÔøΩÔøΩ, ÔøΩÔøΩƒøÔøΩÔøΩÔøΩÔøΩ
+$titleLineHeight1 = 6;   //±ÌÕ∑…œ∞Î≤ø∑÷––∏ﬂ
+$titleLineHeight2 = 8;   //±ÌÕ∑œ¬∞Î≤ø∑÷––∏ﬂ
+$height = 6; // ˝æ›±Ì∏Ò√ø––∏ﬂ∂»
+$width = array();  //◊Û≤‡1¡–øÌ∂», œÓƒø√˚≥∆
 $pagetype = isset($_REQUEST['page']) ? $_REQUEST['page'] : 'A4';
-array_push($width, 10); //ÔøΩÔøΩ≈øÔøΩÔøΩÔøΩ
-array_push($width, 45); //ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩƒøÔøΩÔøΩÔøΩÔøΩ
-$xuhaoLineHeight = ($titleLineHeight1  + $titleLineHeight2);  // ÔøΩÔøΩƒøÔøΩÔøΩÔøΩÔøΩ
+array_push($width, 10); //–Ú∫≈øÌ∂»
+array_push($width, 45); //π§≥ÃœÓƒøøÌ∂»
+$xuhaoLineHeight = ($titleLineHeight1  + $titleLineHeight2);  // œÓƒø√˚≥∆
 $leftNameWith = $width[0]+ $width[1];
 
 include_once "../libs/conn.php";
@@ -41,7 +41,7 @@ $planSvc = BaseSvc::getSvc('PlanMaking');
 $plans = $planSvc->getLaborPlanByProfessionType(array('professionType'=>$_REQUEST['professionType']));
 if(count($plans) == 0 ){
 	header("Content-type: text/html; charset=gbk");
-	$msg = '√ªÔøΩÔøΩÔøΩ“µÔøΩÔøΩÔøΩÔøΩÔøΩŒ™'.$professionTypes[$_REQUEST['professionType']].'ÔøΩÔøΩÔøΩ√πÔøΩÔøΩ∆ªÔøΩ!';
+	$msg = '√ª”–’“µΩπ§÷÷Œ™'.$professionTypes[$_REQUEST['professionType']].'µƒ”√π§º∆ªÆ!';
 	echo $msg;
 	throw new Exception($msg);
 }
@@ -49,24 +49,24 @@ if(count($plans) == 0 ){
 $pageSizeFit = array('A3'=>30,'A4'=>20,'A1'=>150,'A2'=>90);
 $action = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "view";
 
-//ƒ¨ÔøΩÔøΩ πÔøΩ√º∆ªÔøΩÔøΩÔøΩ ±ÔøΩ‰£¨ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩƒø ±ÔøΩ‰£¨ÔøΩÔøΩÔøΩÔøΩ πÔøΩÔøΩÔøΩÔøΩƒøÔøΩÔøΩ
+//ƒ¨»œ π”√º∆ªÆµƒ ±º‰£¨»Áπ˚”–œÓƒø ±º‰£¨”≈œ» π”√œÓƒøµƒ
 $timespan = $planSvc->getTimeSpanByProfessionType(array('professionType'=>$_REQUEST['professionType']));
 
 $start=$timespan['startTime'];
 $end=$timespan['endTime'];
 
-$pdf=new PDF('L','mm', $pagetype); //ÔøΩÔøΩÔøΩÔøΩÔøΩ¬µÔøΩFPDFÔøΩÔøΩÔøΩÔøΩ 
-$pdf->AddGBFont(); //ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ 
+$pdf=new PDF('L','mm', $pagetype); //¥¥Ω®–¬µƒFPDF∂‘œÛ 
+$pdf->AddGBFont(); //…Ë÷√÷–Œƒ◊÷ÃÂ 
 $pdf->SetFillColor(85);
-$pdf->AddPage(); //ÔøΩÔøΩÔøΩÔøΩ“ª“≥ 
-$pdf->SetFont("GB",$GfontStyle,$GfontSize); //ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ Ω 
+$pdf->AddPage(); //‘ˆº”“ª“≥ 
+$pdf->SetFont("GB",$GfontStyle,$GfontSize); //…Ë÷√◊÷ÃÂ—˘ Ω 
 
 $pdf->AliasNbPages("__totalPage__");
  
 $month = array();
 $days = array();
 $header1Borders = array('LT','LT','LT');
-$timespanWidth = $pdf->w - $leftNameWith - 15 -15;//ÔøΩ“≤ÔøΩ ±ÔøΩÔøΩÔøΩ’ºÔøΩ√øÔøΩÔøΩÔøΩ.  - page margin
+$timespanWidth = $pdf->w - $leftNameWith - 15 -15;//”“≤‡ ±º‰±Ì’º”√øÌ∂».  - page margin
 $daysInTotal = floor((strtotime($end) - strtotime($start))/60/60/24)+1;
 $singleDayWidth = $timespanWidth/$daysInTotal;
 
@@ -87,26 +87,26 @@ for($count = 0;$count<$daysInTotal;$count++){
 }
 
 
-//--------ÔøΩÔøΩÕ∑ÔøΩÔøΩÔøΩÔøΩÔøΩ º
-$pdf->Cell($width[0],$xuhaoLineHeight/2,'ÔøΩÔøΩ','LRT',2,'C',0);
-$pdf->Cell($width[0],$xuhaoLineHeight/2,'ÔøΩÔøΩ','LR',2,'C',0);
+//--------±ÌÕ∑ ‰≥ˆø™ º
+$pdf->Cell($width[0],$xuhaoLineHeight/2,'–Ú','LRT',2,'C',0);
+$pdf->Cell($width[0],$xuhaoLineHeight/2,'∫≈','LR',2,'C',0);
 $pdf->SetXY($pdf->getx()+$width[0],$pdf->gety()- $xuhaoLineHeight);
-$pdf->Cell($width[1],$xuhaoLineHeight,'ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩƒø','LRT',2,'C',0);
+$pdf->Cell($width[1],$xuhaoLineHeight,'π§≥ÃœÓƒø','LRT',2,'C',0);
 $pdf->SetXY($pdf->getx()+$width[1], $pdf->gety()- $xuhaoLineHeight);
 
-foreach ($months as $key => $value) {  //ÔøΩÔøΩÔøΩÔøΩ¬∑ÔøΩ
+foreach ($months as $key => $value) {  // ‰≥ˆ‘¬∑›
 	if(startWith($key,'0'))
 		$key = substr($key, 1);
-	$pdf->Cell($singleDayWidth*$value,$titleLineHeight1,$key.'ÔøΩÔøΩ','LTRB',0,'C',0);
+	$pdf->Cell($singleDayWidth*$value,$titleLineHeight1,$key.'‘¬','LTRB',0,'C',0);
 }
 $pdf->ln();
 $pdf->SetXY($pdf->getx()+$width[0]+$width[1],$pdf->gety());
 $count = 1;
 
-if(count($months)>5)  //ÔøΩÔøΩÔøΩÔøΩ6ÔøΩÔøΩÔøΩÔøΩ,√øÔøΩÔøΩ“ªÔøΩÔøΩÔøΩÔøΩ,ÔøΩÔøΩÔøΩÔøΩ–°2ÔøΩÔøΩ
-	$pdf->SetFont("GB",$GfontStyle,$GfontSize - (count($months)-5)*2); //ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ Ω 
+if(count($months)>5)  //≥¨π˝6∏ˆ‘¬,√ø∂‡“ª∏ˆ‘¬,◊÷ÃÂ–°2∫≈
+	$pdf->SetFont("GB",$GfontStyle,$GfontSize - (count($months)-5)*2); //…Ë÷√◊÷ÃÂ—˘ Ω 
 
-foreach ($days as $key => $value) { //ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ
+foreach ($days as $key => $value) { // ‰≥ˆ»’∆⁄
 	if(startWith($value,'0'))
 		$value = substr($value, 1);
 	$d1 = $count%2==0 ? $value : '';
@@ -118,16 +118,16 @@ foreach ($days as $key => $value) { //ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ
 }
 $pdf->ln();
 $pdf->SetXY($pdf->getx(),$pdf->gety()+$titleLineHeight2/2);
-$pdf->SetFont("GB",$GfontStyle,$GfontSize); //ÔøΩÔøΩÔøΩ√ªÔøΩÔøΩÔøΩÔøΩÔøΩ 
-//--------ÔøΩÔøΩÕ∑ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ
+$pdf->SetFont("GB",$GfontStyle,$GfontSize); //…Ë÷√ªÿ◊÷ÃÂ 
+//--------±ÌÕ∑ ‰≥ˆΩ· ¯
 
-//--------ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ›øÔøΩ º
+//-------- ‰≥ˆƒ⁄»›ø™ º
 $lineCount = 0;
 foreach($plans as $key => $item) {
 	$lineCount ++;
 	$projectName = str2GBK($item['projectName']);
 	$linesNeed = $pdf->GetStringShowLines($projectName,$width[1]);
-	//ÔøΩÔøΩÔøΩÔøΩÔøΩƒø  mutilCell ÔøΩÔøΩÔøΩÔøΩcellÔøΩÔøΩÔøΩÔøΩ, cellÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ‘∂ÔøΩÔøΩÔøΩ‚ªª“≥, ÔøΩÔøΩÔøΩ, ÔøΩ·¥•ÔøΩÔøΩÔøΩÔøΩÔøΩaddPage, ÔøΩÔøΩÔøΩ,ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ÷∂ÔøΩ»•addPage“ªÔøΩÔøΩ. fix bug
+	// ‰≥ˆœÓƒø  mutilCell µ˜”√cell∫Ø ˝, cell∫Ø ˝ª·◊‘∂ØºÏ≤‚ªª“≥, “Ú¥À, ª·¥•∑¢∂‡∏ˆaddPage, “Ú¥À,‘⁄’‚∂˘Ωˆ ÷∂Ø»•addPage“ª¥Œ. fix bug
 	if((($pdf->y + (8 * $linesNeed )) > $pdf->PageBreakTrigger)){
 		$pdf->addPage();
 	}
@@ -139,9 +139,9 @@ foreach($plans as $key => $item) {
 	$pdf->setXY($startX + $width[0],$startY);
 	$pdf->MultiCell($width[1],8,$projectName,'LBTR','L',0,$height);
 	$pdf->setXY($startX + $width[0] + $width[1],$startY);
-	//---ÔøΩÔøΩÔøΩÔøΩÔøΩƒøÔøΩÔøΩÔøΩÔøΩ
+	//--- ‰≥ˆœÓƒøΩ· ¯
 
-	//ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ
+	// ‰≥ˆ»’∆⁄ÃÓ≥‰
 	$data = array_fill(0, $daysInTotal, 0);
 	$contentdata = array_fill(0, $daysInTotal, 0);
 	if(isset($item['period']) && is_array($item['period'])  && count($item['period']) > 0){
@@ -168,5 +168,5 @@ foreach($plans as $key => $item) {
 	}
 	$pdf->ln();
 }
-$pdf->Output($professionTypes[$_REQUEST['professionType']].'ÔøΩ√πÔøΩÔøΩ∆ªÔøΩÔøΩÔøΩ ±ÔøΩÔøΩÔøΩ('.$start.'ÔøΩÔøΩ'.$end.').pdf', $action == "view" ? "I" : "D" );
+$pdf->Output($professionTypes[$_REQUEST['professionType']].'”√π§º∆ªÆªÆ ±º‰±Ì('.$start.'÷¡'.$end.').pdf', $action == "view" ? "I" : "D" );
 ?>  
