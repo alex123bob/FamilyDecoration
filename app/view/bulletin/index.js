@@ -695,9 +695,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                             text: '具体时间',
                             dataIndex: 'specificTime',
                             editor: {
-                                xtype: 'timefield',
-                                format: 'H:i',
-                                increment: 30,
+                                xtype: 'textfield'
                             }
                         },
                         {
