@@ -290,6 +290,14 @@ Ext.define('FamilyDecoration.view.paymentrequest.EditBelongedItem', {
                                                 {
                                                     name: '其他',
                                                     value: 'other'
+                                                },
+                                                {
+                                                    name: '材料发票',
+                                                    value: 'materialInvoice'
+                                                },
+                                                {
+                                                    name: '劳务发票',
+                                                    value: 'serviceInvoice'
                                                 }
                                             );
                                         }
