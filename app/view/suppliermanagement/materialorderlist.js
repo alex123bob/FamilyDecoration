@@ -70,7 +70,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.MaterialOrderList', {
                 flag = supplier && resObj.order ? true : false;
             // btnObj.confirm.setDisabled(!supplier || !resObj.order);
             Ext.each(orders, function (order, index, self){
-                if (order.get('status') != 'checked') {
+                if (order.get('status') != 'chk') {
                     flag = false;
                     return false;
                 }

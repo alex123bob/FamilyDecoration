@@ -5,10 +5,12 @@ class AccountSvc extends BaseSvc
 	public static $ACCOUNT_TYPE = array('CASH'=>'现金','CYBER'=>'网银账户','ALI'=>'支付宝账户','OTHER'=>'其他种类','WECHAT'=>'微信');
 
 	public static $BILL_TYPE_MAPPING_TABLE = array(
-		'pmbondOut' => '履约保证金',
-		'depositOut' => '投标保证金',
-		'depositIn' => '投标保证金(退)',
-		'pmbondIn' => '履约保证金(退)',
+		'depositOut' => '保证金出账',
+		'depositIn' => '保证金入账',
+		'pmbond' => '履约保证金',
+		'bidbond' => '投标保证金',
+		'bidbondBk' => '投标保证金(退)',
+		'pmbondBk' => '履约保证金(退)',
 		'companyBonus' => '公司福利',
 		'qualityGuaranteeDeposit' => '质保金',
 		'workerSalary' => '工人工资',
@@ -239,7 +241,6 @@ class AccountSvc extends BaseSvc
 			case 'materialPayment':
 			case 'reimbursementItems':
 			case 'depositOut':
-			case 'pmbondOut':
 			case 'tax':
 				$affect = parent::getSvc('StatementBill')->update(array('@paidAmount'=>$q['@fee'],'@status'=>'paid','id'=>$q['id'],'status'=>'chk','@paidTime'=>'now()'))['affect'];
 				parent::getSvc('StatementBillAudit')->add(array('@billId'=>$q['id'],'@newStatus'=>'paid','@orignalStatus'=>'chk','@drt'=>1));

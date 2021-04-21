@@ -11,7 +11,7 @@ if(strpos($_SERVER["HTTP_USER_AGENT"],"Safari") && !strpos($_SERVER["HTTP_USER_A
 global $bill; 
 
 $lineHeight 	= 6;
-//È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//È«¾Ö×ÖÌå
 $GfontSize		= 10;
 $GfontStyle		= ''; // B bold,U:underline
 
@@ -26,23 +26,23 @@ $bills = $billSvc->get($_REQUEST);
 
 $bill = $bills['data'][0];
 $action = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "view";
-$pdf=new PDF('P','mm', 'A4'); //ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½FPDFï¿½ï¿½ï¿½ï¿½ 
-$pdf->AddGBFont(); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
-$pdf->AddPage(); //ï¿½ï¿½ï¿½ï¿½Ò»Ò³ 
-$pdf->SetFont("GB",$GfontStyle,$GfontSize); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ 
+$pdf=new PDF('P','mm', 'A4'); //´´½¨ÐÂµÄFPDF¶ÔÏó 
+$pdf->AddGBFont(); //ÉèÖÃÖÐÎÄ×ÖÌå 
+$pdf->AddPage(); //Ôö¼ÓÒ»Ò³ 
+$pdf->SetFont("GB",$GfontStyle,$GfontSize); //ÉèÖÃ×ÖÌåÑùÊ½ 
 $pdf->AliasNbPages("__totalPage__");
 $pdf->ln();
 $pdf->Cell(10,20,'','','','L');
 $pdf->ln();
 $pdf->Cell(114,20,'','','','L');
-$pdf->Cell(58,20,'ï¿½ï¿½ï¿½ï¿½ï¿½(Ç©ï¿½ï¿½):','','','L');
+$pdf->Cell(58,20,'Áì¿îÈË(Ç©×Ö):','','','L');
 
 
 $pdf->ln();
 
 $pdf->Cell(10,5,'','','','L');
 $pdf->Cell(145,5,'','','','L');
-$pdf->Cell(30,5,'ï¿½ï¿½     ï¿½ï¿½      ï¿½ï¿½','','','L');
+$pdf->Cell(30,5,'Äê     ÔÂ      ÈÕ','','','L');
 $pdf->ln();
 $pdf->Cell(10,5,'','','','L');
 $pdf->Cell(175,5,'','','','L');
@@ -62,9 +62,9 @@ foreach ($audits['data'] as $key => $item) {
 		array_push($auditA, $s);
 	}
 }
-$auditstr = join('ï¿½ï¿½', $auditA);
-$pdf->Text(83,60,'ï¿½ï¿½ï¿½ï¿½ï¿½:');
+$auditstr = join('¡ú', $auditA);
+$pdf->Text(83,60,'ÉóºËÈË:');
 $pdf->Text(95,60,($auditstr));
 $pdf->Ln();
-$pdf->Output($bill['id'].'-'.$bill['creatorRealName'].'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.pdf', $action == "view" ? "I" : "D" );
+$pdf->Output($bill['id'].'-'.$bill['creatorRealName'].'±¨Ïúµ¥.pdf', $action == "view" ? "I" : "D" );
 ?>  

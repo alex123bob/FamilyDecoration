@@ -11,7 +11,7 @@ if(strpos($_SERVER["HTTP_USER_AGENT"],"Safari") && !strpos($_SERVER["HTTP_USER_A
 global $name,$phone,$times,$address,$totalFee,$captain,$finishPercentage,$requiredFee,$cny,$professionTypeName,$billId; 
 
 $lineHeight 	= 6;
-//È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//È«¾Ö×ÖÌå
 $GfontSize		= 10;
 $GfontStyle		= ''; // B bold,U:underline
 
@@ -25,14 +25,12 @@ $logs = $accountLogSvc->get($_REQUEST);
 $logs = $logs['data'];
 
 $action = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "view";
-$pdf=new PDF('P','mm', 'A4'); //ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½FPDFï¿½ï¿½ï¿½ï¿½ 
-$pdf->AddGBFont(); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
-$pdf=new PDF('P','mm', 'A4'); //ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½FPDFï¿½ï¿½ï¿½ï¿½ 
-$pdf->AddGBFont(); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
-$pdf->AddPage(); //ï¿½ï¿½ï¿½ï¿½Ò»Ò³ 
-$pdf->SetFont("GB",$GfontStyle,$GfontSize); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ 
+$pdf=new PDF('P','mm', 'A4'); //´´½¨ÐÂµÄFPDF¶ÔÏó 
+$pdf->AddGBFont(); //ÉèÖÃÖÐÎÄ×ÖÌå 
+$pdf->AddPage(); //Ôö¼ÓÒ»Ò³ 
+$pdf->SetFont("GB",$GfontStyle,$GfontSize); //ÉèÖÃ×ÖÌåÑùÊ½ 
 $pdf->AliasNbPages("__totalPage__");
-$titles = array('','ï¿½ï¿½ï¿½ï¿½','ï¿½ï¿½ï¿½ï¿½','ï¿½ï¿½ï¿½ï¿½','ï¿½Ë»ï¿½ï¿½ï¿½ï¿½','ï¿½ï¿½×¢','ï¿½Ë¶ï¿½ï¿½ï¿½');
+$titles = array('','ÈÕÆÚ','³öÕË','ÈëÕË','ÕË»§Óà¶î','±¸×¢','ºË¶ÔÈË');
 $widths = array(5,40,20,20,20,55,20);
 $aligns = array('C','C','C','C','C','C','C');
 $pdf->writeCellLine($widths,$titles,'LTBR','','C',7,10,$fontStyles = array());
