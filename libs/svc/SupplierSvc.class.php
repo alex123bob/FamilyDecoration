@@ -7,6 +7,13 @@ class SupplierSvc extends BaseSvc
 		return parent::add($q);
 	}
 
+	public function getSupplierTypes() {
+		return array(
+			array('value'=> 'material', 'name'=> '材料供应商'),
+			array('value'=> 'device', 'name'=> '设备供应商')
+		);
+	}
+
 	public function get($q) {
 		global $mysql;
 		$res = parent::get($q);
