@@ -326,7 +326,7 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 						displayInfo: true
 					}
 				],
-				plugins: me.previewMode ? [] : [
+				plugins: me.previewMode && !(User.isAdmin()) ? [] : [
 					Ext.create('Ext.grid.plugin.CellEditing', {
 						clicksToEdit: 1,
 						listeners: {
@@ -353,12 +353,21 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 										me.halfRefresh(true);
 									});
 								}
+								else if (e.field == 'checkedNumber') {
+									ajaxUpdate('SupplierOrderItem', {
+										checkedNumber: e.record.get('checkedNumber'),
+										id: e.record.getId(),
+									}, 'id', function (obj) {
+										showMsg('编辑成功！');
+										me.halfRefresh(true);
+									});
+								}
 
 								Ext.resumeLayouts();
 							},
 							validateedit: function (editor, e, opts) {
 								var rec = e.record;
-								if (e.field == 'amount') {
+								if (e.field == 'amount' || e.field == 'checkedNumber') {
 									if (isNaN(e.value) || !/^-?\d+(\.\d+)?$/.test(e.value)) {
 										return false;
 									}
@@ -433,6 +442,16 @@ Ext.define('FamilyDecoration.view.materialrequest.MaterialOrder', {
 						align: 'center',
 						flex: 1
 					},
+					{
+                        text: '审核数量',
+                        dataIndex: 'checkedNumber',
+                        flex: 0.6,
+                        hidden: User.isAdmin() ? false : true,
+                        editor: User.isAdmin() ? {
+                            xtype: 'textfield',
+                            allowBlank: false
+                        } : false
+                    },
 					{
 						text: '备注',
 						dataIndex: 'remark',
