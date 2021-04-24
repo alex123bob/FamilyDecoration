@@ -98,6 +98,45 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplier', {
                         value: me.supplier ? me.supplier.get('email') : ''
                     },
                     {
+						xtype: 'combobox',
+						fieldLabel: '类型',
+						name: 'type',
+						queryMode: 'remote',
+						displayField: 'name',
+						allowBlank: false,
+						valueField: 'value',
+						editable: false,
+						store: Ext.create('Ext.data.Store', {
+                            fields: ['name', 'value'],
+                            autoLoad: true,
+                            proxy: {
+                                type: 'rest',
+                                url: './libs/api.php',
+                                reader: {
+                                    type: 'json',
+                                    root: 'data'
+                                },
+                                extraParams: {
+                                    action: 'Supplier.getSupplierTypes'
+                                }
+                            }
+                        }),
+						value: me.rec ? me.rec.get('type') : 'material'
+					},
+                    {
+                        xtype: 'textfield',
+                        name: 'remark',
+                        fieldLabel: '备注'
+                    },
+                    {
+                        xtype: 'checkbox',
+                        boxLabel: '是否长期',
+                        hideLabel: true,
+                        width: '100%',
+                        name: 'isLongTerm',
+                        checked: me.rec ? me.rec.get('isLongTerm') : false
+                    },
+                    {
                         xtype: 'button',
                         anchor: 'auto auto',
                         text: '添加联系人',
@@ -107,7 +146,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplier', {
                                 cmp = frm.getPhoneCmp();
                             frm.add(cmp);
                         }
-                    }
+                    },
                 ]
             }
         ];

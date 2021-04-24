@@ -18,6 +18,9 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 			var projectPane = me.getComponent('treepanel-projectName'),
 				projectPaneSelModel = projectPane.getSelectionModel(),
 				project = projectPaneSelModel.getSelection()[0],
+				professionTypeGrid = me.getComponent('gridpanel-professionType'),
+				professionTypeSelModel = professionTypeGrid.getSelectionModel(),
+				professionType = professionTypeSelModel.getSelection()[0],
 				billPane = me.getComponent('panel-billPanel'),
 				billRecPane = billPane.down('[name="gridpanel-billRecords"]'),
 				billRecPaneSelModel = billRecPane.getSelectionModel(),
@@ -28,6 +31,9 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 				projectPane: projectPane,
 				projectPaneSelModel: projectPaneSelModel,
 				project: project,
+				professionTypeGrid: professionTypeGrid,
+				professionTypeSelModel: professionTypeSelModel,
+				professionType: professionType,
 				billPane: billPane,
 				billRecPane: billRecPane,
 				billRecPaneSelModel: billRecPaneSelModel,
@@ -91,6 +97,47 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 				}
 			},
 			{
+				xtype: 'gridpanel',
+				title: '工种',
+				itemId: 'gridpanel-professionType',
+				name: 'gridpanel-professionType',
+				columns: [
+					{
+						text: '列表',
+						dataIndex: 'cname',
+						flex: 1,
+						renderer: function (val, meta, rec) {
+							// var billNumber = parseInt(rec.get('billNumber'), 10),
+							// 	rdyck1BillNumber = parseInt(rec.get('rdyck1BillNumber'), 10);
+							// var numStr = '<font>['
+							// 	+ '<strong style="color: red;">' + rdyck1BillNumber + '</strong>'
+							// 	+ '/'
+							// 	+ '<strong style="color: blue;">' + billNumber + '</strong>'
+							// 	+ ']</font>';
+							// return val + numStr;
+							return val;
+						}
+					}
+				],
+				store: Ext.create('FamilyDecoration.store.ProfessionType', {
+					autoLoad: true
+				}),
+				style: {
+					borderRightStyle: 'solid',
+					borderRightWidth: '1px'
+				},
+				hideHeaders: true,
+				width: 100,
+				height: '100%',
+				listeners: {
+					selectionchange: function (selModel, sels, opts) {
+						var resObj = _getRes();
+						resObj.billPane.initBtn();
+						resObj.billRecPane.refresh();
+					}
+				}
+			},
+			{
 				xtype: 'panel',
 				flex: 4,
                 title: '&nbsp;',
@@ -126,18 +173,18 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 							switch (key) {
 								case 'add':
 								case 'checkTpl':
-									btn.setDisabled(!resObj.project || !resObj.project.get('projectName'));
+									btn.setDisabled(!resObj.project || !resObj.project.get('projectName') || !resObj.professionType);
 									break;
 								case 'edit':
 								case 'del':
 								case 'submit':
-									btn.setDisabled(!resObj.project || !resObj.billRec || 'new' != resObj.billRec.get('status'));
+									btn.setDisabled(!resObj.project || !resObj.professionType || !resObj.billRec || 'new' != resObj.billRec.get('status'));
 									break;
 								case 'verifyPassed':
-									btn.setDisabled(!resObj.project || !resObj.billRec || 'chk' != resObj.billRec.get('status'));
+									btn.setDisabled(!resObj.project || !resObj.professionType || !resObj.billRec || 'chk' != resObj.billRec.get('status'));
 									break;
 								case 'approve':
-									btn.setDisabled(!resObj.project || !resObj.billRec
+									btn.setDisabled(!resObj.project || !resObj.professionType || !resObj.billRec
 										|| (
 											'rdyck' != resObj.billRec.get('status')
 											// && 'chk' != resObj.billRec.get('status')
@@ -148,13 +195,13 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 								case 'returnMaterialOrder':
 									// 新创建订购单和已申请付款的订购单，不支持退回上一状态
 									btn.setDisabled(
-										!resObj.project || !resObj.billRec || ('new' == resObj.billRec.get('status')) || ('applied' == resObj.billRec.get('status'))
+										!resObj.project || !resObj.professionType || !resObj.billRec || ('new' == resObj.billRec.get('status')) || ('applied' == resObj.billRec.get('status'))
 									);
 									break;
 								case 'preview':
 								case 'print':
 								case 'templatize':
-									btn.setDisabled(!resObj.project || !resObj.billRec);
+									btn.setDisabled(!resObj.project || !resObj.professionType || !resObj.billRec);
 									break;
 								default:
 									break;
@@ -235,7 +282,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						disabled: true,
 						handler: function () {
 							var resObj = _getRes();
-							if (resObj.project) {
+							if (resObj.project && resObj.professionType) {
 								var supplierListWin = Ext.create('Ext.window.Window', {
 									layout: 'fit',
 									title: '选择供应商',
@@ -263,6 +310,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 														projectId: resObj.project.getId(),
 														projectName: resObj.project.get('projectName'),
 														creator: resObj.project.get('captainName'),
+														professionType: resObj.professionType.get('value'),
 														// payee: rec.get('name'),
 														billType: 'mtf',
 														// phoneNumber: phones.join(','),
@@ -271,6 +319,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 														showMsg('初始化成功！');
 														var win = Ext.create('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
 															project: resObj.project,
+															professionType: resObj.professionType,
 															order: Ext.create('FamilyDecoration.model.MaterialOrderList', obj.data),
 															callback: function () {
 																_refreshBillRecPane();
@@ -308,10 +357,11 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 						disabled: true,
 						handler: function () {
 							var resObj = _getRes();
-							if (resObj.project && resObj.billRec) {
+							if (resObj.project && resObj.professionType && resObj.billRec) {
 								var win = Ext.create('FamilyDecoration.view.materialrequest.EditMaterialOrder', {
 									isEdit: true,
 									project: resObj.project,
+									professionType: resObj.professionType,
 									order: resObj.billRec,
 									callback: function () {
 										_refreshBillRecPane();
@@ -544,6 +594,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 							var resObj = _getRes();
 							var win = Ext.create('FamilyDecoration.view.materialrequest.MaterialOrderTemplate', {
 								project: resObj.project,
+								professionType: resObj.professionType,
 								callback: _refreshBillRecPane
 							});
 							win.show();
@@ -554,6 +605,7 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 					var resObj = _getRes(),
 						orderCt = this.down('materialrequest-materialorder');
 					orderCt.project = resObj.project;
+					orderCt.professionType = resObj.professionType;
 					orderCt.order = resObj.billRec;
 					orderCt.refresh();
 				},
@@ -574,9 +626,10 @@ Ext.define('FamilyDecoration.view.materialrequest.Index', {
 							var resObj = _getRes(),
 								st = this.getStore(),
 								proxy = st.getProxy();
-							if (resObj.project) {
+							if (resObj.project && resObj.professionType) {
 								Ext.apply(proxy.extraParams, {
-									projectId: resObj.project.getId()
+									projectId: resObj.project.getId(),
+									professionType: resObj.professionType.get('value')
 								});
 								st.setProxy(proxy);
 								st.loadPage(1);

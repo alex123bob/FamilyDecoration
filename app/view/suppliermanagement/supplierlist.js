@@ -6,7 +6,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierList', {
         'FamilyDecoration.store.Supplier'
     ],
     autoScroll: true,
-    hideHeaders: true,
+    // hideHeaders: true,
     afterSupplierLoad: Ext.emptyFn,
 
     initComponent: function () {
@@ -21,14 +21,45 @@ Ext.define('FamilyDecoration.view.suppliermanagement.SupplierList', {
 
         me.store = st;
 
-        me.columns = [
-            {
-                text: '姓名',
+        me.columns = {
+            defaults: {
                 flex: 1,
-                align: 'center',
-                dataIndex: 'name'
-            }
-        ];
+                align: 'center'
+            },
+            items: [
+                {
+                    text: '姓名',
+                    dataIndex: 'name'
+                },
+                {
+                    text: '长期',
+                    flex: null,
+                    width: 60,
+                    dataIndex: 'isLongTerm',
+                    renderer: function(val){
+                        return val ? '是' : '否';
+                    }
+                },
+                {
+                    text: '类型',
+                    dataIndex: 'type',
+                    renderer: function(val){
+                        var res = '未知';
+                        switch (val) {
+                            case 'material':
+                                res = '物资';
+                                break;
+                            case 'device':
+                                res = '设备';
+                                break;
+                            default:
+                                break;
+                        }
+                        return res;
+                    }
+                }
+            ]
+        };
 
         me.dockedItems = [
             {
