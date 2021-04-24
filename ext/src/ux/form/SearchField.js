@@ -80,21 +80,36 @@ Ext.define('Ext.ux.form.SearchField', {
             //     property: me.paramName,
             //     value: new RegExp(value) // edit by Alexander Lee
             // });
-            me.store.filterBy(function (rec, id){
-                var flag = false;
-                if (Ext.isArray(me.paramName)) {
-                    Ext.each(me.paramName, function (param, index, self){
-                        flag = new RegExp(value).test(rec.data[param]);
-                        if (flag) {
-                            return false;
-                        }
-                    });
-                }
-                else if (Ext.isString(me.paramName)) {
-                    flag = new RegExp(value).test(rec.data[me.paramName]);
-                }
-                return flag;
-            });
+            if (me.store.remoteFilter) {
+                me.store.load({
+                    params: {
+                        _filter: JSON.stringify([
+                            {
+                                field: me.paramName,
+                                value: value,
+                                oper: 'like'// like, notlike, equal, not equal, in , not in, gt, st,
+                            }
+                        ])
+                    }
+                });
+            }
+            else {
+                me.store.filterBy(function (rec, id){
+                    var flag = false;
+                    if (Ext.isArray(me.paramName)) {
+                        Ext.each(me.paramName, function (param, index, self){
+                            flag = new RegExp(value).test(rec.data[param]);
+                            if (flag) {
+                                return false;
+                            }
+                        });
+                    }
+                    else if (Ext.isString(me.paramName)) {
+                        flag = new RegExp(value).test(rec.data[me.paramName]);
+                    }
+                    return flag;
+                });
+            }
             me.hasSearch = true;
             me.triggerCell.item(0).setDisplayed(true);
             me.updateLayout();

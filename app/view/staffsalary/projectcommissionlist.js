@@ -17,6 +17,7 @@ Ext.define('FamilyDecoration.view.staffsalary.ProjectCommissionList', {
     initComponent: function () {
         var me = this,
             projectListSt = Ext.create('Ext.data.Store', {
+                remoteFilter: true,
                 autoLoad: true,
                 model: 'FamilyDecoration.model.Project',
                 proxy: {
