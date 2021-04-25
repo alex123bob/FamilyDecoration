@@ -32,7 +32,7 @@ Ext.define('Ext.ux.form.SearchField', {
                     }
                 },
                 scope: this,
-                buffer: 200
+                buffer: 250
             }
         });
 
