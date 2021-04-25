@@ -152,7 +152,7 @@ class BaseSvc{
 		$tableName = $tableName == "" ? $this->tableName : $tableName;
 		$whereSql = " where 1 = 1 ";
 		$hasWhere = false;
-		$filters = json_decode(($q['_filters'] ?? ""), true) ?? array();
+		$filters = json_decode(urldecode($q['_filter'] ?? "") ?? "", true) ?? array();
 		$filterMap = array();
 		foreach ($filters as $filter){
 			$filterMap[$filter['field']] = array($filter['value'], $filter['oper']);
