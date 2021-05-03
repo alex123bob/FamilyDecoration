@@ -46,7 +46,7 @@ $bill = $bills['data'][0];
 $paidTotalAmount = $billSvc->getPreviousPaidTotalAmountByPayee($bill);
 $billId = $bill['id'];
 $name = str2GBK($bill['payee']);
-$phone = $bill['phoneNumber'];
+$phone = str2GBK($bill['phoneNumber']);
 $projects = $projectSvc->get(array('projectId'=>$bill['projectId']));
 
 $captain = str2GBK($projects['total'] > 0 ? $projects['data'][0]['captain'] : 'unknown');
