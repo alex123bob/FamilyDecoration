@@ -132,6 +132,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplier', {
                         xtype: 'checkbox',
                         boxLabel: '是否长期',
                         hideLabel: true,
+                        inputValue: true,
                         width: '100%',
                         name: 'isLongTerm',
                         checked: me.rec ? me.rec.get('isLongTerm') : false
@@ -175,6 +176,9 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplier', {
                         }
                         obj.phone = phone;
                         delete obj.desc;
+                        if (obj.isLongTerm === undefined) {
+                            obj.isLongTerm = frm.down('[name="isLongTerm"]').getValue();
+                        }
                         if (me.supplier) {
                             Ext.apply(obj, {
                                 id: me.supplier.getId()
