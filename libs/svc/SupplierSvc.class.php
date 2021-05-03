@@ -1,6 +1,8 @@
 <?php
 class SupplierSvc extends BaseSvc
 {
+	public static $TYPES = array('material'=> '材料供应商', 'device'=> '设备供应商');
+
 	public function add($q)
 	{
 		notNullCheck($q, '@name', '供应商名不能为空!');
@@ -10,18 +12,16 @@ class SupplierSvc extends BaseSvc
 
 	public function getSupplierTypes()
 	{
-		return array(
-			'status' => 'successful',
-			'data' => array(
-				array('value' => 'material', 'name' => '材料供应商'),
-				array('value' => 'device', 'name' => '设备供应商')
-			)
-		);
+		$res = array('status' => 'successful', 'data' => array());
+
+		foreach(self::$TYPES as $key => $value){
+			array_push($res['data'], array('value' => $key, 'name' => $value));
+		}
+		return $res;	
 	}
 
 	public function get($q)
 	{
-		global $mysql;
 		$res = parent::get($q);
 		if (isset($_SESSION["supplierId"])) {
 			$supplierId = $_SESSION["supplierId"];
