@@ -7,7 +7,7 @@ Ext.define('FamilyDecoration.model.Supplier', {
         {name: 'address', type: 'string'},
         {name: 'email', type: 'string'},
         {name: 'phone', type: 'string'},
-        {name: 'isLongTerm', converter: function(val){
+        {name: 'isLongTerm', convert: function(val){
             return val === 'true' ? true : false;
         }}, // boolean， 长期,临时供应商
         'type', // material, device
