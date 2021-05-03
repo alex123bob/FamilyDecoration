@@ -121,12 +121,13 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplier', {
                                 }
                             }
                         }),
-						value: me.rec ? me.rec.get('type') : 'material'
+						value: me.supplier ? me.supplier.get('type') : 'material'
 					},
                     {
                         xtype: 'textfield',
                         name: 'remark',
-                        fieldLabel: '备注'
+                        fieldLabel: '备注',
+                        value: me.supplier ? me.supplier.get('remark') : ''
                     },
                     {
                         xtype: 'checkbox',
@@ -135,7 +136,7 @@ Ext.define('FamilyDecoration.view.suppliermanagement.EditSupplier', {
                         inputValue: true,
                         width: '100%',
                         name: 'isLongTerm',
-                        checked: me.rec ? me.rec.get('isLongTerm') : false
+                        checked: me.supplier ? me.supplier.get('isLongTerm') : false
                     },
                     {
                         xtype: 'button',
