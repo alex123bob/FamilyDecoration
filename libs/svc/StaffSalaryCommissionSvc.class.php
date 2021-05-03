@@ -6,11 +6,14 @@
             if (isset($q["start"]) && isset($q["limit"])) {
                 $limitSql .= " LIMIT ".$q["start"].", ".$q["limit"];
             }
-            $sql = "SELECT p.*, c.totalPrice  FROM project p left join contract_engineering c on p.businessId = c.businessId where p.`isDeleted` = 'false' ".$limitSql;
-            $countSql = "SELECT count(*) total FROM project p left join contract_engineering c on p.businessId = c.businessId where p.`isDeleted` = 'false' ";
-            $total = $mysql->DBGetAsMap($countSql);
+
+			$params = array();
+            $whereSql = parent::parseWhereSql('p.',$q,$params,'project');
+            $sql = "SELECT p.*, c.totalPrice  FROM project p left join contract_engineering c on p.businessId = c.businessId ".$whereSql.$limitSql;
+            $countSql = "SELECT count(*) total FROM project p left join contract_engineering c on p.businessId = c.businessId ".$whereSql;
+            $total = $mysql->DBGetAsMap($countSql, $params);
             $total = $total[0]["total"];
-            $data = $mysql->DBGetAsMap($sql);
+            $data = $mysql->DBGetAsMap($sql, $params);
             return array("data" => $data, "total" => $total, "status" => "successful");
         }
 

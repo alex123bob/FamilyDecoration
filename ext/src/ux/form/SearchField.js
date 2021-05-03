@@ -32,7 +32,7 @@ Ext.define('Ext.ux.form.SearchField', {
                     }
                 },
                 scope: this,
-                buffer: 200
+                buffer: 250
             }
         });
 
@@ -62,6 +62,13 @@ Ext.define('Ext.ux.form.SearchField', {
         if (me.hasSearch) {
             me.setValue('');
             me.store.clearFilter();
+            if (me.store.remoteFilter) {
+                var proxy = me.store.getProxy(),
+                    extraParams = proxy.extraParams;
+                delete extraParams._filter;
+                me.store.setProxy(proxy);
+                me.store.load();
+            }
             me.hasSearch = false;
             me.triggerCell.item(0).setDisplayed(false);
             me.updateLayout();
@@ -81,17 +88,21 @@ Ext.define('Ext.ux.form.SearchField', {
             //     value: new RegExp(value) // edit by Alexander Lee
             // });
             if (me.store.remoteFilter) {
-                me.store.load({
-                    params: {
-                        _filter: JSON.stringify([
-                            {
-                                field: me.paramName,
-                                value: value,
-                                oper: 'like'// like, notlike, equal, not equal, in , not in, gt, st,
-                            }
-                        ])
+                var proxy = me.store.getProxy(),
+                    extraParams = proxy.extraParams;
+
+                extraParams._filter = JSON.stringify([
+                    {
+                        field: me.paramName,
+                        value: value,
+                        oper: 'like'// like, notlike, equal, not equal, in , not in, gt, st,
                     }
-                });
+                ]);
+
+                me.store.setProxy(Ext.apply(proxy, {
+                    extraParams: extraParams
+                }));
+                me.store.load();
             }
             else {
                 me.store.filterBy(function (rec, id){
