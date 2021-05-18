@@ -965,7 +965,28 @@ Ext.define('FamilyDecoration.view.projectprogress.Index', {
                                     rec: res && res.data && res.data[0]
                                 });
                                 win.show();
-                            })
+                            });
+                        }
+                    },
+                    {
+                        text: '初始化合同',
+                        name: 'button-initengineeringcontract',
+                        handler: function(){
+                            var resObj = me.getRes(),
+                                treePanel = resObj.proPanel,
+                                st = resObj.proSt,
+                                pro = resObj.pro;
+                            if (!pro) {
+                                Ext.Msg.error('请选择工程！');
+                                return;
+                            }
+                            ajaxUpdate('ContractEngineering.init', {
+                                projectId: pro.getId(),
+                            }, ['projectId'], function (obj){
+                                if ('successful' == obj.status) {
+                                    
+                                }
+                            }, true);
                         }
                     }
                 ],
