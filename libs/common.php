@@ -34,9 +34,10 @@
 			//非业务异常，邮件通知
 			if($errorType != 1){
 				$mailSvc = BaseSvc::getSvc('Mail');
-				$mailContent = '有系统异常啦！<br />'.str_replace(',',',<br />',json_encode($error));
-				$mailSvc->add(array('@mailSubject'=>'有系统异常啦！'.$errstr,'@mailContent'=>$mailContent,'@mailSender'=>'系统提醒','@mailReceiver'=>'674417307@qq.com','@receiverAddress'=>'674417307@qq.com'));
-				$mailSvc->add(array('@mailSubject'=>'有系统异常啦！'.$errstr,'@mailContent'=>$mailContent,'@mailSender'=>'系统提醒','@mailReceiver'=>'547010762@qq.com','@receiverAddress'=>'547010762@qq.com'));
+				$mailContent = 'ERP系统信息<br />'.str_replace(',',',<br />',json_encode($error));
+				// $mailSvc->add(array('@mailSubject'=>'有系统异常啦！'.$errstr,'@mailContent'=>$mailContent,'@mailSender'=>'系统提醒','@mailReceiver'=>'674417307@qq.com','@receiverAddress'=>'674417307@qq.com'));
+				// $mailSvc->add(array('@mailSubject'=>'有系统异常啦！'.$errstr,'@mailContent'=>$mailContent,'@mailSender'=>'系统提醒','@mailReceiver'=>'547010762@qq.com','@receiverAddress'=>'547010762@qq.com'));
+				$mailSvc->add(array('@mailSubject'=>'ERP系统信息'.$errstr,'@mailContent'=>$mailContent,'@mailSender'=>'系统提醒','@mailReceiver'=>'erpjczs@163.com','@receiverAddress'=>'erpjczs@163.com'));
 			}
 		}catch(Exception | Error $e){
 			//var_dump($e);
