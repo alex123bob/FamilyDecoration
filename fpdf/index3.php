@@ -15,16 +15,16 @@ $CellWidth 	= array(11,41,8,12,11,16,13,14,12,15,10,13,8,82);
 $lineHeight 	= 6;
 $titleLeft      = array(17,39,67.5,77,236);
 //$titleLeft      = array(4,25,54.5,65,236);
-//ȫ������
+//全局字体
 $GfontSize		= 10;
 $GfontStyle		= ''; // B bold,U:underline
-//��������
+//大项字体
 $bigItemFontSize = 11;
 $bigItemFontStyles = array_fill(0,14,'B');
-//С������
+//小计字体
 $smallCountFontSize = 10;
 $smallCountFontStyles = array_fill(0,14,'');
-//OPQRST������ʽ
+//OPQRST字体样式
 $NOPQRSTFontSize = 10;
 $NOPQRSTFontStyles = array_fill(0,14,'');
 
@@ -46,11 +46,11 @@ $budgetName = str2GBK(urldecode($budget[0]["budgetName"]));
 $projectComments = str2GBK(urldecode($budget[0]["comments"]));
 $action = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "download";
 $budgetItems = getBudgetItemsByBudgetId($_REQUEST["budgetId"],true);
-$pdf=new PDF('L','mm', 'A4'); //�����µ�FPDF���� 
-$pdf->AddGBFont(); //������������ 
-// $pdf->Open(); //��ʼ����PDF 
-$pdf->AddPage(); //����һҳ 
-$pdf->SetFont("GB",$GfontStyle,$GfontSize); //����������ʽ 
+$pdf=new PDF('L','mm', 'A4'); //创建新的FPDF对象 
+$pdf->AddGBFont(); //设置中文字体 
+// $pdf->Open(); //开始创建PDF 
+$pdf->AddPage(); //增加一页 
+$pdf->SetFont("GB",$GfontStyle,$GfontSize); //设置字体样式 
 $pdf->AliasNbPages("__totalPage__");
 //echo $custName.":".$projectName;
 foreach($budgetItems as $bItem){
@@ -74,7 +74,7 @@ foreach($budgetItems as $bItem){
 					* formatNumber(empty($bItem["lossPercent"]) ? "0" : $bItem["lossPercent"])),
 				$remark);
 	$fontStyles = array_fill(0,14,$GfontStyle);
-	$fontSizes = array_fill(0,13,$GfontSize); //14��,����13������һ��,14�б�ע��С
+	$fontSizes = array_fill(0,13,$GfontSize); //14列,这里13列字体一致,14列备注稍小
 	array_push($fontSizes,8);
 	$borders = array('LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LBR');
 	$align = array('C','L','C','C','C','C','C','C','C','C','C','C','C','L');
@@ -83,23 +83,23 @@ foreach($budgetItems as $bItem){
 		$fontSizes = array_fill(0,14,$NOPQRSTFontSize);
 		$fontStyles = $NOPQRSTFontStyles;
 	}
-	if($itemName == 'С��'){
+	if($itemName == '小计'){
 		$data[12]= '';
 		$fontSizes = array_fill(0,14,$smallCountFontSize);
 		$fontStyles = $smallCountFontStyles;
 	}
-	// �հ���
+	// 空白项
 	if($itemName == '') {
-		//����Ҫ���
+		//不需要损耗
 		$data[12] = '';
 	}
-	//�������
+	//输出大项
 	if(strlen($itemCode) == 1){
-		$data[12] = ''; //�����Ҫ������
+		$data[12] = ''; //大项不需要输出损耗
 		$fontSizes = array_fill(0,14,$bigItemFontSize);
 		$fontStyles = $bigItemFontStyles;
 	}
-	//С�ƺ������
+	//小计后面空行
 	if ($itemCode != "A" && $bItem["basicItemId"] != "" && $bItem["basicSubItemId"] == "") {
 		$pdf->writeCellLine($CellWidth,array("","","","","","","","","","","","","",""),$borders,0,$align,14,$fontSizes);
 	}
@@ -107,35 +107,35 @@ foreach($budgetItems as $bItem){
 }
 
 
-//�������
+//输出其他
 $otherInfo = preg_split('/\n|\r\n|\r|\n\r/',$projectComments);
 $arrayCount = count($otherInfo);
-//�������У���ֹ��ע�������У����������������
+//补齐三行，防止备注不足三行，后面填表格有问题
 while($arrayCount<3){
 	array_push($otherInfo,'');
 	$arrayCount++;
 }
 $titleHeightPosition = 7;
-$pdf->SetFont("GB",'',9); //����������ʽ 
+$pdf->SetFont("GB",'',9); //设置字体样式 
 $pdf->Cell(11,10,"");
 $pdf->Ln();
 $pdf->Cell(11,21,"");
 $pdf->Cell(200,$titleHeightPosition,$otherInfo[0],0);
-$pdf->SetFont("GB",'',10); //����������ʽ 
-$pdf->Cell(21,$titleHeightPosition,'�ͻ�ǩ����',0);
-$pdf->SetFont("GB",'',9); //����������ʽ 
+$pdf->SetFont("GB",'',10); //设置字体样式 
+$pdf->Cell(21,$titleHeightPosition,'客户签名：',0);
+$pdf->SetFont("GB",'',9); //设置字体样式 
 $pdf->Ln();
 $pdf->Cell(11,21,"");
 $pdf->Cell(200,$titleHeightPosition,$otherInfo[1]);
 $pdf->Ln();
 $pdf->Cell(11,21,"");
 $pdf->Cell(200,$titleHeightPosition,$otherInfo[2]);
-$pdf->SetFont("GB",'',10); //����������ʽ 
-$pdf->Cell(21,$titleHeightPosition,'ʱ�䣺',0,0,'R');
-$pdf->Cell(16,$titleHeightPosition,'��',0,0,'R');
-$pdf->Cell(11,$titleHeightPosition,'��',0,0,'R');
-$pdf->Cell(11,$titleHeightPosition,'��',0,0,'R');
-$pdf->SetFont("GB",'',9); //����������ʽ 
+$pdf->SetFont("GB",'',10); //设置字体样式 
+$pdf->Cell(21,$titleHeightPosition,'时间：',0,0,'R');
+$pdf->Cell(16,$titleHeightPosition,'年',0,0,'R');
+$pdf->Cell(11,$titleHeightPosition,'月',0,0,'R');
+$pdf->Cell(11,$titleHeightPosition,'日',0,0,'R');
+$pdf->SetFont("GB",'',9); //设置字体样式 
 $i = 3;
 while($i < $arrayCount){
 	$pdf->Ln();
@@ -145,7 +145,7 @@ while($i < $arrayCount){
 }
 $pdf->Ln();
 $pdf->Cell(11,21,"");
-//$pdf->Cell(200,$titleHeightPosition,'    ע�� 1�� �����۵�Ϊ��ͬ������ ����ͬ�ȷ���Ч���� ҵ��ǩ�ֺ���Ч��');
+//$pdf->Cell(200,$titleHeightPosition,'    注： 1、 本报价单为合同附件， 具有同等法律效力， 业主签字后生效。');
 $pdf->Ln();
 $pdf->Output($projectName.".pdf", $action == "view" ? "I" : "D" );
 ?>  
