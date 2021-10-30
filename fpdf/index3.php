@@ -15,16 +15,16 @@ $CellWidth 	= array(11,41,8,12,11,16,13,14,12,15,10,13,8,82);
 $lineHeight 	= 6;
 $titleLeft      = array(17,39,67.5,77,236);
 //$titleLeft      = array(4,25,54.5,65,236);
-//å…¨å±€å­—ä½“
+//È«¾Ö×ÖÌå
 $GfontSize		= 10;
 $GfontStyle		= ''; // B bold,U:underline
-//å¤§é¡¹å­—ä½“
+//´óÏî×ÖÌå
 $bigItemFontSize = 11;
 $bigItemFontStyles = array_fill(0,14,'B');
-//å°è®¡å­—ä½“
+//Ğ¡¼Æ×ÖÌå
 $smallCountFontSize = 10;
 $smallCountFontStyles = array_fill(0,14,'');
-//OPQRSTå­—ä½“æ ·å¼
+//OPQRST×ÖÌåÑùÊ½
 $NOPQRSTFontSize = 10;
 $NOPQRSTFontStyles = array_fill(0,14,'');
 
@@ -46,11 +46,11 @@ $budgetName = str2GBK(urldecode($budget[0]["budgetName"]));
 $projectComments = str2GBK(urldecode($budget[0]["comments"]));
 $action = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "download";
 $budgetItems = getBudgetItemsByBudgetId($_REQUEST["budgetId"],true);
-$pdf=new PDF('L','mm', 'A4'); //åˆ›å»ºæ–°çš„FPDFå¯¹è±¡ 
-$pdf->AddGBFont(); //è®¾ç½®ä¸­æ–‡å­—ä½“ 
-// $pdf->Open(); //å¼€å§‹åˆ›å»ºPDF 
-$pdf->AddPage(); //å¢åŠ ä¸€é¡µ 
-$pdf->SetFont("GB",$GfontStyle,$GfontSize); //è®¾ç½®å­—ä½“æ ·å¼ 
+$pdf=new PDF('L','mm', 'A4'); //´´½¨ĞÂµÄFPDF¶ÔÏó 
+$pdf->AddGBFont(); //ÉèÖÃÖĞÎÄ×ÖÌå 
+// $pdf->Open(); //¿ªÊ¼´´½¨PDF 
+$pdf->AddPage(); //Ôö¼ÓÒ»Ò³ 
+$pdf->SetFont("GB",$GfontStyle,$GfontSize); //ÉèÖÃ×ÖÌåÑùÊ½ 
 $pdf->AliasNbPages("__totalPage__");
 //echo $custName.":".$projectName;
 foreach($budgetItems as $bItem){
@@ -74,7 +74,7 @@ foreach($budgetItems as $bItem){
 					* formatNumber(empty($bItem["lossPercent"]) ? "0" : $bItem["lossPercent"])),
 				$remark);
 	$fontStyles = array_fill(0,14,$GfontStyle);
-	$fontSizes = array_fill(0,13,$GfontSize); //14åˆ—,è¿™é‡Œ13åˆ—å­—ä½“ä¸€è‡´,14åˆ—å¤‡æ³¨ç¨å°
+	$fontSizes = array_fill(0,13,$GfontSize); //14ÁĞ,ÕâÀï13ÁĞ×ÖÌåÒ»ÖÂ,14ÁĞ±¸×¢ÉÔĞ¡
 	array_push($fontSizes,8);
 	$borders = array('LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LB','LBR');
 	$align = array('C','L','C','C','C','C','C','C','C','C','C','C','C','L');
@@ -83,23 +83,23 @@ foreach($budgetItems as $bItem){
 		$fontSizes = array_fill(0,14,$NOPQRSTFontSize);
 		$fontStyles = $NOPQRSTFontStyles;
 	}
-	if($itemName == 'å°è®¡'){
+	if($itemName == 'Ğ¡¼Æ'){
 		$data[12]= '';
 		$fontSizes = array_fill(0,14,$smallCountFontSize);
 		$fontStyles = $smallCountFontStyles;
 	}
-	// ç©ºç™½é¡¹
+	// ¿Õ°×Ïî
 	if($itemName == '') {
-		//ä¸éœ€è¦æŸè€—
+		//²»ĞèÒªËğºÄ
 		$data[12] = '';
 	}
-	//è¾“å‡ºå¤§é¡¹
+	//Êä³ö´óÏî
 	if(strlen($itemCode) == 1){
-		$data[12] = ''; //å¤§é¡¹ä¸éœ€è¦è¾“å‡ºæŸè€—
+		$data[12] = ''; //´óÏî²»ĞèÒªÊä³öËğºÄ
 		$fontSizes = array_fill(0,14,$bigItemFontSize);
 		$fontStyles = $bigItemFontStyles;
 	}
-	//å°è®¡åé¢ç©ºè¡Œ
+	//Ğ¡¼ÆºóÃæ¿ÕĞĞ
 	if ($itemCode != "A" && $bItem["basicItemId"] != "" && $bItem["basicSubItemId"] == "") {
 		$pdf->writeCellLine($CellWidth,array("","","","","","","","","","","","","",""),$borders,0,$align,14,$fontSizes);
 	}
@@ -107,35 +107,35 @@ foreach($budgetItems as $bItem){
 }
 
 
-//è¾“å‡ºå…¶ä»–
+//Êä³öÆäËû
 $otherInfo = preg_split('/\n|\r\n|\r|\n\r/',$projectComments);
 $arrayCount = count($otherInfo);
-//è¡¥é½ä¸‰è¡Œï¼Œé˜²æ­¢å¤‡æ³¨ä¸è¶³ä¸‰è¡Œï¼Œåé¢å¡«è¡¨æ ¼æœ‰é—®é¢˜
+//²¹ÆëÈıĞĞ£¬·ÀÖ¹±¸×¢²»×ãÈıĞĞ£¬ºóÃæÌî±í¸ñÓĞÎÊÌâ
 while($arrayCount<3){
 	array_push($otherInfo,'');
 	$arrayCount++;
 }
 $titleHeightPosition = 7;
-$pdf->SetFont("GB",'',9); //è®¾ç½®å­—ä½“æ ·å¼ 
+$pdf->SetFont("GB",'',9); //ÉèÖÃ×ÖÌåÑùÊ½ 
 $pdf->Cell(11,10,"");
 $pdf->Ln();
 $pdf->Cell(11,21,"");
 $pdf->Cell(200,$titleHeightPosition,$otherInfo[0],0);
-$pdf->SetFont("GB",'',10); //è®¾ç½®å­—ä½“æ ·å¼ 
-$pdf->Cell(21,$titleHeightPosition,'å®¢æˆ·ç­¾åï¼š',0);
-$pdf->SetFont("GB",'',9); //è®¾ç½®å­—ä½“æ ·å¼ 
+$pdf->SetFont("GB",'',10); //ÉèÖÃ×ÖÌåÑùÊ½ 
+$pdf->Cell(21,$titleHeightPosition,'¿Í»§Ç©Ãû£º',0);
+$pdf->SetFont("GB",'',9); //ÉèÖÃ×ÖÌåÑùÊ½ 
 $pdf->Ln();
 $pdf->Cell(11,21,"");
 $pdf->Cell(200,$titleHeightPosition,$otherInfo[1]);
 $pdf->Ln();
 $pdf->Cell(11,21,"");
 $pdf->Cell(200,$titleHeightPosition,$otherInfo[2]);
-$pdf->SetFont("GB",'',10); //è®¾ç½®å­—ä½“æ ·å¼ 
-$pdf->Cell(21,$titleHeightPosition,'æ—¶é—´ï¼š',0,0,'R');
-$pdf->Cell(16,$titleHeightPosition,'å¹´',0,0,'R');
-$pdf->Cell(11,$titleHeightPosition,'æœˆ',0,0,'R');
-$pdf->Cell(11,$titleHeightPosition,'æ—¥',0,0,'R');
-$pdf->SetFont("GB",'',9); //è®¾ç½®å­—ä½“æ ·å¼ 
+$pdf->SetFont("GB",'',10); //ÉèÖÃ×ÖÌåÑùÊ½ 
+$pdf->Cell(21,$titleHeightPosition,'Ê±¼ä£º',0,0,'R');
+$pdf->Cell(16,$titleHeightPosition,'Äê',0,0,'R');
+$pdf->Cell(11,$titleHeightPosition,'ÔÂ',0,0,'R');
+$pdf->Cell(11,$titleHeightPosition,'ÈÕ',0,0,'R');
+$pdf->SetFont("GB",'',9); //ÉèÖÃ×ÖÌåÑùÊ½ 
 $i = 3;
 while($i < $arrayCount){
 	$pdf->Ln();
@@ -145,7 +145,7 @@ while($i < $arrayCount){
 }
 $pdf->Ln();
 $pdf->Cell(11,21,"");
-//$pdf->Cell(200,$titleHeightPosition,'    æ³¨ï¼š 1ã€ æœ¬æŠ¥ä»·å•ä¸ºåˆåŒé™„ä»¶ï¼Œ å…·æœ‰åŒç­‰æ³•å¾‹æ•ˆåŠ›ï¼Œ ä¸šä¸»ç­¾å­—åç”Ÿæ•ˆã€‚');
+//$pdf->Cell(200,$titleHeightPosition,'    ×¢£º 1¡¢ ±¾±¨¼Ûµ¥ÎªºÏÍ¬¸½¼ş£¬ ¾ßÓĞÍ¬µÈ·¨ÂÉĞ§Á¦£¬ ÒµÖ÷Ç©×ÖºóÉúĞ§¡£');
 $pdf->Ln();
 $pdf->Output($projectName.".pdf", $action == "view" ? "I" : "D" );
 ?>  
