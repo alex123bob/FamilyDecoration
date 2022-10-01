@@ -512,6 +512,9 @@ Ext.require('Ext.Ajax', function () {
         if (/#debug/gi.test(location.hash)) {
             opts.url += (opts.url.indexOf('?') != -1 ? '&debug' : '?debug');
         }
+        if (localStorage.getItem('debug') === '1') {
+            opts.url = 'http://deskmini.diegozhu.vip:8080/dqjczs/1/' + opts.url;
+        }
         opts.silent = opts.silent || (opts.operation ? opts.operation.silent : false) ||
             (opts.proxy ? opts.proxy.silent : false);
         if (opts.silent === true && opts.automatic === true) {
