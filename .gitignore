@@ -3,3 +3,26 @@ sencha.cfg
 build
 */.DS_Store
 production/*
+
+# for browser disable security
+BrowserMetrics-spare.pma
+Local State
+ZxcvbnData
+UrlParamClassifications
+Subresource Filter
+SSLErrorAssistant
+SafetyTips
+pnacl
+PKIMetadata
+OriginTrials
+OptimizationHints
+OnDeviceHeadSuggestModel
+AutofillStates
+CertificateRevocation
+ClientSidePhishing
+Crowd Deny
+Default
+DesktopSHaringHub
+FileTypePolicies
+FirstPartySetsPreloaded
+Safe Browsing
