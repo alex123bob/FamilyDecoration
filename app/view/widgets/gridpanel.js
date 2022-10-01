@@ -11,10 +11,12 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
 	initComponent: function () {
 		var me = this;
 
-        var st = Ext.create('FamilyDecoration.store.'+me.backendSvc, {
-            autoLoad: true
-        });
-        me.store = st;
+        if (me.backendSvc) {
+            var st = Ext.create('FamilyDecoration.store.'+me.backendSvc, {
+                autoLoad: true
+            });
+            me.store = st;
+        }
 
         me.tools = me.tools || [];
 

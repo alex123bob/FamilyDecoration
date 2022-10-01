@@ -50,8 +50,8 @@
                         icon: 'resources/img/check-sign-business.png'
                     },
                     {
-                        name: '小区内容',
-                        cmp: 'regionmgm-index',
+                        name: '投标项目',
+                        cmp: 'bidproject-index',
                         leaf: true,
                         icon: 'resources/img/leave.png'
                     },

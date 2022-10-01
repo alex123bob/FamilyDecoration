@@ -54,7 +54,8 @@ Ext.define('FamilyDecoration.Application', {
         'ContractManagement',
         'StaffSalary',
         'CostListItem',
-        'CostMake'
+        'CostMake',
+        'BidProject'
     ],
 
     stores: [
