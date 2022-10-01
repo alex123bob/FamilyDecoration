@@ -16,15 +16,21 @@ Ext.define('FamilyDecoration.view.bidproject.Index', {
             {
                 flex: 1,
                 height: '100%',
+                margin: '0 1 0 0',
                 title: '区域',
                 xtype: 'widgets-gridpanel',
+                backendSvc: 'BidProjectRegion',
+                canDelete: User.isAdmin(),
+                canEdit: User.isAdmin(),
                 columns: {
                     defaults: {
-                        flex: 1
+                        flex: 1,
+                        editor: 'textfield'
                     },
                     items: [
                         {
-                            text: '名称'
+                            text: '名称',
+                            dataIndex: 'name'
                         }
                     ]
                 }
