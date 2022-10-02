@@ -30,6 +30,8 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
                 tooltip: '刷新当前应用',
                 callback: function (){
                     me.store.reload();
+                    var selModel = me.getSelectionModel();
+                    selModel.deselectAll();
                 }
             }
         );
@@ -66,6 +68,7 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
                             var field = e.field,
                                 rec = e.record,
                                 newValues = e.newValues,
+                                selModel = me.getSelectionModel(),
                                 editorItems = editor.getEditor().items.items;
                             for (var pro in newValues) {
                                 switch (newValues[pro] && newValues[pro].constructor) {
@@ -96,6 +99,7 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
                                         showMsg('添加成功！');
                                         rec.setId(res.data.id);
                                         rec.commit();
+                                        selModel.deselectAll();
                                     });
                                 }
                                 else {
@@ -103,6 +107,7 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
                                         showMsg('添加成功！');
                                         rec.setId(res.data.id);
                                         rec.commit();
+                                        selModel.deselectAll();
                                     });
                                 }
                             }
