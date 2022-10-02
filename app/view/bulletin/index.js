@@ -762,8 +762,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                         },
                     ]
                 },
-                onRender: function(grid, opts) {
-                    debugger
+                onAfterReander: function(grid, opts) {
                     var st = grid.getStore();
                     st.load()
                 }
