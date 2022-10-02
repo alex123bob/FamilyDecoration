@@ -73,6 +73,16 @@ Ext.define('FamilyDecoration.view.bidproject.Index', {
                     {
                         text: '导出',
                         icon: './resources/img/upload.png',
+                        handler: function() {
+                            var region = me.getComponent('gridpanel-bidprojectregion'),
+                                rec = region.getSelectionModel().getSelection()[0];
+                            if (rec) {
+                                window.open('./libs/api.php?action=BidProject.get&download=开标工程&regionId=' + rec.getId());
+                            }
+                            else {
+                                showMsg('请选区域');
+                            }
+                        }
                     }
                 ],
                 columns: {
