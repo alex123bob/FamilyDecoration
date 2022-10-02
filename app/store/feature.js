@@ -23,30 +23,35 @@
                         name: '电销列表',
                         cmp: 'telemarket-index',
                         leaf: true,
+                        closed: true,
                         icon: 'resources/img/telemarket.png'
                     },
                     {
                         name: '我的业务',
                         cmp: 'mybusiness-index',
                         leaf: true,
+                        closed: true,
                         icon: 'resources/img/mybusiness.png'
                     },
                     {
                         name: '查看业务',
                         cmp: 'checkbusiness-index',
                         leaf: true,
+                        closed: true,
                         icon: 'resources/img/checkbusiness.png'
                     },
                     {
                         name: '签单业务',
                         cmp: 'signbusiness-index',
                         leaf: true,
+                        closed: true,
                         icon: 'resources/img/sign-business.png'
                     },
                     {
                         name: '查看签单业务',
                         cmp: 'checksignbusiness-index',
                         leaf: true,
+                        closed: true,
                         icon: 'resources/img/check-sign-business.png'
                     },
                     {
@@ -59,12 +64,14 @@
                         name: '废单业务',
                         cmp: 'deadbusiness-index',
                         leaf: true,
+                        closed: true,
                         icon: 'resources/img/trashbin1.png'
                     },
                     {
                         name: '等待业务',
                         cmp: 'businesstotransfer-index',
                         leaf: true,
+                        closed: true,
                         icon: 'resources/img/wait.png'
                     }
                 ]
@@ -72,6 +79,7 @@
             {
                 name: '决策',
                 expanded: false,
+                closed: true,
                 icon: 'resources/img/strategy.png',
                 cmp: 'strategy-parent',
                 children: [
@@ -162,6 +170,7 @@
             { 
                 name: "查看图库",
                 cmp: 'chart-index',
+                closed: true,
                 leaf: true,
                 icon: 'resources/img/chart.png'
             },
@@ -314,6 +323,7 @@
                 expanded: false,
                 cmp: 'personnel-parent',
                 icon: 'resources/img/personnel.png',
+                closed: true,
                 children: [
                     {
                         name: "帐号管理",
@@ -349,7 +359,7 @@
         filterFeature: function (rec){
             var flag;
 
-            if (rec.get('cmp') == '') {
+            if (rec.get('cmp') == '' || rec.get('closed') === true) {
                 flag = false;
             }
             else if (rec.get('cmp') == 'bulletin-index') {
