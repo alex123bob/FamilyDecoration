@@ -74,7 +74,7 @@
 
 	function printCSVCell($value) {
 		$value = isset($value) ? $value : '';
-		if(is_numeric($value)){
+		if(is_numeric($value) && $value > 10000000){
 			print_r('\''.$value.',');
 		}else if(contains($value, '"')){
 			print_r(str_replace('"','""', $value).',');
