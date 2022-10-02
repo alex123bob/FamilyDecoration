@@ -2,6 +2,8 @@ Ext.define('FamilyDecoration.view.bidproject.Index', {
     extend: 'Ext.container.Container',
     alias: 'widget.bidproject-index',
     requires: [
+        'FamilyDecoration.store.BidProject',
+        'FamilyDecoration.store.BidProjectRegion'
     ],
 
     layout: {
