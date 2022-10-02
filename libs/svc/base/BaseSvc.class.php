@@ -153,65 +153,73 @@ class BaseSvc{
 		$whereSql = " where 1 = 1 ";
 		$hasWhere = false;
 		$filters = json_decode(urldecode($q['_filter'] ?? "") ?? "", true) ?? array();
+
 		$filterMap = array();
 		foreach ($filters as $filter){
-			$filterMap[$filter['field']] = array($filter['value'], $filter['oper']);
+			if(!isset($filterMap[$filter['field']])){
+				$filterMap[$filter['field']] = array();
+			}
+			array_push($filterMap[$filter['field']],  array($filter['value'], $filter['oper']));
 		}
+
 		foreach ($TableMapping[$tableName] as $f) {
 			if(!isset($filterMap[$f])){
 				continue;
 			}
-			switch($filterMap[$f][1]){
-				case 'greaterThan': 
-					$whereSql = $whereSql." and $prefix`$f` > '?' "; 
-					array_push($params, $filterMap[$f][0]);
-					break;
-				case 'notGreaterThan': 
-					$whereSql = $whereSql." and $prefix`$f` <= '?' "; 
-					array_push($params, $filterMap[$f][0]);
-					break;
-				case 'notSmallerThan': 
-					$whereSql = $whereSql." and $prefix`$f` >= '?' "; 
-					array_push($params, $filterMap[$f][0]);
-					break;
-				case 'smallerThan': 
-					$whereSql = $whereSql." and $prefix`$f` < '?' "; 
-					array_push($params, $filterMap[$f][0]);
-					break;
-				case 'equal': 
-					$whereSql = $whereSql." and $prefix`$f` = '?' "; 
-					array_push($params, $filterMap[$f][0]);
-					break;
-				case 'notEqual': 
-					$whereSql = $whereSql." and $prefix`$f` != '?' "; 
-					array_push($params, $filterMap[$f][0]);
-					break;
-				case 'like': 
-					$whereSql = $whereSql." and $prefix`$f` like '%?%' "; 
-					array_push($params, $filterMap[$f][0]);
-					break;
-				case 'notLike': 
-					$whereSql = $whereSql." and $prefix`$f` not like '%?%' "; 
-					array_push($params, $filterMap[$f][0]);
-					break;
-				case 'in': 
-					$whereSql = $whereSql." and $prefix`$f` in ( ";
-					foreach($filterMap[$f][0] as $key => $item){
-						$whereSql = $whereSql. ( $key === 0 ? "'?'" : ",'?'");
-						array_push($params, $item);
-					}
-					$whereSql = $whereSql." ) ";
-					break;
-				case 'notIn': 
-					$whereSql = $whereSql." and $prefix`$f` notIn ( ";
-					foreach($filterMap[$f][0] as $key => $item){
-						$whereSql = $whereSql. ( $key === 0 ? "'?'" : ",'?'");
-						array_push($params, $item);
-					}
-					$whereSql = $whereSql." ) ";
-					break;
+			foreach($filterMap[$f] as $map) {
+				switch($map[1]){
+					case 'greaterThan': 
+						$whereSql = $whereSql." and $prefix`$f` > '?' "; 
+						array_push($params, $map[0]);
+						break;
+					case 'notGreaterThan': 
+						$whereSql = $whereSql." and $prefix`$f` <= '?' "; 
+						array_push($params, $map[0]);
+						break;
+					case 'notSmallerThan': 
+						$whereSql = $whereSql." and $prefix`$f` >= '?' "; 
+						array_push($params, $map[0]);
+						break;
+					case 'smallerThan': 
+						$whereSql = $whereSql." and $prefix`$f` < '?' "; 
+						array_push($params, $map[0]);
+						break;
+					case 'equal': 
+						$whereSql = $whereSql." and $prefix`$f` = '?' "; 
+						array_push($params, $map[0]);
+						break;
+					case 'notEqual': 
+						$whereSql = $whereSql." and $prefix`$f` != '?' "; 
+						array_push($params, $map[0]);
+						break;
+					case 'like': 
+						$whereSql = $whereSql." and $prefix`$f` like '%?%' "; 
+						array_push($params, $map[0]);
+						break;
+					case 'notLike': 
+						$whereSql = $whereSql." and $prefix`$f` not like '%?%' "; 
+						array_push($params, $map[0]);
+						break;
+					case 'in': 
+						$whereSql = $whereSql." and $prefix`$f` in ( ";
+						foreach($map[0] as $key => $item){
+							$whereSql = $whereSql. ( $key === 0 ? "'?'" : ",'?'");
+							array_push($params, $item);
+						}
+						$whereSql = $whereSql." ) ";
+						break;
+					case 'notIn': 
+						$whereSql = $whereSql." and $prefix`$f` notIn ( ";
+						foreach($map[0] as $key => $item){
+							$whereSql = $whereSql. ( $key === 0 ? "'?'" : ",'?'");
+							array_push($params, $item);
+						}
+						$whereSql = $whereSql." ) ";
+						break;
+				}
+				
+				$hasWhere = true;			
 			}
-			$hasWhere = true;			
 		}
 		//echo isset($q['id']);
 		foreach ($TableMapping[$tableName] as $f) {
