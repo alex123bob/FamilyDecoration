@@ -10,6 +10,7 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
     canEdit: false,
     canRefresh: true,
     onSelectionChange: null,
+    onRender: null,
     addHandler: null,
 
 	initComponent: function () {
@@ -144,6 +145,10 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
 
         if (typeof me.onSelectionChange === 'function') {
             me.addListener('selectionchange', me.onSelectionChange);
+        }
+
+        if (typeof me.onRender === 'function') {
+            me.addListener('afterrender', me.onRender);
         }
 
 		me.callParent();

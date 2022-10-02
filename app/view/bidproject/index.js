@@ -39,13 +39,12 @@ Ext.define('FamilyDecoration.view.bidproject.Index', {
                     var rec = recs[0];
                     if (rec) {
                         var bidProject = me.getComponent('gridpanel-bidproject'),
-                            st = bidProject.getStore(),
-                            proxy = st.getProxy();
-                        Ext.apply(proxy.extraParams, {
-                            regionId: rec.getId()
+                            st = bidProject.getStore();
+                        st.loadPage(1, {
+                            params: {
+                                regionId: rec.getId()
+                            }
                         });
-                        st.setProxy(proxy);
-                        st.loadPage(1);
                     }
                 }
             },
@@ -64,10 +63,15 @@ Ext.define('FamilyDecoration.view.bidproject.Index', {
                 addHandler: function(backendSvc, newValues, callback) {
                     var region = me.getComponent('gridpanel-bidprojectregion'),
                         rec = region.getSelectionModel().getSelection()[0];
-                    Ext.apply(newValues, {
-                        regionId: rec.getId()
-                    });
-                    ajaxAdd(backendSvc, newValues, callback);
+                    if (rec) {
+                        Ext.apply(newValues, {
+                            regionId: rec.getId()
+                        });
+                        ajaxAdd(backendSvc, newValues, callback);
+                    }
+                    else {
+                        showMsg('请选区域');
+                    }
                 },
                 bbar: [
                     {
@@ -128,7 +132,20 @@ Ext.define('FamilyDecoration.view.bidproject.Index', {
                                 submitFormat: 'Y-m-d',
                                 format: 'Y-m-d',
                             },
-                            renderer: Ext.util.Format.dateRenderer('Y-m-d')
+                            renderer: function(val, meta, rec, rowIdx, colIdx, st, view) {
+                                var d = Ext.util.Format.dateRenderer('Y-m-d')(val),
+                                    res = '';
+                                if (new Date(d) - Date.now() < 0) {
+                                    res = '<strong><font color="#cccccc">' + d + '</font></strong>';
+                                }
+                                else if ((new Date(d) - Date.now()) / 1000 / 60 /60 / 24 <= 7) {
+                                    res = '<strong><font color="#f300ffb5">' + d + '</font></strong>';
+                                }
+                                else if ((new Date(d) - Date.now()) / 1000 / 60 /60 / 24 <= 14) {
+                                    res = '<strong><font color="darkorange">' + d + '</font></strong>';
+                                }
+                                return res;
+                            }
                         },
                         {
                             text: '具体时间',

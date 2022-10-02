@@ -645,42 +645,16 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 name: 'gridpanel-bidproject',
                 backendSvc: 'BidProject',
                 canDelete: User.isAdmin(),
-                canEdit: User.isAdmin(),
+                canEdit: false,
+                canRefresh: false,
+                canDelete: false,
+                canAutoLoad: false,
                 columns: {
                     defaults: {
                         flex: 1,
                         editor: 'textfield'
                     },
                     items: [
-                        {
-                            xtype: 'actioncolumn',
-                            editor: null,
-                            width: 25,
-                            flex: null,
-                            items: [
-                                {
-                                    icon: 'resources/img/add.png',
-                                    tooltip: '申请投标保证金',
-                                    handler: function(grid, rowIndex, colIndex) {
-                                        var st = grid.getStore();
-                                        var rec = st.getAt(rowIndex);
-                                        if (rec.getId()) {
-                                            ajaxGet('StatementBill', 'get', {
-                                                refId: rec.getId(),
-                                                billType: 'bidbond'
-                                            }, function(obj){
-                                                var win = Ext.create('FamilyDecoration.view.bulletin.BidDepositForm', {
-                                                    isEdit: true,
-                                                    bidProject: rec,
-                                                    rec: obj.data[0]
-                                                });
-                                                win.show();
-                                            });
-                                        }
-                                    }
-                                }
-                            ]
-                        },
                         {
                             text: '开标时间',
                             dataIndex: 'startTime',
@@ -787,6 +761,11 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                             dataIndex: 'floatDownRate',
                         },
                     ]
+                },
+                onRender: function(grid, opts) {
+                    debugger
+                    var st = grid.getStore();
+                    st.load()
                 }
             }
         ];
