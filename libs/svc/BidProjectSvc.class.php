@@ -8,6 +8,9 @@ class BidProjectSvc extends BaseSvc
     }
 
 	public function get($q){
+		if (isset($q['regionId'])) {
+			$this->appendWhere = " and bid_project.regionId = '".$q['regionId']."' ";
+		}
 		$this->appendSelect = ', b.status as billStatus';
 		$this->appendJoin = " left join statement_bill b on bid_project.id = b.refId and b.billType = 'bidbond'";
 		return parent::get($q);

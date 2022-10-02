@@ -18,6 +18,7 @@ Ext.define('FamilyDecoration.view.bidproject.Index', {
                 height: '100%',
                 margin: '0 1 0 0',
                 title: '区域',
+                itemId: 'gridpanel-bidprojectregion',
                 xtype: 'widgets-gridpanel',
                 backendSvc: 'BidProjectRegion',
                 canDelete: User.isAdmin(),
@@ -33,18 +34,41 @@ Ext.define('FamilyDecoration.view.bidproject.Index', {
                             dataIndex: 'name'
                         }
                     ]
+                },
+                onSelectionChange: function(selModel, recs, opts ) {
+                    var rec = recs[0];
+                    if (rec) {
+                        var bidProject = me.getComponent('gridpanel-bidproject'),
+                            st = bidProject.getStore(),
+                            proxy = st.getProxy();
+                        Ext.apply(proxy.extraParams, {
+                            regionId: rec.getId()
+                        });
+                        st.setProxy(proxy);
+                        st.loadPage(1);
+                    }
                 }
             },
             {
                 height: '100%',
+                canRefresh: false,
+                canAutoLoad: false,
                 flex: 4,
                 xtype: 'widgets-gridpanel',
                 title: '开标情况',
-                id: 'gridpanel-bidproject',
+                itemId: 'gridpanel-bidproject',
                 name: 'gridpanel-bidproject',
                 backendSvc: 'BidProject',
                 canDelete: User.isAdmin(),
                 canEdit: User.isAdmin(),
+                addHandler: function(backendSvc, newValues, callback) {
+                    var region = me.getComponent('gridpanel-bidprojectregion'),
+                        rec = region.getSelectionModel().getSelection()[0];
+                    Ext.apply(newValues, {
+                        regionId: rec.getId()
+                    });
+                    ajaxAdd(backendSvc, newValues, callback);
+                },
                 bbar: [
                     {
                         text: '导出',

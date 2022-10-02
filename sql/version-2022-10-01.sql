@@ -10,3 +10,4 @@ insert into `versions`(`id`) values ('version-2022-10-01');
 
 ALTER TABLE `bid_project` ADD PRIMARY KEY(`id`);
 ALTER TABLE `bid_project_region` ADD PRIMARY KEY(`id`);
+ALTER TABLE `bid_project` ADD `regionId` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'bid project region id' AFTER `id`;

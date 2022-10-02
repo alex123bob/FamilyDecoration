@@ -4,23 +4,27 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
 
 	requires: ['Ext.ux.form.SearchField', 'Ext.form.ComboBox', 'FamilyDecoration.store.WorkCategory', 'Ext.grid.plugin.DragDrop'],
 
+    canAutoLoad: true,
     backendSvc: null,
     canDelete: false,
     canEdit: false,
+    canRefresh: true,
+    onSelectionChange: null,
+    addHandler: null,
 
 	initComponent: function () {
 		var me = this;
 
         if (me.backendSvc) {
             var st = Ext.create('FamilyDecoration.store.'+me.backendSvc, {
-                autoLoad: true
+                autoLoad: me.canAutoLoad
             });
             me.store = st;
         }
 
         me.tools = me.tools || [];
 
-        me.tools.push(
+        me.canRefresh && me.tools.push(
             {
                 type: 'refresh',
                 tooltip: '刷新当前应用',
@@ -87,11 +91,20 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
                                 });
                             }
                             else {
-                                ajaxAdd(me.backendSvc, newValues, function (res) {
-                                    showMsg('添加成功！');
-                                    rec.setId(res.data.id);
-                                    rec.commit();
-                                });
+                                if (typeof me.addHandler === 'function') {
+                                    me.addHandler(me.backendSvc, newValues, function (res) {
+                                        showMsg('添加成功！');
+                                        rec.setId(res.data.id);
+                                        rec.commit();
+                                    });
+                                }
+                                else {
+                                    ajaxAdd(me.backendSvc, newValues, function (res) {
+                                        showMsg('添加成功！');
+                                        rec.setId(res.data.id);
+                                        rec.commit();
+                                    });
+                                }
                             }
                         }
                     }
@@ -122,7 +135,11 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
                     }
                 }
             ]
-        })
+        });
+
+        if (typeof me.onSelectionChange === 'function') {
+            me.addListener('selectionchange', me.onSelectionChange);
+        }
 
 		me.callParent();
 	}
