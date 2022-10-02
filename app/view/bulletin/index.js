@@ -640,7 +640,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 width: '100%',
                 flex: 1,
                 xtype: 'widgets-gridpanel',
-                title: '开标情况',
+                title: '最近三天开标情况',
                 id: 'gridpanel-bidproject',
                 name: 'gridpanel-bidproject',
                 backendSvc: 'BidProject',
@@ -764,7 +764,22 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 },
                 onAfterReander: function(grid, opts) {
                     var st = grid.getStore();
-                    st.load()
+                    st.load({
+                        params: {
+                            _filter: JSON.stringify([
+                                {
+                                    field: 'startTime',
+                                    oper: 'greaterThan',
+                                    value: Ext.util.Format.dateRenderer('Y-m-d')(new Date())
+                                },
+                                {
+                                    field: 'startTime',
+                                    oper: 'notGreaterThan',
+                                    value: Ext.util.Format.dateRenderer('Y-m-d')(new Date(Date.now() + 3 * 24 * 60 * 60 * 1000))
+                                }
+                            ])
+                        }
+                    })
                 }
             }
         ];
