@@ -120,6 +120,7 @@
 		}
 		return $ip;
 	}
+
 	function checkUserOnlineUniqueness(){
 		global $mysql;
 		if (!isset($_SESSION["name"])){

@@ -41,5 +41,47 @@
 			
 		}
 	}
-	echo (json_encode($res));
+	$isDownload = isset($_REQUEST["download"]);
+	if(!$isDownload) {
+		echo (json_encode($res));
+	}else{
+		// download
+		global $downloadName, $downloadFields;
+		$name = ($_REQUEST['download'] == '' ? 'd.'.$_REQUEST["action"] : $_REQUEST['download'] ).'-'.date("Y-m-d H.i.s").'.csv';
+		$name = isset($downloadName) ? $downloadName.date("Y-m-d H.i.s").'.csv' : $name;
+		Header('Content-Disposition: attachment; filename='.$name);
+
+		if(isset($downloadFields)){
+			echo(join(',',array_keys($downloadFields))."\n");
+		}
+		if(isset($res['data']) && is_array($res['data'])){
+			foreach($res["data"] as $key => $item){
+				if(isset($downloadFields)) {
+					foreach($downloadFields as $label => $key){
+						printCSVCell(isset($item[$key]) ? $item[$key] : '' );
+					}
+				}else{
+					echo(join(',',array_keys($item))."\n");
+					foreach($item as $key => $value){
+						printCSVCell($value);
+					}
+				}
+				echo "\n";
+			}
+		}
+	}
+
+
+	function printCSVCell($value) {
+		$value = isset($value) ? $value : '';
+		if(is_numeric($value)){
+			print_r('\''.$value.',');
+		}else if(contains($value, '"')){
+			print_r(str_replace('"','""', $value).',');
+		}else if(contains($value, ',')){
+			print_r('"'.$value.'",');
+		}else{
+			print_r($value.',');
+		}
+	} 
 ?>
