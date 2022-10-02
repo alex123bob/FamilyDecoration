@@ -7,3 +7,6 @@ CREATE TABLE `bid_project_region` (
     `isDeleted` varchar(5) NOT NULL DEFAULT 'false'
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 insert into `versions`(`id`) values ('version-2022-10-01');
+
+ALTER TABLE `bid_project` ADD PRIMARY KEY(`id`);
+ALTER TABLE `bid_project_region` ADD PRIMARY KEY(`id`);
