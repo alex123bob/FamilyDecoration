@@ -1,6 +1,6 @@
 <?php
     
-    $isLocal = $_SERVER['SERVER_NAME'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1';
+    $isLocal = $_SERVER['SERVER_NAME'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1' || ($_SERVER['HTTP_HOST'] == 'deskmini.diegozhu.vip');
     if(!$isLocal && $_SERVER['HTTPS'] != 'on') {
         header('HTTP/1.1 301 Moved Permanently');
         header('Location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
