@@ -70,7 +70,7 @@ table.pros td{
 .gridpanel-editbillitemremark .x-grid-cell-inner, .gridpanel-materialorderlist .x-grid-cell-inner,
 .gridpanel-paymentbillcheck .x-grid-cell-inner, .gridpanel-contractengineering-changelog .x-grid-cell-inner,
 .gridpanel-accountloginfo .x-grid-cell-inner, .gridpanel-income .x-grid-cell-inner, .gridpanel-expense .x-grid-cell-inner,
-.gridpanel-depositOutList .x-grid-cell-inner {
+.gridpanel-depositOutList .x-grid-cell-inner, .familydecoration-generic-gridpanel .x-grid-cell-inner{
   white-space: normal;
   word-wrap: break-word;
 }

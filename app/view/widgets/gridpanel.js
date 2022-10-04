@@ -4,6 +4,7 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
 
 	requires: ['Ext.ux.form.SearchField', 'Ext.form.ComboBox', 'FamilyDecoration.store.WorkCategory', 'Ext.grid.plugin.DragDrop'],
 
+    cls: 'familydecoration-generic-gridpanel',
     canAutoLoad: true,
     backendSvc: null,
     canDelete: false,
