@@ -97,7 +97,7 @@
 
 	function getVisitorProjectsByCaptain($visitorName, $captainName, $settled){
 		global $mysql;
-		$sql = "select * from user left join project p on p.projectId = user.projectId where user.name = '?' and p.captainName = '?' and p.projectId is not null and p.isDeleted = 'false' ";
+		$sql = "select * from user left join project p on p.projectId = user.projectId where user.name = '?' and p.captainName = '?' and p.projectId is not null and p.isDeleted = 'false' and projectTime > '2020-01-01-01 00:00:00'";
 		$params = array();
 		array_push($params, $visitorName);
 		array_push($params, $captainName);
@@ -176,7 +176,7 @@
 		$needStatementBillCount = isset($_REQUEST["needStatementBillCount"]) ? $_REQUEST["needStatementBillCount"] : "";
 		$needMaterialOrderCount = isset($_REQUEST["needMaterialOrderCount"]) ? $_REQUEST["needMaterialOrderCount"] : "";
 		$includeFrozen = $_REQUEST["includeFrozen"];
-		$sql = "select * from project where `isDeleted` = 'false' and `captainName` = '?' ";
+		$sql = "select * from project where `isDeleted` = 'false' and projectTime > '2020-01-01-01 00:00:00' and `captainName` = '?' ";
 		$orderby = " ORDER BY `projectTime` ASC ";
 		$params = array();
 		array_push($params, $captainName);
