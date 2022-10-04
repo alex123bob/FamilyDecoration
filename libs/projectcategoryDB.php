@@ -31,7 +31,7 @@
 			array_push($filterParams, $_GET["salesman"]);
 		}
 		$orderBySql = " ORDER BY `captainName` ASC ";
-		$sql = "select * from `project` where `isDeleted` = 'false' and `isFrozen` = 0 ".$userCheckSql.$filterSql.$orderBySql;
+		$sql = "select * from `project` where `isDeleted` = 'false' and `isFrozen` = 0 and projectTime > '2020-01-01-01 00:00:00' ".$userCheckSql.$filterSql.$orderBySql;
 		$limitSql = " limit $start, $limit ";
 		$projects = $mysql->DBGetAsMap($sql.$limitSql, $filterParams);
 		$count = count($mysql->DBGetAsMap($sql, $filterParams));
