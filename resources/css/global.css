@@ -150,10 +150,12 @@ tr.business-locked .x-grid-td {
 
 /* tasktable module class */
 tr.priority-emergency .x-grid-td {
-    background-color: mediumpurple;
+    color: darkorchid;
+    font-weight: 999;
 }
 tr.priority-general .x-grid-td {
-    background-color: sandybrown;
+    color: darkorange;
+    font-weight: 666;
 }
 /* end of tasktable module class */
 

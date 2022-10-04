@@ -48,9 +48,10 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 						var rec = sels[0],
 							taskTable = me.getComponent('taskTable'),
 							cfg;
+
 						if (rec && rec.get('name')) {
 							cfg = {
-								taskExecutor: rec.get('name')
+								specificUser: rec.get('name')
 							};
 							taskTable.filterCfg = cfg;
 							taskTable.refresh({
@@ -74,6 +75,9 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 				flex: 7,
 				needLoad: false,
 				assistantEditEnabled: function (){
+					return User.isAdmin();
+				},
+				acceptorEditEnabled: function (){
 					return User.isAdmin();
 				},
 				scoreEditEnabled: function (){
@@ -116,11 +120,13 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 								user = selModel.getSelection()[0];
 							var win = Ext.create('FamilyDecoration.view.taskassign.AssignTaskWin', {
 								callback: function (){
-									taskTable.refresh({
-										params: {
-											taskExecutor: user.get('name')
-										}
-									});
+									if (user) {
+										taskTable.refresh({
+											params: {
+												specificUser: user.get('name')
+											}
+										});
+									}
 								}
 							});
 							win.show();
@@ -145,7 +151,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 									callback: function (){
 										taskTable.refresh({
 											params: {
-												taskExecutor: user.get('name')
+												specificUser: user.get('name')
 											}
 										});
 									}
@@ -189,7 +195,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 														showMsg('任务删除成功!');
 														taskTable.refresh({
 															params: {
-																taskExecutor: user.get('name')
+																specificUser: user.get('name')
 															}
 														})
 													}

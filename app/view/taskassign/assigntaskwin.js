@@ -22,6 +22,7 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 				xtype: 'container',
 				flex: 2,
 				margin: '0 1 0 0',
+				padding: 2,
 				defaults: {
 					width: '100%'
 				},
@@ -110,6 +111,15 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 								}
 							]
 						})
+					},
+					{
+						height: 20,
+						itemId: 'filePath',
+						margin: '4 0 4 0',
+						xtype: 'textfield',
+						emptyText: '文件位置',
+						allowBlank: false,
+						value: me.task ? me.task.get('filePath') : '',
 					},
 					{
 						xtype: 'fieldcontainer',
@@ -202,11 +212,12 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 					mail = Ext.ComponentQuery.query('[name="checkbox-sendMail"]')[0],
 					sendContent,
 					taskBody = me.down('[name="container-taskBody"]'),
+					filePath = taskBody.getComponent('filePath'),
 					timePeriod = taskBody.getComponent('timePeriod'),
 					startTime = timePeriod.getComponent('startTime'),
 					endTime = timePeriod.getComponent('endTime'),
 					priority = taskBody.getComponent('priority');
-				if (name.isValid() && content.isValid() && startTime.isValid() && endTime.isValid() && priority.isValid()) {
+				if (name.isValid() && content.isValid() && startTime.isValid() && endTime.isValid() && priority.isValid() && filePath.isValid()) {
 					if (startTime.getValue() - endTime.getValue() > 0) {
 						showMsg('开始时间不能晚于完成时间！');
 						return;
@@ -220,6 +231,7 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 						}
 						executor = executor.join(',');
 						Ext.apply(p, {
+							filePath: filePath.getValue(),
 							taskExecutor: executor,
 							startTime: Ext.Date.format(startTime.getValue(), 'Y-m-d H:i:s'),
 							endTime: Ext.Date.format(endTime.getValue(), 'Y-m-d H:i:s'),

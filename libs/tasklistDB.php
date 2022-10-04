@@ -9,6 +9,7 @@
 				"taskContent"=>myStrEscape($post["taskContent"]),
 				"taskDispatcher"=>$_SESSION["name"],
 				"taskExecutor"=>$executor[$i],
+				"filePath" => $post["filePath"],
 				"taskProcess"=>0,
 				"startTime"=>$post["startTime"],
 				"endTime"=>$post["endTime"],
@@ -92,13 +93,23 @@
 		global $mysql;
 		$sql = " SELECT t.*, u.realname as taskDispatcherRealName, p.realname as taskExecutorRealName FROM `task_list` t left join user u on t.taskDispatcher=u.name left join user p on t.taskExecutor = p.name";
 		$orderBy = " ORDER BY t.priority DESC, endTime ASC ";
-		$fields = array("taskName", "taskContent", "startTime", "endTime", "priority", "assistant", "score", "taskDispatcher", "taskExecutor", "taskProcess");
+		$fields = array("taskName", "taskContent", "startTime", "endTime", "priority", "assistant", "acceptor", "score", "taskDispatcher", "taskExecutor", "taskProcess", "filePath");
 		$params = array();
 		$values = array();
-		foreach ($fields as $key => $field) {
-			if (isset($data[$field])) {
-				array_push($params, "t.`".$field."` = '?'");
-				array_push($values, $data[$field]);
+		if (isset($data['specificUser'])) {
+			$sql .= str_replace('?', $data["specificUser"], " where t.isDeleted = 'false' and (t.`taskDispatcher` = '?' or t.`taskExecutor` = '?' or t.`assistant` = '?' or t.`acceptor` = '?')");
+		}
+		else {
+			foreach ($fields as $key => $field) {
+				if (isset($data[$field])) {
+					if ($field == 'acceptor' || $field == 'assistant') {
+						array_push($params, "t.`".$field."` like '%?%'");
+					}
+					else {
+						array_push($params, "t.`".$field."` = '?'");
+					}
+					array_push($values, $data[$field]);
+				}
 			}
 		}
 		if (count($params) > 0) {
@@ -114,6 +125,11 @@
 				$assistantArr[$j] = getUserRealName($assistantArr[$j])["realname"];
 			}
 			$res[$i]["assistantRealName"] = implode(",", $assistantArr);
+			$acceptorArr = explode(",", $res[$i]["acceptor"]);
+			for ($j=0; $j < count($acceptorArr); $j++) { 
+				$acceptorArr[$j] = getUserRealName($acceptorArr[$j])["realname"];
+			}
+			$res[$i]["acceptorRealName"] = implode(",", $acceptorArr);
 		}
 		return $res;
 	}
@@ -262,7 +278,7 @@
 	function editTaskList($data){
 		global $mysql;
 		$obj = array();
-		$fields = array("id", "taskName","createTime", "taskContent","isDeleted", "taskProcess", "startTime", "endTime", "priority", "assistant", "score");
+		$fields = array("id", "taskName","createTime", "taskContent","isDeleted", "isFinished", "taskProcess", "filePath", "startTime", "endTime", "priority", "assistant", "acceptor", "score");
 		foreach ($fields as $field)
 			if (isset($data[$field]))
 				$obj[$field] = $data[$field];

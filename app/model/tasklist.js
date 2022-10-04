@@ -18,7 +18,11 @@ Ext.define('FamilyDecoration.model.TaskList', {
         {name: 'realName', string: 'string'},
         {name: 'taskExecutor', type: 'string'},
         {name: 'taskExecutorRealName', type: 'string'},
+        {name: 'filePath', type: 'string'},
+        {name: 'acceptor', type: 'string'},
+        {name: 'acceptorRealName', type: 'string'},
         {name: 'isDeleted', type: 'boolean'},
+        {name: 'isFinished', type: 'boolean'},
         {name: 'taskProcess', type: 'string'},
         {name: 'year', type: 'string'},
         {name: 'month', type: 'string'}
