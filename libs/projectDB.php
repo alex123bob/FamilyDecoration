@@ -68,13 +68,13 @@
 		global $mysql;
 		$needRdyck1BillCount = isset($_REQUEST["needRdyck1BillCount"]) ? $_REQUEST["needRdyck1BillCount"] : "";
 		$needMaterialOrderCount = isset($_REQUEST["needMaterialOrderCount"]) ? $_REQUEST["needMaterialOrderCount"] : "";
-		$statementBillSql = "select count(*) as num from `statement_bill` b left join `project` p on b.projectId = p.projectId where p.captainName = '?' and b.status = 'rdyck1' and b.isDeleted = 'false' and p.isDeleted = 'false' and p.isFrozen = 0 ";
-		$materialOrderSql = "select count(*) as num from `supplier_order` sp left join `project` p on sp.projectId = p.projectId where p.captainName = '?' and sp.status = 'rdyck' and sp.isDeleted = 'false' and p.isDeleted = 'false' and p.isFrozen = 0";
+		$statementBillSql = "select count(*) as num from `statement_bill` b left join `project` p on b.projectId = p.projectId where p.captainName = '?' and b.status = 'rdyck1' and b.isDeleted = 'false' and p.isDeleted = 'false' and p.isFrozen = 0 and p.projectTime > '2020-01-01-01 00:00:00'";
+		$materialOrderSql = "select count(*) as num from `supplier_order` sp left join `project` p on sp.projectId = p.projectId where p.captainName = '?' and sp.status = 'rdyck' and sp.isDeleted = 'false' and p.isDeleted = 'false' and p.isFrozen = 0 and p.projectTime > '2020-01-01-01 00:00:00'";
 		if ($captainName != "") {
-			$res = $mysql->DBGetAsMap("select distinct `captainName`, `captain` from project where `isDeleted` = 'false' and `captainName` = '$captainName' ");
+			$res = $mysql->DBGetAsMap("select distinct `captainName`, `captain` from project where `isDeleted` = 'false' and `captainName` = '$captainName' and projectTime > '2020-01-01-01 00:00:00'");
 		}
 		else {
-			$res = $mysql->DBGetAsMap("select distinct `captainName`, `captain` from project where `isDeleted` = 'false' and `captainName` is not NULL");
+			$res = $mysql->DBGetAsMap("select distinct `captainName`, `captain` from project where `isDeleted` = 'false' and `captainName` is not NULL and projectTime > '2020-01-01-01 00:00:00'");
 		}
 		if ($needRdyck1BillCount == 'true') {
 			for ($i=0; $i < count($res); $i++) { 
@@ -97,7 +97,7 @@
 
 	function getVisitorProjectsByCaptain($visitorName, $captainName, $settled){
 		global $mysql;
-		$sql = "select * from user left join project p on p.projectId = user.projectId where user.name = '?' and p.captainName = '?' and p.projectId is not null and p.isDeleted = 'false' ";
+		$sql = "select * from user left join project p on p.projectId = user.projectId where user.name = '?' and p.captainName = '?' and p.projectId is not null and p.isDeleted = 'false' and projectTime > '2020-01-01-01 00:00:00'";
 		$params = array();
 		array_push($params, $visitorName);
 		array_push($params, $captainName);
@@ -176,7 +176,7 @@
 		$needStatementBillCount = isset($_REQUEST["needStatementBillCount"]) ? $_REQUEST["needStatementBillCount"] : "";
 		$needMaterialOrderCount = isset($_REQUEST["needMaterialOrderCount"]) ? $_REQUEST["needMaterialOrderCount"] : "";
 		$includeFrozen = $_REQUEST["includeFrozen"];
-		$sql = "select * from project where `isDeleted` = 'false' and `captainName` = '?' ";
+		$sql = "select * from project where `isDeleted` = 'false' and projectTime > '2020-01-01-01 00:00:00' and `captainName` = '?' ";
 		$orderby = " ORDER BY `projectTime` ASC ";
 		$params = array();
 		array_push($params, $captainName);
