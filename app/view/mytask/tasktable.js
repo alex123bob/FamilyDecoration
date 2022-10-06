@@ -186,7 +186,7 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                                 return;
                             }
                             Ext.Msg.confirm('确认', '是否验收当前任务，将其置为完成？', function(btnId) {
-                                if (btnId === 'cancel') {
+                                if (btnId === 'no') {
                                     return;
                                 }
                                 Ext.Ajax.request({

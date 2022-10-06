@@ -174,55 +174,28 @@ Ext.define('FamilyDecoration.view.bidproject.Index', {
                             dataIndex: 'depositProperty',
                         },
                         {
-                            text: '付款情况',
-                            dataIndex: 'billStatus',
-                            flex: 1,
-                            editor: null,
-                            renderer: function(status){
-                                var statusName;
-                                switch (status) {
-                                    case 'new':
-                                        statusName = '未提交';
-                                        break;
-                    
-                                    case 'rdyck':
-                                        statusName = '已提交';
-                                        break;
-                    
-                                    case 'chk':
-                                        statusName = '<font color="green">已审核</font>';
-                                        break;
-                    
-                                    case 'paid':
-                                        statusName = '<font color="darkblue">已付款</font>';;
-                                        break;
-                    
-                                    case 'arch':
-                                        statusName = '<font color="darkgray">已归档</font>';
-                                        break;
-                                
-                                    default:
-                                        statusName = '';
-                                        break;
-                                }
-                                return statusName;
-                            }
-                        },
-                        {
                             text: '代理机构',
                             dataIndex: 'agency',
                         },
                         {
-                            text: '投标人及项目经理佳诚',
-                            dataIndex: 'bidderA',
-                        },
-                        {
-                            text: '投标人及项目经理康凯',
-                            dataIndex: 'bidderB',
-                        },
-                        {
                             text: '预算造价',
                             dataIndex: 'budgetCost',
+                            editor: 'numberfield',
+                            renderer: function(val){
+                                return Ext.util.Format.currency(val, '￥');
+                            }
+                        },
+                        {
+                            text: '控制价',
+                            dataIndex: 'controlledPrice',
+                            editor: 'numberfield',
+                            renderer: function(val){
+                                return Ext.util.Format.currency(val, '￥');
+                            }
+                        },
+                        {
+                            text: '投标价',
+                            dataIndex: 'bidPrice',
                             editor: 'numberfield',
                             renderer: function(val){
                                 return Ext.util.Format.currency(val, '￥');
@@ -234,7 +207,7 @@ Ext.define('FamilyDecoration.view.bidproject.Index', {
                         },
                         {
                             text: '中标价',
-                            dataIndex: 'bidPrice',
+                            dataIndex: 'bidWinningPrice',
                             editor: 'numberfield',
                             renderer: function(val){
                                 return Ext.util.Format.currency(val, '￥');

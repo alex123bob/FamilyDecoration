@@ -131,13 +131,18 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
                     icon: 'resources/img/flaticon-delete.svg',
                     tooltip: '删除',
                     handler: function(grid, rowIndex, colIndex) {
-                        var st = grid.getStore();
-                        var rec = st.getAt(rowIndex);
-                        ajaxDel(me.backendSvc, {
-                            id: rec.getId()
-                        }, function () {
-                            showMsg('已删除!');
-                            st.reload();
+                        Ext.Msg.confirm('确认', '是否删除当前内容？', function(btnId) {
+                            if ('no' === btnId) {
+                                return;
+                            }
+                            var st = grid.getStore();
+                            var rec = st.getAt(rowIndex);
+                            ajaxDel(me.backendSvc, {
+                                id: rec.getId()
+                            }, function () {
+                                showMsg('已删除!');
+                                st.reload();
+                            });
                         });
                     }
                 }

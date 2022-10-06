@@ -11,9 +11,8 @@ class BidProjectSvc extends BaseSvc
 		if (isset($q['regionId'])) {
 			$this->appendWhere = " and bid_project.regionId = '".$q['regionId']."' ";
 		}
-		$this->appendSelect = ', b.status as billStatus, region.name as regionName';
-		$this->appendJoin = " left join statement_bill b on bid_project.id = b.refId and b.billType = 'bidbond'  "
-						  . " left join bid_project_region region on region.id = bid_project.regionId";
+		$this->appendSelect = ', region.name as regionName';
+		$this->appendJoin = " left join bid_project_region region on region.id = bid_project.regionId";
 
 		global $downloadFields;
 		$downloadFields = array(
@@ -25,15 +24,12 @@ class BidProjectSvc extends BaseSvc
 			'开标地点'=>'location',
 			'保证金属性'=>'depositProperty',
 			'代理机构'=>'agency',
-			'bidA'=>'bidderA',
-			'bidB'=>'bidderB',
 			'预算造价'=>'budgetCost',
-			'中标人'=>'perferredBidder',
-			'标的价格'=>'bidPrice',
+			'中标人'=>'preferredBidder',
+			'投标价'=>'bidPrice',
 			'下浮率'=>'floatDownRate',
 			'录入时间'=>'createTime',
 			'最后更新时间'=>'updateTime',
-			'标的状态'=>'billStatus',
 			'区域'=>"regionName"
 		);
 		return parent::get($q);

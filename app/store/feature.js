@@ -206,6 +206,7 @@
                     },
                     {
                         name: '主材订购单',
+                        closed: true,
                         cmp: 'mainmaterial-index',
                         leaf: true,
                         icon: 'resources/img/order.png'
@@ -218,6 +219,7 @@
                     },
                     {
                         name: '材料申购',
+                        closed: true,
                         cmp: 'materialrequest-index',
                         leaf: true,
                         icon: 'resources/img/material_request.png'
@@ -230,6 +232,7 @@
                     },
                     {
                         name: '计划用工',
+                        closed: true,
                         cmp: 'planlabor-index',
                         leaf: true,
                         icon: 'resources/img/planlabor.png'
@@ -323,7 +326,6 @@
                 expanded: false,
                 cmp: 'personnel-parent',
                 icon: 'resources/img/personnel.png',
-                closed: true,
                 children: [
                     {
                         name: "帐号管理",
@@ -334,12 +336,14 @@
                     {
                         name: '人事统计',
                         cmp: 'personnel-index',
+                        closed: true,
                         leaf: true,
                         icon: 'resources/img/statistics.png'
                     },
                     {
                         name: '员工工资',
                         cmp: 'staffsalary-index',
+                        closed: true,
                         leaf: true,
                         icon: 'resources/img/staff_salary.png'
                     }
