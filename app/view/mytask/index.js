@@ -16,39 +16,15 @@ Ext.define('FamilyDecoration.view.mytask.Index', {
 
         me.items = [
             {
-                flex: 1,
                 xtype: 'mytask-tasktable',
-                title: '我执行的任务',
                 filterCfg: {
-                    taskExecutor: User.getName()
+                    specificUser: User.getName()
                 },
-                processEditEnabled: function (){
-                    return true;
-                }
-            },
-            {
-                xtype: 'mytask-tasktable',
-                filterCfg: {
-                    taskDispatcher: User.getName()
+                processEditEnabled: function(rec) {
+                    return rec.get('taskExecutor') === User.getName();
                 },
-                title: '我分配的任务',
-                flex: 1
-            },
-            {
-                xtype: 'mytask-tasktable',
-                title: '我协助的任务',
-                flex: 1,
-                filterCfg: {
-                    assistant: User.getName()
-                }
-            },
-            {
-                xtype: 'mytask-tasktable',
-                title: '待我验收任务',
-                flex: 1,
-                acceptEditEnabled: true,
-                filterCfg: {
-                    acceptor: User.getName()
+                acceptEditEnabled: function(rec) {
+                    return rec.get('acceptor') === User.getName();
                 }
             }
         ]

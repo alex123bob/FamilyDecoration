@@ -1,4 +1,7 @@
 <?php
+
+	$taskStatus = array('new', 'rdyck', 'accepted', 'arch'); // todo for status change in terms of task, need task audit table
+
 	function addTaskList($post){
 		$executor = explode(",", $post["taskExecutor"]);
 		global $mysql;
@@ -97,7 +100,7 @@
 		$params = array();
 		$values = array();
 		if (isset($data['specificUser'])) {
-			$sql .= str_replace('?', $data["specificUser"], " where t.isDeleted = 'false' and (t.`taskDispatcher` = '?' or t.`taskExecutor` = '?' or t.`assistant` = '?' or t.`acceptor` = '?')");
+			$sql .= str_replace('?', $data["specificUser"], " where t.isDeleted = 'false' and t.isFinished = 'false' and (t.`taskDispatcher` = '?' or t.`taskExecutor` = '?' or t.`assistant` = '?' or t.`acceptor` = '?')");
 		}
 		else {
 			foreach ($fields as $key => $field) {
@@ -114,7 +117,7 @@
 		}
 		if (count($params) > 0) {
 			$params = implode(" and ", $params);
-			$sql .= " where t.isDeleted = 'false' and ".$params;
+			$sql .= " where t.isDeleted = 'false' and t.isFinished = 'false' and ".$params;
 		}
 		$sql .= $orderBy;
 		$res = $mysql->DBGetAsMap($sql, $values);
@@ -278,7 +281,7 @@
 	function editTaskList($data){
 		global $mysql;
 		$obj = array();
-		$fields = array("id", "taskName","createTime", "taskContent","isDeleted", "isFinished", "taskProcess", "filePath", "startTime", "endTime", "priority", "assistant", "acceptor", "score");
+		$fields = array("id", "taskName","createTime", "taskContent","isDeleted", "isAccepted", "isFinished", "taskProcess", "filePath", "startTime", "endTime", "priority", "assistant", "acceptor", "score");
 		foreach ($fields as $field)
 			if (isset($data[$field]))
 				$obj[$field] = $data[$field];

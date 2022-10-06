@@ -80,7 +80,10 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 				acceptorEditEnabled: function (){
 					return User.isAdmin();
 				},
-				scoreEditEnabled: function (){
+				acceptEditEnabled: function() {
+					return User.isAdmin();
+				},
+				finishEditEnabled: function() {
 					return User.isAdmin();
 				},
 				_getBtns: function (){

@@ -23,9 +23,9 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
     // this feature is for manager and administrator to distribute corresponding assistant for current task
     assistantEditEnabled: Ext.emptyFn,
     acceptorEditEnabled: Ext.emptyFn,
-    scoreEditEnabled: Ext.emptyFn,
     processEditEnabled: Ext.emptyFn,
-    acceptEditEnabled: false,
+    acceptEditEnabled: Ext.emptyFn,
+    finishEditEnabled: Ext.emptyFn,
 
     refresh: function (cfg) {
         var st = this.getStore();
@@ -103,6 +103,63 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
             },
             items: [
                 {
+                    flex: null,
+                    xtype: 'actioncolumn',
+                    width: 25,
+                    items: [
+                        {
+                            isDisabled: function(view, rowIdx, colIdx, item, rec) {
+                                return me.acceptEditEnabled(rec) === false;
+                            },
+                            icon: 'resources/img/flaticon-checkmark.svg',
+                            tooltip: '验收',
+                            handler: function(grid, rowIndex, colIndex) {
+                                var st = grid.getStore(),
+                                    rec = st.getAt(rowIndex);
+
+                                if (rec.get('isAccepted')) {
+                                    showMsg('已验收，无需操作!');
+                                    return;
+                                }
+                                Ext.Msg.read('请对当前任务进行评分。当前分数:' + rec.get('score'), function (inputVal) {
+                                    inputVal = parseInt(inputVal, 10);
+                                    swal.close();
+                                    if (isNaN(inputVal)) {
+                                        showMsg('请输入数字');
+                                        return;
+                                    }
+                                    if (inputVal < 0 || inputVal > 100) {
+                                        showMsg('输入的数字不在0～100之间');
+                                        return;
+                                    }
+                                    var params = {
+                                        action: 'editTaskList',
+                                        id: rec.getId()
+                                    };
+                                    params['score'] = inputVal;
+                                    params['isAccepted'] = true;
+                                    Ext.Ajax.request({
+                                        url: './libs/tasklist.php',
+                                        method: 'POST',
+                                        params: params,
+                                        callback: function (opts, success, res) {
+                                            if (success) {
+                                                var obj = Ext.decode(res.responseText);
+                                                if ('successful' == obj.status) {
+                                                    showMsg('编辑成功!');
+                                                    me.refresh({
+                                                        params: me.filterCfg
+                                                    });
+                                                }
+                                            }
+                                        }
+                                    })
+                                });
+                            }
+                        },
+                    ]
+                },
+                {
                     text: '分配人',
                     dataIndex: 'taskDispatcherRealName'
                 },
@@ -159,8 +216,8 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                     dataIndex: 'acceptorRealName'
                 },
                 {
-                    text: '已完成',
-                    dataIndex: 'isFinished',
+                    text: '已验收',
+                    dataIndex: 'isAccepted',
                     renderer: function(val) {
                         return val === true ? '<font color="green"><strong>是</strong></font>' : '否';
                     }
@@ -168,24 +225,24 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
             ]
         };
 
-        if (this.acceptEditEnabled) {
+        if (me.finishEditEnabled()) {
             this.columns.items.unshift({
                 flex: null,
                 xtype: 'actioncolumn',
                 width: 25,
                 items: [
                     {
-                        icon: 'resources/img/flaticon-checkmark.svg',
-                        tooltip: '验收',
+                        icon: 'resources/img/check.png',
+                        tooltip: '完成任务',
                         handler: function(grid, rowIndex, colIndex) {
                             var st = grid.getStore(),
                                 rec = st.getAt(rowIndex);
 
                             if (rec.get('isFinished')) {
-                                showMsg('已完成任务，无需验收!');
+                                showMsg('任务已完成，无需操作!');
                                 return;
                             }
-                            Ext.Msg.confirm('确认', '是否验收当前任务，将其置为完成？', function(btnId) {
+                            Ext.Msg.confirm('确认', '是否将当前任务其置为完成？', function(btnId) {
                                 if (btnId === 'no') {
                                     return;
                                 }
@@ -200,8 +257,12 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                                     callback: function (opts, success, res){
                                         if (success) {
                                             var obj = Ext.decode(res.responseText);
+                                            debugger
                                             if ('successful' == obj.status) {
                                                 showMsg('编辑成功!');
+                                                me.refresh({
+                                                    params: me.filterCfg
+                                                });
                                             }
                                             else {
                                                 showMsg(obj.errMsg);
@@ -211,7 +272,7 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                                 });
                             });
                         }
-                    }
+                    },
                 ]
             });
         }
@@ -260,7 +321,7 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                         };
                     switch (dataIndex) {
                         case "assistantRealName":
-                            if (me.assistantEditEnabled()) {
+                            if (me.assistantEditEnabled(rec)) {
                                 var win = Ext.create('FamilyDecoration.view.mytask.AssistantList', {
                                     task: rec,
                                     assistantList: rec.get('assistant').split(','),
@@ -274,17 +335,12 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                             }
                             break;
                         case "taskProcess":
-                            if (me.processEditEnabled()) {
+                            if (me.processEditEnabled(rec)) {
                                 func('请输入完成百分比，从0到100。当前完成情况:' + rec.get('taskProcess'), 'taskProcess', rec);
                             }
                             break;
-                        case 'score':
-                            if (me.scoreEditEnabled()) {
-                                func('请对当前任务进行评分。当前分数:' + rec.get('score'), 'score', rec);
-                            }
-                            break;
                         case 'acceptorRealName':
-                            if (me.acceptorEditEnabled()) {
+                            if (me.acceptorEditEnabled(rec)) {
                                 var win = Ext.create('FamilyDecoration.view.mytask.AcceptorList', {
                                     title: '编辑任务验收人',
                                     task: rec,
@@ -328,7 +384,7 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                             '<br />','<br />',
                             '<strong>文件位置:</strong> ' + rec.get('filePath'),
                             '<br />','<br />',
-                            '<strong>验收状态:</strong> ' + (rec.get('isFinished') ? '<font color="green">已完成</font>' : '未完成'),
+                            '<strong>验收状态:</strong> ' + (rec.get('isAccepted') ? '<font color="green">已验收</font>' : '未验收'),
                         ].join(''),
                         modal: true,
                         buttons: [

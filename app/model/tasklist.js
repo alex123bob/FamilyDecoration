@@ -22,6 +22,7 @@ Ext.define('FamilyDecoration.model.TaskList', {
         {name: 'acceptor', type: 'string'},
         {name: 'acceptorRealName', type: 'string'},
         {name: 'isDeleted', type: 'boolean'},
+        {name: 'isAccepted', type: 'boolean'},
         {name: 'isFinished', type: 'boolean'},
         {name: 'taskProcess', type: 'string'},
         {name: 'year', type: 'string'},
