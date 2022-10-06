@@ -101,7 +101,11 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
                                         showMsg('添加成功！');
                                         rec.setId(res.data.id);
                                         rec.commit();
-                                        selModel.deselectAll();
+                                        var index = st.indexOf(rec);
+                                        selModel.deselect(index);
+                                        setTimeout(function() {
+                                            selModel.select(index);
+                                        }, 100);
                                     });
                                 }
                                 else {
@@ -109,7 +113,11 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
                                         showMsg('添加成功！');
                                         rec.setId(res.data.id);
                                         rec.commit();
-                                        selModel.deselectAll();
+                                        var index = st.indexOf(rec);
+                                        selModel.deselect(index);
+                                        setTimeout(function() {
+                                            selModel.select(index);
+                                        }, 100);
                                     });
                                 }
                             }
