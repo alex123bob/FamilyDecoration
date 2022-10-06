@@ -1,0 +1,1 @@
+open -na Google\ Chrome --args --user-data-dir=/Library/WebServer/Documents/FamilyDecoration --disable-web-security --disable-site-isolation-trials
