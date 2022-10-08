@@ -257,7 +257,6 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                                     callback: function (opts, success, res){
                                         if (success) {
                                             var obj = Ext.decode(res.responseText);
-                                            debugger
                                             if ('successful' == obj.status) {
                                                 showMsg('编辑成功!');
                                                 me.refresh({

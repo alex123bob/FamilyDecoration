@@ -137,6 +137,31 @@
 		return $res;
 	}
 
+	function getTaskListByDepartment($data) {
+		global $mysql;
+		$departmentPrefix = $data["department"];
+		$sql = " SELECT t.* FROM `task_list` t left join user u1 on t.taskExecutor = u1.name left join user u2 on t.taskDispatcher = u2.name left join user u3 on t.assistant = u3.name left join user u4 on t.acceptor = u4.name where (u1.level like '%?%' or u2.level like '%?%' or u3.level like '%?%' or u4.level like '%?%') and t.isDeleted = 'false' and t.isFinished = 'false' ";
+		$orderBy = " ORDER BY t.priority DESC, t.endTime ASC ";
+		$sql = str_replace("?", $departmentPrefix, $sql);
+		$sql .= $orderBy;
+		$values = array();
+		$res = $mysql->DBGetAsMap($sql, $values);
+		include_once "userDB.php";
+		for ($i=0; $i < count($res); $i++) { 
+			$assistantArr = explode(",", $res[$i]["assistant"]);
+			for ($j=0; $j < count($assistantArr); $j++) { 
+				$assistantArr[$j] = getUserRealName($assistantArr[$j])["realname"];
+			}
+			$res[$i]["assistantRealName"] = implode(",", $assistantArr);
+			$acceptorArr = explode(",", $res[$i]["acceptor"]);
+			for ($j=0; $j < count($acceptorArr); $j++) { 
+				$acceptorArr[$j] = getUserRealName($acceptorArr[$j])["realname"];
+			}
+			$res[$i]["acceptorRealName"] = implode(",", $acceptorArr);
+		}
+		return $res;
+	}
+
 	function getTaskListYears(){
 		$currentUser = $_SESSION["name"];
 		$currentUserLevel = $_SESSION["level"];

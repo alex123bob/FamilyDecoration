@@ -37,7 +37,7 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 				margin: '0 1 0 0',
 				listeners: {
 					itemclick: function (view, rec) {
-						if (rec.get('level') && rec.get('name')) {
+						if (rec.get('level') || rec.get('name')) {
 							return true;
 						}
 						else {
@@ -52,6 +52,16 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 						if (rec && rec.get('name')) {
 							cfg = {
 								specificUser: rec.get('name')
+							};
+							taskTable.filterCfg = cfg;
+							taskTable.refresh({
+								params: cfg
+							});
+						}
+						else if (rec && rec.get('level')) {
+							cfg = {
+								department: rec.get('level').split('-')[0] + '-',
+								action: 'getTaskListByDepartment'
 							};
 							taskTable.filterCfg = cfg;
 							taskTable.refresh({
