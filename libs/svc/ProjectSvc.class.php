@@ -158,7 +158,7 @@ class ProjectSvc extends BaseSvc
 				o.isDeleted = 'false' AND i.isDeleted = 'false' and o.projectId in ($projectIds)
 			GROUP BY
 				o.projectId,
-				professionType;
+				i.professionType;
 		";
 		global $mysql;
 		$costData = $mysql->DBGetAsMap($sql);
