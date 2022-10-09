@@ -49,7 +49,7 @@ class UserSvc extends BaseSvc
 		if(strpos($level, "006") === 0) return '游客';
 		if(strpos($level, "007") === 0) return '宣传部';
 		if(strpos($level, "008") === 0) return '财务部';
-		if(strpos($level, "009") === 0) return '预决算部';
+		if(strpos($level, "009") === 0) return '经营科';
 		return '非部门';
 	}
 }
