@@ -100,7 +100,7 @@
 		$params = array();
 		$values = array();
 		if (isset($data['specificUser'])) {
-			$sql .= str_replace('?', $data["specificUser"], " where t.isDeleted = 'false' and t.isFinished = 'false' and (t.`taskDispatcher` = '?' or t.`taskExecutor` = '?' or t.`assistant` = '?' or t.`acceptor` = '?')");
+			$sql .= str_replace('?', $data["specificUser"], " where t.isDeleted = 'false' and t.isFinished = 'false' and (t.`taskDispatcher` = '?' or t.`taskExecutor` = '?' or t.`assistant` like '%?%' or t.`acceptor` like '%?%')");
 		}
 		else {
 			foreach ($fields as $key => $field) {
@@ -140,7 +140,7 @@
 	function getTaskListByDepartment($data) {
 		global $mysql;
 		$departmentPrefix = $data["department"];
-		$sql = " SELECT t.* FROM `task_list` t left join user u1 on t.taskExecutor = u1.name left join user u2 on t.taskDispatcher = u2.name left join user u3 on t.assistant = u3.name left join user u4 on t.acceptor = u4.name where (u1.level like '%?%' or u2.level like '%?%' or u3.level like '%?%' or u4.level like '%?%') and t.isDeleted = 'false' and t.isFinished = 'false' ";
+		$sql = " SELECT t.*, u1.realname as taskExecutorRealName, u2.realname as taskDispatcherRealName FROM `task_list` t left join user u1 on t.taskExecutor = u1.name left join user u2 on t.taskDispatcher = u2.name left join user u3 on u3.name like ('%' + t.assistant +'%') left join user u4 on u4.name like ('%' + t.acceptor + '%') where (u1.level like '%?%' or u2.level like '%?%' or u3.level like '%?%' or u4.level like '%?%') and t.isDeleted = 'false' and t.isFinished = 'false' ";
 		$orderBy = " ORDER BY t.priority DESC, t.endTime ASC ";
 		$sql = str_replace("?", $departmentPrefix, $sql);
 		$sql .= $orderBy;
