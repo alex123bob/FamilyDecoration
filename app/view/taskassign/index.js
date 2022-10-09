@@ -113,6 +113,9 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 									{
 										showFinishColumn: true,
 										showHeader: false,
+										revokeEnabled: function() {
+											return true;
+										},
 										xtype: 'mytask-tasktable',
 										filterCfg: cfg
 									}

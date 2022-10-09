@@ -29,6 +29,7 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
     processEditEnabled: Ext.emptyFn,
     acceptEditEnabled: Ext.emptyFn,
     finishEditEnabled: Ext.emptyFn,
+    revokeEnabled: Ext.emptyFn,
 
     refresh: function (cfg) {
         var st = this.getStore();
@@ -86,7 +87,7 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
         };
 
         this.viewConfig = {
-            getRowClass: function (rec, rowIndex, rowParams, st){
+            getRowClass: function (rec, rowIndex, rowParams, st) {
                 var cls = '';
                 switch (rec.get('priority')) {
                     case 3:
@@ -113,12 +114,12 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                     width: 25,
                     items: [
                         {
-                            isDisabled: function(view, rowIdx, colIdx, item, rec) {
+                            isDisabled: function (view, rowIdx, colIdx, item, rec) {
                                 return me.acceptEditEnabled(rec) === false;
                             },
                             icon: 'resources/img/flaticon-checkmark.svg',
                             tooltip: '验收',
-                            handler: function(grid, rowIndex, colIndex) {
+                            handler: function (grid, rowIndex, colIndex) {
                                 var st = grid.getStore(),
                                     rec = st.getAt(rowIndex);
 
@@ -194,7 +195,7 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                 {
                     text: '内容',
                     dataIndex: 'taskContent',
-                    renderer: function(taskContent) {
+                    renderer: function (taskContent) {
                         var content = taskContent.replace(/\\n/gi, '<br />');
                         return content;
                     }
@@ -227,7 +228,7 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                 {
                     text: '已验收',
                     dataIndex: 'isAccepted',
-                    renderer: function(val) {
+                    renderer: function (val) {
                         return val === true ? '<font color="green"><strong>是</strong></font>' : '否';
                     }
                 },
@@ -235,12 +236,66 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                     text: '已完成',
                     dataIndex: 'isFinished',
                     hidden: !me.showFinishColumn,
-                    renderer: function(val) {
+                    renderer: function (val) {
                         return val === true ? '<font color="green"><strong>是</strong></font>' : '否';
                     }
                 }
             ]
         };
+
+        if (me.revokeEnabled() === true) {
+            this.columns.items.unshift({
+                flex: null,
+                xtype: 'actioncolumn',
+                width: 25,
+                items: [
+                    {
+                        tooltip: '撤回',
+                        width: 25,
+                        flex: null,
+                        icon: 'resources/img/reset.png',
+                        handler: function (grid, rowIndex, colIndex) {
+                            var st = grid.getStore(),
+                            rec = st.getAt(rowIndex);
+
+                            if (!rec.get('isFinished')) {
+                                showMsg('任务未完成，无法撤回!');
+                                return;
+                            }
+
+                            Ext.Msg.confirm('确认', '是否将当前任务标记为未完成?', function(btnId) {
+                                if (btnId === 'no') {
+                                    return;
+                                }
+                                Ext.Ajax.request({
+                                    url: './libs/tasklist.php',
+                                    method: 'POST',
+                                    params: {
+                                        action: 'editTaskList',
+                                        id: rec.getId(),
+                                        isFinished: false
+                                    },
+                                    callback: function (opts, success, res) {
+                                        if (success) {
+                                            var obj = Ext.decode(res.responseText);
+                                            if ('successful' == obj.status) {
+                                                showMsg('编辑成功!');
+                                                me.refresh({
+                                                    params: me.filterCfg
+                                                });
+                                            }
+                                            else {
+                                                showMsg(obj.errMsg);
+                                            }
+                                        }
+                                    }
+                                });
+                            })
+                        }
+                    }
+                ]
+            });
+        }
 
         if (me.finishEditEnabled()) {
             this.columns.items.unshift({
@@ -251,7 +306,7 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                     {
                         icon: 'resources/img/check.png',
                         tooltip: '完成任务',
-                        handler: function(grid, rowIndex, colIndex) {
+                        handler: function (grid, rowIndex, colIndex) {
                             var st = grid.getStore(),
                                 rec = st.getAt(rowIndex);
 
@@ -259,7 +314,7 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                                 showMsg('任务已完成，无需操作!');
                                 return;
                             }
-                            Ext.Msg.confirm('确认', '是否将当前任务其置为完成？', function(btnId) {
+                            Ext.Msg.confirm('确认', '是否将当前任务其置为完成？', function (btnId) {
                                 if (btnId === 'no') {
                                     return;
                                 }
@@ -271,7 +326,7 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                                         id: rec.getId(),
                                         isFinished: true
                                     },
-                                    callback: function (opts, success, res){
+                                    callback: function (opts, success, res) {
                                         if (success) {
                                             var obj = Ext.decode(res.responseText);
                                             if ('successful' == obj.status) {
@@ -374,7 +429,7 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                             break;
                     }
                 },
-                celldblclick: function(view, td, cellIndex, rec, tr, rowIndex, e, eOpts) {
+                celldblclick: function (view, td, cellIndex, rec, tr, rowIndex, e, eOpts) {
                     var win = Ext.create('Ext.window.Window', {
                         width: 800,
                         height: 600,
@@ -383,30 +438,30 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                         autoScroll: true,
                         html: [
                             '<strong>分配人:</strong> ' + rec.get('taskDispatcherRealName'),
-                            '<br />','<br />',
+                            '<br />', '<br />',
                             '<strong>协助人:</strong> ' + rec.get('assistantRealName'),
-                            '<br />','<br />',
+                            '<br />', '<br />',
                             '<strong>验收人:</strong> ' + rec.get('acceptorRealName'),
-                            '<br />','<br />',
+                            '<br />', '<br />',
                             '<strong>标题:</strong> ' + rec.get('taskName'),
-                            '<br />','<br />',
+                            '<br />', '<br />',
                             '<strong>内容:</strong> ',
                             '<br />',
                             rec.get('taskContent').replace(/[\t ]/gi, '&nbsp;').replace(/\\n/gi, '<br />'),
-                            '<br />','<br />',
+                            '<br />', '<br />',
                             '<strong>时间:</strong> ' + rec.get('createTime'),
-                            '<br />','<br />',
+                            '<br />', '<br />',
                             '<strong>完成情况:</strong> ' + rec.get('taskProcess'),
-                            '<br />','<br />',
+                            '<br />', '<br />',
                             '<strong>文件位置:</strong> ' + rec.get('filePath'),
-                            '<br />','<br />',
+                            '<br />', '<br />',
                             '<strong>验收状态:</strong> ' + (rec.get('isAccepted') ? '<font color="green">已验收</font>' : '未验收'),
                         ].join(''),
                         modal: true,
                         buttons: [
                             {
                                 text: '关闭',
-                                handler: function() {
+                                handler: function () {
                                     win.close();
                                 }
                             }
