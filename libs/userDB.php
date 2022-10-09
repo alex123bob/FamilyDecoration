@@ -394,19 +394,19 @@
 		$userName = $_SESSION["name"];
 		// admin members or administration manager
 		if (startWith($level, '001-') || $level == '005-001') {
-			$userList = $mysql->DBGetAsMap("select u.*, p.projectName, s.name as supplierName from `user` u left join project p on p.projectId = u.projectId left join supplier s on u.supplierId = s.id where u.`level` like '%?-%' and u.`isDeleted` = 'false' ", $department);
+			$userList = $mysql->DBGetAsMap("select u.*, p.projectName, s.name as supplierName from `user` u left join project p on p.projectId = u.projectId left join supplier s on u.supplierId = s.id where u.`level` like '%?-%' and u.`isDeleted` = 'false' and `isLocked` = 'false' ", $department);
 		}
 		// market people
 		else if (startWith($level, '004-')) {
 			if ($department == '006') {
-				$userList = $mysql->DBGetAsMap("select u.*, p.projectName, s.name as supplierName from `user` u left join project p on p.projectId = u.projectId left join supplier s on u.supplierId = s.id where u.`level` like '%?-%' and u.`isDeleted` = 'false' ", $department);
+				$userList = $mysql->DBGetAsMap("select u.*, p.projectName, s.name as supplierName from `user` u left join project p on p.projectId = u.projectId left join supplier s on u.supplierId = s.id where u.`level` like '%?-%' and u.`isDeleted` = 'false'  and `isLocked` = 'false' ", $department);
 			}
 			else {
-				$userList = $mysql->DBGetAsMap("select u.*, p.projectName, s.name as supplierName from `user` u left join project p on p.projectId = u.projectId left join supplier s on u.supplierId = s.id where u.`name` = '?' and u.`isDeleted` = 'false' ", $userName);
+				$userList = $mysql->DBGetAsMap("select u.*, p.projectName, s.name as supplierName from `user` u left join project p on p.projectId = u.projectId left join supplier s on u.supplierId = s.id where u.`name` = '?' and u.`isDeleted` = 'false'  and `isLocked` = 'false' ", $userName);
 			}
 		}
 		else {
-			$userList = $mysql->DBGetAsMap("select u.*, p.projectName, s.name as supplierName from `user` u left join project p on p.projectId = u.projectId left join supplier s on u.supplierId = s.id where u.`name` = '?' and u.`isDeleted` = 'false' ", $userName);
+			$userList = $mysql->DBGetAsMap("select u.*, p.projectName, s.name as supplierName from `user` u left join project p on p.projectId = u.projectId left join supplier s on u.supplierId = s.id where u.`name` = '?' and u.`isDeleted` = 'false'  and `isLocked` = 'false' ", $userName);
 		}
 		for($i = 0; $i < count($userList); $i++) {
 			$userList[$i]["department"] = $userList[$i]["level"];

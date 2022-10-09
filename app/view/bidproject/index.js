@@ -23,8 +23,8 @@ Ext.define('FamilyDecoration.view.bidproject.Index', {
                 itemId: 'gridpanel-bidprojectregion',
                 xtype: 'widgets-gridpanel',
                 backendSvc: 'BidProjectRegion',
-                canDelete: User.isAdmin(),
-                canEdit: User.isAdmin(),
+                canDelete: User.isAdmin() || User.isBudgetManager(),
+                canEdit: User.isAdmin() || User.isBudgetManager(),
                 columns: {
                     defaults: {
                         flex: 1,
@@ -60,8 +60,9 @@ Ext.define('FamilyDecoration.view.bidproject.Index', {
                 itemId: 'gridpanel-bidproject',
                 name: 'gridpanel-bidproject',
                 backendSvc: 'BidProject',
-                canDelete: User.isAdmin(),
-                canEdit: User.isAdmin(),
+                canDelete: User.isAdmin() || User.isBudgetManager(),
+                canEdit: User.isAdmin() || User.isBudgetManager(),
+                canRefresh: true,
                 addHandler: function(backendSvc, newValues, callback) {
                     var region = me.getComponent('gridpanel-bidprojectregion'),
                         rec = region.getSelectionModel().getSelection()[0];

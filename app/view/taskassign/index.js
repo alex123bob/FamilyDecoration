@@ -84,6 +84,44 @@ Ext.define('FamilyDecoration.view.taskassign.Index', {
 				itemId: 'taskTable',
 				flex: 7,
 				needLoad: false,
+				tools: [
+                    {
+                        type: 'gear',
+                        disabled: !User.isAdmin(),
+                        id: 'tool-checkAllTasks',
+                        name: 'tool-checkAllTasks',
+                        tooltip: '查看所有任务',
+                        callback: function(owner, tool, event) {
+							var tree = me.getComponent('treepanel-taskMemberName'),
+								rec = tree.getSelectionModel().getSelection()[0],
+								cfg = {
+									shouldShowFinished: true
+								};
+
+							if (rec && rec.get('name')) {
+								cfg['specificUser'] = rec.get('name');
+							}
+								
+							var win = Ext.create('Ext.window.Window', {
+								title: '所有任务列表',
+								width: 1400,
+								height: 800,
+								modal: true,
+								layout: 'fit',
+								maximizable: true,
+								items: [
+									{
+										showFinishColumn: true,
+										showHeader: false,
+										xtype: 'mytask-tasktable',
+										filterCfg: cfg
+									}
+								]
+							});
+							win.show();
+                        }
+                    }
+                ],
 				assistantEditEnabled: function (){
 					return User.isAdmin();
 				},

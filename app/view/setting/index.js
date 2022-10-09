@@ -91,6 +91,7 @@ Ext.define('FamilyDecoration.view.setting.Index', {
 				}
 			}, {
 				text: '锁定',
+				hidden: true,
 				flex: 0.3,
 				dataIndex: 'isLocked',
 				renderer: function(val, meta, rec) {

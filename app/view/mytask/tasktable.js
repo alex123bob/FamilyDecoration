@@ -19,6 +19,9 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
     // indicator: whether autoLoad grid once entering into the page
     // expose load interface of grid
     needLoad: true,
+    showHeader: true,
+    showFinishColumn: false,
+    cls: 'gridpanel-tasktable',
     // whether current user is able to edit assistant. 
     // this feature is for manager and administrator to distribute corresponding assistant for current task
     assistantEditEnabled: Ext.emptyFn,
@@ -50,6 +53,8 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                 action: 'getTaskList'
             };
         me.filterCfg && Ext.override(extraParams, me.filterCfg);
+
+        me.header = me.showHeader;
 
         Ext.override(proxy, {
             extraParams: extraParams
@@ -188,7 +193,11 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                 },
                 {
                     text: '内容',
-                    dataIndex: 'taskContent'
+                    dataIndex: 'taskContent',
+                    renderer: function(taskContent) {
+                        var content = taskContent.replace(/\\n/gi, '<br />');
+                        return content;
+                    }
                 },
                 {
                     text: '优先级',
@@ -218,6 +227,14 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                 {
                     text: '已验收',
                     dataIndex: 'isAccepted',
+                    renderer: function(val) {
+                        return val === true ? '<font color="green"><strong>是</strong></font>' : '否';
+                    }
+                },
+                {
+                    text: '已完成',
+                    dataIndex: 'isFinished',
+                    hidden: !me.showFinishColumn,
                     renderer: function(val) {
                         return val === true ? '<font color="green"><strong>是</strong></font>' : '否';
                     }
@@ -375,7 +392,7 @@ Ext.define('FamilyDecoration.view.mytask.TaskTable', {
                             '<br />','<br />',
                             '<strong>内容:</strong> ',
                             '<br />',
-                            rec.get('taskContent').replace(/[\t ]/gi, '&nbsp;').replace(/\n/gi, '<br />'),
+                            rec.get('taskContent').replace(/[\t ]/gi, '&nbsp;').replace(/\\n/gi, '<br />'),
                             '<br />','<br />',
                             '<strong>时间:</strong> ' + rec.get('createTime'),
                             '<br />','<br />',

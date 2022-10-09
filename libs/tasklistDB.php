@@ -100,7 +100,7 @@
 		$params = array();
 		$values = array();
 		if (isset($data['specificUser'])) {
-			$sql .= str_replace('?', $data["specificUser"], " where t.isDeleted = 'false' and t.isFinished = 'false' and (t.`taskDispatcher` = '?' or t.`taskExecutor` = '?' or t.`assistant` like '%?%' or t.`acceptor` like '%?%')");
+			$sql .= str_replace('?', $data["specificUser"], " where t.isDeleted = 'false' ".(isset($data['shouldShowFinished']) ? "" : " and t.isFinished = 'false' ")." and (t.`taskDispatcher` = '?' or t.`taskExecutor` = '?' or t.`assistant` like '%?%' or t.`acceptor` like '%?%')");
 		}
 		else {
 			foreach ($fields as $key => $field) {
@@ -117,7 +117,7 @@
 		}
 		if (count($params) > 0) {
 			$params = implode(" and ", $params);
-			$sql .= " where t.isDeleted = 'false' and t.isFinished = 'false' and ".$params;
+			$sql .= " where t.isDeleted = 'false' ".(isset($data['shouldShowFinished']) ? "" : " and  t.isFinished = 'false' ")." and ".$params;
 		}
 		$sql .= $orderBy;
 		$res = $mysql->DBGetAsMap($sql, $values);

@@ -246,7 +246,7 @@
 	function getMembersByDepartment($department){
 		global $mysql;
         $res= array();
-        $whereSql = "where level like '".$department."-%' and `isDeleted` = 'false' ";
+        $whereSql = "where level like '".$department."-%' and `isDeleted` = 'false' and `isLocked` = 'false' ";
 
         if ($_GET["individual"] == 'true') {
         	$whereSql .= " and `name` = '".$_SESSION["name"]."' ";
