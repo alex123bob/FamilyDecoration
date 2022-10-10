@@ -61,7 +61,7 @@ Ext.define('FamilyDecoration.view.bidproject.Index', {
                 name: 'gridpanel-bidproject',
                 backendSvc: 'BidProject',
                 canDelete: User.isAdmin() || User.isBudgetManager(),
-                canEdit: User.isAdmin() || User.isBudgetManager(),
+                canEdit: true,
                 canRefresh: true,
                 addHandler: function(backendSvc, newValues, callback) {
                     var region = me.getComponent('gridpanel-bidprojectregion'),
