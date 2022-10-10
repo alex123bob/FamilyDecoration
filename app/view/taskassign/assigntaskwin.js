@@ -47,7 +47,7 @@ Ext.define('FamilyDecoration.view.taskassign.AssignTaskWin', {
 						autoScroll: true,
 						emptyText: '任务内容',
 						allowBlank: false,
-						value: me.task ? me.task.get('taskContent') : ''
+						value: me.task ? me.task.get('taskContent').replace(/\\n/gi, '\n') : ''
 					},
 					{
 						itemId: 'timePeriod',
