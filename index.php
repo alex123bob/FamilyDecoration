@@ -381,7 +381,7 @@
                     department = '财务部';
                 }
                 else if (/^009(-\d{3})?$/i.test(level)) {
-                    department = '预决算部';
+                    department = '经营科';
                 }
                 else if (/^010(-\d{3})?$/i.test(level)) {
                     department = '供应商';
