@@ -67,9 +67,6 @@ class StatementBillSvc extends BaseSvc
 			if($res['total'] <= 0){
 				throw new BaseException("找不到id为".$q['@projectId'].'的工程项目');
 			}
-			if($res['data'][0]['settled'] != 0){
-				throw new BaseException('项目'.$res['data'][0]['projectName'].' 已被标记为结算完成,无法添加单据!');
-			}
 		}else{
 			$q['@projectId'] = '-1';
 		}
