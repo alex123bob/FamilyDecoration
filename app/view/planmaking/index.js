@@ -89,7 +89,7 @@ Ext.define('FamilyDecoration.view.planmaking.Index', {
 				},
 				tbar: [
 					{
-						text: '编辑',
+						text: '添加',
 						icon: './resources/img/edit.png',
 						name: 'button-editplan',
 						hidden: User.isGeneral() ? true : false,
