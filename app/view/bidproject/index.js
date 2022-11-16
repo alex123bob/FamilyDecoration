@@ -147,6 +147,9 @@ Ext.define('FamilyDecoration.view.bidproject.Index', {
                                 else if ((new Date(d) - Date.now()) / 1000 / 60 /60 / 24 <= 14) {
                                     res = '<strong><font color="darkorange">' + d + '</font></strong>';
                                 }
+                                else {
+                                    res = '<strong><font color="blue">' + d + '</font></strong>';
+                                }
                                 return res;
                             }
                         },

@@ -80,6 +80,7 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
                                         });
                                         if (item.format) {
                                             newValues[pro] = Ext.Date.format(newValues[pro], 'Y-m-d');
+                                            rec.set(pro, newValues[pro]);
                                         }
                                         break;
                                 
