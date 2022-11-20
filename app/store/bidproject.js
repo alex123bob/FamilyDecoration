@@ -9,7 +9,8 @@ Ext.define('FamilyDecoration.store.BidProject', {
             root: 'data'
         },
         extraParams: {
-            action: 'BidProject.get'
+            action: 'BidProject.get',
+            orderby: 'startTime DESC'
         }
     }
 });
