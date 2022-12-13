@@ -27,6 +27,7 @@ class BidProjectSvc extends BaseSvc
 			'预算造价'=>'budgetCost',
 			'中标人'=>'preferredBidder',
 			'投标价'=>'bidPrice',
+			'中标价'=>'bidWinningPrice',
 			'下浮率'=>'floatDownRate',
 			'录入时间'=>'createTime',
 			'最后更新时间'=>'updateTime',

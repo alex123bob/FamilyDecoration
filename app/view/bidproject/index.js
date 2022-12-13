@@ -54,7 +54,7 @@ Ext.define('FamilyDecoration.view.bidproject.Index', {
                 height: '100%',
                 canRefresh: false,
                 canAutoLoad: false,
-                flex: 4,
+                flex: 7,
                 xtype: 'widgets-gridpanel',
                 title: '开标情况',
                 itemId: 'gridpanel-bidproject',
@@ -163,15 +163,16 @@ Ext.define('FamilyDecoration.view.bidproject.Index', {
                         {
                             text: '工程名称',
                             dataIndex: 'name',
+                            flex: 2
                         },
                         {
                             text: '项目负责人要求',
-                            dataIndex: 'requirement',
-                            flex: 2
+                            dataIndex: 'requirement'
                         },
                         {
                             text: '开标地点',
                             dataIndex: 'location',
+                            flex: 2
                         },
                         {
                             text: '保证金属性',
@@ -193,12 +194,14 @@ Ext.define('FamilyDecoration.view.bidproject.Index', {
                             text: '控制价',
                             dataIndex: 'controlledPrice',
                             editor: 'numberfield',
+                            flex: 0.75,
                             renderer: function(val){
                                 return Ext.util.Format.currency(val, '￥');
                             }
                         },
                         {
                             text: '投标价',
+                            flex: 0.75,
                             dataIndex: 'bidPrice',
                             editor: 'numberfield',
                             renderer: function(val){
@@ -207,10 +210,13 @@ Ext.define('FamilyDecoration.view.bidproject.Index', {
                         },
                         {
                             text: '中标人',
+                            flex: 0.75,
                             dataIndex: 'preferredBidder',
+                            flex: 2
                         },
                         {
                             text: '中标价',
+                            flex: 0.75,
                             dataIndex: 'bidWinningPrice',
                             editor: 'numberfield',
                             renderer: function(val){
@@ -219,6 +225,7 @@ Ext.define('FamilyDecoration.view.bidproject.Index', {
                         },
                         {
                             text: '下浮率',
+                            flex: 0.75,
                             dataIndex: 'floatDownRate',
                         },
                     ]
