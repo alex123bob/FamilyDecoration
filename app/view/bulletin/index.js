@@ -675,6 +675,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                         {
                             text: '工程名称',
                             dataIndex: 'name',
+                            flex: 2
                         },
                         {
                             text: '项目负责人要求',
@@ -684,6 +685,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                         {
                             text: '开标地点',
                             dataIndex: 'location',
+                            flex: 2
                         },
                         {
                             text: '保证金属性',
@@ -727,14 +729,6 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                         {
                             text: '代理机构',
                             dataIndex: 'agency',
-                        },
-                        {
-                            text: '投标人及项目经理佳诚',
-                            dataIndex: 'bidderA',
-                        },
-                        {
-                            text: '投标人及项目经理康凯',
-                            dataIndex: 'bidderB',
                         },
                         {
                             text: '预算造价',
