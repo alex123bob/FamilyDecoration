@@ -640,7 +640,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                 width: '100%',
                 flex: 1,
                 xtype: 'widgets-gridpanel',
-                title: '最近三天开标情况',
+                title: '最近七天开标情况',
                 id: 'gridpanel-bidproject',
                 name: 'gridpanel-bidproject',
                 backendSvc: 'BidProject',
@@ -769,7 +769,7 @@ Ext.define('FamilyDecoration.view.bulletin.Index', {
                                 {
                                     field: 'startTime',
                                     oper: 'notGreaterThan',
-                                    value: Ext.util.Format.dateRenderer('Y-m-d')(new Date(Date.now() + 3 * 24 * 60 * 60 * 1000))
+                                    value: Ext.util.Format.dateRenderer('Y-m-d')(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
                                 }
                             ])
                         }
