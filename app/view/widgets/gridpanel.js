@@ -13,6 +13,7 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
     onSelectionChange: null,
     addHandler: null,
     onAfterReander: null,
+    itemsPerPage: undefined,
 
 	initComponent: function () {
 		var me = this;
@@ -21,6 +22,11 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
             var st = Ext.create('FamilyDecoration.store.'+me.backendSvc, {
                 autoLoad: me.canAutoLoad
             });
+            if (me.itemsPerPage !== undefined) {
+                Ext.override(st.proxy.extraParams, {
+                    limit: me.itemsPerPage
+                });
+            }
             me.store = st;
         }
 
@@ -37,7 +43,6 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
                 }
             }
         );
-
 
         // Create, Update
         if (me.canEdit) {
