@@ -54,15 +54,15 @@
 		if(isset($downloadFields)){
 			echo(join(',',array_keys($downloadFields))."\n");
 		}
-		if(isset($res['data']) && is_array($res['data'])){
-			foreach($res["data"] as $key => $item){
-				if(isset($downloadFields)) {
-					foreach($downloadFields as $label => $key){
-						printCSVCell(isset($item[$key]) ? $item[$key] : '' );
+       if(isset($res['data']) && is_array($res['data'])){
+			foreach($res["data"] as $key => $val){
+                if(isset($downloadFields)) {
+       			foreach($downloadFields as $label => $key){
+						printCSVCell(isset($val[$key]) ? $val[$key] : '' );
 					}
 				}else{
-					echo(join(',',array_keys($item))."\n");
-					foreach($item as $key => $value){
+					echo(join(',',array_keys($val))."\n");
+                    foreach($val as $key => $value){
 						printCSVCell($value);
 					}
 				}
