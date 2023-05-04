@@ -165,7 +165,7 @@ Ext.define('FamilyDecoration.view.paymentrequest.AttachmentManagement', {
                 handler: function () {
                     var certUpload = Ext.create('FamilyDecoration.view.chart.UploadForm', {
                         title: '附件上传',
-                        typeArray: ['image/jpg', 'image/jpeg'],
+                        typeArray: ['image/jpg', 'image/jpeg', 'image/png'],
                         url: './libs/upload_pic.php',
                         supportMult: true,
                         extraParams: {
