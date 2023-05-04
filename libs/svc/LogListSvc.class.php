@@ -153,6 +153,7 @@ class LogListSvc extends BaseSvc
 			}
 		}
 		$res = array();
+		$days = intval($days);
 		for($i = $days;$i >= 1;$i--){
 			$date = "$year-$month-".($i < 10 ? '0':'').$i;
 			$tele = isset($telemarketingDayNumberMappping[$date]) ? $telemarketingDayNumberMappping[$date] : 0;
