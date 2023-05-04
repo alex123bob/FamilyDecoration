@@ -534,6 +534,16 @@ Ext.define('FamilyDecoration.view.mylog.LogContent', {
                     selectionchange: function (selModel, sels, opts) {
                         var rec = sels[0];
                         _initBtn(rec);
+                    },
+                    celldblclick: function(grid, td, cellIndex, record, tr, rowIndex, e, eOpts ){
+                        var dataIndex = grid.getGridColumns()[cellIndex].dataIndex;
+                        var bbarItems = me.down('gridpanel').getDockedItems('toolbar[dock="bottom"]')[0].items.items;
+                        if (dataIndex === 'selfPlan') {
+                            bbarItems[0].handler();
+                        }
+                        else if (dataIndex === 'summarizedLog') {
+                            bbarItems[1].handler();
+                        }
                     }
                 }
             }
