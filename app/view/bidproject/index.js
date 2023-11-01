@@ -85,7 +85,7 @@ Ext.define('FamilyDecoration.view.bidproject.Index', {
                             var region = me.getComponent('gridpanel-bidprojectregion'),
                                 rec = region.getSelectionModel().getSelection()[0];
                             if (rec) {
-                                window.open('./libs/api.php?action=BidProject.get&download=开标工程&regionId=' + rec.getId());
+                                window.open('./libs/api.php?action=BidProject.get&start=0&limit=10000&download=开标工程&regionId=' + rec.getId());
                             }
                             else {
                                 showMsg('请选区域');
