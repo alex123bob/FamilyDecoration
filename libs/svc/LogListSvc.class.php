@@ -132,7 +132,7 @@ class LogListSvc extends BaseSvc
 			}
 		}
 		$time = strtotime("$year-$month-01");
-		$days = "$year-$month" == date('Y-m') ? date('d') : date('t', $time); //this month , end to today
+		$days = date('t', $time); //Always end the log date to the last day of each month.
 		$beginTime = "$year-$month-01 00:00:00";
 		$endTime = "$year-$month-$days 00:00:00";
 		$logsDayNumberMapping = array();
