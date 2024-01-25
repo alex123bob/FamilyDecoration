@@ -27,7 +27,13 @@ Ext.define('FamilyDecoration.view.paymentrequest.PaymentListCt', {
             if (user) {
                 Ext.apply(requestProxy.extraParams, {
                     payee: user.get('name'),
-                    billType: 'rbm'
+                     _filter: JSON.stringify([
+                        {
+                            field: 'billType',
+                            oper: 'in',
+                            value: ['rbm', 'wlf', 'tax', 'fdf']
+                        }
+                    ])
                 });
                 resObj.requestSt.setProxy(requestProxy);
                 resObj.requestSt.loadPage(1);
