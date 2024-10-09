@@ -64,7 +64,7 @@ Ext.define('FamilyDecoration.view.bidproject.Index', {
                 canEdit: true,
                 canRefresh: true,
                 itemsPerPage: 100000,
-                addHandler: function(backendSvc, newValues, callback) {
+                onAdd: function(backendSvc, newValues, callback) {
                     var region = me.getComponent('gridpanel-bidprojectregion'),
                         rec = region.getSelectionModel().getSelection()[0];
                     if (rec) {

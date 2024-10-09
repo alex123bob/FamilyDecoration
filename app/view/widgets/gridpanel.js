@@ -11,7 +11,7 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
     canEdit: false,
     canRefresh: true,
     onSelectionChange: null,
-    addHandler: null,
+    onAdd: null,
     onAfterReander: null,
     itemsPerPage: undefined,
 
@@ -19,7 +19,7 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
 		var me = this;
 
         if (me.backendSvc) {
-            var st = Ext.create('FamilyDecoration.store.'+me.backendSvc, {
+            var st = Ext.create('FamilyDecoration.store.'+ me.backendSvc, {
                 autoLoad: me.canAutoLoad
             });
             if (me.itemsPerPage !== undefined) {
@@ -102,8 +102,8 @@ Ext.define('FamilyDecoration.view.widgets.GridPanel', {
                                 });
                             }
                             else {
-                                if (typeof me.addHandler === 'function') {
-                                    me.addHandler(me.backendSvc, newValues, function (res) {
+                                if (typeof me.onAdd === 'function') {
+                                    me.onAdd(me.backendSvc, newValues, function (res) {
                                         showMsg('添加成功！');
                                         rec.setId(res.data.id);
                                         rec.commit();
