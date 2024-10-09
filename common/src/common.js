@@ -1191,6 +1191,15 @@ function showPic(src, title) {
     }
 }
 
+/**
+ * Check if current value is undefined or null.
+ * @param {unknown} val value to be checked
+ * @returns boolean
+ */
+function isUndefinedOrNull(val) {
+    return val === undefined || val === null;
+}
+
 Ext.require('Ext.form.field.VTypes', function () {
     Ext.apply(Ext.form.field.VTypes, {
         'phone': function () {
