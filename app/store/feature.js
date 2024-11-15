@@ -23,35 +23,35 @@
                         name: '电销列表',
                         cmp: 'telemarket-index',
                         leaf: true,
-                        closed: true,
+                        deprecated: true,
                         icon: 'resources/img/telemarket.png'
                     },
                     {
                         name: '我的业务',
                         cmp: 'mybusiness-index',
                         leaf: true,
-                        closed: true,
+                        deprecated: true,
                         icon: 'resources/img/mybusiness.png'
                     },
                     {
                         name: '查看业务',
                         cmp: 'checkbusiness-index',
                         leaf: true,
-                        closed: true,
+                        deprecated: true,
                         icon: 'resources/img/checkbusiness.png'
                     },
                     {
                         name: '签单业务',
                         cmp: 'signbusiness-index',
                         leaf: true,
-                        closed: true,
+                        deprecated: true,
                         icon: 'resources/img/sign-business.png'
                     },
                     {
                         name: '查看签单业务',
                         cmp: 'checksignbusiness-index',
                         leaf: true,
-                        closed: true,
+                        deprecated: true,
                         icon: 'resources/img/check-sign-business.png'
                     },
                     {
@@ -64,14 +64,14 @@
                         name: '废单业务',
                         cmp: 'deadbusiness-index',
                         leaf: true,
-                        closed: true,
+                        deprecated: true,
                         icon: 'resources/img/trashbin1.png'
                     },
                     {
                         name: '等待业务',
                         cmp: 'businesstotransfer-index',
                         leaf: true,
-                        closed: true,
+                        deprecated: true,
                         icon: 'resources/img/wait.png'
                     }
                 ]
@@ -79,7 +79,7 @@
             {
                 name: '决策',
                 expanded: false,
-                closed: true,
+                deprecated: true,
                 icon: 'resources/img/strategy.png',
                 cmp: 'strategy-parent',
                 children: [
@@ -145,12 +145,14 @@
                         name: '清单项目编辑',
                         cmp: 'costlistitem-index',
                         leaf: true,
+                        deprecated: true,
                         icon: 'resources/img/to-do.svg'
                     },
                     {
                         name: '成本制作',
                         cmp: 'costmake-index',
                         leaf: true,
+                        deprecated: true,
                         icon: 'resources/img/budget.svg'
                     },
                     {
@@ -170,7 +172,7 @@
             { 
                 name: "查看图库",
                 cmp: 'chart-index',
-                closed: true,
+                deprecated: true,
                 leaf: true,
                 icon: 'resources/img/chart.png'
             },
@@ -206,7 +208,7 @@
                     },
                     {
                         name: '主材订购单',
-                        closed: true,
+                        deprecated: true,
                         cmp: 'mainmaterial-index',
                         leaf: true,
                         icon: 'resources/img/order.png'
@@ -219,7 +221,7 @@
                     },
                     {
                         name: '材料申购',
-                        closed: true,
+                        deprecated: true,
                         cmp: 'materialrequest-index',
                         leaf: true,
                         icon: 'resources/img/material_request.png'
@@ -232,7 +234,7 @@
                     },
                     {
                         name: '计划用工',
-                        closed: true,
+                        deprecated: true,
                         cmp: 'planlabor-index',
                         leaf: true,
                         icon: 'resources/img/planlabor.png'
@@ -336,14 +338,14 @@
                     {
                         name: '人事统计',
                         cmp: 'personnel-index',
-                        closed: true,
+                        deprecated: true,
                         leaf: true,
                         icon: 'resources/img/statistics.png'
                     },
                     {
                         name: '员工工资',
                         cmp: 'staffsalary-index',
-                        closed: true,
+                        deprecated: true,
                         leaf: true,
                         icon: 'resources/img/staff_salary.png'
                     }
@@ -363,7 +365,7 @@
         filterFeature: function (rec){
             var flag;
 
-            if (rec.get('cmp') == '' || rec.get('closed') === true) {
+            if (rec.get('cmp') == '' || rec.get('deprecated') === true) {
                 flag = false;
             }
             else if (rec.get('cmp') == 'bulletin-index') {

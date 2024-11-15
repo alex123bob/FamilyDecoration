@@ -4,7 +4,7 @@ Ext.define('FamilyDecoration.model.Feature', {
 		{name: 'text', mapping: 'name'},
 		{name: 'name', type: 'string'},
 		{name: 'cmp', type: 'string'},
-		{name: 'closed', type: 'boolean'}
+		{name: 'deprecated', type: 'boolean'}
 	],
 	idProperty: 'cmp'
 });
