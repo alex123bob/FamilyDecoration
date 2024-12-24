@@ -6,16 +6,6 @@ Ext.onReady(function () {
 Ext.require('Ext.window.MessageBox', function () {
     Ext.override(Ext.window.MessageBox, {
         info: function (msg, fn, scope) {
-            // var cfg = {
-            //     title: '提示',
-            //     msg: msg,
-            //     buttons: this.OK,
-            //     fn: fn,
-            //     scope: scope,
-            //     width: 450,
-            //     icon: Ext.Msg.INFO
-            // };
-            // return this.show(cfg);
             return swal({
                 title: '提示',
                 text: msg.replace(/\n/gi, '<br />'),
@@ -31,16 +21,6 @@ Ext.require('Ext.window.MessageBox', function () {
             });
         },
         warning: function (msg, fn, scope) {
-            // var cfg = {
-            //     title: '警告',
-            //     msg: msg,
-            //     buttons: this.YESNO,
-            //     fn: fn,
-            //     scope: scope,
-            //     width: 450,
-            //     icon: Ext.Msg.QUESTION
-            // };
-            // return this.show(cfg);
             return swal({
                 title: '警告',
                 text: msg.replace(/\n/gi, '<br />'),
@@ -84,18 +64,6 @@ Ext.require('Ext.window.MessageBox', function () {
                     fn();
                 }
             });
-
-            // cfg = {
-            //     title: '错误',
-            //     msg: text,
-            //     buttons: this.OK,
-            //     fn: fn,
-            //     scope: scope,
-            //     width: 450,
-            //     icon: Ext.Msg.ERROR
-            // };
-
-            // return this.show(cfg);
         },
         read: function (msg, fn, scope) {
             return swal({
@@ -150,12 +118,6 @@ Ext.require('Ext.window.MessageBox', function () {
         }
     });
 });
-
-// Ext.require('Ext.selection.CheckboxModel', function (){
-//     Ext.override(Ext.selection.CheckboxModel, {
-//         mode: 'SIMPLE'
-//     });
-// });
 
 Ext.require('Ext.form.field.Date', function () {
     Ext.override(Ext.form.field.Date, {
@@ -414,36 +376,6 @@ function getIndex(c) {
     var str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     return str.indexOf(c) + 1;
 }
-
-// (function () {
-//     var showing = false,
-//         tid;
-//     window.showMsg = function (title, format) {
-//         Ext.select('#tipBox .text').setHTML(title);
-//         Ext.select('#tipBox').slideIn('t', {
-//             //  easing: 'easeOut',
-//             duration: 500
-//         });
-//         if (tid) {
-//             clearTimeout(tid);
-//         }
-//         tid = setTimeout(hideMsg, 4000);
-//         showing = true;
-//     };
-
-//     window.hideMsg = function () {
-//         if (showing) {
-//             var el = Ext.select('#tipBox').first();
-//             if (el.isVisible()) {
-//                 el.slideOut('t', {
-//                     //  easing: 'easeOut',
-//                     duration: 500
-//                 });
-//             }
-//         }
-//         showing = false;
-//     };
-// })();
 
 // this functionality is used to replace the old showMsg pop up dialogue.
 // use DHTMLX library.
